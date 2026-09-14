@@ -1,0 +1,200 @@
+---
+title: "Lesson 2 · Drive to the Edge and Stop"
+sidebar_label: "2 · Drive to the Edge"
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 2 · Drive to the Edge and Stop"
+  meta={['50–60 min', 'while loops', 'Sensor-driven control']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Last lesson the robot read the sensor but sat still. Now you'll make it **drive and
+watch at the same time** — rolling forward until the sensor spots the line, then
+stopping. The tool that makes this possible is the **`while` loop**.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write a `while` loop that repeats until a condition changes
+- Use comparison operators (`<`, `>`, `==`, `!=`, `<=`, `>=`)
+- Drive the robot with `set_effort()` while checking a sensor each pass
+- Explain why the sensor must be re-read *inside* the loop
+- Say how a `while` loop differs from a `for` loop
+
+</Objectives>
+
+## Part 1 · `for` vs. `while`
+
+In Module 1 the `for` loop repeated a **fixed** number of times — `for i in
+range(4)` draws four sides. But "drive until you hit the line" has no fixed count;
+you don't know how many steps it'll take. That's a job for `while`, which repeats as
+long as a condition stays true:
+
+```python
+while left < threshold:
+    # this runs over and over while the sensor is on white
+    # the moment left >= threshold, the loop stops
+```
+
+A `while` loop needs a **condition** — a test that's either `True` or `False`. We
+build those with comparison operators:
+
+```python
+0.3 < 0.5    # True  (less than)
+0.8 > 0.5    # True  (greater than)
+0.5 == 0.5   # True  (equal to)
+0.9 != 0.5   # True  (not equal to)
+```
+
+<KnowledgeCheck
+  question="Which loop fits the task 'drive until the robot detects a line'?"
+  options={[
+    {text: 'A for loop — you know it takes exactly 4 steps'},
+    {text: 'A while loop — you repeat until a condition changes, however long that takes', correct: true},
+    {text: 'Neither — you cannot loop with sensors'},
+    {text: 'Both work exactly the same here'},
+  ]}
+  explanation="You don't know the number of steps in advance, so you loop while the sensor says 'no line' — that's a while loop."
+/>
+
+## Part 2 · Drive until the line
+
+Here's the whole program. Read the sensor before the loop, keep driving while
+you're on white, and stop once the line is detected:
+
+```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+
+reflectance = Reflectance.get_default_reflectance()
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+threshold = 0.5   # use YOUR value from Lesson 1
+
+board.wait_for_button()
+
+left = reflectance.get_left()
+
+while left < threshold:
+    drivetrain.set_effort(0.3, 0.3)
+    left = reflectance.get_left()   # ← read again every pass!
+
+drivetrain.stop()
+print("Line detected! Sensor value:", left)
+```
+
+`set_effort(0.3, 0.3)` is the key to driving *inside* a loop: unlike `straight()`,
+it sets the motors and returns immediately, so the loop can keep checking the
+sensor while the robot rolls.
+
+<TeacherNote title="set_effort vs. straight()">
+
+Worth stating outright: `straight()` **blocks** — it finishes its distance before
+the next line runs, so you can't watch a sensor during it. `set_effort()` sets
+motor power and returns instantly, which is exactly what a sensor loop needs. Keep
+the speed low (`0.3` or less); momentum at higher speeds carries the robot past the
+line before it can stop.
+
+</TeacherNote>
+
+## Part 3 · The infinite-loop trap
+
+Look at that program again. The line `left = reflectance.get_left()` *inside* the
+loop is the most important one. Leave it out and `left` never changes — so the
+condition never becomes false and **the robot drives forever**. That's an
+**infinite loop**.
+
+> The rule: always update the variable your `while` loop is checking, inside the loop.
+
+<KnowledgeCheck
+  question="A student's robot drives forward and never stops, even over the line. What did they most likely forget?"
+  options={[
+    {text: 'The board.wait_for_button() line'},
+    {text: 'To re-read the sensor inside the loop, so the condition never changes', correct: true},
+    {text: 'To import the drivetrain'},
+    {text: 'To charge the battery'},
+  ]}
+  explanation="Without updating left inside the loop, the condition stays true forever — a classic infinite loop."
+/>
+
+<KnowledgeCheck
+  question="The threshold is 0.5 and the sensor reads 0.3. Is `left < threshold` True or False?"
+  options={[
+    {text: 'True — 0.3 is less than 0.5', correct: true},
+    {text: 'False — 0.3 is greater than 0.5'},
+    {text: 'True — they are equal'},
+    {text: 'It causes an error'},
+  ]}
+  explanation="0.3 < 0.5 is True, so the loop keeps running — the robot is still on white and should keep driving."
+/>
+
+## Part 4 · Try it and extend it
+
+1. Build the program with **your** threshold, start the robot inside the taped
+   circle pointing at an edge, and watch it stop at the line.
+2. **Challenge:** switch to the right sensor, then stop when *either* sensor hits
+   the line:
+
+```python
+while left < threshold and right < threshold:
+    drivetrain.set_effort(0.3, 0.3)
+    left = reflectance.get_left()
+    right = reflectance.get_right()
+```
+
+The `and` means "keep going only while *both* sensors are still on white." (More on
+`and` / `or` next lesson.)
+
+<TeacherNote title="Differentiation">
+
+**More support:** start with a non-robot counting loop (`count = 0; while count <
+5: …`) so the loop mechanics are clear before sensors enter. Use effort `0.2` so
+there's time to observe. **More challenge:** count the loop iterations before the
+line is found, or flash the LED on detection.
+
+</TeacherNote>
+
+## Real-world connections
+
+"Keep going until a condition is met" runs countless real systems:
+
+<CardGrid>
+  <InfoCard tag="Home" title="Thermostats">
+    The furnace runs *while* the room is below the set temperature, then stops — a while loop in hardware.
+  </InfoCard>
+  <InfoCard tag="Software" title="Downloads">
+    A download loops "grab the next chunk" while there's more file left to fetch.
+  </InfoCard>
+  <InfoCard tag="Games" title="Game loops">
+    A game repeats "update and draw" while the game is still running.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- When do you reach for `while` instead of `for`? (When you repeat until a condition changes, not a fixed count.)
+- What's the one line you must never forget in a sensor `while` loop? (Re-reading the sensor inside the loop.)
+- What does `set_effort()` do that `straight()` can't? (Runs the motors without blocking, so the loop can keep checking.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** correct `while` syntax, and explaining the infinite-loop trap.
+**Exit ticket:** "What happens if you don't update the sensor inside the loop?"
+(infinite loop). **Preview:** next lesson we add `if/else` so that instead of
+stopping at the line, the robot decides to turn around — bounce driving.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

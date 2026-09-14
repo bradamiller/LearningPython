@@ -1,0 +1,180 @@
+---
+title: "Lesson 9 · Python Loops"
+sidebar_label: "9 · Python Loops"
+sidebar_position: 9
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 9 · Python Loops"
+  meta={['50–60 min', 'Phase C · Transition to Python', 'for loops']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Remember the **Repeat** block that made shapes so much shorter? Python has the
+same tool: the **`for` loop**. In this lesson you'll write loops in text and use
+them to draw the shapes you already know — proving the logic is identical, only
+the syntax changed.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write a Python `for` loop and use it to repeat robot commands
+- Explain what `range(n)` produces and why counting starts at `0`
+- Use indentation to define exactly what's inside the loop
+- Use the loop counter (`i`) to print progress or change behavior each pass
+
+</Objectives>
+
+## Part 1 · The Repeat block, in text
+
+Here's the square you drew in Lesson 2 as a Blockly Repeat — and the Python `for`
+loop that does the same thing:
+
+<BlockProgram
+  blocks={[
+    {name: 'repeat', note: 'repeat 4 times', children: [
+      {name: 'straight', note: 'cm: 30'},
+      {name: 'turn', note: 'Deg: 90'},
+    ]},
+  ]}
+/>
+
+```python
+for i in range(4):
+    drivetrain.straight(30)
+    drivetrain.turn(90)
+```
+
+Breaking down that first line:
+
+- `for` — the keyword that starts a loop.
+- `i` — a counter variable (you can use it or ignore it).
+- `range(4)` — produces the numbers `0, 1, 2, 3` — four of them.
+- `:` — required, and everything **indented** under it is the loop body.
+
+<KnowledgeCheck
+  question="What numbers does range(4) produce?"
+  options={[
+    {text: '1, 2, 3, 4'},
+    {text: '0, 1, 2, 3', correct: true},
+    {text: '0, 1, 2, 3, 4'},
+    {text: '4, 3, 2, 1'},
+  ]}
+  explanation="range(n) counts from 0 and stops BEFORE n, so range(4) is 0, 1, 2, 3 — four numbers, which is why the loop runs 4 times."
+/>
+
+<TeacherNote title="Two predictable stumbles">
+
+Two things trip nearly everyone: (1) **counting from 0** — `range(4)` is
+`0,1,2,3`, not `1,2,3,4`; and (2) **indentation as syntax** — the indented lines
+are the loop body, and getting the spaces wrong is an actual error, not a style
+nitpick. Demonstrate both the broken (un-indented) and correct versions so they
+see the error message.
+
+</TeacherNote>
+
+## Part 2 · Indentation decides what repeats
+
+Indentation isn't decoration — it's how Python knows which lines are inside the
+loop. Compare:
+
+```python
+for i in range(4):
+    drivetrain.straight(30)
+    drivetrain.turn(90)
+print("Square complete!")     # NOT indented → runs once, after the loop
+```
+
+The two indented lines repeat four times; the `print` runs once at the end because
+it's not indented.
+
+<KnowledgeCheck
+  question={'In the code above, how many times does print("Square complete!") run?'}
+  options={[
+    {text: 'Four times — once per loop'},
+    {text: 'Once, after the loop finishes', correct: true},
+    {text: 'Never'},
+    {text: 'It causes an error'},
+  ]}
+  explanation="Because it isn't indented, print is outside the loop body — it runs a single time once the loop is done."
+/>
+
+## Part 3 · Use the counter
+
+The loop variable isn't just for counting — you can *use* it. This prints which
+side it's drawing as it goes:
+
+```python
+for i in range(5):
+    print(f"Drawing side {i + 1} of 5")
+    drivetrain.straight(20)
+    drivetrain.turn(72)
+```
+
+The `f"…{i + 1}…"` is an **f-string** — it drops the value of `i + 1` right into
+the text. We use `i + 1` so the messages read "1, 2, 3…" instead of "0, 1, 2…".
+
+<KnowledgeCheck
+  question="You want a loop to run 6 times to draw a hexagon. What goes in the range?"
+  options={[
+    {text: 'range(5)'},
+    {text: 'range(6)', correct: true},
+    {text: 'range(7)'},
+    {text: 'range(60)'},
+  ]}
+  explanation="range(6) gives 0–5, which is six passes — one per side of the hexagon (turning 360 ÷ 6 = 60° each time)."
+/>
+
+**Try these:** write loops to draw a triangle (`range(3)`, turn 120) and a pentagon
+(`range(5)`, turn 72). Add a `print()` inside each so you can watch the progress.
+
+<TeacherNote title="Differentiation">
+
+**More support:** practice loops that only print numbers before touching the robot
+(`for i in range(3): print(i)`), and predict output before running. **More
+challenge:** nested loops to draw several shapes in a row, or a loop with an `if`
+that changes the side length on alternating passes (a preview of Lesson 10/11).
+
+</TeacherNote>
+
+## Real-world connections
+
+Loops are how software handles "do this for every…" without endless copy-paste:
+
+<CardGrid>
+  <InfoCard tag="Web" title="Feeds & lists">
+    A social feed loops over posts, drawing each one with the same code.
+  </InfoCard>
+  <InfoCard tag="Data" title="Processing records">
+    Analyzing a million rows is one loop that runs a million times — no extra code.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Sensor polling">
+    Robots loop constantly: read sensors, decide, act, repeat — thousands of times a second.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does `range(4)` produce, and how many times does the loop run? (`0,1,2,3` — four times.)
+- What decides which lines are inside the loop? (Indentation.)
+- How is a Python `for` loop related to the Blockly Repeat block? (Same idea, written as text.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** correct `for` syntax, right `range` value for a shape, and correct
+reading of indentation. **Exit ticket:** "Write a loop to draw a hexagon"
+(`for i in range(6): straight(...); turn(60)`). **Preview:** next lesson we wrap
+loops inside **Python functions** with parameters — the text version of Lessons
+3–5.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/)

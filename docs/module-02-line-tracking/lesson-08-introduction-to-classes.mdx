@@ -1,0 +1,245 @@
+---
+title: "Lesson 8 · Introduction to Classes"
+sidebar_label: "8 · Classes"
+sidebar_position: 8
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 8 · Introduction to Classes"
+  meta={['60+ min', 'Your first class', 'Organizing code']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your line-following programs work — but the sensor logic, the driving, and the
+control math are all tangled together. In this lesson you'll build your first
+**class**, `LineSensor`, that bundles all the sensor logic into one clean, reusable
+object. It's a big new idea; we'll take it a step at a time.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why a class helps organize related data and actions
+- Define a class with `class`, and initialize it with `__init__`
+- Explain what `self` means and why methods take it
+- Write and call methods on an object you create
+
+</Objectives>
+
+## Part 1 · What a class is
+
+A **class** is a blueprint that groups related **data** and **actions** together.
+Think of a TV remote: its *data* is the current channel and volume; its *actions*
+are change-channel and volume-up. The class describes what every remote is like;
+an actual remote you hold is an **object** built from that blueprint.
+
+You've used classes all along — `DifferentialDrive`, `Reflectance`, and `Board` are
+all classes. Now you'll write your own. The goal is code that reads like English:
+
+```python
+sensor = LineSensor()
+error = sensor.get_error()
+if sensor.is_at_cross():
+    print("Cross!")
+```
+
+That last line is far clearer than `left > 0.5 and right > 0.5` scattered through
+your program — and you can reuse the whole thing in any program.
+
+<KnowledgeCheck
+  question="What's the difference between a class and an object?"
+  options={[
+    {text: 'They are two words for the same thing'},
+    {text: 'A class is the blueprint; an object is a specific thing built from it', correct: true},
+    {text: 'A class is smaller than an object'},
+    {text: 'An object is only for sensors'},
+  ]}
+  explanation="One class (blueprint) can produce many objects (instances). LineSensor is the blueprint; the sensor you create from it is an object."
+/>
+
+## Part 2 · `__init__` and `self`
+
+Start the class and give it a constructor — the special `__init__` method Python
+runs automatically whenever you create an object:
+
+```python
+from XRPLib.reflectance import Reflectance
+
+class LineSensor:
+    def __init__(self):
+        self.reflectance = Reflectance.get_default_reflectance()
+        self.threshold = 0.5
+```
+
+The pieces:
+
+- `class LineSensor:` — defines a new type (capitalized by convention).
+- `def __init__(self):` — the **constructor**, run automatically on
+  `LineSensor()`.
+- `self` — the object itself, "me." `self.threshold = 0.5` means "*this* object's
+  threshold is 0.5," and it sticks around as long as the object does.
+
+```python
+sensor = LineSensor()     # __init__ runs now
+print(sensor.threshold)   # 0.5
+```
+
+<KnowledgeCheck
+  question="When does the __init__ method run?"
+  options={[
+    {text: 'When you import the file'},
+    {text: 'When you create an object with LineSensor()', correct: true},
+    {text: 'Every time you call any method'},
+    {text: 'At the end of the program'},
+  ]}
+  explanation="__init__ is the constructor — Python calls it automatically the moment you build a new object with LineSensor()."
+/>
+
+<TeacherNote title="self is the whole ballgame — go slow">
+
+This is the hardest lesson in Module 2, and `self` is the stumbling block. Draw it:
+two objects, `sensor_a` and `sensor_b`, each with its *own* `self.threshold`. When
+you write `sensor_a = LineSensor()`, Python passes that new object into `__init__`
+as `self`, so `self.threshold` means "this particular object's threshold." Use the
+name analogy — `self` is each object saying "my…". Live-code one method at a time and
+run after each; the "it works on my robot" payoff is motivating.
+
+</TeacherNote>
+
+## Part 3 · Methods
+
+A **method** is just a function that lives inside a class and takes `self` as its
+first parameter — that's how it reaches the object's own data. Build up `LineSensor`
+with the sensor logic from earlier lessons:
+
+```python
+class LineSensor:
+    def __init__(self):
+        self.reflectance = Reflectance.get_default_reflectance()
+        self.threshold = 0.5
+
+    def get_left(self):
+        return self.reflectance.get_left()
+
+    def get_right(self):
+        return self.reflectance.get_right()
+
+    def get_error(self):
+        return self.get_left() - self.get_right()
+
+    def is_at_cross(self):
+        return self.get_left() > self.threshold and self.get_right() > self.threshold
+
+    def is_off_line(self):
+        return self.get_left() < self.threshold and self.get_right() < self.threshold
+```
+
+Notice a method can call *other* methods on the same object through `self` (like
+`get_error()` using `self.get_left()`). And when you call `sensor.get_error()`,
+Python passes the object in as `self` automatically — you never type it yourself.
+
+```python
+sensor = LineSensor()
+print(sensor.get_error())      # left − right
+print(sensor.is_at_cross())    # True / False
+```
+
+<KnowledgeCheck
+  question="You have `sensor = LineSensor()`. How do you call its get_error method?"
+  options={[
+    {text: 'sensor.get_error(self)'},
+    {text: 'sensor.get_error()', correct: true},
+    {text: 'get_error(sensor)'},
+    {text: 'LineSensor.get_error()'},
+  ]}
+  explanation="You never pass self yourself — Python supplies it automatically. Just sensor.get_error()."
+/>
+
+<KnowledgeCheck
+  question="Write is_on_line() to return True when AT LEAST ONE sensor is on the line. Which body is correct?"
+  options={[
+    {text: 'return self.get_left() > self.threshold or self.get_right() > self.threshold', correct: true},
+    {text: 'return self.get_left() > self.threshold and self.get_right() > self.threshold'},
+    {text: 'return get_left() or get_right()'},
+    {text: 'return self.threshold'},
+  ]}
+  explanation="'At least one' means or, and each reading needs self. — self.get_left() > self.threshold or self.get_right() > self.threshold."
+/>
+
+## Part 4 · Before and after
+
+See what the class buys you. The old tangled way:
+
+```python
+reflectance = Reflectance.get_default_reflectance()
+threshold = 0.5
+left = reflectance.get_left()
+right = reflectance.get_right()
+error = left - right
+at_cross = left > threshold and right > threshold
+```
+
+The class way:
+
+```python
+sensor = LineSensor()
+error = sensor.get_error()
+at_cross = sensor.is_at_cross()
+```
+
+Same behavior, but the second reads like plain language and can be dropped into any
+program. Test yours with a loop that prints the error while you slide the robot over
+the line by hand.
+
+<TeacherNote title="Watch for these syntax slips & differentiation">
+
+The classic errors: forgetting `self` in a method's parameter list; forgetting the
+`self.` prefix when using an attribute or calling a sibling method; mis-indenting a
+method out of the class; and lowercasing the class name. **More support:** hand out
+the finished class and have students *use* it before writing one; add methods one at
+a time. **More challenge:** a `calibrate()` that averages readings to set the
+threshold, a `get_position()` returning "left"/"right"/"center"/"cross"/"lost", or a
+`Button` class wrapping the board.
+
+</TeacherNote>
+
+## Real-world connections
+
+Classes are how large software stays organized:
+
+<CardGrid>
+  <InfoCard tag="Libraries" title="Everything you import">
+    Every library you use — the robot's own — is built from classes with methods you call.
+  </InfoCard>
+  <InfoCard tag="Games" title="Game objects">
+    A player, an enemy, a bullet — each is a class with its own data and actions.
+  </InfoCard>
+  <InfoCard tag="Apps" title="Real systems">
+    A `User`, an `Order`, a `Message` — big apps are thousands of cooperating classes.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What keyword defines a class, and which method runs automatically? (`class`; `__init__`.)
+- What does `self` refer to? (The object itself — "this one.")
+- How is a method different from a plain function? (It lives in a class and takes `self`.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** identify the parts (`class`, `__init__`, `self`, methods), create an
+object, call methods, and explain `self`. **Exit ticket:** "Why does every method
+take `self`?" (so it can reach the object's own data). **Preview:** next lesson we
+build a `LineTrack` class that *contains* a `LineSensor` — one class using another,
+called object composition.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

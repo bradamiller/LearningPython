@@ -1,0 +1,230 @@
+---
+title: "Lesson 8 · Implementing the Navigator Class"
+sidebar_label: "8 · The Navigator Class"
+sidebar_position: 8
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 8 · Implementing the Navigator Class"
+  meta={['60 min', 'Python + robot', 'Reusing LineTrack']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Time to make the robot move. You'll package the turning logic from Lesson 7 into a
+**`Navigator` class** that drives any Manhattan path on the grid. The best part: it does
+the actual driving by reusing the **`LineTrack` class you built in Module 2** — no motor
+code to rewrite. That's the payoff of building reusable classes.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Design a `Navigator` with `position`, `heading`, and a `line_track` object
+- Implement `desired_heading()`, `turn_to()`, and `drive_path()` as methods
+- Explain **delegation**: the Navigator asks `LineTrack` to turn and follow lines
+- Explain why the robot must "clear the intersection" when driving straight
+- Integrate `Manhattan` and `Navigator` to drive a computed path on the robot
+
+</Objectives>
+
+## Part 1 · What the Navigator needs
+
+`Manhattan` plans; `Navigator` *drives*. When you create one, it needs to know its
+starting position, its starting heading, and it builds a `LineTrack` to do the physical
+work:
+
+```python
+HEADING_NAMES = ["N", "E", "S", "W"]
+
+class Navigator:
+    def __init__(self, start, heading):
+        self.position = start
+        self.heading = heading          # 0=N, 1=E, 2=S, 3=W
+        self.line_track = LineTrack()
+```
+
+Notice the Navigator does **not** create a `DifferentialDrive` — `LineTrack` already has
+one inside it. The Navigator talks to `LineTrack`; `LineTrack` talks to the motors. Each
+class has one job. That handing-off is called **delegation**.
+
+<KnowledgeCheck
+  question="How does the Navigator control the robot's motors?"
+  options={[
+    {text: 'It creates its own DifferentialDrive'},
+    {text: 'It delegates to its LineTrack object, which controls the motors', correct: true},
+    {text: 'It sets motor power directly'},
+    {text: 'It doesn\'t move the robot at all'},
+  ]}
+  explanation="The Navigator asks LineTrack to turn and follow lines; LineTrack (built in Module 2) owns the DifferentialDrive. That's delegation — reusing code you already wrote."
+/>
+
+## Part 2 · The two logic methods
+
+`desired_heading()` is the Lesson 7 logic, now a method that reads `self.position`
+instead of taking a `current` parameter — the object already knows where it is:
+
+```python
+def desired_heading(self, next_pos):
+    row_diff = next_pos[0] - self.position[0]
+    col_diff = next_pos[1] - self.position[1]
+    if row_diff == -1:
+        return 0   # North
+    elif col_diff == 1:
+        return 1   # East
+    elif row_diff == 1:
+        return 2   # South
+    elif col_diff == -1:
+        return 3   # West
+```
+
+And `turn_to()` is the while loop from Lesson 7 — but now each turn is a *real* turn,
+`self.line_track.turn_right()`, which physically spins the robot:
+
+```python
+def turn_to(self, desired):
+    while self.heading != desired:
+        self.line_track.turn_right()
+        self.heading = self.heading + 1
+        if self.heading == 4:
+            self.heading = 0
+```
+
+<KnowledgeCheck
+  question="Why does desired_heading() use self.position instead of a 'current' parameter?"
+  options={[
+    {text: 'To save memory'},
+    {text: 'The Navigator object already knows its own position — that\'s the advantage of a class', correct: true},
+    {text: 'Because parameters are not allowed in methods'},
+    {text: 'It doesn\'t need the current position at all'},
+  ]}
+  explanation="A class bundles data with behavior. The Navigator stores its position, so its methods can read it directly instead of having it passed in every time."
+/>
+
+## Part 3 · `drive_path` and clearing the intersection
+
+`drive_path` loops the path: work out the heading, turn to it, follow the line to the
+next intersection, update position. There's one subtle wrinkle:
+
+```python
+def drive_path(self, path):
+    for next_pos in path:
+        needed = self.desired_heading(next_pos)
+        if self.heading == needed:
+            self.line_track.drivetrain.straight(8)   # clear the intersection
+        self.turn_to(needed)
+        self.line_track.track_until_cross()
+        self.position = next_pos
+```
+
+When the robot needs to **turn**, `turn_right()` already drives it off the current
+intersection as part of the turn. But when it's going **straight** (no turn needed), it's
+still sitting on the cross it just arrived at — and `track_until_cross()` would instantly
+detect *that* cross and stop. So for the straight-ahead case only, we drive forward 8 cm
+first to clear it. `track_until_cross()` then line-follows until the *next* intersection —
+no distance measurement, the sensors say when it's arrived.
+
+<KnowledgeCheck
+  question="Why drive straight(8) before track_until_cross() only when going straight ahead?"
+  options={[
+    {text: 'To speed the robot up'},
+    {text: 'To clear the current intersection, so track_until_cross() finds the NEXT cross, not the one it\'s sitting on', correct: true},
+    {text: 'To turn the robot around'},
+    {text: 'To recharge the battery'},
+  ]}
+  explanation="When turning, turn_right() already moves off the cross. Going straight, the robot is parked on the cross — without clearing it, the sensors detect it immediately and stop early."
+/>
+
+<TeacherNote title="Build incrementally, and test on the desktop first">
+
+Write and test one method at a time: `__init__` (print `nav.position`), then
+`desired_heading()`, then `turn_to()`, then `drive_path()` — never the whole class at
+once. Before the robot, run in "desktop mode" by swapping the `LineTrack` calls for
+prints (`print("turn right")`, `print("follow to next cross")`) so students watch the
+logic execute. Hammer the reuse point: `LineTrack` came from Module 2, drove circles in
+Module 3, and now powers grid navigation unchanged — that's *why* we build reusable
+classes. Usual bugs: missing `self`, the start position sneaking into the path, forgetting
+to update `self.position`, and dropping the `straight(8)` clear.
+
+</TeacherNote>
+
+## Part 4 · Trace it, then integrate
+
+Before running, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N):
+
+```
+Step 1: next (1,0). needed = 2 (S). heading 0 ≠ 2:
+          turn_right → heading 1;  turn_right → heading 2 → stop.
+        track_until_cross → arrive (1,0).
+Step 2: next (1,1). needed = 1 (E). heading 2 ≠ 1:
+          turn_right → 3;  turn_right → 0 (wrapped);  turn_right → 1 → stop.
+        track_until_cross → arrive (1,1).
+```
+
+Now connect the two classes — `Manhattan` computes, `Navigator` drives:
+
+```python
+manhattan = Manhattan((0, 0))
+navigator = Navigator((0, 0), 0)     # start heading North
+
+path = manhattan.compute_path((2, 3))
+print("Path:", path)
+navigator.drive_path(path)
+print("Arrived at:", navigator.position)
+print("Heading:", HEADING_NAMES[navigator.heading])
+```
+
+Test it in stages: `Manhattan` alone (prints), then one short leg on the robot, then a
+longer path. Watch the straight-through cells especially — does the robot clear each
+intersection cleanly?
+
+<KnowledgeCheck
+  question="The path from Manhattan is [(1,0),(2,0),(2,1)]. How many times does drive_path call track_until_cross()?"
+  options={[
+    {text: 'Once'},
+    {text: 'Three times — once per intersection in the path', correct: true},
+    {text: 'Four times — including the start'},
+    {text: 'It depends on the turns'},
+  ]}
+  explanation="drive_path loops once per element in the path, and each pass ends with a track_until_cross() to reach that intersection. Three elements → three calls. The start isn't in the path."
+/>
+
+## Real-world connections
+
+Delegating hard work to a well-built component is how real systems scale:
+
+<CardGrid>
+  <InfoCard tag="Software" title="Libraries">
+    You call a graphics or networking library instead of rewriting it — exactly how Navigator calls LineTrack.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Motor controllers">
+    High-level planners send "go to X"; a lower-level controller handles the motors, just like this split.
+  </InfoCard>
+  <InfoCard tag="Cars" title="Drive-by-wire">
+    The steering software sets a target; a separate actuator system does the physical turning.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What three things does the Navigator store, and what does each do? (`position`, `heading`, `line_track` — where it is, which way it faces, and the driver.)
+- What is delegation here? (Navigator asks LineTrack to move; it never touches motors itself.)
+- Why the `straight(8)` clear? (To leave the current cross so the sensors find the next one.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** name the attributes and their purpose, trace `drive_path` predicting each
+turn and position update, and explain the intersection clear. **Exit ticket:** "At (1,2)
+heading 1 (E), next is (1,1) — what heading is needed and how many right turns?" (needed 3
+(W); turns 1→2→3, three turns). **Preview:** the final project — chain `Manhattan` and
+`Navigator` to visit several destinations in a row.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python classes](https://docs.python.org/3/tutorial/classes.html)

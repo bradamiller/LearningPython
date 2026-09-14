@@ -1,0 +1,221 @@
+---
+title: "Lesson 7 · The Challenge of Turning"
+sidebar_label: "7 · Turning"
+sidebar_position: 7
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 7 · The Challenge of Turning"
+  meta={['55 min', 'Design on paper', 'Headings as numbers']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your path is a list of intersections — but the robot has a **heading**, a direction it's
+currently facing, and driving forward only works if it's already pointed the right way.
+This lesson designs the turning logic on paper: how to figure out which way to face, and
+how to turn until you're facing it. The code comes next lesson.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why only the row **or** the column changes between adjacent intersections
+- Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W
+- Write `desired_heading(current, next_pos)` returning 0–3 from the coordinate change
+- Trace the `turn_to` while loop, showing the heading update and the wrap from 4 back to 0
+- Describe how `drive_path` uses both to move through a whole path
+
+</Objectives>
+
+## Part 1 · One change at a time → four directions
+
+Look at any two *adjacent* intersections on the grid. Between them, either the row
+changes by one **or** the column changes by one — never both (that would be a diagonal,
+which the robot can't do). That's exactly four cases, one per compass direction:
+
+| Coordinate change | Direction | Heading number |
+|---|---|---|
+| row −1 (up) | North | 0 |
+| col +1 (right) | East | 1 |
+| row +1 (down) | South | 2 |
+| col −1 (left) | West | 3 |
+
+The trickiest part to accept: on our grid, **row 0 is at the top** (like a spreadsheet),
+so moving *down* means the row number *increases*. Down is South.
+
+<KnowledgeCheck
+  question="The robot moves from (2,3) to (3,3). Which direction is that, and what heading number?"
+  options={[
+    {text: 'North, heading 0'},
+    {text: 'South, heading 2', correct: true},
+    {text: 'East, heading 1'},
+    {text: 'West, heading 3'},
+  ]}
+  explanation="The row went 2 → 3 (row +1). Increasing row means moving down the grid, which is South — heading 2."
+/>
+
+## Part 2 · Heading as a number
+
+Store the robot's facing as a number 0–3, clockwise from North: **0 = N, 1 = E, 2 = S,
+3 = W.** A handy list converts back to letters for display:
+
+```python
+HEADING_NAMES = ["N", "E", "S", "W"]
+# HEADING_NAMES[2] -> "S"
+```
+
+Why numbers? Because **each right turn just adds 1** — and when you'd reach 4, you wrap
+back to 0 (like an odometer rolling over). That single rule is the whole turning
+mechanism.
+
+The `desired_heading` method reads which coordinate changed and returns the matching
+number:
+
+```python
+def desired_heading(current, next_pos):
+    row_diff = next_pos[0] - current[0]
+    col_diff = next_pos[1] - current[1]
+    if row_diff == -1: return 0   # North
+    if col_diff ==  1: return 1   # East
+    if row_diff ==  1: return 2   # South
+    if col_diff == -1: return 3   # West
+```
+
+<KnowledgeCheck
+  question="Going from (1,5) to (1,4), what does desired_heading return?"
+  options={[
+    {text: '0 (North)'},
+    {text: '1 (East)'},
+    {text: '2 (South)'},
+    {text: '3 (West)', correct: true},
+  ]}
+  explanation="The row is unchanged; the column went 5 → 4 (col −1). Decreasing column is West — heading 3."
+/>
+
+## Part 3 · Turning with a while loop
+
+Here's the elegant part. To face any direction, just **keep turning right until your
+heading matches** — adding 1 each turn, wrapping 4 back to 0. You never have to count
+turns ahead of time:
+
+```python
+def turn_to(self, desired):
+    while self.heading != desired:
+        self.robot.turn_right()
+        self.heading = self.heading + 1
+        if self.heading == 4:
+            self.heading = 0
+```
+
+Trace it. Start heading **2 (S)**, want **1 (E)**:
+
+| Pass | turn right → heading | matches 1? |
+|---|---|---|
+| 1 | 3 | no |
+| 2 | 4 → wraps to 0 | no |
+| 3 | 1 | **yes — stop** |
+
+Three right turns, and the wrap from 4 to 0 is what makes "turn right from West around to
+North" just work. If you start already facing the right way (heading 1, want 1), the
+condition is False immediately — **zero turns.**
+
+<KnowledgeCheck
+  question="Starting at heading 0 (N) and wanting heading 3 (W), how many right turns does turn_to make?"
+  options={[
+    {text: '1'},
+    {text: '2'},
+    {text: '3', correct: true},
+    {text: '0'},
+  ]}
+  explanation="0 → 1 → 2 → 3: three right turns. Turning right (clockwise) from North all the way around to West is three steps — the loop just keeps going until it matches."
+/>
+
+<TeacherNote title="Paper-heavy on purpose — trace the loop, don't count ahead">
+
+Resist jumping to code. Students need to walk the `turn_to` loop by hand, writing each
+heading value including the 4→0 wrap, before Lesson 8. Get them physically standing and
+turning right one step at a time, calling out 0, 1, 2, 3, 0 — the kinesthetic bit cements
+it. The grid orientation (row 0 on top, "down is South") is the #1 confusion; draw it,
+point at it, quiz it. Odometer analogy for the wrap: "…3, and one more is 0, not 4." One
+turn primitive (always right) keeps the code to a single loop with no special cases —
+that simplicity is the lesson.
+
+</TeacherNote>
+
+## Part 4 · Putting it together: `drive_path`
+
+With those two helpers, driving the whole path is short — for each intersection, figure
+out the heading, turn to it, drive forward one, update position:
+
+```python
+def drive_path(self, path):
+    for next_pos in path:
+        desired = self.desired_heading(next_pos)
+        self.turn_to(desired)
+        self.robot.drive_forward_one()
+        self.position = next_pos
+```
+
+Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N):
+
+```
+At (0,0) N, next (1,0): row+1 → want S(2). turn 0→1→2. drive to (1,0).
+At (1,0) S, next (2,0): row+1 → want S(2). already S. drive to (2,0).
+At (2,0) S, next (2,1): col+1 → want E(1). turn 2→3→0→1. drive to (2,1).
+At (2,1) E, next (2,2): col+1 → want E(1). already E. drive to (2,2).
+```
+
+Notice `self.position` gets updated every step — otherwise the *next* `desired_heading`
+would compare against the wrong current spot.
+
+<KnowledgeCheck
+  question="Why must drive_path update self.position after each step?"
+  options={[
+    {text: 'To make the robot faster'},
+    {text: 'So the next desired_heading() compares the next intersection against the correct current position', correct: true},
+    {text: 'To reset the heading to North'},
+    {text: 'It doesn\'t matter — position is never used again'},
+  ]}
+  explanation="desired_heading works from the difference between current and next. If position isn't updated, every step after the first computes the wrong direction."
+/>
+
+## Real-world connections
+
+Tracking heading and turning to a target direction is core to real navigation:
+
+<CardGrid>
+  <InfoCard tag="Aviation" title="Compass headings">
+    Pilots fly numbered headings (0–360°); "turn to heading 090" is exactly this idea at finer resolution.
+  </InfoCard>
+  <InfoCard tag="Games" title="Facing & rotation">
+    Game characters store a facing direction and rotate toward targets — often with the same wrap-around math.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Rovers & drones">
+    Every autonomous vehicle tracks its heading to know which way "forward" actually points.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Between adjacent intersections, what can change, and how many cases result? (Row *or* column, four cases.)
+- Why store heading as a number? (Each right turn adds 1; wrap 4 → 0 handles everything.)
+- What does the `turn_to` while loop do when you're already facing the right way? (Nothing — zero turns.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** map a coordinate change to a heading, trace `turn_to` with the wrap, and
+trace a multi-step path. **Exit ticket:** "Heading 3 (W), desired 1 (E) — list the heading
+values each loop pass." (3→0→1, i.e. 0 then 1). **Preview:** next lesson we turn this paper
+design into the **`Navigator` class**, reusing your Module 2 `LineTrack` for the real
+turning and line-following.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

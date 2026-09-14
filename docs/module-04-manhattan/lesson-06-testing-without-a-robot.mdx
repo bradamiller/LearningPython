@@ -1,0 +1,221 @@
+---
+title: "Lesson 6 · Testing Without a Robot"
+sidebar_label: "6 · Testing on Screen"
+sidebar_position: 6
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 6 · Testing Without a Robot"
+  meta={['50 min', 'Python testing', 'Test on screen first']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your `Manhattan` class is pure math — no motors, no sensors. That's a gift: you can
+prove it's correct on any computer *before* the robot ever moves. This lesson builds the
+habit real software engineers live by: **test on screen before you test on the floor.**
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why testing on screen is faster than debugging on the robot
+- Describe **separation of concerns** — planning (math) vs. driving (hardware)
+- Hand-calculate an expected path, then compare it to the actual output
+- Write a reusable `run_test()` helper and a suite of test cases
+- Debug a failing test with print statements
+
+</Objectives>
+
+## Part 1 · Why test without the robot?
+
+Would a pilot fly a brand-new plane without testing the engines on the ground? Of course
+not. The same logic applies to your code. A robot driving into a wall tells you
+*something* is wrong — but not *what* or *where*. A failing test on screen tells you the
+exact input that produced the wrong output.
+
+This works because of **separation of concerns**: the `Manhattan` class only *computes*
+a path, and the `Navigator` (coming in Lesson 8) *drives* it. Each can be checked on its
+own:
+
+| Problem | Where it runs | What you test |
+|---|---|---|
+| Computing the path | Any computer | Does the path make sense? |
+| Driving the path | On the robot | Does the robot follow it? |
+
+Because `compute_path` is just math, you can run it hundreds of times in seconds — no
+grid, no batteries, no chasing a robot across the room.
+
+<KnowledgeCheck
+  question="What does 'separation of concerns' let you do here?"
+  options={[
+    {text: 'Run the robot faster'},
+    {text: 'Test the path-planning math on its own, separately from the driving', correct: true},
+    {text: 'Skip testing entirely'},
+    {text: 'Combine Manhattan and Navigator into one class'},
+  ]}
+  explanation="Because Manhattan only computes paths and Navigator only drives them, you can verify the algorithm on any computer before hardware is ever involved."
+/>
+
+## Part 2 · Expected vs. actual
+
+The heart of testing: decide what the answer *should* be **by hand**, then check whether
+the code agrees. Hand-trace (0,0) → (2,3) — down 2 rows, right 3 columns — to get the
+expected path, then compare:
+
+```python
+expected = [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+
+manhattan = Manhattan((0, 0))
+actual = manhattan.compute_path((2, 3))
+
+if actual == expected:
+    print("Test 1: PASS")
+else:
+    print("Test 1: FAIL")
+    print("  Expected:", expected)
+    print("  Actual:  ", actual)
+```
+
+The expected list has to come from *your own* tracing. If you just copy whatever the code
+prints and call it "expected," you haven't tested anything — you've assumed the code is
+right.
+
+<KnowledgeCheck
+  question="Where should the 'expected' path come from?"
+  options={[
+    {text: 'Whatever the code prints when you run it'},
+    {text: 'Hand-calculated by you, before running the code', correct: true},
+    {text: 'A random guess'},
+    {text: 'The robot\'s actual movement'},
+  ]}
+  explanation="Testing needs an independent source of truth. You trace the path by hand first; the whole point is to catch the case where the code disagrees with the correct answer."
+/>
+
+## Part 3 · A reusable `run_test()` helper
+
+That compare-and-report pattern repeats for every case, so wrap it in a function:
+
+```python
+def run_test(test_name, start, dest, expected):
+    manhattan = Manhattan(start)
+    actual = manhattan.compute_path(dest)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+```
+
+Now each test is a single line — and a good suite covers **every direction and every edge
+case**:
+
+```python
+run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])
+run_test("Backward left", (2, 3), (0, 0), [(1,3), (0,3), (0,2), (0,1), (0,0)])
+run_test("Same row",      (1, 0), (1, 3), [(1,1), (1,2), (1,3)])
+run_test("Same column",   (0, 2), (3, 2), [(1,2), (2,2), (3,2)])
+run_test("Same spot",     (1, 1), (1, 1), [])
+run_test("One step",      (0, 0), (0, 1), [(0,1)])
+```
+
+If you only ever test (0,0) → (2,3), a bug that only shows up going *backward* will slip
+right past you.
+
+<KnowledgeCheck
+  question="Your test shows actual = [(1,0),(2,0),(2,1)] but expected = [(1,0),(2,0),(2,1),(2,2),(2,3)]. What's the likely problem?"
+  options={[
+    {text: 'The robot battery is low'},
+    {text: 'The east (column) loop is stopping early or not running fully — the column moves are missing', correct: true},
+    {text: 'The test is wrong'},
+    {text: 'Nothing — that output is fine'},
+  ]}
+  explanation="The row moves are all there but the column moves are cut short. That points straight at the east while loop — exactly the kind of pinpointing screen-testing gives you."
+/>
+
+<TeacherNote title="Celebrate the FAILs — and calculate expected paths first">
+
+Reframe a failing test as the test *doing its job*: "the test found a bug for you." Two
+non-negotiables: students must hand-calculate expected paths **before** running (trace on
+the Lesson 1 grid worksheet), and every direction/edge case needs coverage. Watch for the
+student who runs the code, copies the output into `expected`, and declares victory — that
+tests nothing. Repeat the motto until it sticks: *test on screen before you test on the
+floor.* Five minutes of testing saves thirty minutes chasing a robot.
+
+</TeacherNote>
+
+## Part 4 · Debug a failing test
+
+When a test fails, don't guess — add print statements inside `compute_path` to watch the
+logic run:
+
+```python
+def compute_path(self, destination):
+    print("Computing from", self.position, "to", destination)
+    path = []
+    current_row, current_col = self.position
+    dest_row, dest_col = destination
+
+    while current_row < dest_row:
+        current_row = current_row + 1
+        path.append((current_row, current_col))
+        print("  added:", (current_row, current_col))
+    # ... the other three loops, each printing what they add
+    return path
+```
+
+The trace shows exactly which loop ran and what it appended. Once you've found and fixed
+the bug, **remove the debug prints** so the output stays clean. (Try it: change one `+ 1`
+to `- 1` and watch a test catch the bug.)
+
+<KnowledgeCheck
+  question="After using print statements to fix a bug, what should you do with them?"
+  options={[
+    {text: 'Leave them in — more output is always better'},
+    {text: 'Remove or comment them out so the test output stays clean', correct: true},
+    {text: 'Move them outside the class'},
+    {text: 'Turn them into knowledge checks'},
+  ]}
+  explanation="Debug prints are scaffolding. Once the bug is fixed, clear them so future test runs are easy to read."
+/>
+
+## Real-world connections
+
+"Verify before you deploy" is everywhere in engineering:
+
+<CardGrid>
+  <InfoCard tag="Software" title="Unit tests">
+    Professional code ships with automated tests that check each function against known answers — a formal version of run_test().
+  </InfoCard>
+  <InfoCard tag="Aerospace" title="Simulation">
+    Rockets and planes fly thousands of simulated missions before a real one, catching problems on screen.
+  </InfoCard>
+  <InfoCard tag="Cars" title="Digital twins">
+    Self-driving systems test on virtual roads first — far cheaper and safer than a real crash.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Why test on screen before the robot? (Faster, and it points to the exact broken input.)
+- Where does the expected path come from? (Hand-calculation, before you run the code.)
+- What makes a good test suite? (Every direction and edge case, not just one happy path.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** hand-calculate an expected path, write a `run_test()` call, and debug a
+failing test with prints. **Exit ticket:** "Write a test for `Manhattan((1,1))` going to
+`(3,2)` — what's the expected path?" (`[(2,1),(3,1),(3,2)]`). **Preview:** the algorithm's
+proven correct — next lesson we tackle *turning*, so the robot can actually face the right
+way at each step.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python assert & testing](https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement)

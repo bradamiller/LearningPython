@@ -1,0 +1,207 @@
+---
+title: "Lesson 1 · The Grid as a Graph"
+sidebar_label: "1 · Grid as a Graph"
+sidebar_position: 1
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 1 · The Grid as a Graph"
+  meta={['45–50 min', 'No coding', 'Mental model first']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your Manhattan robot always goes rows-first, then columns. But what happens when an
+intersection on that route is **blocked**? It has no way around. This module fixes that —
+and it starts by seeing the grid a new way: as a **graph** of nodes and edges. No code
+today, just paper and the physical grid.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Define **node**, **edge**, and **neighbor**
+- Explain why a grid of intersections *is* a graph
+- Remove a blocked node (and its edges) from a graph
+- Find a shortest path by hand that detours around obstacles
+- Explain why the Manhattan algorithm can't handle blocked intersections
+
+</Objectives>
+
+## Part 1 · Why Manhattan isn't enough
+
+Your usual route to school is closed for construction. You don't give up — you find a
+detour, and your GPS reroutes you automatically. The robot needs to do the same.
+
+The Manhattan algorithm from Module 4 only knows one strategy: rows first, then columns.
+It has no concept of an obstacle. If the intersection it wants to drive through is
+blocked, it drives right into it. To route *around* things, we need a smarter way to
+think about the grid.
+
+<KnowledgeCheck
+  question="Why can't the Manhattan algorithm route around a blocked intersection?"
+  options={[
+    {text: 'It runs too slowly'},
+    {text: 'It only knows one fixed strategy (rows then columns) and has no concept of obstacles', correct: true},
+    {text: 'It can, if you turn it off and on again'},
+    {text: 'The robot has no wheels'},
+  ]}
+  explanation="Manhattan always follows the same L-shaped route. It never checks whether a cell is blocked, so it can't detour."
+/>
+
+## Part 2 · Nodes, edges, neighbors
+
+A **graph** is a collection of **nodes** (points) connected by **edges** (links). You
+already know graphs: a road map (intersections + streets), a social network (people +
+friendships), airline routes (airports + flights). A graph captures *what connects to
+what*.
+
+Our grid is a graph. Every intersection is a **node**, named by its coordinate like
+`(1, 2)`. Every line between two adjacent intersections is an **edge**. The nodes an edge
+connects you to are that node's **neighbors**.
+
+```
+(0,0) --- (0,1) --- (0,2)
+  |         |         |
+(1,0) --- (1,1) --- (1,2)
+  |         |         |
+(2,0) --- (2,1) --- (2,2)
+```
+
+How many neighbors a node has depends on where it sits: a **corner** has 2, an **edge**
+node has 3, an **interior** node has 4.
+
+<KnowledgeCheck
+  question="On a 3×3 grid, how many neighbors does the interior node (1,1) have?"
+  options={[
+    {text: '2'},
+    {text: '3'},
+    {text: '4', correct: true},
+    {text: '8'},
+  ]}
+  explanation="(1,1) connects up, down, left, and right — (0,1), (2,1), (1,0), (1,2). No diagonals, so four neighbors."
+/>
+
+## Part 3 · Blocking a node
+
+When an intersection is blocked, we **remove it from the graph entirely** — the node
+*and* all its edges. Block (1,1) on the 3×3 grid:
+
+```
+(0,0) --- (0,1) --- (0,2)
+  |                   |
+(1,0)               (1,2)
+  |                   |
+(2,0) --- (2,1) --- (2,2)
+```
+
+(1,1) is gone, and every node that used to touch it — (0,1), (1,0), (1,2), (2,1) — has
+lost a neighbor. Blocking one node changes its neighbors too.
+
+<KnowledgeCheck
+  question="After (1,1) is blocked, how many neighbors does (0,1) have?"
+  options={[
+    {text: '3 — nothing changed'},
+    {text: '2 — it lost its downward connection to (1,1)', correct: true},
+    {text: '4'},
+    {text: '0'},
+  ]}
+  explanation="(0,1) used to connect to (0,0), (0,2), and (1,1). With (1,1) removed, only two neighbors remain."
+/>
+
+## Part 4 · Finding a path around
+
+Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
+
+```
+(0,0) --- (0,1) --- (0,2)
+            |         |
+          (1,1) --- (1,2)
+            |         |
+(2,0) --- (2,1) --- (2,2)
+```
+
+Manhattan would try (0,0) → (1,0) → (2,0) — but (1,0) is blocked, so it fails. The graph
+path detours: (0,0) → (0,1) → (1,1) → (2,1) → (2,0), **4 steps**. Without the obstacle,
+the Manhattan distance is only 2. **Obstacles make paths longer** — and Manhattan
+distance becomes just a lower bound, not the real answer.
+
+One more idea for later: our grid is **unweighted** — every edge costs 1 step. (In a
+*weighted* graph, a highway edge might cost less than a side-street edge.) Dijkstra's
+algorithm handles both; we'll use the unweighted case.
+
+<KnowledgeCheck
+  question="With (1,0) blocked, the shortest path from (0,0) to (2,0) is 4 steps, but the Manhattan distance is 2. What does that tell you?"
+  options={[
+    {text: 'The Manhattan distance is wrong'},
+    {text: 'With obstacles, the real shortest path can be longer than the Manhattan distance', correct: true},
+    {text: 'Obstacles always add exactly 2 steps'},
+    {text: 'The destination is unreachable'},
+  ]}
+  explanation="Manhattan distance is the shortest path with NO obstacles. Blocked nodes can force a longer detour, so it becomes a lower bound."
+/>
+
+## Real-world connections
+
+Graphs run a huge amount of the technology you use:
+
+<CardGrid>
+  <InfoCard tag="Navigation" title="GPS & Waze">
+    Roads are edges, intersections are nodes. Rerouting around a closure is exactly this graph problem.
+  </InfoCard>
+  <InfoCard tag="Social" title="Friend networks">
+    People are nodes, friendships are edges — "friends of friends" is a graph search.
+  </InfoCard>
+  <InfoCard tag="Internet" title="Network routing">
+    Data hops between routers (nodes) over links (edges), picking a shortest path each time.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What are a node, an edge, and a neighbor? (A point, a link between adjacent points, and the points a node links to.)
+- What happens to the graph when a node is blocked? (It's removed entirely — node and all its edges.)
+- Why can obstacles make a path longer than the Manhattan distance? (You have to detour around blocked nodes.)
+
+<TeacherNote title="Make Manhattan's failure vivid — and keep it on paper">
+
+This lesson is the *why* for Dijkstra's. Spend real time on the hook: show a blocked cell
+sitting on Manhattan's route and let students feel that the old algorithm is stuck. Draw
+big graphs on the whole board; have students come up, cross out blocked nodes, and trace
+detours with markers. Clear up the word "graph" immediately — in CS it's a network of
+nodes and edges, not a bar chart. Let them struggle to find paths by hand; that struggle
+motivates wanting a systematic method (Dijkstra's, Lesson 3). Save the worksheets — they
+become test cases in Lessons 3–5.
+
+</TeacherNote>
+
+## Wrap-up quiz
+
+<KnowledgeCheck
+  question="In computer science, what does the word 'graph' mean?"
+  options={[
+    {text: 'A bar chart or scatter plot'},
+    {text: 'A network of nodes connected by edges', correct: true},
+    {text: 'A grid of pixels'},
+    {text: 'A line showing data over time'},
+  ]}
+  explanation="Same word, different field. In CS a graph is nodes and edges — the structure behind maps, networks, and our grid."
+/>
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** identify nodes/edges/neighbors, remove a blocked node cleanly, trace a
+detour, and explain why Manhattan fails. **Exit ticket:** "On a 3×3 grid with (1,0)
+blocked, draw the shortest path from (0,0) to (2,0) and count the steps." (4). **Preview:**
+next lesson we store this graph in Python with a **dictionary** — `{(0,0): [(0,1),(1,0)],
+...}`.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
+- [Graphs (intro)](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics))

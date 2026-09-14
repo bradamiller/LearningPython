@@ -1,0 +1,286 @@
+---
+title: "Lesson 1 · Meet the XRP"
+sidebar_label: "1 · Meet the XRP"
+sidebar_position: 1
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 1 · Meet the XRP"
+  meta={['50–60 min', 'Phase A · Blockly Foundation', 'No experience needed']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Gray boxes and this banner are visible only to you. Toggle
+it off (switch in the corner) to preview the student view.
+</TeacherBanner>
+
+Today you'll meet your robot, learn what each part does, and write your very
+first program to make it drive. By the end you'll have code running on real
+hardware — no experience required.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Identify the key hardware parts of the XRP robot and say what each one does
+- Find your way around the XRP Code (Blockly) programming environment
+- Write a simple block program that drives the robot forward and backward
+- Upload your program and run it on the robot
+- Debug the most common first-day problems
+
+</Objectives>
+
+<Video
+  placeholderLabel="Hook clip — an XRP driving around (1–2 min)"
+  caption="Watch the XRP in action. What makes it move? How does it know what to do?"
+/>
+
+<TeacherNote title="Opening hook (5–10 min)">
+
+Play the clip or demo a live robot, then ask: *"What makes this robot move? How
+does it know what to do?"* Let students guess before you explain — it surfaces
+their mental models. Then set the goal: *"Today you'll learn the robot's
+hardware and write your first program to make it move."*
+
+</TeacherNote>
+
+## Part 1 · The parts of the robot
+
+Before we program the XRP, let's see what we're working with. Every part has one
+job, and knowing them makes debugging much easier later.
+
+<Figure
+  placeholderLabel="Labeled diagram of the XRP robot (motors, wheels, board, battery, sensors)"
+  caption="The main parts of the XRP. You'll label your own in the worksheet."
+/>
+
+- **Wheels & motors** — Two motors, one per side. Each motor spins one wheel.
+  Because the sides move independently, the robot can steer.
+- **Controller board** — The robot's "brain." It receives your program over USB
+  and tells the motors what to do.
+- **Battery** — Powers everything. A low battery makes the robot sluggish.
+- **Sensors** — Reflectance sensors (see light vs. dark) and an ultrasonic
+  rangefinder (measures distance). You'll use these in later modules.
+- **Caster wheel** — The little rear wheel that keeps the robot balanced.
+
+<TeacherNote title="Hardware tour tips (15–20 min)">
+
+Hold up a real robot and point to each part as you go. Quick checks for
+understanding:
+
+- Point out the left and right motors — ask which one spins to turn the robot left.
+- Show where the USB plugs in; explain this is how programs get onto the robot.
+- Only *name* the sensors for now — they come into play in Modules 2–5.
+
+</TeacherNote>
+
+<KnowledgeCheck
+  question="Why does the XRP have two motors instead of just one?"
+  options={[
+    {text: 'So it can carry heavier loads'},
+    {text: 'So each side can move at a different speed, which lets the robot steer', correct: true},
+    {text: 'So there is a spare motor in case one fails'},
+    {text: 'One motor drives, the other only brakes'},
+  ]}
+  explanation="Two independently driven wheels are what let a differential-drive robot turn — speed up one side to curve toward the other."
+/>
+
+<KnowledgeCheck
+  question="Which part is the 'brain' that runs your program and tells the motors what to do?"
+  options={[
+    {text: 'The battery'},
+    {text: 'The reflectance sensor'},
+    {text: 'The controller board', correct: true},
+    {text: 'The caster wheel'},
+  ]}
+  explanation="The controller board receives your uploaded program and drives everything else."
+/>
+
+## Part 2 · How the robot gets instructions
+
+A robot only does what you tell it. The workflow is always the same:
+
+1. **Write** a program (we'll use Blockly).
+2. **Upload** it to the robot over the USB cable.
+3. The robot **runs** the program — each command in order.
+
+That middle step matters: writing a program isn't enough. It has to be uploaded
+before the robot can run it.
+
+## Part 3 · Your first program in XRP Code
+
+Open **[xrpcode.wpi.edu](https://xrpcode.wpi.edu/)** in your browser. This is
+where you'll build programs by dragging blocks.
+
+<Video
+  placeholderLabel="Screen recording — creating a project & the three key blocks"
+  caption="A quick tour of XRP Code: the block palette, the work area, and the upload button."
+/>
+
+A few blocks do everything you need today. Drag them out of the block palette:
+
+- The **Straight** block <Block name="straight" /> drives in a straight line.
+  **cm** is how far to go — a *negative* number drives backward — and **Effort**
+  is how hard the motors push, from `0` to `1` (`0.5` is a good starting speed).
+- The **Turn** block <Block name="turn" /> turns the robot in place. **Deg** is
+  the angle (`90` is a quarter turn); **Effort** works the same way.
+- The **Sleep** block <Block name="sleep" /> pauses the program for a number of
+  seconds.
+- The **Stop motors** block <Block name="stop_motors" /> finishes a program by
+  stopping both motors.
+
+Here's the program we'll build together — drive forward, then come back. Set the
+second **Straight** block's *cm* to a negative number so the robot reverses:
+
+<BlockProgram
+  blocks={[
+    {name: 'straight', note: 'forward — cm: 20, Effort: 0.5'},
+    {name: 'straight', note: 'back — change cm to -20'},
+    {name: 'stop_motors'},
+  ]}
+  caption="Your first program: drive out 20 cm, back 20 cm, then stop."
+/>
+
+Before you run it, predict: *What will the robot do? Will it end up where it
+started?*
+
+<KnowledgeCheck
+  question="You place two Straight blocks one above the other. When you run the program, what happens?"
+  options={[
+    {text: 'Both blocks run at the same time'},
+    {text: 'The blocks run in order — the first finishes, then the second starts', correct: true},
+    {text: 'Only the top block runs'},
+    {text: 'The robot picks one block at random'},
+  ]}
+  explanation="Blocks execute in sequence, top to bottom — one command finishes before the next begins."
+/>
+
+## Part 4 · Upload and run it
+
+<TeacherNote title="Guided practice — first upload (10–15 min)">
+
+Have students create a new project named `Lesson_1_First_Drive` and rebuild the
+worked example. Then: plug in USB → **Upload** → pick the robot → wait for
+"Upload Successful" → press the button on the robot to run. Expect it to drive
+~20 cm out and back to roughly where it started.
+
+</TeacherNote>
+
+Follow these steps:
+
+1. Create a new project called **Lesson_1_First_Drive**.
+2. Build the forward/backward program from above.
+3. Plug the robot into your computer with the USB cable.
+4. Click **Upload** and choose your robot from the list.
+5. Wait for **"Upload Successful,"** then press the button on the robot to run.
+
+**You've succeeded when:**
+
+- [ ] The program uploads without errors
+- [ ] The robot drives forward about 20 cm
+- [ ] The robot drives back about 20 cm
+- [ ] It stops near where it started
+
+### If something goes wrong
+
+- **Robot won't move** — check the battery is charged and the USB is seated, then re-upload.
+- **Drives the wrong way** — motor directions can be reversed; that's normal and fixable later.
+- **Not exactly the distance you set** — floor friction and battery level affect distance. Close is fine for now.
+- **Robot not in the upload list** — try another USB port or cable (some cables are charge-only), then reload the page.
+
+<TeacherNote title="Common setup snags">
+
+The USB-not-detected issue is almost always a **charge-only cable** or a flaky
+port. Keep a couple of known-good data cables at the demo station. If an upload
+"fails," have students wait ten seconds and try once more before troubleshooting
+further.
+
+</TeacherNote>
+
+## Part 5 · Make it your own
+
+Now experiment. Try these in order:
+
+1. **Go farther** — change the *cm* on both **Straight** blocks to `30` and re-run.
+2. **Add a turn** — drop a **Turn** block <Block name="turn" /> between the two
+   Straight blocks. What shape does the path make now?
+3. **Challenge** — can you make the robot drive a square? Here's the start of it —
+   repeat the pattern four times (you'll do this officially in Lesson 2):
+
+<BlockProgram
+  blocks={[
+    {name: 'straight', note: 'cm: 20, Effort: 0.5'},
+    {name: 'turn', note: 'Deg: 90'},
+    {name: 'straight', note: 'cm: 20'},
+    {name: 'turn', note: 'Deg: 90'},
+  ]}
+  caption="Two sides of a square. Add two more Straight + Turn pairs to close it."
+/>
+
+<TeacherNote title="Differentiation">
+
+**Need more challenge?** Have students measure the distance the robot travels at
+Effort `0.3`, `0.5`, `0.7`, and `1.0` and report what changes. **Need more
+support?** Provide a starter project with the blocks pre-placed and ask them to
+change only the *cm* number, and pair-program with defined Driver/Navigator roles.
+
+</TeacherNote>
+
+## Real-world connections
+
+The same ideas you just used run much bigger machines:
+
+<CardGrid>
+  <InfoCard tag="Warehouses" title="Delivery robots">
+    Differential-drive robots shuttle shelves around fulfillment centers — same two-motor steering as your XRP.
+  </InfoCard>
+  <InfoCard tag="Homes" title="Robot vacuums">
+    They drive, turn, and sense obstacles using exactly the sequence-of-commands idea from this lesson.
+  </InfoCard>
+  <InfoCard tag="Space" title="Planetary rovers">
+    Rovers upload a program, then run it on their own — because they're too far away to control live.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+Quick recap — answer these in your head or with a partner:
+
+- What are the main parts of the robot, and what does each do?
+- What does a block program actually do?
+- How does a program get from your screen onto the robot?
+
+<KnowledgeCheck
+  question="True or false: you can run a program on the robot without uploading it."
+  options={[
+    {text: 'True'},
+    {text: 'False — the program must be uploaded over USB before the robot can run it', correct: true},
+  ]}
+  explanation="Blockly is just the editor. Uploading is what puts runnable code on the robot."
+/>
+
+<KnowledgeCheck
+  question="True or false: the reflectance sensors detect color."
+  options={[
+    {text: 'True'},
+    {text: 'False — they detect light vs. dark (like a white floor vs. a black line), not color', correct: true},
+  ]}
+  explanation="Reflectance sensors measure how much light bounces back, so they read light/dark — not specific colors."
+/>
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** watch whether students can navigate XRP Code and drag blocks, and
+whether they can explain what each block does. **Summative:** a successful
+Exercise 1 upload plus a plain-language explanation of the hardware and command
+sequencing. **Preview:** next lesson we use the Turn block and some geometry
+(angles) to draw shapes — squares and triangles.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
+- [XRP Support Forum](https://xrp.discourse.group/)

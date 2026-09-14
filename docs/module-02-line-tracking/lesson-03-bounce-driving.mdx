@@ -1,0 +1,208 @@
+---
+title: "Lesson 3 · Bounce Driving"
+sidebar_label: "3 · Bounce Driving"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 3 · Bounce Driving"
+  meta={['50–60 min', 'if / else', 'Decisions']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Stopping at the line is fine — but what if the robot should keep going, bouncing off
+each edge like a ball in a box? To do that, the robot has to make a **decision** every
+moment: *if* I see the line, turn around; *otherwise*, keep driving. That's the
+`if/else` statement.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write `if/else` statements that choose between two actions
+- Combine `while True`, `if/else`, and a sensor read for continuous decisions
+- Use the logical operators `and`, `or`, and `not`
+- Program the robot to bounce between the edges of the circle
+
+</Objectives>
+
+## Part 1 · Making a decision with `if/else`
+
+An `if/else` runs one block when a condition is true and a different block when it's
+false — never both:
+
+```python
+if condition:
+    # runs when the condition is True
+else:
+    # runs when the condition is False
+```
+
+A non-robot example makes the shape clear:
+
+```python
+temperature = 85
+if temperature > 80:
+    print("It's hot outside!")
+else:
+    print("It's comfortable.")
+```
+
+<KnowledgeCheck
+  question="When an if/else runs, how many of the two blocks execute?"
+  options={[
+    {text: 'Both, top to bottom'},
+    {text: 'Exactly one — whichever matches the condition', correct: true},
+    {text: 'Neither, unless you call them'},
+    {text: 'It depends on the sensor'},
+  ]}
+  explanation="An if/else always runs exactly one branch: the if-block when the condition is True, the else-block when it's False."
+/>
+
+## Part 2 · The bounce algorithm
+
+The behavior in plain English:
+
+```text
+loop forever:
+    read the sensor
+    if the sensor sees the line:
+        stop, then turn around
+    else:
+        keep driving forward
+```
+
+"Loop forever" is `while True:` — a loop whose condition is always true, so it runs
+until you power the robot off. That's completely normal in robotics; real robots run
+a loop like this the whole time they're on.
+
+```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+
+reflectance = Reflectance.get_default_reflectance()
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+threshold = 0.5
+
+board.wait_for_button()
+
+while True:
+    left = reflectance.get_left()
+
+    if left > threshold:
+        drivetrain.stop()
+        print("Line detected! Turning around...")
+        drivetrain.turn(180)
+    else:
+        drivetrain.set_effort(0.3, 0.3)
+```
+
+<KnowledgeCheck
+  question="What does `while True:` do?"
+  options={[
+    {text: 'Runs the loop once'},
+    {text: 'Loops forever, until the robot is powered off or stopped', correct: true},
+    {text: 'Causes a syntax error'},
+    {text: 'Runs the loop only if a sensor is True'},
+  ]}
+  explanation="The condition True is always true, so the loop repeats endlessly — the standard pattern for continuous robot control."
+/>
+
+<TeacherNote title="while True is normal — and safe to stop">
+
+Students sometimes think `while True` will "crash" the program — reassure them it's
+the standard control-loop pattern, and the way to stop it is the robot's stop button
+or power. Also note `drivetrain.stop()` before `turn(180)` just makes for a cleaner
+pivot. On real hardware the 180° won't be exact — that's expected, and Lesson 4
+turns it into a feature.
+
+</TeacherNote>
+
+## Part 3 · Combining conditions
+
+One sensor can miss the line if the robot hits it at an angle. Checking **both** is
+safer — and that's where `or` comes in: it's true if *either* side is true.
+
+```python
+if left > threshold or right > threshold:
+    # at least one sensor sees the line → bounce
+    drivetrain.turn(180)
+else:
+    drivetrain.set_effort(0.3, 0.3)
+```
+
+The three logical operators: `and` (both must be true), `or` (at least one true),
+`not` (flips true/false).
+
+<KnowledgeCheck
+  question="left is 0.2 and right is 0.9 (threshold 0.5). Is `left > threshold or right > threshold` True?"
+  options={[
+    {text: 'False — the left sensor is on white'},
+    {text: 'True — the right sensor is over the line, and or needs only one side', correct: true},
+    {text: 'False — you need both sensors on the line'},
+    {text: 'It causes an error'},
+  ]}
+  explanation="or is true when at least one side is true. Right (0.9 > 0.5) is true, so the whole condition is true — bounce."
+/>
+
+## Part 4 · Bounce and extend
+
+1. Run the single-sensor version and watch the robot bounce back and forth.
+2. Upgrade to the `or` version so it bounces off the line no matter which sensor
+   hits first.
+3. **Challenge:** add a `bounce_count` variable that goes up by one each bounce and
+   print it — you'll build on counters like this later.
+
+<TeacherNote title="Differentiation & a lurking problem">
+
+**More support:** start with just `if` (stop on the line) before adding the `else`
+and the turn. **More challenge:** try `turn(90)` and observe; add `elif` for a third
+case. Also plant the seed for Lesson 4: notice the robot keeps bouncing between the
+*same two points* and never explores the rest of the circle — that predictability is
+the problem randomness will fix next.
+
+</TeacherNote>
+
+## Real-world connections
+
+`if/else` decisions are the backbone of anything that reacts:
+
+<CardGrid>
+  <InfoCard tag="Driving" title="Self-driving cars">
+    "If an obstacle is ahead, brake; otherwise keep going" — millions of these checks per second.
+  </InfoCard>
+  <InfoCard tag="Safety" title="Smoke alarms">
+    If smoke is over the threshold, sound the alarm; else stay quiet.
+  </InfoCard>
+  <InfoCard tag="Apps" title="Form validation">
+    If the password is too short, show an error; otherwise let you continue.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- How many branches of an `if/else` run each time? (Exactly one.)
+- What does `while True` mean, and how do you stop it? (Loop forever; stop the robot.)
+- What's the difference between `and` and `or`? (`and` needs both true; `or` needs at least one.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** correct `if/else` syntax, understanding that only one branch runs,
+and reading `and`/`or`. **Exit ticket:** "What happens if you remove
+`drivetrain.stop()` before the turn?" (a sloppier pivot; motors were still driving).
+**Preview:** next lesson we make each bounce turn a *random* angle so the robot
+explores the whole circle.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

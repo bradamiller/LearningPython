@@ -1,0 +1,195 @@
+---
+title: "Lesson 3 · Lists"
+sidebar_label: "3 · Lists"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 3 · Lists"
+  meta={['50 min', 'Python data', 'Storing a path']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+A tuple stores one position. A **path** is many positions in order — and for that you
+need a **list**. By the end, you'll represent a route as a list of coordinate tuples
+like `[(0,0), (1,0), (2,0), (2,1), (2,2), (2,3)]`, and build one up step by step —
+exactly what the Manhattan algorithm does next lesson.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Create a list with `[]` and see how it differs from a tuple
+- Add items with `append()` and count them with `len()`
+- Loop through a list with a `for` loop
+- Build a list step by step inside a loop, and store a path as a list of tuples
+
+</Objectives>
+
+## Part 1 · List vs. tuple
+
+A **list** is an ordered collection written with square brackets — and unlike a tuple,
+it's **mutable** (it can grow and change):
+
+```python
+numbers = [1, 2, 3, 4, 5]
+print(numbers[0])     # 1   — indexing works like tuples
+print(len(numbers))   # 5   — how many items
+```
+
+| | Tuple | List |
+|---|---|---|
+| Brackets | `( )` | `[ ]` |
+| Can change? | No (immutable) | Yes (mutable) |
+| Best for | a fixed position | a growing path |
+
+So a *coordinate* is a tuple; a *path* is a list of tuples.
+
+<KnowledgeCheck
+  question="Which is true about lists compared to tuples?"
+  options={[
+    {text: 'Lists use () and cannot change'},
+    {text: 'Lists use [] and CAN change (they are mutable)', correct: true},
+    {text: 'Lists and tuples are identical'},
+    {text: 'Lists can only hold numbers'},
+  ]}
+  explanation="Lists use square brackets and are mutable, so they can grow — perfect for a path that's built up step by step."
+/>
+
+## Part 2 · Growing a list with `append()`
+
+`append()` adds an item to the **end** of a list. Start empty and build up:
+
+```python
+path = []
+path.append((0, 0))
+path.append((1, 0))
+path.append((2, 0))
+print(path)        # [(0, 0), (1, 0), (2, 0)]
+print(len(path))   # 3
+```
+
+Loop through it with a `for` loop:
+
+```python
+for step in path:
+    print("Visit:", step, " row:", step[0], " col:", step[1])
+```
+
+<KnowledgeCheck
+  question="Given path = [(0, 0), (1, 0), (2, 0)], what does path[2] return?"
+  options={[
+    {text: '(1, 0)'},
+    {text: '(2, 0)', correct: true},
+    {text: '2'},
+    {text: 'An IndexError'},
+  ]}
+  explanation="Indexing starts at 0, so path[2] is the third item: the tuple (2, 0)."
+/>
+
+<KnowledgeCheck
+  question="For that same path, what does path[2][1] return?"
+  options={[
+    {text: '2'},
+    {text: '0', correct: true},
+    {text: '(2, 0)'},
+    {text: 'An error'},
+  ]}
+  explanation="path[2] is (2, 0); then [1] takes its column — 0. Two indexes: which step, then which part of that step."
+/>
+
+## Part 3 · Build a path in a loop
+
+The pattern the whole module depends on: **start empty, append inside a loop.**
+
+```python
+path = []
+for row in range(5):
+    path.append((row, 0))
+print(path)        # [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)]
+```
+
+Trace it and you'll see the list grow by one each pass. Change the loop to vary the
+*column* instead, and you build a horizontal path. Combine a "go down" loop and a "go
+right" loop and you've basically written the Manhattan algorithm.
+
+<TeacherNote title="The build-in-a-loop pattern is make-or-break">
+
+Spend real time on Exercise 2 and a trace table — Lesson 4's algorithm relies
+*entirely* on "empty list, append inside a loop." If students don't own this pattern,
+next lesson is brutal. **Demo the classic bug live:** put `append()` *outside* the
+loop (wrong indentation) so only the last item lands, then fix the indentation. Keep
+scope tight — they need `[]`, `append()`, `len()`, indexing, and `for`. No `insert`,
+`pop`, slicing, or comprehensions yet.
+
+</TeacherNote>
+
+## Part 4 · The most common list bug
+
+Indentation decides what's inside the loop. Get it wrong and only the last item is
+added:
+
+```python
+# WRONG — append is outside the loop
+path = []
+for i in range(3):
+    position = (i, 0)
+path.append(position)     # only runs once → [(2, 0)]
+
+# CORRECT — append is inside the loop
+path = []
+for i in range(3):
+    position = (i, 0)
+    path.append(position)  # runs each pass → [(0, 0), (1, 0), (2, 0)]
+```
+
+<KnowledgeCheck
+  question="A student's loop ends with a list holding only the LAST coordinate instead of all of them. What's wrong?"
+  options={[
+    {text: 'append() is broken'},
+    {text: 'The append() line is outside the loop (wrong indentation), so it runs only once', correct: true},
+    {text: 'They used a tuple instead of a list'},
+    {text: 'range() is the wrong size'},
+  ]}
+  explanation="If append() isn't indented inside the loop, it runs a single time after the loop ends — capturing just the final value."
+/>
+
+## Real-world connections
+
+"A collection you build up and loop over" is one of the most-used ideas in software:
+
+<CardGrid>
+  <InfoCard tag="Apps" title="Feeds & playlists">
+    A playlist or a feed is a list you add to and iterate through, item by item.
+  </InfoCard>
+  <InfoCard tag="Navigation" title="Route waypoints">
+    A GPS route is a list of waypoints the app walks through in order.
+  </InfoCard>
+  <InfoCard tag="Data" title="Records & logs">
+    Programs collect results into a list, then loop over them to summarize or display.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Tuple vs list — which is for a position, which for a path? (Tuple = position; list = path.)
+- What does `append()` do? (Adds an item to the end.)
+- What's the pattern for building a path? (Start with `[]`, `append()` inside a loop.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** create a list, `append()` in a loop, index into a list of tuples
+(`path[3][1]`), and spot the indentation bug. **Exit ticket:** "Given
+`path = [(0,0),(1,0),(2,0)]`, what is `path[2][1]`?" (0). **Preview:** next lesson we
+compute a path *automatically* — the Manhattan algorithm, on paper first.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python lists](https://docs.python.org/3/tutorial/datastructures.html)

@@ -1,0 +1,182 @@
+---
+title: "Lesson 3 · Introduction to Functions"
+sidebar_label: "3 · Functions"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 3 · Introduction to Functions"
+  meta={['50–60 min', 'Phase A · Blockly Foundation', 'Reuse & abstraction']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to see exactly what students see.
+</TeacherBanner>
+
+Your square program works — but what if you want to draw *three* squares? Copying
+the whole loop three times gets long and messy fast. In this lesson you'll learn
+to write the square code **once**, give it a name, and reuse it as many times as
+you like. That's a **function**.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what a function is — a named, reusable block of code
+- Define a function in Blockly using the **"to do something"** block
+- Call your function from the main program
+- Recognize when a function will make your code shorter and easier to change
+
+</Objectives>
+
+## Part 1 · The copy-paste problem
+
+Here's how you'd draw three squares *without* a function — the same loop, pasted
+three times:
+
+<BlockProgram
+  blocks={[
+    {name: 'repeat', note: 'square #1', children: [
+      {name: 'straight', note: 'cm: 30'},
+      {name: 'turn', note: 'Deg: 90'},
+    ]},
+    {name: 'repeat', note: 'square #2 — same thing again', children: [
+      {name: 'straight', note: 'cm: 30'},
+      {name: 'turn', note: 'Deg: 90'},
+    ]},
+  ]}
+  caption="Repetition like this is a signal you want a function."
+/>
+
+If you later want bigger squares, you have to change the number in *three* places
+and hope you don't miss one. A function fixes that.
+
+<TeacherNote title="Hook">
+
+Put the copy-pasted version on the board and ask "what's annoying about this?"
+Students will land on *it's long* and *hard to change* on their own — that felt
+need is the reason functions exist. Use the recipe-card analogy: write the recipe
+once, cook from it as many times as you want.
+
+</TeacherNote>
+
+## Part 2 · Define once, call many times
+
+A function has two parts, and keeping them straight is the whole lesson:
+
+- **Define** — where you *write* what the function does. In Blockly this is the
+  **"to do something"** block; rename it to `draw square` and drop your Repeat
+  loop inside it.
+- **Call** — where you *use* it. A new **draw square** block appears in the
+  Functions palette; drag it into your main program wherever you want a square.
+
+<BlockProgram
+  blocks={[
+    {name: 'function_def', note: 'rename to "draw square"', children: [
+      {name: 'repeat', note: 'repeat 4 times', children: [
+        {name: 'straight', note: 'cm: 30'},
+        {name: 'turn', note: 'Deg: 90'},
+      ]},
+    ]},
+  ]}
+  caption="The definition: the square loop now lives inside a function named draw square."
+/>
+
+Your main program then becomes short and readable — wait for the button, then
+call `draw square` as many times as you want:
+
+```text
+Wait for button press
+call draw square
+call draw square
+call draw square
+```
+
+<KnowledgeCheck
+  question="What's the difference between defining a function and calling it?"
+  options={[
+    {text: 'Defining runs the code; calling just names it'},
+    {text: 'Defining writes what it does; calling runs it in your program', correct: true},
+    {text: 'They are two words for the same thing'},
+    {text: 'You can only call a function once'},
+  ]}
+  explanation="Defining is setup — it doesn't move the robot. The function only runs when you call it."
+/>
+
+<KnowledgeCheck
+  question="Your program calls draw square (a 4-sided loop) four times. How many sides does the robot drive in total?"
+  options={[
+    {text: '4'},
+    {text: '8'},
+    {text: '16', correct: true},
+    {text: '1'},
+  ]}
+  explanation="Each call draws 4 sides, and you called it 4 times: 4 × 4 = 16."
+/>
+
+## Part 3 · Build reusable shapes
+
+1. Take your square loop from Lesson 2 and move it inside a new function named
+   `draw square`.
+2. In the main program, call `draw square` a few times (add a **Sleep** block
+   between calls if you want a pause to watch each one).
+3. Now make a second function, `draw triangle` (Repeat 3, Turn 120°), and call
+   both in a sequence.
+
+<KnowledgeCheck
+  question="You want bigger squares everywhere in your program. With a draw square function, how many places do you change the size?"
+  options={[
+    {text: 'One — just inside the function', correct: true},
+    {text: 'One for every time you called it'},
+    {text: 'You have to rewrite the function'},
+    {text: 'Two'},
+  ]}
+  explanation="That's the payoff of a function: fix or change it in one place, and every call updates automatically."
+/>
+
+<TeacherNote title="Differentiation & common slip">
+
+**More support:** give a program with the function already made and ask students
+just to add `call` blocks. **More challenge:** have them build a pattern —
+square, triangle, square, triangle — from four calls. **Watch for:** students who
+*re-define* the function instead of *calling* it. Point them to the ready-made
+`draw square` block in the Functions palette.
+
+</TeacherNote>
+
+## Real-world connections
+
+"Write it once, use it everywhere" is how all real software is built:
+
+<CardGrid>
+  <InfoCard tag="Apps" title="Buttons & menus">
+    An app defines a "button" once, then reuses it thousands of times across every screen.
+  </InfoCard>
+  <InfoCard tag="Games" title="Spawning enemies">
+    One "make an enemy" function, called over and over, fills a whole level.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Skill libraries">
+    Big robots are built from reusable skills — "pick up", "drive to" — called in different orders.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Why put repeated code in a function? (Write once, reuse, and change it in one place.)
+- What are the two parts of using a function? (Define it, then call it.)
+- Does defining a function make the robot move? (No — only calling it does.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students point at which code belongs in the function vs. the
+main program, and explain define vs. call? **Exit ticket:** "If `draw square`
+draws 4 sides and you call it 3 times, how many sides total?" (12). **Preview:**
+next lesson we make one function draw *any size* square by giving it a **parameter**.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

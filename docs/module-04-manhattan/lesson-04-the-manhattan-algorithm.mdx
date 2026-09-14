@@ -1,0 +1,275 @@
+---
+title: "Lesson 4 · The Manhattan Algorithm"
+sidebar_label: "4 · The Algorithm"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 4 · The Manhattan Algorithm"
+  meta={['60 min', 'Python code', 'Computing a path']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Coordinates, tuples, lists — now they come together. In this lesson you write the
+function that **computes a whole path automatically**: give it a start and a
+destination, and it hands back the list of intersections to drive. You'll trace it on
+paper first, then build it in two stages.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what **Manhattan distance** is and why it's named after Manhattan, NYC
+- Describe the "rows first, then columns" strategy and hand-trace a path on paper
+- Write `compute_path(start, end)` with while loops that build a list of positions
+- Extend it from 2 loops (south/east) to 4 loops (all directions) — no `if/else`
+- Handle the edge cases: same row, same column, and same position
+
+</Objectives>
+
+## Part 1 · Why "Manhattan"?
+
+Picture the streets of Manhattan in New York. To get from one corner to another, you
+can't cut diagonally through the buildings — you walk along the streets and avenues.
+The total distance is the number of blocks across **plus** the number of blocks up or
+down. That's the **Manhattan distance** (taxi drivers know it too — it's also called
+"taxicab distance").
+
+Our robot is in the same situation: it drives along grid lines, never diagonally. So
+the distance from one intersection to another is just *row steps + column steps* — the
+exact idea you computed by hand in Lesson 1.
+
+The strategy we'll use is the simplest one that always works: **move along the rows
+first until you're in the right row, then move along the columns until you're in the
+right column.** That always traces an L-shaped path (or a straight line, if the row or
+column is already correct).
+
+<KnowledgeCheck
+  question="Why can't the robot use a straight diagonal to shorten the trip?"
+  options={[
+    {text: 'Diagonals are slower than straight lines'},
+    {text: 'The robot follows grid lines, so it can only move along rows and columns', correct: true},
+    {text: 'The grid is too small'},
+    {text: 'It can — the Manhattan algorithm just chooses not to'},
+  ]}
+  explanation="Like walking Manhattan's streets, the robot can't cut through the middle of a block — only along the lines. That's exactly why the distance is row steps + column steps."
+/>
+
+## Part 2 · Trace it on paper first
+
+Before any code, walk the algorithm by hand. Take **(0, 0) → (2, 3)**: move down the
+rows first, then right along the columns. Remember the robot is *already* at the start,
+so the path lists only the spots it moves **to**:
+
+| Step | Action | New position | Path so far |
+|---|---|---|---|
+| 1 | row +1 | (1, 0) | `[(1,0)]` |
+| 2 | row +1 | (2, 0) | `[(1,0), (2,0)]` |
+| 3 | col +1 | (2, 1) | `[(1,0), (2,0), (2,1)]` |
+| 4 | col +1 | (2, 2) | `[(1,0), (2,0), (2,1), (2,2)]` |
+| 5 | col +1 | (2, 3) | `[(1,0), (2,0), (2,1), (2,2), (2,3)]` |
+
+Five steps — and `len(path)` is 5, matching the Manhattan distance |2−0| + |3−0| = 5.
+
+Now try **(1, 1) → (1, 1)** (same spot): no row moves, no column moves. The path is
+`[]` — an empty list, zero steps. That's not a bug; the robot is already there.
+
+<KnowledgeCheck
+  question="Hand-tracing (2,0) → (2,3), what path do you get?"
+  options={[
+    {text: '[(2,0), (2,1), (2,2), (2,3)]'},
+    {text: '[(2,1), (2,2), (2,3)]', correct: true},
+    {text: '[(2,3)]'},
+    {text: '[]'},
+  ]}
+  explanation="Same row, so no row moves — only three column moves. The start (2,0) is not included, so the path is [(2,1), (2,2), (2,3)]: three steps."
+/>
+
+<TeacherNote title="Paper first, then code — but coding is the main event">
+
+Spend 8–10 minutes tracing on a big grid before anyone opens a laptop — have students
+walk paths with markers, one color for row moves, another for column moves. Keep it
+short and targeted; the goal is intuition, not mastery. The bulk of the lesson is
+writing and testing `compute_path()`. If you can, show an actual map of Manhattan for
+the hook — the name sticks when it's tied to real streets.
+
+</TeacherNote>
+
+## Part 3 · Code it, stage 1 — south and east only
+
+Start with just the two "positive" directions (moving down and right). Notice
+**tuple unpacking** on the setup lines — `current_row, current_col = start` pulls both
+numbers out of the tuple in one line:
+
+```python
+def compute_path(start, end):
+    path = []
+    current_row, current_col = start
+    dest_row, dest_col = end
+
+    # Move south (rows increase)
+    while current_row < dest_row:
+        current_row = current_row + 1
+        path.append((current_row, current_col))
+
+    # Move east (columns increase)
+    while current_col < dest_col:
+        current_col = current_col + 1
+        path.append((current_row, current_col))
+
+    return path
+```
+
+Test it and compare to your paper traces:
+
+```python
+print(compute_path((0, 0), (2, 3)))   # [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+print(compute_path((1, 1), (3, 4)))   # [(2, 1), (3, 1), (3, 2), (3, 3), (3, 4)]
+```
+
+Both give 5 steps — exactly the hand-traced answers.
+
+**Now find the limit:** what does `compute_path((3, 3), (1, 0))` return? An empty list!
+`3 < 1` is False and `3 < 0` is False, so *neither* loop runs. Going up or left, this
+version does nothing. We need north and west too.
+
+<KnowledgeCheck
+  question="Why does the stage-1 function return [] for (3,3) → (1,0)?"
+  options={[
+    {text: 'append() is broken'},
+    {text: 'Both while conditions are False from the start (3 is not < 1, 3 is not < 0), so neither loop runs', correct: true},
+    {text: 'The start and end are the same'},
+    {text: 'It runs forever'},
+  ]}
+  explanation="Stage 1 only handles increasing row/column. Moving up or left needs the two decreasing loops we add next."
+/>
+
+## Part 4 · Code it, stage 2 — all four directions
+
+The fix is elegant: **add two more while loops**, one for north (rows decrease) and one
+for west (columns decrease). No `if/else` needed — for any single trip, at most one row
+loop and one column loop will run; the others are skipped because their condition is
+False from the start.
+
+```python
+def compute_path(start, end):
+    path = []
+    current_row, current_col = start
+    dest_row, dest_col = end
+
+    # Move south (rows increase)
+    while current_row < dest_row:
+        current_row = current_row + 1
+        path.append((current_row, current_col))
+
+    # Move north (rows decrease)
+    while current_row > dest_row:
+        current_row = current_row - 1
+        path.append((current_row, current_col))
+
+    # Move east (columns increase)
+    while current_col < dest_col:
+        current_col = current_col + 1
+        path.append((current_row, current_col))
+
+    # Move west (columns decrease)
+    while current_col > dest_col:
+        current_col = current_col - 1
+        path.append((current_row, current_col))
+
+    return path
+```
+
+Take **(3, 3) → (1, 0)**: south is skipped (3 isn't < 1), **north runs** (3 > 1) →
+(2,3), (1,3)... wait — north moves rows only, so it appends (2,3), (1,3); east is
+skipped; **west runs** (3 > 0) → (1,2), (1,1), (1,0). Path:
+`[(2,3), (1,3), (1,2), (1,1), (1,0)]`. Try it and confirm.
+
+<KnowledgeCheck
+  question="For a trip that goes up and to the right, how many of the four while loops actually run?"
+  options={[
+    {text: 'All four'},
+    {text: 'Two — the north loop and the east loop', correct: true},
+    {text: 'Just one'},
+    {text: 'None — it needs if/else'},
+  ]}
+  explanation="At most one row loop (north OR south) and one column loop (east OR west) run for any trip. Up-and-right means north + east; the other two are skipped."
+/>
+
+<TeacherNote title="Redirect anyone reaching for if/else">
+
+The four-loop design is the lesson's big idea: *a while loop whose condition starts
+False simply does nothing.* Students who've seen conditionals will try to wrap this in
+`if row < dest ... elif row > dest`. Steer them back — the four loops are simpler and
+handle every case, including same-position (all four skipped → `[]`). Take real time on
+tuple unpacking (`current_row, current_col = start`) and on the double parentheses in
+`append((r, c))`: the outer pair is the function call, the inner pair is the tuple.
+
+</TeacherNote>
+
+## Part 5 · The edge cases
+
+Good algorithms handle the awkward inputs without special code. Trace these and run
+them:
+
+```python
+print(compute_path((2, 0), (2, 3)))   # same row  → [(2,1),(2,2),(2,3)]
+print(compute_path((0, 2), (3, 2)))   # same col  → [(1,2),(2,2),(3,2)]
+print(compute_path((1, 1), (1, 1)))   # same spot → []
+```
+
+Same row means the two row loops are skipped; same column skips the column loops; same
+position skips all four and returns `[]`. Nothing special written — the loops just
+don't run when there's no distance to cover.
+
+<KnowledgeCheck
+  question="What does compute_path((2, 2), (2, 2)) return, and why?"
+  options={[
+    {text: '[(2, 2)] — the current position'},
+    {text: '[] — all four loop conditions are False, so nothing is appended', correct: true},
+    {text: 'An error'},
+    {text: '0'},
+  ]}
+  explanation="Start equals destination, so every while condition is False from the start. No loop runs, the path stays empty, and len(path) is 0 — the robot is already there."
+/>
+
+## Real-world connections
+
+"Move one axis, then the other" and Manhattan distance show up all over computing:
+
+<CardGrid>
+  <InfoCard tag="Games" title="Grid movement">
+    Turn-based and tile games measure moves in Manhattan steps — no diagonal shortcuts.
+  </InfoCard>
+  <InfoCard tag="AI" title="Pathfinding heuristics">
+    Manhattan distance is a classic "how far, roughly?" estimate that guides search algorithms like A*.
+  </InfoCard>
+  <InfoCard tag="Data" title="Clustering">
+    Some machine-learning methods group points by Manhattan (taxicab) distance instead of straight-line distance.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does "rows first, then columns" produce? (An L-shaped path — predictable and always valid.)
+- Why four while loops instead of `if/else`? (Only the relevant loops run; a False condition just skips.)
+- Why isn't the starting position in the path? (The robot is already there; `len(path)` = number of steps.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** trace a path on paper, write the two stage-1 loops, explain why stage 1
+fails for up/left, add the north/west loops without `if/else`, and predict the three
+edge cases. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
+steps is that?" (`[(1,0),(2,0),(2,1),(2,2),(2,3)]`, 5). **Preview:** next lesson we wrap
+this exact function into a **`Manhattan` class** — the algorithm won't change at all.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python while loops](https://docs.python.org/3/reference/compound_stmts.html#while)

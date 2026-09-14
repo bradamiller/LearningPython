@@ -1,0 +1,189 @@
+---
+title: "Lesson 6 · Two-Sensor Line Following"
+sidebar_label: "6 · Two-Sensor Following"
+sidebar_position: 6
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 6 · Two-Sensor Line Following"
+  meta={['50–60 min', 'Control loops', 'Following the center']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Last lesson the robot followed one *edge* with a single sensor. Now you'll use
+**both** sensors together — and the code actually gets simpler. The robot straddles
+the line and follows its **center**, giving smoother, more reliable tracking.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why two sensors track better than one
+- Compute error with two sensors: `error = left − right`
+- Predict the sign of the error from the robot's position
+- Build a two-sensor proportional control loop
+- Explain the negative sign in `arcade(base_effort, -correction)`
+
+</Objectives>
+
+## Part 1 · The difference *is* the error
+
+With two sensors straddling the line, you don't need a setpoint anymore. Just
+subtract one reading from the other:
+
+> error = left − right
+
+When both sensors read the same, the difference is zero and the robot drives
+straight. When one drifts onto the line, the difference tells you exactly how much
+and which way:
+
+| Position | left | right | error = L − R | Meaning |
+|---|---|---|---|---|
+| Centered | 0.5 | 0.5 | `0.0` | drive straight |
+| Drifted left | 0.8 | 0.2 | `+0.6` | steer left to correct |
+| Drifted right | 0.2 | 0.8 | `−0.6` | steer right to correct |
+| Both on white | 0.1 | 0.1 | `0.0` | straight (lost line) |
+| Both on black | 0.9 | 0.9 | `0.0` | straight (an intersection!) |
+
+<Figure
+  placeholderLabel="Diagram — two sensors straddling a line, centered vs. drifted left vs. drifted right"
+  caption="Two sensors straddle the line. The difference between them says which way the robot has drifted."
+/>
+
+<KnowledgeCheck
+  question="The left sensor reads 0.8 and the right reads 0.2. What is the error, and which way has the robot drifted?"
+  options={[
+    {text: 'error +0.6, drifted left', correct: true},
+    {text: 'error −0.6, drifted right'},
+    {text: 'error 0.0, centered'},
+    {text: 'error 1.0, at an intersection'},
+  ]}
+  explanation="error = 0.8 − 0.2 = +0.6. A positive error means the left sensor is on the line, so the robot drifted left."
+/>
+
+## Part 2 · The control loop (and that negative sign)
+
+The loop is the same rhythm as Lesson 5 — read, compute, steer — just with the new
+error and a **negated** correction:
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.reflectance import Reflectance
+from XRPLib.board import Board
+import time
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+reflectance = Reflectance.get_default_reflectance()
+board = Board.get_default_board()
+
+Kp = 0.5            # tune this
+base_effort = 0.3
+
+board.wait_for_button()
+
+while True:
+    left_sensor = reflectance.get_left()
+    right_sensor = reflectance.get_right()
+
+    error = left_sensor - right_sensor
+    correction = error * Kp
+    drivetrain.arcade(base_effort, -correction)   # note the minus sign
+
+    time.sleep(0.01)
+```
+
+Why the minus? A **positive** error means the robot drifted **left**, so it must
+steer left — and in `arcade()` a *negative* turn steers left. Negating the
+correction lines the math up with reality.
+
+<KnowledgeCheck
+  question="Why is the correction negated in arcade(base_effort, -correction) here, when Lesson 5 didn't negate it?"
+  options={[
+    {text: 'The meaning of a positive error flipped, so the steer direction has to flip too', correct: true},
+    {text: 'Two sensors always need a negative sign no matter what'},
+    {text: 'It makes the robot go faster'},
+    {text: 'It fixes a bug in arcade()'},
+  ]}
+  explanation="With two sensors, a positive error means 'drifted left → steer left', which is a negative turn in arcade — so we negate the correction."
+/>
+
+<TeacherNote title="Teach the sign with the explorer program first">
+
+Before the control loop, run a read-and-print program and have students **manually
+slide the robot across the line**, watching `error = left − right` go positive,
+negative, and zero in real time. That physical intuition makes the negative sign
+click. Spend real time on *why* the sign flipped from Lesson 5 (the meaning of a
+positive error changed) — it's the subtle point of the lesson. Expect to re-tune
+`Kp`, since the error range differs from the one-sensor version.
+
+</TeacherNote>
+
+## Part 3 · Follow the circle, then compare
+
+1. Run the two-sensor follower with the line running *between* the sensors, and
+   watch it track the circle.
+2. Run your Lesson 5 (one-sensor) version right after. Which is smoother? Which
+   handles the curves and higher speeds better?
+3. **Challenge:** turn `base_effort` up to 0.4–0.5 on both — the two-sensor version
+   should hold the line better at speed.
+
+<KnowledgeCheck
+  question="Both sensors suddenly read high (0.9 and 0.9), so error ≈ 0 and the robot drives straight. What has it most likely reached?"
+  options={[
+    {text: 'The edge of the table'},
+    {text: 'An intersection — a second line crossing the first', correct: true},
+    {text: 'A dead battery'},
+    {text: 'The end of the program'},
+  ]}
+  explanation="Both sensors on black at once usually means a crossing line. The two-sensor follower can't tell that apart from 'centered' — which is exactly the problem Lesson 7 solves."
+/>
+
+<TeacherNote title="Differentiation & the cliffhanger">
+
+**More support:** hand out a reference card — "left high = drifted left; right high =
+drifted right" — and lean on the explorer program. **More challenge:** a speed boost
+on long straights (when error stays near zero), or track at max speed and re-tune.
+End by flagging the last table row: both-sensors-high gives error ≈ 0, so the robot
+*ignores* an intersection. That ambiguity is the hook for Lesson 7.
+
+</TeacherNote>
+
+## Real-world connections
+
+Comparing two sensors to find a position is a workhorse technique:
+
+<CardGrid>
+  <InfoCard tag="Audio" title="Stereo & hearing">
+    You locate a sound from the tiny difference between your two ears — same differential idea.
+  </InfoCard>
+  <InfoCard tag="Navigation" title="Differential GPS">
+    Comparing two receivers cancels error and pins a position down to centimeters.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Sensor arrays">
+    Advanced line followers use 5–8 sensors, but the principle is the one you just learned.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What's the two-sensor error formula, and why no setpoint? (`left − right`; equal readings already mean zero.)
+- Positive error means the robot drifted which way? (Left.)
+- Why the negative sign on the correction? (A positive error needs a left steer, which is a negative turn in `arcade()`.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** compute `left − right`, predict drift direction and steer, and explain
+the negated correction. **Exit ticket:** "Both sensors read 0.9 — what's the error,
+and what might it physically mean?" (≈0; an intersection). **Preview:** next lesson
+we detect that intersection with `left > threshold and right > threshold`.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

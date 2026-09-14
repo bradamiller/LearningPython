@@ -1,0 +1,183 @@
+---
+title: "Lesson 6 · Differential Drive & Motor Control"
+sidebar_label: "6 · Motor Control"
+sidebar_position: 6
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 6 · Differential Drive & Motor Control"
+  meta={['50–60 min', 'Phase A · Blockly Foundation', 'Under the hood']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Every `Straight` and `Turn` you've used is really controlling two motors behind
+the scenes. In this lesson you'll take the wheel yourself — driving the left and
+right motors **directly** to make curves, spins, and smooth steering that the
+high-level blocks can't do on their own.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain **differential drive** — steering by running the two wheels at different speeds
+- Use **Set effort** to control the left and right motors directly (`-1` to `1`)
+- Use the **Arcade** block for smooth, game-controller-style steering
+- Decide when to use direct motor control vs. the high-level `Straight`/`Turn`
+
+</Objectives>
+
+## Part 1 · How the robot really steers
+
+The XRP is a **differential drive** robot: it has no steering wheel. It turns by
+running its two wheels at different speeds. Same speed both sides → straight.
+One side faster → it curves. One forward and one backward → it spins on the spot.
+
+<Figure
+  placeholderLabel="Diagram — three cases: equal efforts (straight), unequal (curve), opposite (spin)"
+  caption="Different left/right efforts produce every kind of motion."
+/>
+
+The **Set effort** block gives you that direct control. Effort runs from `-1`
+(full reverse) through `0` (stopped) to `1` (full forward), and you set each wheel
+separately. Unlike `Straight`, the motors keep running until you tell them to
+stop — so **Stop motors** is required.
+
+<BlockProgram
+  blocks={[
+    {name: 'wait_for_button_press'},
+    {name: 'set_effort', note: 'left: 0.5, right: 0.5  → straight'},
+    {name: 'sleep', note: 'run for 3 seconds'},
+    {name: 'stop_motors', note: "don't forget this!"},
+  ]}
+  caption="Drive straight for 3 seconds using direct motor control."
+/>
+
+<KnowledgeCheck
+  question="You run Set effort with left 0.5 and right 0.5. What does the robot do?"
+  options={[
+    {text: 'Curves to the left'},
+    {text: 'Drives straight forward', correct: true},
+    {text: 'Spins in place'},
+    {text: 'Stays still'},
+  ]}
+  explanation="Equal effort on both wheels means both sides move at the same speed — the robot goes straight."
+/>
+
+<KnowledgeCheck
+  question="What happens with left 0.5 and right -0.5 (one wheel forward, one backward)?"
+  options={[
+    {text: 'Drives straight'},
+    {text: 'Spins in place', correct: true},
+    {text: 'Drives backward'},
+    {text: 'Curves gently'},
+  ]}
+  explanation="Opposite efforts push the two sides in opposite directions, so the robot rotates on the spot."
+/>
+
+## Part 2 · The most common bug: forgetting to stop
+
+With `Straight`, the robot stops itself. With `Set effort`, it doesn't — the
+motors hold their last effort until you change them. Leave off **Stop motors** and
+your robot drives off the table.
+
+<KnowledgeCheck
+  question="Your Set effort program makes the robot drive away and never stop. What did you most likely forget?"
+  options={[
+    {text: 'The Wait for button press block'},
+    {text: 'The Stop motors block', correct: true},
+    {text: 'To charge the battery'},
+    {text: 'The Turn block'},
+  ]}
+  explanation="Set effort runs the motors continuously. Without a Stop motors block, they keep going at the last effort you set."
+/>
+
+<TeacherNote title="Straight vs. Set effort — the trade-off">
+
+This is the lesson's big idea: **abstraction vs. control**. `Straight`/`Turn` use
+the robot's sensors (encoders/IMU) for precise, repeatable distances and angles —
+easy, but limited to straight lines and pivots. `Set effort` is raw and
+time-based: less precise, but it can make smooth curves and creative motion the
+high-level blocks can't. Neither is "better" — it's about the right tool for the
+task. Reinforce **Stop motors** relentlessly; forgetting it is the #1 issue today.
+
+</TeacherNote>
+
+## Part 3 · Smooth steering with Arcade
+
+Setting two efforts by hand is fiddly. The **Arcade** block is friendlier — you
+give it a forward **speed** and a **turn** amount (like a game controller), and it
+works out the two motor efforts for you.
+
+<BlockProgram
+  blocks={[
+    {name: 'wait_for_button_press'},
+    {name: 'arcade', note: 'speed: 0.5, turn: 0.3  → forward, curving right'},
+    {name: 'sleep', note: '3 seconds'},
+    {name: 'stop_motors'},
+  ]}
+  caption="Arcade combines speed and steering into one intuitive block."
+/>
+
+Try it: drive a big curve, then a figure-eight (curve one way, then the other).
+
+<KnowledgeCheck
+  question="When is the Arcade block a better choice than Set effort?"
+  options={[
+    {text: 'When you need smooth, intuitive steering like a game controller', correct: true},
+    {text: 'When you need to control each wheel to an exact effort'},
+    {text: 'When you want the robot to stop by itself'},
+    {text: 'Arcade and Set effort are exactly the same'},
+  ]}
+  explanation="Arcade is easiest for smooth curves and navigation; Set effort gives finer, per-wheel control when you need it."
+/>
+
+<TeacherNote title="Differentiation">
+
+**More support:** give a table of effort pairs and their outcomes, and start with
+symmetric efforts (0.3/0.3) before curves; let students use Arcade first — it's
+more intuitive. **More challenge:** build a spiral by gradually increasing one
+side's effort across several Set effort blocks, or estimate a fixed distance using
+effort + time (and see why encoders are worth having).
+
+</TeacherNote>
+
+## Real-world connections
+
+Direct motor control is how machines that *don't* drive in straight lines work:
+
+<CardGrid>
+  <InfoCard tag="Mobility" title="Wheelchairs & rovers">
+    Powered wheelchairs and Mars rovers steer by differential drive — exactly this left/right speed trick.
+  </InfoCard>
+  <InfoCard tag="Gaming" title="Twin-stick control">
+    Tank-style games map two sticks to two "tracks," the same idea as setting two efforts.
+  </InfoCard>
+  <InfoCard tag="Heavy equipment" title="Skid-steer loaders">
+    Construction "skid steers" turn by driving their left and right wheels at different speeds.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- How does a differential-drive robot turn? (By running its wheels at different speeds.)
+- Why must a Set effort program include Stop motors? (The motors run until told to stop.)
+- When would you pick `Straight`/`Turn` over `Set effort`? (When you need precise, repeatable distances and angles.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students predict motion from a pair of efforts and explain the
+precision/control trade-off? **Exit ticket:** "Fill in efforts to spin the robot
+in place" (equal and opposite, e.g. 0.5 / −0.5). **Preview:** Lesson 7 is a
+synthesis challenge that pulls together loops, functions, parameters, and motor
+control — the capstone of the Blockly phase.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

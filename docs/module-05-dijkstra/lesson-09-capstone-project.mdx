@@ -1,0 +1,241 @@
+---
+title: "Lesson 9 · Capstone Project"
+sidebar_label: "9 · Capstone Project"
+sidebar_position: 9
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 9 · Capstone Project"
+  meta={['90+ min', 'Full integration', 'Your graduation project']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This is it — every piece you've built, assembled into one autonomous system. The robot
+visits several destinations, plans with Dijkstra, senses obstacles with the rangefinder,
+reroutes on the fly, and remembers what it learned in a file so the next run is smarter. You
+won't write much new code; the challenge is **integration** — making working parts work
+together. That's exactly what real software engineers do.
+
+<Objectives>
+
+By the end of this project you will be able to:
+
+- Integrate Dijkstra, the Navigator, rangefinder detection, and file memory into one program
+- Visit four or more destinations while detecting and avoiding obstacles
+- Save and load obstacles so knowledge persists between runs
+- Demonstrate learning: Run 2 outperforms Run 1, with numbers to prove it
+- Debug integration issues where individually-working parts don't cooperate
+
+</Objectives>
+
+## Part 1 · The mission
+
+Your robot is an autonomous delivery vehicle. It must visit four or more grid destinations
+in sequence, and for each leg: plan a path, drive it while watching for obstacles, and
+reroute whenever the rangefinder finds one. Everything you need already exists — Dijkstra
+(Lessons 4–5), the swap into Navigator (Lesson 6), detection (Lesson 7), and file memory
+(Lesson 8). Today you connect them.
+
+You'll demonstrate with **two runs**: Run 1 (delete the obstacle file, discover obstacles
+the hard way, save them) and Run 2 (load the file, plan around known obstacles, reroute
+less). The drop in step count between runs *is* the learning.
+
+<KnowledgeCheck
+  question="What is the main challenge of the capstone?"
+  options={[
+    {text: 'Inventing a new pathfinding algorithm'},
+    {text: 'Integrating components you already built so they work together as one system', correct: true},
+    {text: 'Building a new robot from parts'},
+    {text: 'Rewriting Dijkstra from scratch'},
+  ]}
+  explanation="Every component already exists and was tested in earlier lessons. The capstone is about connecting them correctly — integration, not new algorithms."
+/>
+
+## Part 2 · Program structure
+
+The whole program has a clear skeleton:
+
+```
+1. Load obstacles from file
+2. Define destinations
+3. For each destination:
+     While not arrived:
+        Compute a path with Dijkstra (from current position, current blocked list)
+        Walk the path, checking the rangefinder at each intersection
+        If obstacle: add to blocked list, recompute
+        If clear all the way: arrived
+4. Save obstacles to file
+5. Print results (steps, reroutes)
+```
+
+The **blocked list is the thread** tying it together: `load_obstacles` produces it,
+`Dijkstra` consumes it, detection appends to it, and `save_obstacles` writes it out.
+
+<KnowledgeCheck
+  question="What single data structure connects loading, pathfinding, detection, and saving?"
+  options={[
+    {text: 'The distances dictionary'},
+    {text: 'The blocked list — loaded, fed to Dijkstra, appended to on detection, then saved', correct: true},
+    {text: 'The visited list'},
+    {text: 'The heading number'},
+  ]}
+  explanation="The blocked list flows through every stage: file → Dijkstra → detection → file. If it doesn't flow correctly, the whole system breaks."
+/>
+
+## Part 3 · The navigation loop
+
+The core is a nested loop — destinations on the outside, rerouting in the middle, walking a
+single path on the inside:
+
+```python
+for dest in destinations:
+    arrived = False
+    while not arrived:
+        pathfinder = Dijkstra(current, blocked)
+        path = pathfinder.compute_path(dest)
+        if len(path) == 0:
+            print("No path to", dest); break
+
+        rerouted = False
+        for i in range(len(path) - 1):
+            distance = rangefinder.distance()        # or simulate
+            if distance < THRESHOLD:
+                blocked.append(path[i + 1])          # obstacle ahead
+                reroute_count += 1
+                rerouted = True
+                break
+            current = path[i + 1]                    # drive one intersection
+            step_count += 1
+
+        if not rerouted:
+            arrived = True
+```
+
+When an obstacle appears mid-path, you `break` out, having added it to `blocked` — and the
+`while` loop computes a fresh path from where you now stand.
+
+<KnowledgeCheck
+  question="When an obstacle is found partway along a path, why break out of the inner for loop?"
+  options={[
+    {text: 'To end the program'},
+    {text: 'To stop walking the now-invalid path and let the while loop recompute a fresh one from the current position', correct: true},
+    {text: 'To skip the destination'},
+    {text: 'To save the file early'},
+  ]}
+  explanation="The rest of the current path may run through the new obstacle, so it's invalid. Breaking out returns to the while loop, which builds a new path from where the robot is."
+/>
+
+## Part 4 · Test in simulation, then drive
+
+Get the whole thing working with a **simulated** rangefinder before the robot — verify
+paths compute, obstacles register, the blocked list grows, and `obstacles.txt` is written
+correctly. Then swap in the real sensor and the `DifferentialDrive`.
+
+```python
+ACTUAL_OBSTACLES = [(1, 0), (2, 2), (1, 3)]
+def simulate_rangefinder(next_pos):
+    return 8.0 if next_pos in ACTUAL_OBSTACLES else 50.0
+```
+
+Watch for the classic integration bugs: the blocked list getting reset between destinations
+(it must persist across all of them), `current` not updating after a move, or forgetting to
+make a *new* Dijkstra after the blocked list changes.
+
+<KnowledgeCheck
+  question="Which is a classic capstone integration bug to watch for?"
+  options={[
+    {text: 'Using too few comments'},
+    {text: 'Resetting the blocked list between destinations, so the robot forgets obstacles mid-run', correct: true},
+    {text: 'Naming the robot'},
+    {text: 'Printing the path'},
+  ]}
+  explanation="The blocked list must persist across all destinations in a run. Re-creating it empty for each destination throws away everything learned so far. (Also common: not updating current, or not rebuilding Dijkstra after blocked changes.)"
+/>
+
+## Part 5 · The rubric and demo
+
+You're graded on the integrated system, component by component:
+
+| Category | Points | What it takes |
+|---|---|---|
+| Dijkstra pathfinding | 10 | Correct, shortest paths from the class |
+| Navigator integration | 10 | Robot physically drives the computed paths |
+| Obstacle detection | 10 | Rangefinder detects and updates the blocked list |
+| Path recomputation | 10 | Reroutes correctly around discovered obstacles |
+| Experience (file I/O) | 10 | Obstacles saved after Run 1, loaded for Run 2 |
+| Demonstration | 5 | Run 1 discovers & reroutes; Run 2 avoids known obstacles |
+| Code quality | 5 | Readable, uses functions/classes, meaningful comments |
+
+For the demo, run twice and have your numbers ready: "Run 1 took X steps with Y reroutes;
+Run 2 took A steps with B reroutes." **Finished early?** Try an extension — live mid-segment
+detection, visiting the nearest destination next, obstacle expiration (re-check old
+obstacles after a few runs), or a text-grid map of the route.
+
+<KnowledgeCheck
+  question="In the demo, what evidence shows the robot 'learned'?"
+  options={[
+    {text: 'It drives faster'},
+    {text: 'Run 2 has fewer reroutes and/or fewer steps than Run 1, because it loaded known obstacles', correct: true},
+    {text: 'It makes a sound at each node'},
+    {text: 'The obstacles.txt file is empty'},
+  ]}
+  explanation="The measurable improvement from Run 1 to Run 2 — fewer reroutes and steps — is the evidence. Same algorithm, better data from the saved file."
+/>
+
+## Real-world connections
+
+You've built, in miniature, what real autonomous systems do:
+
+<CardGrid>
+  <InfoCard tag="Robotics" title="SLAM">
+    Real robots build and reuse maps of their environment — the grown-up version of your obstacle memory.
+  </InfoCard>
+  <InfoCard tag="Vehicles" title="Self-driving">
+    Sense, plan, act, and learn from fleet data — the same loop at massive scale.
+  </InfoCard>
+  <InfoCard tag="Engineering" title="System integration">
+    Connecting tested components into a reliable whole is the core of professional software work.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What connects all the components? (The blocked list flowing file → Dijkstra → detection → file.)
+- Why test in simulation before the robot? (Separate logic bugs from hardware bugs.)
+- What proves the robot learned? (Run 2's measured improvement over Run 1.)
+
+<TeacherNote title="Integration is the hard part — simulate first, celebrate the journey">
+
+Students underestimate how hard connecting working parts is. The recurring bugs: passing a
+stale blocked list, not updating `current`, not rebuilding Dijkstra after the blocked list
+changes, and mis-formatted file I/O. Insist everyone gets the simulation version working
+before the robot — logic first, hardware second. Use the rubric as a self-assessment
+checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is better and listen for
+"better data," not "the robot is smarter." For 50-minute periods this spans 2–3 days
+(assembly/simulation, robot testing, demos). Finally: take a moment to mark how far students
+have come — from "Hello, World" to an autonomous robot that navigates, senses, and learns.
+That's a real accomplishment.
+
+</TeacherNote>
+
+## Course wrap-up
+
+<TeacherNote title="The whole journey">
+
+Trace the arc for students: Module 1 Python foundations, Module 2 sensors and classes,
+Module 3 the grid, Module 4 Manhattan pathfinding and the Navigator, Module 5 graphs,
+Dijkstra, sensing, and learning. The plan-vs-execute split (planner + Navigator) and the
+shared-interface swap are ideas they'll meet again in any serious software work. These
+skills open doors to CS (data structures, algorithms, AI), robotics (SLAM, motion
+planning), and software engineering (integration, testing, modular design).
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

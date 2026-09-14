@@ -1,0 +1,157 @@
+---
+title: "Lesson 3 · Turning on the Grid"
+sidebar_label: "3 · Turning on the Grid"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 3 · Grid Driving"
+  title="Lesson 3 · Turning on the Grid"
+  meta={['40–50 min', 'Sequencing', 'Paths & planning']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You can drive straight down the grid. Now you'll turn corners — sequencing drives and
+turns to trace an **L-shaped path**. Any route across a grid is really just a
+sequence of "drive some segments, turn, drive some more."
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Sequence drive and turn operations into a path
+- Turn at intersections with `turn_right()` and `turn_left()`
+- Navigate an L-shaped path
+- Plan a path on paper before you write the code
+
+</Objectives>
+
+## Part 1 · Drive, turn, drive
+
+Turning a corner on the grid is just like walking city streets: go to the
+intersection, then turn. In code that's `drive_intersections()`, then a turn, then
+`drive_intersections()` again:
+
+```python
+drive_intersections(tracker, 2)   # drive forward 2 intersections
+tracker.turn_right()              # turn right onto the crossing line
+drive_intersections(tracker, 2)   # drive 2 more, now sideways
+
+print("L-shape complete!")
+```
+
+<Figure
+  placeholderLabel="Diagram — grid with an L-shaped path: 2 segments across, a right turn, 2 segments down"
+  caption="An L-shape: drive two segments, turn right, drive two more."
+/>
+
+<KnowledgeCheck
+  question="Which sequence drives an L-shape — two segments, a right turn, then two more segments?"
+  options={[
+    {text: 'turn_right(); drive_intersections(2); drive_intersections(2)'},
+    {text: 'drive_intersections(2); turn_right(); drive_intersections(2)', correct: true},
+    {text: 'drive_intersections(4)'},
+    {text: 'turn_right(); turn_right()'},
+  ]}
+  explanation="Drive to the corner, turn, then continue — the drive/turn/drive order is what makes the L."
+/>
+
+## Part 2 · No clearing after a turn
+
+There's a nice detail: after `turn_right()` or `turn_left()`, you go **straight into**
+the next drive — no clearing needed. That's because the turn methods already drive
+forward off the intersection as part of turning, so the robot is past the cross when
+the turn finishes.
+
+<KnowledgeCheck
+  question="After tracker.turn_right(), do you need to clear the intersection before the next drive_intersections()?"
+  options={[
+    {text: 'Yes — always clear before driving'},
+    {text: 'No — the turn already moves the robot off the intersection', correct: true},
+    {text: 'Only on the last turn'},
+    {text: 'Only if the battery is low'},
+  ]}
+  explanation="turn_right() and turn_left() drive forward as part of turning, so the robot has already cleared the cross — go straight into the next drive."
+/>
+
+<TeacherNote title="Two rules that trip students up">
+
+Reinforce two things: (1) the robot must be **at an intersection** to turn — you
+can't turn mid-segment; and (2) you clear *before* the next drive when going
+straight through, but you **don't** clear after a turn (the turn cleared for you).
+Getting these two backwards is the source of most "my path is off by one
+intersection" bugs.
+
+</TeacherNote>
+
+## Part 3 · Plan on paper first
+
+Before coding a path, sketch it: mark the start, the direction the robot faces, how
+many segments each leg is, and where the turns go. Then translate the sketch,
+one leg per line:
+
+```python
+drive_intersections(tracker, 3)   # leg 1
+tracker.turn_left()               # corner
+drive_intersections(tracker, 1)   # leg 2
+```
+
+<KnowledgeCheck
+  question="Starting at the top-left facing right, the robot runs: drive_intersections(3), turn_right(), drive_intersections(2). Where does it end up?"
+  options={[
+    {text: 'Back at the start'},
+    {text: '3 intersections right of start, then 2 intersections down from there', correct: true},
+    {text: '2 right, then 3 down'},
+    {text: 'It never turns'},
+  ]}
+  explanation="It drives 3 to the right, turns right (now facing down), and drives 2 down — an L ending 3 across and 2 down."
+/>
+
+<TeacherNote title="Differentiation">
+
+**More support:** give students a drawn path and have them write the matching
+sequence. **More challenge:** a U-turn path (drive, turn right, drive one, turn
+right, drive) — a good reminder that two right turns only reverse direction if you
+drive a segment between them. Encourage planning on paper first; it prevents most
+sequencing mistakes.
+
+</TeacherNote>
+
+## Real-world connections
+
+Turn-by-turn sequencing on a grid is exactly how routed navigation works:
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Turn-by-turn directions">
+    "Go 3 blocks, turn right, go 2 blocks" is the same drive/turn sequence you just wrote.
+  </InfoCard>
+  <InfoCard tag="Warehouses" title="Pick routes">
+    A warehouse robot's route is a list of segment-drives and turns between shelf intersections.
+  </InfoCard>
+  <InfoCard tag="Manufacturing" title="Toolpaths">
+    CNC and pick-and-place machines follow planned sequences of moves and direction changes.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What's the basic shape of any grid path? (A sequence of drives and turns.)
+- Do you clear after a turn? (No — the turn already cleared the intersection.)
+- Where must the robot be to turn? (At an intersection.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** sequence drives and turns for a described path, and explain the
+no-clear-after-turn rule. **Exit ticket:** "Write the calls for 'drive 2, turn left,
+drive 1.'" **Preview:** the final project puts four drive-and-turn legs in a loop to
+trace a complete square that returns to the start.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

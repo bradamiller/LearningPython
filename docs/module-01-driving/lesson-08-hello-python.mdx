@@ -1,0 +1,203 @@
+---
+title: "Lesson 8 · Hello, Python"
+sidebar_label: "8 · Hello, Python"
+sidebar_position: 8
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 8 · Hello, Python"
+  meta={['50–60 min', 'Phase C · Transition to Python', 'Blockly → text']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You've mastered the ideas — loops, functions, parameters — by dragging blocks.
+Now you'll write those same ideas as **text**, in Python, the language
+professional programmers and roboticists actually use. Nothing here is a new
+concept. It's the same thinking, typed instead of dragged.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why we move from Blockly to Python
+- Translate a block into the equivalent Python code
+- Follow Python's core syntax rules: indentation, colons, lowercase, parentheses, quotes
+- Use `XRPLib` to drive the robot from Python
+- Use `print()` to show messages and debug
+
+</Objectives>
+
+## Part 1 · The same program, two ways
+
+Here's the **Straight** block you've used all module, and the Python that does the
+exact same thing:
+
+<BlockProgram
+  blocks={[{name: 'straight', note: 'the block you know'}]}
+/>
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+drivetrain.straight(30)
+```
+
+Reading it line by line:
+
+- `from XRPLib… import DifferentialDrive` — bring in the robot-control library.
+- `drivetrain = …get_default_differential_drive()` — get the robot's wheels as an
+  object you can command.
+- `drivetrain.straight(30)` — drive straight 30 cm. (Use a negative number to go
+  backward, just like the block.)
+
+<TeacherNote title="Frame it as 'the next level,' not 'harder'">
+
+The mindset that makes this lesson land: Python isn't harder than Blockly, it's
+the *same ideas written differently*. Put a Blockly program and its Python next to
+each other and let students match them up. The one genuinely new thing is
+**syntax** — the punctuation rules — so name that explicitly and normalize making
+mistakes with it.
+
+</TeacherNote>
+
+## Part 2 · The five syntax rules
+
+Blockly never let you make a spelling mistake. Python will, so five rules matter:
+
+1. **Indentation** — spaces at the start of a line group code together. It's not
+   decoration; it's how Python knows what's inside a loop.
+2. **Colons** — a `:` ends lines that start a block (`for`, `if`, `def`).
+3. **Lowercase** — `print` is not `Print`. Names are case-sensitive.
+4. **Parentheses** — function calls need them: `print()`, even when empty.
+5. **Quotes** — text goes in quotes: `print("hello")`.
+
+<KnowledgeCheck
+  question="Which line is written correctly?"
+  options={[
+    {text: 'Print("Driving...")'},
+    {text: 'print "Driving..."'},
+    {text: 'print("Driving...")', correct: true},
+    {text: 'print(Driving...)'},
+  ]}
+  explanation="Lowercase print, parentheses around the call, and quotes around the text. The others break one rule each."
+/>
+
+<KnowledgeCheck
+  question="What's wrong with this line?  for i in range(4)"
+  options={[
+    {text: 'range should be capitalized'},
+    {text: 'It is missing the colon at the end — for i in range(4):', correct: true},
+    {text: 'It needs quotes around the 4'},
+    {text: 'Nothing is wrong'},
+  ]}
+  explanation="Lines that start a block (for, if, def) must end with a colon."
+/>
+
+## Part 3 · Write your first Python program
+
+Type this into a new file (typing, not pasting — it builds muscle memory), then
+upload and run it:
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+
+print("Driving forward...")
+drivetrain.straight(30)
+
+print("Driving backward...")
+drivetrain.straight(-30)
+
+print("Done!")
+```
+
+Watch the console: your `print()` messages appear as the robot runs, so you can
+see exactly where it is in the program.
+
+<KnowledgeCheck
+  question="Why does drivetrain.straight(-30) drive the robot backward?"
+  options={[
+    {text: 'Negative numbers reverse the direction — same as a negative cm in the Straight block', correct: true},
+    {text: 'It drives forward 30 cm, then stops'},
+    {text: 'It turns instead of driving'},
+    {text: 'It causes an error'},
+  ]}
+  explanation="A negative distance means backward, exactly like typing a negative cm value into the block."
+/>
+
+<TeacherNote title="print() is a debugging superpower">
+
+Encourage *liberal* use of `print()` — a message before and after each action
+turns an invisible program into a visible one. This is the habit that makes the
+Python lessons debuggable. Also expect indentation to be the #1 stumble: a
+whitespace-visible editor and auto-indent help a lot. Let students hit real syntax
+errors and practice reading the messages; that's the skill.
+
+</TeacherNote>
+
+## Part 4 · Read it, then fix it
+
+Spotting mistakes is half of programming. What's wrong here?
+
+```python
+drivetrain.straight(30)
+Print("Backing up")
+drivetrain.straight(-30)
+```
+
+<KnowledgeCheck
+  question="Find the bug in the code above."
+  options={[
+    {text: 'straight should be capitalized'},
+    {text: 'Print should be lowercase: print', correct: true},
+    {text: 'The distances should be positive'},
+    {text: 'There is no bug'},
+  ]}
+  explanation="Python is case-sensitive. Print with a capital P isn't the same as the built-in print."
+/>
+
+**Try it:** rewrite your forward/backward program to drive an L-shape —
+`straight`, `turn(90)`, `straight` — with a `print()` before each step.
+
+## Real-world connections
+
+Python is one of the most-used languages in the world, well beyond robots:
+
+<CardGrid>
+  <InfoCard tag="AI" title="Machine learning">
+    Most AI research and tools — including large language models — are built in Python.
+  </InfoCard>
+  <InfoCard tag="Science" title="Data & discovery">
+    Scientists analyze experiments, genomes, and telescopes' data with Python every day.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Real robots">
+    From classroom bots to industrial arms, Python is a standard language for robot control.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Why learn Python if Blockly works? (More powerful and flexible; it's what real programmers use.)
+- Name two of the five syntax rules. (Indentation, colons, lowercase, parentheses, quotes.)
+- What is `print()` good for? (Showing messages and debugging.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students translate a block to Python and spot a syntax error?
+**Summative:** the forward/backward program runs, the robot moves as intended, and
+the print messages appear. **Preview:** next lesson we replace repeated lines with
+a Python `for` loop — the text version of the Repeat block.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [Python.org docs](https://www.python.org/doc/)

@@ -1,0 +1,188 @@
+---
+title: "Lesson 1 · The Reflectance Sensor"
+sidebar_label: "1 · Reflectance Sensor"
+sidebar_position: 1
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 1 · The Reflectance Sensor"
+  meta={['50–60 min', 'Sensors', 'First look at sensing']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+In Module 1 the robot only ever did what you told it, step by step. Now it gets to
+**sense** the world. This lesson introduces the XRP's reflectance sensors — the
+"eyes" it uses to tell a white surface from a black line — and you'll record the
+readings you'll rely on for the rest of the module.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain how a reflectance sensor tells light surfaces from dark ones
+- Read the left and right sensors with `get_left()` and `get_right()`
+- Interpret sensor values (roughly `0.0` on white to `1.0` on black)
+- Pick a **threshold** that separates "on the line" from "off the line"
+- Record calibration data for your own robot and tape
+
+</Objectives>
+
+## Part 1 · How the robot "sees" a line
+
+Flip an XRP over and you'll find two small reflectance sensors underneath. Each one
+shines invisible infrared light down at the surface and measures how much bounces
+back.
+
+<Figure
+  placeholderLabel="Diagram — IR sensor shining light: white reflects a lot (low value), black absorbs it (high value)"
+  caption="A white surface reflects most of the light back (a low reading); a black line absorbs it (a high reading)."
+/>
+
+- **White surface** → most light bounces back → a **low** value (around `0.1–0.3`).
+- **Black line** → light is absorbed → a **high** value (around `0.7–0.9`).
+
+The XRP has a **left** and a **right** sensor, each with its own reading — which is
+how the robot can tell *which side* of a line it's on.
+
+<KnowledgeCheck
+  question="Your sensor reads 0.8. What is it most likely over?"
+  options={[
+    {text: 'A white surface'},
+    {text: 'A black line', correct: true},
+    {text: 'The edge of the line'},
+    {text: 'Nothing — that value is impossible'},
+  ]}
+  explanation="High values (near 1.0) mean little light came back — a dark surface absorbs it. White gives low values near 0.0."
+/>
+
+## Part 2 · Read the sensors in Python
+
+Reading a sensor is just importing its class and calling a method:
+
+```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.board import Board
+
+reflectance = Reflectance.get_default_reflectance()
+board = Board.get_default_board()
+
+board.wait_for_button()
+
+left = reflectance.get_left()
+right = reflectance.get_right()
+print("Left sensor:", left)
+print("Right sensor:", right)
+```
+
+To watch the values change as you slide the robot across the line, put the read in
+a loop:
+
+```python
+import time
+
+for i in range(50):
+    left = reflectance.get_left()
+    right = reflectance.get_right()
+    print("Left:", left, "  Right:", right)
+    time.sleep(0.1)
+```
+
+<Figure
+  placeholderLabel="Screen recording — sliding the robot across the tape while sensor values print"
+  caption="Slide the robot slowly across the line and watch the readings climb from ~0.2 to ~0.8."
+/>
+
+<TeacherNote title="Setup that makes or breaks the readings">
+
+Press the black tape down flat (no bubbles), keep the sensors a few millimeters
+off the surface, and watch out for direct sunlight or bright overhead lights —
+they shift the values (calibration handles this). Emphasize `print()` as the
+number-one debugging tool all module. Have students **save their calibration data**;
+they'll reuse it in Lessons 2–7.
+
+</TeacherNote>
+
+## Part 3 · Calibrate and pick a threshold
+
+Every surface and every roll of tape is a little different, so you **calibrate** —
+measure your own values — instead of trusting a textbook number. Record readings in
+three positions: both sensors on white, both on the black line, and one on the edge.
+
+Then pick a **threshold** halfway between your highest white reading and your lowest
+black reading. That's the number your programs will use to decide "on the line" vs.
+"off."
+
+> threshold = (highest white value + lowest black value) ÷ 2
+
+<KnowledgeCheck
+  question="Your 'off line' (white) values average 0.2 and your 'on line' (black) values average 0.8. What threshold should you choose?"
+  options={[
+    {text: '0.2'},
+    {text: '0.5', correct: true},
+    {text: '0.8'},
+    {text: '1.0'},
+  ]}
+  explanation="Halfway between 0.2 and 0.8 is 0.5. A reading above it means the line; below it means white."
+/>
+
+<KnowledgeCheck
+  question="Why does the XRP have two reflectance sensors instead of one?"
+  options={[
+    {text: 'As a spare in case one breaks'},
+    {text: 'So it can tell which side of the line it is on', correct: true},
+    {text: 'To read the line twice as fast'},
+    {text: 'One reads white, the other reads black'},
+  ]}
+  explanation="Two independent readings let the robot tell whether it's drifting left or right of the line — essential for following it later."
+/>
+
+<TeacherNote title="Why calibrate instead of just using 0.5?">
+
+0.5 is a fine starting guess, but a glossy surface, a faded line, or bright room
+lighting can push the real edge value well off 0.5. Students who calibrate get
+line-following that actually works in Lessons 5–6; students who guess spend those
+lessons fighting a bad threshold. Frame calibration as the professional habit it
+is — real robots calibrate their sensors on startup.
+
+</TeacherNote>
+
+## Real-world connections
+
+Reflectance sensing shows up all over the automated world:
+
+<CardGrid>
+  <InfoCard tag="Retail" title="Barcode scanners">
+    Scanners read the pattern of light and dark bars exactly the way your sensor reads tape.
+  </InfoCard>
+  <InfoCard tag="Warehouses" title="Line-following AGVs">
+    Automated guided vehicles follow lines taped or painted on warehouse floors.
+  </InfoCard>
+  <InfoCard tag="Phones" title="Ambient light sensors">
+    Your phone dims its screen using the same idea — measuring reflected/available light.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Does a higher reading mean lighter or darker? (Darker — less light bounced back.)
+- What is a threshold, and how do you pick one? (The cutoff between line and white; halfway between your calibrated values.)
+- Why two sensors? (To tell which side of the line the robot is on.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students read and interpret sensor values, and explain how the
+sensor works? **Exit ticket:** given white avg 0.2 and black avg 0.8, choose a
+threshold (0.5). **Preview:** next lesson we use a `while` loop with this threshold
+to drive forward until the robot detects the line, then stop.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

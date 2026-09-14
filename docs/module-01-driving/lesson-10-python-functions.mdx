@@ -1,0 +1,211 @@
+---
+title: "Lesson 10 · Python Functions"
+sidebar_label: "10 · Python Functions"
+sidebar_position: 10
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 10 · Python Functions"
+  meta={['50–60 min', 'Phase C · Transition to Python', 'def, parameters, return']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You built reusable functions with Blockly's "to do something" block back in
+Lessons 3–5. Now you'll write functions in Python with the `def` keyword — same
+idea (define once, call many times), plus the ability to pass in **parameters**
+and hand back a **return** value.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Define a function in Python with `def name(parameters):`
+- Call a function and pass it arguments
+- Use parameters inside the function body
+- Return a value from a function and use it
+- Understand that variables inside a function are **local** to it
+
+</Objectives>
+
+## Part 1 · From "to do something" to `def`
+
+Here's the reusable square, Blockly on top and Python below:
+
+```python
+def draw_square():
+    for i in range(4):
+        drivetrain.straight(30)
+        drivetrain.turn(90)
+
+draw_square()
+draw_square()
+draw_square()
+```
+
+The pieces map to what you already know:
+
+- `def` — the keyword that *defines* a function (like the "to do something" block).
+- `draw_square` — the name (lowercase, words joined by underscores).
+- `()` — the parameter list (empty for now).
+- `:` and indentation — everything indented is the function **body**.
+- `draw_square()` — *calls* it. Define it once at the top; call it as often as you like.
+
+<KnowledgeCheck
+  question="Which keyword defines a function in Python?"
+  options={[
+    {text: 'function'},
+    {text: 'def', correct: true},
+    {text: 'define'},
+    {text: 'func'},
+  ]}
+  explanation="Python uses def, followed by the function name, parentheses, and a colon."
+/>
+
+<TeacherNote title="Order matters in Python">
+
+A difference from Blockly worth calling out: Python reads **top to bottom**, so a
+function must be *defined above* the line that calls it. "Called before it's
+defined" is a common first error — the fix is simply to move the `def` block up.
+Reinforce that this is the text version of the exact same define/call idea from
+Lesson 3.
+
+</TeacherNote>
+
+## Part 2 · Parameters make it flexible
+
+Just like the gear icon added an input in Blockly, a name inside the parentheses
+adds a parameter in Python:
+
+```python
+def draw_square(size):
+    for i in range(4):
+        drivetrain.straight(size)
+        drivetrain.turn(90)
+
+draw_square(30)
+draw_square(50)
+draw_square(20)
+```
+
+The `size` **parameter** is a local variable; the numbers you pass (`30`, `50`,
+`20`) are the **arguments**. Add more parameters by separating them with commas —
+`def draw_square(size, effort):`.
+
+<KnowledgeCheck
+  question="Given def draw_square(size):, what does calling draw_square(45) make the robot do?"
+  options={[
+    {text: 'Draw a square with 45 cm sides', correct: true},
+    {text: 'Draw a square with 90 cm sides'},
+    {text: 'Turn 45 degrees'},
+    {text: 'Cause an error — you must pass two numbers'},
+  ]}
+  explanation="The argument 45 fills the size parameter, so each Straight drives 45 cm. One parameter, one argument."
+/>
+
+## Part 3 · Returning a value
+
+Some functions *do* something (draw a square); others *calculate* something and
+**return** an answer. The `return` keyword hands a value back to whoever called it:
+
+```python
+def calculate_angle(num_sides):
+    return 360 / num_sides
+
+angle = calculate_angle(6)
+print(f"Hexagon angle: {angle}")     # → Hexagon angle: 60.0
+```
+
+You can then build bigger functions from smaller ones — a `draw_polygon` that uses
+`calculate_angle`:
+
+```python
+def draw_polygon(num_sides, size, effort):
+    angle = 360 / num_sides
+    for i in range(num_sides):
+        drivetrain.straight(size, max_effort=effort)
+        drivetrain.turn(angle, max_effort=effort)
+
+draw_polygon(4, 30, 0.5)   # square
+draw_polygon(3, 25, 0.5)   # triangle
+draw_polygon(8, 15, 0.5)   # octagon
+```
+
+<KnowledgeCheck
+  question="A variable created inside a function (like angle above) can be used…"
+  options={[
+    {text: 'Anywhere in the program'},
+    {text: 'Only inside that function — it is local', correct: true},
+    {text: 'Only after the program ends'},
+    {text: 'Only in other functions'},
+  ]}
+  explanation="Variables defined in a function are local to it. Code outside can't see angle — which keeps functions self-contained and safe."
+/>
+
+<KnowledgeCheck
+  question="What's wrong with this?  def multiply(x, y)"
+  options={[
+    {text: 'multiply should be capitalized'},
+    {text: 'It is missing the colon: def multiply(x, y):', correct: true},
+    {text: 'x and y need quotes'},
+    {text: 'Nothing is wrong'},
+  ]}
+  explanation="A def line, like a for line, must end with a colon before its indented body."
+/>
+
+## Part 4 · Build a shape library
+
+1. Write `draw_polygon(num_sides, size, effort)` and test it on three shapes.
+2. Add a helper `calculate_perimeter(num_sides, side_length)` that **returns**
+   `num_sides * side_length`, and print the perimeter after drawing.
+3. **Challenge:** give your function default values —
+   `def draw_square(size=30, effort=0.5):` — so `draw_square()` just works.
+
+<TeacherNote title="Differentiation & habits">
+
+**More support:** start with a no-parameter `def say_hello(): print("Hello")` and a
+fill-in-the-blank skeleton before robot code. **More challenge:** a full shape
+library (star, spiral), default parameters, or functions that call functions.
+Encourage a one-line docstring (`"""Draw a regular polygon."""`) under each def —
+it's the professional habit that pays off in Lesson 11's project.
+
+</TeacherNote>
+
+## Real-world connections
+
+Functions with parameters and return values are the building blocks of every program:
+
+<CardGrid>
+  <InfoCard tag="Everywhere" title="Standard libraries">
+    Languages ship thousands of ready-made functions — you call them without knowing the internals.
+  </InfoCard>
+  <InfoCard tag="Teams" title="Shared code">
+    Engineers split a big system into functions so many people can work on it at once.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Motion & perception">
+    "read distance", "drive to", "plan path" — real robot code is functions calling functions.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What keyword defines a function, and what punctuation must end the line? (`def`, and a colon.)
+- What's the difference between a parameter and an argument? (Parameter = name in the def; argument = value in the call.)
+- What does `return` do? (Sends a value back to whoever called the function.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** correct `def` syntax, using parameters in the body, and reading a
+`return`. **Exit ticket:** "Write `add(a, b)` that returns `a + b`." **Preview:**
+Lesson 11 is the capstone — students design and build their own complete Python
+program using everything from Module 1.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/)

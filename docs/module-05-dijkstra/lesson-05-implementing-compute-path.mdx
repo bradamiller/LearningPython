@@ -1,0 +1,236 @@
+---
+title: "Lesson 5 · Implementing compute_path()"
+sidebar_label: "5 · Implementing compute_path"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 5 · Implementing compute_path()"
+  meta={['60 min', 'Python algorithm', 'Paper trace → code']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This is the heart of Module 5: turning the hand-trace from Lesson 3 into working Python.
+Every step you did on paper becomes a few lines of code — no new Python concepts, just
+dictionaries, lists, loops, and `in` combined into a precise algorithm.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Initialize `distances`, `previous`, and `visited` in code
+- Find the unvisited node with the smallest distance
+- Update a node's neighbors using the graph dictionary
+- Write the main loop with the right stopping condition
+- Reconstruct and reverse the path
+
+</Objectives>
+
+## Part 1 · Set up the three structures
+
+Every step on paper maps to code. Start by creating the structures — all distances at
+"infinity" (999999), except the start at 0:
+
+```python
+def compute_path(self, destination):
+    distances = {}
+    previous = {}
+    visited = []
+
+    for node in self.graph:
+        distances[node] = 999999      # "infinity" — no path found yet
+
+    distances[self.position] = 0       # start is 0 from itself
+    previous[self.position] = None     # nothing before the start
+```
+
+Why 999999? It stands in for infinity. Any real path will be shorter, so the first path
+found to any node always replaces it.
+
+<KnowledgeCheck
+  question="Why are all distances initialized to 999999 except the start?"
+  options={[
+    {text: 'It is the maximum grid size'},
+    {text: 'It represents "infinity / no path yet" — any real distance is smaller, so the first path found always improves it', correct: true},
+    {text: 'It is a random seed'},
+    {text: 'To make the numbers line up'},
+  ]}
+  explanation="999999 is a stand-in for infinity. The start is 0 (zero steps from itself); everything else is 'unknown' until a real path is discovered."
+/>
+
+## Part 2 · Find the smallest unvisited node
+
+The core decision: scan every node, skip visited ones, keep the smallest distance seen.
+
+```python
+current = None
+current_distance = 999999
+for node in distances:
+    if node not in visited:
+        if distances[node] < current_distance:
+            current = node
+            current_distance = distances[node]
+```
+
+This is a classic "find the minimum" pattern: start with a bad value, look at everything,
+remember the best. After the loop, `current` is the closest unvisited node.
+
+<KnowledgeCheck
+  question="What does this loop leave in the variable current?"
+  options={[
+    {text: 'The last node in the graph'},
+    {text: 'The unvisited node with the smallest known distance', correct: true},
+    {text: 'The destination'},
+    {text: 'A node chosen at random'},
+  ]}
+  explanation="It scans all nodes, ignores visited ones, and keeps the one with the smallest distance — exactly the 'pick the nearest unvisited node' step from the paper trace."
+/>
+
+## Part 3 · Update neighbors, then mark visited
+
+For each unvisited neighbor, offer a distance of `distances[current] + 1`; keep it only if
+it's shorter than what the neighbor already had:
+
+```python
+for neighbor in self.graph[current]:
+    if neighbor not in visited:
+        new_distance = distances[current] + 1
+        if new_distance < distances[neighbor]:
+            distances[neighbor] = new_distance
+            previous[neighbor] = current
+
+visited.append(current)      # done with current — AFTER updating neighbors
+```
+
+The `if new_distance < distances[neighbor]` check is what keeps the *shortest* path — if
+you always updated, a longer route could overwrite a shorter one already found.
+
+<KnowledgeCheck
+  question="Why the check `if new_distance < distances[neighbor]` before updating?"
+  options={[
+    {text: 'To skip blocked nodes'},
+    {text: 'So a longer path never overwrites a shorter one already found', correct: true},
+    {text: 'To count the neighbors'},
+    {text: 'It is optional and does nothing'},
+  ]}
+  explanation="Only a strictly shorter distance should replace what's stored. Without the check, a later, longer route could clobber a shorter one — breaking the shortest-path guarantee."
+/>
+
+## Part 4 · The main loop
+
+Wrap find-minimum and update-neighbors in a loop that runs until the destination is
+visited — with a safety check for unreachable destinations:
+
+```python
+while destination not in visited:
+    # find minimum unvisited
+    current = None
+    current_distance = 999999
+    for node in distances:
+        if node not in visited and distances[node] < current_distance:
+            current = node
+            current_distance = distances[node]
+
+    if current is None:            # nothing reachable left
+        print(f"No path to {destination}!")
+        return []
+
+    # update neighbors
+    for neighbor in self.graph[current]:
+        if neighbor not in visited:
+            new_distance = distances[current] + 1
+            if new_distance < distances[neighbor]:
+                distances[neighbor] = new_distance
+                previous[neighbor] = current
+
+    visited.append(current)
+```
+
+The `current is None` check prevents an infinite loop when the destination is walled off
+by obstacles.
+
+<KnowledgeCheck
+  question="What does the `if current is None` check protect against?"
+  options={[
+    {text: 'Running out of memory'},
+    {text: 'An unreachable destination — no unvisited node has a known distance, so the loop would never end', correct: true},
+    {text: 'A blocked start node'},
+    {text: 'Too many neighbors'},
+  ]}
+  explanation="If obstacles seal off the destination, no reachable unvisited node remains. Without the check the loop would spin forever (or crash); with it, compute_path returns [] gracefully."
+/>
+
+## Part 5 · Reconstruct and reverse
+
+Follow `previous` backward from the destination, then flip the list:
+
+```python
+    path = []
+    current = destination
+    while current is not None:
+        path.append(current)
+        current = previous[current]
+
+    path.reverse()
+    return path
+```
+
+The returned path **includes the start** — `[(0,0), (0,1), (0,2), (1,2), (2,2)]` — so the
+number of steps is `len(path) - 1`. Run your code on the *exact* grids you traced in
+Lesson 3; the output should match your hand traces line for line. And on a clear grid,
+Dijkstra's step count matches Manhattan's.
+
+<KnowledgeCheck
+  question="compute_path returns [(0,0), (0,1), (0,2), (1,2), (2,2)]. How many steps is that?"
+  options={[
+    {text: '5'},
+    {text: '4', correct: true},
+    {text: '3'},
+    {text: '0'},
+  ]}
+  explanation="The path includes the start, so it lists 5 nodes but 4 moves between them. Steps = len(path) − 1 = 4."
+/>
+
+## Real-world connections
+
+This exact pattern — explore, relax distances, reconstruct — underlies real systems:
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Route engines">
+    Production routing uses faster cousins of this loop (A*, priority queues) on the same idea.
+  </InfoCard>
+  <InfoCard tag="Networks" title="Link-state routing">
+    Internet routers run Dijkstra-based algorithms to build their forwarding tables.
+  </InfoCard>
+  <InfoCard tag="Logistics" title="Delivery planning">
+    Shortest-path search plans routes for delivery fleets across road networks.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What do the three structures hold in code? (Shortest distances, predecessors, finished nodes.)
+- Why check `if new_distance < distances[neighbor]`? (To keep the shortest path.)
+- Why reverse the reconstructed path, and how many steps is a path of N nodes? (It's built backward; N − 1 steps.)
+
+<TeacherNote title="The most important lesson in the module — build it in stages">
+
+Have a working solution file ready; students who don't finish can't proceed. Build exactly
+as shown: initialization (test with prints), find-minimum (test), neighbor update (test),
+full loop (test), reconstruction (test). Keep the Lesson 3 trace table on the board and
+point to the matching column as you write each block — "this loop is the Update Neighbors
+column." The find-minimum pattern trips people up; practice it in isolation ("find the
+smallest number in a list") first. Watch the off-by-one: a path of N nodes has N − 1 steps.
+Run their code on the same examples they traced by hand — that's the verification that
+closes the loop.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)

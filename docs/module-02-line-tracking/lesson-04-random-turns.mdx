@@ -1,0 +1,180 @@
+---
+title: "Lesson 4 · Random Turns"
+sidebar_label: "4 · Random Turns"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 4 · Random Turns"
+  meta={['50–60 min', 'import & random', 'Breaking the pattern']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your bounce robot has a flaw: turning exactly 180° every time, it just retraces the
+same path back and forth and never explores the rest of the circle. The fix is
+**randomness** — turning a different amount each bounce. To get it, you'll `import`
+one of Python's built-in toolboxes.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what a module is and use `import` to bring one in
+- Generate random integers with `random.randint(a, b)`
+- Say why always turning 180° traps the robot in a pattern
+- Modify your bounce program to turn a random angle each time
+
+</Objectives>
+
+## Part 1 · Modules and `import`
+
+Python ships with thousands of ready-made tools grouped into **modules** — think of
+each as a toolbox. To use one, you `import` it at the top of your file. You've done
+this already for the robot (`from XRPLib.reflectance import Reflectance`); for random
+numbers you import Python's built-in `random`:
+
+```python
+import random
+
+for i in range(5):
+    number = random.randint(1, 10)
+    print("Random number:", number)
+```
+
+`random.randint(1, 10)` hands back **one** random whole number from 1 to 10,
+*including* both ends. Run it again and you'll (usually) get a different number.
+
+<KnowledgeCheck
+  question="What can `random.randint(1, 6)` return?"
+  options={[
+    {text: 'Any decimal between 1 and 6'},
+    {text: 'Any whole number from 1 to 6, including 1 and 6', correct: true},
+    {text: 'The numbers 1 through 5 only'},
+    {text: 'Exactly six random numbers at once'},
+  ]}
+  explanation="randint gives one integer, and the range is inclusive — so 1, 2, 3, 4, 5, or 6 (like rolling a die)."
+/>
+
+<KnowledgeCheck
+  question="Where do import statements belong?"
+  options={[
+    {text: 'At the very top of the file', correct: true},
+    {text: 'Inside the while loop, so they run every pass'},
+    {text: 'Right before the robot moves'},
+    {text: 'Anywhere — it makes no difference'},
+  ]}
+  explanation="By convention imports go at the top. You import once; the tools are then available everywhere below."
+/>
+
+## Part 2 · Random bounce driving
+
+The only change from Lesson 3 is swapping the fixed `turn(180)` for a random angle:
+
+```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+import random
+
+reflectance = Reflectance.get_default_reflectance()
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+threshold = 0.5
+
+board.wait_for_button()
+
+while True:
+    left = reflectance.get_left()
+    right = reflectance.get_right()
+
+    if left > threshold or right > threshold:
+        drivetrain.stop()
+        angle = random.randint(90, 270)          # a different turn each time
+        print("Line detected! Turning", angle, "degrees")
+        drivetrain.turn(angle)
+    else:
+        drivetrain.set_effort(0.3, 0.3)
+```
+
+Now each bounce picks a fresh angle between 90° and 270°, so the robot fans out and
+covers the whole circle instead of pacing the same line.
+
+<KnowledgeCheck
+  question="Why does always turning exactly 180° cause a problem?"
+  options={[
+    {text: 'It drains the battery faster'},
+    {text: 'The robot retraces the same path back and forth and never explores the rest', correct: true},
+    {text: '180° turns are inaccurate on hardware'},
+    {text: 'It makes the robot leave the circle'},
+  ]}
+  explanation="A 180° turn sends the robot straight back the way it came, so it bounces between the same two points forever. Random angles break that."
+/>
+
+<TeacherNote title="Why 90–270, not 0–360?">
+
+The range matters. `randint(90, 270)` guarantees the robot meaningfully changes
+direction. A range that includes very small angles (or 0) can send it straight back
+across the line it just hit, or barely turn at all — so it drifts out of the circle.
+Have students experiment (Lesson worksheet has a range table) and *see* why a
+mid-range band explores best. Good moment to note computer randomness is really
+"pseudo-random" — deterministic underneath, but plenty random for us.
+
+</TeacherNote>
+
+## Part 3 · Experiment
+
+1. Add `import random` and the random angle to your Lesson 3 program.
+2. Try different ranges and watch what changes: `randint(170, 190)` (barely varies),
+   `randint(90, 270)` (good spread), `randint(45, 315)` (wild).
+3. **Challenge:** randomize the *speed* too — `speed = random.randint(20, 50) / 100`
+   gives an effort from 0.2 to 0.5.
+
+<TeacherNote title="Differentiation">
+
+**More support:** first just generate and print random numbers with no robot, so
+`randint` is concrete. **More challenge:** a "dance mode" victory spin every 10th
+bounce, or `random.choice([90, 180, 270])` to pick from specific angles — a nice
+preview of lists.
+
+</TeacherNote>
+
+## Real-world connections
+
+Randomness is a real engineering tool, not just chaos:
+
+<CardGrid>
+  <InfoCard tag="Games" title="Procedural worlds">
+    Games generate endless different levels, loot, and maps from random numbers.
+  </InfoCard>
+  <InfoCard tag="Cleaning" title="Robot vacuums">
+    Simpler vacuums use semi-random turns to eventually cover a whole room — just like your bounce bot.
+  </InfoCard>
+  <InfoCard tag="Science" title="Simulations">
+    Weather, traffic, and epidemic models run millions of random trials to predict outcomes.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does `import` do? (Brings in a module's tools so you can use them.)
+- What does `random.randint(1, 6)` return? (One whole number, 1–6 inclusive.)
+- Why is a random turn better than a fixed 180° here? (It stops the robot retracing the same path.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** correct use of `import random` and understanding `randint`'s inclusive
+range. **Exit ticket:** "What values could `random.randint(90, 270)` give?" (any
+integer 90–270). **Preview:** next lesson is the big one — we stop *bouncing* off the
+line and start *following* it, using proportional control.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python random module](https://docs.python.org/3/library/random.html)

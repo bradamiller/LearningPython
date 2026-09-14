@@ -1,0 +1,261 @@
+---
+title: "Lesson 5 · Implementing the Manhattan Class"
+sidebar_label: "5 · The Manhattan Class"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 5 · Implementing the Manhattan Class"
+  meta={['60 min', 'Python classes', 'Function → method']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Last lesson you wrote `compute_path()` as a standalone function. Now you'll wrap it in a
+**`Manhattan` class** — the planner from the module overview. The algorithm doesn't
+change one bit; this lesson is about the *mechanics* of turning a function into a method
+that remembers where the robot started.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why bundling data and behavior in a class is useful
+- Write an `__init__` that stores the start position as `self.position`
+- Convert a function into a method: add `self`, and use `self.position` instead of a `start` parameter
+- Explain why local variables (`current_row`, `path`) don't need `self.`
+- Test the class by creating an instance and calling its method
+
+</Objectives>
+
+## Part 1 · Why a class?
+
+With the plain function, computing three paths from the same corner means typing the
+start every time:
+
+```python
+path1 = compute_path((0, 0), (2, 3))
+path2 = compute_path((0, 0), (1, 1))
+path3 = compute_path((0, 0), (3, 2))
+```
+
+We wrote `(0, 0)` three times. Move the robot's start and you'd fix it in every line.
+A **class** stores the start once, then reuses it:
+
+```python
+nav = Manhattan((0, 0))
+path1 = nav.compute_path((2, 3))
+path2 = nav.compute_path((1, 1))
+path3 = nav.compute_path((3, 2))
+```
+
+The start lives inside the `nav` object. This is the same idea as the `LineSensor` and
+`LineTrack` classes from Module 2 — a class **bundles data** (the position) **with
+behavior** (computing a path).
+
+<KnowledgeCheck
+  question="What's the main advantage of the Manhattan class over the standalone function?"
+  options={[
+    {text: 'It runs faster'},
+    {text: 'It stores the start position once, so you don\'t repeat it on every call', correct: true},
+    {text: 'It uses fewer while loops'},
+    {text: 'It doesn\'t need a destination'},
+  ]}
+  explanation="The object remembers its position. You pass the start once when you create it, then just ask for paths to different destinations."
+/>
+
+## Part 2 · Step 1 — store the position with `__init__`
+
+`__init__` runs automatically when you create the object. Its job here is to save the
+starting position:
+
+```python
+class Manhattan:
+    def __init__(self, start):
+        self.position = start
+```
+
+`start` is a tuple like `(0, 0)`. `self.position = start` tucks it away so the object's
+methods can read it later. Test it right away:
+
+```python
+nav = Manhattan((0, 0))
+print(nav.position)      # (0, 0)
+```
+
+The `(0, 0)` you passed in flows into `start`, then gets stored as `self.position`.
+
+<KnowledgeCheck
+  question="After nav = Manhattan((2, 1)), what does nav.position hold?"
+  options={[
+    {text: 'An empty tuple'},
+    {text: '(2, 1)', correct: true},
+    {text: '2'},
+    {text: 'Nothing until compute_path is called'},
+  ]}
+  explanation="__init__ runs at creation and stores whatever you passed as self.position — here, the tuple (2, 1)."
+/>
+
+## Part 3 · Step 2 — the method is the same algorithm
+
+Here's the whole conversion in one picture. The function's `start` parameter
+**disappears** — the method reads `self.position` instead. Everything else is
+identical:
+
+```python
+# LESSON 4: standalone function
+def compute_path(start, destination):
+    current_row, current_col = start          # ← uses the start parameter
+    ...
+
+# LESSON 5: method inside the class
+def compute_path(self, destination):
+    current_row, current_col = self.position  # ← reads the stored position
+    ...
+```
+
+Only three things change: the function moves **inside the class**, it gains `self` as
+its first parameter, and `start` becomes `self.position`. The four while loops don't
+change at all.
+
+Here's the complete class:
+
+```python
+class Manhattan:
+    def __init__(self, start):
+        self.position = start
+
+    def compute_path(self, destination):
+        path = []
+        current_row, current_col = self.position
+        dest_row, dest_col = destination
+
+        while current_row < dest_row:
+            current_row = current_row + 1
+            path.append((current_row, current_col))
+        while current_row > dest_row:
+            current_row = current_row - 1
+            path.append((current_row, current_col))
+        while current_col < dest_col:
+            current_col = current_col + 1
+            path.append((current_row, current_col))
+        while current_col > dest_col:
+            current_col = current_col - 1
+            path.append((current_row, current_col))
+
+        return path
+```
+
+<KnowledgeCheck
+  question="In the class version, where does the old start parameter's information come from now?"
+  options={[
+    {text: 'It\'s passed to compute_path each time'},
+    {text: 'From self.position, stored back in __init__ when the object was created', correct: true},
+    {text: 'It defaults to (0, 0)'},
+    {text: 'From a global variable'},
+  ]}
+  explanation="__init__ saved the start as self.position. The method reads it there, so you never pass the start to compute_path — only the destination."
+/>
+
+<TeacherNote title="A conversion, not a blank page — and mind the self. trap">
+
+Students already own the algorithm from Lesson 4, so keep the cognitive load on the
+class mechanics. Put the function and the class **side by side** on the board and
+highlight only the three differences. Live-code it one step at a time, testing after
+each: print `nav.position` after `__init__`, print a path after the loops. Two
+predictable snags: students want to prefix *every* variable with `self.` (only data
+that must persist — `self.position` — needs it; `current_row`, `path`, `dest_col` are
+temporary), and the double parentheses in `append((r, c))` confuse people — the outer
+pair is the call, the inner pair is the tuple.
+
+</TeacherNote>
+
+## Part 4 · Step 3 — test it
+
+Create an instance and call the method. Compare the output to your hand-traced paths
+from Lesson 4:
+
+```python
+nav = Manhattan((0, 0))
+path = nav.compute_path((2, 3))
+print("Path:", path)         # [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+print("Steps:", len(path))   # 5
+```
+
+One subtle, important point: computing a path does **not** change `nav.position`. The
+method works with the local variables `current_row` and `current_col`, so
+`self.position` stays put — you can compute as many paths from the same start as you
+like:
+
+```python
+print(nav.compute_path((1, 1)))   # [(1, 0), (1, 1)]
+print(nav.position)               # still (0, 0)
+```
+
+<KnowledgeCheck
+  question="You create nav = Manhattan((0, 0)) and call nav.compute_path((2, 3)). Afterward, what is nav.position?"
+  options={[
+    {text: '(2, 3) — it moved to the destination'},
+    {text: '(0, 0) — compute_path only reads self.position, it never changes it', correct: true},
+    {text: 'The full path list'},
+    {text: 'Undefined'},
+  ]}
+  explanation="compute_path uses local variables for the walk, so the stored self.position is untouched. That's what lets you plan several routes from the same start."
+/>
+
+## Part 5 · Why not use `self.` everywhere?
+
+A common instinct is to write `self.current_row`, `self.path`, and so on. Don't. The
+rule: **`self.` is for data that must survive between method calls.** The position does
+— other methods (and next lessons' `Navigator`) need it. But `current_row`, `path`, and
+`dest_col` are scratch values that only matter while `compute_path` is running; they're
+plain **local variables**.
+
+<CardGrid>
+  <InfoCard tag="Persistent" title="self.position">
+    Stored in <code>__init__</code>, read by methods, survives between calls. Needs <code>self.</code>
+  </InfoCard>
+  <InfoCard tag="Temporary" title="current_row, path">
+    Created fresh each time <code>compute_path</code> runs, then discarded. No <code>self.</code> — they're local.
+  </InfoCard>
+</CardGrid>
+
+## Real-world connections
+
+The "store it once, reuse it" pattern of objects is everywhere in real software:
+
+<CardGrid>
+  <InfoCard tag="Games" title="Player objects">
+    A player object remembers its position, health, and score across every method that acts on it.
+  </InfoCard>
+  <InfoCard tag="Apps" title="User accounts">
+    A user object holds your name and settings once; every feature reads them from the same object.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Sensor drivers">
+    Your Module 2 LineSensor stored its pin once, then every reading method used it — same idea.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What are the three changes from function to method? (Move inside the class, add `self`, replace `start` with `self.position`.)
+- What does `current_row, current_col = self.position` do, and what's it called? (Tuple unpacking — pulls both numbers out at once.)
+- Which variables need `self.`? (Only data that persists — `self.position`; the rest are local.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** name the three conversion changes, explain `self.position` vs. a local
+variable, and produce output matching Lesson 4's hand traces. **Exit ticket:** "If
+`nav = Manhattan((2, 1))`, what does `nav.compute_path((2, 1))` return and why?" (`[]` —
+start equals destination, all loops skipped). **Preview:** next lesson we test the class
+*systematically*, without a robot — comparing its output to known-correct paths.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python classes](https://docs.python.org/3/tutorial/classes.html)

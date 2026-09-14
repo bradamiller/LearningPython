@@ -1,0 +1,222 @@
+---
+title: "Lesson 4 · The Dijkstra Class"
+sidebar_label: "4 · The Dijkstra Class"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 4 · The Dijkstra Class"
+  meta={['55 min', 'Python classes', 'Structure first']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Time to turn the concept into code — but in stages. This lesson builds the **class
+structure**: the constructor, the instance variables, and `build_graph` (which creates
+the grid and removes blocked nodes). The `compute_path` algorithm itself waits until
+Lesson 5. The class is designed as a **drop-in replacement** for Manhattan — same method
+name, same return type — so the Navigator works with either.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write the Dijkstra `__init__` with `start` and `blocked` parameters
+- Store `self.position`, `self.blocked`, and `self.graph`
+- Implement `build_graph`, skipping blocked nodes and blocked neighbors
+- Write a `compute_path` placeholder that returns an empty list
+- Explain why Dijkstra's interface matches Manhattan's
+
+</Objectives>
+
+## Part 1 · A better toolbox
+
+In Module 4 you built the `Manhattan` class — a path planner for a clear grid. `Dijkstra`
+is a better one: same shape, but it can route around obstacles. Compare the constructors:
+
+```python
+class Manhattan:
+    def __init__(self, start):
+        self.position = start
+
+class Dijkstra:
+    def __init__(self, start, blocked):
+        self.position = start
+        self.blocked = blocked
+        self.graph = self.build_graph()
+```
+
+Two additions: a **blocked** list (the obstacles) and a **graph** (built immediately when
+the object is created). Notice `__init__` *calls* `build_graph()` — so the graph is ready
+the moment you make a Dijkstra object.
+
+<KnowledgeCheck
+  question="When is self.graph built?"
+  options={[
+    {text: 'The first time you call compute_path'},
+    {text: 'Automatically in __init__, when the object is created', correct: true},
+    {text: 'You must call build_graph yourself after creating the object'},
+    {text: 'Every time you access it'},
+  ]}
+  explanation="The constructor calls self.build_graph() once, so the graph is stored in self.graph and ready to use as soon as the object exists."
+/>
+
+## Part 2 · `build_graph` — build and block in one pass
+
+This is the `build_grid_graph` idea from Lesson 2, adapted as a method that also skips
+blocked nodes. It does both jobs at once — skip a node if it's blocked, and only add a
+neighbor if *that* neighbor isn't blocked:
+
+```python
+def build_graph(self):
+    rows = 4
+    cols = 4
+    graph = {}
+    for row in range(rows):
+        for col in range(cols):
+            if (row, col) in self.blocked:
+                continue                                   # skip blocked node entirely
+            neighbors = []
+            if row > 0 and (row - 1, col) not in self.blocked:
+                neighbors.append((row - 1, col))
+            if row < rows - 1 and (row + 1, col) not in self.blocked:
+                neighbors.append((row + 1, col))
+            if col > 0 and (row, col - 1) not in self.blocked:
+                neighbors.append((row, col - 1))
+            if col < cols - 1 and (row, col + 1) not in self.blocked:
+                neighbors.append((row, col + 1))
+            graph[(row, col)] = neighbors
+    return graph
+```
+
+Building and blocking together is cleaner than building the full graph and then removing
+nodes in a second pass — a blocked node never enters the graph at all.
+
+<KnowledgeCheck
+  question="What does `if (row, col) in self.blocked: continue` do?"
+  options={[
+    {text: 'Adds the node with an empty neighbor list'},
+    {text: 'Skips a blocked node so it never becomes a key in the graph', correct: true},
+    {text: 'Stops the whole loop'},
+    {text: 'Marks the node as visited'},
+  ]}
+  explanation="continue jumps to the next loop iteration, so a blocked node is never added as a key. Combined with the neighbor checks, blocked nodes are fully absent."
+/>
+
+## Part 3 · The `compute_path` placeholder
+
+Build in stages: leave the algorithm as a placeholder so you can test the structure now.
+
+```python
+def compute_path(self, destination):
+    # TODO: implement Dijkstra's algorithm (Lesson 5)
+    print(f"compute_path from {self.position} to {destination}")
+    print(f"Graph has {len(self.graph)} nodes")
+    return []
+```
+
+Returning an empty list of the right *type* means you can test `__init__` and
+`build_graph` today without needing the algorithm yet.
+
+<KnowledgeCheck
+  question="Why leave compute_path as a placeholder for now?"
+  options={[
+    {text: 'Because the algorithm is impossible'},
+    {text: 'To test the class structure (constructor and graph) first, before adding the harder algorithm next lesson', correct: true},
+    {text: 'To save memory'},
+    {text: 'It will never be implemented'},
+  ]}
+  explanation="Building in stages keeps the load manageable — verify the graph is correct now, then focus entirely on the algorithm in Lesson 5."
+/>
+
+## Part 4 · Test the structure
+
+Create objects and check the graph against what you know from Lessons 1–2:
+
+```python
+d = Dijkstra((0, 0), [])
+print(len(d.graph))          # 16 (full 4×4 grid)
+print(d.graph[(1, 1)])       # 4 neighbors
+
+d = Dijkstra((0, 0), [(1, 1)])
+print(len(d.graph))          # 15
+print((1, 1) in d.graph)     # False
+print(d.graph[(0, 1)])       # does NOT include (1,1)
+```
+
+Block two nodes and you get 14. Each blocked node vanishes from the keys *and* from every
+neighbor list.
+
+<KnowledgeCheck
+  question="On a 4×4 grid, how many nodes does Dijkstra((0,0), [(1,0),(2,1)]).graph contain?"
+  options={[
+    {text: '16'},
+    {text: '15'},
+    {text: '14', correct: true},
+    {text: '2'},
+  ]}
+  explanation="16 total minus 2 blocked = 14. Both blocked nodes are skipped as keys, and removed from all neighbor lists too."
+/>
+
+## Part 5 · The shared interface
+
+Here's the design payoff. Both classes offer `compute_path(destination)` returning a list
+of `(row, col)` tuples:
+
+<CardGrid>
+  <InfoCard tag="Module 4" title="Manhattan(start)">
+    <code>compute_path(destination)</code> → list of tuples. Fast, but no obstacles.
+  </InfoCard>
+  <InfoCard tag="Module 5" title="Dijkstra(start, blocked)">
+    <code>compute_path(destination)</code> → list of tuples. Handles obstacles.
+  </InfoCard>
+</CardGrid>
+
+Because the interface matches, the Navigator can call `pathfinder.compute_path(dest)`
+without caring which class it holds. You'll swap them in Lesson 6.
+
+<KnowledgeCheck
+  question="Why does it matter that Dijkstra's compute_path returns the same type as Manhattan's?"
+  options={[
+    {text: 'It makes the code run faster'},
+    {text: 'The Navigator can use either class interchangeably, since it just calls compute_path and gets a list of tuples back', correct: true},
+    {text: 'It saves disk space'},
+    {text: 'It doesn\'t matter'},
+  ]}
+  explanation="A shared interface — same method name, same return type — is what makes Dijkstra a drop-in replacement for Manhattan in the Navigator."
+/>
+
+<TeacherNote title="Build incrementally; watch the self. mistakes">
+
+Write `__init__`, test it (print the instance variables). Add `build_graph`, test the
+graph. Add the placeholder, test the call. Never dump the whole class at once. Put the
+Manhattan and Dijkstra constructors side by side — students who wobbled on classes in
+Module 4 get another pass here. Common errors: forgetting `self` (`position = start`
+instead of `self.position = start`), and expecting to call `build_graph` manually when the
+constructor already does. Show what a graph looks like if you forget the blocked-neighbor
+checks — a blocked node reappears as someone's neighbor and the path goes wrong.
+
+</TeacherNote>
+
+## Wrap-up
+
+- What three things does `__init__` store? (`self.position`, `self.blocked`, `self.graph`.)
+- What two jobs does `build_graph` do at once? (Builds the grid and excludes blocked nodes.)
+- Why does the interface match Manhattan's? (So Navigator can swap one for the other.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** explain each instance variable, predict node counts given a blocked list,
+and confirm blocked nodes appear in no neighbor lists. **Exit ticket:** "For `Dijkstra((0,0),
+[(1,0),(2,1)])` on a 4×4 grid, how many nodes in the graph?" (14). **Preview:** next lesson
+we fill in `compute_path` with the full algorithm you traced by hand in Lesson 3.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python classes](https://docs.python.org/3/tutorial/classes.html)

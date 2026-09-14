@@ -1,0 +1,198 @@
+---
+title: "Lesson 2 · Dictionaries"
+sidebar_label: "2 · Dictionaries"
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 2 · Dictionaries"
+  meta={['50 min', 'Python data', 'The graph in code']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You drew the grid graph on paper. Now you'll store it in Python using a **dictionary** —
+where each key is a `(row, col)` node and each value is a list of that node's neighbors.
+By the end you'll have a `build_grid_graph(rows, cols)` function that generates the whole
+graph automatically, ready for Dijkstra's algorithm.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what a dictionary is: a collection of key-value pairs
+- Create a dictionary, add pairs, and look up a value by key
+- Check whether a key exists with the `in` keyword
+- Represent a grid graph as `{node: [neighbors]}`
+- Write `build_grid_graph(rows, cols)` and remove blocked nodes
+
+</Objectives>
+
+## Part 1 · What is a dictionary?
+
+A **dictionary** stores **key-value pairs** in curly braces. Like a real dictionary maps
+words to definitions, or a phone book maps names to numbers, a Python dictionary maps any
+key to any value:
+
+```python
+scores = {"Alice": 95, "Bob": 87}
+graph = {}                         # empty, ready to fill
+graph[(0, 0)] = [(0, 1), (1, 0)]   # node (0,0) → its neighbor list
+```
+
+For our graph, the **keys are node tuples** and the **values are lists of neighbor
+tuples.** Why not just a list? Because we look things up by *content* — "what are the
+neighbors of (1,1)?" — not by position. A dictionary jumps straight to the answer.
+
+<KnowledgeCheck
+  question="In our graph dictionary, what are the keys and what are the values?"
+  options={[
+    {text: 'Keys are numbers; values are strings'},
+    {text: 'Keys are (row, col) node tuples; values are lists of neighbor tuples', correct: true},
+    {text: 'Keys are lists; values are tuples'},
+    {text: 'Both are single integers'},
+  ]}
+  explanation="Each node is a tuple key, and its value is the list of nodes it connects to — the Python version of the paper graph."
+/>
+
+## Part 2 · Access and the `in` keyword
+
+Look up a value with square brackets, and check whether a key exists with `in`:
+
+```python
+graph = {(0, 0): [(0, 1), (1, 0)], (0, 1): [(0, 0), (0, 2), (1, 1)]}
+
+print(graph[(0, 0)])       # [(0, 1), (1, 0)]
+print(len(graph[(0, 0)]))  # 2  — number of neighbors
+
+print((0, 0) in graph)     # True
+print((2, 2) in graph)     # False — not added
+```
+
+`in` matters a lot here: **a blocked node simply isn't in the graph**, so
+`(1, 1) in graph` tells you whether that intersection is reachable. Accessing a *missing*
+key with `graph[(9, 9)]` raises a `KeyError` — so check with `in` first.
+
+<KnowledgeCheck
+  question="Given graph = {(0,0): [(0,1)]}, what does (0,0) in graph return?"
+  options={[
+    {text: 'True', correct: true},
+    {text: 'False'},
+    {text: '[(0,1)]'},
+    {text: 'A KeyError'},
+  ]}
+  explanation="in checks whether a key exists. (0,0) is a key, so it returns True. (Accessing a missing key with [] would raise KeyError — which is why we use in.)"
+/>
+
+## Part 3 · Build the graph automatically
+
+Typing all 9 nodes of a 3×3 grid by hand is tedious; a 10×10 grid has 100. So write a
+function that generates the graph for any size, using nested loops and bounds checks so
+each node only lists neighbors that are actually on the grid:
+
+```python
+def build_grid_graph(rows, cols):
+    graph = {}
+    for row in range(rows):
+        for col in range(cols):
+            neighbors = []
+            if row > 0:            neighbors.append((row - 1, col))  # up
+            if row < rows - 1:     neighbors.append((row + 1, col))  # down
+            if col > 0:            neighbors.append((row, col - 1))  # left
+            if col < cols - 1:     neighbors.append((row, col + 1))  # right
+            graph[(row, col)] = neighbors
+    return graph
+
+graph = build_grid_graph(4, 4)
+print(len(graph))          # 16
+print(graph[(1, 1)])       # 4 neighbors
+print(graph[(0, 0)])       # 2 neighbors (corner)
+```
+
+Each `if` is a bounds check: only add "up" if you're not already in the top row, and so
+on. That's what gives corners 2 neighbors and interior nodes 4.
+
+<KnowledgeCheck
+  question="In build_grid_graph, why is each neighbor guarded by an if (like `if row > 0`)?"
+  options={[
+    {text: 'To make the code shorter'},
+    {text: 'To keep neighbors inside the grid — a corner or edge node has no neighbor off the grid', correct: true},
+    {text: 'To skip blocked nodes'},
+    {text: 'It has no effect'},
+  ]}
+  explanation="The bounds checks prevent adding neighbors that fall off the edge of the grid, so corners get 2 neighbors and interior nodes get 4."
+/>
+
+## Part 4 · Removing blocked nodes
+
+Blocking a node is a **two-step** job: delete its key, *and* remove it from every other
+node's neighbor list. Forget the second step and other nodes still think they can reach a
+blocked intersection:
+
+```python
+def remove_blocked(graph, blocked_nodes):
+    for node in blocked_nodes:          # step 1: delete the keys
+        if node in graph:
+            del graph[node]
+    for node in graph:                   # step 2: clean neighbor lists
+        graph[node] = [n for n in graph[node] if n not in blocked_nodes]
+    return graph
+
+graph = build_grid_graph(3, 3)
+graph = remove_blocked(graph, [(1, 1)])
+print((1, 1) in graph)      # False
+print(graph[(0, 1)])        # (1,1) no longer listed
+```
+
+<KnowledgeCheck
+  question="To block node (1,1), what two things must happen to the graph dictionary?"
+  options={[
+    {text: 'Just delete the key (1,1)'},
+    {text: 'Delete the key (1,1) AND remove (1,1) from every other node\'s neighbor list', correct: true},
+    {text: 'Set graph[(1,1)] to an empty list'},
+    {text: 'Nothing — blocked nodes are ignored automatically'},
+  ]}
+  explanation="Deleting only the key leaves dangling references — neighbors still list (1,1). You must also clean it out of every neighbor list."
+/>
+
+## Real-world connections
+
+Key-value lookup is one of the most-used tools in all of programming:
+
+<CardGrid>
+  <InfoCard tag="Web" title="User profiles">
+    A username maps to a profile object — look up any user instantly by their key.
+  </InfoCard>
+  <InfoCard tag="Games" title="Inventories">
+    Item name maps to quantity; the game jumps straight to "how many potions?" without searching.
+  </InfoCard>
+  <InfoCard tag="Data" title="Caches & indexes">
+    Databases and caches use key lookups so huge datasets stay fast to search.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- How is a dictionary different from a list? (Looked up by key, not by position.)
+- Why are tuples the keys and lists the values in our graph? (A node is a fixed pair; its neighbors are a changing collection.)
+- What are the two steps to block a node? (Delete its key; remove it from all neighbor lists.)
+
+<TeacherNote title="Start simple; the two-step removal is the trap">
+
+Show a plain dictionary (`{"name": "Alice"}`) before the tuple-keyed graph. Have students
+open their Lesson 1 drawings and translate each node into a key-value pair — makes the
+paper-to-code jump concrete. `build_grid_graph` is the core deliverable: every student
+needs a working copy, since it becomes a method of the Dijkstra class in Lesson 4. Spend
+extra time on the two-step removal — forgetting to clean neighbor lists is the #1 bug in
+later lessons. Remind them: tuples can be dict keys, lists cannot (keys must be
+immutable).
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python dictionaries](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)

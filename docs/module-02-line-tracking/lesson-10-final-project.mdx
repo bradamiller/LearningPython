@@ -1,0 +1,212 @@
+---
+title: "Lesson 10 · Module 2 Final Project"
+sidebar_label: "10 · Final Project"
+sidebar_position: 10
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 10 · Module 2 Final Project"
+  meta={['Multi-day', 'Capstone', 'Two cooperating classes']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Time to put it all together. Using your `LineSensor` and `LineTrack` classes, you'll
+build a program that follows the taped circle, detects the cross, reverses direction,
+and repeats — four times — then stops. It's the capstone of everything in Module 2:
+sensors, control loops, decisions, classes, and composition.
+
+<Objectives>
+
+By the end of this project you will be able to:
+
+- Combine multiple classes into one complete, working program
+- Write a short, readable main program that orchestrates class methods
+- Test and debug a real robot behavior systematically
+- Explain and demonstrate your design
+
+</Objectives>
+
+## Part 1 · The mission
+
+Your robot must:
+
+1. Follow the taped circle with `track_until_cross()`.
+2. Detect the cross intersection.
+3. Reverse direction.
+4. Keep following, and repeat for **4 total reversals**.
+5. Stop and print a completion message.
+
+<CardGrid>
+  <InfoCard tag="Option A" title="Standard">
+    The mission above, using your existing classes unchanged. Focus on a clean main program and solid debugging.
+  </InfoCard>
+  <InfoCard tag="Option B" title="Enhanced">
+    Add a turn_around() method, time each leg, and flash the LED or beep at every reversal.
+  </InfoCard>
+  <InfoCard tag="Option C" title="Advanced">
+    Add line-loss recovery, or speed up on later laps. Invent your own twist (teacher-approved).
+  </InfoCard>
+</CardGrid>
+
+## Part 2 · Plan before you build
+
+Pseudocode the main program first — notice how short it is, because the classes do
+the heavy lifting:
+
+```text
+create a LineTrack
+wait for the button
+
+repeat 4 times:
+    follow the line until a cross
+    print which leg we're on
+    turn around
+
+stop and print "Done!"
+```
+
+<KnowledgeCheck
+  question="For the final project, do you need to rewrite the sensor and driving logic from scratch?"
+  options={[
+    {text: 'Yes — copy it all into the main program'},
+    {text: 'No — reuse your tested LineSensor and LineTrack classes', correct: true},
+    {text: 'Yes — classes cannot be reused in a new program'},
+    {text: 'Only the sensor part'},
+  ]}
+  explanation="That's the whole point of building the classes: the main program just creates a LineTrack and calls its methods."
+/>
+
+## Part 3 · The complete program
+
+Both classes, plus a main program that reverses four times (two right turns make a
+~180° reversal on the line):
+
+```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+import time
+
+
+class LineSensor:
+    def __init__(self):
+        self.reflectance = Reflectance.get_default_reflectance()
+        self.threshold = 0.5
+
+    def get_left(self):
+        return self.reflectance.get_left()
+
+    def get_right(self):
+        return self.reflectance.get_right()
+
+    def get_error(self):
+        return self.get_left() - self.get_right()
+
+    def is_at_cross(self):
+        return self.get_left() > self.threshold and self.get_right() > self.threshold
+
+    def is_off_line(self):
+        return self.get_left() < self.threshold and self.get_right() < self.threshold
+
+
+class LineTrack:
+    def __init__(self):
+        self.sensor = LineSensor()
+        self.drivetrain = DifferentialDrive.get_default_differential_drive()
+        self.base_effort = 0.4
+        self.kp = 0.5
+
+    def track_until_cross(self):
+        while not self.sensor.is_at_cross():
+            correction = self.sensor.get_error() * self.kp
+            self.drivetrain.arcade(self.base_effort, -correction)
+        self.drivetrain.stop()
+
+    def turn_right(self):
+        self.drivetrain.set_effort(0.3, -0.3)
+        time.sleep(0.5)
+        while self.sensor.is_off_line():
+            pass
+        self.drivetrain.stop()
+
+
+# ===== MAIN PROGRAM =====
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
+print("Module 2 Final Project — starting!")
+
+for i in range(4):
+    print("Leg", i + 1, "— following line to the cross...")
+    tracker.track_until_cross()
+    print("Cross detected! Reversing...")
+    tracker.turn_right()
+    tracker.turn_right()      # two right turns ≈ 180° reversal
+
+tracker.drivetrain.stop()
+print("Complete! 4 reversals done.")
+```
+
+<TeacherNote title="Run it as a build, and test in pieces">
+
+Treat this as a multi-day arc: plan → build → test → present. Insist on **incremental
+testing** — `track_until_cross()` alone, then one turn, then one full reversal, then
+the four-rep loop. The common fixes are all *tuning*: threshold (cross not detected),
+the turn `time.sleep()` (loses the line after turning), and `base_effort` (overshoots
+the cross) — frame that tuning as the real engineering, not failure. Two successful
+reversals already demonstrate mastery; four is the goal.
+
+</TeacherNote>
+
+## Part 4 · Test, tune, present
+
+Work up in stages, and keep a note of what you tuned:
+
+1. Does `track_until_cross()` follow and stop at the cross?
+2. Does one turn-around find the line again?
+3. Does one full reversal work end to end?
+4. Do all four reversals run and stop?
+
+Then demo it and reflect: what was hardest, how did classes make the project easier,
+and what would you add with more time?
+
+<KnowledgeCheck
+  question="Your robot follows the line but blows past the cross without stopping. What's the best first thing to try?"
+  options={[
+    {text: 'Rewrite both classes'},
+    {text: 'Lower base_effort (and/or check the threshold) so it detects the cross in time', correct: true},
+    {text: 'Delete the turn methods'},
+    {text: 'Increase Kp to 5'},
+  ]}
+  explanation="Overshooting is usually too much speed or a threshold that's too high. Slow down and re-check calibration before touching anything else."
+/>
+
+## You built a robot that thinks 🎉
+
+Look back at the journey: you started Module 2 reading a single sensor value, and
+you're finishing it with two cooperating classes that follow a line, detect
+intersections, and navigate a course. That `LineSensor`/`LineTrack` design — sensing
+and driving cleanly separated and composed — is exactly how professional robot code
+is structured, and you'll build directly on it next.
+
+<TeacherNote title="Assessment & what's next">
+
+The final project is the summative assessment (a 50-point rubric across code
+organization, functionality, testing/debugging, and presentation works well). Reward
+process and tuning, not just a flawless demo. **Coming in Module 3 · Grid Driving:**
+`LineTrack` goes onto a taped grid — `track_until_cross()` becomes the way the robot
+drives from one intersection to the next, the foundation for the navigation and
+pathfinding in Modules 4 and 5.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

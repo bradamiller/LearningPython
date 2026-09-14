@@ -1,0 +1,160 @@
+---
+title: "Lesson 4 · Parameters & Customization"
+sidebar_label: "4 · Parameters"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 4 · Parameters & Customization"
+  meta={['50–60 min', 'Phase A · Blockly Foundation', 'Flexible functions']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your `draw square` function always draws the *same size* square. What if you want
+a big one, then a small one? You could write `draw_square_big` and
+`draw_square_small`… but that's the copy-paste problem all over again. The fix is
+a **parameter** — a slot you fill in each time you call the function.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what a parameter is — an input that changes what a function does
+- Add a parameter to a Blockly function using the **gear icon**
+- Use the parameter's value inside the function body
+- Call one function with different **arguments** to get different results
+
+</Objectives>
+
+## Part 1 · One function, any size
+
+A parameter is like a blank in a recipe: instead of "add 1 cup of sugar," it says
+"add *this much* sugar," and you decide how much each time you cook. For our square
+function, the blank is the side length — we'll name the parameter `side_length`:
+
+<BlockShot
+  src="/img/blocks/programs/square-function.png"
+  alt="A square function that takes a side_length parameter; the Straight block's cm uses side_length, and a call passes 35"
+  caption="The square(side_length) function — the Straight block's cm holds the side_length parameter — with a call that passes 35."
+/>
+
+See how the **Straight** block's *cm* slot holds `side_length` (the parameter)
+instead of a fixed number, and the call at the bottom fills it in with `35`. Now
+one function draws every size — just pass a different value each time you call it:
+
+```text
+call square (side_length: 35)     → medium
+call square (side_length: 60)     → big
+call square (side_length: 20)     → small
+```
+
+<TeacherNote title="Where the parameter comes from">
+
+The move students miss is the **gear icon** on the function definition block —
+click it, choose *Add Input*, and name it `size`. Then drag the new `size`
+variable into the Straight block in place of the number. Show this on the
+projector slowly; it's the one bit of Blockly UI that isn't obvious.
+
+</TeacherNote>
+
+## Part 2 · Parameter vs. argument
+
+Two words that sound similar and trip everyone up:
+
+- **Parameter** — the *name* in the definition: the `size` in `draw square (size)`.
+  It's the empty slot.
+- **Argument** — the *value* you pass in when you call it: the `50` in
+  `draw square (size: 50)`. It's what fills the slot.
+
+<KnowledgeCheck
+  question="In the call draw square (size: 50), what is the 50?"
+  options={[
+    {text: 'The parameter'},
+    {text: 'The argument — the value passed in', correct: true},
+    {text: 'The function name'},
+    {text: 'The turn angle'},
+  ]}
+  explanation="The parameter is the name (size) in the definition; the argument is the value (50) you pass when calling."
+/>
+
+<KnowledgeCheck
+  question="With draw square (size), calling draw square (size: 35) makes the robot drive each side how long?"
+  options={[
+    {text: '90 cm'},
+    {text: '35 cm', correct: true},
+    {text: '4 cm'},
+    {text: 'It depends on the effort'},
+  ]}
+  explanation="The argument 35 flows into the size parameter, so every Straight drives 35 cm."
+/>
+
+## Part 3 · Make your functions flexible
+
+1. Add a `size` parameter to your `draw square` function and call it at three
+   different sizes.
+2. Do the same for `draw triangle` — one function, any size triangle.
+3. **Challenge:** add a *second* parameter, `speed`, and use it for the **Effort**
+   on your Straight and Turn blocks: `draw square (size, speed)`.
+
+<KnowledgeCheck
+  question="A function is defined as draw rectangle (length, width). Are draw rectangle (50, 30) and draw rectangle (30, 50) the same?"
+  options={[
+    {text: 'Yes — the numbers are the same'},
+    {text: 'No — order matters, so length and width are swapped', correct: true},
+    {text: 'Yes — Blockly sorts them'},
+    {text: 'Only if the robot is turned off'},
+  ]}
+  explanation="Arguments fill parameters in order. (50, 30) means length 50 / width 30; (30, 50) swaps them into a different rectangle."
+/>
+
+<TeacherNote title="Watch for: the unused parameter">
+
+The classic bug this lesson: a student adds a `size` parameter but leaves the
+Straight block set to `30`, so nothing changes when they pass different values.
+When a function "ignores" its argument, that's the first thing to check — is the
+parameter actually *used* inside the body? **More challenge:** have advanced
+students preview Lesson 5 by adding a `sides` parameter and computing the turn as
+`360 ÷ sides`.
+
+</TeacherNote>
+
+## Real-world connections
+
+Parameters are everywhere you customize something without rebuilding it:
+
+<CardGrid>
+  <InfoCard tag="Print" title="Print dialog">
+    "Copies," "paper size," and "color" are parameters — one print function, many outcomes.
+  </InfoCard>
+  <InfoCard tag="Games" title="Difficulty settings">
+    Easy / hard is a parameter fed into the same game code to change enemy speed and health.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Motion commands">
+    "Drive to (x, y) at speed s" — real robot commands are functions with parameters just like yours.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does a parameter let one function do? (Behave differently each time, based on the value you pass.)
+- Parameter vs. argument? (Parameter = the name/slot; argument = the value you pass in.)
+- Why does parameter order matter? (Arguments fill the slots in order.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students add a parameter with the gear icon, use it in the
+body, and call with different arguments? **Exit ticket:** "Given
+`draw triangle (size)`, what does `draw triangle (40)` drive per side?" (40 cm).
+**Preview:** next lesson we combine a parameter with the `360 ÷ sides` math to
+build one **polygon** function that draws *any* regular shape.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

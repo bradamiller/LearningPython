@@ -1,0 +1,206 @@
+---
+title: "Lesson 2 · Tuples"
+sidebar_label: "2 · Tuples"
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="Lesson 2 · Tuples"
+  meta={['50 min', 'Python data', 'Storing a position']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You can name any grid spot with `(row, column)`. Now you'll store one in Python using
+a **tuple** — a single value that neatly packages two numbers. This is where Module 4
+turns into code.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Create a tuple to hold a `(row, column)` coordinate
+- Read its parts with `position[0]` (row) and `position[1]` (column)
+- Explain **immutability** and why it suits coordinates
+- Compare positions with `==` and compute a Manhattan distance in code
+
+</Objectives>
+
+## Part 1 · One value, two numbers
+
+You *could* store a position in two variables — `row = 2`, `col = 3` — but that gets
+messy fast (ten positions would need twenty variables). A **tuple** packs both into
+one value, written with parentheses:
+
+```python
+position = (2, 3)
+start = (0, 0)
+destination = (3, 2)
+```
+
+Pull the pieces out by **index** — and since Python counts from zero (just like our
+grid), index `0` is the row and index `1` is the column:
+
+```python
+position = (2, 3)
+print(position[0])   # 2  → the row
+print(position[1])   # 3  → the column
+```
+
+<KnowledgeCheck
+  question="Given position = (3, 5), what does position[0] return?"
+  options={[
+    {text: '5'},
+    {text: '3', correct: true},
+    {text: '(3, 5)'},
+    {text: 'An error'},
+  ]}
+  explanation="Index 0 is the first element — the row — so position[0] is 3. position[1] would be the column, 5."
+/>
+
+## Part 2 · Tuples don't change (and that's good)
+
+Try to modify a tuple and Python stops you:
+
+```python
+position = (2, 3)
+position[0] = 5      # TypeError: 'tuple' object does not support item assignment
+```
+
+Tuples are **immutable** — once made, they can't be altered. That's exactly right for
+a coordinate: `(2, 3)` should *always* mean row 2, column 3. To represent a new spot,
+you make a new tuple:
+
+```python
+old_position = (2, 3)
+new_position = (2, 4)    # one column right — a brand-new tuple
+```
+
+Think of a street address: it doesn't change. Move, and you get a *new* address — you
+don't edit the old one.
+
+<KnowledgeCheck
+  question="What happens when you run position[0] = 5 on a tuple?"
+  options={[
+    {text: 'The row changes to 5'},
+    {text: 'You get a TypeError — tuples cannot be modified', correct: true},
+    {text: 'It creates a new tuple automatically'},
+    {text: 'Nothing happens'},
+  ]}
+  explanation="Tuples are immutable, so item assignment raises a TypeError. To 'change' a position, create a new tuple."
+/>
+
+<TeacherNote title="Index mix-ups and the parentheses/brackets split">
+
+Expect `[0]` vs `[1]` confusion for a few exercises — post "`[0]` = row, `[1]` =
+column" on the wall. Also flag the bracket rule early: tuples are made with
+parentheses `()`; square brackets `[]` are *only* for indexing (and, next lesson, for
+lists). The immutability payoff isn't obvious yet — the street-address analogy is
+enough for now; it really pays off once tuples live inside lists and the algorithm.
+
+</TeacherNote>
+
+## Part 3 · Comparing positions
+
+`==` checks whether two tuples are the *same* position — both parts must match, in
+order:
+
+```python
+current = (1, 2)
+target  = (1, 2)
+print(current == target)   # True
+
+other = (2, 1)
+print(current == other)    # False — order matters!
+```
+
+This matters later: the algorithm asks "have we reached the destination yet?" by
+comparing tuples.
+
+<KnowledgeCheck
+  question="Does (1, 4) == (4, 1) evaluate to True?"
+  options={[
+    {text: 'Yes — they contain the same numbers'},
+    {text: 'No — the parts must match in order, and these are swapped', correct: true},
+    {text: 'Yes — tuples ignore order'},
+    {text: 'It causes an error'},
+  ]}
+  explanation="Two tuples are equal only if every element matches in order. (1, 4) is row 1/col 4; (4, 1) is row 4/col 1 — different, so False."
+/>
+
+## Part 4 · Manhattan distance in code
+
+The paper counting from Lesson 1 becomes simple arithmetic on tuple parts:
+
+```python
+start = (0, 0)
+destination = (2, 3)
+
+row_distance = destination[0] - start[0]     # 2
+col_distance = destination[1] - start[1]     # 3
+total_steps  = row_distance + col_distance    # 5
+print("Total steps:", total_steps)
+```
+
+<KnowledgeCheck
+  question="Using this method, what's the Manhattan distance from (1, 1) to (4, 3)?"
+  options={[
+    {text: '7'},
+    {text: '5', correct: true},
+    {text: '3'},
+    {text: '2'},
+  ]}
+  explanation="(4 − 1) rows + (3 − 1) cols = 3 + 2 = 5 steps."
+/>
+
+**Try it:** store five of your grid positions as tuples and print each one's row and
+column; then compute a couple of distances.
+
+<TeacherNote title="Differentiation & the negative-distance preview">
+
+**More support:** reference card ("`[0]` = row, `[1]` = column"); use the interactive
+shell for instant feedback; start with just creating and printing tuples. **More
+challenge:** a `(row, col, heading)` three-tuple (what does `[2]` give?), or input-
+built tuples. **Watch for:** subtracting a bigger start from a smaller destination
+gives a *negative* distance — acknowledge it's real and say Lesson 4 fixes it with
+`abs()`; for now keep destinations down-and-right of the start.
+
+</TeacherNote>
+
+## Real-world connections
+
+Bundling related values into one unit is everywhere in code:
+
+<CardGrid>
+  <InfoCard tag="Graphics" title="Points & colors">
+    Screen points (x, y) and colors (r, g, b) are stored exactly like coordinate tuples.
+  </InfoCard>
+  <InfoCard tag="Data" title="Records">
+    A row of a dataset — (name, age, score) — is a fixed bundle, just like a coordinate.
+  </InfoCard>
+  <InfoCard tag="Maps" title="Lat/long pairs">
+    Every mapped location is a two-value pair passed around as one unit.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- How do you get the row and column out of a tuple? (`[0]` and `[1]`.)
+- What does immutable mean, and why is it good for coordinates? (Can't change; a position should stay fixed.)
+- Why is `(2, 3) == (3, 2)` False? (Elements must match in order.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** correct tuple syntax, right index for row vs column, and reading `==`.
+**Exit ticket:** "Manhattan distance from (1,1) to (4,3), show your work" (5).
+**Preview:** next lesson we store a whole *path* — many tuples — in a **list**.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python tuples](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences)

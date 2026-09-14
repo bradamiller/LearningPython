@@ -1,0 +1,169 @@
+---
+title: "Lesson 4 · Module 3 Final Project"
+sidebar_label: "4 · Final Project"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 3 · Grid Driving"
+  title="Lesson 4 · Module 3 Final Project"
+  meta={['50–60 min', 'Capstone', 'Drive a square']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Time to tie the module together. Your robot will drive a complete **square** on the
+grid — two intersections per side, turn right at each corner, four times — and end
+up right back where it started. Same `LineTrack` class, no new Python: just your
+tools, put to work.
+
+<Objectives>
+
+By the end of this project you will be able to:
+
+- Design a program that drives a closed square path on the grid
+- Use a `for` loop to repeat a drive-and-turn sequence
+- Test and tune a real robot until the path closes
+- Verify the robot returns to its starting position
+
+</Objectives>
+
+## Part 1 · The mission
+
+Make the robot drive a square: each side is 2 intersections, with a right turn at
+each of the 4 corners. Done right, it finishes where it began.
+
+<Figure
+  placeholderLabel="Diagram — grid with a square path, 2 segments per side, right turn at each corner, start = end"
+  caption="Four sides, four right turns, back to start. One loop iteration draws one side."
+/>
+
+**Your program must:** use the `LineTrack` class, drive the square with a `for` loop
+(not four copied blocks), print progress, and return to start.
+
+## Part 2 · One loop, four sides
+
+The whole square is a four-iteration loop. Each pass drives one side, then turns the
+corner:
+
+```python
+# (LineSensor and LineTrack classes from Module 2 go above)
+
+def drive_intersections(tracker, count):
+    for i in range(count):
+        tracker.track_until_cross()
+        if i < count - 1:
+            tracker.drivetrain.set_effort(0.3, 0.3)
+            time.sleep(0.3)
+
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
+print("Module 3 Final Project — Square Pattern!")
+
+sides = 2                     # intersections per side
+
+for leg in range(4):
+    print("Side", leg + 1, "of 4")
+    drive_intersections(tracker, sides)
+    print("  Turning right...")
+    tracker.turn_right()
+
+print("Square complete! Back at start.")
+```
+
+Notice there's no separate clear before `turn_right()` — the turn clears the corner
+itself (Lesson 3). Four right turns add up to a full 360°, which is why the robot
+comes back around.
+
+<KnowledgeCheck
+  question="The square loop runs turn_right() once per side, four times. How many total degrees does the robot turn?"
+  options={[
+    {text: '90°'},
+    {text: '180°'},
+    {text: '360°', correct: true},
+    {text: '270°'},
+  ]}
+  explanation="Four right turns × 90° each = 360° — one full rotation, which is why a four-sided loop returns the robot to its starting heading."
+/>
+
+## Part 3 · Test one side at a time
+
+Don't run all four sides first. Build up:
+
+1. **One side** — comment out the loop; run one `drive_intersections(2)` + `turn_right()`.
+2. **Two sides** — `range(2)`; you should get an L (half the square).
+3. **Full square** — `range(4)`; does it close back to the start?
+
+<KnowledgeCheck
+  question="A student wrote `for leg in range(3):` and added a clear step right before turn_right(). What are the two bugs?"
+  options={[
+    {text: 'Nothing is wrong'},
+    {text: 'range(3) only makes 3 sides (needs 4), and clearing before the turn double-clears the corner', correct: true},
+    {text: 'turn_right() should be turn_left(), and sides should be 4'},
+    {text: 'The loop should be a while loop, and print is missing'},
+  ]}
+  explanation="A square needs range(4). And since turn_right() already clears the intersection, an extra clear before it pushes the robot past the corner — drop it."
+/>
+
+<TeacherNote title="Run it as a build; tuning is the lesson">
+
+Treat this as plan → build → test → present, and insist on **incremental testing** —
+one side, then two, then four. The common fixes are all tuning: turns that aren't
+quite 90° (the square drifts open), a clear time that skips or overshoots, or too
+much `base_effort`. Frame that as real engineering. Returning *approximately* to
+start is success; a perfectly closed square on real tape is a bonus. Two clean sides
+already show mastery of the concept.
+
+</TeacherNote>
+
+## Part 4 · Extend it
+
+Once the square works, try a variation:
+
+<CardGrid>
+  <InfoCard tag="Bigger" title="3-per-side square">
+    Set `sides = 3` for a larger square. Does it still close?
+  </InfoCard>
+  <InfoCard tag="Rectangle" title="Alternating legs">
+    Use a list `[2, 3, 2, 3]` and index it by `leg` so opposite sides differ.
+  </InfoCard>
+  <InfoCard tag="Mirror" title="Left-turn square">
+    Swap in `turn_left()` to drive the square the other way around.
+  </InfoCard>
+</CardGrid>
+
+## Part 5 · Reflect
+
+Demo your square and think back:
+
+- What was hardest to get working, and how did you fix it?
+- Why is the `for` loop better than copying the side code four times?
+- How is this different from the polygon function in Module 1? (There you set
+  distances and angles; here you *count intersections* and follow real lines.)
+
+## Nice work — Module 3 done 🎉
+
+You reused a class you wrote weeks ago on a brand-new surface, learned to clear
+intersections and count segments, and sequenced drives and turns into real paths.
+Every route here was one *you* planned and hard-coded. That's about to change.
+
+<TeacherNote title="Assessment & what's next">
+
+The square is the summative assessment (a 50-point rubric across using the class,
+using a loop, completing four sides, returning to start, and progress prints works
+well). Reward the tuning process. **Coming in Module 4 · Manhattan Navigation:**
+instead of you hard-coding the path, the *computer* calculates it — "go to row 2,
+column 3" and the robot works out the drives and turns itself, using coordinates,
+tuples, and lists.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

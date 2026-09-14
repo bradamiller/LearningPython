@@ -1,0 +1,13 @@
+# Netlify configuration for the XRP Python Curriculum site.
+#
+# When you connect this repo in Netlify, set the site's
+#   Base directory:  curriculum-site
+# Netlify then reads this file and uses the settings below.
+# (Publish path is relative to the base directory.)
+
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "20"

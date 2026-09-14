@@ -1,0 +1,166 @@
+---
+title: "Lesson 5 · The Polygon Function"
+sidebar_label: "5 · Polygon Function"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 5 · The Polygon Function"
+  meta={['50–60 min', 'Phase A · Blockly Foundation', 'Synthesis challenge']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This is the big one. You'll combine everything from Lessons 2–4 — loops,
+functions, parameters, and the angle formula — into a single function that draws
+**any** regular polygon. Tell it how many sides and how long, and it figures out
+the rest.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Combine a loop, a function, and parameters to solve one bigger problem
+- Compute the turn angle *inside* the function with `360 ÷ sides`
+- Test one function against many shapes (triangle, square, hexagon, octagon…)
+- Explain how one general function replaces a whole pile of specific ones
+
+</Objectives>
+
+## Part 1 · One function to draw them all
+
+So far each shape needed its own function. But look at the pattern: every polygon
+is *repeat N times: drive a side, turn `360 ÷ N`*. The only things that change are
+the number of sides and the side length — perfect for **parameters**. And the
+angle? The function can calculate it itself.
+
+<BlockProgram
+  blocks={[
+    {name: 'function_def', note: 'draw polygon (sides, distance, effort)', children: [
+      {name: 'repeat', note: 'repeat: sides times', children: [
+        {name: 'straight', note: 'cm: distance'},
+        {name: 'turn', note: 'Deg: 360 ÷ sides'},
+      ]},
+    ]},
+  ]}
+  caption="One function draws every regular polygon. The turn angle is computed from the sides parameter."
+/>
+
+The new trick is putting a **math division block** (`360 ÷ sides`) right into the
+Turn block's angle slot. Now `sides` does double duty: it sets how many times the
+loop repeats *and* it sets the angle.
+
+<TeacherNote title="Building the division">
+
+The one unfamiliar step is the Math → division block. Have students drag `360 ÷ [ ]`
+into the Turn angle slot, then drop the `sides` variable into the blank. Point out
+that `sides` is used in two places — the repeat count and the angle — which is why
+this single function generalizes. Build the square test case first and confirm it
+works before turning students loose on other shapes.
+
+</TeacherNote>
+
+## Part 2 · Test it like an engineer
+
+Real programmers test one function against many inputs. In your main program, call
+`draw polygon` with different values and predict each shape before it runs:
+
+```text
+Wait for button press
+call draw polygon (sides: 4, distance: 30, effort: 0.5)   → square
+call draw polygon (sides: 3, distance: 30, effort: 0.5)   → triangle
+call draw polygon (sides: 6, distance: 20, effort: 0.5)   → hexagon
+call draw polygon (sides: 8, distance: 15, effort: 0.5)   → octagon
+```
+
+<KnowledgeCheck
+  question="What turn angle will draw polygon compute for a 12-sided shape (a dodecagon)?"
+  options={[
+    {text: '12°'},
+    {text: '30°', correct: true},
+    {text: '36°'},
+    {text: '90°'},
+  ]}
+  explanation="The function calculates 360 ÷ 12 = 30° on its own — no need to work it out by hand."
+/>
+
+<KnowledgeCheck
+  question="draw polygon (8, 25, 0.5) traces an octagon about 2 m around. What does draw polygon (8, 50, 0.5) do?"
+  options={[
+    {text: 'A different shape'},
+    {text: 'The same octagon shape, but about twice as big (~4 m around)', correct: true},
+    {text: 'An octagon at double speed'},
+    {text: 'Nothing changes'},
+  ]}
+  explanation="Doubling distance doubles each side, so the perimeter doubles — but the angles (and therefore the shape) stay the same."
+/>
+
+## Part 3 · Explore
+
+1. Run the four test shapes above and check each one roughly closes back to its
+   start.
+2. Notice what happens as sides go up (10, 12, 20): the shape gets closer and
+   closer to a **circle**.
+3. **Challenge:** draw a pentagon, `Turn 72°`, then draw the pentagon again — the
+   two overlapping pentagons make a star/mandala.
+
+<KnowledgeCheck
+  question="Without a general polygon function, you'd write one function each for square, triangle, pentagon, hexagon, and octagon. With draw polygon, how many functions do you need?"
+  options={[
+    {text: 'Five'},
+    {text: 'One', correct: true},
+    {text: 'One per shape you draw'},
+    {text: 'Three'},
+  ]}
+  explanation="That's the power of generalizing: a single well-designed function replaces all the special-case ones."
+/>
+
+<TeacherNote title="Differentiation & debugging">
+
+**More support:** give a skeleton with the Repeat block already placed and only
+ask students to add Straight and the `360 ÷ sides` Turn. **More challenge:** a
+"spiral polygon" that grows each side, or a `draw star` helper built on top of
+`draw polygon`. **When a shape looks off:** first confirm the math (`360 ÷ 6 = 60`),
+then rule out wheel slip by testing at effort `0.5` — many "bugs" here are physics,
+not code.
+
+</TeacherNote>
+
+## Real-world connections
+
+Writing one flexible tool instead of many rigid ones is the heart of good engineering:
+
+<CardGrid>
+  <InfoCard tag="Software" title="Libraries">
+    A charting library draws any chart from parameters — you don't write new code for every graph.
+  </InfoCard>
+  <InfoCard tag="Design" title="Parametric CAD">
+    Engineers define a part once with parameters, then generate every size from the same model.
+  </InfoCard>
+  <InfoCard tag="Manufacturing" title="Configurable machines">
+    One programmable machine makes many products by changing inputs, not by rebuilding the machine.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What three parameters does `draw polygon` take, and what does each control?
+- How does the function get the turn angle? (`360 ÷ sides`, computed inside.)
+- Why is one general function better than many specific ones? (Less code, fewer bugs, easier to change.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students explain why `sides` appears in two places, and predict
+a shape from a call? **Exit ticket:** "Turn angle for a 9-sided polygon?"
+(`360 ÷ 9 = 40°`). **Preview:** next lesson we go *under* `straight` and `turn` to
+control the left and right motors directly.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

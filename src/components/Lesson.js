@@ -1,0 +1,57 @@
+import React from 'react';
+
+/**
+ * Lesson header band — the colored title block at the top of a lesson,
+ * like the VEX lesson pages. `meta` is a list of small facts (duration,
+ * module, etc.) shown as a dotted row.
+ */
+export function LessonHeader({eyebrow, title, meta = []}) {
+  return (
+    <header className="lessonHeader">
+      {eyebrow && <div className="eyebrow">{eyebrow}</div>}
+      <h1>{title}</h1>
+      {meta.length > 0 && (
+        <div className="lessonMeta">
+          {meta.map((m, i) => (
+            <span key={i}>{m}</span>
+          ))}
+        </div>
+      )}
+    </header>
+  );
+}
+
+/** Learning-objectives callout box. */
+export function Objectives({children, title = 'Learning Objectives'}) {
+  return (
+    <section className="objectives">
+      <h4>{title}</h4>
+      {children}
+    </section>
+  );
+}
+
+/** A dashed banner that only appears when teacher mode is on. */
+export function TeacherBanner({children}) {
+  return (
+    <div className="teacherBanner">
+      <span>👩‍🏫</span>
+      <span>{children}</span>
+    </div>
+  );
+}
+
+/** Simple responsive card grid for real-world connections / choice boards. */
+export function CardGrid({children}) {
+  return <div className="cardGrid">{children}</div>;
+}
+
+export function InfoCard({tag, title, children}) {
+  return (
+    <div className="infoCard">
+      {tag && <div className="infoCard__tag">{tag}</div>}
+      {title && <h4>{title}</h4>}
+      <div>{children}</div>
+    </div>
+  );
+}

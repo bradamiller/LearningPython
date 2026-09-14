@@ -1,0 +1,162 @@
+---
+title: "Lesson 7 · Blockly Challenges & Synthesis"
+sidebar_label: "7 · Blockly Challenges"
+sidebar_position: 7
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 7 · Blockly Challenges & Synthesis"
+  meta={['60+ min', 'Phase A · Blockly Foundation', 'Capstone project']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This is your Blockly capstone. There's nothing new to learn — instead you'll put
+*everything* together (loops, functions, parameters, motor control) to solve two
+open-ended challenges. Like real engineering problems, these have many right
+answers.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Combine loops, functions, parameters, and motor control in one program
+- Plan a program's structure *before* you start dragging blocks
+- Debug with a repeatable process: predict → test → observe → adjust
+- Judge trade-offs (precision vs. speed, simple vs. flexible)
+
+</Objectives>
+
+## Challenge 1 · Precision navigation
+
+Your robot is a delivery vehicle. It has to follow a marked course and stop on a
+target within **±30 cm**, then signal that it arrived.
+
+<Figure
+  placeholderLabel="Course map — start, 150 cm, right 90°, 100 cm, left 45°, 50 cm, target"
+  caption="The delivery course. Measure it, then translate it into blocks."
+/>
+
+The clean way to build this is one function that sequences the whole route, called
+from a short main program:
+
+<BlockProgram
+  blocks={[
+    {name: 'function_def', note: 'navigate course', children: [
+      {name: 'straight', note: 'cm: 150'},
+      {name: 'turn', note: 'Deg: 90'},
+      {name: 'straight', note: 'cm: 100'},
+      {name: 'turn', note: 'Deg: -45'},
+      {name: 'straight', note: 'cm: 50'},
+    ]},
+  ]}
+  caption="Wrap the route in a function, then just call navigate course from your main program."
+/>
+
+**Test it in pieces.** Get the first straight-and-turn landing correctly before you
+add the next. That's far easier than running all six moves and guessing which one
+is off.
+
+<KnowledgeCheck
+  question="Your robot overshoots the target by about 15 cm every run. What's the most sensible fix?"
+  options={[
+    {text: 'Give up and start over'},
+    {text: 'Shorten the final Straight distance by roughly 15 cm and re-test', correct: true},
+    {text: 'Increase the effort to 1.0'},
+    {text: 'Add more turns'},
+  ]}
+  explanation="Consistent overshoot is a measurement to adjust, not a mystery. Trim the distance a bit and re-test — predict, test, observe, adjust."
+/>
+
+<TeacherNote title="Running Challenge 1">
+
+Have teams **measure the course and plan on paper first** — sketch the segments
+and label distances/angles before any coding. Push the test-in-pieces habit hard;
+students who build all six moves at once and then debug struggle the most. A
+consistent over/undershoot is a distance to trim, while erratic results point to
+wheel slip or surface, not code. Target: finish within ±30 cm (±15 cm for a stretch
+goal).
+
+</TeacherNote>
+
+## Challenge 2 · Creative design
+
+Now design your own robotic performance. Pick one (or invent your own) and bring
+the whole toolkit:
+
+<CardGrid>
+  <InfoCard tag="Option A" title="Multi-shape artist">
+    Use your polygon function to lay out a design — pentagon, hexagon, octagon arranged into a pattern.
+  </InfoCard>
+  <InfoCard tag="Option B" title="Precision parking">
+    Drive in, then use Set effort for a slow, careful final nudge to park centered in a marked box.
+  </InfoCard>
+  <InfoCard tag="Option C" title="Robot choreography">
+    Combine curves, spins, and the LED into a 30-second performance that tells a little story.
+  </InfoCard>
+</CardGrid>
+
+The workflow is the same one professionals use: **brainstorm → break it into
+functions → pseudocode → build core functions → test each → assemble → refine.**
+
+<KnowledgeCheck
+  question="Your creative program is one giant stack of 40 blocks and it's hard to debug. What's the best move?"
+  options={[
+    {text: 'Delete it and pick an easier project'},
+    {text: 'Break it into small named functions and test each one on its own', correct: true},
+    {text: 'Add more blocks until it works'},
+    {text: 'Run it faster'},
+  ]}
+  explanation="Splitting a big program into small, testable functions is exactly what functions are for — it makes bugs easy to isolate."
+/>
+
+<TeacherNote title="Running Challenge 2 & showcase">
+
+Give a hard "stop coding" time five minutes early so there's room for a showcase.
+Have two or three teams present — *what was your goal, which functions did you use,
+what was hardest?* — and run quick peer feedback. Value the process (planning,
+iterating, documenting) over a flawless result. Encourage descriptive function
+names and a one-line "story" describing what the robot does.
+
+</TeacherNote>
+
+## Looking ahead: why Python next?
+
+You may have hit Blockly's limits today — big programs get unwieldy, and some
+ideas are just faster to *type* than to drag. That's exactly why the next phase
+moves to **Python**. The good news: it's the same concepts you already know —
+loops, functions, parameters — just written as text.
+
+<KnowledgeCheck
+  question="Moving from Blockly to Python next lesson mostly means…"
+  options={[
+    {text: 'Learning brand-new concepts from scratch'},
+    {text: 'Writing the same ideas (loops, functions, parameters) as typed text', correct: true},
+    {text: 'Giving up on the robot'},
+    {text: 'Only drawing shapes'},
+  ]}
+  explanation="The logic carries straight over. Python is a new way to write the ideas you already understand — not a new set of ideas."
+/>
+
+## Wrap-up
+
+- What's the debugging loop? (Predict → test → observe → adjust.)
+- Why break a big program into functions? (Easier to build, test, and fix.)
+- Which Module 1 concept will you lean on most in Python? (Your call — loops, functions, and parameters all carry over.)
+
+<TeacherNote title="Assessment">
+
+Two-part: Challenge 1 completed within ±30 cm, and a working, creative Challenge 2
+with a short written reflection — *what did you build, which concepts did you use
+and why, what was the hardest part, what would you improve?* A simple rubric:
+planning, implementation, debugging evidence, and reflection.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

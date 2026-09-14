@@ -1,0 +1,190 @@
+---
+title: "Lesson 11 · Python Final Project"
+sidebar_label: "11 · Final Project"
+sidebar_position: 11
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 11 · Python Final Project"
+  meta={['Multi-day', 'Phase C · Transition to Python', 'Capstone']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This is it — the capstone of Module 1. You'll design and build your **own**
+complete Python program for the XRP, pulling together everything you've learned:
+loops, functions, parameters, motor control, and geometric thinking. It's both a
+real project and your proof of mastery.
+
+<Objectives>
+
+By the end of this project you will be able to:
+
+- Design a complete program from a problem statement to a working robot
+- Combine loops, functions, and parameters in one purposeful program
+- Test and debug systematically, and document your code so others can read it
+- Present your work and reflect on what you learned
+
+</Objectives>
+
+## Part 1 · Pick your project
+
+Choose one path (or pitch your own to your teacher):
+
+<CardGrid>
+  <InfoCard tag="Option A" title="Polygon artist">
+    Use a draw_polygon function to compose a geometric art piece — nested shapes, a star, a repeating pattern. A great fit if you liked Lesson 5.
+  </InfoCard>
+  <InfoCard tag="Option B" title="Precision navigation">
+    Build a delivery robot: functions for each course segment, hit waypoints accurately, and return home.
+  </InfoCard>
+  <InfoCard tag="Option C" title="Sensor behavior">
+    (Stretch) Use the rangefinder or reflectance sensors so the robot reacts to its world — avoid an obstacle, follow a line.
+  </InfoCard>
+  <InfoCard tag="Option D" title="Your own idea">
+    Anything that shows off Module 1 skills — a race timer, a robot dance, a maze runner. Clear it with your teacher first.
+  </InfoCard>
+</CardGrid>
+
+## Part 2 · Plan before you code
+
+Professionals design before they build. On paper first:
+
+1. **Problem statement** — one or two sentences: what will your robot do?
+2. **Function inventory** — list the functions you'll need, with their parameters
+   (e.g. `draw_polygon(sides, size, effort)`, `navigate_segment(distance, angle)`).
+3. **Pseudocode** — the flow in plain English, not Python:
+
+```text
+Main:
+    set up the robot
+    for each shape in my design:
+        draw the shape
+        move to the next spot
+    announce "done"
+```
+
+<KnowledgeCheck
+  question="You're about to build a 60-block-worth Python program. What's the smartest way to start?"
+  options={[
+    {text: 'Write the whole thing, then run it once at the end'},
+    {text: 'Write and test one small function at a time, then combine them', correct: true},
+    {text: 'Copy a classmate’s program'},
+    {text: 'Skip planning and improvise'},
+  ]}
+  explanation="Build and test in small pieces (unit testing), then integrate. It's far easier to find a bug in one small function than in a giant program."
+/>
+
+## Part 3 · A clean program structure
+
+Good Python programs have a shape: a docstring at the top, helper functions, a
+`main()`, and one line that runs it. Use this as your skeleton:
+
+```python
+"""
+Module 1 Final Project: <your project name>
+Team: <names>
+Description: <two-sentence overview>
+"""
+
+from XRPLib.differential_drive import DifferentialDrive
+import time
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+
+# ===== HELPER FUNCTIONS =====
+def calculate_angle(num_sides):
+    """Return the exterior angle of a regular polygon."""
+    return 360 / num_sides
+
+# ===== MAIN FUNCTIONS =====
+def draw_polygon(num_sides, size, effort):
+    """Draw one regular polygon."""
+    angle = calculate_angle(num_sides)
+    for i in range(num_sides):
+        drivetrain.straight(size, max_effort=effort)
+        drivetrain.turn(angle, max_effort=effort)
+
+def main():
+    """Run the project."""
+    print("Starting...")
+    draw_polygon(4, 30, 0.5)
+    time.sleep(1)
+    draw_polygon(6, 25, 0.5)
+    print("Done!")
+
+# ===== RUN =====
+if __name__ == "__main__":
+    main()
+```
+
+That last block (`if __name__ == "__main__":`) is the professional way to say "run
+`main()` when this file is the program." You'll see it in real Python everywhere.
+
+## Part 4 · Build, test, and polish
+
+Work the same loop engineers use:
+
+1. **Build** one function; **test** it on its own with a few inputs.
+2. **Integrate** — call it from `main()` alongside the others; test the flow.
+3. **Instrument** — sprinkle `print()` messages so you can see what's happening.
+4. **Polish** — add a one-line docstring to each function, remove leftover debug
+   prints, and make your names clear.
+
+<KnowledgeCheck
+  question="Your program runs but the robot behaves differently each time on the same code. Most likely cause?"
+  options={[
+    {text: 'A syntax error'},
+    {text: 'Physical factors — wheel slip, surface, or battery level', correct: true},
+    {text: 'The function names are wrong'},
+    {text: 'Python is broken'},
+  ]}
+  explanation="If the code is unchanged and the result varies, it's usually physics — grippier surface, fresher battery, or wheel slip — not a code bug."
+/>
+
+<TeacherNote title="Running the capstone">
+
+Treat this as a multi-day arc: **plan → build → test → document → present.** Have
+teams turn in a short written plan (problem, function list, pseudocode) before
+they code, and enforce test-in-pieces. A simple rubric weights design/planning,
+implementation, testing evidence, documentation, and a short reflection roughly
+equally — reward process and debugging, not just a flawless demo. Teams of 2–3
+with rotating roles (programmer / tester / documenter) work well; a five-minute
+showcase at the end lets everyone see the range of solutions.
+
+</TeacherNote>
+
+## Part 5 · Show it and reflect
+
+Wrap up by demoing your robot and writing a short reflection:
+
+- What did you build, and what does it do?
+- Which Module 1 concepts did you use, and why?
+- What was the hardest bug, and how did you crack it?
+- If you had more time, what would you add?
+
+## You made it 🎉
+
+Look how far you've come: you started Module 1 dragging a single Drive block, and
+you're finishing it designing complete Python programs. The loops, functions, and
+parameters you now know are exactly the tools real robotics engineers use every
+day — and they carry straight into the next module.
+
+<TeacherNote title="Assessment & what's next">
+
+The final project is the summative assessment for Module 1 (a 50-point rubric
+across design, implementation, testing, documentation, and reflection works well).
+**Coming in Module 2 · Line Tracking:** sensors and control loops — the robot
+starts reacting to the world instead of just following a script, and students meet
+their first `while` loops and their own sensor classes.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

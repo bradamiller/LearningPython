@@ -1,0 +1,125 @@
+---
+title: "Module Overview · The Big Picture"
+sidebar_label: "0 · The Big Picture"
+sidebar_position: 0
+---
+
+<LessonHeader
+  eyebrow="Module 4 · Manhattan Navigation"
+  title="The Big Picture"
+  meta={['15–20 min', 'Top-down design', 'No coding yet']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+Before we learn a single new piece, let's look at where we're headed. By the end of
+this module, your robot will start at one corner of the grid and **visit several
+destinations in order, all by itself** — no remote control, no manual steering. It
+figures out each route and drives it, intersection by intersection.
+
+<Objectives>
+
+By the end of this overview you will be able to:
+
+- Describe the goal of Module 4: autonomous multi-destination navigation
+- Name the two classes — `Manhattan` (plans) and `Navigator` (drives) — and each one's job
+- Read the short main program and explain it in plain English
+- Explain **top-down design**: start with the big picture, then build each piece
+
+</Objectives>
+
+## The whole program — really
+
+Here's the *entire* main program you're building toward. Seven lines:
+
+```python
+manhattan = Manhattan((0, 0))
+navigator = Navigator((0, 0), 0)
+destinations = [(2, 0), (2, 3), (0, 3)]
+
+for dest in destinations:
+    path = manhattan.compute_path(dest)
+    navigator.drive_path(path)
+    manhattan.position = navigator.position
+```
+
+In plain English: *make a planner and a driver, both starting at corner (0, 0); for
+each destination, compute the path, drive it, and update where we are.* You don't
+need to understand `compute_path` or `drive_path` yet — just see that the program is
+short **because the classes do all the work**.
+
+## Two classes, two jobs
+
+<CardGrid>
+  <InfoCard tag="Planner" title="Manhattan">
+    Given where you are and where you want to go, it computes a <strong>list of intersections</strong> to follow. It never touches the robot.
+  </InfoCard>
+  <InfoCard tag="Driver" title="Navigator">
+    Given that list, it <strong>drives the robot</strong> through each intersection — turning and line-following. It never decides the route.
+  </InfoCard>
+</CardGrid>
+
+`Manhattan` produces a path; `Navigator` consumes it. Each class has exactly one
+responsibility — that's called **separation of concerns**, and it makes bugs easy to
+find: a wrong route is a `Manhattan` problem; a wrong turn is a `Navigator` problem.
+
+<KnowledgeCheck
+  question="Which class decides the route, and which one drives the robot?"
+  options={[
+    {text: 'Manhattan drives; Navigator plans'},
+    {text: 'Manhattan plans the path; Navigator drives it', correct: true},
+    {text: 'They both do both jobs'},
+    {text: 'LineTrack does everything'},
+  ]}
+  explanation="Manhattan computes the list of intersections (planning); Navigator drives through them (execution). One job each."
+/>
+
+<TeacherNote title="This is an advance organizer — keep it high-level">
+
+The whole point of this lesson is *shape, not detail*. Resist explaining how
+anything works; deflect "how does compute_path work?" with "that's exactly Lessons 4
+and 5." Tell students plainly: "You're not meant to understand every line yet — by
+Lesson 9 you will, because you'll have built each piece." Consider printing the
+seven-line main program on a card students keep and revisit at the start of each
+lesson, highlighting the piece they're building that day.
+
+</TeacherNote>
+
+## Your roadmap
+
+Every lesson in this module builds one piece of that program:
+
+- **Lesson 1** — coordinates: the `(row, col)` system
+- **Lesson 2** — tuples: storing a position like `(2, 3)`
+- **Lesson 3** — lists: storing a path like `[(0,0), (1,0), (2,0)]`
+- **Lessons 4–5** — the Manhattan algorithm: computing paths (on paper, then in code)
+- **Lesson 6** — testing your code without a robot
+- **Lesson 7** — turning logic: headings as numbers
+- **Lesson 8** — the `Navigator` class, built on your Module 2 `LineTrack`
+- **Lesson 9** — the final project: it all comes together
+
+Notice `Navigator` reuses `LineTrack` from Module 2 for the actual driving — you're
+not starting from scratch. That's the payoff of building reusable classes.
+
+## Wrap-up
+
+- What will the robot do by the end of the module? (Visit multiple destinations on its own.)
+- What are the two classes and their jobs? (`Manhattan` plans; `Navigator` drives.)
+- What does top-down design mean? (Start with the big goal, break it into buildable pieces.)
+
+<TeacherNote title="Teaching note">
+
+Reference this overview at the *start* of every lesson — "remember the big picture?
+today we build this piece." That thread is what turns nine separate topics into one
+coherent system in students' minds. Return to the seven-line program in Lesson 9;
+they'll understand every line because they wrote every piece.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

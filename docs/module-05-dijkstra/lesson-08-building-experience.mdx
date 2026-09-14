@@ -1,0 +1,201 @@
+---
+title: "Lesson 8 · Building Experience"
+sidebar_label: "8 · Building Experience"
+sidebar_position: 8
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 8 · Building Experience"
+  meta={['55 min', 'Memory + file I/O', 'The robot learns']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+In Lesson 7 the robot rediscovered every obstacle from scratch each run — like being
+surprised by the same construction zone every morning. This lesson gives it **memory**: it
+remembers obstacles from one run and plans smarter on the next. Just like Waze learns from
+drivers, the robot learns from its own experience.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why remembering obstacles improves navigation
+- Keep a blocked list across runs so the robot pre-plans around known obstacles
+- Compare Run 1 and Run 2 with metrics (steps, reroutes)
+- Explain the GPS/Waze analogy for crowd-sourced obstacle data
+- (Challenge) Save and load the blocked list with a file so it survives restarts
+
+</Objectives>
+
+## Part 1 · Why memory matters
+
+The Dijkstra algorithm doesn't change between runs. The Navigator doesn't change. Only the
+**input** changes — the blocked list starts with more information:
+
+```
+Run 1: empty blocked list  → discover obstacles the hard way → many reroutes
+Run 2: pre-loaded list     → plan around known obstacles      → few or no reroutes
+```
+
+**Better data leads to better performance.** The robot isn't running a smarter algorithm on
+Run 2 — it's running the *same* algorithm on better information.
+
+<KnowledgeCheck
+  question="Why does the robot navigate better on Run 2?"
+  options={[
+    {text: 'It learns a smarter algorithm'},
+    {text: 'The algorithm is identical — but the blocked list starts with obstacles learned in Run 1, so paths are planned around them from the start', correct: true},
+    {text: 'Its motors get faster'},
+    {text: 'It skips destinations'},
+  ]}
+  explanation="Same Dijkstra, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
+/>
+
+## Part 2 · Measure the improvement
+
+"It seemed faster" isn't evidence — **measure**. Track total steps, reroutes, and newly
+discovered obstacles for each run:
+
+```
+Metric              Run 1    Run 2
+Starting obstacles    0       (from Run 1)
+Reroutes              3        0
+Total steps          12        8
+```
+
+Keeping the same `blocked_list` variable across both runs is all it takes — its Run 1
+discoveries are already there when Run 2 begins.
+
+<KnowledgeCheck
+  question="Run 1 took 12 steps with 3 reroutes; Run 2 took 8 steps with 0 reroutes. Why the change?"
+  options={[
+    {text: 'The battery was fuller'},
+    {text: 'Run 2 started already knowing the obstacles, so it planned around them and never had to reroute', correct: true},
+    {text: 'The grid got smaller'},
+    {text: 'Random luck'},
+  ]}
+  explanation="With obstacles pre-loaded, Run 2's initial paths already avoid them — no mid-run surprises, so zero reroutes and fewer steps."
+/>
+
+## Part 3 · Could Run 2 still find new obstacles?
+
+Yes. Run 2 avoids everything it *already* knows, but its smarter route may pass nodes Run 1
+never visited — and one of those could be blocked. So Run 2 can still discover something
+new, and Run 3 would start with even more knowledge. Eventually the robot knows every
+relevant obstacle and its paths are optimal from the start — that's **convergence**.
+
+<KnowledgeCheck
+  question="Can Run 2 discover an obstacle Run 1 never found?"
+  options={[
+    {text: 'No — Run 2 knows everything already'},
+    {text: 'Yes — Run 2 may take a different route and encounter obstacles Run 1 never drove past', correct: true},
+    {text: 'No — obstacles never change'},
+    {text: 'Only if the grid grows'},
+  ]}
+  explanation="The robot only discovers obstacles it drives toward. A new route can reach nodes Run 1 skipped, so Run 2 can still find something new — feeding Run 3 even better data."
+/>
+
+## Part 4 · Persistence with a file
+
+Within one program run, a list variable persists between function calls. But close the
+program and it's gone — Python variables don't survive a restart. To keep knowledge across
+*separate* runs, save it to a **file**:
+
+```python
+def save_obstacles(blocked, filename="obstacles.txt"):
+    with open(filename, "w") as f:
+        for node in blocked:
+            f.write(f"{node[0]},{node[1]}\n")     # one "row,col" per line
+
+def load_obstacles(filename="obstacles.txt"):
+    blocked = []
+    try:
+        with open(filename, "r") as f:
+            for line in f:
+                row, col = line.strip().split(",")
+                blocked.append((int(row), int(col)))
+    except FileNotFoundError:
+        pass                                       # no file yet → start fresh
+    return blocked
+```
+
+Load at the start, save at the end. Now the robot's experience survives being powered off —
+run it a third time and the file holds obstacles from every prior run.
+
+<KnowledgeCheck
+  question="Why is a file needed to remember obstacles between separate program runs?"
+  options={[
+    {text: 'Files are faster than lists'},
+    {text: 'Python variables disappear when the program stops — a file stores the data on disk so it survives a restart', correct: true},
+    {text: 'The blocked list is too big for memory'},
+    {text: 'It is not needed'},
+  ]}
+  explanation="A list variable lives only while the program runs. Writing the blocked list to a file (and reading it back) is what makes the knowledge persist across restarts."
+/>
+
+## Real-world connections
+
+Systems that accumulate and reuse experience are everywhere:
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Waze traffic">
+    One driver hits traffic; the app warns everyone behind them. Shared, remembered data.
+  </InfoCard>
+  <InfoCard tag="AI" title="Learning from data">
+    Machine-learning systems improve as they accumulate examples — the same "better data, better results" idea.
+  </InfoCard>
+  <InfoCard tag="Apps" title="Saved state">
+    Games, editors, and browsers save progress to files so you pick up where you left off.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What actually changes between Run 1 and Run 2? (The data — the blocked list — not the algorithm.)
+- How do you show Run 2 is better? (Measure steps and reroutes.)
+- Why a file instead of just a variable? (Variables vanish on restart; files persist.)
+
+<TeacherNote title="The Waze analogy lands; make Run 1 vs Run 2 dramatic">
+
+Frame memory with Waze — students get it instantly ("what if Waze forgot every traffic
+report when you closed the app?"). Set up the grid so Run 1 has 2–3 reroutes; the contrast
+with a zero-reroute Run 2 is the "aha." Use the simulation (`two_run_navigation.py`) before
+hardware so the concept lands without sensor noise. Insist on recorded numbers — steps,
+reroutes — the quantitative comparison convinces far more than "it felt faster." The file
+I/O challenge is optional but a genuinely useful real-world skill. Be honest about limits:
+what if an obstacle *moves*? Real systems need to forget stale data, not just accumulate —
+good discussion for advanced students. Connect lightly to machine learning: accumulate
+data, make better decisions.
+
+</TeacherNote>
+
+## Wrap-up quiz
+
+<KnowledgeCheck
+  question="What is 'convergence' in this context?"
+  options={[
+    {text: 'The robot running out of battery'},
+    {text: 'After enough runs the robot knows all relevant obstacles, so its paths are optimal from the start and no more reroutes happen', correct: true},
+    {text: 'Two robots meeting at a node'},
+    {text: 'The grid shrinking over time'},
+  ]}
+  explanation="Each run can add knowledge until there's nothing new to learn. At that point paths are optimal immediately — the robot's map has converged."
+/>
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** explain Run 2's improvement, pre-load a blocked list, and articulate the
+Waze analogy. **Exit ticket:** "Run 1 took 12 steps / 3 reroutes; Run 2 took 8 / 0. Explain
+why." **Preview:** the capstone — combine Dijkstra, the Navigator, the rangefinder, and file
+memory into one complete autonomous system, and demonstrate Run 1 vs. Run 2.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python file I/O](https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files)

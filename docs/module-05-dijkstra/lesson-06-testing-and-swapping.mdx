@@ -1,0 +1,199 @@
+---
+title: "Lesson 6 · Testing and Swapping"
+sidebar_label: "6 · Testing & Swapping"
+sidebar_position: 6
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 6 · Testing and Swapping"
+  meta={['55 min', 'Testing + design', 'The two-line swap']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your Dijkstra class works — now prove it, then experience the payoff of good design. Because
+Dijkstra and Manhattan share the same interface, you can drop Dijkstra into your Module 4
+Navigator by changing **two lines**. The robot drives exactly as before, but now it can
+route around obstacles.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write tests that verify Dijkstra matches Manhattan on a clear grid
+- Write tests that verify Dijkstra reroutes around blocked nodes
+- Explain what a **shared interface** is and why it matters
+- Swap Dijkstra into the Navigator by changing only the import and constructor
+- Explain **polymorphism** in plain terms
+
+</Objectives>
+
+## Part 1 · What makes a good test
+
+A good test has a **known input**, an **expected output** you worked out yourself, and a
+**check** that compares actual to expected. Test two scenarios: clear grids (Dijkstra
+should match Manhattan's length) and grids with obstacles (Dijkstra should detour).
+
+```python
+d = Dijkstra((0, 0), [])
+path = d.compute_path((3, 3))
+print("Path:", path)
+print("Steps:", len(path) - 1)     # expect 6 — the Manhattan distance
+```
+
+On a clear 4×4 grid, the path from (0,0) to (3,3) is 6 steps. The *route* Dijkstra picks
+may differ from Manhattan's, but the **step count** must match — because there are many
+shortest paths of equal length.
+
+<KnowledgeCheck
+  question="On a clear grid, why check the step count rather than the exact path?"
+  options={[
+    {text: 'The exact path is impossible to compute'},
+    {text: 'There can be several shortest paths of the same length — Dijkstra may pick a different valid one', correct: true},
+    {text: 'Step count is easier to type'},
+    {text: 'The path is always the same'},
+  ]}
+  explanation="Multiple routes can tie for shortest. What must match is the optimal length; the specific cells may legitimately differ between the two algorithms."
+/>
+
+## Part 2 · Test the obstacle case
+
+Block a node on the direct route and confirm Dijkstra both detours *and* never steps on a
+blocked node:
+
+```python
+blocked = [(1, 0), (2, 2)]
+d = Dijkstra((0, 0), blocked)
+path = d.compute_path((3, 3))
+print("Path:", path)
+
+for node in path:
+    if node in blocked:
+        print("ERROR: path goes through", node)
+        break
+else:
+    print("PASS: path avoids all blocked nodes")
+```
+
+That `for/else` is handy: the `else` runs only if the loop finishes *without* `break` — so
+it prints PASS only when no blocked node was found.
+
+<KnowledgeCheck
+  question="In a for/else loop, when does the else block run?"
+  options={[
+    {text: 'Every time, always'},
+    {text: 'Only if the loop finishes without hitting break', correct: true},
+    {text: 'Only if break is hit'},
+    {text: 'Never'},
+  ]}
+  explanation="The else clause of a for loop runs only when the loop completes normally. A break skips it — perfect for 'passed unless we found a problem' checks."
+/>
+
+## Part 3 · The two-line swap
+
+Here's the reward for building Dijkstra with Manhattan's interface. Your Module 4 program
+created a Manhattan planner:
+
+```python
+from manhattan import Manhattan
+pathfinder = Manhattan((0, 0))
+# ... navigator uses pathfinder.compute_path(dest)
+```
+
+Change **two lines** to use Dijkstra — the import and the constructor:
+
+```python
+from dijkstra import Dijkstra
+pathfinder = Dijkstra((0, 0), [])     # add a blocked list
+# ... EVERYTHING ELSE STAYS THE SAME
+```
+
+The Navigator still calls `pathfinder.compute_path(dest)` exactly as before. It doesn't
+know — or care — which planner it's holding.
+
+<KnowledgeCheck
+  question="How many lines of the Navigator's own code change to use Dijkstra instead of Manhattan?"
+  options={[
+    {text: 'Dozens — you rewrite drive_path'},
+    {text: 'Zero — only the import and constructor change; the Navigator code is untouched', correct: true},
+    {text: 'Every line that mentions a path'},
+    {text: 'You must build a new Navigator class'},
+  ]}
+  explanation="The Navigator calls compute_path the same way regardless. Only the two setup lines (import + constructor) change — the whole point of a shared interface."
+/>
+
+## Part 4 · Shared interface = polymorphism
+
+When two classes offer the same method names, parameters, and return types, code that uses
+one automatically works with the other. That's a **shared interface**, and the ability to
+swap them is called **polymorphism** ("many forms").
+
+<CardGrid>
+  <InfoCard tag="Everyday" title="USB-C">
+    One connector, many devices. The port doesn't care what's plugged in — same interface.
+  </InfoCard>
+  <InfoCard tag="Everyday" title="Power outlets">
+    Any appliance with a standard plug works in any outlet. Shared interface, swappable devices.
+  </InfoCard>
+  <InfoCard tag="Code" title="Pathfinders">
+    Navigator + compute_path() = any planner that fits the interface. Manhattan or Dijkstra, its choice.
+  </InfoCard>
+</CardGrid>
+
+You've been *using* polymorphism the moment you swapped planners — the fancy word is just
+a label for something simple: if two things work the same from the outside, use either.
+
+<KnowledgeCheck
+  question="The swap works because Dijkstra is 'better' than Manhattan. True or false?"
+  options={[
+    {text: 'True — better classes are always swappable'},
+    {text: 'False — the swap works because they share the same interface, not because of quality', correct: true},
+    {text: 'True — Manhattan is broken'},
+    {text: 'False — you cannot swap classes in Python'},
+  ]}
+  explanation="Swappability comes from interface compatibility (same method name, params, return type), not from which class is 'better.' A worse class with the same interface would swap just as cleanly."
+/>
+
+## Wrap-up
+
+- What three parts make a good test? (Known input, hand-calculated expected output, a check.)
+- What two lines change to swap in Dijkstra? (The import and the constructor.)
+- What is a shared interface, and what's the swap ability called? (Same method signature/return; polymorphism.)
+
+<TeacherNote title="Make the swap dramatic — and don't over-formalize polymorphism">
+
+The two-line swap is the concrete payoff for the careful design in Lessons 4–5; show the
+old code, make the change live, run it. Spend time on *testing* before the swap even though
+students want the "cool part" — hand-calculate expected paths, don't copy code output.
+Keep polymorphism light: "if two things work the same from the outside, you can use either"
+is enough; USB-C and outlets make it concrete. Let students notice Manhattan and Dijkstra
+sometimes return different paths of equal length — a good teaching moment about multiple
+optimal solutions. Save the test files; Lessons 7–9 reuse them.
+
+</TeacherNote>
+
+## Note on the interface
+
+Both planners take a **start** when created and a **destination** in `compute_path`:
+`Manhattan((0,0))` and `Dijkstra((0,0), [])` both answer `compute_path((3,3))` with a list
+of grid tuples. That shared shape is exactly what makes the swap a two-line change. (One
+detail to keep in mind for your own evaluation: Dijkstra's returned path *includes* the
+start node, so its step count is `len(path) - 1`.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** write a test with a hand-calculated expected result, identify the two swap
+lines, and explain "shared interface" in their own words. **Exit ticket:** "What two lines
+change to swap Manhattan for Dijkstra? Write both versions." **Preview:** next lesson the
+robot gets *eyes* — the rangefinder detects obstacles in real time and feeds them to
+Dijkstra for live rerouting.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Polymorphism (overview)](https://en.wikipedia.org/wiki/Polymorphism_(computer_science))

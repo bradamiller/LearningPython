@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="XRP robot">
+  <rect x="9" y="14" width="30" height="22" rx="5" fill="#22527b"/>
+  <circle cx="18" cy="24" r="3.2" fill="#fff"/>
+  <circle cx="30" cy="24" r="3.2" fill="#fff"/>
+  <circle cx="18" cy="24" r="1.4" fill="#22527b"/>
+  <circle cx="30" cy="24" r="1.4" fill="#22527b"/>
+  <rect x="19" y="30" width="10" height="2.4" rx="1.2" fill="#d1182c"/>
+  <rect x="5" y="19" width="4" height="12" rx="2" fill="#142d50"/>
+  <rect x="39" y="19" width="4" height="12" rx="2" fill="#142d50"/>
+  <line x1="24" y1="14" x2="24" y2="8" stroke="#142d50" stroke-width="2"/>
+  <circle cx="24" cy="7" r="2.4" fill="#d1182c"/>
+</svg>

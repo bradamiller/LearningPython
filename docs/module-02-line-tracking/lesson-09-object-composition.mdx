@@ -1,0 +1,216 @@
+---
+title: "Lesson 9 · Object Composition"
+sidebar_label: "9 · Object Composition"
+sidebar_position: 9
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 9 · Object Composition"
+  meta={['60 min', 'Classes using classes', 'LineTrack']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your `LineSensor` handles sensing. But the robot also has to *drive*. In this lesson
+you'll build a second class, `LineTrack`, that **contains** a `LineSensor` and uses
+it to follow the line and turn at intersections. One class holding another is called
+**object composition** — and it's how real programs are built.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain object composition — one class holding another ("has-a")
+- Build a `LineTrack` class that stores a `LineSensor` and a drivetrain
+- Write methods that coordinate sensing and driving
+- Package line-following and turning into clean, reusable methods
+
+</Objectives>
+
+## Part 1 · "Has-a": composition
+
+A car **has an** engine. The car uses the engine to move, but the engine doesn't
+know about the steering wheel — each part has its own job. Code works the same way:
+`LineTrack` will **have a** `LineSensor` (for sensing) and **have a** drivetrain (for
+driving), and coordinate them.
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+import time
+
+class LineTrack:
+    def __init__(self):
+        self.sensor = LineSensor()                                     # has-a LineSensor
+        self.drivetrain = DifferentialDrive.get_default_differential_drive()  # has-a drivetrain
+        self.base_effort = 0.4
+        self.kp = 0.5
+```
+
+When you create a `LineTrack`, it builds its *own* `LineSensor` inside `__init__` —
+you don't make one separately. Now `LineTrack` can ask its sensor for data any time
+with `self.sensor.get_error()`.
+
+<KnowledgeCheck
+  question="What does 'object composition' mean?"
+  options={[
+    {text: 'Writing all your code in one giant class'},
+    {text: 'One class storing an instance of another class and using it', correct: true},
+    {text: 'Two classes with the same methods'},
+    {text: 'Turning a function into a class'},
+  ]}
+  explanation="Composition is a 'has-a' relationship: LineTrack has-a LineSensor. It keeps each class focused on one job."
+/>
+
+## Part 2 · Following the line, cleanly
+
+The core method is the Lesson 5–7 control loop, now tucked inside `LineTrack` and
+using its own sensor and settings:
+
+```python
+def track_until_cross(self):
+    while not self.sensor.is_at_cross():
+        error = self.sensor.get_error()
+        correction = error * self.kp
+        self.drivetrain.arcade(self.base_effort, -correction)
+    self.drivetrain.stop()
+```
+
+`while not self.sensor.is_at_cross():` keeps following until both sensors hit the
+cross — then it stops. All the messy sensor math is hidden behind
+`self.sensor.get_error()` and `self.sensor.is_at_cross()`.
+
+## Part 3 · Turning to find the line again
+
+At a cross, the robot spins until a sensor finds the next line. The trick is a brief
+pause first, so it clears the intersection before it starts looking:
+
+```python
+def turn_right(self):
+    self.drivetrain.set_effort(0.3, -0.3)   # spin clockwise
+    time.sleep(0.5)                          # drive past the cross first
+    while self.sensor.is_off_line():
+        pass                                 # keep spinning until a line appears
+    self.drivetrain.stop()
+```
+
+`turn_left()` is identical with the motor efforts swapped. Two new bits to notice:
+
+- `time.sleep(0.5)` gives the robot time to physically rotate off the cross —
+  without it, the sensor is still on the intersection and the turn ends instantly.
+- `pass` means "do nothing." The `while` loop's job here is just to *keep checking*
+  the condition while the motors (already set above) keep spinning.
+
+<KnowledgeCheck
+  question="Why is there a time.sleep(0.5) at the start of turn_right(), before the while loop?"
+  options={[
+    {text: 'To let the motors warm up'},
+    {text: 'So the robot rotates off the cross first — otherwise the sensor is still on the line and the turn ends immediately', correct: true},
+    {text: 'To slow the whole program down'},
+    {text: 'It is required by every method'},
+  ]}
+  explanation="Right after starting the spin, the sensors are still on the intersection. The pause lets the robot clear it before it starts looking for the next line."
+/>
+
+<KnowledgeCheck
+  question="What does the `pass` inside the while loop do?"
+  options={[
+    {text: 'Stops the loop'},
+    {text: 'Nothing — the loop just keeps re-checking the condition while the motors spin', correct: true},
+    {text: 'Passes control to another method'},
+    {text: 'Reads the sensor'},
+  ]}
+  explanation="pass is a do-nothing placeholder. The motors were already told to spin; the loop simply waits, re-checking is_off_line() until a line appears."
+/>
+
+<TeacherNote title="Teach 'has-a', and test incrementally">
+
+Repeat the mantra: "a LineTrack *has a* LineSensor; a LineTrack *has a* drivetrain."
+That's the whole mental model. Two spots need care: the `time.sleep(0.5)` is a
+*physical-world* requirement (code is instant; the robot needs time to move), and
+`pass` confuses students — stress that the loop is already doing something by
+checking the condition. Have students test `track_until_cross()` alone before adding
+the turns, then each turn method on its own. Expect to tune the sleep duration.
+
+</TeacherNote>
+
+## Part 4 · Three lines to drive a course
+
+With both classes done, the main program is astonishingly short:
+
+```python
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
+
+tracker.track_until_cross()
+tracker.turn_right()
+tracker.track_until_cross()
+print("Done!")
+```
+
+All the sensor reading and motor control is hidden inside the classes. Compare that
+to the wall of code this was back in Lesson 7 — *that's* the payoff of good class
+design.
+
+1. Build both classes and run the follow → turn → follow test on the circle-with-cross.
+2. **Challenge:** add a `turn_around()` method that calls `turn_right()` twice.
+
+<KnowledgeCheck
+  question="Why can the main program be just a few method calls now?"
+  options={[
+    {text: 'The robot got faster'},
+    {text: 'All the sensor and motor detail is hidden inside the classes', correct: true},
+    {text: 'Classes make code run with fewer steps'},
+    {text: 'It skips the control loop'},
+  ]}
+  explanation="Composition hides complexity: the classes hold the detail, so the main program reads as a clear sequence of intentions."
+/>
+
+<TeacherNote title="Differentiation">
+
+**More support:** give the finished `LineSensor` and have students write only
+`LineTrack`, starting with `__init__` + `track_until_cross()`. **More challenge:** a
+`track_for_distance()` using timing, a `turn_degrees()`, or a timeout so a turn that
+never finds a line gives up gracefully.
+
+</TeacherNote>
+
+## Real-world connections
+
+Composition is the default way large systems are assembled:
+
+<CardGrid>
+  <InfoCard tag="Cars" title="Systems of systems">
+    A car has an engine, a transmission, a brake system — each its own module, coordinated together.
+  </InfoCard>
+  <InfoCard tag="Phones" title="App components">
+    An app screen has a camera object, a network object, a database object working in concert.
+  </InfoCard>
+  <InfoCard tag="Robots" title="Skill stacks">
+    Complex robots stack modules — perception, planning, motion — each a class the others call.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What is composition, in one phrase? ("Has-a" — one object holds another.)
+- What two objects does `LineTrack` hold? (A `LineSensor` and a drivetrain.)
+- Why the `time.sleep()` in the turn methods? (To clear the cross before looking for the next line.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** identify the "has-a" relationships, trace `track_until_cross()`, and
+explain the sleep and `pass`. **Exit ticket:** "Write `track_and_turn_right()` that
+follows to a cross then turns right." **Preview:** the final project uses both
+classes to lap the circle, reverse at the cross four times, and stop.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

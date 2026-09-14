@@ -1,0 +1,221 @@
+---
+title: "Lesson 7 · Obstacle Detection with the Rangefinder"
+sidebar_label: "7 · Obstacle Detection"
+sidebar_position: 7
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 7 · Obstacle Detection"
+  meta={['60 min', 'Python + robot', 'The robot gets eyes']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Until now you've typed the blocked list by hand. Now the robot discovers obstacles on its
+own, using the **ultrasonic rangefinder**. At each intersection it checks ahead, and if
+something's blocking the next node, it adds it to the blocked list and asks Dijkstra for a
+fresh path. The robot stops following a script and starts reacting to its world.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Initialize the XRP rangefinder and read a distance
+- Explain how an ultrasonic rangefinder measures distance
+- Use a threshold to decide whether the next intersection is blocked
+- Work out which node is ahead from position and heading
+- Run the **check → detect → update → recompute → drive** loop
+
+</Objectives>
+
+## Part 1 · The robot gets eyes
+
+The ultrasonic rangefinder sends out a sound pulse — too high for us to hear — and times
+the echo bouncing back. The round-trip time tells it how far away an object is, returned in
+centimeters. Reading it takes three lines:
+
+```python
+from XRPLib.rangefinder import Rangefinder
+
+rangefinder = Rangefinder.get_default_rangefinder()
+distance = rangefinder.distance()      # float, in cm
+print(f"Distance: {distance:.1f} cm")
+```
+
+The sensor does the physics internally; you just read a number.
+
+<KnowledgeCheck
+  question="How does an ultrasonic rangefinder measure distance?"
+  options={[
+    {text: 'It uses a camera to estimate size'},
+    {text: 'It sends a sound pulse and times how long the echo takes to return', correct: true},
+    {text: 'It counts wheel rotations'},
+    {text: 'It reads a GPS signal'},
+  ]}
+  explanation="Sound pulse out, echo back, time it — that round-trip time converts to a distance. The XRP returns it in centimeters."
+/>
+
+## Part 2 · Choosing a threshold
+
+Sensor readings have noise and vary a little each time, so you don't check for an exact
+distance — you use a **threshold**. Measure with the next intersection blocked (say ~12
+cm) and clear (say ~50 cm), then pick a cutoff between them:
+
+```python
+OBSTACLE_THRESHOLD = 15   # cm — tune to your grid spacing
+
+distance = rangefinder.distance()
+if distance < OBSTACLE_THRESHOLD:
+    print("OBSTACLE DETECTED")
+else:
+    print("Path is clear")
+```
+
+<KnowledgeCheck
+  question="Why use a threshold instead of checking for an exact distance?"
+  options={[
+    {text: 'Exact distances are illegal'},
+    {text: 'Sensor readings vary slightly (noise), so a cutoff is more reliable than an exact match', correct: true},
+    {text: 'To make the robot slower'},
+    {text: 'Thresholds use less memory'},
+  ]}
+  explanation="Ultrasonic readings fluctuate with angle, surface, and noise. A threshold ('closer than 15 cm = blocked') absorbs that variation; an exact-match check would fail constantly."
+/>
+
+## Part 3 · Which node is blocked?
+
+The rangefinder says something's ahead — but *which* node? The blocked one is the
+intersection **directly in front of the robot**, and the robot already knows its position
+and heading (0=N, 1=E, 2=S, 3=W from Module 4):
+
+```python
+NORTH, EAST, SOUTH, WEST = 0, 1, 2, 3
+
+def get_next_intersection(current_pos, heading):
+    row, col = current_pos
+    if heading == NORTH: return (row - 1, col)
+    if heading == EAST:  return (row, col + 1)
+    if heading == SOUTH: return (row + 1, col)
+    if heading == WEST:  return (row, col - 1)
+```
+
+The obstacle is never the node the robot is *on* — it's the adjacent one the sensor points
+at.
+
+<KnowledgeCheck
+  question="The robot is at (2,1) facing NORTH and the rangefinder reads 8 cm (threshold 15). Which node is blocked?"
+  options={[
+    {text: '(2,1) — where the robot is'},
+    {text: '(1,1) — the node directly ahead (north is row − 1)', correct: true},
+    {text: '(3,1)'},
+    {text: '(2,2)'},
+  ]}
+  explanation="Facing north means the next node is row − 1: (1,1). The robot sits on a clear node; the obstacle is the adjacent one it faces."
+/>
+
+## Part 4 · The five-step loop
+
+At each intersection, the robot runs the same cycle — the core of reactive robotics:
+
+```python
+# 1. CHECK: read the rangefinder
+distance = rangefinder.distance()
+
+# 2. DETECT: is the next node blocked?
+if distance < OBSTACLE_THRESHOLD:
+    blocked_node = get_next_intersection(current_pos, heading)
+
+    # 3. UPDATE: remember the obstacle
+    if blocked_node not in blocked_list:
+        blocked_list.append(blocked_node)
+
+    # 4. RECOMPUTE: fresh path from where we are now
+    pathfinder = Dijkstra(current_pos, blocked_list)
+    path = pathfinder.compute_path(destination)
+
+# 5. DRIVE: follow the (possibly new) path to the next node
+```
+
+Every time a new obstacle turns up, you make a fresh Dijkstra with the updated blocked list
+and the robot's *current* position, and get a new path. **Check → detect → update →
+recompute → drive**, over and over.
+
+<KnowledgeCheck
+  question="When the robot detects a new obstacle, what does it do to reroute?"
+  options={[
+    {text: 'Stops permanently'},
+    {text: 'Creates a fresh Dijkstra with the updated blocked list and current position, then recomputes the path', correct: true},
+    {text: 'Reverses back to the start'},
+    {text: 'Ignores it and drives through'},
+  ]}
+  explanation="Detecting an obstacle means reroute, not stop. A new Dijkstra with the updated blocked list and the robot's current position produces a path around it."
+/>
+
+## Part 5 · Test in simulation first
+
+Before the robot, prove the *logic* works by faking the sensor — return a short distance
+when the next node is a pretend obstacle:
+
+```python
+simulated_obstacles = [(1, 1), (2, 2)]
+
+def simulate_rangefinder(next_pos):
+    return 8.0 if next_pos in simulated_obstacles else 50.0
+```
+
+Run the whole loop with this stand-in; confirm the path reroutes and the blocked list
+grows. *Then* swap in the real `rangefinder.distance()`. Separating software bugs from
+hardware bugs saves enormous frustration.
+
+<KnowledgeCheck
+  question="Why test with a simulated rangefinder before using the real one?"
+  options={[
+    {text: 'The real sensor never works'},
+    {text: 'To verify the detect-update-recompute logic in software first, separating code bugs from hardware bugs', correct: true},
+    {text: 'Simulation is required by Python'},
+    {text: 'To avoid writing the loop'},
+  ]}
+  explanation="A simulated sensor lets you confirm the rerouting logic on screen. Once that's solid, real-sensor problems are clearly hardware, not logic — much easier to debug."
+/>
+
+## Real-world connections
+
+Sense → decide → act is the loop behind every autonomous machine:
+
+<CardGrid>
+  <InfoCard tag="Cars" title="Self-driving">
+    Radar and LIDAR detect obstacles; the planner reroutes in real time, just like this loop.
+  </InfoCard>
+  <InfoCard tag="Warehouses" title="Fulfillment robots">
+    Robots sense blocked aisles and replan paths on the fly to keep goods moving.
+  </InfoCard>
+  <InfoCard tag="Space" title="Mars rovers">
+    Rovers scan the terrain ahead and reroute around rocks they can't cross.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What three lines read the rangefinder? (Import, get_default, `.distance()`.)
+- Which node does an obstacle reading refer to? (The next intersection ahead, from position + heading.)
+- What are the five steps of the loop? (Check, detect, update, recompute, drive.)
+
+<TeacherNote title="Calibrate the threshold ahead of class; simulate before hardware">
+
+The right threshold depends on grid spacing, obstacle material, and the sensor — test it
+yourself and have a value ready. Expect variability: soft or angled surfaces read
+inconsistently, which is a good real-world-sensor talking point. The "which node is
+blocked" logic confuses students — demonstrate physically: stand on an intersection, face a
+direction, point to the node ahead. Have everyone get `test_detection_sim.py` working
+before touching the robot; separating software from hardware debugging is the whole game.
+Place demo obstacles *on* the planned path so the reroute is visible and dramatic.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Rangefinder](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

@@ -1,0 +1,173 @@
+---
+title: "Lesson 1 · Introduction to the Grid"
+sidebar_label: "1 · Intro to the Grid"
+sidebar_position: 1
+---
+
+<LessonHeader
+  eyebrow="Module 3 · Grid Driving"
+  title="Lesson 1 · Introduction to the Grid"
+  meta={['40–50 min', 'Code reuse', 'From circle to grid']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+You spent Module 2 teaching the robot to follow a line and detect a cross. Now
+you'll put a whole **grid** of lines on the floor — and here's the good part: your
+`LineTrack` class already knows how to drive it. No new code needed.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Describe how a grid is built from lines and intersections
+- Explain how a grid intersection is just the "cross" from Module 2
+- Use `LineTrack.track_until_cross()` to drive to the next intersection
+- Place the robot on the grid and reach the first intersection
+
+</Objectives>
+
+## Part 1 · A grid is just a lot of intersections
+
+A grid is a set of taped lines running two directions — rows and columns. Wherever
+two lines cross is an **intersection**, and to the robot's two sensors an
+intersection looks exactly like the taped cross from Module 2: both sensors go high
+at once.
+
+<Figure
+  placeholderLabel="Diagram — a 3×3 taped grid with intersections circled, robot on a line between two of them"
+  caption="Rows and columns of tape. Every place they cross is an intersection — a spot the robot can stop and turn."
+/>
+
+That's the whole insight: you already built everything needed to drive a grid. Your
+`LineTrack` class has the three methods that do it all:
+
+- `track_until_cross()` — follow the line to the next intersection and stop.
+- `turn_right()` — turn onto the perpendicular line to the right.
+- `turn_left()` — turn onto the perpendicular line to the left.
+
+<KnowledgeCheck
+  question="Do you need to change your LineTrack class to drive on the grid?"
+  options={[
+    {text: 'Yes — grids need a whole new class'},
+    {text: 'No — a grid intersection looks just like the Module 2 cross, so LineTrack works unchanged', correct: true},
+    {text: 'Yes — you must rewrite track_until_cross()'},
+    {text: 'Only the sensor class changes'},
+  ]}
+  explanation="An intersection reads the same to the sensors as the circle's cross did, so the same class navigates the grid with no changes. That's code reuse."
+/>
+
+<TeacherNote title="Sell the reuse — it's the point of the module">
+
+The big idea of Module 3 isn't a new Python concept — it's *reuse*. Make it explicit:
+"we're running the exact same class on a new surface." That's how professionals
+work — a well-designed class outlives the problem it was written for. If the grid is
+the same tape as the circle, the Lesson 1 threshold from Module 2 still applies; if
+they recalibrated the surface, have them re-check it.
+
+</TeacherNote>
+
+## Part 2 · Drive to the first intersection
+
+The program is the same `LineSensor` + `LineTrack` from Module 2, with a one-line
+main program:
+
+```python
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
+print("Driving to the first intersection...")
+tracker.track_until_cross()
+print("Intersection reached!")
+```
+
+Place the robot centered on a line, facing toward the next intersection, and it
+follows the line right up to the cross and stops.
+
+<KnowledgeCheck
+  question="Which LineTrack method drives the robot from where it is to the next intersection?"
+  options={[
+    {text: 'turn_right()'},
+    {text: 'track_until_cross()', correct: true},
+    {text: 'turn_left()'},
+    {text: 'get_error()'},
+  ]}
+  explanation="track_until_cross() follows the line and stops when both sensors hit the intersection — one grid segment per call."
+/>
+
+## Part 3 · Reach it, then turn
+
+Once you're at an intersection you can turn onto the crossing line:
+
+```python
+tracker.track_until_cross()
+print("Turning right...")
+tracker.turn_right()
+print("Now facing a new direction!")
+```
+
+Try it from a few starting spots. One thing to watch: if the robot detects an
+intersection *immediately*, it started sitting right on one — nudge it back onto the
+line first.
+
+<KnowledgeCheck
+  question="You run the program and the robot reports 'Intersection reached!' instantly without moving. Why?"
+  options={[
+    {text: 'The battery is dead'},
+    {text: 'It started sitting on an intersection, so both sensors were already high', correct: true},
+    {text: 'track_until_cross() is broken'},
+    {text: 'The threshold is too low'},
+  ]}
+  explanation="If it starts on a cross, is_at_cross() is already true and the follow loop exits at once. Back it onto a plain line segment to start."
+/>
+
+<TeacherNote title="Common setup snags & differentiation">
+
+The usual issues: starting on an intersection (detects instantly), a threshold that
+needs re-calibrating for the grid's surface, or the robot not centered before a
+turn. **More support:** have students just drive-to-first-intersection reliably
+before adding a turn. **More challenge:** drive to an intersection, turn, and drive
+to another — a two-segment path, previewing Lesson 2.
+
+</TeacherNote>
+
+## Real-world connections
+
+Navigating a grid of intersections is how a lot of real automation gets around:
+
+<CardGrid>
+  <InfoCard tag="Warehouses" title="Fulfillment robots">
+    Warehouse robots roll along floor grids, stopping at labeled intersections to pick shelves.
+  </InfoCard>
+  <InfoCard tag="Cities" title="Street navigation">
+    Self-driving cars think in intersections and blocks — drive to the next junction, then decide.
+  </InfoCard>
+  <InfoCard tag="Games" title="Grid worlds">
+    Countless games move characters on a grid, one tile at a time, exactly like this.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What is a grid intersection, to the robot? (The same both-sensors-high "cross" from Module 2.)
+- Which method drives one segment to the next intersection? (`track_until_cross()`.)
+- Why didn't you have to write any new class code? (LineTrack already handles lines and crosses — reuse.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** explain why `LineTrack` works unchanged, and drive to the first
+intersection reliably. **Exit ticket:** "Which method turns the robot onto the
+crossing line?" (`turn_right()` / `turn_left()`). **Preview:** next lesson we drive
+*past* an intersection to reach ones further down the grid — which needs one new
+trick: clearing the cross.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

@@ -1,0 +1,212 @@
+---
+title: "Lesson 3 · Dijkstra's Algorithm — The Concept"
+sidebar_label: "3 · Dijkstra's Concept"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Dijkstra's Algorithm"
+  title="Lesson 3 · Dijkstra's Algorithm — The Concept"
+  meta={['55 min', 'No coding', 'Hand-trace on paper']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This is the algorithm GPS systems use to find the shortest route — invented by Edsger
+Dijkstra in 1956 and still in use today. You'll learn it the way you learned Manhattan:
+**by hand, on paper**, before writing a line of code. Trace it a few times and the code in
+Lessons 4–5 will feel like transcription.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Name the three data structures: `distances`, `previous`, and `visited`
+- Explain what each one stores
+- Trace the algorithm step by step on a small grid
+- Pick the correct next node (smallest distance, unvisited)
+- Reconstruct the shortest path from `previous`
+
+</Objectives>
+
+## Part 1 · The three data structures
+
+Dijkstra explores outward from the start, always visiting the nearest unvisited node next.
+It keeps track of everything with three structures:
+
+- **`distances`** — a dictionary of the shortest known distance from the start to each node. Start is `0`; everything else begins at "infinity" (we'll use a big number).
+- **`previous`** — a dictionary of which node you came *from* to reach each node. Used to rebuild the path. Start's previous is `None`.
+- **`visited`** — a list of nodes already finished. Once visited, a node's distance is final.
+
+```
+distances = {(0,0): 0}      # start is 0 steps from itself
+previous  = {(0,0): None}    # nothing comes before the start
+visited   = []               # nothing finished yet
+```
+
+<KnowledgeCheck
+  question="What does the previous dictionary store?"
+  options={[
+    {text: 'The distance from the start to each node'},
+    {text: 'Which node you came from to reach each node — used to rebuild the path', correct: true},
+    {text: 'The list of blocked nodes'},
+    {text: 'How many neighbors each node has'},
+  ]}
+  explanation="previous records each node's predecessor on the shortest path. Tracing it backward from the destination reconstructs the route."
+/>
+
+## Part 2 · The algorithm in one sentence
+
+> Repeat: pick the unvisited node with the **smallest** distance, update its neighbors,
+> then mark it visited — until the destination is visited.
+
+More precisely, each round:
+
+1. Among unvisited nodes with a known distance, pick the one with the **smallest** distance — call it `current`.
+2. For each unvisited **neighbor** of `current`: if going through `current` is shorter than the neighbor's current distance, update its distance and set its `previous` to `current`.
+3. Mark `current` **visited**.
+
+The key decision is step 1: you always visit the closest-to-*start* node next — **not** the one closest to the destination.
+
+<KnowledgeCheck
+  question="Which unvisited node does Dijkstra visit next?"
+  options={[
+    {text: 'The one closest to the destination'},
+    {text: 'The one with the smallest known distance from the start', correct: true},
+    {text: 'The most recently updated one'},
+    {text: 'A random one'},
+  ]}
+  explanation="Dijkstra has no notion of 'distance to the destination.' It always expands the nearest unvisited node measured from the start."
+/>
+
+## Part 3 · Trace it: 3×3 with (1,1) blocked
+
+Find the shortest path from (0,0) to (2,2), with (1,1) blocked:
+
+```
+(0,0) --- (0,1) --- (0,2)
+  |                   |
+(1,0)               (1,2)
+  |                   |
+(2,0) --- (2,1) --- (2,2)
+```
+
+| Step | Visit | Dist | Updates neighbors | visited grows to |
+|---|---|---|---|---|
+| 1 | (0,0) | 0 | (0,1)=1, (1,0)=1 | [(0,0)] |
+| 2 | (0,1) | 1 | (0,2)=2 | …(0,1) |
+| 3 | (1,0) | 1 | (2,0)=2 | …(1,0) |
+| 4 | (0,2) | 2 | (1,2)=3 | …(0,2) |
+| 5 | (2,0) | 2 | (2,1)=3 | …(2,0) |
+| 6 | (1,2) | 3 | (2,2)=4 | …(1,2) |
+| 7 | (2,1) | 3 | (2,2): 3+1 not < 4, no change | …(2,1) |
+| 8 | (2,2) | 4 | destination visited — done | …(2,2) |
+
+Notice (1,1) never appears — a blocked node simply isn't in the graph, so the algorithm
+never touches it.
+
+<KnowledgeCheck
+  question="At step 7, visiting (2,1) offers (2,2) a distance of 3+1=4, but (2,2) already has distance 4. What happens?"
+  options={[
+    {text: '(2,2) is updated to 4 again'},
+    {text: 'No change — the new distance is not smaller than the existing one', correct: true},
+    {text: 'The algorithm crashes'},
+    {text: '(2,2) is marked visited early'},
+  ]}
+  explanation="Dijkstra only updates when the new path is strictly shorter. 4 is not less than 4, so (2,2) keeps its existing distance and previous."
+/>
+
+## Part 4 · Reconstruct the path
+
+The `previous` dictionary rebuilds the route — trace **backward** from the destination:
+
+```
+previous: {(0,0): None, (0,1): (0,0), (0,2): (0,1),
+           (1,0): (0,0), (1,2): (0,2), (2,0): (1,0),
+           (2,1): (2,0), (2,2): (1,2)}
+
+(2,2) ← (1,2) ← (0,2) ← (0,1) ← (0,0)   # (0,0)'s previous is None → stop
+```
+
+That gives `[(2,2), (1,2), (0,2), (0,1), (0,0)]` — backward. **Reverse it** for the real
+path: `[(0,0), (0,1), (0,2), (1,2), (2,2)]`, 4 steps. It routed cleanly around (1,1).
+
+Compared to Manhattan: on a *clear* grid, Dijkstra finds a path of the **same length**
+as Manhattan (the exact route may differ). Its advantage isn't shorter paths — it's that
+it **works with obstacles**.
+
+<KnowledgeCheck
+  question="Why must the reconstructed path be reversed?"
+  options={[
+    {text: 'To make it look nicer'},
+    {text: 'Because tracing previous goes from destination back to start — reversing puts it in start-to-destination order', correct: true},
+    {text: 'Dijkstra always returns paths backward by mistake'},
+    {text: 'It doesn\'t need to be reversed'},
+  ]}
+  explanation="You follow previous backward (destination → start), so the collected list is reversed. Flipping it gives the forward path the robot drives."
+/>
+
+## Real-world connections
+
+Dijkstra and its relatives are everywhere shortest paths matter:
+
+<CardGrid>
+  <InfoCard tag="Maps" title="GPS routing">
+    Turn-by-turn directions come from shortest-path algorithms descended from Dijkstra's.
+  </InfoCard>
+  <InfoCard tag="Networks" title="Internet packets">
+    Routers use shortest-path algorithms to move data efficiently across the network.
+  </InfoCard>
+  <InfoCard tag="Games" title="Enemy AI">
+    Game characters find their way around walls and obstacles with graph search like this.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What are the three data structures and what does each hold? (`distances`, `previous`, `visited` — shortest distances, predecessors, and finished nodes.)
+- How do you choose the next node? (Smallest known distance among unvisited.)
+- Why reverse the reconstructed path? (You trace it backward from the destination.)
+
+<TeacherNote title="The hardest lesson in the module — go slow, use the board">
+
+Write the full state (distances / previous / visited) after *every* step; students must
+see the structures change. Ask "which node next?" each round and make them answer before
+you proceed — that's the core skill. The #1 confusion: they want to visit the node nearest
+the *destination*; reinforce that it's smallest distance from the *start*. Emphasize that
+blocked nodes simply aren't in the graph — the algorithm doesn't "skip" them, they're
+absent. Path reconstruction feels backward; connect it to "how did you get here?" (you
+hear the last step first). Save every completed trace — they're the test cases for Lessons
+4 and 5.
+
+</TeacherNote>
+
+## Wrap-up quiz
+
+<KnowledgeCheck
+  question="On a clear grid with no obstacles, how does Dijkstra's path length compare to Manhattan's?"
+  options={[
+    {text: 'Always shorter'},
+    {text: 'The same length (the exact route may differ)', correct: true},
+    {text: 'Always longer'},
+    {text: 'Unpredictable'},
+  ]}
+  explanation="With no obstacles, both find an optimal path of equal step count. Dijkstra's real advantage shows up only when obstacles are present."
+/>
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** name the three structures, pick the right next node, update neighbors
+correctly, and reconstruct a path. **Exit ticket:** "Given `previous = {(0,0): None, (0,1):
+(0,0), (1,1): (0,1)}`, reconstruct the path from (0,0) to (1,1)." (`[(0,0),(0,1),(1,1)]`).
+**Preview:** next lesson we start building the **Dijkstra class** — constructor and graph
+now, the algorithm in Lesson 5.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)

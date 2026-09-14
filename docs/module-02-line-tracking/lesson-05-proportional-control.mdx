@@ -1,0 +1,239 @@
+---
+title: "Lesson 5 · Proportional Control"
+sidebar_label: "5 · Proportional Control"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 5 · Proportional Control"
+  meta={['60+ min', 'Control loops', 'First real line following']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Bouncing kept the robot *inside* the circle, but it never actually **followed** the
+line. This lesson is the real thing: the robot smoothly tracks the edge of the line
+by making tiny, constant steering adjustments — the same way you'd steer a car around
+a gentle curve. It's your first **control loop**, and one of the most important ideas
+in the whole course.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain a **setpoint** and why the line's edge (~0.5) is ours
+- Compute **error** as `setpoint − sensor_reading`, and read its sign
+- Turn error into a steering **correction** with a gain `Kp`
+- Steer continuously with `arcade()` inside a `while True` loop
+- Tune `Kp` by watching the robot and adjusting
+
+</Objectives>
+
+## Part 1 · Steer while you drive: `arcade()`
+
+Bounce driving *reacted* after hitting the line. Following means *constantly*
+adjusting so you never leave it — like nudging the wheel around a curve instead of
+stopping to turn.
+
+For that you need to steer without stopping. `arcade(speed, turn)` does exactly this
+— it sets a forward speed and a steering amount in one non-blocking call:
+
+```python
+drivetrain.arcade(speed, turn)
+# is the same as:
+drivetrain.set_effort(speed + turn, speed - turn)
+```
+
+So `arcade(0.3, 0.15)` speeds up the left wheel and slows the right — the robot
+curves. A positive `turn` steers one way, negative the other, and zero drives
+straight.
+
+<KnowledgeCheck
+  question="With base speed 0.3, what does `arcade(0.3, 0.15)` set the two motors to?"
+  options={[
+    {text: 'Left 0.15, right 0.45'},
+    {text: 'Left 0.45, right 0.15', correct: true},
+    {text: 'Both 0.3'},
+    {text: 'Left 0.3, right 0.15'},
+  ]}
+  explanation="arcade adds turn to the left motor and subtracts it from the right: 0.3 + 0.15 = 0.45 left, 0.3 − 0.15 = 0.15 right."
+/>
+
+## Part 2 · Setpoint and error
+
+The **setpoint** is the reading we want the sensor to hold. Following the *edge* of
+the line, that's about `0.5` — halfway between white and black. **Error** is how far
+off we are:
+
+> error = setpoint − sensor_reading
+
+The sign tells us which way we've drifted; the size tells us how far:
+
+| Where the robot is | reading | error = 0.5 − reading | Meaning |
+|---|---|---|---|
+| On the edge (perfect) | 0.5 | `0.0` | no correction |
+| Drifted onto white | 0.2 | `+0.3` | steer toward the line |
+| Drifted onto black | 0.8 | `−0.3` | steer back off the line |
+| Far onto white | 0.1 | `+0.4` | steer hard toward the line |
+
+<Figure
+  placeholderLabel="Diagram — sensor drifting onto white (positive error) vs onto black (negative error), with steering arrows"
+  caption="Positive error means steer one way, negative the other. The controller figures out direction automatically from the sign."
+/>
+
+<KnowledgeCheck
+  question="Setpoint is 0.5 and the sensor reads 0.2. What is the error?"
+  options={[
+    {text: '−0.3'},
+    {text: '+0.3', correct: true},
+    {text: '0.7'},
+    {text: '0.2'},
+  ]}
+  explanation="error = 0.5 − 0.2 = +0.3. The positive sign says the robot drifted onto white and should steer toward the line."
+/>
+
+## Part 3 · From error to steering: the gain `Kp`
+
+We don't feed raw error to the motors — we scale it by a **proportional gain**,
+`Kp`, to set how strongly the robot reacts:
+
+> correction = error × Kp
+
+With `Kp = 0.5`, an error of `+0.3` gives a correction of `+0.15`. Then we steer with
+that correction:
+
+```python
+drivetrain.arcade(base_effort, correction)
+```
+
+Bigger error → bigger correction → sharper steer. When the robot is right on the edge
+(error 0), the correction is 0 and it drives straight. Notice there's **no
+`if/else`** — the math handles left vs. right on its own, through the sign.
+
+<KnowledgeCheck
+  question="If Kp = 0.6 and error = 0.3, what is the correction?"
+  options={[
+    {text: '0.9'},
+    {text: '0.18', correct: true},
+    {text: '0.3'},
+    {text: '0.5'},
+  ]}
+  explanation="correction = error × Kp = 0.3 × 0.6 = 0.18."
+/>
+
+## Part 4 · The complete control loop
+
+Every pass: read the sensor, compute error, compute correction, steer. Hundreds of
+times a second.
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.reflectance import Reflectance
+from XRPLib.board import Board
+import time
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+reflectance = Reflectance.get_default_reflectance()
+board = Board.get_default_board()
+
+setpoint = 0.5        # target: the edge of the line
+Kp = 0.5              # proportional gain — tune this!
+base_effort = 0.3     # forward speed
+
+board.wait_for_button()
+
+while True:
+    sensor_value = reflectance.get_left()
+    error = setpoint - sensor_value
+    correction = error * Kp
+    drivetrain.arcade(base_effort, correction)
+    time.sleep(0.01)
+```
+
+<TeacherNote title="This is a big conceptual leap">
+
+Going from "do this, then that" to "constantly read and adjust" is the hardest shift
+in the module — lean on the car-steering analogy hard. Two things to hammer: the
+setpoint is the *edge* (~0.5), **not** white (0.0) — the robot rides the boundary;
+and proportional control needs **no if/else**, because the sign of the error already
+encodes direction. The `time.sleep(0.01)` just keeps the loop from flooding the
+processor. Encourage students to use their Lesson 1 edge value rather than assuming
+exactly 0.5.
+
+</TeacherNote>
+
+## Part 5 · Tuning Kp
+
+`Kp` is yours to tune by watching the robot:
+
+- **Too high** → the robot over-corrects and **oscillates**, weaving rapidly.
+- **Too low** → it reacts sluggishly and **drifts off** the line.
+- **Just right** → smooth tracking with small corrections.
+
+<KnowledgeCheck
+  question="Your robot follows the line but weaves back and forth rapidly, never settling. What should you do to Kp?"
+  options={[
+    {text: 'Increase it — it needs to react harder'},
+    {text: 'Decrease it — it is over-correcting', correct: true},
+    {text: 'Set it to 0'},
+    {text: 'Leave Kp; increase base_effort instead'},
+  ]}
+  explanation="Rapid weaving is over-correction — Kp is too high. Lower it for gentler, smoother steering."
+/>
+
+Print your values while you tune (every 50th pass keeps the console readable):
+
+```python
+if loop_count % 50 == 0:
+    print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
+```
+
+<TeacherNote title="Tuning is the fun part">
+
+There's no single "right" `Kp` — it depends on the surface, the tape, and the base
+speed. The goal isn't a magic number but understanding the *relationship*: higher Kp
+= stronger reaction = risk of oscillation. Let students run the tuning table from the
+worksheet and feel it. Start everyone at `base_effort = 0.3` or lower so the robot is
+observable; speed can come once tracking is stable.
+
+</TeacherNote>
+
+## Real-world connections
+
+Proportional control (and its bigger sibling, PID) runs an enormous amount of the
+physical world:
+
+<CardGrid>
+  <InfoCard tag="Cars" title="Cruise control">
+    The further you are below the set speed, the harder it presses the throttle — error × gain.
+  </InfoCard>
+  <InfoCard tag="Flight" title="Drone stabilization">
+    Drones hold level by constantly correcting in proportion to how far they've tilted.
+  </InfoCard>
+  <InfoCard tag="Driving" title="Lane-keeping">
+    Self-driving lane assist steers in proportion to how far the car has drifted from center.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What's the setpoint for edge-following, and why? (~0.5 — the boundary between white and black.)
+- What do the sign and size of the error each tell you? (Sign = which way to steer; size = how hard.)
+- The robot oscillates — too high or too low `Kp`? (Too high; decrease it.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** compute error and correction, predict steer direction from the sign,
+and explain a too-high/too-low `Kp`. **Exit ticket:** "setpoint 0.5, sensor 0.2 —
+error and steer direction?" (+0.3, toward the line). **Preview:** next lesson uses
+*both* sensors, which makes the error calculation simpler and the tracking smoother.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

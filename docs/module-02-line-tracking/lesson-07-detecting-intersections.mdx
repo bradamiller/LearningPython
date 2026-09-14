@@ -1,0 +1,204 @@
+---
+title: "Lesson 7 · Detecting Intersections"
+sidebar_label: "7 · Intersections"
+sidebar_position: 7
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 7 · Detecting Intersections"
+  meta={['50–60 min', 'and / event detection', 'Integration']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Add a taped **cross** to your circle and your line follower has a new problem: when
+the robot reaches the crossing, *both* sensors hit black at once. This lesson turns
+that into a feature — the robot detects the intersection, reacts to it, and keeps
+following. It's where everything from Lessons 1–6 comes together.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what an intersection looks like to the two sensors
+- Write a condition with `and` that fires when both sensors are on the line
+- Combine intersection detection with line following in one loop
+- Program a response to the cross (stop, turn around, continue)
+
+</Objectives>
+
+## Part 1 · What a cross looks like to the robot
+
+During normal following, one sensor is darker than the other — the readings differ.
+At a crossing line, **both** sensors sit on black at the same time. That's the tell:
+
+> if left > threshold **and** right > threshold → we're at a cross
+
+`and` means *both* conditions must be true (you met its partner `or` back in Lesson
+3). Here, only both-sensors-on-black should count as an intersection.
+
+<Figure
+  placeholderLabel="Diagram — robot following the circle, then reaching the taped cross with both sensors on black"
+  caption="Following the line, the sensors read differently. At the cross, both read high at once."
+/>
+
+<KnowledgeCheck
+  question="Which condition detects an intersection (both sensors on the line)?"
+  options={[
+    {text: 'left > 0.5 or right > 0.5'},
+    {text: 'left > 0.5 and right > 0.5', correct: true},
+    {text: 'left > 0.5'},
+    {text: 'not (left > 0.5)'},
+  ]}
+  explanation="A cross means BOTH sensors are on black at once, so both comparisons must be true — that's and. or would fire during normal following too."
+/>
+
+## Part 2 · Detect, then follow
+
+The structure is one `if/else` inside the control loop: **check for the cross
+first**; if it's not a cross, do normal two-sensor following.
+
+```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+import time
+
+reflectance = Reflectance.get_default_reflectance()
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+threshold = 0.5
+Kp = 0.5
+base_effort = 0.3
+
+board.wait_for_button()
+
+while True:
+    left = reflectance.get_left()
+    right = reflectance.get_right()
+
+    if left > threshold and right > threshold:
+        # Intersection! Stop and turn around
+        drivetrain.stop()
+        print("Cross detected! Turning around...")
+        drivetrain.turn(180)
+        time.sleep(0.3)          # roll past the cross before checking again
+    else:
+        # Normal two-sensor line following
+        error = left - right
+        correction = error * Kp
+        drivetrain.arcade(base_effort, -correction)
+```
+
+<KnowledgeCheck
+  question="Why is there a time.sleep(0.3) right after the robot turns at the cross?"
+  options={[
+    {text: 'To let the motors cool down'},
+    {text: 'So the robot moves past the cross before the loop checks again — otherwise it re-detects the same cross instantly', correct: true},
+    {text: 'To make the turn more accurate'},
+    {text: 'It is required by arcade()'},
+  ]}
+  explanation="Right after turning, both sensors are still on the cross. The brief pause lets the robot drive clear so it doesn't detect the same intersection over and over."
+/>
+
+<TeacherNote title="Order matters, and so does the pause">
+
+Two things carry this lesson. First, the cross check comes **first** in the
+`if/else` — if you did normal following first, you'd never reach the intersection
+branch. Second, without `time.sleep(0.3)` (or an equivalent) the robot re-detects the
+same cross every pass and spins in place. On tight curves both sensors can briefly go
+high (a false positive); a wide, crisp taped cross and a little tuning handle it. This
+is the integration lesson — while loops, if/else, `and`, sensors, and motor control
+all in one program.
+
+</TeacherNote>
+
+## Part 3 · Follow, reverse, and count
+
+1. Run the follow-and-reverse program: the robot laps the circle, hits the cross,
+   turns 180°, and heads back.
+2. **Challenge:** count the crossings and stop after four — a direct preview of the
+   final project:
+
+```python
+cross_count = 0
+max_crosses = 4
+
+while cross_count < max_crosses:
+    left = reflectance.get_left()
+    right = reflectance.get_right()
+
+    if left > threshold and right > threshold:
+        cross_count = cross_count + 1
+        drivetrain.stop()
+        print("Cross #", cross_count)
+        drivetrain.turn(180)
+        time.sleep(0.3)
+    else:
+        error = left - right
+        drivetrain.arcade(base_effort, -error * Kp)
+
+drivetrain.stop()
+print("Done! Crossed", cross_count, "times.")
+```
+
+<KnowledgeCheck
+  question="During normal line following (not at a cross), which branch of the if/else runs?"
+  options={[
+    {text: 'The if branch — it turns around'},
+    {text: 'The else branch — it does proportional line following', correct: true},
+    {text: 'Both branches run'},
+    {text: 'Neither runs'},
+  ]}
+  explanation="Only one branch runs. When the sensors differ (not both high), the cross condition is false, so the else branch does normal following."
+/>
+
+<TeacherNote title="Differentiation">
+
+**More support:** test cross detection *without driving* first — just print
+"CROSS!" vs "normal" while sliding the robot over the cross by hand. **More
+challenge:** turn 90° to take the perpendicular path instead of reversing; give
+different crossings different behaviors (beep on #1, blink on #2); or handle
+false positives with a short confirm-delay before reacting.
+
+</TeacherNote>
+
+## Real-world connections
+
+Watching a continuous stream for a specific event is everywhere in automation:
+
+<CardGrid>
+  <InfoCard tag="Transit" title="Rail junctions">
+    Trains detect track sensors at switches to decide which way to route.
+  </InfoCard>
+  <InfoCard tag="Factories" title="Conveyor triggers">
+    A sensor spots each item passing a point and triggers a sort, stamp, or count.
+  </InfoCard>
+  <InfoCard tag="Wearables" title="Step & tap detection">
+    Your watch watches a constant sensor stream for the pattern that means "a step" or "a tap."
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does the robot see at an intersection? (Both sensors on black at once.)
+- Why `and` and not `or`? (Both must be true; `or` would fire during normal following.)
+- Why the pause after turning? (So it clears the cross instead of re-detecting it.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** write the `and` condition, explain the pause, and trace which branch
+runs. **Exit ticket:** "Write a condition that's true when both sensors read above
+0.5." **Preview:** the next two lessons package all this sensor logic into your first
+Python **classes** — `LineSensor`, then a `LineTrack` that uses it.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
