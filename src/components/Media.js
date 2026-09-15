@@ -46,7 +46,11 @@ export function Figure({src, alt = '', caption, placeholderLabel = 'Graphic goes
   return (
     <figure className="videoBlock">
       {src ? (
-        <img src={src} alt={alt} style={{borderRadius: 12, display: 'block', width: '100%'}} />
+        <img
+          src={src}
+          alt={alt}
+          style={{borderRadius: 12, display: 'block', maxWidth: '100%', maxHeight: 520, width: 'auto', margin: '0 auto'}}
+        />
       ) : (
         <div className="figurePlaceholder">
           <div className="figurePlaceholder__icon">🖼️</div>
