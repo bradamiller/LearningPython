@@ -350,3 +350,29 @@ backticks (inline code) or put it in a fenced code block.
 **To continue in a new session, a prompt like this is enough:**
 "Continue the XRP curriculum site in `curriculum-site/`. Read CLAUDE.md." — all five
 modules are built; work is now evaluation/refinement, not new conversion.
+
+## 11. Videos & images (adding real media)
+
+Media lives under `static/` and is referenced from the site root (drop the word
+`static`, keep the leading slash): `static/img/module-01/x.jpg` → `/img/module-01/x.jpg`;
+`static/videos/x.mp4` → `/videos/x.mp4`. Swap a placeholder by replacing
+`placeholderLabel` with `src` (+ `alt` for images; `mp4` flag for local video):
+
+```mdx
+<Figure src="/img/module-01/mars-rover.jpg" alt="..." caption="..." />
+<Video src="/videos/gort.mp4" mp4 caption="..." />
+<Video src="https://www.youtube.com/embed/VIDEO_ID" caption="..." />   {/* embed URL, not watch URL */}
+```
+
+**Local video must be transcoded first.** Raw screen recordings (.mov, 60 fps,
+10+ Mbps) are 100+ MB — GitHub rejects files over 100 MB and Netlify deploys
+bloat. Recipe (ffmpeg is on Brad's Mac; ~10 MB per 90 s):
+
+```bash
+ffmpeg -i Input.mov -vf "scale=960:-2,fps=30" -c:v libx264 -preset fast -crf 26 \
+  -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 96k output.mp4
+```
+
+`.gitignore` excludes `static/videos/*.mov` so originals never get committed.
+Long or many videos → YouTube (unlisted) instead of local files. First real
+video: `static/videos/gort.mp4` in Module 1 Lesson 0, Part 1.
