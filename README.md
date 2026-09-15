@@ -1,8 +1,8 @@
 # XRP Python Curriculum — Web Site
 
 A VEX STEM Labs-style web version of the XRP Python curriculum, built with
-[Docusaurus](https://docusaurus.io/). **All five modules are built — 44 lessons:**
-Module 1 · Learning to Drive (11), Module 2 · Line Tracking (10), Module 3 · Grid
+[Docusaurus](https://docusaurus.io/). **All five modules are built — 45 lessons:**
+Module 1 · Learning to Drive (kickoff lesson 0 + 11), Module 2 · Line Tracking (10), Module 3 · Grid
 Driving (4), Module 4 · Manhattan Navigation (overview + 9), and Module 5 ·
 Dijkstra's Algorithm (9). See `CLAUDE.md` for the full project spec, conventions,
 and open items.
@@ -23,8 +23,9 @@ and open items.
 
 ## Style conventions (enforced across lessons)
 
-- **Phases (Module 1):** A · Blockly Foundation (lessons 1–5), B · Driving
-  Challenges (6–7), C · Transition to Python (8–11) — shown in each lesson header.
+- **Phases (Module 1):** Lesson 0 is a no-code kickoff discussion ("What Is a
+  Robot?"); then A · Blockly Foundation (lessons 1–5), B · Driving Challenges (6–7),
+  C · Transition to Python (8–11) — shown in each lesson header.
 - **Function names carry from Blockly to Python unchanged:** `draw_square(size)`,
   `draw_triangle(size)`, `draw_polygon(sides, size, effort)`. The Blockly and Python
   versions of a function have the same name and the same parameters, in the same

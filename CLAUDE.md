@@ -18,9 +18,9 @@ checks, and a teacher-notes toggle.
   media-rich lessons).
 - **Audience:** high school students (no prior programming); teachers use the
   same pages with teacher-only notes toggled on.
-- **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (11 lessons),
-  Module 2 (10), Module 3 (4), Module 4 (10: overview + lessons 1–9),
-  Module 5 (9: lessons 1–9) — 44 lessons live. Site builds clean (`npm run build`).
+- **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (12: kickoff
+  lesson-00-what-is-a-robot + lessons 1–11), Module 2 (10), Module 3 (4),
+  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9) — 45 lessons live. Site builds clean (`npm run build`).
   Brad is now doing an evaluation pass to see what needs changing.
   `docs/module-01-driving/lesson-01-meet-the-xrp.mdx` is the canonical template.
 - **Blockly vs. Python by module:** Module 1 is the Blockly→Python arc (lessons
@@ -54,7 +54,7 @@ Docusaurus (classic preset, JavaScript). Docs are served at the site root
 curriculum-site/
 ├── docs/
 │   ├── index.mdx                         # welcome / landing page (slug: /)
-│   ├── module-01-driving/                # 11 lessons (Blockly→Python) — DONE
+│   ├── module-01-driving/                # lesson-00 kickoff + 11 lessons (Blockly→Python) — DONE
 │   │   └── lesson-01-meet-the-xrp.mdx    # THE TEMPLATE lesson — copy its structure
 │   ├── module-02-line-tracking/          # 10 lessons (all Python) — DONE
 │   ├── module-03-grid-driving/           # 4 lessons — DONE
@@ -290,6 +290,15 @@ npm run serve   # preview the build
   (Lesson 4 already done, but see re-shoot note above). Whiten + drop into
   `static/img/blocks/programs/`. Note: L1's first program now begins with
   `wait_for_button_press` — screenshots should include it.
+- **Lesson 0 · What Is a Robot? (added 2026-09-15):** a no-code discussion kickoff
+  built from Brad's *WhatIsARobot.pdf* slide deck (WPI). Gallery of "is this a
+  robot?" devices with answers hidden in TeacherNotes → 1979 RIA definition →
+  WPI sense/think/act → where the XRP fits. Numbered 0 (not renumbered to 1) so
+  the site stays aligned with the source repo's 01–11 lesson/slide/worksheet
+  numbering; matches Module 4's lesson-00 precedent. **Media pending:** the 9
+  Figure placeholders map 1:1, in order, to the deck's images (slides 3–11); the
+  Video placeholder is the FIRST ball-shooter clip (slide 14). No matching
+  lesson-plan .md exists in the source repo's `module-01-driving/lessons/` yet.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
   starts with Wait for button press (programs auto-run on upload); Python editor is

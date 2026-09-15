@@ -1,0 +1,398 @@
+---
+title: "Lesson 0 · What Is a Robot?"
+sidebar_label: "0 · What Is a Robot?"
+sidebar_position: 0
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 0 · What Is a Robot?"
+  meta={['30–40 min', 'Kickoff discussion', 'No coding']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. This lesson is a guided
+discussion; the gray boxes hold the talking points and the "answers." Flip the
+switch (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You're in a robotics class, so you should probably be able to say what a robot
+*is*. That turns out to be harder than it sounds. Before you touch the XRP, you'll
+look at a lineup of machines — some obviously robots, some obviously not, and a few
+that will split the room — and argue it out until a definition emerges.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Argue whether a given device is or isn't a robot, and say *why*
+- State the three traits of a robot — it must **sense**, **think**, and **act**
+- Explain why the classic "mechanical arm" definition isn't enough anymore
+- Describe how the XRP — and this course — fits the sense–think–act idea
+
+</Objectives>
+
+## Part 1 · It used to be easy to tell
+
+For most of the last century, a robot was easy to spot: a metal figure with a
+visor, walking stiffly out of a flying saucer in a black-and-white movie. Nobody
+argued about whether *that* was a robot.
+
+<Figure
+  placeholderLabel="Still from a 1950s science-fiction film — a humanoid robot in front of a flying saucer"
+  caption="The robot everyone recognizes. Today the line is a lot blurrier."
+/>
+
+Today the machines around us are smarter and much less obvious. So: is the thing
+in your pocket a robot? The car in the driveway? The washing machine? Let's find
+out where *you* draw the line.
+
+<TeacherNote title="How to run this lesson (30–40 min)">
+
+This is a **discussion**, not a lecture. Don't reveal answers as you go — the
+value is in the disagreement. A format that works: show one device at a time, have
+students **vote with their feet** ("robot" on one side of the room, "not a robot"
+on the other, "not sure" in the middle), then call on someone from each side to
+defend their position. Keep a running list on the board of the *reasons* people
+give ("it moves on its own," "a person is controlling it," "it has sensors") —
+you'll harvest those reasons into the definition in Part 3. Budget roughly 15
+minutes for the gallery, 10 for the definition, 5–10 for the wrap-up.
+
+</TeacherNote>
+
+## Part 2 · Is this a robot?
+
+For each device, decide: **robot or not?** — and, more importantly, *what's your
+reason?* Write down one sentence for each before your class discusses it.
+
+### A radio-controlled airplane
+
+<Figure
+  placeholderLabel="Radio-controlled model airplane with its handheld transmitter"
+  caption="It flies. It has motors. Somebody's holding a controller. Robot?"
+/>
+
+<TeacherNote title="Talking points · RC plane">
+
+Most students say **not a robot**, and the reason they give is the key one: *a
+person is doing all the deciding.* The plane senses nothing and decides nothing —
+the human does the sensing (eyes) and the thinking (hands on the sticks). Push
+back gently: "But it has motors and it moves — isn't that enough?" You want them
+to articulate that *moving* isn't the test.
+
+</TeacherNote>
+
+### A camera drone
+
+<Figure
+  placeholderLabel="Camera drone (quadcopter) hovering"
+  caption="Also flies, also has a controller in the box. Same answer as the airplane?"
+/>
+
+<TeacherNote title="Talking points · Drone">
+
+This is the pair to the airplane, and it's where the room starts to split. A
+modern camera drone has GPS, obstacle sensors, and a computer that holds it
+level, stops it from hitting a wall, and flies itself home when the battery is
+low — *even though a human is nominally controlling it.* Ask: "What can the drone
+do that the airplane can't?" The answer — it senses and makes some decisions on
+its own — is the first crack in the "someone's controlling it, so it's not a
+robot" argument.
+
+</TeacherNote>
+
+### A vacuum cleaner
+
+<Figure
+  placeholderLabel="Ordinary canister vacuum cleaner with hose and floor head"
+  caption="Powerful motor, does a useful job. Robot?"
+/>
+
+<TeacherNote title="Talking points · Canister vacuum">
+
+Easy **no**, and useful for the same reason as the airplane: a person pushes it
+everywhere. It has a motor and a job, but no sensing, no deciding. Keep it quick;
+it's here to set up the next one.
+
+</TeacherNote>
+
+### A vacuum that drives itself
+
+<Figure
+  placeholderLabel="Round robot vacuum driving a back-and-forth pattern across a wood floor"
+  caption="Same job as the vacuum above. Different answer?"
+/>
+
+<TeacherNote title="Talking points · Robot vacuum">
+
+Nearly everyone says **yes** — it's even *called* a robot vacuum. Ask them to
+prove it: what does it sense (bumper, cliff sensors so it doesn't fall down
+stairs, dirt detection), what does it decide (turn when it hits something, go
+back to the dock when the battery's low), what does it do (drive, vacuum). Same
+job as the canister vacuum, but it senses, decides, and acts *on its own*. Put
+those three words on the board — they're about to become the definition.
+
+</TeacherNote>
+
+### A car
+
+<Figure
+  placeholderLabel="Modern electric sedan with driver-assist features, city skyline behind it"
+  caption="A car. Is a car a robot?"
+/>
+
+<TeacherNote title="Talking points · Self-driving-capable car">
+
+Expect a genuine split, and let it run. If a person is driving, most say no. If
+the car is on driver-assist or self-driving mode — cameras sense the road, a
+computer decides to brake or steer, and it steers — most say yes. The interesting
+conclusion: *the same machine can be a robot or not depending on what's doing the
+thinking.* That's a sophisticated point; if a student gets there on their own,
+celebrate it.
+
+</TeacherNote>
+
+### A laundry-folding machine
+
+<Figure
+  placeholderLabel="Two-armed research robot folding a towel on a table"
+  caption="A research robot folding laundry."
+/>
+
+<TeacherNote title="Talking points · Towel-folding robot">
+
+An easy **yes** and a chance to name *why* it's hard: folding a floppy towel means
+sensing where the cloth is (cameras), figuring out how to grab it (that's the
+hard part), and moving arms precisely. Note that a task trivial for a human is a
+research problem for a robot — a theme students will feel personally in Module 2
+when line-following turns out to be harder than it looks.
+
+</TeacherNote>
+
+### A Mars rover
+
+<Figure
+  placeholderLabel="Mars rover on the Martian surface"
+  caption="A rover on Mars, hundreds of millions of kilometers away."
+/>
+
+<TeacherNote title="Talking points · Mars rover">
+
+**Yes** — and the twist is worth stating: a radio signal to Mars takes several
+minutes each way, so nobody can drive it with a joystick. It *has* to look at the
+ground, decide whether a rock is safe, and drive around it by itself. Ask: "Why
+couldn't NASA just remote-control it like the airplane?" Distance forces autonomy
+— a great example of why "thinking for itself" is the heart of the definition.
+
+</TeacherNote>
+
+### A washing machine
+
+<Figure
+  placeholderLabel="Front-loading washing machine with towels spilling out of the open door"
+  caption="A washing machine. Think carefully before you answer."
+/>
+
+<TeacherNote title="Talking points · Washing machine (the one that breaks the room)">
+
+Save this for last — it's the productive controversy. Students say "obviously not"
+… until someone points out it senses the load size and water level, follows cycle
+logic (it *decides* when to spin, how long to rinse), and acts (fills, agitates,
+spins) — all without a human after the button press. By the criteria on the board,
+it might qualify! Don't resolve it. The honest takeaway is that "robot" is a
+**spectrum**, not a switch: a washing machine does all three things in a very
+simple, fixed way; a rover does them in a rich, adaptable way. Both are further
+along the line than an RC plane. The point of a definition is to make the
+argument *precise*, not to end it.
+
+</TeacherNote>
+
+Before reading on: look at your eight answers. What did every "yes" have in common
+that the "no"s were missing?
+
+## Part 3 · So what *is* a robot?
+
+Here's the definition engineers wrote back in **1979** (the Robot Institute of
+America): a robot is *"a reprogrammable, multifunctional manipulator designed to
+move material, parts, tools, or specialized devices through various programmed
+motions for the performance of a variety of tasks."*
+
+In plain English: a **programmable mechanical arm** that does factory work —
+assembly, welding, painting. The classic jobs are the **three Ds**: work that's
+**dirty, dull, or dangerous** for people.
+
+That definition was fine for 1979. But check it against Part 2: a Mars rover isn't
+a "manipulator," and neither is a drone or a robot vacuum. The definition is too
+narrow for the robots we actually have. Let's try again.
+
+<KnowledgeCheck
+  question="Which device from Part 2 does the 1979 'reprogrammable manipulator' definition clearly leave out, even though almost everyone agrees it's a robot?"
+  options={[
+    {text: 'The towel-folding robot — it has arms'},
+    {text: 'The Mars rover — it drives and explores, but it isn\'t a manipulator arm', correct: true},
+    {text: 'The RC airplane'},
+    {text: 'The canister vacuum'},
+  ]}
+  explanation="The 1979 definition describes a factory arm. A rover, a drone, or a robot vacuum has no manipulator at all — yet they're clearly robots. That's why we need a better definition."
+/>
+
+### Try again: sense, think, act
+
+The robotics engineering program at WPI uses three traits instead. A robot must:
+
+1. **Sense** — take in information about the world with some kind of sensor.
+2. **Think** — process what it sensed; make a decision based on it.
+3. **Act** — do something in the world based on that decision: move, grab,
+   change something.
+
+<CardGrid>
+  <InfoCard tag="1 · Sense" title="Take in the world">
+    Cameras, bump sensors, distance sensors, GPS, light sensors — some way of finding out what's out there.
+  </InfoCard>
+  <InfoCard tag="2 · Think" title="Decide">
+    A program that turns sensor readings into a choice: turn left, stop, go home, grab here.
+  </InfoCard>
+  <InfoCard tag="3 · Act" title="Change the world">
+    Motors, wheels, arms, propellers — something that carries the decision out physically.
+  </InfoCard>
+</CardGrid>
+
+**A robot must sense, think, and act.** Miss one and it's something else: a
+machine that only acts is a tool (the vacuum); a machine where a *person* does the
+sensing and thinking is remote-controlled (the airplane).
+
+<KnowledgeCheck
+  question="Using sense–think–act, why isn't the RC airplane a robot?"
+  options={[
+    {text: 'It can\'t fly high enough'},
+    {text: 'The human does the sensing and thinking — the plane only acts', correct: true},
+    {text: 'It has no motor'},
+    {text: 'It isn\'t reprogrammable'},
+  ]}
+  explanation="The plane acts (motor, control surfaces), but all the sensing (the pilot's eyes) and deciding (the pilot's hands) happen in a person. Two of the three traits are missing from the machine itself."
+/>
+
+<KnowledgeCheck
+  question="Why can't NASA fly a Mars rover the way you'd fly the RC airplane?"
+  options={[
+    {text: 'Mars has no radio'},
+    {text: 'The radio delay is minutes each way, so the rover must sense the ground and decide for itself', correct: true},
+    {text: 'Rovers have no motors'},
+    {text: 'It could — they just prefer not to'},
+  ]}
+  explanation="A command takes minutes to arrive and the reply takes minutes to come back. By then the rover could have driven off a ledge. Distance forces it to do its own sensing and thinking — the definition of a robot."
+/>
+
+<KnowledgeCheck
+  question="A washing machine senses the load, follows cycle logic, and spins on its own. Under sense–think–act, what's the honest answer?"
+  options={[
+    {text: 'Definitely not a robot — it doesn\'t move around'},
+    {text: 'It does all three in a simple, fixed way — so it sits at the low end of a robot spectrum, and the argument is the point', correct: true},
+    {text: 'Definitely a robot, exactly like a Mars rover'},
+    {text: 'It fails because it has no sensors'},
+  ]}
+  explanation="By the letter of the definition it qualifies, just barely: simple sensing, fixed logic, one kind of action. That's why 'robot' is best thought of as a spectrum. A good definition makes the disagreement precise — it doesn't always make it go away."
+/>
+
+<TeacherNote title="Harvesting the board into the definition">
+
+Before showing the three traits, look back at the reasons list from the gallery.
+Students will already have said things like "it has sensors," "it decides on its
+own," "a person is controlling it," "it moves." Group them on the board into
+*sense / think / act* — you're not handing them a definition, you're naming the
+one they built. The spectrum idea (washing machine at one end, rover at the other)
+is the most important nuance; it inoculates against the "is it or isn't it"
+dead-end and sets up the idea that this course moves the XRP *along* that
+spectrum.
+
+</TeacherNote>
+
+## Part 4 · Why robots — and where the XRP fits
+
+Robots are worth building because they combine so many ideas at once. A
+competition robot built by high-school students **senses** where the balls and
+the goal are with a camera, **thinks** — using trigonometry to aim — and
+**acts**, driving into position and shooting. A climbing robot needs torque, gear
+ratios, and speed calculations just to get off the ground. Robotics is where math,
+physics, and programming stop being separate subjects.
+
+<Video
+  placeholderLabel="Clip — a student-built competition robot sensing, aiming, and shooting (30–60 s)"
+  caption="Sense (camera), think (aim with trig), act (shoot). Built by high-school students."
+/>
+
+Now look at the robot on your desk with those three words in mind:
+
+<CardGrid>
+  <InfoCard tag="Sense" title="The XRP's senses">
+    Reflectance sensors that see light vs. dark, an ultrasonic rangefinder that measures distance, and encoders that count how far each wheel has turned.
+  </InfoCard>
+  <InfoCard tag="Think" title="The XRP's brain">
+    The controller board runs <em>your</em> program. Every decision it makes is one you wrote — in Blockly first, then in Python.
+  </InfoCard>
+  <InfoCard tag="Act" title="The XRP's muscles">
+    Two motors, one per wheel. That's enough to drive straight, turn, curve, and spin.
+  </InfoCard>
+</CardGrid>
+
+And this is exactly the shape of the course. In **Module 1** you'll mostly teach
+the XRP to **act** — driving, turning, drawing shapes. In **Module 2** you'll add
+**sensing**, so it can follow a line and react to what it sees. By **Modules 4
+and 5** the **thinking** gets serious: your robot will plan its own route across a
+grid and re-plan around obstacles it discovers. By the end, the XRP will be doing
+all three — a robot by anyone's definition.
+
+The XRP isn't a toy, either — the same robot is used in a college sophomore
+programming course. The tools you'll learn here are the real ones.
+
+<KnowledgeCheck
+  question="Which of the three traits will you spend most of Module 1 on?"
+  options={[
+    {text: 'Sense — reading sensors'},
+    {text: 'Act — making the robot drive, turn, and draw shapes', correct: true},
+    {text: 'Think — pathfinding algorithms'},
+    {text: 'None — Module 1 is all theory'},
+  ]}
+  explanation="Module 1 is about controlling the motors: driving, turning, shapes. Sensing arrives in Module 2, and the heavy thinking (pathfinding) in Modules 4–5."
+/>
+
+## Real-world connections
+
+Robots earn their keep on the **three Ds** — work that's dirty, dull, or dangerous:
+
+<CardGrid>
+  <InfoCard tag="Dirty" title="Sewers & disaster sites">
+    Inspection robots crawl pipes and rubble where people can't or shouldn't go.
+  </InfoCard>
+  <InfoCard tag="Dull" title="Warehouses & factories">
+    Robots move shelves, weld seams, and paint car bodies — thousands of identical times a day.
+  </InfoCard>
+  <InfoCard tag="Dangerous" title="Bombs, reactors, deep space">
+    Bomb-disposal robots, nuclear-plant inspectors, and rovers do the jobs where a mistake costs a life.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What three things must a robot do? (Sense, think, act.)
+- Why isn't a remote-controlled plane a robot? (The person does the sensing and thinking.)
+- Name a device at home and argue whether it's a robot — using all three traits.
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can students give a *reason*, not just a vote, for each device, and
+map the reason onto sense/think/act? **Exit ticket:** "Pick any device in your
+house. Is it a robot? Defend your answer using all three traits." (Look for the
+spectrum idea — "it senses and acts but doesn't really decide anything.")
+**Preview:** next lesson you meet the XRP itself — the parts, the programming
+environment, and your first program to make it act.
+
+**Media note:** the images for Part 2 come straight from the *What Is a Robot?*
+slide deck — one per figure placeholder, in the same order.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
+- [WPI Robotics Engineering](https://www.wpi.edu/academics/departments/robotics-engineering) — the source of the sense–think–act traits

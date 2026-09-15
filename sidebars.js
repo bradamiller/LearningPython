@@ -14,6 +14,7 @@ const sidebars = {
       label: 'Module 1 · Learning to Drive',
       collapsed: false,
       items: [
+        'module-01-driving/lesson-00-what-is-a-robot',
         'module-01-driving/lesson-01-meet-the-xrp',
         'module-01-driving/lesson-02-drawing-shapes',
         'module-01-driving/lesson-03-introduction-to-functions',
