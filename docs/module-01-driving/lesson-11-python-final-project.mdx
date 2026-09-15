@@ -96,15 +96,15 @@ import time
 drivetrain = DifferentialDrive.get_default_differential_drive()
 
 # ===== HELPER FUNCTIONS =====
-def calculate_angle(num_sides):
+def calculate_angle(sides):
     """Return the exterior angle of a regular polygon."""
-    return 360 / num_sides
+    return 360 / sides
 
 # ===== MAIN FUNCTIONS =====
-def draw_polygon(num_sides, size, effort):
+def draw_polygon(sides, size, effort):
     """Draw one regular polygon."""
-    angle = calculate_angle(num_sides)
-    for i in range(num_sides):
+    angle = calculate_angle(sides)
+    for i in range(sides):
         drivetrain.straight(size, max_effort=effort)
         drivetrain.turn(angle, max_effort=effort)
 
@@ -186,5 +186,5 @@ their first `while` loops and their own sensor classes.
 ## Resources
 
 - [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
-- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [VS Code](https://code.visualstudio.com/) — the editor we use for Python
 - [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

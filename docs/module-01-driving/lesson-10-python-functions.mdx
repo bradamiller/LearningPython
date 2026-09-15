@@ -24,8 +24,7 @@ and hand back a **return** value.
 By the end of this lesson you will be able to:
 
 - Define a function in Python with `def name(parameters):`
-- Call a function and pass it arguments
-- Use parameters inside the function body
+- Call a function with arguments and use the parameters inside its body
 - Return a value from a function and use it
 - Understand that variables inside a function are **local** to it
 
@@ -112,8 +111,8 @@ Some functions *do* something (draw a square); others *calculate* something and
 **return** an answer. The `return` keyword hands a value back to whoever called it:
 
 ```python
-def calculate_angle(num_sides):
-    return 360 / num_sides
+def calculate_angle(sides):
+    return 360 / sides
 
 angle = calculate_angle(6)
 print(f"Hexagon angle: {angle}")     # → Hexagon angle: 60.0
@@ -123,9 +122,9 @@ You can then build bigger functions from smaller ones — a `draw_polygon` that 
 `calculate_angle`:
 
 ```python
-def draw_polygon(num_sides, size, effort):
-    angle = 360 / num_sides
-    for i in range(num_sides):
+def draw_polygon(sides, size, effort):
+    angle = 360 / sides
+    for i in range(sides):
         drivetrain.straight(size, max_effort=effort)
         drivetrain.turn(angle, max_effort=effort)
 
@@ -158,9 +157,9 @@ draw_polygon(8, 15, 0.5)   # octagon
 
 ## Part 4 · Build a shape library
 
-1. Write `draw_polygon(num_sides, size, effort)` and test it on three shapes.
-2. Add a helper `calculate_perimeter(num_sides, side_length)` that **returns**
-   `num_sides * side_length`, and print the perimeter after drawing.
+1. Write `draw_polygon(sides, size, effort)` and test it on three shapes.
+2. Add a helper `calculate_perimeter(sides, size)` that **returns**
+   `sides * size`, and print the perimeter after drawing.
 3. **Challenge:** give your function default values —
    `def draw_square(size=30, effort=0.5):` — so `draw_square()` just works.
 
@@ -208,4 +207,4 @@ program using everything from Module 1.
 ## Resources
 
 - [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
-- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [VS Code](https://code.visualstudio.com/) — the editor we use for Python

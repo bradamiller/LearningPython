@@ -1,10 +1,13 @@
-# XRP Python Curriculum — Web Site (Proof of Concept)
+# XRP Python Curriculum — Web Site
 
 A VEX STEM Labs-style web version of the XRP Python curriculum, built with
-[Docusaurus](https://docusaurus.io/). This proof of concept has **Module 1 ·
-Lesson 1** fully built out to demonstrate the format.
+[Docusaurus](https://docusaurus.io/). **All five modules are built — 44 lessons:**
+Module 1 · Learning to Drive (11), Module 2 · Line Tracking (10), Module 3 · Grid
+Driving (4), Module 4 · Manhattan Navigation (overview + 9), and Module 5 ·
+Dijkstra's Algorithm (9). See `CLAUDE.md` for the full project spec, conventions,
+and open items.
 
-## What's demonstrated
+## What the site provides
 
 - **Sidebar + breadcrumb + prev/next navigation** across modules and lessons
 - **Colored lesson header** band with duration / phase metadata
@@ -15,6 +18,26 @@ Lesson 1** fully built out to demonstrate the format.
   instant color-coded feedback and a "try again" reset
 - **Video and image placeholders** — labeled drop-in spots; add a `src` to embed
   the real media later
+- **Real XRP Blockly block images** — Module 1 sample programs are built from the
+  actual block graphics (from the XRP User Guide); Modules 2–5 are all Python
+
+## Style conventions (enforced across lessons)
+
+- **Phases (Module 1):** A · Blockly Foundation (lessons 1–5), B · Driving
+  Challenges (6–7), C · Transition to Python (8–11) — shown in each lesson header.
+- **Function names carry from Blockly to Python unchanged:** `draw_square(size)`,
+  `draw_triangle(size)`, `draw_polygon(sides, size, effort)`. The Blockly and Python
+  versions of a function have the same name and the same parameters, in the same
+  order.
+- **Real XRP block vocabulary:** Straight (cm, Effort 0–1), Turn (Deg, Effort),
+  Sleep (seconds), Stop motors, Wait for button press — never "power %".
+- **Every robot program starts with Wait for button press** (programs run the
+  moment they upload).
+- **Python editor:** VS Code with the MicroPython extension (Blockly is XRP Code in
+  the browser).
+- **Paper before code:** each lesson that introduces an idea has a short
+  student-facing "on paper first" / "say it in English first" step before building.
+- **3–4 learning objectives per lesson.**
 
 ## Run it locally
 

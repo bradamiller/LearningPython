@@ -83,7 +83,7 @@ A square has 4 sides, so each turn is `360 ÷ 4 = 90°`. A triangle has 3 sides,
   question="A classmate's triangle isn't closing up — the robot ends facing the wrong way. They used Turn 60°. What should it be?"
   options={[
     {text: '90°'},
-    {text: '120°', correct: true, },
+    {text: '120°', correct: true},
     {text: '30°'},
     {text: '45°'},
   ]}
@@ -100,7 +100,28 @@ and pivoting 90° at each corner — makes it stick.
 
 </TeacherNote>
 
-## Part 3 · Build it and drive it
+## Part 3 · On paper first
+
+Before you touch a single block, work it out by hand — it's much faster to fix a
+wrong angle on paper than on a robot.
+
+1. **Draw the square.** On your worksheet, sketch a square and walk the robot
+   around it with your pencil: at each corner, write the turn angle. All four
+   turns should add up to `360°`.
+2. **Fill in the table.** For each shape, compute the turn angle with
+   `360 ÷ sides`:
+
+   | Shape | Sides | Repeat | Turn angle |
+   |---|---|---|---|
+   | Triangle | 3 | 3 | ____ |
+   | Square | 4 | 4 | ____ |
+   | Pentagon | 5 | 5 | ____ |
+   | Hexagon | 6 | 6 | ____ |
+
+3. **Predict.** Write down what the robot will draw for *Repeat 4 · Turn 90*
+   before you run it. Then check yourself against the real thing in Part 4.
+
+## Part 4 · Build it and drive it
 
 1. Start a new project and build the square program above (Repeat 4 → Straight
    30, Turn 90).
@@ -120,10 +141,10 @@ within ~10% are a success; perfect closure isn't the goal here.
 
 </TeacherNote>
 
-## Part 4 · Make other shapes
+## Part 5 · Make other shapes
 
 Now change just two numbers — the repeat count and the turn angle — to draw new
-shapes. Try them in order:
+shapes. Use the angles from your table in Part 3, and try them in order:
 
 1. **Triangle** — Repeat `3`, Turn `120°`, Straight `25`.
 2. **Pentagon** — Repeat `5`, Turn `72°`, Straight `20`.

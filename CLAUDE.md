@@ -277,12 +277,25 @@ npm run serve   # preview the build
 - **Videos/graphics:** Brad produces them and hands them off; lessons use labeled placeholders until then.
 
 **Open / unresolved (flag for Brad's evaluation pass):**
-- **Naming inconsistency (Module 1):** most shape lessons use `draw_square` / `size`,
-  but Lesson 4 uses `square` / `side_length` (matched to Brad's real screenshot).
-  Not yet standardized — confirm with Brad before mass-renaming.
+- **Module 1 naming is now STANDARDIZED (2026-09-15 review):** `draw_square(size)`,
+  `draw_triangle(size)`, `draw_polygon(sides, size, effort)` — identical names and
+  parameter order in Blockly (L3–5) and Python (L10–11), so the Phase C mapping is
+  literally 1:1. (Previously drifted: L5 used `distance`, L10/11 used `num_sides`.)
+  **Still pending:** the Lesson 4 hero screenshot
+  (`static/img/blocks/programs/square-function.png`) shows `square(side_length)`;
+  the lesson text bridges this in the caption for now. **Brad to re-shoot it as
+  `draw_square(size)`**, then drop the parenthetical from the L4 caption.
 - **Block screenshots pending:** Brad is supplying real XRP Code screenshots to
   replace the composed `BlockProgram`s in Module 1 lessons 1, 2, 3, 5, 7, 9
-  (Lesson 4 already done). Whiten + drop into `static/img/blocks/programs/`.
+  (Lesson 4 already done, but see re-shoot note above). Whiten + drop into
+  `static/img/blocks/programs/`. Note: L1's first program now begins with
+  `wait_for_button_press` — screenshots should include it.
+- **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
+  Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
+  starts with Wait for button press (programs auto-run on upload); Python editor is
+  **VS Code + MicroPython extension** (per Brad's source), Blockly is XRP Code;
+  student-facing "on paper first" step in L2 and "say it in English first" in L3;
+  3–4 objectives per lesson.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
   - **Module 4 `Manhattan`:** returned path **excludes** the start; `steps = len(path)`;

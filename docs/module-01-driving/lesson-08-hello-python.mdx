@@ -23,8 +23,7 @@ concept. It's the same thinking, typed instead of dragged.
 
 By the end of this lesson you will be able to:
 
-- Explain why we move from Blockly to Python
-- Translate a block into the equivalent Python code
+- Explain why we move from Blockly to Python, and translate a block into the equivalent Python code
 - Follow Python's core syntax rules: indentation, colons, lowercase, parentheses, quotes
 - Use `XRPLib` to drive the robot from Python
 - Use `print()` to show messages and debug
@@ -100,8 +99,13 @@ Blockly never let you make a spelling mistake. Python will, so five rules matter
 
 ## Part 3 · Write your first Python program
 
-Type this into a new file (typing, not pasting — it builds muscle memory), then
-upload and run it:
+Blockly lived in the browser; Python lives in a code editor. We use **VS Code**
+with the **MicroPython extension**, which uploads your `.py` file to the robot
+and shows its console output. (Your teacher has it set up — see the XRP setup
+guide if you're on your own machine.)
+
+Open VS Code, create a new file called `lesson_08_first_drive.py`, and type this
+in (typing, not pasting — it builds muscle memory). Then upload and run it:
 
 ```python
 from XRPLib.differential_drive import DifferentialDrive
@@ -199,5 +203,5 @@ a Python `for` loop — the text version of the Repeat block.
 ## Resources
 
 - [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
-- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [VS Code](https://code.visualstudio.com/) — the editor we use for Python
 - [Python.org docs](https://www.python.org/doc/)

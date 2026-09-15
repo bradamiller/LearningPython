@@ -34,22 +34,22 @@ By the end of this lesson you will be able to:
 
 A parameter is like a blank in a recipe: instead of "add 1 cup of sugar," it says
 "add *this much* sugar," and you decide how much each time you cook. For our square
-function, the blank is the side length — we'll name the parameter `side_length`:
+function, the blank is the side length — we'll name the parameter `size`:
 
 <BlockShot
   src="/img/blocks/programs/square-function.png"
-  alt="A square function that takes a side_length parameter; the Straight block's cm uses side_length, and a call passes 35"
-  caption="The square(side_length) function — the Straight block's cm holds the side_length parameter — with a call that passes 35."
+  alt="A square function that takes a side-length parameter; the Straight block's cm uses the parameter, and a call passes 35"
+  caption="A square function with a side-length parameter — the Straight block's cm holds the parameter instead of a number — and a call that passes 35. (In this screenshot the function is named square and the parameter side_length; in your program, use draw square and size to match the rest of the module.)"
 />
 
-See how the **Straight** block's *cm* slot holds `side_length` (the parameter)
-instead of a fixed number, and the call at the bottom fills it in with `35`. Now
-one function draws every size — just pass a different value each time you call it:
+See how the **Straight** block's *cm* slot holds the parameter instead of a fixed
+number, and the call at the bottom fills it in with `35`. Now one function draws
+every size — just pass a different value each time you call it:
 
 ```text
-call square (side_length: 35)     → medium
-call square (side_length: 60)     → big
-call square (side_length: 20)     → small
+call draw square (size: 35)     → medium
+call draw square (size: 60)     → big
+call draw square (size: 20)     → small
 ```
 
 <TeacherNote title="Where the parameter comes from">
@@ -97,8 +97,9 @@ Two words that sound similar and trip everyone up:
 1. Add a `size` parameter to your `draw square` function and call it at three
    different sizes.
 2. Do the same for `draw triangle` — one function, any size triangle.
-3. **Challenge:** add a *second* parameter, `speed`, and use it for the **Effort**
-   on your Straight and Turn blocks: `draw square (size, speed)`.
+3. **Challenge:** add a *second* parameter, `effort`, and use it for the **Effort**
+   on your Straight and Turn blocks: `draw square (size, effort)`. (You'll use
+   this exact pair of parameters again in the polygon function next lesson.)
 
 <KnowledgeCheck
   question="A function is defined as draw rectangle (length, width). Are draw rectangle (50, 30) and draw rectangle (30, 50) the same?"

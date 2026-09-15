@@ -39,9 +39,9 @@ angle? The function can calculate it itself.
 
 <BlockProgram
   blocks={[
-    {name: 'function_def', note: 'draw polygon (sides, distance, effort)', children: [
+    {name: 'function_def', note: 'draw polygon (sides, size, effort)', children: [
       {name: 'repeat', note: 'repeat: sides times', children: [
-        {name: 'straight', note: 'cm: distance'},
+        {name: 'straight', note: 'cm: size'},
         {name: 'turn', note: 'Deg: 360 ÷ sides'},
       ]},
     ]},
@@ -70,10 +70,10 @@ Real programmers test one function against many inputs. In your main program, ca
 
 ```text
 Wait for button press
-call draw polygon (sides: 4, distance: 30, effort: 0.5)   → square
-call draw polygon (sides: 3, distance: 30, effort: 0.5)   → triangle
-call draw polygon (sides: 6, distance: 20, effort: 0.5)   → hexagon
-call draw polygon (sides: 8, distance: 15, effort: 0.5)   → octagon
+call draw polygon (sides: 4, size: 30, effort: 0.5)   → square
+call draw polygon (sides: 3, size: 30, effort: 0.5)   → triangle
+call draw polygon (sides: 6, size: 20, effort: 0.5)   → hexagon
+call draw polygon (sides: 8, size: 15, effort: 0.5)   → octagon
 ```
 
 <KnowledgeCheck
@@ -95,7 +95,7 @@ call draw polygon (sides: 8, distance: 15, effort: 0.5)   → octagon
     {text: 'An octagon at double speed'},
     {text: 'Nothing changes'},
   ]}
-  explanation="Doubling distance doubles each side, so the perimeter doubles — but the angles (and therefore the shape) stay the same."
+  explanation="Doubling size doubles each side, so the perimeter doubles — but the angles (and therefore the shape) stay the same."
 />
 
 ## Part 3 · Explore
