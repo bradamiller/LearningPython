@@ -299,6 +299,15 @@ npm run serve   # preview the build
   Figure placeholders map 1:1, in order, to the deck's images (slides 3–11); the
   Video placeholder is the FIRST ball-shooter clip (slide 14). No matching
   lesson-plan .md exists in the source repo's `module-01-driving/lessons/` yet.
+- **EXPERIENTIAL LEARNING IS THE CORNERSTONE (Brad, 2026-09-15).** When a lesson
+  introduces a new construct, students must build up to *needing* it (try → run →
+  hit the limitation → discover/search for the construct) before it's named or the
+  finished code is shown. Lesson 2 was rebuilt as the model (straight → turn →
+  eight-block square → find Repeat; triangle fails at 90° → derive 360 ÷ sides).
+  Lesson 1's square "challenge" no longer gives the recipe. Objectives/headings
+  must not spoil the construct. Paper reasoning comes *after* the motivating
+  attempt, not before all coding. **Apply this pattern when revisiting Lessons 3
+  (functions), 4 (parameters), 5 (polygon), 9–10 (Python loops/functions).**
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
   starts with Wait for button press (programs auto-run on upload); Python editor is

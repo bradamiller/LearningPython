@@ -7,77 +7,238 @@ sidebar_position: 2
 <LessonHeader
   eyebrow="Module 1 · Learning to Drive"
   title="Lesson 2 · Drawing Shapes"
-  meta={['50–60 min', 'Phase A · Blockly Foundation', 'Loops + geometry']}
+  meta={['50–60 min', 'Phase A · Blockly Foundation', 'Build it up yourself']}
 />
 
 <TeacherBanner>
-Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
-to preview the student view.
+Teacher mode is on — the gray boxes are yours only. This lesson is built as a
+**discovery sequence**: students figure out the square, and the shortcut, before
+either is explained. The gray boxes tell you what to hold back and when to reveal.
+Flip the switch (bottom-right) to preview the student view.
 </TeacherBanner>
 
-In Lesson 1 you drove the robot forward and back. Now you'll make it draw whole
-shapes — squares, triangles, pentagons — using one powerful idea: **repeating**
-a drive-and-turn a few times.
+In Lesson 1 you drove the robot forward and back. Today you'll get it to draw a
+**square** — and you'll work out how, one block at a time. No recipe up front.
+Somewhere along the way you're going to invent a shortcut that programmers use
+constantly.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Use the **Repeat** block to run commands over and over without retyping them
-- Combine **Straight** and **Turn** to trace the sides of a shape
-- Calculate the turn angle for any regular polygon (`360° ÷ number of sides`)
-- Predict and debug a shape by changing the repeat count and the angle
+- Build a program up one step at a time, running it after each change
+- Make the robot trace a square, and explain why the program needs what it needs
+- Find a shorter way to write a program that does the same thing many times
+- Work out the turn angle for any regular shape (`360° ÷ number of sides`)
 
 </Objectives>
 
-## Part 1 · Why a square is really four repeats
-
-Watch how the robot draws a square, and notice the pattern: drive a side, turn a
-corner — four times.
-
 <Video
-  placeholderLabel="Clip — XRP drawing a square on the floor"
-  caption="Drive a side, turn 90°, repeat four times."
+  placeholderLabel="Clip — XRP driving a square on the floor"
+  caption="Here's where you're headed. You'll get there one block at a time."
 />
 
-Instead of dragging four Straight blocks and four Turn blocks, you can wrap **one**
-Straight and **one** Turn in a **Repeat** block and tell it to run four times.
+<TeacherNote title="How to run this lesson (the whole point is who does the discovering)">
+
+Resist the urge to show the finished program. The sequence is: **drive straight →
+add a turn → make a square with what you have → notice the repetition → find the
+shortcut.** Students who arrive at "repeat the straight-and-turn four times" on
+their own *own* the idea of a loop; students who are handed the Repeat block have
+merely seen one. Your job is to ask questions, not answer them: *"What did the
+robot do? What do you want it to do next? What's one block that would get you
+closer?"* Budget roughly 10 min for straight + turn, 15 min for the square, 10
+min for the shortcut, 15 min for other shapes.
+
+</TeacherNote>
+
+## Part 1 · Drive straight
+
+Open XRP Code and start a new project. Your first job is small: **find a block
+that makes the robot drive straight for 20 centimeters.** Look through the block
+palette, drag it out, and set it up. Put a **Wait for button press** block above
+it so the robot waits for you.
+
+Upload it, set the robot on the floor, press the button. Did it go 20 cm? Roughly
+where did it end up, and which way is it facing?
+
+<TeacherNote title="Part 1 facilitation">
+
+Let students find the **Straight** block themselves — say "find a block that
+drives straight" rather than naming it. Most will spot it in seconds; the point is
+that they're *searching* the palette, which they'll need to do again in Part 4.
+Expect a few to forget the button-press block and have the robot drive off the
+table — that's a memorable lesson about why the block exists. Keep this part
+short; it's a warm-up.
+
+</TeacherNote>
+
+## Part 2 · Add a turn
+
+Now change your program so that **after driving straight, the robot turns 90
+degrees.** Find the block that turns, add it under the Straight block, set the
+angle, and run it again.
+
+Before you press the button, predict: where will the robot end up, and which way
+will it be facing? Then check.
+
+<KnowledgeCheck
+  question="Your program is Straight 20, then Turn 90. After it runs, how has the robot changed from where it started?"
+  options={[
+    {text: 'It is in the same spot, facing the same way'},
+    {text: 'It has moved 20 cm forward and is now facing a quarter-turn from where it started', correct: true},
+    {text: 'It has turned but not moved'},
+    {text: 'It has driven in a full circle'},
+  ]}
+  explanation="Blocks run in order: first the drive, then the turn. So the robot is 20 cm away AND rotated 90°. That combination — a side and a corner — is the building block of every shape."
+/>
+
+<TeacherNote title="Part 2 facilitation">
+
+Ask "what shape has the robot drawn so far?" — a single side and a corner, an L.
+Then ask the leading question that sets up Part 3: *"What would you have to add to
+draw a second side?"* Don't answer it. Some students will already see where this
+is going. Good.
+
+</TeacherNote>
+
+## Part 3 · Make a square
+
+Here's the real challenge: **change your program so the robot drives a complete
+square and ends up back where it started, facing the same way.**
+
+You already know everything you need. Use the blocks you have. Try something, run
+it, watch what happens, adjust, run it again. It's fine if your first try is a
+triangle or an open box — that's information.
+
+**You've succeeded when** the robot drives four roughly-equal sides, turns four
+corners, and finishes near its starting spot.
+
+<TeacherNote title="Part 3 facilitation — let them build the long version">
+
+Nearly every student will solve this by stacking **Straight, Turn, Straight, Turn,
+Straight, Turn, Straight, Turn** — eight blocks. **That is the correct answer for
+this part.** Do not suggest the Repeat block; do not hint that there's a shorter
+way. If a student finds Repeat in the palette on their own and uses it, wonderful —
+ask them to hold on to it and show the class in Part 4.
+
+Common stumbles: only three sides (miscounting), or a turn of 45° or 180° (they'll
+see a wrong shape and fix it — don't pre-empt). Once a student's square works, ask
+them to **count their blocks** and to **point at anything that's repeated.** That
+question is the bridge to Part 4.
+
+</TeacherNote>
+
+Once your square works, look at your program and answer these two questions:
+
+1. How many blocks did it take?
+2. Is there anything in it that's the same thing, over and over?
+
+Most people's square looks something like this at this point:
+
+<BlockProgram
+  blocks={[
+    {name: 'wait_for_button_press'},
+    {name: 'straight', note: 'cm: 20'},
+    {name: 'turn', note: 'Deg: 90'},
+    {name: 'straight', note: 'cm: 20'},
+    {name: 'turn', note: 'Deg: 90'},
+    {name: 'straight', note: 'cm: 20'},
+    {name: 'turn', note: 'Deg: 90'},
+    {name: 'straight', note: 'cm: 20'},
+    {name: 'turn', note: 'Deg: 90'},
+  ]}
+  caption="A working square — the same two blocks, four times over."
+/>
+
+<KnowledgeCheck
+  question="In the eight-block square, what is being repeated, and how many times?"
+  options={[
+    {text: 'The Straight block, eight times'},
+    {text: 'The pair Straight-then-Turn, four times', correct: true},
+    {text: 'The Turn block, eight times'},
+    {text: 'Nothing is repeated'},
+  ]}
+  explanation="Look at the pattern: drive a side, turn a corner. That pair appears four times — once per side of the square."
+/>
+
+## Part 4 · A shorter way to say "four times"
+
+You just wrote the same two blocks four times. Imagine drawing a shape with 12
+sides — 24 blocks. There has to be a better way, and there is: **the palette has a
+block that repeats whatever you put inside it.** Go find it.
+
+Drag it out, set it to run **4** times, and move **one** Straight and **one** Turn
+inside it. Delete the other six blocks. Run it. Does the robot still draw a square?
+
+<TeacherNote title="Part 4 facilitation — the reveal, after the search">
+
+Give students a minute or two to find the block themselves (it's **Repeat** in
+the Loops category). If someone found it during Part 3, this is their moment to
+demonstrate. Only after most have tried it, show the finished version below and
+name it: *this is a **loop** — one copy of the instructions, run as many times as
+you say.* Emphasize the physical action of dropping blocks *inside* the Repeat's
+mouth — being beside it instead of inside it is the classic error, and the robot
+will show them (it drives one side and stops).
+
+</TeacherNote>
+
+Here's what it looks like when it works:
 
 <BlockProgram
   blocks={[
     {name: 'wait_for_button_press'},
     {name: 'repeat', note: 'repeat 4 times', children: [
-      {name: 'straight', note: 'cm: 30'},
+      {name: 'straight', note: 'cm: 20'},
       {name: 'turn', note: 'Deg: 90'},
     ]},
   ]}
-  caption="A square: the Straight and Turn blocks sit inside the Repeat, which runs them 4 times."
+  caption="The same square, with the Straight and Turn blocks inside a Repeat. Two blocks instead of eight."
 />
 
-The **Wait for button press** block at the top just makes the robot wait for you
-to press its button before it takes off — handy so it doesn't drive off the table
-the moment you upload.
+This is a **loop**: you write the instructions once, and the Repeat block runs
+them as many times as you tell it to. You've just discovered one of the most
+important ideas in all of programming.
 
-## Part 2 · The angle trick
+<KnowledgeCheck
+  question="A student's Repeat-4 program makes the robot drive one side and then stop. What's the most likely problem?"
+  options={[
+    {text: 'The robot is out of battery'},
+    {text: 'The Straight and Turn blocks are next to the Repeat instead of inside it', correct: true},
+    {text: 'Repeat only works with Turn blocks'},
+    {text: 'The number 4 is too small'},
+  ]}
+  explanation="Only blocks tucked inside the Repeat's mouth get repeated. Blocks stacked beside it run once — so the robot drives a single side, and the empty loop repeats nothing."
+/>
 
-Here's the one piece of math you need. To close any regular shape, the robot makes
-one full turn (360°) split evenly across the corners:
+## Part 5 · Now try a triangle
+
+Change your Repeat from 4 to **3**. What angle should the turn be? Make your best
+guess, run it, and look at the result.
+
+<TeacherNote title="Part 5 facilitation — let the wrong angle happen">
+
+Most students will leave the turn at 90° (the robot draws three sides of a square
+and stops, facing sideways) or guess **60°** because they remember a triangle's
+corners are 60° — the robot then draws a wide, open zig-zag that never closes.
+Both failures are the whole point. Ask: *"Did it close? Which way is it facing
+compared to the start? How far did it turn in total?"* The move that makes the
+rule click: have a student **walk** the triangle, pivoting at each corner, and
+notice they've turned all the way around by the end — a full 360°. Three corners
+sharing 360° is 120° each. Only now go to the rule.
+
+</TeacherNote>
+
+Didn't close? Here's the idea that fixes it. To get back to facing where it
+started, the robot has to turn **all the way around** over the course of the
+shape — one full circle, 360°. Every corner gets an equal share:
 
 > **Turn angle = 360° ÷ number of sides**
 
-A square has 4 sides, so each turn is `360 ÷ 4 = 90°`. A triangle has 3 sides, so
-`360 ÷ 3 = 120°`.
+A square: `360 ÷ 4 = 90°`, which is why 90 worked. A triangle: `360 ÷ 3 = 120°` —
+*not* 60°. The robot turns through the **outside** of each corner, and the outside
+angle of a triangle's corner is 120°.
 
-<KnowledgeCheck
-  question="What turn angle do you need to draw a regular hexagon (6 sides)?"
-  options={[
-    {text: '90°'},
-    {text: '60°', correct: true},
-    {text: '120°'},
-    {text: '45°'},
-  ]}
-  explanation="360 ÷ 6 = 60°. Split one full turn evenly across all six corners."
-/>
+Set the turn to 120 and run it again.
 
 <KnowledgeCheck
   question="A classmate's triangle isn't closing up — the robot ends facing the wrong way. They used Turn 60°. What should it be?"
@@ -90,66 +251,38 @@ A square has 4 sides, so each turn is `360 ÷ 4 = 90°`. A triangle has 3 sides,
   explanation="A triangle has 3 sides: 360 ÷ 3 = 120°. The turn is the OUTSIDE angle, not the 60° inside angle — a common mix-up."
 />
 
-<TeacherNote title="Head off the interior-angle mistake">
+Now do the reasoning on paper before you run anything else. Sketch a square and
+walk your pencil around it, writing the turn at each corner: four 90s that add up
+to 360. Then fill in the table for the rest:
 
-The most common error all lesson is students using the *interior* angle (a
-triangle's 60°) instead of the *exterior* turn (120°). Emphasize that the robot
-turns through the outside angle, and that all the turns together add up to one
-full 360° rotation. A quick "walk the square" demo — students physically pacing
-and pivoting 90° at each corner — makes it stick.
+| Shape | Sides | Repeat | Turn angle |
+|---|---|---|---|
+| Triangle | 3 | 3 | ____ |
+| Square | 4 | 4 | ____ |
+| Pentagon | 5 | 5 | ____ |
+| Hexagon | 6 | 6 | ____ |
+| Octagon | 8 | 8 | ____ |
 
-</TeacherNote>
+<KnowledgeCheck
+  question="What turn angle do you need to draw a regular hexagon (6 sides)?"
+  options={[
+    {text: '90°'},
+    {text: '60°', correct: true},
+    {text: '120°'},
+    {text: '45°'},
+  ]}
+  explanation="360 ÷ 6 = 60°. Split one full turn evenly across all six corners."
+/>
 
-## Part 3 · On paper first
+## Part 6 · Make other shapes
 
-Before you touch a single block, work it out by hand — it's much faster to fix a
-wrong angle on paper than on a robot.
+Now you can draw *any* regular shape by changing just two numbers — the repeat
+count and the turn angle. Use your table, predict the shape, then run it:
 
-1. **Draw the square.** On your worksheet, sketch a square and walk the robot
-   around it with your pencil: at each corner, write the turn angle. All four
-   turns should add up to `360°`.
-2. **Fill in the table.** For each shape, compute the turn angle with
-   `360 ÷ sides`:
-
-   | Shape | Sides | Repeat | Turn angle |
-   |---|---|---|---|
-   | Triangle | 3 | 3 | ____ |
-   | Square | 4 | 4 | ____ |
-   | Pentagon | 5 | 5 | ____ |
-   | Hexagon | 6 | 6 | ____ |
-
-3. **Predict.** Write down what the robot will draw for *Repeat 4 · Turn 90*
-   before you run it. Then check yourself against the real thing in Part 4.
-
-## Part 4 · Build it and drive it
-
-1. Start a new project and build the square program above (Repeat 4 → Straight
-   30, Turn 90).
-2. Give the robot clear floor space, upload, and press its button to run.
-3. Watch it trace a square and end up roughly where it started, facing its start
-   direction.
-
-**You've succeeded when** the robot drives four roughly-equal sides and turns four
-corners, ending near its starting spot.
-
-<TeacherNote title="Space, effort, and clean shapes">
-
-Give each robot a clear patch of floor (a 1–1.5 m square is plenty at 30 cm
-sides). If shapes come out lopsided, it's usually wheel slip — lower **Effort**
-to `0.3` on carpet, or nudge it up to `0.7` if the robot is sluggish. Shapes
-within ~10% are a success; perfect closure isn't the goal here.
-
-</TeacherNote>
-
-## Part 5 · Make other shapes
-
-Now change just two numbers — the repeat count and the turn angle — to draw new
-shapes. Use the angles from your table in Part 3, and try them in order:
-
-1. **Triangle** — Repeat `3`, Turn `120°`, Straight `25`.
-2. **Pentagon** — Repeat `5`, Turn `72°`, Straight `20`.
-3. **Your choice** — pick a number of sides, compute `360 ÷ sides`, and predict
-   the shape before you run it.
+1. **Pentagon** — Repeat `5`, Turn `72°`. Shorten the sides to `15` cm so it fits.
+2. **Hexagon** — Repeat `6`, Turn `60°`.
+3. **Your choice** — pick a number of sides, compute `360 ÷ sides`, predict, run.
+   What happens as the number of sides gets big?
 
 <KnowledgeCheck
   question="You change a working square program from Repeat 4 to Repeat 6, and set the turn to 60°. What does the robot draw?"
@@ -162,12 +295,15 @@ shapes. Use the angles from your table in Part 3, and try them in order:
   explanation="Six sides with 60° turns (360 ÷ 6) closes into a hexagon. The side length sets the size, not the number of sides."
 />
 
-<TeacherNote title="Differentiation">
+<TeacherNote title="Space, effort, and differentiation">
 
-**More support:** hand out a reference card of pre-computed angles (3→120°,
-4→90°, 5→72°, 6→60°, 8→45°) and a fill-in template: "Repeat (__) · Straight (__)
-· Turn (__)." **More challenge:** have them draw a star (5 points, 144° turns) or
-combine two shapes back-to-back from the same start point.
+Give each robot a clear patch of floor (about 1 m square at 20 cm sides). Lopsided
+shapes are usually wheel slip — lower **Effort** to `0.3` on carpet, or nudge to
+`0.7` if the robot is sluggish; within ~10% is a success. **More support:** a
+reference card of angles (3→120°, 4→90°, 5→72°, 6→60°, 8→45°) and a fill-in
+template "Repeat (__) · Straight (__) · Turn (__)." **More challenge:** a
+five-point star (Repeat 5, Turn 144°) — ask them to work out *why* 144 before
+running it — or two shapes back-to-back from the same start.
 
 </TeacherNote>
 
@@ -189,16 +325,18 @@ Repeating a move-and-turn is exactly how machines make precise, repeatable paths
 
 ## Wrap-up
 
-- Why does a Repeat block make shape code shorter? (One copy of Straight + Turn instead of many.)
+- Why did the eight-block square work, and why is the Repeat version better? (Same result; one copy of the instructions instead of four, and easy to change.)
 - What's the rule for the turn angle? (`360 ÷ number of sides`.)
-- If a shape doesn't close, what's the first thing to check? (The turn angle.)
+- If a shape doesn't close, what's the first thing to check? (The turn angle — did the turns add up to 360?)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** can students state the repeat count and angle for a named shape and
-predict what a program draws? **Summative (exit ticket):** give the octagon —
-Repeat 8, `360 ÷ 8 = 45°`. **Preview:** next lesson we take this square code and
-tuck it inside a **function** so we can reuse it by name.
+**Formative:** did each student get a square working *before* seeing Repeat, and
+can they say what the Repeat block does in their own words? Can they state the
+repeat count and angle for a named shape? **Exit ticket:** "Octagon — what goes in
+the Repeat, and what's the turn?" (8, `360 ÷ 8 = 45°`). **Preview:** next lesson we
+take this square code and tuck it inside a **function** so we can reuse it by
+name — and, true to form, students will feel the need for one before they meet it.
 
 </TeacherNote>
 

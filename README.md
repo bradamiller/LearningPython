@@ -36,8 +36,19 @@ and open items.
   moment they upload).
 - **Python editor:** VS Code with the MicroPython extension (Blockly is XRP Code in
   the browser).
-- **Paper before code:** each lesson that introduces an idea has a short
-  student-facing "on paper first" / "say it in English first" step before building.
+- **Experience before explanation (the cornerstone):** when a lesson introduces a
+  new construct (a loop, a function, a parameter, an angle rule…), students build
+  up to *needing* it through a short guided sequence — try something → run it →
+  see the limitation → discover or search for the construct — before it is named
+  or shown finished. Never open with the working solution. Lesson 2 is the model:
+  drive straight → add a turn → make a square with what you have (eight blocks) →
+  notice the repetition → find the Repeat block. Teacher notes say what to hold
+  back and when to reveal.
+- **Paper reasoning follows the experiment:** the "on paper first" step (angle
+  table, pseudocode in English) comes *after* a quick hands-on attempt has
+  motivated it — e.g. let the triangle fail at 90° before deriving 360 ÷ sides.
+- **Objectives and headings don't spoil the discovery:** phrase them as outcomes
+  ("find a shorter way to repeat…") rather than naming the construct up front.
 - **3–4 learning objectives per lesson.**
 
 ## Run it locally
