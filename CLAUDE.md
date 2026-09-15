@@ -376,3 +376,22 @@ ffmpeg -i Input.mov -vf "scale=960:-2,fps=30" -c:v libx264 -preset fast -crf 26 
 `.gitignore` excludes `static/videos/*.mov` so originals never get committed.
 Long or many videos → YouTube (unlisted) instead of local files. First real
 video: `static/videos/gort.mp4` in Module 1 Lesson 0, Part 1.
+
+**Keynote decks → lesson media.** Brad's Keynote "Publish to HTML" exports (an
+`index.html` + `assets/<UUID>/` per slide) hide their content: each slide is a
+multi-page PDF of *layers* (arrows and labels are vector overlays, NOT baked into
+the photos — `pdfimages` returns the bare photo), and embedded clips are HEVC
+`.mov`, which Chrome/Firefox won't play. What works:
+- `assets/header.json` → `slideList` gives the true slide order.
+- Flat slide images: serve the export (`npx serve`) and drive the player with
+  Playwright (ArrowRight advances one *build*, not one slide; dedupe screenshots
+  by hash). `deviceScaleFactor: 3` gives crisp vector text.
+- Photo-only crops: `pdftoppm -r 150` the question slide, then crop the photo box.
+- Videos: `ffmpeg -i in.mov -an -vf scale=960:-2 -c:v libx264 -crf 27 -movflags
+  +faststart out.mp4` (HEVC→H.264; ~0.2–0.8 MB for 4–10 s).
+First use: the motion deck → Module 1 Lesson 6 Part 1 (`static/img/lesson-06/`,
+`static/videos/motors-*.mp4`).
+
+**Heads-up:** the robot in those Lesson 6 photos/clips is a **VEX-style build,
+not an XRP** — captions say "the robot" / "a two-motor robot" rather than naming
+the XRP. Reshoot with an XRP if you want it on-brand.

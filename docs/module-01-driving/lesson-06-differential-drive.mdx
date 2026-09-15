@@ -17,33 +17,115 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Every `Straight` and `Turn` you've used is really controlling two motors behind
 the scenes. In this lesson you'll take the wheel yourself — driving the left and
 right motors **directly** to make curves, spins, and smooth steering that the
-high-level blocks can't do on their own.
+high-level blocks can't do on their own. Along the way you'll find out what the
+word **effort** actually means, and why it isn't the same thing as speed.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
 - Explain **differential drive** — steering by running the two wheels at different speeds
-- Use **Set effort** to control the left and right motors directly (`-1` to `1`)
-- Use the **Arcade** block for smooth, game-controller-style steering
+- Predict the robot's motion from what each side's motor is doing
+- Use **Set effort** to control the motors directly (`-1` to `1`), and explain how **effort** differs from **speed**
 - Decide when to use direct motor control vs. the high-level `Straight`/`Turn`
 
 </Objectives>
 
 ## Part 1 · How the robot really steers
 
-The XRP is a **differential drive** robot: it has no steering wheel. It turns by
-running its two wheels at different speeds. Same speed both sides → straight.
-One side faster → it curves. One forward and one backward → it spins on the spot.
+The XRP is a **differential drive** robot: it has no steering wheel. The only
+thing it can control is **how fast each side turns, and in which direction** —
+and that turns out to be enough to produce every motion it can make.
+
+### Predict first: which way will the robot drive?
+
+In each photo below, the robot is seen from above and the arrows show what each
+side's motor is doing: **which way it turns**, and **how fast** (longer arrow =
+faster). For each one, decide *before* you play the video: does the robot drive
+straight, curve, swing around, or spin? Then watch and check.
 
 <Figure
-  placeholderLabel="Diagram — three cases: equal efforts (straight), unequal (curve), opposite (spin)"
-  caption="Different left/right efforts produce every kind of motion."
+  src="/img/lesson-06/motors-case-straight.jpg"
+  alt="Top view of a two-motor robot; both side arrows point forward and are the same length"
+  caption="Case 1 — both sides forward, same speed. Which way will it drive?"
 />
+
+<Video
+  src="/videos/motors-straight.mp4"
+  mp4
+  caption="Both sides matched: the robot drives straight ahead."
+/>
+
+<Figure
+  src="/img/lesson-06/motors-case-curve.jpg"
+  alt="Top view; both side arrows point forward, but one is much longer than the other"
+  caption="Case 2 — both sides forward, but one side faster than the other."
+/>
+
+<Video
+  src="/videos/motors-curve.mp4"
+  mp4
+  caption="The faster side travels farther in the same time, so the robot arcs toward the slower side."
+/>
+
+<Figure
+  src="/img/lesson-06/motors-case-pivot.jpg"
+  alt="Top view; one side has a forward arrow and the other side has no arrow at all"
+  caption="Case 3 — one side driving, the other side stopped."
+/>
+
+<Video
+  src="/videos/motors-pivot.mp4"
+  mp4
+  caption="The stopped side stays put and the driven side walks around it — the robot swings about the stopped wheel."
+/>
+
+<Figure
+  src="/img/lesson-06/motors-case-spin.jpg"
+  alt="Top view; one side arrow points forward and the other points backward"
+  caption="Case 4 — the two sides driving in opposite directions."
+/>
+
+<Video
+  src="/videos/motors-spin.mp4"
+  mp4
+  caption="One side pushes forward while the other pulls back, so the robot spins in place."
+/>
+
+### The whole rule, in three lines
+
+Every one of those outcomes comes from the same idea — you operate the left and
+right sides of the driveline independently:
+
+<CardGrid>
+  <InfoCard tag="Same" title="Both sides, same speed">
+    Drives straight. Match the two sides and there's nothing to turn the robot.
+  </InfoCard>
+  <InfoCard tag="Different" title="One side faster">
+    Turns. The bigger the difference, the tighter the curve — until one side stops and it swings about that wheel.
+  </InfoCard>
+  <InfoCard tag="Opposite" title="Each side opposite">
+    Turns in place. The robot rotates about its own center without going anywhere.
+  </InfoCard>
+</CardGrid>
+
+<KnowledgeCheck
+  question="Your robot is supposed to drive straight but keeps drifting to the left. What does that tell you about the two sides?"
+  options={[
+    {text: 'Both sides are running at exactly the same speed'},
+    {text: 'The right side is running slightly faster than the left', correct: true},
+    {text: 'The motors are running in opposite directions'},
+    {text: 'One side is completely stopped'},
+  ]}
+  explanation="Drifting is Case 2 in miniature: the faster side travels farther, so the robot curves toward the slower one. Drifting left means the right side is winning."
+/>
+
+### Commanding the motors: the Set effort block
 
 The **Set effort** block gives you that direct control. Effort runs from `-1`
 (full reverse) through `0` (stopped) to `1` (full forward), and you set each wheel
-separately. Unlike `Straight`, the motors keep running until you tell them to
+separately — so each of the four cases above is just a pair of effort numbers.
+Unlike `Straight`, the motors keep running until you tell them to
 stop — so **Stop motors** is required.
 
 <BlockProgram
@@ -77,6 +159,77 @@ stop — so **Stop motors** is required.
   ]}
   explanation="Opposite efforts push the two sides in opposite directions, so the robot rotates on the spot."
 />
+
+### Effort is not the same as speed
+
+The block is called Set **effort**, not "set speed," and the difference matters.
+Effort is **how hard the motors try** — electrically, it's how much voltage they
+get. Think of it the way you'd think about your own effort in a sport:
+
+<Figure
+  src="/img/lesson-06/motor-effort-analogy.jpg"
+  alt="Line drawings of a cyclist, a skater, a swimmer, and a hiker, illustrating effort"
+  caption="Effort is how hard you're working — not how fast you're actually going."
+/>
+
+Those two things come apart as soon as the world pushes back. Pedal a bike uphill
+at a *constant* effort and you slow down; the same effort on the flat carries you
+much faster. **Effort** is your input. **Speed** is the result — and it depends on
+the hill, the carpet, the battery, and how much the robot is carrying.
+
+**Speed** is the other way of asking: you name the speed you want, and the robot
+*adjusts its own effort* to hold it — pushing harder up the hill, easing off on
+the way down:
+
+<Figure
+  src="/img/lesson-06/effort-vs-speed.jpg"
+  alt="Diagram of a robot climbing and descending a hill, using big effort uphill, less effort at the top, and little effort downhill"
+  caption="Ask for a speed and the effort changes to maintain it: big effort uphill, little effort coming down."
+/>
+
+This is why the same `Set effort` numbers don't always produce the same motion.
+Effort `0.5` on a smooth floor is quicker than effort `0.5` on thick carpet, and
+quicker again with a fresh battery. It's also why `Straight` and `Turn` are more
+repeatable than raw effort — they watch the robot's sensors and adjust, instead
+of blindly holding one voltage.
+
+<KnowledgeCheck
+  question="You set both motors to effort 0.5 and drive across a smooth floor, then across a thick carpet. What happens?"
+  options={[
+    {text: 'The robot travels at the same speed on both — effort sets the speed'},
+    {text: 'It is slower on the carpet: effort is how hard the motors try, and the carpet fights back', correct: true},
+    {text: 'It goes faster on the carpet'},
+    {text: 'The robot refuses to move on carpet'},
+  ]}
+  explanation="Effort is the input (roughly, motor voltage), not the outcome. The same effort against more resistance gives less speed — exactly like pedalling a bike uphill."
+/>
+
+<KnowledgeCheck
+  question="A robot is asked to hold a steady speed as it drives up and over a hill. What does its effort do?"
+  options={[
+    {text: 'Stays at one fixed value the whole way'},
+    {text: 'Rises going uphill and drops going downhill, to keep the speed the same', correct: true},
+    {text: 'Drops going uphill'},
+    {text: 'Goes to zero at the top'},
+  ]}
+  explanation="That's the trade: commanding speed means the robot changes effort by itself to maintain what you asked for. Commanding effort means you fix the effort and let the speed vary."
+/>
+
+<TeacherNote title="Effort vs. speed — worth naming explicitly">
+
+Students will otherwise read "effort 0.5" as "half speed," and then be puzzled
+when the same program behaves differently on carpet, on a ramp, or with a tired
+battery. The bike-uphill analogy lands fastest: same effort, different speed. If
+you have a ramp or a carpet square handy, run one `Set effort` program on both
+surfaces back to back — thirty seconds of demo and the distinction sticks.
+
+This is also the honest answer to "why do we even have `Straight` and `Turn`?"
+Those close the loop with sensors to deliver a requested distance or angle;
+`Set effort` is open-loop and gives you whatever the world allows. Module 2's
+line-following builds directly on this idea of adjusting effort based on what the
+robot senses.
+
+</TeacherNote>
 
 ## Part 2 · The most common bug: forgetting to stop
 
