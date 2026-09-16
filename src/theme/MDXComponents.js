@@ -9,6 +9,7 @@ import {
   TeacherBanner,
   CardGrid,
   InfoCard,
+  Decide,
 } from '@site/src/components/Lesson';
 
 // Register curriculum components globally so lesson .mdx files can use them
@@ -27,4 +28,5 @@ export default {
   TeacherBanner,
   CardGrid,
   InfoCard,
+  Decide,
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 /**
  * Lesson header band — the colored title block at the top of a lesson,
@@ -52,6 +52,34 @@ export function InfoCard({tag, title, children}) {
       {tag && <div className="infoCard__tag">{tag}</div>}
       {title && <h4>{title}</h4>}
       <div>{children}</div>
+    </div>
+  );
+}
+
+/**
+ * Decide — a compact "Robot? yes/no + why" fill-in that sits directly under a
+ * gallery picture (Lesson 0). Interactive so a teacher can record the class's
+ * answer live on the projector; state is in-memory only.
+ */
+export function Decide({device, prompt = 'Robot?', why = 'Why? — what makes it a robot, or keeps it from being one?'}) {
+  const [choice, setChoice] = useState(null);
+  return (
+    <div className="decide">
+      <div className="decide__row">
+        {device && <span className="decide__device">{device}</span>}
+        <span className="decide__prompt">{prompt}</span>
+        {['Yes', 'No'].map((v) => (
+          <button
+            key={v}
+            type="button"
+            className={'decide__btn' + (choice === v ? ' decide__btn--on' : '')}
+            onClick={() => setChoice(choice === v ? null : v)}
+          >
+            {v}
+          </button>
+        ))}
+      </div>
+      <input className="decide__why" type="text" placeholder={why} aria-label={why} />
     </div>
   );
 }

@@ -468,3 +468,57 @@ html[data-teacher='on'] .teacherToggle__thumb { transform: translateX(18px); }
   letter-spacing: 0.05em;
   color: var(--xrp-red);
 }
+
+/* ---------- Decide (Lesson 0 robot-or-not fill-in) ---------- */
+.decide {
+  background: var(--xrp-gray-200);
+  border-left: 5px solid var(--xrp-blue);
+  border-radius: 0 10px 10px 0;
+  padding: 0.85rem 1.1rem;
+  margin: 0.75rem 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+[data-theme='dark'] .decide { background: #2b2f33; }
+.decide__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.decide__device {
+  font-weight: 700;
+  color: var(--xrp-blue);
+  margin-right: auto;
+}
+[data-theme='dark'] .decide__device { color: var(--ifm-color-primary-lightest); }
+.decide__prompt { font-weight: 600; }
+.decide__btn {
+  border: 2px solid var(--xrp-blue);
+  background: #fff;
+  color: var(--xrp-blue);
+  font: inherit;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.25rem 1.1rem;
+  cursor: pointer;
+}
+[data-theme='dark'] .decide__btn { background: transparent; color: var(--ifm-color-primary-lightest); border-color: var(--ifm-color-primary-lightest); }
+.decide__btn--on, .decide__btn--on:hover {
+  background: var(--xrp-red);
+  border-color: var(--xrp-red);
+  color: #fff;
+}
+.decide__why {
+  width: 100%;
+  font: inherit;
+  padding: 0.5rem 0.2rem;
+  border: 0;
+  border-bottom: 2px solid var(--xrp-blue);
+  background: transparent;
+  color: inherit;
+  outline: none;
+}
+.decide__why::placeholder { color: #6c757d; font-style: italic; }
+[data-theme='dark'] .decide__why { border-bottom-color: var(--ifm-color-primary-lightest); }
