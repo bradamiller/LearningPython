@@ -103,11 +103,59 @@ understanding:
 A robot only does what you tell it. The workflow is always the same:
 
 1. **Write** a program (we'll use Blockly).
-2. **Upload** it to the robot over the USB cable.
-3. The robot **runs** the program — each command in order.
+2. **Connect** your computer to the robot — by USB cable or over Bluetooth.
+3. **Upload** the program to the robot.
+4. The robot **runs** the program — each command in order.
 
-That middle step matters: writing a program isn't enough. It has to be uploaded
-before the robot can run it.
+Step 3 matters: writing a program isn't enough. It has to be uploaded before the
+robot can run it.
+
+### Two ways to connect
+
+**USB cable.** Plug the robot into your computer. This is how you'll connect
+today, and it's the connection every robot needs the *first* time — XRP Code
+uses it to install and update the software that lives on the robot.
+
+**Bluetooth.** Once a robot has been set up over USB, XRP Code can reach it
+wirelessly. Unplug the cable, turn the robot on, click **CONNECT**, choose
+**Bluetooth**, and pick your robot from the list. Everything works exactly as it
+does over USB — you're just not tethered to the table anymore, which matters a
+lot once the robot is driving around the floor.
+
+Every XRP has its own **ID**, shown under the RUN button while it's connected.
+Write yours on the robot so you can pick it out of the list — and don't pair
+with somebody else's robot.
+
+<KnowledgeCheck
+  question="Your robot is brand new. Why can't you just connect to it over Bluetooth right away?"
+  options={[
+    {text: 'Bluetooth only works with Python, not Blockly'},
+    {text: 'It has to be connected by USB once first, so XRP Code can set up the software on the robot', correct: true},
+    {text: 'Bluetooth is slower, so uploads would fail'},
+    {text: 'You can — Bluetooth always works out of the box'},
+  ]}
+  explanation="The first USB connection is what lets XRP Code install and update the robot's MicroPython software. After that, the same robot can connect wirelessly."
+/>
+
+<TeacherNote title="Bluetooth in a classroom">
+
+Worth setting up early — a tethered robot can only drive as far as the cable,
+and Lesson 2 has them driving squares on the floor. Practical notes:
+
+- **Do the USB pass first.** Connect every robot by cable once, let XRP Code
+  finish its update, and **label each robot with its ID** (it shows under the RUN
+  button). Without labels, a room full of XRPs in the pairing list is chaos.
+- **Low batteries kill Bluetooth before anything else.** If a robot connects
+  over USB but not wirelessly, charge it before troubleshooting anything else.
+- **A running program can block the connection** — press the robot's reset button
+  so it restarts without running, then connect.
+- Use **Chrome or Edge**; XRP Code's Bluetooth support needs a Chromium browser
+  (Safari and Firefox won't show the option). On Windows, give it up to ~20
+  seconds after a dropped connection before retrying.
+- Keep a few known-good USB cables at the demo station regardless — USB is the
+  fallback whenever wireless acts up.
+
+</TeacherNote>
 
 ## Part 3 · Your first program in XRP Code
 
@@ -170,7 +218,8 @@ started?*
 Have students create a new project named `Lesson_1_First_Drive` and rebuild the
 worked example. Then: plug in USB → **Upload** → pick the robot → wait for
 "Upload Successful" → press the button on the robot to run. Expect it to drive
-~20 cm out and back to roughly where it started.
+~20 cm out and back to roughly where it started. Keep everyone on the cable for
+this first upload — it's also the USB pass that makes Bluetooth possible later.
 
 </TeacherNote>
 
@@ -178,7 +227,8 @@ Follow these steps:
 
 1. Create a new project called **Lesson_1_First_Drive**.
 2. Build the forward/backward program from above.
-3. Plug the robot into your computer with the USB cable.
+3. Connect the robot: plug in the USB cable (use the cable today — your robot
+   needs one USB connection before it can go wireless).
 4. Click **Upload** and choose your robot from the list.
 5. Wait for **"Upload Successful,"** set the robot on the floor, then press the
    button on the robot — your **Wait for button press** block releases the
@@ -197,6 +247,7 @@ Follow these steps:
 - **Drives the wrong way** — motor directions can be reversed; that's normal and fixable later.
 - **Not exactly the distance you set** — floor friction and battery level affect distance. Close is fine for now.
 - **Robot not in the upload list** — try another USB port or cable (some cables are charge-only), then reload the page.
+- **Robot doesn't appear over Bluetooth** — charge the battery first (a low battery stops Bluetooth before anything else), press the robot's reset button so it isn't busy running a program, and make sure you're in Chrome or Edge. Still stuck? Plug in the cable and keep going.
 
 <TeacherNote title="Common setup snags">
 

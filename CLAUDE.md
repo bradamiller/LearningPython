@@ -313,7 +313,12 @@ npm run serve   # preview the build
   starts with Wait for button press (programs auto-run on upload); Python editor is
   **VS Code + MicroPython extension** (per Brad's source), Blockly is XRP Code;
   student-facing "on paper first" step in L2 and "say it in English first" in L3;
-  3–4 objectives per lesson.
+  3–4 objectives per lesson. **Connecting (L1 Part 2, 2026-09-17):** XRP Code
+  connects over **USB cable or Bluetooth** — every robot needs one USB connection
+  first (that's how XRP Code installs/updates its MicroPython), after which it
+  pairs wirelessly by its per-robot ID shown under the RUN button. Bluetooth needs
+  a Chromium browser (Chrome/Edge); low battery kills Bluetooth first; a running
+  program can block pairing (press reset). Don't describe uploading as USB-only.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
   - **Module 4 `Manhattan`:** returned path **excludes** the start; `steps = len(path)`;
