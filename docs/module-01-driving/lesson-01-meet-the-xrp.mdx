@@ -178,8 +178,6 @@ A few blocks do everything you need today. Drag them out of the block palette:
   is how hard the motors push, from `0` to `1` (`0.5` is a good starting speed).
 - The **Turn** block <Block name="turn" /> turns the robot in place. **Deg** is
   the angle (`90` is a quarter turn); **Effort** works the same way.
-- The **Sleep** block <Block name="sleep" /> pauses the program for a number of
-  seconds. You'll use it in Part 5.
 
 You don't need a block to stop at the end — when the program finishes, the robot
 stops the motors for you.
@@ -263,11 +261,10 @@ further.
 Now experiment. Try these in order:
 
 1. **Go farther** — change the *cm* on both **Straight** blocks to `30` and re-run.
-2. **Add a pause** — drop a **Sleep** block <Block name="sleep" /> set to `2`
-   seconds between the two Straight blocks. The robot should drive out, sit for
-   two seconds, then come back.
-3. **Add a turn** — swap the Sleep for a **Turn** block <Block name="turn" />.
-   What shape does the path make now?
+2. **Change the effort** — try `0.3`, then `0.8`. What changes: how *far* the
+   robot goes, how *fast* it gets there, or both? Measure before you decide.
+3. **Add a turn** — drop a **Turn** block <Block name="turn" /> between the two
+   Straight blocks. What shape does the path make now?
 4. **Challenge** — can you make the robot drive a square and end up back where
    it started? No hints: try something, run it, watch, adjust. (Lesson 2 picks up
    right here, so whatever you figure out now is a head start.)

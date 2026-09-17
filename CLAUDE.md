@@ -442,9 +442,12 @@ Pages for a static site.)
   stop on a **sensor** (rangefinder distance, reflectance seeing the line,
   encoder count) instead. Sleep is fine as an occasional pause or as an
   explicitly-flagged stand-in before sensors exist — never a section heading or a
-  knowledge-check answer that endorses it. Module 1 currently has exactly two
-  flagged stand-ins, both in L6 (the Set effort demo and the Arcade demo), plus
-  ordinary pauses in L1 and L3. L6 Part 2 ("Blocks that finish vs. blocks that don't") is the model:
+  knowledge-check answer that endorses it. **Brad went further on 2026-09-17: no
+  Sleep at all outside L6.** L1 no longer lists Sleep among the starter blocks
+  (its Part 5 "add a pause" step is now a change-the-effort experiment) and L3 no
+  longer suggests a Sleep between calls. The only Sleeps left in Module 1 are the
+  two flagged stand-ins in L6, where `Set effort` needs something to hold the
+  program open, plus `time.sleep(1)` between shapes in L11's project skeleton. L6 Part 2 ("Blocks that finish vs. blocks that don't") is the model:
   measure the same timed program on two surfaces, then point at Module 2.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
@@ -479,9 +482,9 @@ signal of what he cares about when you touch an unreviewed lesson.
 | Lesson | What changed |
 |---|---|
 | **M1 L0** | Written from *WhatIsARobot.pdf*; all media wired; scaffolding stripped twice (see §9); table → per-picture `<Decide>` boxes |
-| **M1 L1** | Real `xrp-parts.jpg` diagram; **Bluetooth** added beside USB; square challenge de-spoiled (hands off to L2); trailing `stop_motors` removed |
+| **M1 L1** | Real `xrp-parts.jpg` diagram; **Bluetooth** added beside USB; square challenge de-spoiled (hands off to L2); trailing `stop_motors` removed; Sleep dropped from the block list and from Part 5 |
 | **M1 L2** | Rebuilt as the discovery model (straight → turn → 8-block square → find Repeat; triangle fails before `360 ÷ sides`); real Repeat screenshot |
-| **M1 L3** | Function renamed `square` |
+| **M1 L3** | Function renamed `square`; Sleep-between-calls suggestion removed |
 | **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
 | **M1 L6** | Part 1 built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; Part 2 re-framed to finishing vs. non-finishing blocks, timed driving demoted |
