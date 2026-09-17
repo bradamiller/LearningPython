@@ -66,31 +66,31 @@ once, cook from it as many times as you want.
 A function has two parts, and keeping them straight is the whole lesson:
 
 - **Define** — where you *write* what the function does. In Blockly this is the
-  **"to do something"** block; rename it to `draw square` and drop your Repeat
+  **"to do something"** block; rename it to `square` and drop your Repeat
   loop inside it.
-- **Call** — where you *use* it. A new **draw square** block appears in the
+- **Call** — where you *use* it. A new **square** block appears in the
   Functions palette; drag it into your main program wherever you want a square.
 
 <BlockProgram
   blocks={[
-    {name: 'function_def', note: 'rename to "draw square"', children: [
+    {name: 'function_def', note: 'rename to "square"', children: [
       {name: 'repeat', note: 'repeat 4 times', children: [
         {name: 'straight', note: 'cm: 30'},
         {name: 'turn', note: 'Deg: 90'},
       ]},
     ]},
   ]}
-  caption="The definition: the square loop now lives inside a function named draw square."
+  caption="The definition: the square loop now lives inside a function named square."
 />
 
 Your main program then becomes short and readable — wait for the button, then
-call `draw square` as many times as you want:
+call `square` as many times as you want:
 
 ```text
 Wait for button press
-call draw square
-call draw square
-call draw square
+call square
+call square
+call square
 ```
 
 <KnowledgeCheck
@@ -105,7 +105,7 @@ call draw square
 />
 
 <KnowledgeCheck
-  question="Your program calls draw square (a 4-sided loop) four times. How many sides does the robot drive in total?"
+  question="Your program calls square (a 4-sided loop) four times. How many sides does the robot drive in total?"
   options={[
     {text: '4'},
     {text: '8'},
@@ -119,19 +119,19 @@ call draw square
 
 **Say it in English first.** Before you build anything, write one or two plain
 sentences on paper describing what your function should do — for example:
-*"draw square: repeat 4 times — drive 30 cm, then turn 90°."* If you can't
+*"square: repeat 4 times — drive 30 cm, then turn 90°."* If you can't
 describe it in words, you're not ready to build it in blocks. Do the same for
-`draw triangle` before step 3.
+`triangle` before step 3.
 
 1. Take your square loop from Lesson 2 and move it inside a new function named
-   `draw square`.
-2. In the main program, call `draw square` a few times (add a **Sleep** block
+   `square`.
+2. In the main program, call `square` a few times (add a **Sleep** block
    between calls if you want a pause to watch each one).
-3. Now make a second function, `draw triangle` (Repeat 3, Turn 120°), and call
+3. Now make a second function, `triangle` (Repeat 3, Turn 120°), and call
    both in a sequence.
 
 <KnowledgeCheck
-  question="You want bigger squares everywhere in your program. With a draw square function, how many places do you change the size?"
+  question="You want bigger squares everywhere in your program. With a square function, how many places do you change the size?"
   options={[
     {text: 'One — just inside the function', correct: true},
     {text: 'One for every time you called it'},
@@ -147,7 +147,7 @@ describe it in words, you're not ready to build it in blocks. Do the same for
 just to add `call` blocks. **More challenge:** have them build a pattern —
 square, triangle, square, triangle — from four calls. **Watch for:** students who
 *re-define* the function instead of *calling* it. Point them to the ready-made
-`draw square` block in the Functions palette.
+`square` block in the Functions palette.
 
 </TeacherNote>
 
@@ -176,7 +176,7 @@ square, triangle, square, triangle — from four calls. **Watch for:** students 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** can students point at which code belongs in the function vs. the
-main program, and explain define vs. call? **Exit ticket:** "If `draw square`
+main program, and explain define vs. call? **Exit ticket:** "If `square`
 draws 4 sides and you call it 3 times, how many sides total?" (12). **Preview:**
 next lesson we make one function draw *any size* square by giving it a **parameter**.
 

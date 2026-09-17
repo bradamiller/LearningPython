@@ -36,7 +36,7 @@ Choose one path (or pitch your own to your teacher):
 
 <CardGrid>
   <InfoCard tag="Option A" title="Polygon artist">
-    Use a draw_polygon function to compose a geometric art piece — nested shapes, a star, a repeating pattern. A great fit if you liked Lesson 5.
+    Use a polygon function to compose a geometric art piece — nested shapes, a star, a repeating pattern. A great fit if you liked Lesson 5.
   </InfoCard>
   <InfoCard tag="Option B" title="Precision navigation">
     Build a delivery robot: functions for each course segment, hit waypoints accurately, and return home.
@@ -55,7 +55,7 @@ Professionals design before they build. On paper first:
 
 1. **Problem statement** — one or two sentences: what will your robot do?
 2. **Function inventory** — list the functions you'll need, with their parameters
-   (e.g. `draw_polygon(sides, size, effort)`, `navigate_segment(distance, angle)`).
+   (e.g. `polygon(sides, side_length)`, `navigate_segment(distance, angle)`).
 3. **Pseudocode** — the flow in plain English, not Python:
 
 ```text
@@ -101,19 +101,19 @@ def calculate_angle(sides):
     return 360 / sides
 
 # ===== MAIN FUNCTIONS =====
-def draw_polygon(sides, size, effort):
+def polygon(sides, side_length):
     """Draw one regular polygon."""
     angle = calculate_angle(sides)
     for i in range(sides):
-        drivetrain.straight(size, max_effort=effort)
-        drivetrain.turn(angle, max_effort=effort)
+        drivetrain.straight(side_length)
+        drivetrain.turn(angle)
 
 def main():
     """Run the project."""
     print("Starting...")
-    draw_polygon(4, 30, 0.5)
+    polygon(4, 30)
     time.sleep(1)
-    draw_polygon(6, 25, 0.5)
+    polygon(6, 25)
     print("Done!")
 
 # ===== RUN =====

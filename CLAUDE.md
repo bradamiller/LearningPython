@@ -309,15 +309,14 @@ npm run serve   # preview the build
   `effort` parameter** (Effort stays `0.5` in the blocks; Brad: "I didn't think
   effort added to the example"). L5 text, calls, knowledge checks and wrap-up all
   match, and L4's forward reference no longer promises an effort parameter in L5.
-  ⚠️ **Still open — two naming questions:**
-  1. **Function names.** Brad's real screenshots use bare names (`square`,
-     `polygon`); the lessons otherwise say `draw square` / `draw triangle`
-     (L3/L4) and his SOURCE lesson plans say `draw_square`. L5 now uses
-     `polygon` (matching its screenshot), so Module 1 is mixed. Either adopt the
-     bare names module-wide or keep the `draw` prefix and bridge in captions.
-  2. **Python lessons.** L10 (`draw_square(size)`) and L11
-     (`draw_polygon(sides, size, effort)`) still use `size` and still carry the
-     effort parameter, so the Blockly→Python mapping is no longer 1:1.
+  **RESOLVED 2026-09-17 (Brad chose both):** Module 1 uses **bare function names**
+  — `square`, `triangle`, `polygon` — in Blockly (L3–5) AND Python (L10–11), with
+  **`side_length`** as the side parameter, and **`polygon(sides, side_length)`
+  takes no effort parameter** in either language. The Blockly→Python mapping is
+  literally 1:1 again. NOTE this now differs from Brad's SOURCE lesson plans and
+  solution code (`draw_square(size)` / `draw_square(distance)`); the site is
+  ahead of the source, matching his current XRP Code screenshots. Effort appears
+  only as an optional challenge (L4 Part 3, L10 Part 2 prose).
 - **Block screenshots pending:** Brad is supplying real XRP Code screenshots to
   replace the composed `BlockProgram`s in Module 1 lessons 1, 2, 3, 5, 7, 9
   (Lesson 4 already done, but see re-shoot note above). Whiten + drop into

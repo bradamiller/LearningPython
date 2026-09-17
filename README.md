@@ -26,10 +26,12 @@ and open items.
 - **Phases (Module 1):** Lesson 0 is a no-code kickoff discussion ("What Is a
   Robot?"); then A · Blockly Foundation (lessons 1–5), B · Driving Challenges (6–7),
   C · Transition to Python (8–11) — shown in each lesson header.
-- **Function names carry from Blockly to Python unchanged:** `draw_square(size)`,
-  `draw_triangle(size)`, `draw_polygon(sides, size, effort)`. The Blockly and Python
+- **Function names carry from Blockly to Python unchanged:** `square(side_length)`,
+  `triangle(side_length)`, `polygon(sides, side_length)`. The Blockly and Python
   versions of a function have the same name and the same parameters, in the same
-  order.
+  order — the names match the real XRP Code screenshots in the lessons. Effort is
+  not a parameter; it stays at `0.5` in the blocks (it appears only as an optional
+  challenge).
 - **Real XRP block vocabulary:** Straight (cm, Effort 0–1), Turn (Deg, Effort),
   Sleep (seconds), Stop motors, Wait for button press — never "power %".
 - **Every robot program starts with Wait for button press** (programs run the

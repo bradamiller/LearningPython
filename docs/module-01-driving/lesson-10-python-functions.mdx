@@ -35,23 +35,23 @@ By the end of this lesson you will be able to:
 Here's the reusable square, Blockly on top and Python below:
 
 ```python
-def draw_square():
+def square():
     for i in range(4):
         drivetrain.straight(30)
         drivetrain.turn(90)
 
-draw_square()
-draw_square()
-draw_square()
+square()
+square()
+square()
 ```
 
 The pieces map to what you already know:
 
 - `def` — the keyword that *defines* a function (like the "to do something" block).
-- `draw_square` — the name (lowercase, words joined by underscores).
+- `square` — the name (lowercase, words joined by underscores).
 - `()` — the parameter list (empty for now).
 - `:` and indentation — everything indented is the function **body**.
-- `draw_square()` — *calls* it. Define it once at the top; call it as often as you like.
+- `square()` — *calls* it. Define it once at the top; call it as often as you like.
 
 <KnowledgeCheck
   question="Which keyword defines a function in Python?"
@@ -80,29 +80,29 @@ Just like the gear icon added an input in Blockly, a name inside the parentheses
 adds a parameter in Python:
 
 ```python
-def draw_square(size):
+def square(side_length):
     for i in range(4):
-        drivetrain.straight(size)
+        drivetrain.straight(side_length)
         drivetrain.turn(90)
 
-draw_square(30)
-draw_square(50)
-draw_square(20)
+square(30)
+square(50)
+square(20)
 ```
 
-The `size` **parameter** is a local variable; the numbers you pass (`30`, `50`,
-`20`) are the **arguments**. Add more parameters by separating them with commas —
-`def draw_square(size, effort):`.
+The `side_length` **parameter** is a local variable; the numbers you pass (`30`,
+`50`, `20`) are the **arguments** — the same names you used in Blockly. Add more
+parameters by separating them with commas: `def square(side_length, effort):`.
 
 <KnowledgeCheck
-  question="Given def draw_square(size):, what does calling draw_square(45) make the robot do?"
+  question="Given def square(side_length):, what does calling square(45) make the robot do?"
   options={[
     {text: 'Draw a square with 45 cm sides', correct: true},
     {text: 'Draw a square with 90 cm sides'},
     {text: 'Turn 45 degrees'},
     {text: 'Cause an error — you must pass two numbers'},
   ]}
-  explanation="The argument 45 fills the size parameter, so each Straight drives 45 cm. One parameter, one argument."
+  explanation="The argument 45 fills the side_length parameter, so each Straight drives 45 cm. One parameter, one argument."
 />
 
 ## Part 3 · Returning a value
@@ -118,19 +118,19 @@ angle = calculate_angle(6)
 print(f"Hexagon angle: {angle}")     # → Hexagon angle: 60.0
 ```
 
-You can then build bigger functions from smaller ones — a `draw_polygon` that uses
+You can then build bigger functions from smaller ones — a `polygon` that uses
 `calculate_angle`:
 
 ```python
-def draw_polygon(sides, size, effort):
-    angle = 360 / sides
+def polygon(sides, side_length):
+    angle = calculate_angle(sides)
     for i in range(sides):
-        drivetrain.straight(size, max_effort=effort)
-        drivetrain.turn(angle, max_effort=effort)
+        drivetrain.straight(side_length)
+        drivetrain.turn(angle)
 
-draw_polygon(4, 30, 0.5)   # square
-draw_polygon(3, 25, 0.5)   # triangle
-draw_polygon(8, 15, 0.5)   # octagon
+polygon(4, 30)   # square
+polygon(3, 25)   # triangle
+polygon(8, 15)   # octagon
 ```
 
 <KnowledgeCheck
@@ -157,11 +157,12 @@ draw_polygon(8, 15, 0.5)   # octagon
 
 ## Part 4 · Build a shape library
 
-1. Write `draw_polygon(sides, size, effort)` and test it on three shapes.
-2. Add a helper `calculate_perimeter(sides, size)` that **returns**
-   `sides * size`, and print the perimeter after drawing.
-3. **Challenge:** give your function default values —
-   `def draw_square(size=30, effort=0.5):` — so `draw_square()` just works.
+1. Write `polygon(sides, side_length)` and test it on three shapes — the same
+   function you built in Blockly in Lesson 5, now in Python.
+2. Add a helper `calculate_perimeter(sides, side_length)` that **returns**
+   `sides * side_length`, and print the perimeter after drawing.
+3. **Challenge:** give your function a default value —
+   `def square(side_length=30):` — so `square()` just works.
 
 <TeacherNote title="Differentiation & habits">
 

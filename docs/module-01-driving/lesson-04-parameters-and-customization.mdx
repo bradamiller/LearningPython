@@ -14,9 +14,9 @@ sidebar_position: 4
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Your `draw square` function always draws the *same size* square. What if you want
-a big one, then a small one? You could write `draw_square_big` and
-`draw_square_small`… but that's the copy-paste problem all over again. The fix is
+Your `square` function always draws the *same size* square. What if you want
+a big one, then a small one? You could write `square_big` and
+`square_small`… but that's the copy-paste problem all over again. The fix is
 a **parameter** — a slot you fill in each time you call the function.
 
 <Objectives>
@@ -39,7 +39,7 @@ function, the blank is the side length — we'll name the parameter `side_length
 <BlockShot
   src="/img/blocks/programs/square-function.png"
   alt="A square function that takes a side-length parameter; the Straight block's cm uses the parameter, and a call passes 35"
-  caption="A square function with a side_length parameter — the Straight block's cm holds the parameter instead of a number — and a call that passes 35. (The screenshot names the function square; call yours draw square to match the rest of the module.)"
+  caption="The square function with a side_length parameter — the Straight block's cm holds the parameter instead of a number — and a call that passes 35."
 />
 
 See how the **Straight** block's *cm* slot holds the parameter instead of a fixed
@@ -47,9 +47,9 @@ number, and the call at the bottom fills it in with `35`. Now one function draws
 every size — just pass a different value each time you call it:
 
 ```text
-call draw square (side_length: 35)     → medium
-call draw square (side_length: 60)     → big
-call draw square (side_length: 20)     → small
+call square (side_length: 35)     → medium
+call square (side_length: 60)     → big
+call square (side_length: 20)     → small
 ```
 
 <TeacherNote title="Where the parameter comes from">
@@ -66,12 +66,12 @@ on the projector slowly; it's the one bit of Blockly UI that isn't obvious.
 Two words that sound similar and trip everyone up:
 
 - **Parameter** — the *name* in the definition: the `side_length` in
-  `draw square (side_length)`. It's the empty slot.
+  `square (side_length)`. It's the empty slot.
 - **Argument** — the *value* you pass in when you call it: the `50` in
-  `draw square (side_length: 50)`. It's what fills the slot.
+  `square (side_length: 50)`. It's what fills the slot.
 
 <KnowledgeCheck
-  question="In the call draw square (side_length: 50), what is the 50?"
+  question="In the call square (side_length: 50), what is the 50?"
   options={[
     {text: 'The parameter'},
     {text: 'The argument — the value passed in', correct: true},
@@ -82,7 +82,7 @@ Two words that sound similar and trip everyone up:
 />
 
 <KnowledgeCheck
-  question="With draw square (side_length), calling draw square (side_length: 35) makes the robot drive each side how long?"
+  question="With square (side_length), calling square (side_length: 35) makes the robot drive each side how long?"
   options={[
     {text: '90 cm'},
     {text: '35 cm', correct: true},
@@ -94,11 +94,11 @@ Two words that sound similar and trip everyone up:
 
 ## Part 3 · Make your functions flexible
 
-1. Add a `side_length` parameter to your `draw square` function and call it at
+1. Add a `side_length` parameter to your `square` function and call it at
    three different sizes.
-2. Do the same for `draw triangle` — one function, any size triangle.
+2. Do the same for `triangle` — one function, any size triangle.
 3. **Challenge:** add a *second* parameter, `effort`, and use it for the **Effort**
-   on your Straight and Turn blocks: `draw square (side_length, effort)`. Then ask
+   on your Straight and Turn blocks: `square (side_length, effort)`. Then ask
    yourself whether it earns its keep — next lesson's polygon function takes
    `sides` and `side_length` only, and leaves Effort at `0.5`.
 
@@ -150,7 +150,7 @@ Parameters are everywhere you customize something without rebuilding it:
 
 **Formative:** can students add a parameter with the gear icon, use it in the
 body, and call with different arguments? **Exit ticket:** "Given
-`draw triangle (side_length)`, what does `draw triangle (40)` drive per side?" (40 cm).
+`triangle (side_length)`, what does `triangle (40)` drive per side?" (40 cm).
 **Preview:** next lesson we combine a parameter with the `360 ÷ sides` math to
 build one **polygon** function that draws *any* regular shape.
 
