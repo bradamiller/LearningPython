@@ -2,8 +2,8 @@
 
 /**
  * Curriculum sidebar. Mirrors the module/lesson folder structure.
- * For the proof of concept only Module 1 · Lesson 1 is a real page;
- * the rest are placeholders to show how the full curriculum will look.
+ * All 45 lessons across the five modules are real pages — no placeholders.
+ * Add a new lesson's doc id here under its module category.
  *
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
  */

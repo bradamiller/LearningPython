@@ -21,16 +21,27 @@ checks, and a teacher-notes toggle.
 - **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (12: kickoff
   lesson-00-what-is-a-robot + lessons 1–11), Module 2 (10), Module 3 (4),
   Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9) — 45 lessons live. Site builds clean (`npm run build`).
-  Brad is now doing an evaluation pass to see what needs changing.
   `docs/module-01-driving/lesson-01-meet-the-xrp.mdx` is the canonical template.
+- **Evaluation pass in progress (Brad, since 2026-09-15).** Conversion is done;
+  the work now is Brad reading lessons and correcting them. **Module 1 lessons 0–6
+  have been through it** (see §9 for every rule that came out of it): Lesson 0
+  written and fully illustrated, Lesson 1 given the parts diagram + Bluetooth,
+  Lesson 2 rebuilt for discovery learning, Lessons 3–5 renamed and re-shot,
+  Lesson 6 rebuilt from Brad's motor deck and re-framed. **Lessons 7–11 and
+  Modules 2–5 have NOT been reviewed yet** — expect the same kinds of correction
+  there, and apply §9's rules pre-emptively when touching them.
 - **Blockly vs. Python by module:** Module 1 is the Blockly→Python arc (lessons
-  1–7 use real Blockly block images; 8–11 are Python). **Module 2 onward is
+  1–7 are Blockly; 8–11 are Python, though L8 and L9 each still show one block
+  figure as the bridge). **Module 2 onward is
   all Python** — plain ```python code blocks, no block images. Handy: the
   block-screenshot workflow (§6) only matters for Module 1.
 
 ## 2. Source content (what we convert from)
 
-The curriculum content lives in the **parent repo** (`../`, `IntoToPython`):
+The curriculum content lives in the **parent repo** (`../`, `IntoToPython`) — on
+Brad's machine. Note that a cloud sandbox usually holds a copy of
+`curriculum-site/` ONLY, so `../module-01-driving/` may not resolve there; read the
+source through the device bridge (§13) when you need it:
 
 - `../module-01-driving/` … `../module-05-dijkstra/`, each with:
   - `lessons/NN-*.md` — teacher lesson plans (objectives, key concepts, lesson flow, exercises, misconceptions, assessment)
@@ -62,23 +73,40 @@ curriculum-site/
 │   └── module-05-dijkstra/               # lessons 1–9 (no overview) — DONE
 ├── src/
 │   ├── components/
-│   │   ├── Lesson.js      # LessonHeader, Objectives, TeacherBanner, CardGrid, InfoCard
+│   │   ├── Lesson.js      # LessonHeader, Objectives, TeacherBanner, CardGrid, InfoCard, Decide
 │   │   ├── TeacherNote.js # gray teacher-only box
 │   │   ├── KnowledgeCheck.js # interactive multiple-choice quiz
 │   │   ├── Media.js       # Video, Figure (real src OR labeled placeholder)
-│   │   └── Blocks.js      # Block (inline), BlockProgram (composed), BlockShot (real screenshot)
+│   │   ├── Blocks.js      # Block (inline), BlockProgram (composed), BlockShot (real screenshot)
+│   │   └── cblocks.json   # GENERATED geometry for C-shaped blocks (see §6) — don't hand-edit
 │   ├── theme/
 │   │   ├── Root.js        # the floating Teacher-mode toggle + persistence
 │   │   └── MDXComponents.js # registers all components globally (no imports needed in .mdx)
 │   └── css/custom.css     # ALL styling + brand color tokens (top of file)
-├── static/img/
-│   ├── logo.svg
-│   └── blocks/            # 91 real XRP Blockly block PNGs + programs/ real screenshots (see §6)
+├── scripts/
+│   └── slice_c_blocks.py  # slices container block art into bar/spine/foot (§6)
+├── static/
+│   ├── img/
+│   │   ├── logo.svg
+│   │   ├── blocks/        # 91 real XRP Blockly block PNGs
+│   │   │   ├── c/         # GENERATED slices of the C-shaped blocks (§6)
+│   │   │   └── programs/  # real XRP Code screenshots of whole programs (§6)
+│   │   ├── lesson-01/     # Lesson 0 robot gallery (8 JPGs) + xrp-parts.jpg (Lesson 1)
+│   │   └── lesson-06/     # motor-motion stills + the two effort diagrams (§12)
+│   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4 (§12)
+│   └── .nojekyll          # already there for GitHub Pages (§8)
 ├── sidebars.js            # curriculum outline (modules → lessons)
 ├── docusaurus.config.js   # site config, navbar, Montserrat font, footer
 ├── netlify.toml           # deploy config (see §8)
 └── README.md              # run + deploy instructions
 ```
+
+`.gitignore` excludes `static/videos/*.mov` — only transcoded MP4s get committed
+(§12). Not listed above: `package.json`/`package-lock.json`, an empty
+`src/pages/`, and leftover Docusaurus scaffold art in `static/img/`
+(`docusaurus*.{png,jpg}`, `undraw_*.svg`). `img/favicon.ico` is also there and IS
+referenced by `docusaurus.config.js`, so leave that one alone. Everything under `static/img/blocks/c/` and `src/components/cblocks.json` is
+generated; re-run `python3 scripts/slice_c_blocks.py` instead of editing by hand.
 
 MDX gotcha: don't put escaped double-quotes inside a JSX attribute string. For a
 `KnowledgeCheck` question that must contain quotes (e.g. `print("hi")`), use a JS
@@ -96,7 +124,8 @@ not inline.
 | Steel blue — navigation, lesson-header gradient start, section headings | `#22527B` |
 | Deep navy — lesson-header gradient end | `#142D50` / `#0F2543` |
 | Dark slate — body text, headings | `#343A40` |
-| Light gray — section + teacher-note backgrounds | `#E9ECEF` / `#F8F9FA` |
+| Light gray — section backgrounds | `#E9ECEF` / `#F8F9FA` |
+| Teacher-note background / border | `--xrp-teacher-bg: #f1f3f5` / `--xrp-teacher-border: #adb5bd` |
 | Success green (knowledge-check correct) | `#2E7D32` |
 
 - **Font:** Montserrat (loaded via Google Fonts in `docusaurus.config.js`).
@@ -128,21 +157,30 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
   question="..."
   options={[
     {text: 'A wrong answer'},
-    {text: 'The correct answer', correct: true},
-    {text: 'Another wrong answer', feedback: 'Optional per-option hint'},
+    {text: 'The correct answer', correct: true, feedback: 'Optional nudge, shown when they answer WRONG'},
+    {text: 'Another wrong answer'},
   ]}
   explanation="Shown after answering. Works for true/false too (just two options)." />
+{/* NB: KnowledgeCheck reads `feedback` only from the CORRECT option — putting it
+    on a wrong option does nothing. `title` is optional on TeacherNote (default
+    "Teacher Note") and Objectives (default "Learning Objectives"). */}
 
 <Video placeholderLabel="Intro clip (1–2 min)" caption="..." />   {/* placeholder */}
 <Video src="https://www.youtube.com/embed/XXXX" caption="..." />  {/* YouTube/Vimeo */}
 <Video src="/videos/first-drive.mp4" mp4 caption="..." />         {/* local mp4 */}
 
 <Figure placeholderLabel="Labeled diagram of the XRP" caption="..." />  {/* placeholder */}
-<Figure src="/img/lesson-01/parts.png" alt="..." caption="..." />       {/* real image */}
+<Figure src="/img/lesson-01/xrp-parts.jpg" alt="..." caption="..." />   {/* real image */}
 
 <CardGrid>
   <InfoCard tag="Warehouses" title="Delivery robots">Real-world connection card.</InfoCard>
 </CardGrid>
+
+{/* A per-item fill-in: Yes/No buttons + a "Why?" line. Lesson 0 uses one under
+    each gallery picture so a class can answer on the projector without
+    scrolling back to a table. State is in-memory only — a reload clears it. */}
+<Decide device="Camera drone" />
+<Decide device="Mars rover" prompt="Robot?" why="Why? — what makes it one?" />
 ```
 
 **Teacher mode** (Root.js): a floating switch (bottom-right) sets
@@ -187,8 +225,9 @@ and foot below), so re-running the script picks up any new container art:
 python3 scripts/slice_c_blocks.py     # after adding/replacing block images
 ```
 
-Nest `children` inside `children` for a function containing a loop — L5's
-`draw_polygon` renders as purple function def wrapping a green repeat. (Do NOT use
+Nest `children` inside `children` for a function containing a loop — L3's
+`square` renders as a purple function def wrapping a green repeat
+(`lesson-03-introduction-to-functions.mdx`). (Do NOT use
 a flat list with an `indent` field, and don't reintroduce the old CSS bracket; it
 is kept only as a fallback for a container with no sliced art.)
 
@@ -221,6 +260,7 @@ it shows correct values and exact nesting. Save the PNG under
 ```mdx
 <BlockShot src="/img/blocks/programs/square-function.png"
   alt="square(side_length) function with a call passing 35"
+  maxWidth={520}                        {/* optional; default 480 */}
   caption="The square(side_length) function and a call." />
 ```
 
@@ -241,8 +281,11 @@ Real screenshots so far: `square-function.png` (Lesson 4),
 from Brad on 2026-09-17. **Heads-up on `repeat-square.png`:** it shows a Repeat block at
 its default count of **10**, not the 4 a square needs, and it has no
 `wait_for_button_press` on top; the caption covers both ("a new Repeat block starts
-at 10, so change the count to 4"). Swap it if Brad re-shoots with 4. The composed
-`BlockProgram` remains in lessons 3, 7, 9.
+at 10, so change the count to 4"). Swap it if Brad re-shoots with 4.
+
+**Composed `BlockProgram`s still in use — L1, L2, L3, L6, L7, L8, L9** (L2 has one
+*and* a real screenshot: the eight-block square is composed, the Repeat reveal is
+Brad's shot). Those are the candidates for replacement as more screenshots arrive.
 
 **Composed-block limitation:** `BlockProgram` images show fixed field values
 (e.g. `cm: 20`); use the `note` prop for a different intended value.
@@ -263,8 +306,8 @@ at 10, so change the count to 4"). Swap it if Brad re-shoots with 4. The compose
    `BlockProgram`s for any code) → `KnowledgeCheck`s built from the worksheet
    questions → `TeacherNote`s for teacher-only material → real-world `CardGrid`
    → wrap-up → Resources.
-4. Add the page to `sidebars.js` (under its module category; replace the
-   "Coming soon" placeholder as modules get built out).
+4. Add the page to `sidebars.js` (under its module category — all 45 lessons are
+   listed explicitly there now; no "Coming soon" placeholders remain).
 5. Use **real block vocabulary** (§6) — Straight/Turn/Effort/Sleep, not power %.
 6. `npm start` and eyeball it in both student and teacher mode.
 
@@ -283,7 +326,26 @@ npm run serve   # preview the build
   and set **Base directory = `curriculum-site`** (build command + publish path
   come from `netlify.toml`). Served at domain root, so `baseUrl` stays `/`.
 
-(GitHub Pages also works but needs `baseUrl` = `/IntoToPython/` + a build workflow.)
+**Switching to GitHub Pages (Brad asked 2026-09-16 — not done, recipe only).**
+Three steps, because the site lives in a subfolder of the repo:
+1. `docusaurus.config.js`: `baseUrl: '/'` → `baseUrl: '/IntoToPython/'` (project
+   sites serve from a subpath; without this every `/img/...` and `/videos/...`
+   path 404s). `url` and `organizationName`/`projectName` are already correct.
+   Site would live at `https://bradamiller.github.io/IntoToPython/`.
+2. Add `.github/workflows/deploy.yml` at the REPO root that checks out, runs
+   `npm ci && npm run build` with `working-directory: curriculum-site`, uploads
+   `curriculum-site/build` via `actions/upload-pages-artifact@v3`, and deploys
+   with `actions/deploy-pages@v4` (permissions: `contents: read`, `pages: write`,
+   `id-token: write`).
+3. Repo → Settings → Pages → Source: **GitHub Actions**.
+
+Caveats: the repo must be public for Pages on a free personal account; a custom
+domain (e.g. `curriculum.experiential.bot`) would instead keep `baseUrl: '/'`,
+set `url` to the domain and add a `CNAME` file in `static/`. Netlify and Pages
+can't both be served correctly from one committed `baseUrl` — drive it from an
+env var if both must run during a transition. (Google Cloud: Firebase Hosting
+with public dir `curriculum-site/build` is the simple option; no advantage over
+Pages for a static site.)
 
 ## 9. Decisions already made (don't re-litigate without reason)
 
@@ -294,43 +356,53 @@ npm run serve   # preview the build
 - **Videos/graphics:** Brad produces them and hands them off; lessons use labeled placeholders until then.
 
 **Open / unresolved (flag for Brad's evaluation pass):**
-- **Module 1 naming is now STANDARDIZED (2026-09-15 review):** `draw_square(size)`,
-  `draw_triangle(size)`, `draw_polygon(sides, size, effort)` — identical names and
-  parameter order in Blockly (L3–5) and Python (L10–11), so the Phase C mapping is
-  literally 1:1. (Previously drifted: L5 used `distance`, L10/11 used `num_sides`.)
-  **Amended 2026-09-17 (Brad):** rather than re-shoot the Lesson 4 hero screenshot
-  (`static/img/blocks/programs/square-function.png`, which shows
-  `square(side_length)`), **Lesson 4 now names the parameter `side_length`
-  throughout** so the text matches the picture. The caption still bridges the
-  function name only (screenshot says `square`, lesson says `draw square`).
-  **L5 followed on 2026-09-17** from Brad's second screenshot
-  (`polygon-function.png`): the Blockly polygon function is
-  **`polygon (sides, side_length)`** — two parameters, `sides` first, and **no
-  `effort` parameter** (Effort stays `0.5` in the blocks; Brad: "I didn't think
-  effort added to the example"). L5 text, calls, knowledge checks and wrap-up all
-  match, and L4's forward reference no longer promises an effort parameter in L5.
-  **RESOLVED 2026-09-17 (Brad chose both):** Module 1 uses **bare function names**
-  — `square`, `triangle`, `polygon` — in Blockly (L3–5) AND Python (L10–11), with
-  **`side_length`** as the side parameter, and **`polygon(sides, side_length)`
-  takes no effort parameter** in either language. The Blockly→Python mapping is
-  literally 1:1 again. NOTE this now differs from Brad's SOURCE lesson plans and
-  solution code (`draw_square(size)` / `draw_square(distance)`); the site is
-  ahead of the source, matching his current XRP Code screenshots. Effort appears
-  only as an optional challenge (L4 Part 3, L10 Part 2 prose).
-- **Block screenshots pending:** Brad is supplying real XRP Code screenshots to
-  replace the composed `BlockProgram`s in Module 1 lessons 1, 2, 3, 5, 7, 9
-  (Lesson 4 already done, but see re-shoot note above). Whiten + drop into
-  `static/img/blocks/programs/`. Note: L1's first program now begins with
-  `wait_for_button_press` — screenshots should include it.
+- **MODULE 1 FUNCTION NAMING — current, settled 2026-09-17.** One set of names in
+  **both** languages: **`square(side_length)`**, **`triangle(side_length)`**,
+  **`polygon(sides, side_length)`** — bare names (no `draw_` prefix), `sides`
+  first, and **no `effort` parameter on `polygon`** in Blockly or Python. Effort
+  stays `0.5` in the blocks and appears only as an optional challenge (L4 Part 3,
+  L10 Part 2 prose). This is what the lessons and Brad's real XRP Code screenshots
+  now agree on; `grep -rn "draw_square\|draw_polygon\|draw square\|draw polygon" docs/`
+  should stay empty (don't grep bare `size` — it's ordinary English all over the
+  lessons). *(Caveat: only `square` and `polygon` exist in both languages — no Python
+  lesson defines `triangle`.)*
+  - *History, so nobody "restores" it:* the 2026-09-15 review had standardized on
+    `draw_square(size)` / `draw_polygon(sides, size, effort)`. Brad's screenshots
+    then showed `square(side_length)` and `polygon(sides, side_length)`, and on
+    2026-09-17 he chose to follow the screenshots rather than re-shoot, and to
+    align the Python lessons exactly. **The site is now ahead of Brad's SOURCE
+    repo**, which still says `draw_square(size)` in
+    `../module-01-driving/lessons/04-*.md` and `draw_square(distance)` in
+    `../module-01-driving/code/solutions/lesson-10-functions.py`. Open question:
+    whether to bring the source markdown/slides/solutions in line.
+- **Block screenshots — done so far / still wanted:** real XRP Code shots are in
+  for **L2** (`repeat-square.png`), **L4** (`square-function.png`) and **L5**
+  (`polygon-function.png`). Composed `BlockProgram`s still stand in for
+  **L1, L2, L3, L6, L7, L8 and L9** — whiten (§6) and drop into
+  `static/img/blocks/programs/` as Brad supplies them. Two things a new shot
+  should have: the program starts with `wait_for_button_press`, and no trailing
+  `stop_motors`. (`repeat-square.png` predates that and is captioned around it.)
 - **Lesson 0 · What Is a Robot? (added 2026-09-15):** a no-code discussion kickoff
   built from Brad's *WhatIsARobot.pdf* slide deck (WPI). Gallery of "is this a
   robot?" devices with answers hidden in TeacherNotes → 1979 RIA definition →
   WPI sense/think/act → where the XRP fits. Numbered 0 (not renumbered to 1) so
   the site stays aligned with the source repo's 01–11 lesson/slide/worksheet
-  numbering; matches Module 4's lesson-00 precedent. **Media pending:** the 9
-  Figure placeholders map 1:1, in order, to the deck's images (slides 3–11); the
-  Video placeholder is the FIRST ball-shooter clip (slide 14). No matching
-  lesson-plan .md exists in the source repo's `module-01-driving/lessons/` yet.
+  numbering; matches Module 4's lesson-00 precedent. No matching lesson-plan .md
+  exists in the source repo's `module-01-driving/lessons/` yet — the site page is
+  the only version.
+  **Media is DONE (2026-09-15/17):** Part 1 plays `/videos/gort.mp4`, the Part 2
+  gallery shows all eight devices from `/img/lesson-01/` (RadioControlledAirplane,
+  Drone, ManualVacuum, RobotVacuum, RedCar, ClothesFolding, MarsRover,
+  WashingMachine) and Part 4 plays `/videos/ballshooter.mp4`.
+  **Discussion design — do not re-scaffold (Brad, 2026-09-15):** students must
+  reach "sensors + acting on what was sensed" THEMSELVES. The student page gives
+  only a neutral "Think about it" prompt per picture (most ask what happens if the
+  person walks away); every answer lives in a `TeacherNote`. An earlier draft with
+  Q1–Q4 prompts and a multi-column table was rejected for giving it away.
+  **Answers are recorded per picture, not in a table (Brad, 2026-09-16):** each
+  image is followed by `<Decide device="…" />` — Yes/No buttons plus one "Why?"
+  line — so a class answers in place instead of scrolling to a table during a
+  presentation. Keep that pattern if more devices are added.
 - **EXPERIENTIAL LEARNING IS THE CORNERSTONE (Brad, 2026-09-15).** When a lesson
   introduces a new construct, students must build up to *needing* it (try → run →
   hit the limitation → discover/search for the construct) before it's named or the
@@ -342,7 +414,12 @@ npm run serve   # preview the build
   (functions), 4 (parameters), 5 (polygon), 9–10 (Python loops/functions).**
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
-  starts with Wait for button press (programs auto-run on upload); Python editor is
+  starts with Wait for button press / `board.wait_for_button()` (programs auto-run
+  on upload) — **⚠️ not yet true everywhere: none of the 11 Python examples in
+  L8–L11 call `board.wait_for_button()`, and five of the nine composed Blockly
+  programs omit the block (L3 ×2, L7, L8, L9 — L3's first one is the deliberate
+  copy-paste "before" figure, so judge it on its own). Module 2 does it right (9
+  of 10 lessons). Fix when those lessons get their review pass;** Python editor is
   **VS Code + MicroPython extension** (per Brad's source), Blockly is XRP Code;
   student-facing "on paper first" step in L2 and "say it in English first" in L3;
   3–4 objectives per lesson. **Connecting (L1 Part 2, 2026-09-17):** XRP Code
@@ -364,9 +441,10 @@ npm run serve   # preview the build
   results with battery level, surface and load; students should almost always
   stop on a **sensor** (rangefinder distance, reflectance seeing the line,
   encoder count) instead. Sleep is fine as an occasional pause or as an
-  explicitly-flagged stand-in before sensors exist (Module 1) — one example, with
-  the caveat, never a section heading or a knowledge-check answer that endorses
-  it. L6 Part 2 ("Blocks that finish vs. blocks that don't") is the model:
+  explicitly-flagged stand-in before sensors exist — never a section heading or a
+  knowledge-check answer that endorses it. Module 1 currently has exactly two
+  flagged stand-ins, both in L6 (the Set effort demo and the Arcade demo), plus
+  ordinary pauses in L1 and L3. L6 Part 2 ("Blocks that finish vs. blocks that don't") is the model:
   measure the same timed program on two surfaces, then point at Module 2.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
@@ -393,16 +471,46 @@ npm run serve   # preview the build
   had `00-module-overview.md`. **Module 5 has no overview page** (source starts at 01) —
   consider whether M5 wants a parallel "big picture" overview for consistency.
 
-## 10. Good next steps
+## 10. Where the evaluation pass has reached
 
-- **Evaluation pass (current):** Brad is reviewing all 5 modules. Likely follow-ups:
-  resolve the M4/M5 `compute_path` return-shape mismatch (above), standardize Module 1
-  naming, and drop in real screenshots/videos as delivered.
-- Swap the placeholder `logo.svg` if Brad provides an official XRP logo.
-- Drop in real videos/graphics and block screenshots as Brad delivers them
-  (replace `placeholderLabel` / add `src`; whiten screenshots per §6).
-- Deploy the updated build to Netlify (drag `build/` to app.netlify.com/drop, or push
-  to GitHub for auto-deploy).
+What Brad has corrected so far, lesson by lesson — useful both as history and as a
+signal of what he cares about when you touch an unreviewed lesson.
+
+| Lesson | What changed |
+|---|---|
+| **M1 L0** | Written from *WhatIsARobot.pdf*; all media wired; scaffolding stripped twice (see §9); table → per-picture `<Decide>` boxes |
+| **M1 L1** | Real `xrp-parts.jpg` diagram; **Bluetooth** added beside USB; square challenge de-spoiled (hands off to L2); trailing `stop_motors` removed |
+| **M1 L2** | Rebuilt as the discovery model (straight → turn → 8-block square → find Repeat; triangle fails before `360 ÷ sides`); real Repeat screenshot |
+| **M1 L3** | Function renamed `square` |
+| **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
+| **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
+| **M1 L6** | Part 1 built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; Part 2 re-framed to finishing vs. non-finishing blocks, timed driving demoted |
+| **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
+| **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |
+| **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
+
+## 11. Good next steps
+
+- **Push.** Commits are made here but **`git push` cannot run from the sandbox**
+  (no GitHub credentials) — Brad pushes with `git push origin main` or VS Code
+  Sync. Always tell him how many commits are waiting.
+- **Continue the evaluation pass** with M1 L7–L11, then Modules 2–5 — applying §9's
+  rules (experiential first, no trailing stop, sensor-based stopping, naming)
+  rather than waiting for Brad to catch each one.
+- **Decide the M4/M5 `compute_path` return-shape mismatch** (§9) — the one known
+  correctness bug in the converted material.
+- **Source-repo sync (open question).** The site is now ahead of
+  `../module-01-driving/` on naming (`square(side_length)` vs the source's
+  `draw_square(size)`), on Lesson 0 (no source lesson plan exists), and on the
+  stop-motors and Bluetooth guidance. Ask Brad whether to bring the source
+  markdown/slides/solutions in line.
+- **Media still wanted:** real block screenshots for the lessons still on composed
+  art — **L1, L3, L6, L7, L8, L9** (§6; L2 is half-done); an XRP-built
+  re-shoot of the Lesson 6 motor photos, which currently show a VEX-style robot
+  (§12); an official `logo.svg` if there is one; and a social/OG card image — the
+  config used to point at an `img/social-card.png` that never existed, so that
+  reference has been removed rather than left broken.
+- Deploy: Netlify as configured, or switch to GitHub Pages with the recipe in §8.
 
 **Per-module pattern reminder:** each module is a `docs/module-XX-name/` folder of
 `lesson-NN-slug.mdx` files, added to its category in `sidebars.js`. Modules 2+ are all
@@ -414,15 +522,16 @@ backticks (inline code) or put it in a fenced code block.
 "Continue the XRP curriculum site in `curriculum-site/`. Read CLAUDE.md." — all five
 modules are built; work is now evaluation/refinement, not new conversion.
 
-## 11. Videos & images (adding real media)
+## 12. Videos & images (adding real media)
 
 Media lives under `static/` and is referenced from the site root (drop the word
-`static`, keep the leading slash): `static/img/module-01/x.jpg` → `/img/module-01/x.jpg`;
-`static/videos/x.mp4` → `/videos/x.mp4`. Swap a placeholder by replacing
+`static`, keep the leading slash): `static/img/lesson-06/x.jpg` → `/img/lesson-06/x.jpg`;
+`static/videos/x.mp4` → `/videos/x.mp4`. Images are foldered **by lesson**
+(`img/lesson-01/`, `img/lesson-06/`), not by module. Swap a placeholder by replacing
 `placeholderLabel` with `src` (+ `alt` for images; `mp4` flag for local video):
 
 ```mdx
-<Figure src="/img/module-01/mars-rover.jpg" alt="..." caption="..." />
+<Figure src="/img/lesson-01/MarsRover.jpg" alt="..." caption="..." />
 <Video src="/videos/gort.mp4" mp4 caption="..." />
 <Video src="https://www.youtube.com/embed/VIDEO_ID" caption="..." />   {/* embed URL, not watch URL */}
 ```
@@ -458,3 +567,44 @@ First use: the motion deck → Module 1 Lesson 6 Part 1 (`static/img/lesson-06/`
 **Heads-up:** the robot in those Lesson 6 photos/clips is a **VEX-style build,
 not an XRP** — captions say "the robot" / "a two-motor robot" rather than naming
 the XRP. Reshoot with an XRP if you want it on-brand.
+
+**HEIF/HEIC from Brad's Mac won't render in a browser** — convert to JPG first.
+On his machine ImageMagick handles it (`magick in.heif -background white -flatten
+out.jpg`); in this sandbox install the decoder first:
+
+```bash
+pip install pillow-heif --break-system-packages
+python3 -c "
+import pillow_heif; pillow_heif.register_heif_opener()
+from PIL import Image
+im = Image.open('XRPParts.heif').convert('RGBA')
+bg = Image.new('RGB', im.size, 'white'); bg.paste(im, mask=im.split()[3])
+bg.save('static/img/lesson-01/xrp-parts.jpg', quality=90)"
+```
+
+That is where `xrp-parts.jpg` (Lesson 1's labeled kit diagram) came from.
+
+## 13. Getting changes from this sandbox into Brad's repo
+
+The cloud workspace is NOT his machine. The loop that works:
+
+1. Edit and `npm run build` in the cloud copy (`/home/claude/xrp-curriculum`).
+2. Eyeball it: serve `build/` (`npx serve -l 3055 build`) and screenshot with the
+   bundled Playwright — `require('<site>/node_modules/playwright-core')`,
+   `executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'`. Serve
+   and shoot in ONE bash call. (That Chromium can't decode H.264, so local MP4s
+   show `readyState 0` in a screenshot — expected, not a bug.)
+3. `tar -czf /mnt/user-data/outputs/<name>.tgz <changed files>` → `SendUserFile` →
+   `device_commit_files` into `…/IntoToPython/curriculum-site/` → on the device,
+   `tar --overwrite -xzf <name>.tgz && rm -f <name>.tgz` (plain `tar` refuses to
+   overwrite; the FUSE mount needs `--overwrite`).
+4. `git add curriculum-site && git commit` on the device.
+
+**`git push` does not work from here** — no GitHub credentials in the sandbox.
+Brad pushes. Say how many commits are waiting when you finish.
+
+**If git complains about `index.lock`:** the mount sometimes leaves stale locks
+and `rm` is blocked until file deletion is granted for the session — call
+`device_request_delete_permission` on `/Users/bradmiller/GitHub/IntoToPython`,
+then `rm -f .git/index.lock .git/HEAD.lock` and re-commit. The grant lapses
+between sessions, so expect to ask again.
