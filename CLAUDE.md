@@ -172,12 +172,25 @@ The <Block name="straight" /> block drives in a straight line.   {/* inline */}
 ```
 
 **Container / C-shaped blocks (Repeat, If, function def):** give the block a
-`children` array. The component wraps those children in a colored C-bracket that
-matches the block's category color (loops green, functions purple, if blue) — so
-the contained blocks look genuinely *enclosed*, the way Blockly stretches a Repeat
-to wrap its contents. Nest `children` inside `children` for a function that
-contains a loop, etc. (Do NOT use a flat list with an `indent` field — that's the
-old approach and it did not show enclosure.)
+`children` array and the component draws a real, stretching C — not a bracket.
+`scripts/slice_c_blocks.py` cuts each container image in `static/img/blocks/` into
+four pieces in `static/img/blocks/c/`: `<name>-bar.png` (top bar + inner notch),
+`<name>-do.png` (the spine slice carrying the "do" label), `<name>-fill.png` (a 1px
+tileable spine slice) and `<name>-foot.png` (closing lip + bottom tab), plus the
+geometry manifest `src/components/cblocks.json`. `CBlock` in `Blocks.js` stacks
+bar → spine (do slice on top, fill tiled beneath, stretched by flexbox to the
+children's height) → foot, so the container grows around its contents exactly like
+XRP Code. Detection is automatic (a narrow left-aligned band with a wider bar above
+and foot below), so re-running the script picks up any new container art:
+
+```bash
+python3 scripts/slice_c_blocks.py     # after adding/replacing block images
+```
+
+Nest `children` inside `children` for a function containing a loop — L5's
+`draw_polygon` renders as purple function def wrapping a green repeat. (Do NOT use
+a flat list with an `indent` field, and don't reintroduce the old CSS bracket; it
+is kept only as a fallback for a container with no sliced art.)
 
 ```mdx
 <BlockProgram
@@ -222,9 +235,13 @@ for s in [(0,0),(w-1,0),(0,h-1),(w-1,h-1),(w//2,0),(w//2,h-1),(0,h//2),(w-1,h//2
 im.save('out.png')
 ```
 
-`static/img/blocks/programs/square-function.png` is the first real one (used in
-Lesson 4). The composed `BlockProgram` remains in lessons 2, 3, 5, 7, 9 until real
-screenshots replace them.
+Real screenshots so far: `square-function.png` (Lesson 4) and
+`repeat-square.png` (Lesson 2 Part 4, from Brad 2026-09-17 — a Repeat containing
+Straight + Turn). **Heads-up on `repeat-square.png`:** it shows a Repeat block at
+its default count of **10**, not the 4 a square needs, and it has no
+`wait_for_button_press` on top; the caption covers both ("a new Repeat block starts
+at 10, so change the count to 4"). Swap it if Brad re-shoots with 4. The composed
+`BlockProgram` remains in lessons 3, 5, 7, 9.
 
 **Composed-block limitation:** `BlockProgram` images show fixed field values
 (e.g. `cm: 20`); use the `note` prop for a different intended value.

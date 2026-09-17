@@ -184,15 +184,10 @@ will show them (it drives one side and stops).
 
 Here's what it looks like when it works:
 
-<BlockProgram
-  blocks={[
-    {name: 'wait_for_button_press'},
-    {name: 'repeat', note: 'repeat 4 times', children: [
-      {name: 'straight', note: 'cm: 20'},
-      {name: 'turn', note: 'Deg: 90'},
-    ]},
-  ]}
-  caption="The same square, with the Straight and Turn blocks inside a Repeat. Two blocks instead of eight."
+<BlockShot
+  src="/img/blocks/programs/repeat-square.png"
+  alt="A Repeat block in XRP Code with a Straight block (cm 20, Effort 0.5) and a Turn block (Deg 90, Effort 0.5) inside it"
+  caption="The same square: the Straight and Turn blocks sit inside the Repeat — two blocks instead of eight. A new Repeat block starts at 10, so change the count to 4; your Wait for button press block stays on top."
 />
 
 This is a **loop**: you write the instructions once, and the Repeat block runs

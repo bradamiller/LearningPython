@@ -1,0 +1,74 @@
+{
+  "count": {
+    "barH": 41,
+    "barW": 348,
+    "doH": 17,
+    "footH": 17,
+    "footW": 348,
+    "spineW": 38
+  },
+  "for_each": {
+    "barH": 30,
+    "barW": 184,
+    "doH": 17,
+    "footH": 17,
+    "footW": 184,
+    "spineW": 38
+  },
+  "funct_def_with_return": {
+    "barH": 31,
+    "barW": 208,
+    "doH": 17,
+    "footH": 28,
+    "footW": 208,
+    "spineW": 22
+  },
+  "function_def": {
+    "barH": 31,
+    "barW": 200,
+    "doH": 17,
+    "footH": 13,
+    "footW": 200,
+    "spineW": 22
+  },
+  "if_do": {
+    "barH": 31,
+    "barW": 68,
+    "doH": 17,
+    "footH": 16,
+    "footW": 68,
+    "spineW": 38
+  },
+  "repeat": {
+    "barH": 41,
+    "barW": 162,
+    "doH": 17,
+    "footH": 17,
+    "footW": 162,
+    "spineW": 38
+  },
+  "repeat_while": {
+    "barH": 30,
+    "barW": 128,
+    "doH": 17,
+    "footH": 17,
+    "footW": 128,
+    "spineW": 38
+  },
+  "web_add_button": {
+    "barH": 30,
+    "barW": 223,
+    "doH": 17,
+    "footH": 17,
+    "footW": 223,
+    "spineW": 83
+  },
+  "web_forward": {
+    "barH": 30,
+    "barW": 149,
+    "doH": 17,
+    "footH": 17,
+    "footW": 149,
+    "spineW": 83
+  }
+}

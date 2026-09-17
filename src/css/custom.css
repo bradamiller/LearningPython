@@ -522,3 +522,36 @@ html[data-teacher='on'] .teacherToggle__thumb { transform: translateX(18px); }
 }
 .decide__why::placeholder { color: #6c757d; font-style: italic; }
 [data-theme='dark'] .decide__why { border-bottom-color: var(--ifm-color-primary-lightest); }
+
+/* ---------- C-shaped container blocks, drawn from the real artwork ----------
+   The block image is sliced into bar / spine / foot (scripts/slice_c_blocks.py)
+   so the container stretches around its contents the way XRP Code draws it. */
+.cblock { display: block; }
+.cblock__bar { display: block; image-rendering: -webkit-optimize-contrast; }
+.cblock__mid {
+  display: flex;
+  align-items: stretch;
+  margin-top: -4px;              /* child stack tucks under the bar's notch */
+}
+.cblock__spine {
+  flex: 0 0 auto;
+  background-position: top left, top left;
+  background-repeat: no-repeat, repeat-y;
+  image-rendering: -webkit-optimize-contrast;
+}
+.cblock__kids {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.cblock__kids > .blockProgram__row + .blockProgram__row,
+.cblock__kids > .cblock + .cblock,
+.cblock__kids > .blockProgram__row + .cblock,
+.cblock__kids > .cblock + .blockProgram__row { margin-top: -3px; }
+.cblock__foot {
+  display: block;
+  margin-top: -5px;
+  image-rendering: -webkit-optimize-contrast;
+}
