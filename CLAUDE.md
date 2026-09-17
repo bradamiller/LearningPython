@@ -167,7 +167,6 @@ The <Block name="straight" /> block drives in a straight line.   {/* inline */}
   blocks={[
     {name: 'straight', note: 'forward — cm: 20, Effort: 0.5'},
     {name: 'straight', note: 'back — change cm to -20'},
-    {name: 'stop_motors'},
   ]}
   caption="A stacked program, like the real workspace." />
 ```
@@ -319,6 +318,13 @@ npm run serve   # preview the build
   pairs wirelessly by its per-robot ID shown under the RUN button. Bluetooth needs
   a Chromium browser (Chrome/Edge); low battery kills Bluetooth first; a running
   program can block pairing (press reset). Don't describe uploading as USB-only.
+  **No trailing stop (Brad, 2026-09-17):** motors stop automatically when a
+  program ends, so NO program ends with **Stop motors** / `drivetrain.stop()`.
+  Keep stops only where they're functional mid-program (stop → turn; a
+  `track_until_cross()` that ends its motion before returning). Consequence in
+  L6: the headline `Set effort` bug is a **missing Sleep** (program ends
+  instantly, robot twitches), not a missing Stop motors — L6 Part 2 was rewritten
+  on 2026-09-17 to say so.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
   - **Module 4 `Manhattan`:** returned path **excludes** the start; `steps = len(path)`;

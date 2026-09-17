@@ -180,8 +180,9 @@ A few blocks do everything you need today. Drag them out of the block palette:
   the angle (`90` is a quarter turn); **Effort** works the same way.
 - The **Sleep** block <Block name="sleep" /> pauses the program for a number of
   seconds. You'll use it in Part 5.
-- The **Stop motors** block <Block name="stop_motors" /> finishes a program by
-  stopping both motors.
+
+You don't need a block to stop at the end — when the program finishes, the robot
+stops the motors for you.
 
 Here's the program we'll build together — wait for the button, drive forward,
 then come back. Set the second **Straight** block's *cm* to a negative number so
@@ -192,9 +193,8 @@ the robot reverses:
     {name: 'wait_for_button_press'},
     {name: 'straight', note: 'forward — cm: 20, Effort: 0.5'},
     {name: 'straight', note: 'back — change cm to -20'},
-    {name: 'stop_motors'},
   ]}
-  caption="Your first program: wait for the button, drive out 20 cm, back 20 cm, then stop."
+  caption="Your first program: wait for the button, drive out 20 cm, then back 20 cm."
 />
 
 Before you run it, predict: *What will the robot do? Will it end up where it

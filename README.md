@@ -34,6 +34,10 @@ and open items.
   Sleep (seconds), Stop motors, Wait for button press — never "power %".
 - **Every robot program starts with Wait for button press** (programs run the
   moment they upload).
+- **No stop block at the end.** The robot stops its motors when the program
+  ends, so programs never finish with **Stop motors** / `drivetrain.stop()`.
+  Stopping is only shown *mid*-program, where the motors must quit while the
+  program keeps running (e.g. stop, then turn).
 - **Python editor:** VS Code with the MicroPython extension (Blockly is XRP Code in
   the browser).
 - **Experience before explanation (the cornerstone):** when a lesson introduces a

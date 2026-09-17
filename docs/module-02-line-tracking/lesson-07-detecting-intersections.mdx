@@ -142,7 +142,6 @@ while cross_count < max_crosses:
         error = left - right
         drivetrain.arcade(base_effort, -error * Kp)
 
-drivetrain.stop()
 print("Done! Crossed", cross_count, "times.")
 ```
 
