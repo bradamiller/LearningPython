@@ -37,21 +37,20 @@ is *repeat N times: drive a side, turn `360 ÷ N`*. The only things that change 
 the number of sides and the side length — perfect for **parameters**. And the
 angle? The function can calculate it itself.
 
-<BlockProgram
-  blocks={[
-    {name: 'function_def', note: 'draw polygon (sides, size, effort)', children: [
-      {name: 'repeat', note: 'repeat: sides times', children: [
-        {name: 'straight', note: 'cm: size'},
-        {name: 'turn', note: 'Deg: 360 ÷ sides'},
-      ]},
-    ]},
-  ]}
-  caption="One function draws every regular polygon. The turn angle is computed from the sides parameter."
+<BlockShot
+  src="/img/blocks/programs/polygon-function.png"
+  alt="A polygon function with parameters sides and side_length: a Repeat sides times containing Straight cm side_length and Turn Deg 360 ÷ sides"
+  maxWidth={520}
+  caption="One function draws every regular polygon. The two parameters are sides and side_length; the turn angle is computed from sides."
 />
 
 The new trick is putting a **math division block** (`360 ÷ sides`) right into the
 Turn block's angle slot. Now `sides` does double duty: it sets how many times the
 loop repeats *and* it sets the angle.
+
+Notice what is *not* a parameter: **Effort** stays at `0.5` in both blocks. A
+parameter earns its place when callers actually need to vary it — `sides` and
+`side_length` change with every shape, speed doesn't.
 
 <TeacherNote title="Building the division">
 
@@ -66,18 +65,18 @@ works before turning students loose on other shapes.
 ## Part 2 · Test it like an engineer
 
 Real programmers test one function against many inputs. In your main program, call
-`draw polygon` with different values and predict each shape before it runs:
+`polygon` with different values and predict each shape before it runs:
 
 ```text
 Wait for button press
-call draw polygon (sides: 4, size: 30, effort: 0.5)   → square
-call draw polygon (sides: 3, size: 30, effort: 0.5)   → triangle
-call draw polygon (sides: 6, size: 20, effort: 0.5)   → hexagon
-call draw polygon (sides: 8, size: 15, effort: 0.5)   → octagon
+call polygon (sides: 4, side_length: 30)   → square
+call polygon (sides: 3, side_length: 30)   → triangle
+call polygon (sides: 6, side_length: 20)   → hexagon
+call polygon (sides: 8, side_length: 15)   → octagon
 ```
 
 <KnowledgeCheck
-  question="What turn angle will draw polygon compute for a 12-sided shape (a dodecagon)?"
+  question="What turn angle will polygon compute for a 12-sided shape (a dodecagon)?"
   options={[
     {text: '12°'},
     {text: '30°', correct: true},
@@ -88,14 +87,14 @@ call draw polygon (sides: 8, size: 15, effort: 0.5)   → octagon
 />
 
 <KnowledgeCheck
-  question="draw polygon (8, 25, 0.5) traces an octagon about 2 m around. What does draw polygon (8, 50, 0.5) do?"
+  question="polygon (8, 25) traces an octagon about 2 m around. What does polygon (8, 50) do?"
   options={[
     {text: 'A different shape'},
     {text: 'The same octagon shape, but about twice as big (~4 m around)', correct: true},
     {text: 'An octagon at double speed'},
     {text: 'Nothing changes'},
   ]}
-  explanation="Doubling size doubles each side, so the perimeter doubles — but the angles (and therefore the shape) stay the same."
+  explanation="Doubling side_length doubles each side, so the perimeter doubles — but the angles (and therefore the shape) stay the same."
 />
 
 ## Part 3 · Explore
@@ -108,7 +107,7 @@ call draw polygon (sides: 8, size: 15, effort: 0.5)   → octagon
    two overlapping pentagons make a star/mandala.
 
 <KnowledgeCheck
-  question="Without a general polygon function, you'd write one function each for square, triangle, pentagon, hexagon, and octagon. With draw polygon, how many functions do you need?"
+  question="Without a general polygon function, you'd write one function each for square, triangle, pentagon, hexagon, and octagon. With polygon, how many functions do you need?"
   options={[
     {text: 'Five'},
     {text: 'One', correct: true},
@@ -122,8 +121,8 @@ call draw polygon (sides: 8, size: 15, effort: 0.5)   → octagon
 
 **More support:** give a skeleton with the Repeat block already placed and only
 ask students to add Straight and the `360 ÷ sides` Turn. **More challenge:** a
-"spiral polygon" that grows each side, or a `draw star` helper built on top of
-`draw polygon`. **When a shape looks off:** first confirm the math (`360 ÷ 6 = 60`),
+"spiral polygon" that grows each side, or a `star` helper built on top of
+`polygon`. **When a shape looks off:** first confirm the math (`360 ÷ 6 = 60`),
 then rule out wheel slip by testing at effort `0.5` — many "bugs" here are physics,
 not code.
 
@@ -147,7 +146,7 @@ Writing one flexible tool instead of many rigid ones is the heart of good engine
 
 ## Wrap-up
 
-- What three parameters does `draw polygon` take, and what does each control?
+- What two parameters does `polygon` take, and what does each control?
 - How does the function get the turn angle? (`360 ÷ sides`, computed inside.)
 - Why is one general function better than many specific ones? (Less code, fewer bugs, easier to change.)
 

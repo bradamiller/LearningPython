@@ -235,13 +235,14 @@ for s in [(0,0),(w-1,0),(0,h-1),(w-1,h-1),(w//2,0),(w//2,h-1),(0,h//2),(w-1,h//2
 im.save('out.png')
 ```
 
-Real screenshots so far: `square-function.png` (Lesson 4) and
-`repeat-square.png` (Lesson 2 Part 4, from Brad 2026-09-17 — a Repeat containing
-Straight + Turn). **Heads-up on `repeat-square.png`:** it shows a Repeat block at
+Real screenshots so far: `square-function.png` (Lesson 4),
+`repeat-square.png` (Lesson 2 Part 4) and `polygon-function.png` (Lesson 5 Part 1
+— `polygon (sides, side_length)` with `360 ÷ sides` in the Turn slot), the last two
+from Brad on 2026-09-17. **Heads-up on `repeat-square.png`:** it shows a Repeat block at
 its default count of **10**, not the 4 a square needs, and it has no
 `wait_for_button_press` on top; the caption covers both ("a new Repeat block starts
 at 10, so change the count to 4"). Swap it if Brad re-shoots with 4. The composed
-`BlockProgram` remains in lessons 3, 5, 7, 9.
+`BlockProgram` remains in lessons 3, 7, 9.
 
 **Composed-block limitation:** `BlockProgram` images show fixed field values
 (e.g. `cm: 20`); use the `note` prop for a different intended value.
@@ -302,12 +303,21 @@ npm run serve   # preview the build
   `square(side_length)`), **Lesson 4 now names the parameter `side_length`
   throughout** so the text matches the picture. The caption still bridges the
   function name only (screenshot says `square`, lesson says `draw square`).
-  ⚠️ **Ripple not yet decided:** L5 (`draw polygon (sides, size, effort)`), L10
-  (`draw_square(size)`) and L11 (`draw_polygon(sides, size, effort)`) still say
-  `size`, as does Brad's SOURCE lesson plan
-  (`../module-01-driving/lessons/04-parameters-and-customization.md`, which
-  specifies `draw_square(size)`). Either propagate `side_length` through L5/L10/L11
-  or revert L4 — don't leave the module split.
+  **L5 followed on 2026-09-17** from Brad's second screenshot
+  (`polygon-function.png`): the Blockly polygon function is
+  **`polygon (sides, side_length)`** — two parameters, `sides` first, and **no
+  `effort` parameter** (Effort stays `0.5` in the blocks; Brad: "I didn't think
+  effort added to the example"). L5 text, calls, knowledge checks and wrap-up all
+  match, and L4's forward reference no longer promises an effort parameter in L5.
+  ⚠️ **Still open — two naming questions:**
+  1. **Function names.** Brad's real screenshots use bare names (`square`,
+     `polygon`); the lessons otherwise say `draw square` / `draw triangle`
+     (L3/L4) and his SOURCE lesson plans say `draw_square`. L5 now uses
+     `polygon` (matching its screenshot), so Module 1 is mixed. Either adopt the
+     bare names module-wide or keep the `draw` prefix and bridge in captions.
+  2. **Python lessons.** L10 (`draw_square(size)`) and L11
+     (`draw_polygon(sides, size, effort)`) still use `size` and still carry the
+     effort parameter, so the Blockly→Python mapping is no longer 1:1.
 - **Block screenshots pending:** Brad is supplying real XRP Code screenshots to
   replace the composed `BlockProgram`s in Module 1 lessons 1, 2, 3, 5, 7, 9
   (Lesson 4 already done, but see re-shoot note above). Whiten + drop into
