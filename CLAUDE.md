@@ -321,10 +321,20 @@ npm run serve   # preview the build
   **No trailing stop (Brad, 2026-09-17):** motors stop automatically when a
   program ends, so NO program ends with **Stop motors** / `drivetrain.stop()`.
   Keep stops only where they're functional mid-program (stop → turn; a
-  `track_until_cross()` that ends its motion before returning). Consequence in
-  L6: the headline `Set effort` bug is a **missing Sleep** (program ends
-  instantly, robot twitches), not a missing Stop motors — L6 Part 2 was rewritten
-  on 2026-09-17 to say so.
+  `track_until_cross()` that ends its motion before returning).
+- **FINISHING vs. NON-FINISHING BLOCKS — and don't teach timed driving (Brad,
+  2026-09-17).** The distinction students need: `Straight`/`Turn` **finish** —
+  they do the job and stop the motors themselves; `Set effort`/`Arcade` just
+  **start** the motors, which run until something stops them (a Stop motors
+  block, another Set effort, or the program ending). **Do NOT build a section
+  around `Sleep`.** Timed driving teaches the wrong habit and gives different
+  results with battery level, surface and load; students should almost always
+  stop on a **sensor** (rangefinder distance, reflectance seeing the line,
+  encoder count) instead. Sleep is fine as an occasional pause or as an
+  explicitly-flagged stand-in before sensors exist (Module 1) — one example, with
+  the caveat, never a section heading or a knowledge-check answer that endorses
+  it. L6 Part 2 ("Blocks that finish vs. blocks that don't") is the model:
+  measure the same timed program on two surfaces, then point at Module 2.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
   - **Module 4 `Manhattan`:** returned path **excludes** the start; `steps = len(path)`;

@@ -126,17 +126,22 @@ The **Set effort** block gives you that direct control. Effort runs from `-1`
 (full reverse) through `0` (stopped) to `1` (full forward), and you set each wheel
 separately — so each of the four cases above is just a pair of effort numbers.
 
-There's a catch. `Straight` finishes on its own — it drives 20 cm and it's done.
-`Set effort` doesn't finish: it starts the motors and immediately moves on to the
-next block. So *you* decide how long the motion lasts, with a **Sleep** block.
+There's a catch, and it's the big idea of this lesson. `Straight` **finishes**:
+it drives its 20 cm, stops the motors, and hands the program to the next block.
+`Set effort` doesn't finish — it switches the motors on and moves straight to the
+next block, leaving them running. They keep running until something stops them.
+
+So a `Set effort` program has to answer a question `Straight` never asks you:
+**when should the motors stop?** For a first look, we'll answer it with a
+**Sleep** — but keep an eye on how well that works.
 
 <BlockProgram
   blocks={[
     {name: 'wait_for_button_press'},
     {name: 'set_effort', note: 'left: 0.5, right: 0.5  → straight'},
-    {name: 'sleep', note: 'run for 3 seconds'},
+    {name: 'sleep', note: '3 seconds — the motors are still running the whole time'},
   ]}
-  caption="Drive straight for 3 seconds using direct motor control. The Sleep block is what sets the distance — it's how long the motors are left running."
+  caption="Direct motor control: Set effort starts both wheels, and they stay on while the program sleeps."
 />
 
 <KnowledgeCheck
@@ -232,31 +237,61 @@ robot senses.
 
 </TeacherNote>
 
-## Part 2 · The most common bug: forgetting the Sleep
+## Part 2 · Blocks that finish vs. blocks that don't
 
-Try this on purpose: build a program that's just **Wait for button press** and
-**Set effort**, with no Sleep after it. Run it. The robot barely twitches.
+Run the program above three times: once with a fresh battery, once on carpet, and
+once on a smooth floor. Measure how far the robot goes each time.
 
-Why? `Set effort` turns the motors on and moves straight to the next block —
-there isn't one, so the program ends, and when a program ends the robot stops
-its motors. The motors were on for a few thousandths of a second. **Sleep is what
-gives the motion its length**: the motors run for exactly as long as the program
-keeps going.
+Three seconds at effort `0.5` is not a distance. It's three seconds — and the
+distance you get out of it changes with the battery, the surface, the weight on
+the robot, even whether the floor slopes. That's the effort-isn't-speed idea from
+Part 1, showing up as a practical problem.
 
-That also means you don't need a stop block at the end of a program — the robot
-takes care of it. **Stop motors** <Block name="stop_motors" /> is for stopping
-*in the middle* of a program, when the motors should quit but the program has
-more to do.
+Now compare the two kinds of block:
+
+<CardGrid>
+  <InfoCard tag="Finishes" title="Straight / Turn">
+    Runs until the job is done — the distance driven, the angle turned — then stops the motors by itself. The next block doesn't start until it's finished.
+  </InfoCard>
+  <InfoCard tag="Doesn't finish" title="Set effort / Arcade">
+    Switches the motors on and moves to the next block immediately. The motors stay on until something stops them.
+  </InfoCard>
+</CardGrid>
+
+Three things can stop them: a **Stop motors** block <Block name="stop_motors" />,
+another `Set effort` (including effort `0`), or the program ending. You don't
+need a stop block at the *end* of a program — the robot stops the motors when the
+program is over — but any time the motors should quit while the program keeps
+going, that's what **Stop motors** is for.
+
+Which leaves the real question: **what should the robot wait for before it
+stops?** A Sleep is the crudest possible answer, and you just measured why. The
+answer you'll use for the rest of this course is to stop on something the robot
+**senses** — drive until the rangefinder says the wall is 10 cm away, until the
+reflectance sensor sees the line, until the encoder has counted far enough. Same
+`Set effort`, but the robot decides when it's done instead of the clock. That's
+where Module 2 goes next.
 
 <KnowledgeCheck
-  question="Your program is Wait for button press, then Set effort (0.5, 0.5), and nothing else. What does the robot do?"
+  question="What's the difference between what Straight does and what Set effort does?"
   options={[
-    {text: 'Drives forward until the battery dies'},
-    {text: 'Twitches and stops — the program ends right away, and the motors stop with it', correct: true},
-    {text: 'Drives forward exactly 20 cm'},
-    {text: 'Nothing at all — Set effort needs a Stop motors block to work'},
+    {text: 'Straight drives its distance and then stops the motors; Set effort starts the motors and leaves them running', correct: true},
+    {text: 'They do the same thing — Set effort is just the Python version'},
+    {text: 'Straight leaves the motors running; Set effort stops them when it finishes'},
+    {text: 'Set effort can only drive backward'},
   ]}
-  explanation="Set effort doesn't wait around — it sets the motors and moves on. With no Sleep to hold the program open, the program is over in an instant and the motors stop with it. Add a Sleep to decide how long the robot drives."
+  explanation="Straight and Turn finish a job and stop. Set effort just sets the motors going — deciding when they stop is now your problem."
+/>
+
+<KnowledgeCheck
+  question="Why is 'Set effort 0.5, Sleep 3 seconds' a poor way to travel a set distance?"
+  options={[
+    {text: 'Sleep blocks are slower than Straight blocks'},
+    {text: 'Effort is not speed — the same 3 seconds covers different distances depending on battery, surface, and load', correct: true},
+    {text: 'Sleep stops the motors, so the robot never gets anywhere'},
+    {text: 'The robot cannot run Set effort and Sleep in the same program'},
+  ]}
+  explanation="Timed driving is guesswork: a fresh battery on a smooth floor goes much farther in 3 seconds than a tired one on carpet. Use Straight when you want a distance, and a sensor when you want the robot to stop at something."
 />
 
 <TeacherNote title="Straight vs. Set effort — the trade-off">
@@ -266,11 +301,15 @@ the robot's sensors (encoders/IMU) for precise, repeatable distances and angles 
 easy, but limited to straight lines and pivots. `Set effort` is raw and
 time-based: less precise, but it can make smooth curves and creative motion the
 high-level blocks can't. Neither is "better" — it's about the right tool for the
-task. The #1 issue today is a missing **Sleep** — students expect `Set effort` to
-finish like `Straight` does, and instead the program ends instantly and the robot
-twitches. Have them say out loud what the Sleep is *for* ("it's how long the
-motors run"). Also head off the opposite habit: no stop block is needed at the end
-of a program; the robot stops its motors when the program ends.
+task. The distinction to drill is **finishing vs. not finishing**: `Straight` and
+`Turn` stop the motors themselves when the job is done; `Set effort` and `Arcade`
+just start them. Two habits to head off while you're here. First, don't let timed
+driving take root — the Sleep in these examples is a placeholder because we have
+no sensors yet, and it's worth having students measure the same program on two
+surfaces so they see the distance change. Real programs stop on what the robot
+senses (Module 2), or use `Straight`/`Turn` when a measured distance is what they
+want. Second, nobody needs a stop block at the end of a program — the robot stops
+the motors when the program ends; `Stop motors` is for stopping mid-program.
 
 </TeacherNote>
 
@@ -284,7 +323,7 @@ works out the two motor efforts for you.
   blocks={[
     {name: 'wait_for_button_press'},
     {name: 'arcade', note: 'speed: 0.5, turn: 0.3  → forward, curving right'},
-    {name: 'sleep', note: '3 seconds — how long the curve lasts'},
+    {name: 'sleep', note: '3 seconds — again, a stand-in until we have sensors'},
   ]}
   caption="Arcade combines speed and steering into one intuitive block."
 />
@@ -331,7 +370,8 @@ Direct motor control is how machines that *don't* drive in straight lines work:
 ## Wrap-up
 
 - How does a differential-drive robot turn? (By running its wheels at different speeds.)
-- Why does a Set effort program need a Sleep? (Set effort doesn't wait — Sleep is what decides how long the motors run.)
+- What happens to the motors when a Straight block finishes? What about a Set effort block? (Straight stops them; Set effort leaves them running.)
+- Why is timed driving unreliable, and what should a robot stop on instead? (Effort isn't speed — battery and surface change the distance; stop on a sensor reading.)
 - When would you pick `Straight`/`Turn` over `Set effort`? (When you need precise, repeatable distances and angles.)
 
 <TeacherNote title="Assessment & next lesson">

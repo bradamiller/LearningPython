@@ -38,6 +38,11 @@ and open items.
   ends, so programs never finish with **Stop motors** / `drivetrain.stop()`.
   Stopping is only shown *mid*-program, where the motors must quit while the
   program keeps running (e.g. stop, then turn).
+- **Finishing vs. non-finishing blocks:** `Straight`/`Turn` finish the job and
+  stop the motors themselves; `Set effort`/`Arcade` start the motors and leave
+  them running. Lessons teach that distinction — and stop motion on a **sensor**
+  (distance, line, encoder), not a timer. `Sleep` appears only as a pause or a
+  clearly-flagged stand-in before sensors are introduced.
 - **Python editor:** VS Code with the MicroPython extension (Blockly is XRP Code in
   the browser).
 - **Experience before explanation (the cornerstone):** when a lesson introduces a
