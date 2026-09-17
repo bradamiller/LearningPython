@@ -297,10 +297,17 @@ npm run serve   # preview the build
   `draw_triangle(size)`, `draw_polygon(sides, size, effort)` — identical names and
   parameter order in Blockly (L3–5) and Python (L10–11), so the Phase C mapping is
   literally 1:1. (Previously drifted: L5 used `distance`, L10/11 used `num_sides`.)
-  **Still pending:** the Lesson 4 hero screenshot
-  (`static/img/blocks/programs/square-function.png`) shows `square(side_length)`;
-  the lesson text bridges this in the caption for now. **Brad to re-shoot it as
-  `draw_square(size)`**, then drop the parenthetical from the L4 caption.
+  **Amended 2026-09-17 (Brad):** rather than re-shoot the Lesson 4 hero screenshot
+  (`static/img/blocks/programs/square-function.png`, which shows
+  `square(side_length)`), **Lesson 4 now names the parameter `side_length`
+  throughout** so the text matches the picture. The caption still bridges the
+  function name only (screenshot says `square`, lesson says `draw square`).
+  ⚠️ **Ripple not yet decided:** L5 (`draw polygon (sides, size, effort)`), L10
+  (`draw_square(size)`) and L11 (`draw_polygon(sides, size, effort)`) still say
+  `size`, as does Brad's SOURCE lesson plan
+  (`../module-01-driving/lessons/04-parameters-and-customization.md`, which
+  specifies `draw_square(size)`). Either propagate `side_length` through L5/L10/L11
+  or revert L4 — don't leave the module split.
 - **Block screenshots pending:** Brad is supplying real XRP Code screenshots to
   replace the composed `BlockProgram`s in Module 1 lessons 1, 2, 3, 5, 7, 9
   (Lesson 4 already done, but see re-shoot note above). Whiten + drop into

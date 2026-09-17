@@ -34,12 +34,12 @@ By the end of this lesson you will be able to:
 
 A parameter is like a blank in a recipe: instead of "add 1 cup of sugar," it says
 "add *this much* sugar," and you decide how much each time you cook. For our square
-function, the blank is the side length — we'll name the parameter `size`:
+function, the blank is the side length — we'll name the parameter `side_length`:
 
 <BlockShot
   src="/img/blocks/programs/square-function.png"
   alt="A square function that takes a side-length parameter; the Straight block's cm uses the parameter, and a call passes 35"
-  caption="A square function with a side-length parameter — the Straight block's cm holds the parameter instead of a number — and a call that passes 35. (In this screenshot the function is named square and the parameter side_length; in your program, use draw square and size to match the rest of the module.)"
+  caption="A square function with a side_length parameter — the Straight block's cm holds the parameter instead of a number — and a call that passes 35. (The screenshot names the function square; call yours draw square to match the rest of the module.)"
 />
 
 See how the **Straight** block's *cm* slot holds the parameter instead of a fixed
@@ -47,17 +47,17 @@ number, and the call at the bottom fills it in with `35`. Now one function draws
 every size — just pass a different value each time you call it:
 
 ```text
-call draw square (size: 35)     → medium
-call draw square (size: 60)     → big
-call draw square (size: 20)     → small
+call draw square (side_length: 35)     → medium
+call draw square (side_length: 60)     → big
+call draw square (side_length: 20)     → small
 ```
 
 <TeacherNote title="Where the parameter comes from">
 
 The move students miss is the **gear icon** on the function definition block —
-click it, choose *Add Input*, and name it `size`. Then drag the new `size`
-variable into the Straight block in place of the number. Show this on the
-projector slowly; it's the one bit of Blockly UI that isn't obvious.
+click it, choose *Add Input*, and name it `side_length`. Then drag the new
+`side_length` variable into the Straight block in place of the number. Show this
+on the projector slowly; it's the one bit of Blockly UI that isn't obvious.
 
 </TeacherNote>
 
@@ -65,40 +65,40 @@ projector slowly; it's the one bit of Blockly UI that isn't obvious.
 
 Two words that sound similar and trip everyone up:
 
-- **Parameter** — the *name* in the definition: the `size` in `draw square (size)`.
-  It's the empty slot.
+- **Parameter** — the *name* in the definition: the `side_length` in
+  `draw square (side_length)`. It's the empty slot.
 - **Argument** — the *value* you pass in when you call it: the `50` in
-  `draw square (size: 50)`. It's what fills the slot.
+  `draw square (side_length: 50)`. It's what fills the slot.
 
 <KnowledgeCheck
-  question="In the call draw square (size: 50), what is the 50?"
+  question="In the call draw square (side_length: 50), what is the 50?"
   options={[
     {text: 'The parameter'},
     {text: 'The argument — the value passed in', correct: true},
     {text: 'The function name'},
     {text: 'The turn angle'},
   ]}
-  explanation="The parameter is the name (size) in the definition; the argument is the value (50) you pass when calling."
+  explanation="The parameter is the name (side_length) in the definition; the argument is the value (50) you pass when calling."
 />
 
 <KnowledgeCheck
-  question="With draw square (size), calling draw square (size: 35) makes the robot drive each side how long?"
+  question="With draw square (side_length), calling draw square (side_length: 35) makes the robot drive each side how long?"
   options={[
     {text: '90 cm'},
     {text: '35 cm', correct: true},
     {text: '4 cm'},
     {text: 'It depends on the effort'},
   ]}
-  explanation="The argument 35 flows into the size parameter, so every Straight drives 35 cm."
+  explanation="The argument 35 flows into the side_length parameter, so every Straight drives 35 cm."
 />
 
 ## Part 3 · Make your functions flexible
 
-1. Add a `size` parameter to your `draw square` function and call it at three
-   different sizes.
+1. Add a `side_length` parameter to your `draw square` function and call it at
+   three different sizes.
 2. Do the same for `draw triangle` — one function, any size triangle.
 3. **Challenge:** add a *second* parameter, `effort`, and use it for the **Effort**
-   on your Straight and Turn blocks: `draw square (size, effort)`. (You'll use
+   on your Straight and Turn blocks: `draw square (side_length, effort)`. (You'll use
    this exact pair of parameters again in the polygon function next lesson.)
 
 <KnowledgeCheck
@@ -114,7 +114,7 @@ Two words that sound similar and trip everyone up:
 
 <TeacherNote title="Watch for: the unused parameter">
 
-The classic bug this lesson: a student adds a `size` parameter but leaves the
+The classic bug this lesson: a student adds a `side_length` parameter but leaves the
 Straight block set to `30`, so nothing changes when they pass different values.
 When a function "ignores" its argument, that's the first thing to check — is the
 parameter actually *used* inside the body? **More challenge:** have advanced
@@ -149,7 +149,7 @@ Parameters are everywhere you customize something without rebuilding it:
 
 **Formative:** can students add a parameter with the gear icon, use it in the
 body, and call with different arguments? **Exit ticket:** "Given
-`draw triangle (size)`, what does `draw triangle (40)` drive per side?" (40 cm).
+`draw triangle (side_length)`, what does `draw triangle (40)` drive per side?" (40 cm).
 **Preview:** next lesson we combine a parameter with the `360 ÷ sides` math to
 build one **polygon** function that draws *any* regular shape.
 
