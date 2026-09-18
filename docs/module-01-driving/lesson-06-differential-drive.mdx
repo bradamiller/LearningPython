@@ -330,8 +330,6 @@ works out the two motor efforts for you.
   caption="Arcade combines speed and steering into one intuitive block."
 />
 
-Try it: drive a big curve, then a figure-eight (curve one way, then the other).
-
 <KnowledgeCheck
   question="When is the Arcade block a better choice than Set effort?"
   options={[
@@ -348,8 +346,45 @@ Try it: drive a big curve, then a figure-eight (curve one way, then the other).
 **More support:** give a table of effort pairs and their outcomes, and start with
 symmetric efforts (0.3/0.3) before curves; let students use Arcade first — it's
 more intuitive. **More challenge:** build a spiral by gradually increasing one
-side's effort across several Set effort blocks, or estimate a fixed distance using
-effort + time (and see why encoders are worth having).
+side's effort across several Set effort blocks.
+
+</TeacherNote>
+
+## Activity · Drive a figure-eight
+
+A figure-eight is two curves that bend opposite ways, joined in the middle. It is
+the shape that proves you really understand what the two numbers in **Arcade** do
+— and `Straight` and `Turn` cannot draw it at all.
+
+1. **One curve first.** Use **Arcade** with a speed of `0.5` and a turn of `0.3`,
+   held long enough to come most of the way around a circle. Adjust the turn
+   number until the circle is about a metre across: bigger turn, tighter circle.
+2. **Write down what worked** — your speed, your turn, and roughly how long the
+   robot ran. You need those numbers twice.
+3. **Mirror it.** Add a second Arcade with the same speed and the *opposite* turn
+   (`-0.3` if the first was `0.3`), held for the same length of time.
+4. **Run the pair.** You should get two loops joined in the middle. If the second
+   loop is a different size from the first, the two halves aren't matched — check
+   that the numbers really are mirror images.
+5. **Challenge** — make the two loops different sizes on purpose, so the path
+   looks like a lopsided eight. Which number do you change, and which stays?
+
+**You've succeeded when** the robot traces two joined loops and finishes near
+where it began, pointing roughly the way it started.
+
+<TeacherNote title="Running the figure-eight">
+
+Floor space is the limiting factor: about 2 m × 1 m per robot. If that's tight,
+have students drop the speed to `0.3` — smaller loops, same lesson.
+
+This is also where timed driving bites, hard and usefully. Two robots with the
+same numbers will trace visibly different eights, and the same robot will differ
+between a fresh battery and a tired one. Name it: *the only reason we're timing
+this is that the robot can't yet sense where it is.* That's the thread Module 2
+picks up.
+
+Step 2 matters more than it looks — students who don't record their first curve
+end up guessing twice and never get a symmetric eight.
 
 </TeacherNote>
 

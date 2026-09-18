@@ -17,7 +17,8 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Remember the **Repeat** block that made shapes so much shorter? Python has the
 same tool: the **`for` loop**. In this lesson you'll write loops in text and use
 them to draw the shapes you already know — proving the logic is identical, only
-the syntax changed.
+the syntax changed. Then you'll do something Blockly made awkward: put a loop
+*inside* another loop.
 
 <Objectives>
 
@@ -26,7 +27,8 @@ By the end of this lesson you will be able to:
 - Write a Python `for` loop and use it to repeat robot commands
 - Explain what `range(n)` produces and why counting starts at `0`
 - Use indentation to define exactly what's inside the loop
-- Use the loop counter (`i`) to print progress or change behavior each pass
+- Nest one loop inside another, using the outer counter to change what the inner
+  loop draws
 
 </Objectives>
 
@@ -139,8 +141,110 @@ the text. We use `i + 1` so the messages read "1, 2, 3…" instead of "0, 1, 2�
 
 **More support:** practice loops that only print numbers before touching the robot
 (`for i in range(3): print(i)`), and predict output before running. **More
-challenge:** nested loops to draw several shapes in a row, or a loop with an `if`
-that changes the side length on alternating passes (a preview of Lesson 10/11).
+challenge:** a loop with an `if` that changes the side length on alternating
+passes (a preview of Lessons 10–11).
+
+</TeacherNote>
+
+## A loop inside a loop
+
+New problem: draw **four squares, each bigger than the last** — 20 cm, then 25,
+then 30, then 35.
+
+You already know how to draw one square with a loop. So you could write that loop
+four times, changing one number in each copy… and you know where that goes. In
+Lesson 2, the answer to "the same thing, over and over" was a loop. It still is.
+The only difference this time is that the thing being repeated **is itself a
+loop**.
+
+```python
+from XRPLib.defaults import *
+
+board.wait_for_button()
+
+for square in range(4):          # outer loop — one pass per square
+    size = 20 + square * 5       # 20, 25, 30, 35
+    for side in range(4):        # inner loop — one pass per side
+        drivetrain.straight(size)
+        drivetrain.turn(90)
+```
+
+Read it from the inside out. The **inner** loop is the square you already wrote:
+four sides, four corners. The **outer** loop runs that entire square four times —
+and this is the useful part, `square` counts `0, 1, 2, 3` as it goes, so
+`20 + square * 5` works out to a different size on every pass.
+
+Indentation is doing real work here. `size` is indented once, so it belongs to the
+outer loop and is recalculated once per square. The two `drivetrain` lines are
+indented twice, so they belong to the inner loop and run four times per square —
+sixteen sides in total.
+
+Because a square finishes where it started, each new square sets off from the same
+corner as the one before it, so the four nest inside each other.
+
+<KnowledgeCheck
+  question="In the nested program above, how many times does drivetrain.straight() run in total?"
+  options={[
+    {text: 'Four times — once per square'},
+    {text: 'Sixteen times — four sides in each of four squares', correct: true},
+    {text: 'Eight times'},
+    {text: 'Once, because it is inside two loops'},
+  ]}
+  explanation="The inner loop runs four times per pass of the outer loop, and the outer loop runs four times: 4 × 4 = 16 sides."
+/>
+
+<KnowledgeCheck
+  question="What happens if you indent the size line twice, so it lines up with the drivetrain lines?"
+  options={[
+    {text: 'Nothing changes', correct: true},
+    {text: 'The program will not run at all'},
+    {text: 'Every square comes out the same size'},
+    {text: 'The robot draws only one square'},
+  ]}
+  explanation="It still computes the same value, just four times per square instead of once — wasteful, but harmless. Indentation changes WHEN a line runs; here the answer happens to be the same either way. (Move it ABOVE the outer loop, though, and every square really would come out the same size.)"
+/>
+
+<TeacherNote title="Teaching nested loops">
+
+The idea students find slippery is not the syntax, it's that **the outer loop's
+body is a whole loop**. Two moves that help: trace it out loud together for the
+first two passes (`square = 0`, size 20, four sides… `square = 1`, size 25, four
+sides…), and have them predict the total number of sides before running — 16
+surprises people who expect 8.
+
+The second knowledge check is deliberately a near-miss: moving `size` deeper
+doesn't break anything, which is worth saying out loud, because students often
+believe any indentation change breaks a program. The change that *does* matter is
+moving it above the outer loop.
+
+Watch for a robot that drifts as the squares grow — the corners accumulate error,
+so the biggest square rarely closes perfectly. That's the encoder/wheel-slip
+reality, not a bug in their code.
+
+</TeacherNote>
+
+## Activity · Draw a nest of squares
+
+1. Type the nested-loop program above and run it. Before you press the button,
+   predict how many squares you'll see and how big the last one will be.
+2. Change it to draw **six** squares. What did you have to change — and what
+   stayed the same?
+3. Change the step from `5` cm to `10` cm and run it again.
+4. **Challenge** — make the squares *shrink* instead of grow, so the largest is
+   drawn first. There are two ways to do it: change the arithmetic, or count down.
+5. **Challenge** — right now every square starts from the same corner. What would
+   you add between squares to centre them all on one point instead?
+
+<TeacherNote title="Where students get stuck">
+
+Step 2 is the real check: the answer is "change `range(4)` in the outer loop" —
+the inner loop and the size formula are untouched, which is exactly the payoff of
+nesting. If a student changes the inner `range(4)`, they get four-sided shapes
+turning into something else and will see it immediately.
+
+Step 5 has no single right answer and is worth discussing rather than solving:
+before each square, drive half the step distance diagonally and turn back. It is
+fiddly on purpose — a good place to stop if time runs short.
 
 </TeacherNote>
 
@@ -164,15 +268,19 @@ Loops are how software handles "do this for every…" without endless copy-paste
 
 - What does `range(4)` produce, and how many times does the loop run? (`0,1,2,3` — four times.)
 - What decides which lines are inside the loop? (Indentation.)
-- How is a Python `for` loop related to the Blockly Repeat block? (Same idea, written as text.)
+- In a nested loop, which loop runs more often — the inner one or the outer one? (The inner one: once per side, per square.)
+- How did the outer loop change the size of each square? (Its counter was used in the arithmetic that set `size`.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** correct `for` syntax, right `range` value for a shape, and correct
-reading of indentation. **Exit ticket:** "Write a loop to draw a hexagon"
-(`for i in range(6): straight(...); turn(60)`). **Preview:** next lesson we wrap
+**Formative:** correct `for` syntax, right `range` value for a shape, correct
+reading of indentation, and — for the nested section — whether a student can say
+which loop a given line belongs to and why. **Exit ticket:** "Write a loop to draw
+a hexagon" (`for i in range(6): straight(...); turn(60)`); for a stretch, "how
+would you draw three hexagons of different sizes?" **Preview:** next lesson we wrap
 loops inside **Python functions** with parameters — the text version of Lessons
-3–5.
+3–5. Worth flagging there: the nested squares program is crying out to become
+`square(side_length)` called from a loop.
 
 </TeacherNote>
 

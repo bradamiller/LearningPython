@@ -425,6 +425,28 @@ Pages for a static site.)
   must not spoil the construct. Paper reasoning comes *after* the motivating
   attempt, not before all coding. **Apply this pattern when revisiting Lessons 3
   (functions), 4 (parameters), 5 (polygon), 9–10 (Python loops/functions).**
+- **ACTIVITY HEADINGS, NOT PART NUMBERS (Brad, 2026-09-18).** Lessons are short
+  enough that "Part 3" earned nothing, and it never told a student whether to read
+  or to do. **Module 1 is converted; Modules 2–5 are NOT yet.** The scheme:
+  - A section that is student work is `## Activity · <title>`; everything else is
+    just `## <title>` with no number. Lesson 7's `## Challenge 1 · …` headings
+    count as activities too.
+  - The **DO THIS** badge is pure CSS in `custom.css`, matched on the heading id
+    Docusaurus derives from the text (`h2[id^='activity']`, `h2[id^='challenge']`),
+    so activities stay ordinary markdown headings — still in the right-hand
+    contents (where they also get a red dot), still linkable, no wrapper
+    component. Nothing to remember when authoring beyond the heading text.
+  - **A long build-up is ONE activity with `### Step N · …` subheadings**, not one
+    activity per step (Brad, 2026-09-18) — L2's drive-straight → add-a-turn →
+    make-a-square sequence is the model.
+  - Cross-references must name the section ("when they hunt for the Repeat block"),
+    never "see Part 4". `grep -rn "Part [0-9]" docs/module-01-driving/` stays empty.
+  - Every lesson should have at least one activity. Two lessons had none and got
+    new ones on 2026-09-18: **L6 · Drive a figure-eight** (two mirrored Arcade
+    curves — the shape `Straight`/`Turn` cannot draw) and **L9 · Draw a nest of
+    squares**, which needed a new teaching section first (**A loop inside a loop**,
+    nested `for` loops where the outer counter sets each square's size — Brad's
+    design).
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
   starts with Wait for button press / `board.wait_for_button()` (programs auto-run
@@ -532,7 +554,9 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L3** | Function renamed `square`; Sleep-between-calls suggestion removed |
 | **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
-| **M1 L6** | Part 1 built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; Part 2 re-framed to finishing vs. non-finishing blocks, timed driving demoted |
+| **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18) |
+| **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
+| **All M1** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge (2026-09-18) |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
 | **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
