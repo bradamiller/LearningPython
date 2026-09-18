@@ -427,7 +427,9 @@ Pages for a static site.)
   (functions), 4 (parameters), 5 (polygon), 9–10 (Python loops/functions).**
 - **ACTIVITY HEADINGS, NOT PART NUMBERS (Brad, 2026-09-18).** Lessons are short
   enough that "Part 3" earned nothing, and it never told a student whether to read
-  or to do. **Module 1 is converted; Modules 2–5 are NOT yet.** The scheme:
+  or to do. **All five modules are converted** (M1 first, then M2–M5) — 55
+  activities across the 45 lessons; `grep -rn "^## Part " docs/` stays empty. The
+  scheme:
   - A section that is student work is `## Activity · <title>`; everything else is
     just `## <title>` with no number. Lesson 7's `## Challenge 1 · …` headings
     count as activities too.
@@ -441,12 +443,23 @@ Pages for a static site.)
     make-a-square sequence is the model.
   - Cross-references must name the section ("when they hunt for the Repeat block"),
     never "see Part 4". `grep -rn "Part [0-9]" docs/module-01-driving/` stays empty.
-  - Every lesson should have at least one activity. Two lessons had none and got
+  - Every lesson should have at least one activity. Two M1 lessons had none and got
     new ones on 2026-09-18: **L6 · Drive a figure-eight** (two mirrored Arcade
     curves — the shape `Straight`/`Turn` cannot draw) and **L9 · Draw a nest of
     squares**, which needed a new teaching section first (**A loop inside a loop**,
     nested `for` loops where the outer counter sets each square's size — Brad's
-    design).
+    design). **The one lesson still without an activity is M2 L8
+    (Introduction to Classes)** — pure concept teaching, and due for rewrite when
+    the classes-optional reshape reaches the site, so nothing was invented for it.
+  - Staged builds in M4/M5 follow the same one-activity-many-steps rule: the
+    Manhattan algorithm (2 steps), the Manhattan class (3), the Dijkstra class (3)
+    and `compute_path` (5 — the whole lesson is one activity). Each opens with a
+    sentence saying what the steps add up to. **Watch for duplicated wording** when
+    grouping: titles that already began "Step 1 — …" or "stage 1 —" had to be
+    trimmed, or the heading renders "Step 1 · Step 1 — …".
+  - For a final-project lesson, "The mission" and "The rubric" stay plain — they're
+    the brief, not the work; the planning/testing/reflecting sections carry the
+    badge.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
   starts with Wait for button press / `board.wait_for_button()` (programs auto-run
@@ -556,7 +569,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
 | **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18) |
 | **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
-| **All M1** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge (2026-09-18) |
+| **All 45 lessons** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
 | **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
