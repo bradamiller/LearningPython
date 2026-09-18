@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-06-testing-without-a-robot" />
 
-## Part 1 · Why test without the robot?
+## Why test without the robot?
 
 Would a pilot fly a brand-new plane without testing the engines on the ground? Of course
 not. The same logic applies to your code. A robot driving into a wall tells you
@@ -62,7 +62,7 @@ grid, no batteries, no chasing a robot across the room.
   explanation="Because Manhattan only computes paths and Navigator only drives them, you can verify the algorithm on any computer before hardware is ever involved."
 />
 
-## Part 2 · Expected vs. actual
+## Expected vs. actual
 
 The heart of testing: decide what the answer *should* be **by hand**, then check whether
 the code agrees. Hand-trace (0,0) → (2,3) — down 2 rows, right 3 columns — to get the
@@ -97,7 +97,7 @@ right.
   explanation="Testing needs an independent source of truth. You trace the path by hand first; the whole point is to catch the case where the code disagrees with the correct answer."
 />
 
-## Part 3 · A reusable `run_test()` helper
+## Activity · A reusable `run_test()` helper
 
 That compare-and-report pattern repeats for every case, so wrap it in a function:
 
@@ -150,7 +150,7 @@ floor.* Five minutes of testing saves thirty minutes chasing a robot.
 
 </TeacherNote>
 
-## Part 4 · Debug a failing test
+## Activity · Debug a failing test
 
 When a test fails, don't guess — add print statements inside `compute_path` to watch the
 logic run:

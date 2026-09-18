@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-08-navigator-class" />
 
-## Part 1 · What the Navigator needs
+## What the Navigator needs
 
 `Manhattan` plans; `Navigator` *drives*. When you create one, it needs to know its
 starting position, its starting heading, and it builds a `LineTrack` to do the physical
@@ -64,7 +64,7 @@ class has one job. That handing-off is called **delegation**.
   explanation="The Navigator asks LineTrack to turn and follow lines; LineTrack (built in Module 2) owns the DifferentialDrive. That's delegation — reusing code you already wrote."
 />
 
-## Part 2 · The two logic methods
+## The two logic methods
 
 `desired_heading()` is the Lesson 7 logic, now a method that reads `self.position`
 instead of taking a `current` parameter — the object already knows where it is:
@@ -106,7 +106,7 @@ def turn_to(self, desired):
   explanation="A class bundles data with behavior. The Navigator stores its position, so its methods can read it directly instead of having it passed in every time."
 />
 
-## Part 3 · `drive_path` and clearing the intersection
+## `drive_path` and clearing the intersection
 
 `drive_path` loops the path: work out the heading, turn to it, follow the line to the
 next intersection, update position. There's one subtle wrinkle:
@@ -153,7 +153,7 @@ to update `self.position`, and dropping the `straight(8)` clear.
 
 </TeacherNote>
 
-## Part 4 · Trace it, then integrate
+## Activity · Trace it, then integrate
 
 Before running, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N):
 

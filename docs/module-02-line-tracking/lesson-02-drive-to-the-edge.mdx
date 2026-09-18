@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-02-line-tracking/lesson-02-drive-to-the-edge" />
 
-## Part 1 · `for` vs. `while`
+## `for` vs. `while`
 
 In Module 1 the `for` loop repeated a **fixed** number of times — `for i in
 range(4)` draws four sides. But "drive until you hit the line" has no fixed count;
@@ -66,7 +66,7 @@ build those with comparison operators:
   explanation="You don't know the number of steps in advance, so you loop while the sensor says 'no line' — that's a while loop."
 />
 
-## Part 2 · Drive until the line
+## Drive until the line
 
 Here's the whole program. Read the sensor before the loop, keep driving while
 you're on white, and stop once the line is detected:
@@ -107,7 +107,7 @@ line before it can stop.
 
 </TeacherNote>
 
-## Part 3 · The infinite-loop trap
+## The infinite-loop trap
 
 Look at that program again. The line `left = reflectance.get_left()` *inside* the
 loop is the most important one. Leave it out and `left` never changes — so the
@@ -138,7 +138,7 @@ condition never becomes false and **the robot drives forever**. That's an
   explanation="0.3 < 0.5 is True, so the loop keeps running — the robot is still on white and should keep driving."
 />
 
-## Part 4 · Try it and extend it
+## Activity · Try it and extend it
 
 1. Build the program with **your** threshold, start the robot inside the taped
    circle pointing at an edge, and watch it stop at the line.

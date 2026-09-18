@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-02-line-tracking/lesson-09-object-composition" />
 
-## Part 1 · "Has-a": composition
+## "Has-a": composition
 
 A car **has an** engine. The car uses the engine to move, but the engine doesn't
 know about the steering wheel — each part has its own job. Code works the same way:
@@ -66,7 +66,7 @@ with `self.sensor.get_error()`.
   explanation="Composition is a 'has-a' relationship: LineTrack has-a LineSensor. It keeps each class focused on one job."
 />
 
-## Part 2 · Following the line, cleanly
+## Following the line, cleanly
 
 The core method is the Lesson 5–7 control loop, now tucked inside `LineTrack` and
 using its own sensor and settings:
@@ -84,7 +84,7 @@ def track_until_cross(self):
 cross — then it stops. All the messy sensor math is hidden behind
 `self.sensor.get_error()` and `self.sensor.is_at_cross()`.
 
-## Part 3 · Turning to find the line again
+## Turning to find the line again
 
 At a cross, the robot spins until a sensor finds the next line. The trick is a brief
 pause first, so it clears the intersection before it starts looking:
@@ -138,7 +138,7 @@ the turns, then each turn method on its own. Expect to tune the sleep duration.
 
 </TeacherNote>
 
-## Part 4 · Three lines to drive a course
+## Activity · Three lines to drive a course
 
 With both classes done, the main program is astonishingly short:
 

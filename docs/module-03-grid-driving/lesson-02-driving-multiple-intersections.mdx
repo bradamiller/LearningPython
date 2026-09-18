@@ -31,7 +31,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-03-grid-driving/lesson-02-driving-multiple-intersections" />
 
-## Part 1 · Why the robot gets stuck
+## Why the robot gets stuck
 
 When `track_until_cross()` stops, the robot is sitting *on* the intersection — both
 sensors still read high. Call `track_until_cross()` again and its loop condition
@@ -60,7 +60,7 @@ So the pattern is: **detect → clear → detect → clear → …**
   explanation="After stopping, both sensors are still on the cross. The follow loop only runs while NOT at a cross, so it exits at once — until you clear the intersection."
 />
 
-## Part 2 · Drive a set number with a `for` loop
+## Drive a set number with a `for` loop
 
 Doing detect-and-clear by hand for each intersection is repetitive. A `for` loop
 repeats it a chosen number of times — with one subtlety: don't clear after the
@@ -105,7 +105,7 @@ where the guard fires.
 
 </TeacherNote>
 
-## Part 3 · Package it as a helper
+## Activity · Package it as a helper
 
 Since you'll drive segments constantly, wrap the pattern in a reusable function:
 

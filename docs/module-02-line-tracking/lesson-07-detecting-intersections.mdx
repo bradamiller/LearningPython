@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-02-line-tracking/lesson-07-detecting-intersections" />
 
-## Part 1 · What a cross looks like to the robot
+## What a cross looks like to the robot
 
 During normal following, one sensor is darker than the other — the readings differ.
 At a crossing line, **both** sensors sit on black at the same time. That's the tell:
@@ -58,7 +58,7 @@ At a crossing line, **both** sensors sit on black at the same time. That's the t
   explanation="A cross means BOTH sensors are on black at once, so both comparisons must be true — that's and. or would fire during normal following too."
 />
 
-## Part 2 · Detect, then follow
+## Detect, then follow
 
 The structure is one `if/else` inside the control loop: **check for the cross
 first**; if it's not a cross, do normal two-sensor following.
@@ -119,7 +119,7 @@ all in one program.
 
 </TeacherNote>
 
-## Part 3 · Follow, reverse, and count
+## Activity · Follow, reverse, and count
 
 1. Run the follow-and-reverse program: the robot laps the circle, hits the cross,
    turns 180°, and heads back.

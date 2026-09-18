@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-07-obstacle-detection" />
 
-## Part 1 · The robot gets eyes
+## The robot gets eyes
 
 The ultrasonic rangefinder sends out a sound pulse — too high for us to hear — and times
 the echo bouncing back. The round-trip time tells it how far away an object is, returned in
@@ -60,7 +60,7 @@ The sensor does the physics internally; you just read a number.
   explanation="Sound pulse out, echo back, time it — that round-trip time converts to a distance. The XRP returns it in centimeters."
 />
 
-## Part 2 · Choosing a threshold
+## Choosing a threshold
 
 Sensor readings have noise and vary a little each time, so you don't check for an exact
 distance — you use a **threshold**. Measure with the next intersection blocked (say ~12
@@ -87,7 +87,7 @@ else:
   explanation="Ultrasonic readings fluctuate with angle, surface, and noise. A threshold ('closer than 15 cm = blocked') absorbs that variation; an exact-match check would fail constantly."
 />
 
-## Part 3 · Which node is blocked?
+## Which node is blocked?
 
 The rangefinder says something's ahead — but *which* node? The blocked one is the
 intersection **directly in front of the robot**, and the robot already knows its position
@@ -118,7 +118,7 @@ at.
   explanation="Facing north means the next node is row − 1: (1,1). The robot sits on a clear node; the obstacle is the adjacent one it faces."
 />
 
-## Part 4 · The five-step loop
+## The five-step loop
 
 At each intersection, the robot runs the same cycle — the core of reactive robotics:
 
@@ -156,7 +156,7 @@ recompute → drive**, over and over.
   explanation="Detecting an obstacle means reroute, not stop. A new Dijkstra with the updated blocked list and the robot's current position produces a path around it."
 />
 
-## Part 5 · Test in simulation first
+## Activity · Test in simulation first
 
 Before the robot, prove the *logic* works by faking the sensor — return a short distance
 when the next node is a pretend obstacle:

@@ -34,7 +34,7 @@ By the end of this project you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-09-capstone-project" />
 
-## Part 1 · The mission
+## The mission
 
 Your robot is an autonomous delivery vehicle. It must visit four or more grid destinations
 in sequence, and for each leg: plan a path, drive it while watching for obstacles, and
@@ -57,7 +57,7 @@ less). The drop in step count between runs *is* the learning.
   explanation="Every component already exists and was tested in earlier lessons. The capstone is about connecting them correctly — integration, not new algorithms."
 />
 
-## Part 2 · Program structure
+## Program structure
 
 The whole program has a clear skeleton:
 
@@ -88,7 +88,7 @@ The **blocked list is the thread** tying it together: `load_obstacles` produces 
   explanation="The blocked list flows through every stage: file → Dijkstra → detection → file. If it doesn't flow correctly, the whole system breaks."
 />
 
-## Part 3 · The navigation loop
+## The navigation loop
 
 The core is a nested loop — destinations on the outside, rerouting in the middle, walking a
 single path on the inside:
@@ -131,7 +131,7 @@ When an obstacle appears mid-path, you `break` out, having added it to `blocked`
   explanation="The rest of the current path may run through the new obstacle, so it's invalid. Breaking out returns to the while loop, which builds a new path from where the robot is."
 />
 
-## Part 4 · Test in simulation, then drive
+## Activity · Test in simulation, then drive
 
 Get the whole thing working with a **simulated** rangefinder before the robot — verify
 paths compute, obstacles register, the blocked list grows, and `obstacles.txt` is written
@@ -158,7 +158,7 @@ make a *new* Dijkstra after the blocked list changes.
   explanation="The blocked list must persist across all destinations in a run. Re-creating it empty for each destination throws away everything learned so far. (Also common: not updating current, or not rebuilding Dijkstra after blocked changes.)"
 />
 
-## Part 5 · The rubric and demo
+## The rubric and demo
 
 You're graded on the integrated system, component by component:
 

@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-02-dictionaries" />
 
-## Part 1 · What is a dictionary?
+## What is a dictionary?
 
 A **dictionary** stores **key-value pairs** in curly braces. Like a real dictionary maps
 words to definitions, or a phone book maps names to numbers, a Python dictionary maps any
@@ -60,7 +60,7 @@ neighbors of (1,1)?" — not by position. A dictionary jumps straight to the ans
   explanation="Each node is a tuple key, and its value is the list of nodes it connects to — the Python version of the paper graph."
 />
 
-## Part 2 · Access and the `in` keyword
+## Access and the `in` keyword
 
 Look up a value with square brackets, and check whether a key exists with `in`:
 
@@ -89,7 +89,7 @@ key with `graph[(9, 9)]` raises a `KeyError` — so check with `in` first.
   explanation="in checks whether a key exists. (0,0) is a key, so it returns True. (Accessing a missing key with [] would raise KeyError — which is why we use in.)"
 />
 
-## Part 3 · Build the graph automatically
+## Activity · Build the graph automatically
 
 Typing all 9 nodes of a 3×3 grid by hand is tedious; a 10×10 grid has 100. So write a
 function that generates the graph for any size, using nested loops and bounds checks so
@@ -128,7 +128,7 @@ on. That's what gives corners 2 neighbors and interior nodes 4.
   explanation="The bounds checks prevent adding neighbors that fall off the edge of the grid, so corners get 2 neighbors and interior nodes get 4."
 />
 
-## Part 4 · Removing blocked nodes
+## Removing blocked nodes
 
 Blocking a node is a **two-step** job: delete its key, *and* remove it from every other
 node's neighbor list. Forget the second step and other nodes still think they can reach a

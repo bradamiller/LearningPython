@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-03-lists" />
 
-## Part 1 · List vs. tuple
+## List vs. tuple
 
 A **list** is an ordered collection written with square brackets — and unlike a tuple,
 it's **mutable** (it can grow and change):
@@ -62,7 +62,7 @@ So a *coordinate* is a tuple; a *path* is a list of tuples.
   explanation="Lists use square brackets and are mutable, so they can grow — perfect for a path that's built up step by step."
 />
 
-## Part 2 · Growing a list with `append()`
+## Growing a list with `append()`
 
 `append()` adds an item to the **end** of a list. Start empty and build up:
 
@@ -104,7 +104,7 @@ for step in path:
   explanation="path[2] is (2, 0); then [1] takes its column — 0. Two indexes: which step, then which part of that step."
 />
 
-## Part 3 · Build a path in a loop
+## Activity · Build a path in a loop
 
 The pattern the whole module depends on: **start empty, append inside a loop.**
 
@@ -130,7 +130,7 @@ scope tight — they need `[]`, `append()`, `len()`, indexing, and `for`. No `in
 
 </TeacherNote>
 
-## Part 4 · The most common list bug
+## The most common list bug
 
 Indentation decides what's inside the loop. Get it wrong and only the last item is
 added:

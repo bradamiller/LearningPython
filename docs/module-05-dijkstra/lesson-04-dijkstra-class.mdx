@@ -34,7 +34,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-04-dijkstra-class" />
 
-## Part 1 · A better toolbox
+## A better toolbox
 
 In Module 4 you built the `Manhattan` class — a path planner for a clear grid. `Dijkstra`
 is a better one: same shape, but it can route around obstacles. Compare the constructors:
@@ -66,7 +66,13 @@ the moment you make a Dijkstra object.
   explanation="The constructor calls self.build_graph() once, so the graph is stored in self.graph and ready to use as soon as the object exists."
 />
 
-## Part 2 · `build_graph` — build and block in one pass
+## Activity · Build the Dijkstra class
+
+Three steps, the same shape as the Manhattan class: store what has to persist,
+stub out what you haven't written yet, and test the structure before you write
+any of the hard part.
+
+### Step 1 · `build_graph` — build and block in one pass
 
 This is the `build_grid_graph` idea from Lesson 2, adapted as a method that also skips
 blocked nodes. It does both jobs at once — skip a node if it's blocked, and only add a
@@ -108,7 +114,7 @@ nodes in a second pass — a blocked node never enters the graph at all.
   explanation="continue jumps to the next loop iteration, so a blocked node is never added as a key. Combined with the neighbor checks, blocked nodes are fully absent."
 />
 
-## Part 3 · The `compute_path` placeholder
+### Step 2 · The `compute_path` placeholder
 
 Build in stages: leave the algorithm as a placeholder so you can test the structure now.
 
@@ -134,7 +140,7 @@ Returning an empty list of the right *type* means you can test `__init__` and
   explanation="Building in stages keeps the load manageable — verify the graph is correct now, then focus entirely on the algorithm in Lesson 5."
 />
 
-## Part 4 · Test the structure
+### Step 3 · Test the structure
 
 Create objects and check the graph against what you know from Lessons 1–2:
 
@@ -163,7 +169,7 @@ neighbor list.
   explanation="16 total minus 2 blocked = 14. Both blocked nodes are skipped as keys, and removed from all neighbor lists too."
 />
 
-## Part 5 · The shared interface
+## The shared interface
 
 Here's the design payoff. Both classes offer `compute_path(destination)` returning a list
 of `(row, col)` tuples:

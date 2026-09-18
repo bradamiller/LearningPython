@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-06-testing-and-swapping" />
 
-## Part 1 · What makes a good test
+## What makes a good test
 
 A good test has a **known input**, an **expected output** you worked out yourself, and a
 **check** that compares actual to expected. Test two scenarios: clear grids (Dijkstra
@@ -61,7 +61,7 @@ shortest paths of equal length.
   explanation="Multiple routes can tie for shortest. What must match is the optimal length; the specific cells may legitimately differ between the two algorithms."
 />
 
-## Part 2 · Test the obstacle case
+## Activity · Test the obstacle case
 
 Block a node on the direct route and confirm Dijkstra both detours *and* never steps on a
 blocked node:
@@ -94,7 +94,7 @@ it prints PASS only when no blocked node was found.
   explanation="The else clause of a for loop runs only when the loop completes normally. A break skips it — perfect for 'passed unless we found a problem' checks."
 />
 
-## Part 3 · The two-line swap
+## Activity · The two-line swap
 
 Here's the reward for building Dijkstra with Manhattan's interface. Your Module 4 program
 created a Manhattan planner:
@@ -127,7 +127,7 @@ know — or care — which planner it's holding.
   explanation="The Navigator calls compute_path the same way regardless. Only the two setup lines (import + constructor) change — the whole point of a shared interface."
 />
 
-## Part 4 · Shared interface = polymorphism
+## Shared interface = polymorphism
 
 When two classes offer the same method names, parameters, and return types, code that uses
 one automatically works with the other. That's a **shared interface**, and the ability to

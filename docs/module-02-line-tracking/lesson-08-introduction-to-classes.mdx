@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-02-line-tracking/lesson-08-introduction-to-classes" />
 
-## Part 1 · What a class is
+## What a class is
 
 A **class** is a blueprint that groups related **data** and **actions** together.
 Think of a TV remote: its *data* is the current channel and volume; its *actions*
@@ -63,7 +63,7 @@ your program — and you can reuse the whole thing in any program.
   explanation="One class (blueprint) can produce many objects (instances). LineSensor is the blueprint; the sensor you create from it is an object."
 />
 
-## Part 2 · `__init__` and `self`
+## `__init__` and `self`
 
 Start the class and give it a constructor — the special `__init__` method Python
 runs automatically whenever you create an object:
@@ -112,7 +112,7 @@ run after each; the "it works on my robot" payoff is motivating.
 
 </TeacherNote>
 
-## Part 3 · Methods
+## Methods
 
 A **method** is just a function that lives inside a class and takes `self` as its
 first parameter — that's how it reaches the object's own data. Build up `LineSensor`
@@ -172,7 +172,7 @@ print(sensor.is_at_cross())    # True / False
   explanation="'At least one' means or, and each reading needs self. — self.get_left() > self.threshold or self.get_right() > self.threshold."
 />
 
-## Part 4 · Before and after
+## Before and after
 
 See what the class buys you. The old tangled way:
 

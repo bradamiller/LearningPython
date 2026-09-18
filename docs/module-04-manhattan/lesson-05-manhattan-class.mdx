@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-05-manhattan-class" />
 
-## Part 1 · Why a class?
+## Why a class?
 
 With the plain function, computing three paths from the same corner means typing the
 start every time:
@@ -69,7 +69,12 @@ behavior** (computing a path).
   explanation="The object remembers its position. You pass the start once when you create it, then just ask for paths to different destinations."
 />
 
-## Part 2 · Step 1 — store the position with `__init__`
+## Activity · Build the Manhattan class
+
+Three steps. Watch what *doesn't* change: the algorithm is the one you already
+wrote and tested — all that moves is where the start position comes from.
+
+### Step 1 · Store the position with `__init__`
 
 `__init__` runs automatically when you create the object. Its job here is to save the
 starting position:
@@ -101,7 +106,7 @@ The `(0, 0)` you passed in flows into `start`, then gets stored as `self.positio
   explanation="__init__ runs at creation and stores whatever you passed as self.position — here, the tuple (2, 1)."
 />
 
-## Part 3 · Step 2 — the method is the same algorithm
+### Step 2 · The method is the same algorithm
 
 Here's the whole conversion in one picture. The function's `start` parameter
 **disappears** — the method reads `self.position` instead. Everything else is
@@ -175,7 +180,7 @@ pair is the call, the inner pair is the tuple.
 
 </TeacherNote>
 
-## Part 4 · Step 3 — test it
+### Step 3 · Test it
 
 Create an instance and call the method. Compare the output to your hand-traced paths
 from Lesson 4:
@@ -208,7 +213,7 @@ print(nav.position)               # still (0, 0)
   explanation="compute_path uses local variables for the walk, so the stored self.position is untouched. That's what lets you plan several routes from the same start."
 />
 
-## Part 5 · Why not use `self.` everywhere?
+## Why not use `self.` everywhere?
 
 A common instinct is to write `self.current_row`, `self.path`, and so on. Don't. The
 rule: **`self.` is for data that must survive between method calls.** The position does

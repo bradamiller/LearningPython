@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-04-the-manhattan-algorithm" />
 
-## Part 1 · Why "Manhattan"?
+## Why "Manhattan"?
 
 Picture the streets of Manhattan in New York. To get from one corner to another, you
 can't cut diagonally through the buildings — you walk along the streets and avenues.
@@ -61,7 +61,7 @@ column is already correct).
   explanation="Like walking Manhattan's streets, the robot can't cut through the middle of a block — only along the lines. That's exactly why the distance is row steps + column steps."
 />
 
-## Part 2 · Trace it on paper first
+## Activity · Trace it on paper first
 
 Before any code, walk the algorithm by hand. Take **(0, 0) → (2, 3)**: move down the
 rows first, then right along the columns. Remember the robot is *already* at the start,
@@ -101,7 +101,13 @@ the hook — the name sticks when it's tied to real streets.
 
 </TeacherNote>
 
-## Part 3 · Code it, stage 1 — south and east only
+## Activity · Code the algorithm
+
+Build it in two stages: get the easy half working and *run it* before you
+generalise. A half-finished algorithm you have tested beats a whole one you
+haven't.
+
+### Step 1 · South and east only
 
 Start with just the two "positive" directions (moving down and right). Notice
 **tuple unpacking** on the setup lines — `current_row, current_col = start` pulls both
@@ -150,7 +156,7 @@ version does nothing. We need north and west too.
   explanation="Stage 1 only handles increasing row/column. Moving up or left needs the two decreasing loops we add next."
 />
 
-## Part 4 · Code it, stage 2 — all four directions
+### Step 2 · All four directions
 
 The fix is elegant: **add two more while loops**, one for north (rows decrease) and one
 for west (columns decrease). No `if/else` needed — for any single trip, at most one row
@@ -213,7 +219,7 @@ tuple unpacking (`current_row, current_col = start`) and on the double parenthes
 
 </TeacherNote>
 
-## Part 5 · The edge cases
+## Activity · The edge cases
 
 Good algorithms handle the awkward inputs without special code. Trace these and run
 them:

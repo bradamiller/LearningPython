@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-01-grid-as-a-graph" />
 
-## Part 1 · Why Manhattan isn't enough
+## Why Manhattan isn't enough
 
 Your usual route to school is closed for construction. You don't give up — you find a
 detour, and your GPS reroutes you automatically. The robot needs to do the same.
@@ -54,7 +54,7 @@ think about the grid.
   explanation="Manhattan always follows the same L-shaped route. It never checks whether a cell is blocked, so it can't detour."
 />
 
-## Part 2 · Nodes, edges, neighbors
+## Nodes, edges, neighbors
 
 A **graph** is a collection of **nodes** (points) connected by **edges** (links). You
 already know graphs: a road map (intersections + streets), a social network (people +
@@ -87,7 +87,7 @@ node has 3, an **interior** node has 4.
   explanation="(1,1) connects up, down, left, and right — (0,1), (2,1), (1,0), (1,2). No diagonals, so four neighbors."
 />
 
-## Part 3 · Blocking a node
+## Blocking a node
 
 When an intersection is blocked, we **remove it from the graph entirely** — the node
 *and* all its edges. Block (1,1) on the 3×3 grid:
@@ -114,7 +114,7 @@ lost a neighbor. Blocking one node changes its neighbors too.
   explanation="(0,1) used to connect to (0,0), (0,2), and (1,1). With (1,1) removed, only two neighbors remain."
 />
 
-## Part 4 · Finding a path around
+## Activity · Finding a path around
 
 Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
 

@@ -33,7 +33,7 @@ By the end of this project you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-09-final-project" />
 
-## Part 1 · The mission
+## The mission
 
 Four destinations, visited in order, starting and (optionally) ending at home base
 (0,0). The two classes do the heavy lifting: `Manhattan.compute_path(dest)` returns the
@@ -69,7 +69,7 @@ for dest in destinations:
   explanation="Manhattan doesn't automatically know the robot moved. Without updating its position, every leg after the first would compute a path from (0,0) — the wrong starting point."
 />
 
-## Part 2 · Create objects once, reuse them
+## Create objects once, reuse them
 
 A common mistake is making new `Manhattan` and `Navigator` objects for every destination.
 Don't — **create them once** before the loop and reuse them. That's the whole point of
@@ -89,7 +89,7 @@ true current heading.
   explanation="The Navigator keeps its state. It begins each leg facing however it finished the last — which is exactly why turn_to() must work from the real current heading."
 />
 
-## Part 3 · Test in three levels
+## Activity · Test in three levels
 
 Do **not** jump straight to the full run on the robot. If something breaks, you won't know
 which piece. Build up:
@@ -132,7 +132,7 @@ planning + desktop testing, then robot day.
 
 </TeacherNote>
 
-## Part 4 · The rubric and extensions
+## The rubric and extensions
 
 You're graded on the whole system working together:
 

@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-08-building-experience" />
 
-## Part 1 · Why memory matters
+## Why memory matters
 
 The Dijkstra algorithm doesn't change between runs. The Navigator doesn't change. Only the
 **input** changes — the blocked list starts with more information:
@@ -57,7 +57,7 @@ Run 2 — it's running the *same* algorithm on better information.
   explanation="Same Dijkstra, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
 />
 
-## Part 2 · Measure the improvement
+## Activity · Measure the improvement
 
 "It seemed faster" isn't evidence — **measure**. Track total steps, reroutes, and newly
 discovered obstacles for each run:
@@ -83,7 +83,7 @@ discoveries are already there when Run 2 begins.
   explanation="With obstacles pre-loaded, Run 2's initial paths already avoid them — no mid-run surprises, so zero reroutes and fewer steps."
 />
 
-## Part 3 · Could Run 2 still find new obstacles?
+## Could Run 2 still find new obstacles?
 
 Yes. Run 2 avoids everything it *already* knows, but its smarter route may pass nodes Run 1
 never visited — and one of those could be blocked. So Run 2 can still discover something
@@ -101,7 +101,7 @@ relevant obstacle and its paths are optimal from the start — that's **converge
   explanation="The robot only discovers obstacles it drives toward. A new route can reach nodes Run 1 skipped, so Run 2 can still find something new — feeding Run 3 even better data."
 />
 
-## Part 4 · Persistence with a file
+## Activity · Persistence with a file
 
 Within one program run, a list variable persists between function calls. But close the
 program and it's gone — Python variables don't survive a restart. To keep knowledge across

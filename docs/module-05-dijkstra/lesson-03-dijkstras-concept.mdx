@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-dijkstra/lesson-03-dijkstras-concept" />
 
-## Part 1 · The three data structures
+## The three data structures
 
 Dijkstra explores outward from the start, always visiting the nearest unvisited node next.
 It keeps track of everything with three structures:
@@ -59,7 +59,7 @@ visited   = []               # nothing finished yet
   explanation="previous records each node's predecessor on the shortest path. Tracing it backward from the destination reconstructs the route."
 />
 
-## Part 2 · The algorithm in one sentence
+## The algorithm in one sentence
 
 > Repeat: pick the unvisited node with the **smallest** distance, update its neighbors,
 > then mark it visited — until the destination is visited.
@@ -83,7 +83,7 @@ The key decision is step 1: you always visit the closest-to-*start* node next �
   explanation="Dijkstra has no notion of 'distance to the destination.' It always expands the nearest unvisited node measured from the start."
 />
 
-## Part 3 · Trace it: 3×3 with (1,1) blocked
+## Activity · Trace it: 3×3 with (1,1) blocked
 
 Find the shortest path from (0,0) to (2,2), with (1,1) blocked:
 
@@ -120,7 +120,7 @@ never touches it.
   explanation="Dijkstra only updates when the new path is strictly shorter. 4 is not less than 4, so (2,2) keeps its existing distance and previous."
 />
 
-## Part 4 · Reconstruct the path
+## Reconstruct the path
 
 The `previous` dictionary rebuilds the route — trace **backward** from the destination:
 
