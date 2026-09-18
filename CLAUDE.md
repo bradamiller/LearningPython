@@ -487,6 +487,18 @@ Pages for a static site.)
   program ends, so NO program ends with **Stop motors** / `drivetrain.stop()`.
   Keep stops only where they're functional mid-program (stop → turn; a
   `track_until_cross()` that ends its motion before returning).
+- **XRP CODE URL AND BROWSER (Brad, 2026-09-18).** The IDE students use is
+  **https://xrpcode.wpi.edu/staging**, and it works **only in Google Chrome or
+  Microsoft Edge** — the serial and Bluetooth APIs it needs to reach a robot exist
+  only in Chromium browsers, so Safari and Firefox load the page, build programs
+  fine, and then fail at CONNECT with the robot simply absent from the list. L1
+  says this where students are first told to open the tool, with a knowledge check
+  on the symptom. Deeper how-to lives in the **XRPCode chapter of the XRP User
+  Guide** (`https://xrpusersguide.readthedocs.io/en/latest/course/XRPCode.html` —
+  panels, USB connection, troubleshooting); link there rather than re-documenting
+  the IDE. **Not yet propagated:** the other nine lessons' Resources lists still
+  point at `https://xrpcode.wpi.edu/` (production, no `/staging`) — ask Brad before
+  changing them site-wide.
 - **FINISHING vs. NON-FINISHING BLOCKS — and don't teach timed driving (Brad,
   2026-09-17).** The distinction students need: `Straight`/`Turn` **finish** —
   they do the job and stop the motors themselves; `Set effort`/`Arcade` just

@@ -161,8 +161,33 @@ and Lesson 2 has them driving squares on the floor. Practical notes:
 
 ## Your first program in XRP Code
 
-Open **[xrpcode.wpi.edu](https://xrpcode.wpi.edu/)** in your browser. This is
-where you'll build programs by dragging blocks.
+XRP Code runs in a web browser — there's nothing to install and nothing to log
+into. Open **[xrpcode.wpi.edu/staging](https://xrpcode.wpi.edu/staging)** and
+you're at the place where you'll build programs by dragging blocks.
+
+**Use Google Chrome or Microsoft Edge.** This isn't a preference — talking to the
+robot needs browser features for serial and Bluetooth connections that only those
+browsers support. Safari and Firefox will load the page and let you build a
+program, then leave you stuck at the point where you try to connect: your robot
+never appears in the list. If you hit that, switch browsers before you
+troubleshoot anything else.
+
+The XRP User Guide has a whole chapter on XRP Code — a tour of the three panels,
+connecting over USB step by step, and a troubleshooting section for when a robot
+won't show up. Keep
+[that chapter](https://xrpusersguide.readthedocs.io/en/latest/course/XRPCode.html)
+open in a tab; this lesson covers just enough to get your first program running.
+
+<KnowledgeCheck
+  question="A classmate built a program in XRP Code on Safari, but when they click CONNECT their robot never appears in the list. What is the most likely reason?"
+  options={[
+    {text: 'The robot is broken'},
+    {text: 'Safari cannot connect to the robot — XRP Code needs Chrome or Edge for that', correct: true},
+    {text: 'The program has too many blocks'},
+    {text: 'They need to create an account first'},
+  ]}
+  explanation="Building a program works in any browser; connecting to the robot does not. The serial and Bluetooth features XRP Code uses exist only in Chrome and Edge, so the robot never shows up in the list."
+/>
 
 <Video
   placeholderLabel="Screen recording — creating a project & the three key blocks"
@@ -335,6 +360,7 @@ sequencing. **Preview:** next lesson we use the Turn block and some geometry
 
 ## Resources
 
-- [XRP Code IDE](https://xrpcode.wpi.edu/)
+- [XRP Code IDE](https://xrpcode.wpi.edu/staging) — Chrome or Edge only
+- [XRP Code, in the XRP User Guide](https://xrpusersguide.readthedocs.io/en/latest/course/XRPCode.html) — the full tour, connecting, and troubleshooting
 - [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
 - [XRP Support Forum](https://xrp.discourse.group/)
