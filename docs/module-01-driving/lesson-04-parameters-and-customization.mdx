@@ -24,8 +24,8 @@ a **parameter** — a slot you fill in each time you call the function.
 By the end of this lesson you will be able to:
 
 - Explain what a parameter is — an input that changes what a function does
-- Add a parameter to a Blockly function using the **gear icon**
-- Use the parameter's value inside the function body
+- Add a parameter to a Blockly function using the **gear icon** and the mutator bubble
+- Find that parameter in the **Variables** palette and use its value inside the function body
 - Call one function with different **arguments** to get different results
 
 </Objectives>
@@ -54,12 +54,125 @@ call square (side_length: 60)     → big
 call square (side_length: 20)     → small
 ```
 
-<TeacherNote title="Where the parameter comes from">
+Getting there takes two moves that aren't obvious from looking at the blocks:
+first you **add** the parameter to the function, then you **use** its value inside
+the body. They happen in two different places, which is why it's easy to do one and
+forget the other.
 
-The move students miss is the **gear icon** on the function definition block —
-click it, choose *Add Input*, and name it `side_length`. Then drag the new
-`side_length` variable into the Straight block in place of the number. Show this
-on the projector slowly; it's the one bit of Blockly UI that isn't obvious.
+## Adding the parameter: the gear icon
+
+Look at the top-left corner of your `square` definition block. There's a small
+blue **gear icon**. Most blocks don't have one — the gear means "this block can
+change shape," and a function's shape is exactly what you're about to change.
+
+**1 · Click the gear.** A small bubble opens above the block with its own tiny
+workspace. On the left of the bubble is a block that says **input name: x**. On the
+right is a block labelled **inputs** with an empty notch inside it.
+
+<Figure
+  placeholderLabel="XRP Code: the square function block with the blue gear icon at its top-left circled"
+  caption="The gear icon lives at the top-left of the function definition block."
+/>
+
+**2 · Drag `input name: x` into the `inputs` block.** Grab it from the left of the
+bubble and snap it into the notch. Watch the definition block *behind* the bubble as
+you let go — it grows a new row reading **with: x**. That's your parameter. It
+already exists; it just has a terrible name.
+
+<Figure
+  placeholderLabel="The mutator bubble open: an 'input name: x' block being dragged into the 'inputs' container block, with the definition block behind it growing a 'with: x' row"
+  caption="Snap the input into the inputs block. The function grows a 'with:' row the moment it connects."
+/>
+
+**3 · Rename it.** Click the word `x` on the block you just dropped in and type
+`side_length`, then press Enter. Use underscores, not spaces — and pick the same
+name you'd want in Python later, because in Lesson 10 you'll write this same
+function in text.
+
+<Figure
+  placeholderLabel="The input block renamed to side_length; the definition block now reads 'to square with: side_length'"
+  caption="Rename the input and the function header updates immediately."
+/>
+
+**4 · Close the bubble** by clicking the gear again. Your definition now reads
+**to square with: side_length**.
+
+Need a *second* parameter? Open the gear again and stack another **input name**
+block underneath the first. The top-to-bottom order in the bubble is the
+left-to-right order of the arguments, so it matters — `polygon (sides,
+side_length)` in the next lesson is not the same function as
+`polygon (side_length, sides)`.
+
+<KnowledgeCheck
+  question="You click the gear on a function block and drag an 'input name' block into the 'inputs' block. What happens to the function definition?"
+  options={[
+    {text: 'Nothing until you press Run'},
+    {text: 'It grows a "with:" row naming the new parameter', correct: true},
+    {text: 'The blocks inside the function are deleted'},
+    {text: 'A new function is created'},
+  ]}
+  explanation="The definition block changes shape as soon as the input connects — that 'with:' row is the parameter list. Renaming the input renames what appears there."
+/>
+
+## Using the parameter: the Variables palette
+
+The function now *accepts* a side length, but the **Straight** block inside it is
+still set to a hard number, so nothing has actually changed yet. You need a block
+that says "whatever value was passed in" — and that block is waiting in the palette.
+
+Open the **Variables** category. Along with any variables you made yourself,
+there's now a rounded block named **side_length**. Adding the parameter created it;
+you don't have to make it.
+
+<Figure
+  placeholderLabel="The Variables category open in the palette, showing a rounded side_length block alongside the make-a-variable button"
+  caption="A parameter shows up in Variables automatically — that rounded block is how you read its value."
+/>
+
+Drag that `side_length` block into the **cm** slot of the Straight block, right on
+top of the number that's there. The old number block pops out and is left floating in
+the workspace — drag it to the trash so it doesn't confuse you later.
+
+<Figure
+  placeholderLabel="The side_length variable block being dropped into the cm slot of a Straight block inside the square function"
+  caption="Drop the variable into the cm slot. The number it replaces pops out — delete it."
+/>
+
+You can use the same parameter as many times as you like inside the function. And
+once the definition has a parameter, **every call block for that function updates by
+itself** — it grows a socket labelled `side_length` where you plug in a number.
+
+<Figure
+  placeholderLabel="A call block reading 'square side_length:' with a number block showing 35 plugged into its socket"
+  caption="The call block grows a socket for each parameter. This is where the argument goes."
+/>
+
+<KnowledgeCheck
+  question="Inside the function body, where do you get a block that holds the parameter's value?"
+  options={[
+    {text: 'The Variables category — the parameter appears there as a rounded block', correct: true},
+    {text: 'The Functions category, next to the call block'},
+    {text: 'You type its name into the number slot'},
+    {text: 'You have to make a new variable with the same name'},
+  ]}
+  explanation="Adding a parameter creates a variable of the same name, and Blockly lists it under Variables. Drag that block into any slot inside the function where you want the value."
+/>
+
+<TeacherNote title="Demo this one live — slowly">
+
+This is the one piece of Blockly UI that nobody discovers on their own. Project it
+and narrate each move, especially the mutator bubble: students expect a menu or an
+"Add Input" button, and instead they have to **drag a block inside another block**
+in a floating mini-workspace. Several will drop the input *next to* the `inputs`
+block rather than inside it and see nothing happen — the tell is a definition block
+with no `with:` row.
+
+Two more predictable snags. (1) They rename the input but never visit **Variables**,
+so the body still uses a fixed number — the function ignores its argument. (2) They
+drag the `side_length` block out of the function and into the main program, where it
+has no value; it only means something inside the function that declares it. If a
+student deletes a parameter later, any `side_length` block left in the body becomes a
+plain variable that's never set — clean those out with them.
 
 </TeacherNote>
 
@@ -96,8 +209,10 @@ Two words that sound similar and trip everyone up:
 
 ## Activity · Make your functions flexible
 
-1. Add a `side_length` parameter to your `square` function and call it at
-   three different sizes.
+1. Add a `side_length` parameter to your `square` function — gear icon, then the
+   Variables palette — and call it at three different sizes. If all three squares
+   come out identical, you've done the first half and not the second: check what's
+   actually sitting in the Straight block's *cm* slot.
 2. Do the same for `triangle` — one function, any size triangle.
 3. **Challenge:** add a *second* parameter, `effort`, and use it for the **Effort**
    on your Straight and Turn blocks: `square (side_length, effort)`. Then ask
@@ -115,14 +230,13 @@ Two words that sound similar and trip everyone up:
   explanation="Arguments fill parameters in order. (50, 30) means length 50 / width 30; (30, 50) swaps them into a different rectangle."
 />
 
-<TeacherNote title="Watch for: the unused parameter">
+<TeacherNote title="Differentiation">
 
-The classic bug this lesson: a student adds a `side_length` parameter but leaves the
-Straight block set to `30`, so nothing changes when they pass different values.
-When a function "ignores" its argument, that's the first thing to check — is the
-parameter actually *used* inside the body? **More challenge:** have advanced
-students preview Lesson 5 by adding a `sides` parameter and computing the turn as
-`360 ÷ sides`.
+**More support:** pair them up and have one student talk the other through the gear
+sequence from the lesson without touching the mouse — saying it out loud is what
+makes it stick. **More challenge:** preview Lesson 5 by adding a `sides` parameter
+and computing the turn as `360 ÷ sides`, or add `effort` and compare the robot's
+behaviour at 0.3 and 0.8.
 
 </TeacherNote>
 

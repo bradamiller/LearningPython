@@ -596,8 +596,14 @@ signal of what he cares about when you touch an unreviewed lesson.
   `draw_square(size)`), on Lesson 0 (no source lesson plan exists), and on the
   stop-motors and Bluetooth guidance. Ask Brad whether to bring the source
   markdown/slides/solutions in line.
-- **Media still wanted:** real block screenshots for the lessons still on composed
-  art — **L1, L3, L6, L7, L8, L9** (§6; L2 is half-done); an XRP-built
+- **Media still wanted:** six XRP Code screenshots for **L4's gear-icon
+  walkthrough** — the gear on the definition block, the mutator bubble mid-drag,
+  the renamed input, the Variables flyout showing `side_length`, that block going
+  into the Straight *cm* slot, and the updated call block (they're `<Figure
+  placeholderLabel>`s in `lesson-04-parameters-and-customization.mdx`, and the
+  caption text says exactly what each one has to show); real block screenshots for
+  the lessons still on composed art — **L1, L3, L6, L7, L8, L9** (§6; L2 is
+  half-done); an XRP-built
   re-shoot of the Lesson 6 motor photos, which currently show a VEX-style robot
   (§12); an official `logo.svg` if there is one; and a social/OG card image — the
   config used to point at an `img/social-card.png` that never existed, so that
