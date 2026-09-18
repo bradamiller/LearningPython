@@ -449,6 +449,36 @@ Pages for a static site.)
   two flagged stand-ins in L6, where `Set effort` needs something to hold the
   program open, plus `time.sleep(1)` between shapes in L11's project skeleton. L6 Part 2 ("Blocks that finish vs. blocks that don't") is the model:
   measure the same timed program on two surfaces, then point at Module 2.
+- **🚨 THE SITE IS NOW BEHIND THE SOURCE: classes became OPTIONAL (merged
+  2026-09-18, branch `separate-classes`, 170 files).** Brad reshaped the source
+  curriculum so **functions are the spine everywhere and classes are an "Optional
+  Extension" at the end of selected lessons** — a course can be taught entirely
+  without `class`/`self` and still reach the same capstones. Read
+  `../teacher-guide/classes-optional.md` first; it has the full lesson-by-lesson
+  table. The merge touched NO files under `curriculum-site/`, so **every Module
+  2/4/5 page on the site still teaches the old class-first version.** The gap, by
+  page:
+  - **M2:** source renamed `08-introduction-to-classes` → `08-sensor-functions`
+    and `09-object-composition` → `09-line-tracking-functions`; the site still has
+    `lesson-08-introduction-to-classes.mdx` / `lesson-09-object-composition.mdx`
+    (file names, sidebar labels and content all class-first). L10 combines them.
+  - **M4:** L5 (`Manhattan` class) and L8 (`Navigator` class) are now
+    `compute_manhattan_path` + `desired_heading`/`turn_to`/`drive_path` functions,
+    with the class as the extension; L9's main program has a functions version
+    that skips the `manhattan.position = navigator.position` sync step.
+  - **M5:** L4–L5 build `build_dijkstra_graph`/`compute_dijkstra_path` as
+    functions; L6's swap is a `compute_path(algorithm, ...)` dispatch function in
+    the functions track, with true polymorphism as the extension; L7–L9 call the
+    functions directly.
+  - Site pages need the same primary/extension split, and probably a visual
+    treatment for "Optional Extension" (a collapsible, or reuse of the
+    `TeacherNote` pattern). **Ask Brad how he wants extensions shown before
+    rewriting.** Note this also resolves how M4/M5 relate — see the
+    `compute_path` bullet below, which the functions-first shape may settle on its
+    own.
+  - Also per that guide, still stale in the SOURCE (not the site): M2 L8–L9 slide
+    outlines + `.pptx`, the root `generate_pptx_lesson*.py` scripts, and the
+    `.html`/`.pdf` worksheet renders for M4–M5.
 - **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
   real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
   - **Module 4 `Manhattan`:** returned path **excludes** the start; `steps = len(path)`;
@@ -491,6 +521,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
 | **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
+| **M2/M4/M5 site pages** | ⚠️ Now BEHIND the source — the `separate-classes` merge (2026-09-18) made classes optional in the source only. See §9. |
 
 ## 11. Good next steps
 
