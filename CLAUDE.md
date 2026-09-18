@@ -97,8 +97,9 @@ curriculum-site/
 │   │   │   ├── c/         # GENERATED slices of the C-shaped blocks (§6)
 │   │   │   └── programs/  # real XRP Code screenshots of whole programs (§6)
 │   │   ├── lesson-01/     # Lesson 0 robot gallery (8 JPGs) + xrp-parts.jpg (Lesson 1)
+│   │   ├── lesson-04/     # gear-icon walkthrough stills, cut from the screencast (§12)
 │   │   └── lesson-06/     # motor-motion stills + the two effort diagrams (§12)
-│   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4 (§12)
+│   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4, l4-square-parameter.mp4 (§12)
 │   └── .nojekyll          # already there for GitHub Pages (§8)
 ├── sidebars.js            # curriculum outline (modules → lessons)
 ├── docusaurus.config.js   # site config, navbar, Montserrat font, footer
@@ -596,16 +597,8 @@ signal of what he cares about when you touch an unreviewed lesson.
   `draw_square(size)`), on Lesson 0 (no source lesson plan exists), and on the
   stop-motors and Bluetooth guidance. Ask Brad whether to bring the source
   markdown/slides/solutions in line.
-- **Media still wanted:** three XRP Code stills for **L4's gear-icon walkthrough** —
-  the mutator bubble mid-drag, the Variables flyout showing `side_length`, and the
-  two stacked call blocks at 20 and 30 (they're `<Figure placeholderLabel>`s in
-  `lesson-04-parameters-and-customization.mdx`, and each caption says what the shot
-  has to show; the screencast covers the motion, so these are for the printed page).
-  Brad may also re-shoot `l4-square-parameter.mp4` with a shorter parameter name —
-  in the current take the variable field renders clipped (`side_lengt`), which reads
-  as a typo. Same path, no lesson edits needed. Also: real block screenshots for the
-  lessons still on composed art — **L1, L3, L6, L7, L8, L9** (§6; L2 is
-  half-done); an XRP-built
+- **Media still wanted:** real block screenshots for the lessons still on composed
+  art — **L1, L3, L6, L7, L8, L9** (§6; L2 is half-done); an XRP-built
   re-shoot of the Lesson 6 motor photos, which currently show a VEX-style robot
   (§12); an official `logo.svg` if there is one; and a social/OG card image — the
   config used to point at an `img/social-card.png` that never existed, so that
@@ -661,6 +654,15 @@ the photos — `pdfimages` returns the bare photo), and embedded clips are HEVC
 - Photo-only crops: `pdftoppm -r 150` the question slide, then crop the photo box.
 - Videos: `ffmpeg -i in.mov -an -vf scale=960:-2 -c:v libx264 -crf 27 -movflags
   +faststart out.mp4` (HEVC→H.264; ~0.2–0.8 MB for 4–10 s).
+**Stills pulled from a screencast.** Lesson 4's three step images were cut from
+Brad's own XRP Code recording rather than shot separately: find a sharp frame
+(CleanShot's zoom-ins are upscales of a 894×500 capture, so they're soft — the
+*un*-zoomed frames are the sharp ones; rank candidates by variance-of-Laplacian),
+crop tight around the blocks in native coordinates, then upscale 1.5–2× with
+Lanczos and save JPEG q88 into `static/img/lesson-NN/`. That keeps a 365 px-wide
+crop legible in a ~720 px content column. `scripts/` has no helper for this; it was
+a one-off ffmpeg + Pillow pass.
+
 First use: the motion deck → Module 1 Lesson 6 Part 1 (`static/img/lesson-06/`,
 `static/videos/motors-*.mp4`).
 
