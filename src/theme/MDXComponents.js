@@ -4,6 +4,7 @@ import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
 import {Video, Figure} from '@site/src/components/Media';
 import {Block, BlockProgram, BlockShot} from '@site/src/components/Blocks';
 import {QuizSheet, QuizLink, QuizIndex} from '@site/src/components/Quiz';
+import Reveal from '@site/src/components/Reveal';
 import {
   LessonHeader,
   Objectives,
@@ -27,6 +28,7 @@ export default {
   QuizSheet,
   QuizLink,
   QuizIndex,
+  Reveal,
   LessonHeader,
   Objectives,
   TeacherBanner,

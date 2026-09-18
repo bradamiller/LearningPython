@@ -126,10 +126,19 @@ Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
 (2,0) --- (2,1) --- (2,2)
 ```
 
-Manhattan would try (0,0) → (1,0) → (2,0) — but (1,0) is blocked, so it fails. The graph
-path detours: (0,0) → (0,1) → (1,1) → (2,1) → (2,0), **4 steps**. Without the obstacle,
-the Manhattan distance is only 2. **Obstacles make paths longer** — and Manhattan
-distance becomes just a lower bound, not the real answer.
+Manhattan would try (0,0) → (1,0) → (2,0) — but (1,0) is blocked, so it fails.
+Trace a way around with your finger and count the steps before reading on.
+
+<Reveal title="Check your route" hint="find one by hand first">
+
+One shortest detour is (0,0) → (0,1) → (1,1) → (2,1) → (2,0) — **4 steps**. Any
+other 4-step route avoiding (1,0) is equally correct; there's usually more than one
+shortest path.
+
+</Reveal>
+
+Without the obstacle, the Manhattan distance is only 2. **Obstacles make paths
+longer** — and Manhattan distance becomes just a lower bound, not the real answer.
 
 One more idea for later: our grid is **unweighted** — every edge costs 1 step. (In a
 *weighted* graph, a highway edge might cost less than a side-street edge.) Dijkstra's

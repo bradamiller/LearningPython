@@ -71,11 +71,22 @@ Real programmers test one function against many inputs. In your main program, ca
 
 ```text
 Wait for button press
-call polygon (sides: 4, side_length: 30)   → square
-call polygon (sides: 3, side_length: 30)   → triangle
-call polygon (sides: 6, side_length: 20)   → hexagon
-call polygon (sides: 8, side_length: 15)   → octagon
+call polygon (sides: 4, side_length: 30)
+call polygon (sides: 3, side_length: 30)
+call polygon (sides: 6, side_length: 20)
+call polygon (sides: 8, side_length: 15)
 ```
+
+Write down what you expect each line to draw **before** you upload. Then run it
+and see whether the robot agrees with you.
+
+<Reveal title="Check your predictions" hint="write yours down first">
+
+Square, triangle, hexagon, octagon — in that order. The side lengths shrink as the
+shapes gain sides, because a shape with more sides needs more floor for the same
+side length.
+
+</Reveal>
 
 <KnowledgeCheck
   question="What turn angle will polygon compute for a 12-sided shape (a dodecagon)?"

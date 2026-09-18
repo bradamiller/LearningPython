@@ -226,7 +226,8 @@ reality, not a bug in their code.
 ## Activity · Draw a nest of squares
 
 1. Type the nested-loop program above and run it. Before you press the button,
-   predict how many squares you'll see and how big the last one will be.
+   write down two predictions: the **total distance** the robot will drive, and
+   how many **turns** it will make. Check them against what you see.
 2. Change it to draw **six** squares. What did you have to change — and what
    stayed the same?
 3. Change the step from `5` cm to `10` cm and run it again.
@@ -234,6 +235,14 @@ reality, not a bug in their code.
    drawn first. There are two ways to do it: change the arithmetic, or count down.
 5. **Challenge** — right now every square starts from the same corner. What would
    you add between squares to centre them all on one point instead?
+
+<Reveal title="Check your step 1 predictions" hint="write yours down first">
+
+Four sides each at 20, 25, 30 and 35 cm: 4 × (20 + 25 + 30 + 35) = **440 cm**, and
+one 90° turn per side gives 4 × 4 = **16 turns**. If you measured less than 440 cm on
+the floor, that's wheel slip and corner error, not arithmetic.
+
+</Reveal>
 
 <TeacherNote title="Where students get stuck">
 

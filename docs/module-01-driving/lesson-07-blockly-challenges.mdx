@@ -42,21 +42,30 @@ target within **±30 cm**, then signal that it arrived.
   caption="The delivery course. Measure it, then translate it into blocks."
 />
 
-The clean way to build this is one function that sequences the whole route, called
-from a short main program:
+Measure the course, plan the moves on paper, then build it. Everything you need
+you already have: Straight, Turn, a function to wrap the route, and the debugging
+loop of predict → run → watch → adjust.
+
+<Reveal title="Stuck on how to organise it?" hint="plan on paper first">
+
+One clean structure is a single function that sequences the whole route, called
+from a short main program — so the main program reads as one instruction and the
+route lives in one place you can tune:
 
 <BlockProgram
   blocks={[
     {name: 'function_def', note: 'navigate course', children: [
-      {name: 'straight', note: 'cm: 150'},
-      {name: 'turn', note: 'Deg: 90'},
-      {name: 'straight', note: 'cm: 100'},
-      {name: 'turn', note: 'Deg: -45'},
-      {name: 'straight', note: 'cm: 50'},
+      {name: 'straight', note: 'first leg'},
+      {name: 'turn', note: 'first corner'},
+      {name: 'straight', note: 'second leg'},
+      {name: 'turn', note: 'second corner'},
+      {name: 'straight', note: 'final leg'},
     ]},
   ]}
-  caption="Wrap the route in a function, then just call navigate course from your main program."
+  caption="The shape of a solution — the distances and angles are yours to measure."
 />
+
+</Reveal>
 
 **Test it in pieces.** Get the first straight-and-turn landing correctly before you
 add the next. That's far easier than running all six moves and guessing which one

@@ -114,19 +114,36 @@ def run_test(test_name, start, dest, expected):
 ```
 
 Now each test is a single line — and a good suite covers **every direction and every edge
-case**:
+case**. Here's one case worked out, and the five your suite still needs:
 
 ```python
 run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])
-run_test("Backward left", (2, 3), (0, 0), [(1,3), (0,3), (0,2), (0,1), (0,0)])
-run_test("Same row",      (1, 0), (1, 3), [(1,1), (1,2), (1,3)])
-run_test("Same column",   (0, 2), (3, 2), [(1,2), (2,2), (3,2)])
-run_test("Same spot",     (1, 1), (1, 1), [])
-run_test("One step",      (0, 0), (0, 1), [(0,1)])
+run_test("Backward left", (2, 3), (0, 0), [ ... ])   # trace it, then fill it in
+run_test("Same row",      (1, 0), (1, 3), [ ... ])
+run_test("Same column",   (0, 2), (3, 2), [ ... ])
+run_test("Same spot",     (1, 1), (1, 1), [ ... ])
+run_test("One step",      (0, 0), (0, 1), [ ... ])
 ```
+
+**Work each `expected` out by hand before you run anything.** That is the whole
+point: a test whose expected value came from the program's own output proves
+nothing except that the program agrees with itself. If a test fails, one of two
+things is wrong — your trace or your code — and finding out which is the skill.
 
 If you only ever test (0,0) → (2,3), a bug that only shows up going *backward* will slip
 right past you.
+
+<TeacherNote title="Expected values (teacher copy)">
+
+Backward left `[(1,3), (0,3), (0,2), (0,1), (0,0)]`; same row `[(1,1), (1,2), (1,3)]`;
+same column `[(1,2), (2,2), (3,2)]`; same spot `[]`; one step `[(0,1)]`.
+
+Don't hand these out — the hand-tracing *is* the lesson. Use them to check work
+quickly, and watch for the student who runs the code first and pastes the output
+into `expected`: that student's suite will pass on day one and hide a real bug on
+day three.
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="Your test shows actual = [(1,0),(2,0),(2,1)] but expected = [(1,0),(2,0),(2,1),(2,2),(2,3)]. What's the likely problem?"

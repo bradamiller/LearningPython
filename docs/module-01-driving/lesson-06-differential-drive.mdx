@@ -55,7 +55,7 @@ straight, curve, swing around, or spin? Then watch and check.
 <Video
   src="/videos/motors-straight.mp4"
   mp4
-  caption="Both sides matched: the robot drives straight ahead."
+  caption="Case 1 — press play once you've committed to a prediction."
 />
 
 <Figure
@@ -67,7 +67,7 @@ straight, curve, swing around, or spin? Then watch and check.
 <Video
   src="/videos/motors-curve.mp4"
   mp4
-  caption="The faster side travels farther in the same time, so the robot arcs toward the slower side."
+  caption="Case 2 — press play once you've committed to a prediction."
 />
 
 <Figure
@@ -79,7 +79,7 @@ straight, curve, swing around, or spin? Then watch and check.
 <Video
   src="/videos/motors-pivot.mp4"
   mp4
-  caption="The stopped side stays put and the driven side walks around it — the robot swings about the stopped wheel."
+  caption="Case 3 — press play once you've committed to a prediction."
 />
 
 <Figure
@@ -91,10 +91,22 @@ straight, curve, swing around, or spin? Then watch and check.
 <Video
   src="/videos/motors-spin.mp4"
   mp4
-  caption="One side pushes forward while the other pulls back, so the robot spins in place."
+  caption="Case 4 — press play once you've committed to a prediction."
 />
 
 ### The whole rule, in three lines
+
+<Reveal title="What each case does" hint="after all four predictions">
+
+1. **Both sides forward, matched** — drives straight ahead.
+2. **Both forward, one faster** — the faster side travels farther in the same
+   time, so the robot arcs *toward the slower side*.
+3. **One side stopped** — the stopped wheel stays put and the driven side walks
+   around it: the robot swings about that wheel.
+4. **Opposite directions** — one side pushes forward while the other pulls back,
+   so the robot spins on the spot.
+
+</Reveal>
 
 Every one of those outcomes comes from the same idea — you operate the left and
 right sides of the driveline independently:

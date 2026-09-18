@@ -56,8 +56,11 @@ Your robot must:
 
 ## Activity · Plan before you build
 
-Pseudocode the main program first — notice how short it is, because the classes do
-the heavy lifting:
+Pseudocode the main program first, in plain English, before you type any Python.
+It will be shorter than you expect, because the classes do the heavy lifting —
+each line of your plan is close to one line of code.
+
+<Reveal title="Compare with one possible plan" hint="write yours first">
 
 ```text
 create a LineTrack
@@ -71,6 +74,11 @@ repeat 4 times:
 stop and print "Done!"
 ```
 
+If yours has more steps than this, look for work you're doing by hand that a class
+method already does for you.
+
+</Reveal>
+
 <KnowledgeCheck
   question="For the final project, do you need to rewrite the sensor and driving logic from scratch?"
   options={[
@@ -82,10 +90,24 @@ stop and print "Done!"
   explanation="That's the whole point of building the classes: the main program just creates a LineTrack and calls its methods."
 />
 
-## The complete program
+## Build it in pieces
 
-Both classes, plus a main program that reverses four times (two right turns make a
-~180° reversal on the line):
+You have every part already: `LineSensor` from Lesson 8, `LineTrack` from Lesson 9,
+and the reversal trick you worked out above. What's left is assembling them and
+tuning — which is most of what real robot work is.
+
+Build in this order, testing each before adding the next:
+
+1. `track_until_cross()` alone — does it follow the line and stop at the cross?
+2. One `turn_right()` — does it find the line again?
+3. One full reversal — two right turns, then following back the other way.
+4. The loop that does it four times.
+
+<TeacherNote title="Reference program (teacher copy)">
+
+The whole thing, both classes plus a main program that reverses four times (two
+right turns make a ~180° reversal on the line). Use it to unstick a team, not as a
+handout — the assembly and tuning is the graded work.
 
 ```python
 from XRPLib.reflectance import Reflectance
@@ -152,6 +174,8 @@ for i in range(4):
 
 print("Complete! 4 reversals done.")
 ```
+
+</TeacherNote>
 
 <TeacherNote title="Run it as a build, and test in pieces">
 

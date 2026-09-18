@@ -155,7 +155,11 @@ to update `self.position`, and dropping the `straight(8)` clear.
 
 ## Activity · Trace it, then integrate
 
-Before running, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N):
+Before running anything, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N) on paper.
+For each step write down: the next intersection, the heading the robot needs, and
+how many right turns get it there. Watch what happens when the count passes 3.
+
+<Reveal title="Check your trace" hint="paper first">
 
 ```
 Step 1: next (1,0). needed = 2 (S). heading 0 ≠ 2:
@@ -165,6 +169,12 @@ Step 2: next (1,1). needed = 1 (E). heading 2 ≠ 1:
           turn_right → 3;  turn_right → 0 (wrapped);  turn_right → 1 → stop.
         track_until_cross → arrive (1,1).
 ```
+
+Step 2 is the one worth noticing: three right turns to face East, wrapping 3 → 0
+on the way. A left turn would have been one move, but right turns alone are enough
+to reach any heading — which is why the class doesn't need a `turn_left`.
+
+</Reveal>
 
 Now connect the two classes — `Manhattan` computes, `Navigator` drives:
 

@@ -47,8 +47,13 @@ each of the 4 corners. Done right, it finishes where it began.
 
 ## One loop, four sides
 
-The whole square is a four-iteration loop. Each pass drives one side, then turns the
-corner:
+The whole square is a four-iteration loop: each pass drives one side, then turns the
+corner. Two pieces to write — a `drive_intersections(tracker, count)` helper (you
+built this in Lesson 2) and the loop that calls it and turns.
+
+Sketch the loop body in English first: what happens once per side?
+
+<Reveal title="Compare with a working version" hint="write yours first">
 
 ```python
 # (LineSensor and LineTrack classes from Module 2 go above)
@@ -77,6 +82,11 @@ for leg in range(4):
 print("Square complete! Back at start.")
 ```
 
+The `if i < count - 1` guard matters: you clear *between* intersections on a side,
+but not after the last one, because the turn clears that corner itself.
+
+</Reveal>
+
 Notice there's no separate clear before `turn_right()` — the turn clears the corner
 itself (Lesson 3). Four right turns add up to a full 360°, which is why the robot
 comes back around.
@@ -97,7 +107,7 @@ comes back around.
 Don't run all four sides first. Build up:
 
 1. **One side** — comment out the loop; run one `drive_intersections(2)` + `turn_right()`.
-2. **Two sides** — `range(2)`; you should get an L (half the square).
+2. **Two sides** — `range(2)`. What shape should that give you? Predict, then run.
 3. **Full square** — `range(4)`; does it close back to the start?
 
 <KnowledgeCheck

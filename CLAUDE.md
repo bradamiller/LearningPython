@@ -194,6 +194,12 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
 <QuizSheet id="module-01-driving/lesson-01-meet-the-xrp" />        {/* student sheet */}
 <QuizSheet id="module-01-driving/lesson-01-meet-the-xrp" answers /> {/* answer key */}
 <QuizIndex />                                                       {/* all sheets, by module */}
+
+{/* Click-to-reveal answer box (§15). Closed by default, so opening it is a
+    deliberate act — and closed content doesn't print, which is what you want on
+    a handout. Never put anything students HAND IN in here. */}
+<Reveal>Default title is "Check your work".</Reveal>
+<Reveal title="Check your trace" hint="fill the table in first">…</Reveal>
 ```
 
 **Teacher mode** (Root.js): a floating switch (bottom-right) sets
@@ -751,3 +757,49 @@ generated automatically; just add a `<QuizLink>` after its `</Objectives>`.
 **If the links don't appear while you're working:** restart `npm start`. Component
 registration (`src/theme/MDXComponents.js`) is read at server start, so a dev
 server that was already running when `QuizLink` was added renders nothing for it.
+
+## 15. Where answers may and may not appear
+
+Added 2026-09-18. Brad flagged that the Drawing Shapes lesson handed students the
+answers to the very problems it had just asked them to solve, and asked for that to
+be fixed throughout. The rule now has two tiers, and which tier something falls into
+depends on **whether the student turns it in**:
+
+| The thing | Where it goes | Student can open it? |
+|---|---|---|
+| Worked result, finished program, the rule behind a pattern — something they may check *after trying* | `<Reveal>` | Yes, by clicking |
+| Anything they hand in: filled tables, challenge solutions, project code, expected test values | `<TeacherNote>` | No |
+
+`<Reveal>` (`src/components/Reveal.js`) is closed by default, so opening it is a
+deliberate act rather than something the eye catches while scrolling. Closed content
+isn't printed either, which matters because these pages get printed as handouts.
+`<TeacherNote>` is the existing teacher-mode box — invisible to students entirely.
+
+Conventions that came out of the pass:
+
+- **Never answer in the next paragraph.** If a section asks "what do you predict?",
+  the paragraph after it must not say. Put the answer behind a `<Reveal>`.
+- **Blank the givens.** Tables with a worked example: leave exactly one row filled as
+  a model and blank the rest, then a `<Reveal>` with the completed table. Lesson 2's
+  angle table and M5 L3's Dijkstra trace are the references.
+- **Videos are answers too.** Where a video shows the outcome of a prediction, the
+  caption says "press play once you've committed to a prediction" rather than
+  describing what happens (M1 L6).
+- **Don't demonstrate on the same data they just traced.** M5 L3 teaches path
+  reconstruction on a throwaway 1×3 strip, then sends students back to their own
+  table. Reuse of the activity's own numbers is a spoiler even when it reads like
+  teaching.
+- **Reference programs are teacher copies.** M4 L9's main program, M4 L6's expected
+  `run_test` values and M2 L10's complete program are `<TeacherNote title="… (teacher
+  copy)">`; the student page keeps a comment-only skeleton describing the shape.
+- **Reveals get a hint.** The `hint` prop ("try it first", "fill the table in
+  first") prints next to the closed title and is the thing that actually stops a
+  student opening it reflexively.
+
+**Lessons touched by this pass:** M1 L2, L3, L5, L6, L7, L9; M2 L4, L6, L10; M3 L4;
+M4 L1, L4, L6, L8, L9; M5 L1, L3, L8. If you write a new lesson, apply the table
+above as you go — it's much cheaper than another audit.
+
+**Known remaining softness:** M4 L1's "Map it" activity and the knowledge check
+below it are close enough that a student can read one off the other; the coordinates
+were changed so they no longer coincide, but the two are still adjacent.

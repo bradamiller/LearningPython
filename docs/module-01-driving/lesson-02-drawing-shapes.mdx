@@ -141,7 +141,9 @@ Once your square works, look at your program and answer these two questions:
 1. How many blocks did it take?
 2. Is there anything in it that's the same thing, over and over?
 
-Most people's square looks something like this at this point:
+<Reveal title="Compare with a working square" hint="after yours runs">
+
+Most people's square looks something like this:
 
 <BlockProgram
   blocks={[
@@ -157,6 +159,8 @@ Most people's square looks something like this at this point:
   ]}
   caption="A working square — the same two blocks, four times over."
 />
+
+</Reveal>
 
 <KnowledgeCheck
   question="In the eight-block square, what is being repeated, and how many times?"
@@ -190,7 +194,7 @@ will show them (it drives one side and stops).
 
 </TeacherNote>
 
-Here's what it looks like when it works:
+<Reveal title="Found it? Check how the blocks go together" hint="search the palette first">
 
 <BlockShot
   src="/img/blocks/programs/repeat-square.png"
@@ -198,9 +202,16 @@ Here's what it looks like when it works:
   caption="The same square: the Straight and Turn blocks sit inside the Repeat — two blocks instead of eight. A new Repeat block starts at 10, so change the count to 4; your Wait for button press block stays on top."
 />
 
-This is a **loop**: you write the instructions once, and the Repeat block runs
-them as many times as you tell it to. You've just discovered one of the most
-important ideas in all of programming.
+The block is called **Repeat**, and it lives in the Loops category. The part that
+catches people out is physical: the two blocks have to sit *inside* its mouth, not
+stacked beside it.
+
+</Reveal>
+
+Once yours works, you've used a **loop**: you write the instructions once, and the
+Repeat block runs them as many times as you tell it to. That's one of the most
+important ideas in all of programming, and you got to it by noticing your own
+program repeating itself.
 
 <KnowledgeCheck
   question="A student's Repeat-4 program makes the robot drive one side and then stop. What's the most likely problem?"
@@ -231,9 +242,16 @@ sharing 360° is 120° each. Only now go to the rule.
 
 </TeacherNote>
 
-Didn't close? Here's the idea that fixes it. To get back to facing where it
-started, the robot has to turn **all the way around** over the course of the
-shape — one full circle, 360°. Every corner gets an equal share:
+Didn't close? Before you read on, try this: **walk the triangle yourself.** Pace
+out a side, pivot at the corner the way the robot does, and keep going until
+you're back where you began, facing the way you started. How far did you turn in
+total, adding up all three corners? That total is the whole answer.
+
+<Reveal title="Work out the angle — open this once you've walked it" hint="don't open first">
+
+To end up facing the way it started, the robot has to turn **all the way around**
+over the course of the shape — one full circle, 360°. The corners share that
+turn equally:
 
 > **Turn angle = 360° ÷ number of sides**
 
@@ -241,7 +259,9 @@ A square: `360 ÷ 4 = 90°`, which is why 90 worked. A triangle: `360 ÷ 3 = 120
 *not* 60°. The robot turns through the **outside** of each corner, and the outside
 angle of a triangle's corner is 120°.
 
-Set the turn to 120 and run it again.
+</Reveal>
+
+Now set your turn to the angle you worked out and run it again.
 
 <KnowledgeCheck
   question="A classmate's triangle isn't closing up — the robot ends facing the wrong way. They used Turn 60°. What should it be?"
@@ -266,6 +286,31 @@ to 360. Then fill in the table for the rest:
 | Hexagon | 6 | 6 | ____ |
 | Octagon | 8 | 8 | ____ |
 
+<TeacherNote title="Completed table (teacher copy)">
+
+Triangle 120°, square 90°, pentagon 72°, hexagon 60°, octagon 45°. Students who
+fill it in without the rule usually get the triangle wrong (60° instead of 120°)
+— that one row is the quickest check of whether the idea landed.
+
+Collect the table if you want a paper artifact from this lesson; it's the only
+written work here.
+
+</TeacherNote>
+
+## Activity · Make other shapes
+
+Now you can draw *any* regular shape by changing just two numbers — the repeat
+count and the turn angle. Use your table, predict the shape, then run it:
+
+1. **Pentagon** — Repeat `5`, and the turn angle from your table. Shorten the
+   sides to `15` cm so it fits.
+2. **Hexagon** — Repeat `6`, and its angle from your table.
+3. **Your choice** — pick a number of sides, work out `360 ÷ sides`, predict the
+   shape, run it. What happens as the number of sides gets big?
+
+Check each one against your prediction before moving on: if the shape doesn't
+close, the angle and the repeat count disagree.
+
 <KnowledgeCheck
   question="What turn angle do you need to draw a regular hexagon (6 sides)?"
   options={[
@@ -277,15 +322,6 @@ to 360. Then fill in the table for the rest:
   explanation="360 ÷ 6 = 60°. Split one full turn evenly across all six corners."
 />
 
-## Activity · Make other shapes
-
-Now you can draw *any* regular shape by changing just two numbers — the repeat
-count and the turn angle. Use your table, predict the shape, then run it:
-
-1. **Pentagon** — Repeat `5`, Turn `72°`. Shorten the sides to `15` cm so it fits.
-2. **Hexagon** — Repeat `6`, Turn `60°`.
-3. **Your choice** — pick a number of sides, compute `360 ÷ sides`, predict, run.
-   What happens as the number of sides gets big?
 
 <KnowledgeCheck
   question="You change a working square program from Repeat 4 to Repeat 6, and set the turn to 60°. What does the robot draw?"

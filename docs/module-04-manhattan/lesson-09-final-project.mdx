@@ -38,7 +38,25 @@ By the end of this project you will be able to:
 Four destinations, visited in order, starting and (optionally) ending at home base
 (0,0). The two classes do the heavy lifting: `Manhattan.compute_path(dest)` returns the
 list of intersections, and `Navigator.drive_path(path)` turns and drives it. Your job is
-the **main program** that orchestrates them — about ten lines:
+the **main program** that orchestrates them — about ten lines.
+
+Write it yourself. The shape you need:
+
+```python
+# create one Manhattan and one Navigator, before the loop
+# list your destinations in the order to visit them
+# wait for the button
+# for each destination:
+#     compute the path
+#     drive it
+#     ... and make sure the planner knows where the robot ended up
+#     print progress so you can follow along
+```
+
+That last comment is the one that decides whether the second leg works. Think
+about what each object knows after `drive_path` finishes, and what it doesn't.
+
+<TeacherNote title="Working main program (teacher copy)">
 
 ```python
 HEADING_NAMES = ["N", "E", "S", "W"]
@@ -57,6 +75,13 @@ for dest in destinations:
     manhattan.position = navigator.position   # ← the key line
     print("Arrived at:", navigator.position)
 ```
+
+`manhattan.position = navigator.position` is the line nearly everyone misses, and
+the failure is instructive rather than obvious: leg one works perfectly, and every
+later leg is computed from (0,0). If a student's robot drives a sensible first
+route and then wanders, ask what `manhattan` thinks its position is.
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="Why is the line manhattan.position = navigator.position necessary each leg?"
