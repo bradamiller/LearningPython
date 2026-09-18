@@ -106,10 +106,12 @@ LearningPython/                            # repo root — the site itself
 │   │   ├── lesson-04/     # gear-icon walkthrough stills, cut from the screencast (§12)
 │   │   └── lesson-06/     # motor-motion stills + the two effort diagrams (§12)
 │   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4, l4-square-parameter.mp4 (§12)
+│   ├── CNAME              # the custom domain, re-asserted on every deploy (§8)
 │   └── .nojekyll          # already there for GitHub Pages (§8)
+├── .github/workflows/
+│   └── deploy.yml         # build + publish to GitHub Pages on push to main (§8)
 ├── sidebars.js            # curriculum outline (modules → lessons)
 ├── docusaurus.config.js   # site config, navbar, Montserrat font, footer
-├── netlify.toml           # deploy config (see §8)
 └── README.md              # run + deploy instructions
 ```
 
@@ -347,44 +349,55 @@ npm run serve   # preview the build
 ```
 
 **Deploy: GitHub Pages, automatically (set up 2026-09-18).** Netlify was never
-connected and its config is gone; `.github/workflows/deploy.yml` now builds on
-every push to `main` and publishes to Pages. Live site:
-**https://bradamiller.github.io/LearningPython/**. The workflow runs `npm ci &&
-npm run build` on Node 20 (so the `prebuild` hook regenerates the printable
-checks, §14), uploads `build/` with `actions/upload-pages-artifact@v3` and
-deploys with `actions/deploy-pages@v4`; permissions `contents: read`,
-`pages: write`, `id-token: write`, and a `pages` concurrency group so deploys
-queue instead of racing. Repo setting, done once by Brad: **Settings → Pages →
-Source: GitHub Actions** (and Pages needs a public repo on a free personal
-account).
+connected and its config is gone; `.github/workflows/deploy.yml` builds on every
+push to `main` and publishes to Pages. Live site:
+**https://learningpython.bradhouse.com/**. The workflow runs `npm ci && npm run
+build` on Node 20 (so the `prebuild` hook regenerates the printable checks, §14),
+uploads `build/` with `actions/upload-pages-artifact@v3` and deploys with
+`actions/deploy-pages@v4`; permissions `contents: read`, `pages: write`,
+`id-token: write`, and a `pages` concurrency group so deploys queue instead of
+racing. Repo setting, done once: **Settings → Pages → Source: GitHub Actions**
+(Pages also needs a public repo on a free personal account).
 
-**⚠️ `baseUrl` and the repo name are now coupled.** A project site is served from
-`/<repo>/`, so `docusaurus.config.js` has `baseUrl: '/LearningPython/'`. Rename
-the repo and every asset 404s until `baseUrl` follows. **This is also why any
-component that takes a `src` MUST pass it through `useBaseUrl`** — a raw
-`/img/...` string is correct at the domain root and broken under a subpath.
-`Media.js` (`Video`, `Figure`) was fixed for this at the same time; `Blocks.js`
-(`Block`, `BlockShot`, the C-block slices) and `Quiz.js` already did it. Lessons
-keep writing site-absolute paths; the components do the resolving.
+**The domain, and the three places it lives (settled 2026-09-18).** The site is
+served at the root of its own subdomain: DNS has a `learningpython` CNAME under
+`bradhouse.com` pointing at `bradamiller.github.io`, and the **`LearningPython`
+repo's** Settings → Pages custom domain is `learningpython.bradhouse.com`. Because
+it's a root, `baseUrl` is `/` and `url` is the subdomain. `static/CNAME` carries
+the domain into every deploy. **Change the domain and you change three things:**
+`static/CNAME`, `url` + `baseUrl` in `docusaurus.config.js`, and the repo setting.
 
-**Verifying a Pages build locally** — `npm run serve` is not enough of a test,
-because a plain static server at the root hides subpath mistakes. Serve it one
-directory deeper instead:
+History worth knowing, because it was an hour of confusion: the site first went up
+as a project site at `bradamiller.github.io/LearningPython/` with
+`baseUrl: '/LearningPython/'`. It 404'd, because the **user-site** repo
+`bradamiller.github.io` had a `CNAME` of `bradhouse.com` — a user site's custom
+domain applies account-wide, so every project site is served at
+`bradhouse.com/<repo>/` and the github.io address 301-redirects there. Deleting
+that CNAME restored the github.io URL (and Safari cached the 301, which needed
+Develop → Empty Caches plus a restart). Then the subdomain replaced it. Two rules
+fall out: a custom domain on the **user-site** repo means project sites live at
+`<domain>/<repo>/`; a custom domain on **this** repo means the root of that
+domain. Only the second is in play now.
+
+**⚠️ Any component that takes a `src` MUST pass it through `useBaseUrl`.** A raw
+`/img/...` string works at a domain root and breaks under a subpath — and the site
+has now been both. `Media.js` (`Video`, `Figure`) was fixed for this on
+2026-09-18; `Blocks.js` (`Block`, `BlockShot`, the C-block slices) and `Quiz.js`
+already did it. Lessons keep writing site-absolute paths; components resolve them.
+That discipline is why moving from `/LearningPython/` to `/` touched no lesson
+file.
+
+**Verifying a build locally** — `npm run build && npm run serve` is enough now
+that the site is served at a root. If it is ever moved back under a subpath,
+verify it one directory deep instead, because a server at the root hides subpath
+mistakes:
 
 ```bash
-npm run build
-mkdir -p /tmp/pub/LearningPython && cp -r build/* /tmp/pub/LearningPython/
-npx serve /tmp/pub    # open http://localhost:3000/LearningPython/
+mkdir -p /tmp/pub/<subpath> && cp -r build/* /tmp/pub/<subpath>/
+npx serve /tmp/pub    # NOT `serve -s`, which shows a directory listing
 ```
 
-Then check for 4xx responses and images with `naturalWidth === 0` — that is how
-the 2026-09-18 conversion was verified (5/5 images loading, zero failed
-requests). Note `npx serve -s` (SPA mode) will show a directory listing for a
-nested root; drop the `-s`.
-
-**Custom domain,** if it ever happens: `baseUrl: '/'`, `url` set to the domain,
-and a `CNAME` file in `static/`. (Google Cloud: Firebase Hosting with public dir
-`build` works too; no advantage over Pages for a static site.)
+Then check for 4xx responses and images with `naturalWidth === 0`.
 
 ## 9. Decisions already made (don't re-litigate without reason)
 
@@ -635,7 +648,7 @@ signal of what he cares about when you touch an unreviewed lesson.
   config used to point at an `img/social-card.png` that never existed, so that
   reference has been removed rather than left broken.
 - Deploy: GitHub Pages, automatic on push to `main` (§8). Live at
-  https://bradamiller.github.io/LearningPython/.
+  https://learningpython.bradhouse.com/.
 
 **Per-module pattern reminder:** each module is a `docs/module-XX-name/` folder of
 `lesson-NN-slug.mdx` files, added to its category in `sidebars.js`. Modules 2+ are all
@@ -892,8 +905,8 @@ worth reading when a lesson's source intent is in question.
 - The `curriculum-site-only` branch is still in `IntoToPython` too; it's disposable
   (`git branch -D curriculum-site-only`).
 - ~~Netlify was never connected~~ — settled 2026-09-18: publishing goes through
-  GitHub Pages instead, `netlify.toml` deleted (§8). Brad still has to set
-  Settings → Pages → Source: GitHub Actions once.
+  GitHub Pages instead, `netlify.toml` deleted, and the site is live at its own
+  subdomain (§8).
 - `IntoToPython` commits with a local identity of `Brad Miller <brad@example.com>`,
   which doesn't link to Brad's GitHub account. This repo is set to
   `bradamiller <brad@bradhouse.com>` to match his own first commit. The imported

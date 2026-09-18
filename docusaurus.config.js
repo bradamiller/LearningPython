@@ -11,9 +11,10 @@ const config = {
     v4: true,
   },
 
-  // GitHub Pages project site: served from https://<org>.github.io/<repo>/
-  url: 'https://bradamiller.github.io',
-  baseUrl: '/LearningPython/',
+  // Served at the root of its own subdomain (GitHub Pages custom domain).
+  // static/CNAME carries the domain into every deploy; change both together.
+  url: 'https://learningpython.bradhouse.com',
+  baseUrl: '/',
 
   organizationName: 'bradamiller',
   projectName: 'LearningPython',
