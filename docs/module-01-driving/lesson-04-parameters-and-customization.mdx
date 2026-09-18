@@ -59,40 +59,43 @@ first you **add** the parameter to the function, then you **use** its value insi
 the body. They happen in two different places, which is why it's easy to do one and
 forget the other.
 
+Here's the whole build, start to finish — about a minute and a half, no sound.
+Watch it once for the shape of it, then work through the written steps below at
+your own pace.
+
+<Video
+  src="/videos/l4-square-parameter.mp4"
+  mp4
+  caption="Building square (side_length) in XRP Code: name the function, add the parameter with the gear icon, use it in the body from the Variables palette, then call it twice — 20 cm and 30 cm."
+/>
+
 ## Adding the parameter: the gear icon
 
 Look at the top-left corner of your `square` definition block. There's a small
 blue **gear icon**. Most blocks don't have one — the gear means "this block can
 change shape," and a function's shape is exactly what you're about to change.
 
-**1 · Click the gear.** A small bubble opens above the block with its own tiny
-workspace. On the left of the bubble is a block that says **input name: x**. On the
-right is a block labelled **inputs** with an empty notch inside it.
+**1 · Click the gear.** A small bubble opens next to the block with its own tiny
+workspace. In the grey strip on the left of the bubble is a block that says
+**input name: x**. To its right is a block labelled **inputs** with an empty notch
+inside it.
 
-<Figure
-  placeholderLabel="XRP Code: the square function block with the blue gear icon at its top-left circled"
-  caption="The gear icon lives at the top-left of the function definition block."
-/>
-
-**2 · Drag `input name: x` into the `inputs` block.** Grab it from the left of the
-bubble and snap it into the notch. Watch the definition block *behind* the bubble as
-you let go — it grows a new row reading **with: x**. That's your parameter. It
-already exists; it just has a terrible name.
+**2 · Drag `input name: x` into the `inputs` block.** Grab it from the grey strip and
+snap it into the notch. Watch the definition block *behind* the bubble as you let go
+— it grows a new row reading **with: x**. That's your parameter. It already exists;
+it just has a terrible name.
 
 <Figure
   placeholderLabel="The mutator bubble open: an 'input name: x' block being dragged into the 'inputs' container block, with the definition block behind it growing a 'with: x' row"
   caption="Snap the input into the inputs block. The function grows a 'with:' row the moment it connects."
 />
 
-**3 · Rename it.** Click the word `x` on the block you just dropped in and type
-`side_length`, then press Enter. Use underscores, not spaces — and pick the same
-name you'd want in Python later, because in Lesson 10 you'll write this same
-function in text.
-
-<Figure
-  placeholderLabel="The input block renamed to side_length; the definition block now reads 'to square with: side_length'"
-  caption="Rename the input and the function header updates immediately."
-/>
+**3 · Rename it.** Click the word `x` on the block you just dropped in, type
+`side_length`, and press Enter. Use underscores, not spaces, and pick the name you'd
+want in Python later, because in Lesson 10 you'll write this same function in text.
+Short names are worth a thought here: the name rides along on the definition, on
+every call block and on the variable block you'll drag into the body, so a long one
+makes for wide blocks.
 
 **4 · Close the bubble** by clicking the gear again. Your definition now reads
 **to square with: side_length**.
@@ -120,31 +123,33 @@ The function now *accepts* a side length, but the **Straight** block inside it i
 still set to a hard number, so nothing has actually changed yet. You need a block
 that says "whatever value was passed in" — and that block is waiting in the palette.
 
-Open the **Variables** category. Along with any variables you made yourself,
-there's now a rounded block named **side_length**. Adding the parameter created it;
-you don't have to make it.
+Open the **Variables** category, near the bottom of the palette. Past *Create
+variable…* and the **set** and **change** blocks, there's a small rounded block
+named **side_length**. Adding the parameter created it; you don't have to make it.
+
+Every variable block carries a dropdown arrow, so if you grab the wrong one — easy
+once a project has a few variables with similar names — you can switch it from the
+dropdown instead of starting over.
 
 <Figure
-  placeholderLabel="The Variables category open in the palette, showing a rounded side_length block alongside the make-a-variable button"
+  placeholderLabel="The Variables category open in the palette, showing the rounded side_length block below Create variable and the set/change blocks"
   caption="A parameter shows up in Variables automatically — that rounded block is how you read its value."
 />
 
-Drag that `side_length` block into the **cm** slot of the Straight block, right on
-top of the number that's there. The old number block pops out and is left floating in
-the workspace — drag it to the trash so it doesn't confuse you later.
+Drag `side_length` into the **cm** slot of the Straight block, straight on top of the
+number sitting there. The number doesn't pop out and it isn't deleted — it's tucked
+underneath, and it comes back if you ever pull the variable out again.
+
+You can use the same parameter as many times as you like inside the function.
+
+Now the calls. Open the **Functions** category and the call block there has changed
+shape too — it reads **square with: side_length** and carries a socket for the value.
+Drag one out, type `20` into the socket, drag out a second and type `30`, and snap
+them together into a stack.
 
 <Figure
-  placeholderLabel="The side_length variable block being dropped into the cm slot of a Straight block inside the square function"
-  caption="Drop the variable into the cm slot. The number it replaces pops out — delete it."
-/>
-
-You can use the same parameter as many times as you like inside the function. And
-once the definition has a parameter, **every call block for that function updates by
-itself** — it grows a socket labelled `side_length` where you plug in a number.
-
-<Figure
-  placeholderLabel="A call block reading 'square side_length:' with a number block showing 35 plugged into its socket"
-  caption="The call block grows a socket for each parameter. This is where the argument goes."
+  placeholderLabel="Two stacked call blocks reading 'square with: side_length 20' and 'square with: side_length 30', beside the finished square function"
+  caption="Two calls, two sizes, one function. This is the payoff."
 />
 
 <KnowledgeCheck
@@ -167,12 +172,17 @@ in a floating mini-workspace. Several will drop the input *next to* the `inputs`
 block rather than inside it and see nothing happen — the tell is a definition block
 with no `with:` row.
 
+The screencast at the top of this section is silent by design — project it, pause it
+wherever you want to talk, and let it run again. It's also the fastest way to get a
+student who fell behind back to the same place as everyone else.
+
 Two more predictable snags. (1) They rename the input but never visit **Variables**,
-so the body still uses a fixed number — the function ignores its argument. (2) They
-drag the `side_length` block out of the function and into the main program, where it
-has no value; it only means something inside the function that declares it. If a
-student deletes a parameter later, any `side_length` block left in the body becomes a
-plain variable that's never set — clean those out with them.
+so the body still uses a fixed number — the function ignores its argument, and the
+symptom is that every call draws the same square. (2) They drag the `side_length`
+block out of the function and into the main program, where it has no value; it only
+means something inside the function that declares it. If a student deletes a
+parameter later, any `side_length` block left in the body becomes a plain variable
+that's never set — clean those out with them.
 
 </TeacherNote>
 

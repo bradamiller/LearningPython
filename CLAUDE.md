@@ -596,13 +596,15 @@ signal of what he cares about when you touch an unreviewed lesson.
   `draw_square(size)`), on Lesson 0 (no source lesson plan exists), and on the
   stop-motors and Bluetooth guidance. Ask Brad whether to bring the source
   markdown/slides/solutions in line.
-- **Media still wanted:** six XRP Code screenshots for **L4's gear-icon
-  walkthrough** — the gear on the definition block, the mutator bubble mid-drag,
-  the renamed input, the Variables flyout showing `side_length`, that block going
-  into the Straight *cm* slot, and the updated call block (they're `<Figure
-  placeholderLabel>`s in `lesson-04-parameters-and-customization.mdx`, and the
-  caption text says exactly what each one has to show); real block screenshots for
-  the lessons still on composed art — **L1, L3, L6, L7, L8, L9** (§6; L2 is
+- **Media still wanted:** three XRP Code stills for **L4's gear-icon walkthrough** —
+  the mutator bubble mid-drag, the Variables flyout showing `side_length`, and the
+  two stacked call blocks at 20 and 30 (they're `<Figure placeholderLabel>`s in
+  `lesson-04-parameters-and-customization.mdx`, and each caption says what the shot
+  has to show; the screencast covers the motion, so these are for the printed page).
+  Brad may also re-shoot `l4-square-parameter.mp4` with a shorter parameter name —
+  in the current take the variable field renders clipped (`side_lengt`), which reads
+  as a typo. Same path, no lesson edits needed. Also: real block screenshots for the
+  lessons still on composed art — **L1, L3, L6, L7, L8, L9** (§6; L2 is
   half-done); an XRP-built
   re-shoot of the Lesson 6 motor photos, which currently show a VEX-style robot
   (§12); an official `logo.svg` if there is one; and a social/OG card image — the
