@@ -699,3 +699,42 @@ html[data-teacher='on'] .teacherNote--inline {
 .quizIndex__list li { padding: 0.28rem 0; border-bottom: 1px solid var(--ifm-color-emphasis-200); }
 .quizIndex__count { color: var(--ifm-color-emphasis-600); font-size: 0.85rem; }
 .quizIndex__key { font-size: 0.85rem; float: right; }
+
+/* ---------- "Do this" badge on activity headings ----------
+   Docusaurus derives a heading's id from its text, so a section titled
+   "Activity · Make your functions flexible" gets id="activity--make-your-…".
+   That lets the badge be pure CSS: no component wrapper, and the heading stays
+   a real markdown heading, so it still appears in the right-hand contents. */
+.markdown h2[id^='activity']::before,
+.markdown h2[id^='challenge']::before {
+  content: 'Do this';
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.6rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--xrp-red);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  position: relative;
+  top: -0.2rem;
+}
+/* the right-hand contents marks them too, without shouting */
+.table-of-contents a[href^='#activity']::before,
+.table-of-contents a[href^='#challenge']::before {
+  content: '●';
+  color: var(--xrp-red);
+  font-size: 0.7em;
+  margin-right: 0.35rem;
+}
+@media print {
+  .markdown h2[id^='activity']::before,
+  .markdown h2[id^='challenge']::before {
+    background: none !important;
+    color: #000 !important;
+    border: 1px solid #000;
+  }
+}

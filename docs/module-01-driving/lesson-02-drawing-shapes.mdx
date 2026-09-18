@@ -53,7 +53,7 @@ min for the shortcut, 15 min for other shapes.
 
 </TeacherNote>
 
-## Part 1 · Drive straight
+## Activity · Drive straight
 
 Open XRP Code and start a new project. Your first job is small: **find a block
 that makes the robot drive straight for 20 centimeters.** Look through the block
@@ -63,18 +63,19 @@ it so the robot waits for you.
 Upload it, set the robot on the floor, press the button. Did it go 20 cm? Roughly
 where did it end up, and which way is it facing?
 
-<TeacherNote title="Part 1 facilitation">
+<TeacherNote title="Facilitating: Drive straight">
 
 Let students find the **Straight** block themselves — say "find a block that
 drives straight" rather than naming it. Most will spot it in seconds; the point is
-that they're *searching* the palette, which they'll need to do again in Part 4.
+that they're *searching* the palette, which they'll need to do again when they
+hunt for the Repeat block.
 Expect a few to forget the button-press block and have the robot drive off the
 table — that's a memorable lesson about why the block exists. Keep this part
 short; it's a warm-up.
 
 </TeacherNote>
 
-## Part 2 · Add a turn
+## Activity · Add a turn
 
 Now change your program so that **after driving straight, the robot turns 90
 degrees.** Find the block that turns, add it under the Straight block, set the
@@ -94,16 +95,16 @@ will it be facing? Then check.
   explanation="Blocks run in order: first the drive, then the turn. So the robot is 20 cm away AND rotated 90°. That combination — a side and a corner — is the building block of every shape."
 />
 
-<TeacherNote title="Part 2 facilitation">
+<TeacherNote title="Facilitating: Add a turn">
 
 Ask "what shape has the robot drawn so far?" — a single side and a corner, an L.
-Then ask the leading question that sets up Part 3: *"What would you have to add to
+Then ask the leading question that sets up the square: *"What would you have to add to
 draw a second side?"* Don't answer it. Some students will already see where this
 is going. Good.
 
 </TeacherNote>
 
-## Part 3 · Make a square
+## Activity · Make a square
 
 Here's the real challenge: **change your program so the robot drives a complete
 square and ends up back where it started, facing the same way.**
@@ -115,18 +116,18 @@ triangle or an open box — that's information.
 **You've succeeded when** the robot drives four roughly-equal sides, turns four
 corners, and finishes near its starting spot.
 
-<TeacherNote title="Part 3 facilitation — let them build the long version">
+<TeacherNote title="Facilitating: Make a square — let them build the long version">
 
 Nearly every student will solve this by stacking **Straight, Turn, Straight, Turn,
 Straight, Turn, Straight, Turn** — eight blocks. **That is the correct answer for
 this part.** Do not suggest the Repeat block; do not hint that there's a shorter
 way. If a student finds Repeat in the palette on their own and uses it, wonderful —
-ask them to hold on to it and show the class in Part 4.
+ask them to hold on to it and demonstrate when the class gets to the shortcut.
 
 Common stumbles: only three sides (miscounting), or a turn of 45° or 180° (they'll
 see a wrong shape and fix it — don't pre-empt). Once a student's square works, ask
 them to **count their blocks** and to **point at anything that's repeated.** That
-question is the bridge to Part 4.
+question is the bridge to the shortcut.
 
 </TeacherNote>
 
@@ -163,7 +164,7 @@ Most people's square looks something like this at this point:
   explanation="Look at the pattern: drive a side, turn a corner. That pair appears four times — once per side of the square."
 />
 
-## Part 4 · A shorter way to say "four times"
+## Activity · A shorter way to say "four times"
 
 You just wrote the same two blocks four times. Imagine drawing a shape with 12
 sides — 24 blocks. There has to be a better way, and there is: **the palette has a
@@ -172,10 +173,10 @@ block that repeats whatever you put inside it.** Go find it.
 Drag it out, set it to run **4** times, and move **one** Straight and **one** Turn
 inside it. Delete the other six blocks. Run it. Does the robot still draw a square?
 
-<TeacherNote title="Part 4 facilitation — the reveal, after the search">
+<TeacherNote title="Facilitating: the reveal, after the search">
 
 Give students a minute or two to find the block themselves (it's **Repeat** in
-the Loops category). If someone found it during Part 3, this is their moment to
+the Loops category). If someone found it while building the square, this is their moment to
 demonstrate. Only after most have tried it, show the finished version below and
 name it: *this is a **loop** — one copy of the instructions, run as many times as
 you say.* Emphasize the physical action of dropping blocks *inside* the Repeat's
@@ -207,12 +208,12 @@ important ideas in all of programming.
   explanation="Only blocks tucked inside the Repeat's mouth get repeated. Blocks stacked beside it run once — so the robot drives a single side, and the empty loop repeats nothing."
 />
 
-## Part 5 · Now try a triangle
+## Activity · Now try a triangle
 
 Change your Repeat from 4 to **3**. What angle should the turn be? Make your best
 guess, run it, and look at the result.
 
-<TeacherNote title="Part 5 facilitation — let the wrong angle happen">
+<TeacherNote title="Facilitating: the triangle — let the wrong angle happen">
 
 Most students will leave the turn at 90° (the robot draws three sides of a square
 and stops, facing sideways) or guess **60°** because they remember a triangle's
@@ -271,7 +272,7 @@ to 360. Then fill in the table for the rest:
   explanation="360 ÷ 6 = 60°. Split one full turn evenly across all six corners."
 />
 
-## Part 6 · Make other shapes
+## Activity · Make other shapes
 
 Now you can draw *any* regular shape by changing just two numbers — the repeat
 count and the turn angle. Use your table, predict the shape, then run it:
