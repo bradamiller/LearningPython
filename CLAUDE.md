@@ -472,8 +472,10 @@ Pages for a static site.)
     functions directly.
   - Site pages need the same primary/extension split, and probably a visual
     treatment for "Optional Extension" (a collapsible, or reuse of the
-    `TeacherNote` pattern). **Ask Brad how he wants extensions shown before
-    rewriting.** Note this also resolves how M4/M5 relate — see the
+    `TeacherNote` pattern). **DO NOT start this yet — Brad is deliberately
+    deferring it (2026-09-18): he wants the course's overall structure settled
+    first, then he'll come back to the class-first question.** When he does, the
+    open decision is how an Optional Extension should look on a page.** Note this also resolves how M4/M5 relate — see the
     `compute_path` bullet below, which the functions-first shape may settle on its
     own.
   - Also per that guide, still stale in the SOURCE (not the site): M2 L8–L9 slide
