@@ -1,7 +1,10 @@
 # XRP Python Curriculum — Web Site
 
 A VEX STEM Labs-style web version of the XRP Python curriculum, built with
-[Docusaurus](https://docusaurus.io/). **All five modules are built — 45 lessons:**
+[Docusaurus](https://docusaurus.io/). The source curriculum this was converted
+from — the teacher lesson plans, student worksheets, starter/solution code and
+slide decks — lives in a separate repo, `IntoToPython`. This repo is the website
+only. **All five modules are built — 45 lessons:**
 Module 1 · Learning to Drive (kickoff lesson 0 + 11), Module 2 · Line Tracking (10), Module 3 · Grid
 Driving (4), Module 4 · Manhattan Navigation (overview + 9), and Module 5 ·
 Dijkstra's Algorithm (9). See `CLAUDE.md` for the full project spec, conventions,
@@ -140,15 +143,15 @@ update it, re-run the build and drag again.
 
 ### B. Auto-deploy on every push (recommended for ongoing review)
 
-1. Commit and push this `curriculum-site` folder to GitHub:
+1. Commit and push:
    ```bash
-   git add curriculum-site
-   git commit -m "Add curriculum website"
+   git add -A
+   git commit -m "..."
    git push
    ```
 2. In Netlify: **Add new site → Import an existing project → GitHub**, pick the
-   `IntoToPython` repo.
-3. Set **Base directory** to `curriculum-site`. The build command
+   `LearningPython` repo.
+3. Leave **Base directory** empty — this repo is the site. The build command
    (`npm run build`) and publish path (`build`) come from `netlify.toml`
    automatically.
 4. Deploy. Every push to GitHub now rebuilds the live site.
@@ -159,7 +162,7 @@ affects SEO/sitemap metadata).
 
 ### Other hosts
 
-Vercel and Cloudflare Pages work the same way — connect the repo, set the root/base
-directory to `curriculum-site`. For **GitHub Pages**, change `baseUrl` to
-`/IntoToPython/` first (project sites serve from a subpath) and add a build
+Vercel and Cloudflare Pages work the same way — connect the repo and leave the
+root/base directory at the default. For **GitHub Pages**, change `baseUrl` to
+`/LearningPython/` first (project sites serve from a subpath) and add a build
 workflow.

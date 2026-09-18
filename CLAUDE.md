@@ -4,12 +4,16 @@ Context for anyone (human or AI) continuing work on this site. This is a
 Docusaurus web version of Brad's XRP Python curriculum, styled like the
 VEX STEM Labs lessons. **Read this first before making changes.**
 
+**This repo is `LearningPython` — the website only.** It was split out of the
+`IntoToPython` repo on 2026-09-18, carrying its full history with it (§16). The
+source curriculum it was converted from still lives in `IntoToPython`.
+
 ---
 
 ## 1. What this project is
 
-Turn the existing markdown curriculum (`../` — the `IntoToPython` repo) into a
-browsable, VEX STEM Labs-style **website**: multi-page lessons with a sidebar,
+Turn the existing markdown curriculum (the separate `IntoToPython` repo — see §2)
+into a browsable, VEX STEM Labs-style **website**: multi-page lessons with a sidebar,
 prev/next navigation, embedded videos and graphics, interactive knowledge
 checks, and a teacher-notes toggle.
 
@@ -38,12 +42,14 @@ checks, and a teacher-notes toggle.
 
 ## 2. Source content (what we convert from)
 
-The curriculum content lives in the **parent repo** (`../`, `IntoToPython`) — on
-Brad's machine. Note that a cloud sandbox usually holds a copy of
-`curriculum-site/` ONLY, so `../module-01-driving/` may not resolve there; read the
-source through the device bridge (§13) when you need it:
+The curriculum content lives in a **separate repo**, `IntoToPython` — on Brad's
+machine at `/Users/bradmiller/GitHub/IntoToPython`, and on GitHub at
+`bradamiller/IntoToPython`. It is NOT a parent directory of this repo any more
+(it was until the 2026-09-18 split, which is why older notes say `../`). A cloud
+sandbox holds a copy of THIS repo only, so reach the source through the device
+bridge (§13) — it has to be a connected folder before you can read it:
 
-- `../module-01-driving/` … `../module-05-dijkstra/`, each with:
+- `<IntoToPython>/module-01-driving/` … `<IntoToPython>/module-05-dijkstra/`, each with:
   - `lessons/NN-*.md` — teacher lesson plans (objectives, key concepts, lesson flow, exercises, misconceptions, assessment)
   - `worksheets/NN-*.md` — student worksheets (great source for knowledge-check questions)
   - `code/starter/` and `code/solutions/` — Python/Blockly code
@@ -62,7 +68,7 @@ Docusaurus (classic preset, JavaScript). Docs are served at the site root
 (`routeBasePath: '/'`).
 
 ```
-curriculum-site/
+LearningPython/                            # repo root — the site itself
 ├── docs/
 │   ├── index.mdx                         # welcome / landing page (slug: /)
 │   ├── module-01-driving/                # lesson-00 kickoff + 11 lessons (Blockly→Python) — DONE
@@ -342,21 +348,22 @@ npm run serve   # preview the build
 
 **Deploy: Netlify.** `netlify.toml` is set up. Two options:
 - **Instant link:** `npm run build`, then drag `build/` onto app.netlify.com/drop.
-- **Auto-deploy:** push this folder to GitHub, then in Netlify import the repo
-  and set **Base directory = `curriculum-site`** (build command + publish path
-  come from `netlify.toml`). Served at domain root, so `baseUrl` stays `/`.
+- **Auto-deploy:** push to GitHub, then in Netlify import the `LearningPython`
+  repo and leave **Base directory empty** — this repo is the site (build command
+  + publish path come from `netlify.toml`). Served at domain root, so `baseUrl`
+  stays `/`.
 
 **Switching to GitHub Pages (Brad asked 2026-09-16 — not done, recipe only).**
-Three steps, because the site lives in a subfolder of the repo:
-1. `docusaurus.config.js`: `baseUrl: '/'` → `baseUrl: '/IntoToPython/'` (project
+Simpler since the split, because the site is now the whole repo:
+1. `docusaurus.config.js`: `baseUrl: '/'` → `baseUrl: '/LearningPython/'` (project
    sites serve from a subpath; without this every `/img/...` and `/videos/...`
-   path 404s). `url` and `organizationName`/`projectName` are already correct.
-   Site would live at `https://bradamiller.github.io/IntoToPython/`.
-2. Add `.github/workflows/deploy.yml` at the REPO root that checks out, runs
-   `npm ci && npm run build` with `working-directory: curriculum-site`, uploads
-   `curriculum-site/build` via `actions/upload-pages-artifact@v3`, and deploys
-   with `actions/deploy-pages@v4` (permissions: `contents: read`, `pages: write`,
-   `id-token: write`).
+   path 404s). Check `organizationName`/`projectName` still say `IntoToPython`
+   and update them. Site would live at
+   `https://bradamiller.github.io/LearningPython/`.
+2. Add `.github/workflows/deploy.yml` that checks out, runs `npm ci && npm run
+   build` (no `working-directory` needed now), uploads `build` via
+   `actions/upload-pages-artifact@v3`, and deploys with `actions/deploy-pages@v4`
+   (permissions: `contents: read`, `pages: write`, `id-token: write`).
 3. Repo → Settings → Pages → Source: **GitHub Actions**.
 
 Caveats: the repo must be public for Pages on a free personal account; a custom
@@ -364,8 +371,8 @@ domain (e.g. `curriculum.experiential.bot`) would instead keep `baseUrl: '/'`,
 set `url` to the domain and add a `CNAME` file in `static/`. Netlify and Pages
 can't both be served correctly from one committed `baseUrl` — drive it from an
 env var if both must run during a transition. (Google Cloud: Firebase Hosting
-with public dir `curriculum-site/build` is the simple option; no advantage over
-Pages for a static site.)
+with public dir `build` is the simple option; no advantage over Pages for a
+static site.)
 
 ## 9. Decisions already made (don't re-litigate without reason)
 
@@ -624,8 +631,8 @@ Python. **MDX gotcha:** a bare `{...}` in prose (e.g. a dict literal like
 backticks (inline code) or put it in a fenced code block.
 
 **To continue in a new session, a prompt like this is enough:**
-"Continue the XRP curriculum site in `curriculum-site/`. Read CLAUDE.md." — all five
-modules are built; work is now evaluation/refinement, not new conversion.
+"Continue the XRP curriculum site in the `LearningPython` repo. Read CLAUDE.md." —
+all five modules are built; work is now evaluation/refinement, not new conversion.
 
 ## 12. Videos & images (adding real media)
 
@@ -700,7 +707,10 @@ That is where `xrp-parts.jpg` (Lesson 1's labeled kit diagram) came from.
 
 ## 13. Getting changes from this sandbox into Brad's repo
 
-The cloud workspace is NOT his machine. The loop that works:
+The cloud workspace is NOT his machine. The repo lives at
+`/Users/bradmiller/GitHub/LearningPython`; it must be a **connected folder** for
+this session before any of this works (ask with `device_request_folder_access` if
+the `device_*` tools can't see it). The loop that works:
 
 1. Edit and `npm run build` in the cloud copy (`/home/claude/xrp-curriculum`).
 2. Eyeball it: serve `build/` (`npx serve -l 3055 build`) and screenshot with the
@@ -709,19 +719,23 @@ The cloud workspace is NOT his machine. The loop that works:
    and shoot in ONE bash call. (That Chromium can't decode H.264, so local MP4s
    show `readyState 0` in a screenshot — expected, not a bug.)
 3. `tar -czf /mnt/user-data/outputs/<name>.tgz <changed files>` → `SendUserFile` →
-   `device_commit_files` into `…/IntoToPython/curriculum-site/` → on the device,
+   `device_commit_files` into `…/GitHub/LearningPython/` → on the device,
    `tar --overwrite -xzf <name>.tgz && rm -f <name>.tgz` (plain `tar` refuses to
-   overwrite; the FUSE mount needs `--overwrite`).
-4. `git add curriculum-site && git commit` on the device.
+   overwrite; the FUSE mount needs `--overwrite`). Paths in the tarball are now
+   repo-root-relative — before the split they were relative to `curriculum-site/`.
+4. `git add -A && git commit` on the device.
 
 **`git push` does not work from here** — no GitHub credentials in the sandbox.
 Brad pushes. Say how many commits are waiting when you finish.
 
 **If git complains about `index.lock`:** the mount sometimes leaves stale locks
 and `rm` is blocked until file deletion is granted for the session — call
-`device_request_delete_permission` on `/Users/bradmiller/GitHub/IntoToPython`,
+`device_request_delete_permission` on `/Users/bradmiller/GitHub/LearningPython`,
 then `rm -f .git/index.lock .git/HEAD.lock` and re-commit. The grant lapses
-between sessions, so expect to ask again.
+between sessions, so expect to ask again. Anything that writes git's own
+temporary state (rebase, cherry-pick) needs that grant too, and git needs an
+identity in the repo — the mount has none, so `git config user.name/user.email`
+locally or every commit fails with "unable to auto-detect email address".
 
 ## 14. Printable knowledge checks
 
@@ -825,3 +839,48 @@ above as you go — it's much cheaper than another audit.
 **Known remaining softness:** M4 L1's "Map it" activity and the knowledge check
 below it are close enough that a student can read one off the other; the coordinates
 were changed so they no longer coincide, but the two are still adjacent.
+
+## 16. The 2026-09-18 repo split (how this repo came to exist)
+
+The site started as `curriculum-site/` inside `IntoToPython`, alongside the source
+curriculum. Brad split it out once it was clearly its own project.
+
+**What was done, in case it ever needs repeating or explaining:**
+
+```bash
+# in IntoToPython — extract the 35 commits that touched curriculum-site,
+# rewritten so its files sit at the repo root
+git subtree split --prefix=curriculum-site -b curriculum-site-only
+
+# in the new, empty LearningPython repo (which had one stub "first commit")
+git fetch <path-to-IntoToPython> curriculum-site-only:imported
+git rebase --onto main --root imported -X theirs   # -X theirs: site README wins
+git checkout main && git merge --ff-only imported && git branch -d imported
+```
+
+Result: linear history, Brad's `first commit` at the root, then all 35 site
+commits on top, and a push that fast-forwards (no force-push needed). The
+resulting tree hash matched `IntoToPython`'s `HEAD:curriculum-site` exactly, so
+nothing was lost or altered in the move.
+
+**What deliberately did NOT come along** (it stays in `IntoToPython`): the source
+markdown (`module-01-driving/` … `module-05-dijkstra/` with lesson plans,
+worksheets, starter/solution code and slides), the `generate_pptx_*.py` deck
+scripts, `course-outline.md`, `Module 1 Content Roadmap.md`, the
+`student-guide/`, `teacher-guide/`, `templates/` and `tools/` folders, and
+`XRPLib_API_Reference.md`. §2 of this file says where to find them; several are
+worth reading when a lesson's source intent is in question.
+
+**Still standing open after the split:**
+
+- `curriculum-site/` is still present in `IntoToPython` (Brad chose to leave it
+  until the new repo is proven). Once he's happy, it should be deleted there in
+  its own commit with a pointer to this repo, so the two copies can't drift.
+- The `curriculum-site-only` branch is still in `IntoToPython` too; it's disposable
+  (`git branch -D curriculum-site-only`).
+- Netlify was never connected (§8) — when it is, it's this repo, no base directory.
+- `IntoToPython` commits with a local identity of `Brad Miller <brad@example.com>`,
+  which doesn't link to Brad's GitHub account. This repo is set to
+  `bradamiller <brad@bradhouse.com>` to match his own first commit. The imported
+  commits keep their original author (`brad@example.com`); only the committer is
+  the new identity.

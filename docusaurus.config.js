@@ -15,7 +15,7 @@ const config = {
   baseUrl: '/',
 
   organizationName: 'bradamiller',
-  projectName: 'IntoToPython',
+  projectName: 'LearningPython',
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
