@@ -555,3 +555,147 @@ html[data-teacher='on'] .teacherToggle__thumb { transform: translateX(18px); }
   margin-top: -5px;
   image-rendering: -webkit-optimize-contrast;
 }
+
+/* ---------- Printable knowledge-check sheets ---------- */
+/* The link from a lesson page to its sheet. */
+.quizLink {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  background: var(--xrp-gray-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-left: 5px solid var(--xrp-blue);
+  border-radius: 0 10px 10px 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1.6rem 0;
+}
+[data-theme='dark'] .quizLink { background: #2b2f33; }
+.quizLink__icon { font-size: 1.3rem; line-height: 1.4; }
+/* teacher-only bit sits inside a sentence, so it can't be a block */
+html[data-teacher='on'] .teacherNote--inline {
+  display: inline;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font-style: italic;
+}
+
+/* The sheet itself. */
+.quizSheet {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1rem 0 3rem;
+}
+.quizSheet__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--xrp-blue);
+}
+[data-theme='dark'] .quizSheet__eyebrow { color: var(--ifm-color-primary-lightest); }
+.quizSheet__title { font-size: 1.7rem; margin: 0.2rem 0 0.6rem; }
+.quizSheet__keyTag {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.6rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--xrp-red);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.quizSheet__meta { color: var(--ifm-color-emphasis-700); font-size: 0.9rem; }
+.quizSheet__nameRow {
+  display: flex;
+  gap: 2rem;
+  margin: 1.2rem 0 0.4rem;
+  font-size: 0.95rem;
+}
+.quizSheet__nameRow > span { display: flex; align-items: baseline; gap: 0.4rem; flex: 1; }
+.quizSheet__rule {
+  flex: 1;
+  min-width: 6rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-500);
+  height: 1rem;
+  display: inline-block;
+}
+.quizSheet__ruleShort { width: 7rem; border-bottom: 1px solid var(--ifm-color-emphasis-500); height: 1rem; display: inline-block; }
+.quizSheet__list { padding-left: 1.4rem; }
+.quizSheet__item { margin: 0 0 1.6rem; break-inside: avoid; page-break-inside: avoid; }
+.quizSheet__q { font-weight: 600; margin-bottom: 0.5rem; }
+.quizSheet__options { list-style: none; padding-left: 0.2rem; margin: 0 0 0.6rem; }
+.quizSheet__option { display: flex; gap: 0.5rem; margin: 0.25rem 0; }
+.quizSheet__letter { font-weight: 700; min-width: 1.3rem; }
+.quizSheet__option--correct { font-weight: 700; color: #2e7d32; }
+[data-theme='dark'] .quizSheet__option--correct { color: #7bc47f; }
+.quizSheet__tick { font-weight: 700; }
+.quizSheet__why {
+  font-size: 0.92rem;
+  color: var(--ifm-color-emphasis-800);
+  border-left: 3px solid var(--ifm-color-emphasis-300);
+  padding-left: 0.7rem;
+  margin: 0.4rem 0 0;
+}
+.quizSheet__answerLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ifm-color-emphasis-700);
+}
+.quizSheet__box {
+  display: inline-block;
+  width: 2.2rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-600);
+  height: 1.1rem;
+}
+.quizSheet__foot {
+  margin-top: 2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 0.9rem;
+}
+
+/* ---------- Printing ----------
+   Anything that isn't the sheet gets out of the way, and the page prints black
+   on white so it photocopies cleanly. */
+@media print {
+  .navbar,
+  .footer,
+  .theme-doc-sidebar-container,
+  .theme-doc-toc-desktop,
+  .tableOfContents,
+  .pagination-nav,
+  .breadcrumbs,
+  .teacherToggle,
+  .quizSheet__foot {
+    display: none !important;
+  }
+  html, body, .main-wrapper {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .quizSheet { max-width: none; padding: 0; }
+  .quizSheet__eyebrow, .quizSheet__option--correct { color: #000 !important; }
+  .quizSheet__keyTag {
+    background: none !important;
+    color: #000 !important;
+    border: 1px solid #000;
+  }
+  .quizSheet__title { font-size: 1.4rem; }
+  .quizSheet__item { margin-bottom: 1.1rem; }
+  a { text-decoration: none !important; color: #000 !important; }
+  @page { margin: 1.6cm; }
+}
+.quizIndex__module { margin-top: 1.8rem; }
+.quizIndex__module h2 { font-size: 1.15rem; margin-bottom: 0.4rem; }
+.quizIndex__list { list-style: none; padding-left: 0; }
+.quizIndex__list li { padding: 0.28rem 0; border-bottom: 1px solid var(--ifm-color-emphasis-200); }
+.quizIndex__count { color: var(--ifm-color-emphasis-600); font-size: 0.85rem; }
+.quizIndex__key { font-size: 0.85rem; float: right; }

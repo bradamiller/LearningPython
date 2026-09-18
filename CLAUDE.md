@@ -78,13 +78,18 @@ curriculum-site/
 │   │   ├── KnowledgeCheck.js # interactive multiple-choice quiz
 │   │   ├── Media.js       # Video, Figure (real src OR labeled placeholder)
 │   │   ├── Blocks.js      # Block (inline), BlockProgram (composed), BlockShot (real screenshot)
+│   │   ├── Quiz.js        # QuizSheet, QuizLink, QuizIndex — printable checks (§14)
 │   │   └── cblocks.json   # GENERATED geometry for C-shaped blocks (see §6) — don't hand-edit
+│   ├── data/checks.json   # GENERATED question data (§14) — gitignored
+│   ├── pages/checks/      # GENERATED printable sheets + keys (§14) — gitignored
 │   ├── theme/
 │   │   ├── Root.js        # the floating Teacher-mode toggle + persistence
 │   │   └── MDXComponents.js # registers all components globally (no imports needed in .mdx)
 │   └── css/custom.css     # ALL styling + brand color tokens (top of file)
 ├── scripts/
-│   └── slice_c_blocks.py  # slices container block art into bar/spine/foot (§6)
+│   ├── slice_c_blocks.py       # slices container block art into bar/spine/foot (§6)
+│   ├── extract_checks.js       # lessons → src/data/checks.json (§14)
+│   └── generate_quiz_pages.js  # checks.json → src/pages/checks/*.mdx (§14)
 ├── static/
 │   ├── img/
 │   │   ├── logo.svg
@@ -181,6 +186,14 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
     scrolling back to a table. State is in-memory only — a reload clears it. */}
 <Decide device="Camera drone" />
 <Decide device="Mars rover" prompt="Robot?" why="Why? — what makes it one?" />
+
+{/* Printable knowledge checks (§14). The QuizLink goes just before ## Resources
+    in every lesson; the sheet pages are generated, so you never write these two
+    by hand. */}
+<QuizLink id="module-01-driving/lesson-01-meet-the-xrp" />
+<QuizSheet id="module-01-driving/lesson-01-meet-the-xrp" />        {/* student sheet */}
+<QuizSheet id="module-01-driving/lesson-01-meet-the-xrp" answers /> {/* answer key */}
+<QuizIndex />                                                       {/* all sheets, by module */}
 ```
 
 **Teacher mode** (Root.js): a floating switch (bottom-right) sets
@@ -644,3 +657,52 @@ and `rm` is blocked until file deletion is granted for the session — call
 `device_request_delete_permission` on `/Users/bradmiller/GitHub/IntoToPython`,
 then `rm -f .git/index.lock .git/HEAD.lock` and re-commit. The grant lapses
 between sessions, so expect to ask again.
+
+## 14. Printable knowledge checks
+
+Added 2026-09-18 at Brad's request: teachers can print the questions and students
+fill them in by hand, **without losing the interactive versions** on the lesson
+pages (he chose to keep both).
+
+**Where the questions live:** in the lesson `.mdx`, as `<KnowledgeCheck>` — exactly
+as before. That is the single source of truth. Nothing is duplicated.
+
+**The pipeline** (`npm run checks`, run automatically by `prestart`/`prebuild`):
+
+```
+docs/**/lesson-*.mdx  --scripts/extract_checks.js-->  src/data/checks.json
+                      --scripts/generate_quiz_pages.js-->  src/pages/checks/**.mdx
+```
+
+- `extract_checks.js` parses every `<KnowledgeCheck>` (174 of them across the 45
+  lessons) into JSON, with the lesson title, module title and doc path. It fails
+  loudly if a question can't be parsed or doesn't have exactly one `correct: true`,
+  so a malformed check can't silently vanish from a sheet.
+- `generate_quiz_pages.js` writes 91 stub pages — a student sheet and an answer key
+  per lesson, plus an index at `/checks` — each three lines long, rendering
+  `<QuizSheet>`/`<QuizIndex>` from the JSON. It wipes the folder first, so renamed
+  or deleted lessons can't leave stale sheets behind.
+- Both outputs are **gitignored**; the build regenerates them. Don't commit them,
+  and don't hand-edit them — edit the lesson.
+
+**Pages** live under `src/pages/` (not `docs/`), so a sheet has no sidebar,
+breadcrumb or prev/next — it's a handout, not a lesson. URLs:
+`/checks/<module>/<lesson>`, `…-key` for the answer key, `/checks` for the index.
+
+**Titles** identify the lesson, per Brad's ask: the module in small caps above,
+then "Lesson N · Title — Knowledge Checks", plus a red ANSWER KEY chip on the key.
+The student sheet adds Name/Date rules, lettered options, and an "Answer ___ Why?"
+line under each question. The key marks the correct option and prints the
+explanation that was already written for the interactive version.
+
+**Printing** is plain browser print (Cmd/Ctrl-P): `@media print` in `custom.css`
+hides the navbar, footer, sidebar, TOC and the teacher-mode toggle, forces black
+on white, and keeps a question from splitting across a page break.
+
+**On each lesson page**, `<QuizLink id="…" />` sits immediately before
+`## Resources`. Its answer-key link is wrapped in `.teacherNote teacherNote--inline`,
+so students don't see it unless teacher mode is on.
+
+**If you add or edit a question:** edit the `<KnowledgeCheck>` in the lesson and
+rebuild — the sheet follows. **If you add a lesson:** the sheet and key are
+generated automatically; just add the `<QuizLink>` before its `## Resources`.

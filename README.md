@@ -16,6 +16,10 @@ and open items.
   remembered in the browser.
 - **Knowledge checks** — interactive multiple-choice / true-false questions with
   instant color-coded feedback and a "try again" reset
+- **Printable knowledge checks** — every lesson links to a one-page handout of its
+  questions (with a teacher answer key) that prints cleanly from the browser; the
+  full list is at `/checks`. The questions still live in the lesson files, so the
+  sheets can't drift out of date
 - **Video and image placeholders** — labeled drop-in spots; add a `src` to embed
   the real media later
 - **Real XRP Blockly block images** — Module 1 sample programs are built from the

@@ -3,6 +3,7 @@ import TeacherNote from '@site/src/components/TeacherNote';
 import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
 import {Video, Figure} from '@site/src/components/Media';
 import {Block, BlockProgram, BlockShot} from '@site/src/components/Blocks';
+import {QuizSheet, QuizLink, QuizIndex} from '@site/src/components/Quiz';
 import {
   LessonHeader,
   Objectives,
@@ -23,6 +24,9 @@ export default {
   Block,
   BlockProgram,
   BlockShot,
+  QuizSheet,
+  QuizLink,
+  QuizIndex,
   LessonHeader,
   Objectives,
   TeacherBanner,
