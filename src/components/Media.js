@@ -1,4 +1,18 @@
 import React from 'react';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+/**
+ * Site-root paths like /img/x.jpg must go through useBaseUrl, or they break the
+ * moment the site is served from a subpath (GitHub Pages project sites are
+ * served from /<repo>/). External URLs and data: URIs are passed through
+ * untouched.
+ */
+function useMediaUrl(src) {
+  const resolved = useBaseUrl(src || '');
+  if (!src) return src;
+  if (/^(https?:)?\/\//.test(src) || src.startsWith('data:')) return src;
+  return resolved;
+}
 
 /**
  * Video block. If you pass `src` (a YouTube/Vimeo embed URL or a local
@@ -12,14 +26,15 @@ import React from 'react';
  *   <Video src="/videos/first-drive.mp4" mp4 caption="First upload" />
  */
 export function Video({src, mp4 = false, caption, placeholderLabel = 'Video goes here'}) {
+  const url = useMediaUrl(src);
   return (
     <figure className="videoBlock">
       {src ? (
         <div className="videoBlock__frame">
           {mp4 ? (
-            <video controls src={src} />
+            <video controls src={url} />
           ) : (
-            <iframe src={src} title={caption || 'video'} allowFullScreen />
+            <iframe src={url} title={caption || 'video'} allowFullScreen />
           )}
         </div>
       ) : (
@@ -43,11 +58,12 @@ export function Video({src, mp4 = false, caption, placeholderLabel = 'Video goes
  *   <Figure placeholderLabel="Labeled diagram of the XRP robot" caption="Robot hardware" />
  */
 export function Figure({src, alt = '', caption, placeholderLabel = 'Graphic goes here'}) {
+  const url = useMediaUrl(src);
   return (
     <figure className="videoBlock">
       {src ? (
         <img
-          src={src}
+          src={url}
           alt={alt}
           style={{borderRadius: 12, display: 'block', maxWidth: '100%', maxHeight: 520, width: 'auto', margin: '0 auto'}}
         />

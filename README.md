@@ -126,43 +126,51 @@ example. The available tags:
 <Figure src="/img/lesson-01/parts.png" alt="..." caption="..." />
 ```
 
-## Deploying (Netlify)
+## Deploying (GitHub Pages)
 
-The site builds to static HTML in `build/`, so it hosts free on Netlify. Two ways:
+The site publishes itself. `.github/workflows/deploy.yml` builds on every push to
+`main` and deploys the result to GitHub Pages, so the live site is at
 
-### A. Instant link (no account setup, throwaway URL)
+**https://bradamiller.github.io/LearningPython/**
 
-```bash
-npm install      # first time only
-npm run build
+One-time setup in the repo: **Settings → Pages → Build and deployment → Source:
+GitHub Actions**. (Also: Pages needs the repo to be public on a free personal
+account.) After that, pushing is deploying — watch the run in the **Actions** tab.
+
+### The one thing to be careful about
+
+A project site is served from a subpath, so `docusaurus.config.js` sets
+
+```js
+baseUrl: '/LearningPython/',
 ```
 
-Then drag the `build/` folder onto **https://app.netlify.com/drop**. Netlify
-gives you a public URL (e.g. `something.netlify.app`) to share immediately. To
-update it, re-run the build and drag again.
+If the repo is ever renamed, `baseUrl` has to change with it or every image,
+stylesheet and link 404s. Media paths in lessons are written site-absolute
+(`/img/...`, `/videos/...`) and the `<Figure>`, `<Video>`, `<Block>` and
+`<BlockShot>` components run them through Docusaurus's `useBaseUrl`, which is what
+keeps them working under the subpath — new components that take a `src` must do
+the same.
 
-### B. Auto-deploy on every push (recommended for ongoing review)
+### Checking a build locally
 
-1. Commit and push:
-   ```bash
-   git add -A
-   git commit -m "..."
-   git push
-   ```
-2. In Netlify: **Add new site → Import an existing project → GitHub**, pick the
-   `LearningPython` repo.
-3. Leave **Base directory** empty — this repo is the site. The build command
-   (`npm run build`) and publish path (`build`) come from `netlify.toml`
-   automatically.
-4. Deploy. Every push to GitHub now rebuilds the live site.
+`npm run serve` previews at the right path. To be really sure it works as a
+project site, serve the build one directory deeper:
 
-The site is served at the domain root, so `baseUrl` stays `/` (no change needed).
-Once you know the final URL you can set `url` in `docusaurus.config.js` to it (only
-affects SEO/sitemap metadata).
+```bash
+npm run build
+mkdir -p /tmp/pub/LearningPython && cp -r build/* /tmp/pub/LearningPython/
+npx serve /tmp/pub          # then open http://localhost:3000/LearningPython/
+```
 
-### Other hosts
+### A throwaway link, without deploying
 
-Vercel and Cloudflare Pages work the same way — connect the repo and leave the
-root/base directory at the default. For **GitHub Pages**, change `baseUrl` to
-`/LearningPython/` first (project sites serve from a subpath) and add a build
-workflow.
+`npm run build`, then drag the `build/` folder onto https://app.netlify.com/drop
+for a temporary URL. Note the built files have `/LearningPython/` baked into every
+path, so a Netlify drop only works if you put the build inside a folder of that
+name, or temporarily set `baseUrl: '/'`.
+
+### Custom domain
+
+A custom domain (e.g. `curriculum.experiential.bot`) changes the shape: set
+`baseUrl: '/'`, set `url` to the domain, and add a `CNAME` file in `static/`.

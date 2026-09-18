@@ -1,0 +1,59 @@
+### Build the Docusaurus site and publish it to GitHub Pages.
+#
+# Runs on every push to main. The site is a project site, so it is served from
+# https://bradamiller.github.io/LearningPython/ — which is why
+# docusaurus.config.js sets `baseUrl: '/LearningPython/'`. Change one and you
+# must change the other, or every image and link 404s.
+#
+# One-time setup in the repo: Settings → Pages → Build and deployment →
+# Source: GitHub Actions.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # lets you re-run a deploy by hand from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; queue them instead of cancelling a live one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # `npm run build` also runs the prebuild hook, which regenerates the
+      # printable knowledge-check pages from the lessons (see CLAUDE.md §14).
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

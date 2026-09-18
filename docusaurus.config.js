@@ -11,8 +11,9 @@ const config = {
     v4: true,
   },
 
+  // GitHub Pages project site: served from https://<org>.github.io/<repo>/
   url: 'https://bradamiller.github.io',
-  baseUrl: '/',
+  baseUrl: '/LearningPython/',
 
   organizationName: 'bradamiller',
   projectName: 'LearningPython',

@@ -346,33 +346,45 @@ npm run build   # static site → build/
 npm run serve   # preview the build
 ```
 
-**Deploy: Netlify.** `netlify.toml` is set up. Two options:
-- **Instant link:** `npm run build`, then drag `build/` onto app.netlify.com/drop.
-- **Auto-deploy:** push to GitHub, then in Netlify import the `LearningPython`
-  repo and leave **Base directory empty** — this repo is the site (build command
-  + publish path come from `netlify.toml`). Served at domain root, so `baseUrl`
-  stays `/`.
+**Deploy: GitHub Pages, automatically (set up 2026-09-18).** Netlify was never
+connected and its config is gone; `.github/workflows/deploy.yml` now builds on
+every push to `main` and publishes to Pages. Live site:
+**https://bradamiller.github.io/LearningPython/**. The workflow runs `npm ci &&
+npm run build` on Node 20 (so the `prebuild` hook regenerates the printable
+checks, §14), uploads `build/` with `actions/upload-pages-artifact@v3` and
+deploys with `actions/deploy-pages@v4`; permissions `contents: read`,
+`pages: write`, `id-token: write`, and a `pages` concurrency group so deploys
+queue instead of racing. Repo setting, done once by Brad: **Settings → Pages →
+Source: GitHub Actions** (and Pages needs a public repo on a free personal
+account).
 
-**Switching to GitHub Pages (Brad asked 2026-09-16 — not done, recipe only).**
-Simpler since the split, because the site is now the whole repo:
-1. `docusaurus.config.js`: `baseUrl: '/'` → `baseUrl: '/LearningPython/'` (project
-   sites serve from a subpath; without this every `/img/...` and `/videos/...`
-   path 404s). Check `organizationName`/`projectName` still say `IntoToPython`
-   and update them. Site would live at
-   `https://bradamiller.github.io/LearningPython/`.
-2. Add `.github/workflows/deploy.yml` that checks out, runs `npm ci && npm run
-   build` (no `working-directory` needed now), uploads `build` via
-   `actions/upload-pages-artifact@v3`, and deploys with `actions/deploy-pages@v4`
-   (permissions: `contents: read`, `pages: write`, `id-token: write`).
-3. Repo → Settings → Pages → Source: **GitHub Actions**.
+**⚠️ `baseUrl` and the repo name are now coupled.** A project site is served from
+`/<repo>/`, so `docusaurus.config.js` has `baseUrl: '/LearningPython/'`. Rename
+the repo and every asset 404s until `baseUrl` follows. **This is also why any
+component that takes a `src` MUST pass it through `useBaseUrl`** — a raw
+`/img/...` string is correct at the domain root and broken under a subpath.
+`Media.js` (`Video`, `Figure`) was fixed for this at the same time; `Blocks.js`
+(`Block`, `BlockShot`, the C-block slices) and `Quiz.js` already did it. Lessons
+keep writing site-absolute paths; the components do the resolving.
 
-Caveats: the repo must be public for Pages on a free personal account; a custom
-domain (e.g. `curriculum.experiential.bot`) would instead keep `baseUrl: '/'`,
-set `url` to the domain and add a `CNAME` file in `static/`. Netlify and Pages
-can't both be served correctly from one committed `baseUrl` — drive it from an
-env var if both must run during a transition. (Google Cloud: Firebase Hosting
-with public dir `build` is the simple option; no advantage over Pages for a
-static site.)
+**Verifying a Pages build locally** — `npm run serve` is not enough of a test,
+because a plain static server at the root hides subpath mistakes. Serve it one
+directory deeper instead:
+
+```bash
+npm run build
+mkdir -p /tmp/pub/LearningPython && cp -r build/* /tmp/pub/LearningPython/
+npx serve /tmp/pub    # open http://localhost:3000/LearningPython/
+```
+
+Then check for 4xx responses and images with `naturalWidth === 0` — that is how
+the 2026-09-18 conversion was verified (5/5 images loading, zero failed
+requests). Note `npx serve -s` (SPA mode) will show a directory listing for a
+nested root; drop the `-s`.
+
+**Custom domain,** if it ever happens: `baseUrl: '/'`, `url` set to the domain,
+and a `CNAME` file in `static/`. (Google Cloud: Firebase Hosting with public dir
+`build` works too; no advantage over Pages for a static site.)
 
 ## 9. Decisions already made (don't re-litigate without reason)
 
@@ -622,7 +634,8 @@ signal of what he cares about when you touch an unreviewed lesson.
   (§12); an official `logo.svg` if there is one; and a social/OG card image — the
   config used to point at an `img/social-card.png` that never existed, so that
   reference has been removed rather than left broken.
-- Deploy: Netlify as configured, or switch to GitHub Pages with the recipe in §8.
+- Deploy: GitHub Pages, automatic on push to `main` (§8). Live at
+  https://bradamiller.github.io/LearningPython/.
 
 **Per-module pattern reminder:** each module is a `docs/module-XX-name/` folder of
 `lesson-NN-slug.mdx` files, added to its category in `sidebars.js`. Modules 2+ are all
@@ -649,8 +662,8 @@ Media lives under `static/` and is referenced from the site root (drop the word
 ```
 
 **Local video must be transcoded first.** Raw screen recordings (.mov, 60 fps,
-10+ Mbps) are 100+ MB — GitHub rejects files over 100 MB and Netlify deploys
-bloat. Recipe (ffmpeg is on Brad's Mac; ~10 MB per 90 s):
+10+ Mbps) are 100+ MB — GitHub rejects files over 100 MB, and every megabyte is
+re-fetched by each Pages build. Recipe (ffmpeg is on Brad's Mac; ~10 MB per 90 s):
 
 ```bash
 ffmpeg -i Input.mov -vf "scale=960:-2,fps=30" -c:v libx264 -preset fast -crf 26 \
@@ -878,7 +891,9 @@ worth reading when a lesson's source intent is in question.
   its own commit with a pointer to this repo, so the two copies can't drift.
 - The `curriculum-site-only` branch is still in `IntoToPython` too; it's disposable
   (`git branch -D curriculum-site-only`).
-- Netlify was never connected (§8) — when it is, it's this repo, no base directory.
+- ~~Netlify was never connected~~ — settled 2026-09-18: publishing goes through
+  GitHub Pages instead, `netlify.toml` deleted (§8). Brad still has to set
+  Settings → Pages → Source: GitHub Actions once.
 - `IntoToPython` commits with a local identity of `Brad Miller <brad@example.com>`,
   which doesn't link to Brad's GitHub account. This repo is set to
   `bradamiller <brad@bradhouse.com>` to match his own first commit. The imported
