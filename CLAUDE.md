@@ -187,9 +187,9 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
 <Decide device="Camera drone" />
 <Decide device="Mars rover" prompt="Robot?" why="Why? — what makes it one?" />
 
-{/* Printable knowledge checks (§14). The QuizLink goes just before ## Resources
-    in every lesson; the sheet pages are generated, so you never write these two
-    by hand. */}
+{/* Printable knowledge checks (§14). The QuizLink goes right after </Objectives>
+    in every lesson; the sheet pages are generated, so you never write those by
+    hand. */}
 <QuizLink id="module-01-driving/lesson-01-meet-the-xrp" />
 <QuizSheet id="module-01-driving/lesson-01-meet-the-xrp" />        {/* student sheet */}
 <QuizSheet id="module-01-driving/lesson-01-meet-the-xrp" answers /> {/* answer key */}
@@ -699,10 +699,18 @@ explanation that was already written for the interactive version.
 hides the navbar, footer, sidebar, TOC and the teacher-mode toggle, forces black
 on white, and keeps a question from splitting across a page break.
 
-**On each lesson page**, `<QuizLink id="…" />` sits immediately before
-`## Resources`. Its answer-key link is wrapped in `.teacherNote teacherNote--inline`,
-so students don't see it unless teacher mode is on.
+**On each lesson page**, `<QuizLink id="…" />` sits **immediately after the
+`</Objectives>` block** — near the top, where a teacher planning the lesson will
+see it. (It was first placed just before `## Resources`; Brad couldn't find it
+down there, so it moved up on 2026-09-18. Keep it near the top.) Its answer-key
+link is wrapped in `.teacherNote teacherNote--inline`, so students don't see it
+unless teacher mode is on. The navbar also has a **Printable Checks** entry
+pointing at `/checks`, so the whole set is reachable from any page.
 
 **If you add or edit a question:** edit the `<KnowledgeCheck>` in the lesson and
 rebuild — the sheet follows. **If you add a lesson:** the sheet and key are
-generated automatically; just add the `<QuizLink>` before its `## Resources`.
+generated automatically; just add a `<QuizLink>` after its `</Objectives>`.
+
+**If the links don't appear while you're working:** restart `npm start`. Component
+registration (`src/theme/MDXComponents.js`) is read at server start, so a dev
+server that was already running when `QuizLink` was added renders nothing for it.

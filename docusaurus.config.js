@@ -75,6 +75,11 @@ const config = {
             label: 'Curriculum',
           },
           {
+            to: '/checks',
+            label: 'Printable Checks',
+            position: 'left',
+          },
+          {
             href: 'https://xrpcode.wpi.edu/',
             label: 'XRP Code IDE',
             position: 'right',
