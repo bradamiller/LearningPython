@@ -52,8 +52,9 @@ and open items.
   them running. Lessons teach that distinction — and stop motion on a **sensor**
   (distance, line, encoder), not a timer. `Sleep` appears only as a pause or a
   clearly-flagged stand-in before sensors are introduced.
-- **Python editor:** VS Code with the MicroPython extension (Blockly is XRP Code in
-  the browser).
+- **One tool throughout:** XRP Code in the browser — Blockly first, then
+  MicroPython files in the same editor from Module 1 Lesson 8 on. No local
+  install, Chrome or Edge only.
 - **Experience before explanation (the cornerstone):** when a lesson introduces a
   new construct (a loop, a function, a parameter, an angle rule…), students build
   up to *needing* it through a short guided sequence — try something → run it →

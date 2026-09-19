@@ -207,13 +207,14 @@ Blockly never let you make a spelling mistake. Python will, so five rules matter
 
 ## Activity · Write your first Python program
 
-Blockly lived in the browser; Python lives in a code editor. We use **VS Code**
-with the **MicroPython extension**, which uploads your `.py` file to the robot
-and shows its console output. (Your teacher has it set up — see the XRP setup
-guide if you're on your own machine.)
+Same tool, different file. Python lives in **XRP Code**, exactly where your
+blocks did — `File → New File`, then choose **MICROPYTHON** instead of Blockly.
+The window is the one you already know: your robot's files down the left, the
+editor in the middle, and the **shell** along the bottom, which is where
+`print()` output shows up.
 
-Open VS Code, create a new file called `lesson_08_first_drive.py`, and type this
-in (typing, not pasting — it builds muscle memory). Then upload and run it:
+Create a file called `lesson_08_first_drive.py` and type this in — typing, not
+pasting; it builds muscle memory. Then press **RUN**:
 
 ```python
 from XRPLib.differential_drive import DifferentialDrive
@@ -229,8 +230,8 @@ drivetrain.straight(-30)
 print("Done!")
 ```
 
-Watch the console: your `print()` messages appear as the robot runs, so you can
-see exactly where it is in the program.
+Watch the shell at the bottom: your `print()` messages appear there as the robot
+runs, so you can see exactly where it is in the program.
 
 <KnowledgeCheck
   question="Why does drivetrain.straight(-30) drive the robot backward?"
@@ -312,5 +313,5 @@ a Python `for` loop — the text version of the Repeat block.
 ## Resources
 
 - [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
-- [VS Code](https://code.visualstudio.com/) — the editor we use for Python
+- [XRP Code IDE](https://xrpcode.wpi.edu/staging) — where you write both blocks and Python
 - [Python.org docs](https://www.python.org/doc/)

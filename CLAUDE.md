@@ -523,7 +523,12 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   programs omit the block (L3 ×2, L7, L8, L9 — L3's first one is the deliberate
   copy-paste "before" figure, so judge it on its own). Module 2 does it right (9
   of 10 lessons). Fix when those lessons get their review pass;** Python editor is
-  **VS Code + MicroPython extension** (per Brad's source), Blockly is XRP Code;
+  **XRP Code for everything** — Blockly first, then MicroPython files in the same
+  browser editor (`File → New File` → MICROPYTHON; filesystem left, editor middle,
+  shell bottom; green RUN button). **Corrected 2026-09-19:** earlier notes and
+  four lessons said VS Code + the MicroPython extension, which came from the
+  source repo and is not what the course uses. If you see VS Code anywhere, it's
+  a leftover;
   student-facing "on paper first" step in L2 and "say it in English first" in L3;
   3–4 objectives per lesson. **Connecting (L1 Part 2, 2026-09-17):** XRP Code
   connects over **USB cable or Bluetooth** — every robot needs one USB connection
@@ -656,8 +661,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 ## 11. Good next steps
 
 - **Push.** Commits are made here but **`git push` cannot run from the sandbox**
-  (no GitHub credentials) — Brad pushes with `git push origin main` or VS Code
-  Sync. Always tell him how many commits are waiting.
+  (no GitHub credentials) — Brad pushes with `git push origin main`. Always tell him how many commits are waiting.
 - **Continue the evaluation pass** with M1 L7–L11, then Modules 2–5 — applying §9's
   rules (experiential first, no trailing stop, sensor-based stopping, naming)
   rather than waiting for Brad to catch each one.
