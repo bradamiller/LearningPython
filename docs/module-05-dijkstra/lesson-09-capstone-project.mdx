@@ -103,14 +103,14 @@ for dest in destinations:
             print("No path to", dest); break
 
         rerouted = False
-        for i in range(len(path) - 1):
-            distance = rangefinder.distance()        # or simulate
+        for next_stop in path:                       # path starts at the NEXT
+            distance = rangefinder.distance()        # intersection, not here
             if distance < THRESHOLD:
-                blocked.append(path[i + 1])          # obstacle ahead
+                blocked.append(next_stop)            # obstacle ahead
                 reroute_count += 1
                 rerouted = True
                 break
-            current = path[i + 1]                    # drive one intersection
+            current = next_stop                      # drive one intersection
             step_count += 1
 
         if not rerouted:

@@ -43,7 +43,7 @@ should match Manhattan's length) and grids with obstacles (Dijkstra should detou
 d = Dijkstra((0, 0), [])
 path = d.compute_path((3, 3))
 print("Path:", path)
-print("Steps:", len(path) - 1)     # expect 6 — the Manhattan distance
+print("Steps:", len(path))         # expect 6 — the Manhattan distance
 ```
 
 On a clear 4×4 grid, the path from (0,0) to (3,3) is 6 steps. The *route* Dijkstra picks
@@ -181,9 +181,15 @@ optimal solutions. Save the test files; Lessons 7–9 reuse them.
 
 Both planners take a **start** when created and a **destination** in `compute_path`:
 `Manhattan((0,0))` and `Dijkstra((0,0), [])` both answer `compute_path((3,3))` with a list
-of grid tuples. That shared shape is exactly what makes the swap a two-line change. (One
-detail to keep in mind for your own evaluation: Dijkstra's returned path *includes* the
-start node, so its step count is `len(path) - 1`.)
+of grid tuples. That shared shape is exactly what makes the swap a two-line change.
+
+The agreement has to be exact, down to the first element. Neither planner includes
+the robot's current position in what it returns — it's already there — so both step
+counts are plain `len(path)` and `Navigator.drive_path` can drive either list
+without knowing which planner produced it. If one of them returned the start and
+the other didn't, the swap would still *run*, and the robot would quietly waste its
+first move on every route. That's the kind of bug a shared interface is supposed to
+prevent, and it only works if both sides honour it.
 
 <TeacherNote title="Assessment & next lesson">
 

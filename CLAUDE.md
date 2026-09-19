@@ -612,19 +612,23 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   - Also per that guide, still stale in the SOURCE (not the site): M2 L8–L9 slide
     outlines + `.pptx`, the root `generate_pptx_lesson*.py` scripts, and the
     `.html`/`.pdf` worksheet renders for M4–M5.
-- **⚠️ Cross-module `compute_path` return-shape mismatch (M4 vs M5).** This is a
-  real inconsistency in Brad's SOURCE curriculum, carried faithfully into the site:
-  - **Module 4 `Manhattan`:** returned path **excludes** the start; `steps = len(path)`;
-    same position → `[]`.
-  - **Module 5 `Dijkstra`:** returned path **includes** the start (per M5 lessons
-    4/5/9 reconstruction: `path[0] == self.position`); `steps = len(path) - 1`;
-    same position → `[(start)]`.
-  The M5 Lesson 6 "two-line swap into Navigator" narrative assumes drop-in
-  compatibility, but the Module 4 `Navigator.drive_path` iterates the path driving
-  to each node — so a Dijkstra path that includes the current position would try to
-  "drive to" where it already is on the first step. **Decide during eval:** either
-  make Dijkstra exclude the start (match Manhattan), or adjust `drive_path` to skip
-  `path[0]`. Not changed yet — faithful conversion + flagged.
+- **✅ `compute_path` return shape — SETTLED 2026-09-19: both planners EXCLUDE the
+  start.** `compute_path` returns only the intersections the robot drives *to*, so
+  `steps = len(path)` in both modules and "already there" is `[]`. Brad's call;
+  it makes the Manhattan→Dijkstra swap real, which the philosophy page (§18) now
+  promises publicly.
+  - Previously M4 excluded the start and M5 **included** it (the source curriculum
+    disagreed with itself), so a Dijkstra path fed to `Navigator.drive_path` would
+    have driven to the robot's own position on every first step.
+  - What changed on the site: M5 L5's reconstruction now ends `return path[1:]`
+    with the reasoning spelled out; step counts moved from `len(path) - 1` to
+    `len(path)` in L5 and L6; L6's interface note explains that the agreement has
+    to be exact down to the first element; L9's capstone loop iterates
+    `for next_stop in path` instead of `range(len(path) - 1)` / `path[i + 1]`;
+    L3 (hand-tracing) still reconstructs the whole route — correct for tracing —
+    but now says the code drops the first entry.
+  - **The source repo still has the old M5 shape.** If lessons are ever re-converted
+    from `IntoToPython`, this correction must be re-applied.
 - **Module 5 source constructor drift (already normalized on the site).** M5 source
   lessons 4/5/9 use `Dijkstra(start, blocked)` + `compute_path(destination)` (matches
   the real Manhattan/Navigator interface); source lessons 6/7/8 drift to
@@ -1015,10 +1019,8 @@ design intent, not decoration, so don't contradict them in a lesson:**
    is NOT an OOP course; the aim is a feel for how a program can be structured.
 3. **The swap is the payoff.** `Manhattan` and `Dijkstra` answer the same request,
    so the navigator doesn't care which it holds: get Manhattan working, then hand
-   it a Dijkstra with almost no other change. **⚠️ The site does not currently
-   keep this promise — see the `compute_path` return-shape mismatch in §9. The
-   philosophy page now states the promise publicly, which raises the priority of
-   settling it.**
+   it a Dijkstra with almost no other change. The site keeps this promise as of
+   2026-09-19 — both planners exclude the start from the path they return (§9).
 4. **Planners are testable without a robot** — they're arithmetic that returns a
    list of intersections. M4 L6 is the worked example.
 

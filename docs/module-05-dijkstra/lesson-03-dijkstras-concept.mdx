@@ -175,6 +175,12 @@ ties give equally short paths.
 
 </Reveal>
 
+One thing to carry into Lesson 5, where you write this as code: the reconstruction
+always hands back the *whole* route, start included, but the robot is already
+standing on the start. The code drops that first entry, so what `compute_path`
+returns begins at the first place the robot actually drives to — exactly like
+Manhattan's.
+
 Compared to Manhattan: on a *clear* grid, Dijkstra finds a path of the **same length**
 as Manhattan (the exact route may differ). Its advantage isn't shorter paths — it's that
 it **works with obstacles**.

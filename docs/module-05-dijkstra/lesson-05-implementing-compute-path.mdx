@@ -172,7 +172,7 @@ by obstacles.
   explanation="If obstacles seal off the destination, no reachable unvisited node remains. Without the check the loop would spin forever (or crash); with it, compute_path returns [] gracefully."
 />
 
-### Step 5 · Reconstruct and reverse
+### Step 5 · Reconstruct, reverse, and drop the start
 
 Follow `previous` backward from the destination, then flip the list:
 
@@ -184,23 +184,35 @@ Follow `previous` backward from the destination, then flip the list:
         current = previous[current]
 
     path.reverse()
-    return path
+    return path[1:]      # the robot is already at the start — leave it out
 ```
 
-The returned path **includes the start** — `[(0,0), (0,1), (0,2), (1,2), (2,2)]` — so the
-number of steps is `len(path) - 1`. Run your code on the *exact* grids you traced in
-Lesson 3; the output should match your hand traces line for line. And on a clear grid,
-Dijkstra's step count matches Manhattan's.
+That last line matters more than it looks. Reconstruction naturally produces the
+*whole route*, start included: `[(0,0), (0,1), (0,2), (1,2), (2,2)]`. But the
+robot is already standing on `(0,0)` — asking it to drive there first would be a
+step to nowhere. `path[1:]` returns everything after the start, which is exactly
+what `Manhattan.compute_path` gives back.
+
+That's not a detail; it's the whole reason you can swap one planner for the other.
+Both answer the same question — *where do I go next, in order* — so the navigator
+that drives a Manhattan route drives a Dijkstra route without noticing the
+difference. Two classes that agree on what they return are interchangeable; two
+that disagree by one element produce a robot that lurches on every first step.
+
+So the step count is simply `len(path)`, the same as Manhattan. Run your code on
+the *exact* grids you traced in Lesson 3 — the route should match your hand traces
+from the second node on. And on a clear grid, Dijkstra's step count matches
+Manhattan's.
 
 <KnowledgeCheck
-  question="compute_path returns [(0,0), (0,1), (0,2), (1,2), (2,2)]. How many steps is that?"
+  question="Reconstruction produces [(0,0), (0,1), (0,2), (1,2), (2,2)] and the robot is at (0,0). What should compute_path return, and how many steps is that?"
   options={[
-    {text: '5'},
-    {text: '4', correct: true},
-    {text: '3'},
-    {text: '0'},
+    {text: '[(0,1), (0,2), (1,2), (2,2)] — 4 steps, because the robot is already at the start', correct: true},
+    {text: 'The whole list — 5 steps, one per node'},
+    {text: 'The whole list — 4 steps, because len(path) − 1'},
+    {text: '[(2,2)] — 1 step, the destination'},
   ]}
-  explanation="The path includes the start, so it lists 5 nodes but 4 moves between them. Steps = len(path) − 1 = 4."
+  explanation="Dropping the start with path[1:] leaves the four intersections the robot actually drives to, so steps = len(path). It also matches what Manhattan.compute_path returns, which is what makes the two planners interchangeable."
 />
 
 ## Real-world connections
