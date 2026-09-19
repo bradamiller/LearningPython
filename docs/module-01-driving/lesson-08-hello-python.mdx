@@ -25,7 +25,7 @@ By the end of this lesson you will be able to:
 
 - Explain why we move from Blockly to Python, and translate a block into the equivalent Python code
 - Follow Python's core syntax rules: indentation, colons, lowercase, parentheses, quotes
-- Use `XRPLib` to drive the robot from Python
+- Use the three-step XRPLib pattern — import the class, make an instance, call its methods — to drive the robot from Python
 - Use `print()` to show messages and debug
 
 </Objectives>
@@ -55,6 +55,85 @@ Reading it line by line:
   object you can command.
 - `drivetrain.straight(30)` — drive straight 30 cm. (Use a negative number to go
   backward, just like the block.)
+
+### Three steps — and they never change
+
+Those three lines aren't a driving recipe. They're how you use **any** piece of
+hardware in XRPLib, so once you have the shape you can read code for a device
+you've never touched:
+
+1. **Import the class.** `from XRPLib.differential_drive import DifferentialDrive`
+   tells Python where the code for that piece of hardware lives. Nothing happens
+   to the robot yet.
+2. **Make an instance.** `drivetrain = DifferentialDrive.get_default_differential_drive()`
+   hands you an object that stands for the real hardware bolted to your robot.
+   The name on the left is yours to pick — `drivetrain` is just a good one.
+3. **Use it.** `drivetrain.straight(30)` — instance name, a dot, then what you
+   want it to do. That `instance.method()` shape is most of the Python you'll
+   write from here on.
+
+The device changes; the three steps don't. Here is the **reflectance sensor** you
+meet in the next module — read it against the drivetrain code above:
+
+```python
+from XRPLib.reflectance import Reflectance            # 1 · import the class
+reflectance = Reflectance.get_default_reflectance()   # 2 · make an instance
+reflectance.get_left()                                # 3 · use it
+```
+
+And the **rangefinder**, later on:
+
+```python
+from XRPLib.rangefinder import Rangefinder            # 1 · import the class
+rangefinder = Rangefinder.get_default_rangefinder()   # 2 · make an instance
+rangefinder.distance()                                # 3 · use it
+```
+
+Line them up beside the drivetrain and only the names differ. That's the whole
+trick: when a new device shows up, you already know two thirds of the code before
+anyone explains it.
+
+<Callout kind="tip" title="Let the editor do the spelling">
+
+Those class names are long, and Python is fussy about capitals (`Rangefinder`, not
+`rangefinder`). You don't have to type them. Start typing the first few
+characters — `Diff` — and the editor offers `DifferentialDrive`; press Tab or
+Enter to accept it. The same works after a dot: type `drivetrain.` and it lists
+everything the drivetrain can do, which is also a quick way to discover methods
+nobody told you about.
+
+If the suggestion never appears, the name you're typing probably isn't imported
+yet — which is a useful hint in itself.
+
+</Callout>
+
+<KnowledgeCheck
+  question={'A program starts with "from XRPLib.rangefinder import Rangefinder" and then calls rangefinder.distance(). It fails with a NameError. What was skipped?'}
+  options={[
+    {text: 'Step 2 — no instance was made, so the name rangefinder means nothing yet', correct: true},
+    {text: 'Step 1 — the import line is wrong'},
+    {text: 'The program needs to import Rangefinder twice'},
+    {text: 'Nothing — distance() only works in Blockly'},
+  ]}
+  explanation="Importing the class makes Rangefinder available; it does not create rangefinder. The middle step — rangefinder = Rangefinder.get_default_rangefinder() — is what gives that name an object to stand for the hardware."
+/>
+
+<TeacherNote title="The three steps are the spine of Modules 2–5">
+
+Worth slowing down on, because every later module reuses it: import the class,
+make an instance, call methods on the instance. Students who learn it as a
+*pattern* read the reflectance and rangefinder lessons as variations; students who
+memorise these particular three lines meet each new device as a fresh mystery.
+
+A good board exercise: write the three rows of the table with the device column
+filled in and the rest blank, and have students complete the reflectance row from
+the drivetrain one before they've seen any sensor code. Most can.
+
+Note the capital/lowercase convention while you're here — `Rangefinder` is the
+class, `rangefinder` is their variable — and point out that the editor's
+autocomplete gets the capitals right for them.
+
+</TeacherNote>
 
 <TeacherNote title="Frame it as 'the next level,' not 'harder'">
 
