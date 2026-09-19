@@ -106,6 +106,7 @@ LearningPython/                            # repo root — the site itself
 │   │   │   └── programs/  # real XRP Code screenshots of whole programs (§6)
 │   │   ├── lesson-01/     # Lesson 0 robot gallery (8 JPGs) + xrp-parts.jpg (Lesson 1)
 │   │   ├── lesson-04/     # gear-icon walkthrough stills, cut from the screencast (§12)
+│   │   ├── lesson-08/     # library-shelf.svg — hand-drawn diagram (§12)
 │   │   └── lesson-06/     # motor-motion stills + the two effort diagrams (§12)
 │   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4, l4-square-parameter.mp4 (§12)
 │   ├── CNAME              # the custom domain, re-asserted on every deploy (§8)
@@ -725,6 +726,15 @@ the photos — `pdfimages` returns the bare photo), and embedded clips are HEVC
 - Photo-only crops: `pdftoppm -r 150` the question slide, then crop the photo box.
 - Videos: `ffmpeg -i in.mov -an -vf scale=960:-2 -c:v libx264 -crf 27 -movflags
   +faststart out.mp4` (HEVC→H.264; ~0.2–0.8 MB for 4–10 s).
+**Hand-drawn SVG diagrams.** Where a photo doesn't exist and a stock image would
+only be decorative, draw it: `static/img/lesson-08/library-shelf.svg` (XRPLib as a
+shelf of books, with DifferentialDrive taken down) is the worked example. Inline
+the styles, use the brand palette from §4, and give it `<title>`/`<desc>` for
+screen readers. **Size it for the content column, which is only ~570 px wide** —
+the first version had a 900-wide viewBox, so its 15px labels rendered at 9px and
+were unreadable. A viewBox around 680×300 scales to roughly 0.83 and stays legible;
+check by screenshotting the figure as rendered, not the file on its own.
+
 **Stills pulled from a screencast.** Lesson 4's three step images were cut from
 Brad's own XRP Code recording rather than shot separately: find a sharp frame
 (CleanShot's zoom-ins are upscales of a 894×500 capture, so they're soft — the

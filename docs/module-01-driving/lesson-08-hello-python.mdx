@@ -56,6 +56,33 @@ Reading it line by line:
 - `drivetrain.straight(30)` — drive straight 30 cm. (Use a negative number to go
   backward, just like the block.)
 
+### What's a library?
+
+`XRPLib` is a **library** — code somebody else already wrote, tested, and left on
+the robot for you to use. Making a motor turn a wheel at a steady speed means
+timing electrical pulses and counting encoder ticks; reading the reflectance
+sensor means measuring how much light bounces back and turning that into a number.
+That work is genuinely hard, it's already done, and it's sitting in the library.
+
+Picture a shelf of books, one book per piece of hardware — one for the drivetrain,
+one for the reflectance sensor, one for the rangefinder, one for the servo. You
+don't read the whole shelf. You take down the one book you need, when you need it.
+
+<Figure
+  src="/img/lesson-08/library-shelf.svg"
+  alt="A bookshelf labeled XRPLib with a book for each device — Reflectance, Rangefinder, Servo, IMU, Board, Encoder, Motor — and the DifferentialDrive book taken off the shelf, its pages listing straight(), turn() and set_effort()"
+  caption="XRPLib is the shelf; each class is a book. An import takes one book down — and what's written inside it are the commands you can use."
+/>
+
+That's what `import` does. `from XRPLib.differential_drive import DifferentialDrive`
+takes the **DifferentialDrive** book off the shelf and opens it on your desk.
+What's written inside are the things a drivetrain can do: `straight()`, `turn()`,
+`set_effort()`. Leave the book on the shelf and Python has no idea those words
+mean anything.
+
+You import each device as you need it, which is why the import lines at the top of
+a program are a decent table of contents for what the program touches.
+
 ### Three steps — and they never change
 
 Those three lines aren't a driving recipe. They're how you use **any** piece of
