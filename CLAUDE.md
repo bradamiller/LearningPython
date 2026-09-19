@@ -1032,6 +1032,15 @@ functions-first material exists in the source repo and is the deferred rework in
 §9, so the page describes the choice as design intent rather than promising
 parallel pages.
 
+**Materials list contents** are Brad's (2026-09-19): robots and ratios, browsers,
+data USB cables and the first USB pass, floor space, **whiteboard panels** from a
+hardware store (a driving surface that works on the floor or across tables, and
+the surface the robot draws on with a marker — **Brad is supplying specific panel
+recommendations, still TBD**), **dry-erase markers** that fit the robot's marker
+holder, tape for floor line courses, and **rechargeable AAs with a charger bank
+and two boxes** (charged / needs charging) so a flat robot is a swap, not a lost
+period.
+
 **Shared materials list.** `docs/_partials/materials.mdx` is imported by BOTH
 this page and `src/pages/pacing.mdx` — one file, two renderings, so they can't
 drift. Docusaurus ignores `docs/_partials/`, and an `@site/docs/_partials/…`
