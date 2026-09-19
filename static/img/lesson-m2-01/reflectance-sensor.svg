@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" width="680" height="360" role="img"
+     aria-labelledby="rsTitle rsDesc">
+  <title id="rsTitle">How a reflectance sensor reads a line</title>
+  <desc id="rsDesc">Two side-by-side diagrams. In each, a sensor board carries an LED and a
+    phototransistor pointing down at the surface. Over a white surface the light from the LED
+    bounces strongly back into the phototransistor, giving a low reading of about 0.2. Over a
+    black line most of the light is absorbed, little returns, and the reading is high, about
+    0.8.</desc>
+
+  <style>
+    .sceneTitle { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #22527B; }
+    .partLabel  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 600; fill: #343A40; }
+    .note       { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #6C757D; }
+    .reading    { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; font-weight: 700; }
+    .surfaceLbl { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 600; }
+  </style>
+
+  <rect x="0" y="0" width="680" height="360" fill="#FFFFFF"/>
+
+  <!-- ============================ WHITE SURFACE ============================ -->
+  <text class="sceneTitle" x="30" y="26">Over white</text>
+
+  <!-- sensor board -->
+  <rect x="60" y="44" width="150" height="30" rx="5" fill="#2E5E43"/>
+  <text class="partLabel" x="135" y="64" text-anchor="middle" fill="#fff">sensor board</text>
+
+  <!-- LED -->
+  <rect x="86" y="74" width="26" height="16" rx="3" fill="#D1182C"/>
+  <path d="M 86 90 h 26 l -6 8 h -14 z" fill="#D1182C"/>
+  <!-- phototransistor -->
+  <rect x="158" y="74" width="26" height="16" rx="3" fill="#2B2B2B"/>
+  <path d="M 158 90 h 26 l -6 8 h -14 z" fill="#2B2B2B"/>
+
+  <text class="partLabel" x="78" y="86" text-anchor="end">LED</text>
+  <text class="note" x="78" y="102" text-anchor="end">shines light</text>
+  <text class="partLabel" x="192" y="86">phototransistor</text>
+  <text class="note" x="192" y="102">measures light</text>
+
+  <!-- light out and back: strong -->
+  <path d="M 99 100 L 141 246" stroke="#D1182C" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M 141 246 L 171 100" stroke="#D1182C" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M 171 100 l -8 12 l 14 1 z" fill="#D1182C"/>
+  <circle cx="141" cy="246" r="5" fill="#D1182C" opacity="0.35"/>
+
+  <text class="note" x="196" y="170">most of the</text>
+  <text class="note" x="196" y="186">light bounces</text>
+  <text class="note" x="196" y="202">back</text>
+
+  <!-- surface -->
+  <rect x="35" y="248" width="270" height="26" rx="3" fill="#FFFFFF" stroke="#ADB5BD" stroke-width="2"/>
+  <text class="surfaceLbl" x="170" y="266" text-anchor="middle" fill="#495057">white surface</text>
+
+  <text class="reading" x="170" y="300" text-anchor="middle" fill="#2E7D32">reads ≈ 0.2</text>
+  <text class="note" x="170" y="318" text-anchor="middle">low value — plenty of light came back</text>
+
+  <!-- ============================= BLACK LINE ============================== -->
+  <text class="sceneTitle" x="390" y="26">Over the black line</text>
+
+  <rect x="420" y="44" width="150" height="30" rx="5" fill="#2E5E43"/>
+  <text class="partLabel" x="495" y="64" text-anchor="middle" fill="#fff">sensor board</text>
+
+  <rect x="446" y="74" width="26" height="16" rx="3" fill="#D1182C"/>
+  <path d="M 446 90 h 26 l -6 8 h -14 z" fill="#D1182C"/>
+  <rect x="518" y="74" width="26" height="16" rx="3" fill="#2B2B2B"/>
+  <path d="M 518 90 h 26 l -6 8 h -14 z" fill="#2B2B2B"/>
+
+  <!-- light out strong, back faint -->
+  <path d="M 459 100 L 501 246" stroke="#D1182C" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M 501 246 L 531 100" stroke="#D1182C" stroke-width="2" stroke-linecap="round"
+        stroke-dasharray="6 7" opacity="0.45"/>
+  <path d="M 531 100 l -8 12 l 14 1 z" fill="#D1182C" opacity="0.45"/>
+
+  <!-- absorbed marks -->
+  <g stroke="#495057" stroke-width="2" stroke-linecap="round" opacity="0.6">
+    <path d="M 488 236 l -9 -9"/>
+    <path d="M 501 232 l 0 -12"/>
+    <path d="M 514 236 l 9 -9"/>
+  </g>
+
+  <text class="note" x="556" y="170">the dark tape</text>
+  <text class="note" x="556" y="186">soaks up most</text>
+  <text class="note" x="556" y="202">of it</text>
+
+  <rect x="395" y="248" width="270" height="26" rx="3" fill="#FFFFFF" stroke="#ADB5BD" stroke-width="2"/>
+  <rect x="455" y="248" width="92" height="26" fill="#1E1E1E"/>
+  <text class="surfaceLbl" x="501" y="266" text-anchor="middle" fill="#FFFFFF">tape</text>
+  <text class="surfaceLbl" x="610" y="266" text-anchor="middle" fill="#495057">white</text>
+
+  <text class="reading" x="530" y="300" text-anchor="middle" fill="#D1182C">reads ≈ 0.8</text>
+  <text class="note" x="530" y="318" text-anchor="middle">high value — little light came back</text>
+
+  <!-- footnote -->
+  <text class="note" x="340" y="348" text-anchor="middle" font-style="italic">
+    The real sensor uses infrared light, which your eye can't see — drawn here in red.
+  </text>
+</svg>

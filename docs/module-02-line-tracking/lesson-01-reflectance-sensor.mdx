@@ -37,13 +37,19 @@ By the end of this lesson you will be able to:
 ## How the robot "sees" a line
 
 Flip an XRP over and you'll find two small reflectance sensors underneath. Each one
-shines invisible infrared light down at the surface and measures how much bounces
-back.
+is a pair of parts sitting side by side: an **LED** that shines light down at the
+surface, and a **phototransistor** right next to it that measures how much of that
+light comes back.
 
 <Figure
-  placeholderLabel="Diagram — IR sensor shining light: white reflects a lot (low value), black absorbs it (high value)"
-  caption="A white surface reflects most of the light back (a low reading); a black line absorbs it (a high reading)."
+  src="/img/lesson-m2-01/reflectance-sensor.svg"
+  alt="Two diagrams of a reflectance sensor. In each, an LED and a phototransistor point down from a sensor board. Over white, the light from the LED bounces strongly into the phototransistor and the reading is about 0.2. Over black tape, most of the light is absorbed, only a faint amount returns, and the reading is about 0.8."
+  caption="The LED shines, the phototransistor listens. White bounces most of the light back — a low reading; black tape soaks it up — a high reading."
 />
+
+Nothing in there measures colour. The sensor only knows *how much light came back*,
+which is why anything dark reads like a line and anything light reads like the
+floor.
 
 - **White surface** → most light bounces back → a **low** value (around `0.1–0.3`).
 - **Black line** → light is absorbed → a **high** value (around `0.7–0.9`).

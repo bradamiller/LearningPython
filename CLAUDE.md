@@ -107,6 +107,7 @@ LearningPython/                            # repo root — the site itself
 │   │   ├── lesson-01/     # Lesson 0 robot gallery (8 JPGs) + xrp-parts.jpg (Lesson 1)
 │   │   ├── lesson-04/     # gear-icon walkthrough stills, cut from the screencast (§12)
 │   │   ├── lesson-08/     # library-shelf.svg — hand-drawn diagram (§12)
+│   │   ├── lesson-m2-01/  # reflectance-sensor.svg — hand-drawn diagram (§12)
 │   │   └── lesson-06/     # motor-motion stills + the two effort diagrams (§12)
 │   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4, l4-square-parameter.mp4 (§12)
 │   ├── CNAME              # the custom domain, re-asserted on every deploy (§8)
@@ -734,6 +735,13 @@ the photos — `pdfimages` returns the bare photo), and embedded clips are HEVC
 - Photo-only crops: `pdftoppm -r 150` the question slide, then crop the photo box.
 - Videos: `ffmpeg -i in.mov -an -vf scale=960:-2 -c:v libx264 -crf 27 -movflags
   +faststart out.mp4` (HEVC→H.264; ~0.2–0.8 MB for 4–10 s).
+**Hand-drawn SVG diagrams.** Two exist so far: `lesson-08/library-shelf.svg`
+(XRPLib as a shelf of books) and `lesson-m2-01/reflectance-sensor.svg` (LED +
+phototransistor over white vs. black, with the ≈0.2 / ≈0.8 readings that match the
+lesson's convention — higher means darker). Note the folder naming: Module 1
+lessons use `lesson-NN/`, so anything outside Module 1 needs a module-qualified
+name like `lesson-m2-01/`.
+
 **Hand-drawn SVG diagrams.** Where a photo doesn't exist and a stock image would
 only be decorative, draw it: `static/img/lesson-08/library-shelf.svg` (XRPLib as a
 shelf of books, with DifferentialDrive taken down) is the worked example. Inline
