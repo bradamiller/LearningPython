@@ -948,3 +948,44 @@ worth reading when a lesson's source intent is in question.
   `bradamiller <brad@bradhouse.com>` to match his own first commit. The imported
   commits keep their original author (`brad@example.com`); only the committer is
   the new identity.
+
+## 17. The pacing guide (/pacing)
+
+Added 2026-09-19. A teacher-facing planning page, generated from the lessons the
+same way the printable checks are — nothing is authored twice, so it can't drift.
+
+```
+docs/**/lesson-*.mdx  --scripts/extract_pacing.js-->  src/data/pacing.json
+                      --src/components/Pacing.js-->   /pacing
+```
+
+**What it reads out of each lesson:** the chips in `<LessonHeader meta={[...]}/>`
+(the duration and the phase), the `## Activity ·` and `## Challenge N ·`
+headings, whether there's a `<QuizLink>`, and the `<KnowledgeCheck>` count. The
+page is `src/pages/pacing.mdx` — a hand-written intro (materials, robot ratios,
+where the natural pauses are) around a `<PacingGuide />`. `pacing.json` is
+gitignored; `npm run pacing` regenerates it and `prestart`/`prebuild` run it.
+
+**Numbers as of the build that added it:** 45 lessons, 2245–2465 minutes of
+estimated class time (37–41 hours), 61 hand-in activities, 181 knowledge checks.
+At 50-minute periods that's 49–53 periods including the two multi-day capstones
+at an assumed 2 periods each — about 16–18 weeks at three periods a week, which
+is where the home page's "18 weeks" comes from.
+
+**Conventions the extractor depends on** (break these and the guide goes wrong,
+loudly — it exits non-zero and names the file):
+
+- Every lesson has a duration chip in its header meta: `'50–60 min'`, `'90 min'`,
+  or `'Multi-day'` for a capstone. A range becomes lo–hi; `Multi-day` is counted
+  separately rather than given invented minutes.
+- Hand-in work is an `h2` of the form `## Activity · Name` or
+  `## Challenge 1 · Name`. That's the same convention the DO THIS badge keys on
+  (§9), so one rule serves both.
+
+**It doubles as a coverage report.** Lessons with no hand-in activity show a dash
+in the table, which is how M2 L8 (introduction-to-classes) and M1 L7 stand out —
+L7 turned out to have challenges rather than activities, and the extractor was
+fixed to count those. M4's overview page legitimately has none.
+
+**If you add a module,** add it to `MODULE_ORDER` and `MODULE_TITLES` at the top
+of `scripts/extract_pacing.js` (the same pair exists in `extract_checks.js`).

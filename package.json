@@ -13,8 +13,9 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "checks": "node scripts/extract_checks.js && node scripts/generate_quiz_pages.js",
-    "prestart": "npm run checks",
-    "prebuild": "npm run checks"
+    "prestart": "npm run checks && npm run pacing",
+    "prebuild": "npm run checks && npm run pacing",
+    "pacing": "node scripts/extract_pacing.js"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

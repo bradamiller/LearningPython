@@ -82,6 +82,11 @@ const config = {
             position: 'left',
           },
           {
+            to: '/pacing',
+            label: 'Pacing Guide',
+            position: 'left',
+          },
+          {
             href: 'https://xrpcode.wpi.edu/',
             label: 'XRP Code IDE',
             position: 'right',
