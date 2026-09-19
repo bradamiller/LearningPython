@@ -86,7 +86,7 @@ function main() {
 
   const dirs = fs
     .readdirSync(DOCS, {withFileTypes: true})
-    .filter((d) => d.isDirectory())
+    .filter((d) => d.isDirectory() && !d.name.startsWith('_')) // docs/_partials/ is shared MDX, not lessons
     .map((d) => d.name)
     .sort((a, b) => {
       const ia = MODULE_ORDER.indexOf(a);
@@ -97,7 +97,7 @@ function main() {
   for (const dir of dirs) {
     const files = fs
       .readdirSync(path.join(DOCS, dir))
-      .filter((f) => f.endsWith('.mdx'))
+      .filter((f) => f.endsWith('.mdx') && !f.startsWith('_'))
       .sort();
     if (!files.length) continue;
 

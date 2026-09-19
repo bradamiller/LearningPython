@@ -993,3 +993,46 @@ fixed to count those. M4's overview page legitimately has none.
 
 **If you add a module,** add it to `MODULE_ORDER` and `MODULE_TITLES` at the top
 of `scripts/extract_pacing.js` (the same pair exists in `extract_checks.js`).
+
+## 18. The "How this course works" page
+
+Added 2026-09-19 (Brad's philosophy + materials). `docs/how-this-course-works.mdx`
+sits at the TOP of the sidebar, above Module 1 — student-visible on purpose:
+Brad's call was that none of it is harmful to share, and the experiential
+principle in particular works better as a contract with students than as a
+technique applied to them.
+
+**The big ideas it states, in Brad's words (2026-09-19) — these are course
+design intent, not decoration, so don't contradict them in a lesson:**
+
+1. **Reuse is the spine.** Each module's code is reused by the next: Module 1's
+   driving → Module 2's line tracking → Module 3's intersection-to-intersection
+   driving → Module 4's navigator → Module 5's planner swap. The end state is a
+   complex program nobody wrote in one go. Writing reusable code is presented as
+   a real programming skill, and the practical payoff is that every step stays
+   small.
+2. **Each reusable part is an object** — and that's as far as the OOP goes. This
+   is NOT an OOP course; the aim is a feel for how a program can be structured.
+3. **The swap is the payoff.** `Manhattan` and `Dijkstra` answer the same request,
+   so the navigator doesn't care which it holds: get Manhattan working, then hand
+   it a Dijkstra with almost no other change. **⚠️ The site does not currently
+   keep this promise — see the `compute_path` return-shape mismatch in §9. The
+   philosophy page now states the promise publicly, which raises the priority of
+   settling it.**
+4. **Planners are testable without a robot** — they're arithmetic that returns a
+   list of intersections. M4 L6 is the worked example.
+
+**Three stated cut points** (also in §9 terms): skip classes and write the same
+components as functions (loses the planner swap, keeps everything else); stop
+after Manhattan; or teach Dijkstra without the drive-time blocked-intersection
+discovery. Note the site currently teaches the class route only — the
+functions-first material exists in the source repo and is the deferred rework in
+§9, so the page describes the choice as design intent rather than promising
+parallel pages.
+
+**Shared materials list.** `docs/_partials/materials.mdx` is imported by BOTH
+this page and `src/pages/pacing.mdx` — one file, two renderings, so they can't
+drift. Docusaurus ignores `docs/_partials/`, and an `@site/docs/_partials/…`
+import works from `src/pages` as well as from a docs page (verified). Both
+extractors now skip `_`-prefixed files and folders; before that, `extract_pacing`
+counted the partial as a 46th lesson and failed the build.

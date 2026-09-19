@@ -1,0 +1,156 @@
+---
+title: How this course works
+sidebar_label: How this course works
+sidebar_position: 0
+---
+
+import Materials from './_partials/materials.mdx';
+
+<LessonHeader
+  eyebrow="Before you begin"
+  title="How this course works"
+  meta={['Read first', 'Students & teachers', '5 modules · 45 lessons']}
+/>
+
+This page is the shape of the course: what you'll build, why it's arranged this
+way, and what you need to run it. Students and teachers both — none of it is a
+secret, and the course works better when everyone knows the plan.
+
+## Everything you write gets used again
+
+The single biggest idea here isn't a Python feature. It's that **the code you
+write in one module becomes a part you build with in the next.**
+
+The driving functions from Module 1 are what Module 2's line tracking steers.
+The line tracking is how Module 3 drives from one intersection to the next. That
+intersection-to-intersection driving is what Module 4's navigator uses to follow
+a route. And Module 5 swaps in a smarter way of choosing the route, driving it
+with the same navigator that already worked.
+
+By the last module you're running a genuinely complicated program — a robot that
+plans a route around obstacles it discovers and drives it autonomously. Nobody
+sat down and wrote that program. It was assembled out of pieces that already
+worked, one module at a time.
+
+That's not a teaching trick; it's how real software gets built. Writing code that
+can be reused is one of the most valuable habits a programmer can have, and it
+has a second payoff you'll feel immediately: **every step stays small.** You're
+never starting from a blank file and a hard problem. You're adding one part to a
+machine that already runs.
+
+## The parts are objects
+
+Each of those reusable pieces is an **object** — a bundle of the data it keeps
+track of and the things it knows how to do. The drivetrain is an object. The
+reflectance sensor is an object. The navigator is an object. Later on, so is the
+thing that plans routes.
+
+This is not a course about object-oriented programming, and we don't go far past
+that idea. The point is to leave you with a feel for how a program can be
+*structured*: not one long list of instructions, but a set of parts with clear
+jobs that you hand work to. That instinct is what you'll carry into whatever you
+write next.
+
+Two things make the payoff concrete, and both happen in the last two modules.
+
+**You can swap one part for another.** Module 4's `Manhattan` planner and Module
+5's `Dijkstra` planner are asked for a route the same way. The navigator that
+drives the route doesn't care which one it's holding. So you get Manhattan
+working first — simpler, no obstacles — and then hand the navigator a Dijkstra
+instead, with almost nothing else changing. Feeling that swap work is worth more
+than any explanation of why interfaces matter.
+
+**You can test without the robot.** A route planner is just arithmetic: give it a
+start and a destination and it hands back a list of intersections. You can build
+it, run it, and print what it produces with no robot, no batteries, and no floor
+space — which means you debug the thinking on its own, and only then put it on a
+robot where a mistake looks like a robot driving into a chair. Module 4 spends a
+whole lesson on exactly this.
+
+## You'll try things before they're explained
+
+When a lesson needs a new idea, you'll usually meet the *problem* first. You'll
+draw a square by placing eight blocks by hand before anyone mentions a loop.
+You'll watch a triangle come out wrong at 90° before working out where 120° comes
+from.
+
+That order is deliberate. A loop means something different once you've felt the
+tedium it removes, and the explanation lands in a gap you already noticed. If a
+lesson seems to be making you do something the long way round — it is, and the
+short way is on the next page.
+
+## The arc
+
+**Module 1 · Learning to Drive** starts in Blockly, where you build programs by
+dragging blocks, and ends in Python writing the same programs as text. The bridge
+is deliberate: you learn sequencing, repetition, functions and parameters where
+syntax can't get in the way, then rewrite what you already understand in a
+language that can spell things wrong.
+
+**Module 2 · Line Tracking** adds a sensor, and with it the idea of a program that
+reacts to the world instead of following a fixed script — including proportional
+control, which is a real control-systems idea in disguise.
+
+**Module 3 · Grid Driving** turns "follow a line" into "drive from one
+intersection to the next," the unit of movement everything after it uses.
+
+**Module 4 · Manhattan Navigation** introduces coordinates, lists and an
+algorithm: work out a route, then drive it.
+
+**Module 5 · Dijkstra's Algorithm** replaces that route planner with one that
+handles obstacles, and — if you go the whole way — one that re-plans when the
+robot discovers a blocked intersection while driving.
+
+Underneath, the big ideas arrive in this order: sequence and repetition, then
+abstraction through functions and parameters, then sensing and feedback, then
+algorithms and data structures.
+
+## What a lesson is made of
+
+Every lesson opens with its **objectives** and an estimate of how long it takes.
+**Activities** are the parts you actually do and hand in — they're labeled, so
+there's no guessing about what gets submitted. **Knowledge checks** are scattered
+through to catch misunderstandings early; each lesson also links to a
+[printable sheet](/checks) of its questions. **Teacher notes** are the gray boxes,
+shown when the teacher-mode switch at the corner of the page is on. A
+[pacing guide](/pacing) totals the whole course up for planning.
+
+## The course can be made shorter
+
+The full run is 45 lessons. It's designed so you can stop at three sensible
+places without the ending feeling arbitrary.
+
+**Skip the classes.** Classes are the tidiest way to package a reusable part, but
+they're also the hardest idea in the course for most students, and nothing about
+the course's structure depends on them. The same components can be written as
+plain functions that take what they need as parameters. You lose the neat swap
+between planners; you keep every other idea.
+
+**Stop after Manhattan.** Module 4 ends with a robot that plans a route and drives
+it autonomously — a satisfying finish on its own. Module 5 is the same story told
+with a better algorithm.
+
+**Do Dijkstra, but not the discovery part.** Module 5's algorithm can be taught
+with a map of obstacles known up front. Adding the code that finds blocked
+intersections *while driving* and re-plans around them is the most demanding work
+in the course, and it's the natural thing to drop if you're short on time.
+
+## What you need
+
+<Materials />
+
+<TeacherNote title="Where to put your own emphasis">
+
+Two things are worth saying out loud to a class rather than leaving on this page.
+
+The reuse story only lands if you keep pointing at it: when Module 3 calls the
+line-tracking code from Module 2, say so. Students who are heads-down on this
+week's problem often don't notice that they're standing on four weeks of their
+own work until someone points.
+
+And the cut points above are pedagogical, not just scheduling. A group that
+struggles with classes is not a group that should be pushed through classes to
+reach Dijkstra — the functions route reaches the same place, and the
+planner-swap payoff is the only thing lost.
+
+</TeacherNote>

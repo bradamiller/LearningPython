@@ -9,6 +9,7 @@
  */
 const sidebars = {
   curriculumSidebar: [
+    'how-this-course-works',
     {
       type: 'category',
       label: 'Module 1 · Learning to Drive',
