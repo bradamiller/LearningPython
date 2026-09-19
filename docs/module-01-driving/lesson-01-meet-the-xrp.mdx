@@ -236,6 +236,44 @@ started?*
   explanation="Blocks execute in sequence, top to bottom — one command finishes before the next begins."
 />
 
+### Put the robot down *before* you switch it on
+
+<Callout title="Give the robot a few seconds of stillness">
+
+When the XRP powers on — or when you press its reset button — it spends the first
+few seconds **calibrating its IMU**, the sensor it uses to measure how far it has
+turned. That calibration assumes the robot is perfectly still, and it has no way
+to tell that it isn't.
+
+Hold the robot in your hand while it starts up and the calibration is taken from a
+moving robot, so every turn afterwards is measured against a bad reference. The
+robot doesn't report an error — it just turns the wrong amount, differently each
+time, and anything else that depends on knowing its heading drifts too.
+
+So get in the habit of this order, every run:
+
+1. **Put the robot down** on the floor or table, where it will actually drive.
+2. **Power it on** — or press **reset** if it's already on.
+3. **Wait a few seconds**, hands off, while it calibrates.
+4. **Then press the User button** to release your **Wait for button press** block.
+
+</Callout>
+
+That last step is why the Wait for button press block is so useful: it gives you
+the gap between "powered on and calibrated" and "driving," instead of the program
+taking off the instant it uploads.
+
+<KnowledgeCheck
+  question="Your program tells the robot to turn 90°, but every run it turns a different, unpredictable amount. What is the most likely cause?"
+  options={[
+    {text: 'The robot was moving or being held when it powered on, so its IMU calibration is bad', correct: true},
+    {text: 'The Turn block only works in Python programs'},
+    {text: 'The battery is fully charged'},
+    {text: 'A program can only contain one Turn block'},
+  ]}
+  explanation="The IMU calibrates in the first seconds after power-on or reset, and it assumes the robot is completely still. Calibrate it while it's moving in someone's hand and every turn is measured against a bad reference. Put the robot down, power on or reset, wait a few seconds, then press the button."
+/>
+
 ## Activity · Upload and run it
 
 <TeacherNote title="Guided practice — first upload (10–15 min)">
@@ -246,6 +284,13 @@ worked example. Then: plug in USB → **Upload** → pick the robot → wait for
 ~20 cm out and back to roughly where it started. Keep everyone on the cable for
 this first upload — it's also the USB pass that makes Bluetooth possible later.
 
+Establish the power-on habit now, before turns matter: **robot on the floor,
+then switch on, then hands off for a few seconds.** The IMU calibrates in those
+first seconds and a robot held in the air calibrates wrong, which shows up later
+as turns that are off by different amounts each run — a bug students will blame
+on their code. When a turn misbehaves in any lesson, "put it down and press
+reset" is the first thing to try.
+
 </TeacherNote>
 
 Follow these steps:
@@ -255,9 +300,11 @@ Follow these steps:
 3. Connect the robot: plug in the USB cable (use the cable today — your robot
    needs one USB connection before it can go wireless).
 4. Click **Upload** and choose your robot from the list.
-5. Wait for **"Upload Successful,"** set the robot on the floor, then press the
-   button on the robot — your **Wait for button press** block releases the
-   program and it runs.
+5. Wait for **"Upload Successful,"** then set the robot on the floor. If you
+   picked it up at any point, press **reset** and give it a few seconds to
+   recalibrate while it sits still.
+6. Press the User button on the robot — your **Wait for button press** block
+   releases the program and it runs.
 
 **You've succeeded when:**
 
@@ -269,6 +316,7 @@ Follow these steps:
 ### If something goes wrong
 
 - **Robot won't move** — check the battery is charged and the USB is seated, then re-upload.
+- **Turns are wildly off, or different every run** — the robot was almost certainly moving while it powered on. Set it down, press reset, wait a few seconds without touching it, then try again.
 - **Drives the wrong way** — motor directions can be reversed; that's normal and fixable later.
 - **Not exactly the distance you set** — floor friction and battery level affect distance. Close is fine for now.
 - **Robot not in the upload list** — try another USB port or cable (some cables are charge-only), then reload the page.

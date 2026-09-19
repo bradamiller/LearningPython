@@ -5,6 +5,7 @@ import {Video, Figure} from '@site/src/components/Media';
 import {Block, BlockProgram, BlockShot} from '@site/src/components/Blocks';
 import {QuizSheet, QuizLink, QuizIndex} from '@site/src/components/Quiz';
 import Reveal from '@site/src/components/Reveal';
+import Callout from '@site/src/components/Callout';
 import {
   LessonHeader,
   Objectives,
@@ -29,6 +30,7 @@ export default {
   QuizLink,
   QuizIndex,
   Reveal,
+  Callout,
   LessonHeader,
   Objectives,
   TeacherBanner,

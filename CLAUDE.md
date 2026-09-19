@@ -85,6 +85,8 @@ LearningPython/                            # repo root — the site itself
 │   │   ├── Media.js       # Video, Figure (real src OR labeled placeholder)
 │   │   ├── Blocks.js      # Block (inline), BlockProgram (composed), BlockShot (real screenshot)
 │   │   ├── Quiz.js        # QuizSheet, QuizLink, QuizIndex — printable checks (§14)
+│   │   ├── Callout.js     # student-facing callout box (:::admonitions don't work — §5)
+│   │   ├── Reveal.js      # click-to-reveal answer box (§15)
 │   │   └── cblocks.json   # GENERATED geometry for C-shaped blocks (see §6) — don't hand-edit
 │   ├── data/checks.json   # GENERATED question data (§14) — gitignored
 │   ├── pages/checks/      # GENERATED printable sheets + keys (§14) — gitignored
@@ -209,7 +211,20 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
     a handout. Never put anything students HAND IN in here. */}
 <Reveal>Default title is "Check your work".</Reveal>
 <Reveal title="Check your trace" hint="fill the table in first">…</Reveal>
+
+{/* Student-facing callout. Use sparingly — a page with five callouts has none.
+    kind: warn (amber, default) | tip (blue) | note (gray). */}
+<Callout title="Give the robot a few seconds of stillness">…</Callout>
+<Callout kind="tip" title="Proof of concept">…</Callout>
 ```
+
+**⚠️ Docusaurus `:::` admonitions DO NOT RENDER on this site** — they come out as
+literal `:::tip` text. That bit us twice: the home page shipped a literal
+`:::tip Proof of concept` for weeks, and a Lesson 1 callout written that way did
+the same on 2026-09-19. Root cause not chased; `<Callout>` exists precisely so
+nobody has to. If you ever fix the directive parsing, the component can stay —
+it's styled to match the course, prints as a bordered box, and takes MDX
+children (leave blank lines inside the tags so markdown is parsed).
 
 **Teacher mode** (Root.js): a floating switch (bottom-right) sets
 `html[data-teacher='on']` and saves to `localStorage['xrp-teacher-mode']`.
@@ -531,6 +546,17 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the IDE. **Not yet propagated:** the other nine lessons' Resources lists still
   point at `https://xrpcode.wpi.edu/` (production, no `/staging`) — ask Brad before
   changing them site-wide.
+- **IMU CALIBRATION: PUT THE ROBOT DOWN BEFORE POWER-ON (Brad, 2026-09-19).** For
+  the first few seconds after power-on or reset, the XRP calibrates its IMU, and
+  the calibration assumes the robot is completely still. Held in a hand — or
+  bumped — it calibrates against a moving reference and **every later turn is off
+  by an unpredictable amount**, with no error reported. The sequence students
+  learn: robot down → power on (or reset) → wait a few seconds, hands off → press
+  the User button to release **Wait for button press**. That's the practical
+  justification for the wait-for-button block beyond "don't drive off the table."
+  Lesson 1's "Put the robot down *before* you switch it on" `<Callout>` and its
+  knowledge check are the canonical treatment; the same symptom is the first
+  troubleshooting entry for any turn that misbehaves in later lessons.
 - **FINISHING vs. NON-FINISHING BLOCKS — and don't teach timed driving (Brad,
   2026-09-17).** The distinction students need: `Straight`/`Turn` **finish** —
   they do the job and stop the motors themselves; `Set effort`/`Arcade` just

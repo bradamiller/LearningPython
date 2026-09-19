@@ -783,3 +783,75 @@ html[data-teacher='on'] .teacherNote--inline {
   .reveal { border-style: solid; }
   .reveal__hint { display: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   Callout — student-facing "watch out" box (src/components/Callout.js).
+   Docusaurus ::: admonitions do not render on this site, so this is the
+   supported callout. Colors are tuned to sit beside, not compete with, the
+   red KnowledgeCheck and the gray TeacherNote.
+   ------------------------------------------------------------------------ */
+
+.callout {
+  --callout-accent: #B8860B;
+  --callout-bg: #FFF8E6;
+  border: 1px solid #F0D98C;
+  border-left: 5px solid var(--callout-accent);
+  background: var(--callout-bg);
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  margin: 1.6rem 0;
+}
+
+.callout--tip {
+  --callout-accent: var(--xrp-blue, #22527B);
+  --callout-bg: #EEF4FA;
+  border-color: #C5D8EA;
+}
+
+.callout--note {
+  --callout-accent: #6C757D;
+  --callout-bg: #F5F6F7;
+  border-color: #DDE1E4;
+}
+
+.callout__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--callout-accent);
+  letter-spacing: 0.01em;
+  margin-bottom: 0.5rem;
+}
+
+.callout__icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.callout__body > *:first-child { margin-top: 0; }
+.callout__body > *:last-child { margin-bottom: 0; }
+
+.callout__body ol,
+.callout__body ul {
+  margin-bottom: 0;
+  padding-left: 1.3rem;
+}
+
+html[data-theme='dark'] .callout {
+  --callout-bg: rgba(184, 134, 11, 0.12);
+  border-color: rgba(240, 217, 140, 0.35);
+}
+html[data-theme='dark'] .callout--tip { --callout-bg: rgba(34, 82, 123, 0.18); }
+html[data-theme='dark'] .callout--note { --callout-bg: rgba(108, 117, 125, 0.15); }
+html[data-theme='dark'] .callout__title { color: #F0D98C; }
+html[data-theme='dark'] .callout--tip .callout__title { color: #9CC3E5; }
+
+@media print {
+  .callout {
+    background: none !important;
+    border: 1px solid #000 !important;
+    border-left: 4px solid #000 !important;
+  }
+  .callout__title { color: #000 !important; }
+}
