@@ -1,12 +1,12 @@
 ---
-title: "Lesson 5 · Proportional Control"
-sidebar_label: "5 · Proportional Control"
+title: "Lesson 2-5 · Proportional Control"
+sidebar_label: "2-5 · Proportional Control"
 sidebar_position: 5
 ---
 
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
-  title="Lesson 5 · Proportional Control"
+  title="Lesson 2-5 · Proportional Control"
   meta={['60+ min', 'Control loops', 'First real line following']}
 />
 
@@ -162,7 +162,7 @@ in the module — lean on the car-steering analogy hard. Two things to hammer: t
 setpoint is the *edge* (~0.5), **not** white (0.0) — the robot rides the boundary;
 and proportional control needs **no if/else**, because the sign of the error already
 encodes direction. The `time.sleep(0.01)` just keeps the loop from flooding the
-processor. Encourage students to use their Lesson 1 edge value rather than assuming
+processor. Encourage students to use their Lesson 2-1 edge value rather than assuming
 exactly 0.5.
 
 </TeacherNote>

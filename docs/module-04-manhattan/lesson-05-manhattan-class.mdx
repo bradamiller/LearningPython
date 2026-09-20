@@ -1,12 +1,12 @@
 ---
-title: "Lesson 5 · Implementing the Manhattan Class"
-sidebar_label: "5 · The Manhattan Class"
+title: "Lesson 4-5 · Implementing the Manhattan Class"
+sidebar_label: "4-5 · The Manhattan Class"
 sidebar_position: 5
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 5 · Implementing the Manhattan Class"
+  title="Lesson 4-5 · Implementing the Manhattan Class"
   meta={['60 min', 'Python classes', 'Function → method']}
 />
 
@@ -169,7 +169,7 @@ class Manhattan:
 
 <TeacherNote title="A conversion, not a blank page — and mind the self. trap">
 
-Students already own the algorithm from Lesson 4, so keep the cognitive load on the
+Students already own the algorithm from Lesson 4-4, so keep the cognitive load on the
 class mechanics. Put the function and the class **side by side** on the board and
 highlight only the three differences. Live-code it one step at a time, testing after
 each: print `nav.position` after `__init__`, print a path after the loops. Two
@@ -183,7 +183,7 @@ pair is the call, the inner pair is the tuple.
 ### Step 3 · Test it
 
 Create an instance and call the method. Compare the output to your hand-traced paths
-from Lesson 4:
+from Lesson 4-4:
 
 ```python
 nav = Manhattan((0, 0))
@@ -255,7 +255,7 @@ The "store it once, reuse it" pattern of objects is everywhere in real software:
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** name the three conversion changes, explain `self.position` vs. a local
-variable, and produce output matching Lesson 4's hand traces. **Exit ticket:** "If
+variable, and produce output matching Lesson 4-4's hand traces. **Exit ticket:** "If
 `nav = Manhattan((2, 1))`, what does `nav.compute_path((2, 1))` return and why?" (`[]` —
 start equals destination, all loops skipped). **Preview:** next lesson we test the class
 *systematically*, without a robot — comparing its output to known-correct paths.

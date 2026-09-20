@@ -1,12 +1,12 @@
 ---
-title: "Lesson 7 · Detecting Intersections"
-sidebar_label: "7 · Intersections"
+title: "Lesson 2-7 · Detecting Intersections"
+sidebar_label: "2-7 · Intersections"
 sidebar_position: 7
 ---
 
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
-  title="Lesson 7 · Detecting Intersections"
+  title="Lesson 2-7 · Detecting Intersections"
   meta={['50–60 min', 'and / event detection', 'Integration']}
 />
 
@@ -17,7 +17,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Add a taped **cross** to your circle and your line follower has a new problem: when
 the robot reaches the crossing, *both* sensors hit black at once. This lesson turns
 that into a feature — the robot detects the intersection, reacts to it, and keeps
-following. It's where everything from Lessons 1–6 comes together.
+following. It's where everything from Lessons 2-1 through 2-6 comes together.
 
 <Objectives>
 
@@ -39,8 +39,7 @@ At a crossing line, **both** sensors sit on black at the same time. That's the t
 
 > if left > threshold **and** right > threshold → we're at a cross
 
-`and` means *both* conditions must be true (you met its partner `or` back in Lesson
-3). Here, only both-sensors-on-black should count as an intersection.
+`and` means *both* conditions must be true (you met its partner `or` back in Lesson 2-3). Here, only both-sensors-on-black should count as an intersection.
 
 <Figure
   placeholderLabel="Diagram — robot following the circle, then reaching the taped cross with both sensors on black"

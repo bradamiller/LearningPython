@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4 · Module 3 Final Project"
-sidebar_label: "4 · Final Project"
+title: "Lesson 3-4 · Final Project"
+sidebar_label: "3-4 · Final Project"
 sidebar_position: 4
 ---
 
 <LessonHeader
   eyebrow="Module 3 · Grid Driving"
-  title="Lesson 4 · Module 3 Final Project"
+  title="Lesson 3-4 · Final Project"
   meta={['50–60 min', 'Capstone', 'Drive a square']}
 />
 
@@ -49,7 +49,7 @@ each of the 4 corners. Done right, it finishes where it began.
 
 The whole square is a four-iteration loop: each pass drives one side, then turns the
 corner. Two pieces to write — a `drive_intersections(tracker, count)` helper (you
-built this in Lesson 2) and the loop that calls it and turns.
+built this in Lesson 3-2) and the loop that calls it and turns.
 
 Sketch the loop body in English first: what happens once per side?
 
@@ -88,7 +88,7 @@ but not after the last one, because the turn clears that corner itself.
 </Reveal>
 
 Notice there's no separate clear before `turn_right()` — the turn clears the corner
-itself (Lesson 3). Four right turns add up to a full 360°, which is why the robot
+itself (Lesson 3-3). Four right turns add up to a full 360°, which is why the robot
 comes back around.
 
 <KnowledgeCheck

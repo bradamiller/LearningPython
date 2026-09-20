@@ -1,12 +1,12 @@
 ---
-title: "Lesson 8 · Implementing the Navigator Class"
-sidebar_label: "8 · The Navigator Class"
+title: "Lesson 4-8 · Implementing the Navigator Class"
+sidebar_label: "4-8 · The Navigator Class"
 sidebar_position: 8
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 8 · Implementing the Navigator Class"
+  title="Lesson 4-8 · Implementing the Navigator Class"
   meta={['60 min', 'Python + robot', 'Reusing LineTrack']}
 />
 
@@ -14,7 +14,7 @@ sidebar_position: 8
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Time to make the robot move. You'll package the turning logic from Lesson 7 into a
+Time to make the robot move. You'll package the turning logic from Lesson 4-7 into a
 **`Navigator` class** that drives any Manhattan path on the grid. The best part: it does
 the actual driving by reusing the **`LineTrack` class you built in Module 2** — no motor
 code to rewrite. That's the payoff of building reusable classes.
@@ -66,7 +66,7 @@ class has one job. That handing-off is called **delegation**.
 
 ## The two logic methods
 
-`desired_heading()` is the Lesson 7 logic, now a method that reads `self.position`
+`desired_heading()` is the Lesson 4-7 logic, now a method that reads `self.position`
 instead of taking a `current` parameter — the object already knows where it is:
 
 ```python
@@ -83,7 +83,7 @@ def desired_heading(self, next_pos):
         return 3   # West
 ```
 
-And `turn_to()` is the while loop from Lesson 7 — but now each turn is a *real* turn,
+And `turn_to()` is the while loop from Lesson 4-7 — but now each turn is a *real* turn,
 `self.line_track.turn_right()`, which physically spins the robot:
 
 ```python

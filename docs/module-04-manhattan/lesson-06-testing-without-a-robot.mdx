@@ -1,12 +1,12 @@
 ---
-title: "Lesson 6 · Testing Without a Robot"
-sidebar_label: "6 · Testing on Screen"
+title: "Lesson 4-6 · Testing Without a Robot"
+sidebar_label: "4-6 · Testing on Screen"
 sidebar_position: 6
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 6 · Testing Without a Robot"
+  title="Lesson 4-6 · Testing Without a Robot"
   meta={['50 min', 'Python testing', 'Test on screen first']}
 />
 
@@ -40,7 +40,7 @@ not. The same logic applies to your code. A robot driving into a wall tells you
 exact input that produced the wrong output.
 
 This works because of **separation of concerns**: the `Manhattan` class only *computes*
-a path, and the `Navigator` (coming in Lesson 8) *drives* it. Each can be checked on its
+a path, and the `Navigator` (coming in Lesson 4-8) *drives* it. Each can be checked on its
 own:
 
 | Problem | Where it runs | What you test |
@@ -160,7 +160,7 @@ day three.
 
 Reframe a failing test as the test *doing its job*: "the test found a bug for you." Two
 non-negotiables: students must hand-calculate expected paths **before** running (trace on
-the Lesson 1 grid worksheet), and every direction/edge case needs coverage. Watch for the
+the Lesson 4-1 grid worksheet), and every direction/edge case needs coverage. Watch for the
 student who runs the code, copies the output into `expected`, and declares victory — that
 tests nothing. Repeat the motto until it sticks: *test on screen before you test on the
 floor.* Five minutes of testing saves thirty minutes chasing a robot.

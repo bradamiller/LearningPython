@@ -1,12 +1,12 @@
 ---
-title: "Lesson 3 · Dijkstra's Algorithm — The Concept"
-sidebar_label: "3 · Dijkstra's Concept"
+title: "Lesson 5-3 · Dijkstra's Algorithm — The Concept"
+sidebar_label: "5-3 · Dijkstra's Concept"
 sidebar_position: 3
 ---
 
 <LessonHeader
   eyebrow="Module 5 · Dijkstra's Algorithm"
-  title="Lesson 3 · Dijkstra's Algorithm — The Concept"
+  title="Lesson 5-3 · Dijkstra's Algorithm — The Concept"
   meta={['55 min', 'No coding', 'Hand-trace on paper']}
 />
 
@@ -17,7 +17,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 This is the algorithm GPS systems use to find the shortest route — invented by Edsger
 Dijkstra in 1956 and still in use today. You'll learn it the way you learned Manhattan:
 **by hand, on paper**, before writing a line of code. Trace it a few times and the code in
-Lessons 4–5 will feel like transcription.
+Lessons 5-4 and 5-5 will feel like transcription.
 
 <Objectives>
 
@@ -98,7 +98,7 @@ Find the shortest path from (0,0) to (2,2), with (1,1) blocked:
 Work it one row at a time. Each round: pick the unvisited node with the smallest
 distance, update its neighbors, mark it visited. The first row is done for you —
 carry on until the destination is visited. **Keep this table**: you'll use it as a
-test case in Lessons 4 and 5, so it has to be yours.
+test case in Lessons 5-4 and 5-5, so it has to be yours.
 
 | Step | Visit | Dist | Updates neighbors | visited grows to |
 |---|---|---|---|---|
@@ -175,7 +175,7 @@ ties give equally short paths.
 
 </Reveal>
 
-One thing to carry into Lesson 5, where you write this as code: the reconstruction
+One thing to carry into Lesson 5-5, where you write this as code: the reconstruction
 always hands back the *whole* route, start included, but the robot is already
 standing on the start. The code drops that first entry, so what `compute_path`
 returns begins at the first place the robot actually drives to — exactly like
@@ -226,8 +226,7 @@ you proceed — that's the core skill. The #1 confusion: they want to visit the 
 the *destination*; reinforce that it's smallest distance from the *start*. Emphasize that
 blocked nodes simply aren't in the graph — the algorithm doesn't "skip" them, they're
 absent. Path reconstruction feels backward; connect it to "how did you get here?" (you
-hear the last step first). Save every completed trace — they're the test cases for Lessons
-4 and 5.
+hear the last step first). Save every completed trace — they're the test cases for Lessons 5-4 and 5-5.
 
 </TeacherNote>
 
@@ -250,7 +249,7 @@ hear the last step first). Save every completed trace — they're the test cases
 correctly, and reconstruct a path. **Exit ticket:** "Given `previous = {(0,0): None, (0,1):
 (0,0), (1,1): (0,1)}`, reconstruct the path from (0,0) to (1,1)." (`[(0,0),(0,1),(1,1)]`).
 **Preview:** next lesson we start building the **Dijkstra class** — constructor and graph
-now, the algorithm in Lesson 5.
+now, the algorithm in Lesson 5-5.
 
 </TeacherNote>
 

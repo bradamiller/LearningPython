@@ -516,6 +516,20 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   - For a final-project lesson, "The mission" and "The rubric" stay plain — they're
     the brief, not the work; the planning/testing/reflecting sections carry the
     badge.
+- **LESSON NUMBERING IS `module-lesson` (Brad, 2026-09-20).** Every lesson is
+  "Lesson 1-7", "Lesson 5-3" — module number, hyphen, lesson number — in the
+  frontmatter `title`, the `sidebar_label` (without the word "Lesson"), the
+  `<LessonHeader title>`, and every cross-reference in prose. **Cross-references
+  are always fully qualified now**, so "see Lesson 1-2" reads the same from any
+  module; there is no such thing as a bare "Lesson 2" any more. Ranges read
+  "Lessons 5-4 and 5-5" (adjacent) or "Lessons 2-1 through 2-6" (wider) — an
+  en-dash range like "5-4–5-5" is unreadable next to the hyphens. Edge cases:
+  Module 1's kickoff is **1-0**, Module 4's overview is **4-0** (its title stays
+  "Module Overview · The Big Picture"), and the final-project titles dropped the
+  redundant "Module N" — "Lesson 2-10 · Final Project". File names keep their old
+  `lesson-NN-slug.mdx` form and URLs are unchanged; only display text moved.
+  Printable checks and the pacing guide read titles from frontmatter, so both
+  followed automatically.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
   starts with Wait for button press / `board.wait_for_button()` (programs auto-run

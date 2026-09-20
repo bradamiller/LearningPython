@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4 · The Dijkstra Class"
-sidebar_label: "4 · The Dijkstra Class"
+title: "Lesson 5-4 · The Dijkstra Class"
+sidebar_label: "5-4 · The Dijkstra Class"
 sidebar_position: 4
 ---
 
 <LessonHeader
   eyebrow="Module 5 · Dijkstra's Algorithm"
-  title="Lesson 4 · The Dijkstra Class"
+  title="Lesson 5-4 · The Dijkstra Class"
   meta={['55 min', 'Python classes', 'Structure first']}
 />
 
@@ -17,7 +17,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Time to turn the concept into code — but in stages. This lesson builds the **class
 structure**: the constructor, the instance variables, and `build_graph` (which creates
 the grid and removes blocked nodes). The `compute_path` algorithm itself waits until
-Lesson 5. The class is designed as a **drop-in replacement** for Manhattan — same method
+Lesson 5-5. The class is designed as a **drop-in replacement** for Manhattan — same method
 name, same return type — so the Navigator works with either.
 
 <Objectives>
@@ -74,7 +74,7 @@ any of the hard part.
 
 ### Step 1 · `build_graph` — build and block in one pass
 
-This is the `build_grid_graph` idea from Lesson 2, adapted as a method that also skips
+This is the `build_grid_graph` idea from Lesson 5-2, adapted as a method that also skips
 blocked nodes. It does both jobs at once — skip a node if it's blocked, and only add a
 neighbor if *that* neighbor isn't blocked:
 
@@ -120,7 +120,7 @@ Build in stages: leave the algorithm as a placeholder so you can test the struct
 
 ```python
 def compute_path(self, destination):
-    # TODO: implement Dijkstra's algorithm (Lesson 5)
+    # TODO: implement Dijkstra's algorithm (Lesson 5-5)
     print(f"compute_path from {self.position} to {destination}")
     print(f"Graph has {len(self.graph)} nodes")
     return []
@@ -137,12 +137,12 @@ Returning an empty list of the right *type* means you can test `__init__` and
     {text: 'To save memory'},
     {text: 'It will never be implemented'},
   ]}
-  explanation="Building in stages keeps the load manageable — verify the graph is correct now, then focus entirely on the algorithm in Lesson 5."
+  explanation="Building in stages keeps the load manageable — verify the graph is correct now, then focus entirely on the algorithm in Lesson 5-5."
 />
 
 ### Step 3 · Test the structure
 
-Create objects and check the graph against what you know from Lessons 1–2:
+Create objects and check the graph against what you know from Lessons 5-1 and 5-2:
 
 ```python
 d = Dijkstra((0, 0), [])
@@ -184,7 +184,7 @@ of `(row, col)` tuples:
 </CardGrid>
 
 Because the interface matches, the Navigator can call `pathfinder.compute_path(dest)`
-without caring which class it holds. You'll swap them in Lesson 6.
+without caring which class it holds. You'll swap them in Lesson 5-6.
 
 <KnowledgeCheck
   question="Why does it matter that Dijkstra's compute_path returns the same type as Manhattan's?"
@@ -220,7 +220,7 @@ checks — a blocked node reappears as someone's neighbor and the path goes wron
 **Formative:** explain each instance variable, predict node counts given a blocked list,
 and confirm blocked nodes appear in no neighbor lists. **Exit ticket:** "For `Dijkstra((0,0),
 [(1,0),(2,1)])` on a 4×4 grid, how many nodes in the graph?" (14). **Preview:** next lesson
-we fill in `compute_path` with the full algorithm you traced by hand in Lesson 3.
+we fill in `compute_path` with the full algorithm you traced by hand in Lesson 5-3.
 
 </TeacherNote>
 

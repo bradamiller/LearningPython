@@ -1,12 +1,12 @@
 ---
-title: "Lesson 5 · Implementing compute_path()"
-sidebar_label: "5 · Implementing compute_path"
+title: "Lesson 5-5 · Implementing compute_path()"
+sidebar_label: "5-5 · Implementing compute_path"
 sidebar_position: 5
 ---
 
 <LessonHeader
   eyebrow="Module 5 · Dijkstra's Algorithm"
-  title="Lesson 5 · Implementing compute_path()"
+  title="Lesson 5-5 · Implementing compute_path()"
   meta={['60 min', 'Python algorithm', 'Paper trace → code']}
 />
 
@@ -14,7 +14,7 @@ sidebar_position: 5
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-This is the heart of Module 5: turning the hand-trace from Lesson 3 into working Python.
+This is the heart of Module 5: turning the hand-trace from Lesson 5-3 into working Python.
 Every step you did on paper becomes a few lines of code — no new Python concepts, just
 dictionaries, lists, loops, and `in` combined into a precise algorithm.
 
@@ -200,7 +200,7 @@ difference. Two classes that agree on what they return are interchangeable; two
 that disagree by one element produce a robot that lurches on every first step.
 
 So the step count is simply `len(path)`, the same as Manhattan. Run your code on
-the *exact* grids you traced in Lesson 3 — the route should match your hand traces
+the *exact* grids you traced in Lesson 5-3 — the route should match your hand traces
 from the second node on. And on a clear grid, Dijkstra's step count matches
 Manhattan's.
 
@@ -241,7 +241,7 @@ This exact pattern — explore, relax distances, reconstruct — underlies real 
 
 Have a working solution file ready; students who don't finish can't proceed. Build exactly
 as shown: initialization (test with prints), find-minimum (test), neighbor update (test),
-full loop (test), reconstruction (test). Keep the Lesson 3 trace table on the board and
+full loop (test), reconstruction (test). Keep the Lesson 5-3 trace table on the board and
 point to the matching column as you write each block — "this loop is the Update Neighbors
 column." The find-minimum pattern trips people up; practice it in isolation ("find the
 smallest number in a list") first. Watch the off-by-one: a path of N nodes has N − 1 steps.

@@ -1,12 +1,12 @@
 ---
-title: "Lesson 6 · Two-Sensor Line Following"
-sidebar_label: "6 · Two-Sensor Following"
+title: "Lesson 2-6 · Two-Sensor Line Following"
+sidebar_label: "2-6 · Two-Sensor Following"
 sidebar_position: 6
 ---
 
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
-  title="Lesson 6 · Two-Sensor Line Following"
+  title="Lesson 2-6 · Two-Sensor Line Following"
   meta={['50–60 min', 'Control loops', 'Following the center']}
 />
 
@@ -69,7 +69,7 @@ and which way:
 
 ## The control loop (and that negative sign)
 
-The loop is the same rhythm as Lesson 5 — read, compute, steer — just with the new
+The loop is the same rhythm as Lesson 2-5 — read, compute, steer — just with the new
 error and a **negated** correction:
 
 ```python
@@ -103,7 +103,7 @@ steer left — and in `arcade()` a *negative* turn steers left. Negating the
 correction lines the math up with reality.
 
 <KnowledgeCheck
-  question="Why is the correction negated in arcade(base_effort, -correction) here, when Lesson 5 didn't negate it?"
+  question="Why is the correction negated in arcade(base_effort, -correction) here, when Lesson 2-5 didn't negate it?"
   options={[
     {text: 'The meaning of a positive error flipped, so the steer direction has to flip too', correct: true},
     {text: 'Two sensors always need a negative sign no matter what'},
@@ -118,7 +118,7 @@ correction lines the math up with reality.
 Before the control loop, run a read-and-print program and have students **manually
 slide the robot across the line**, watching `error = left − right` go positive,
 negative, and zero in real time. That physical intuition makes the negative sign
-click. Spend real time on *why* the sign flipped from Lesson 5 (the meaning of a
+click. Spend real time on *why* the sign flipped from Lesson 2-5 (the meaning of a
 positive error changed) — it's the subtle point of the lesson. Expect to re-tune
 `Kp`, since the error range differs from the one-sensor version.
 
@@ -128,7 +128,7 @@ positive error changed) — it's the subtle point of the lesson. Expect to re-tu
 
 1. Run the two-sensor follower with the line running *between* the sensors, and
    watch it track the circle.
-2. Run your Lesson 5 (one-sensor) version right after. Which is smoother? Which
+2. Run your Lesson 2-5 (one-sensor) version right after. Which is smoother? Which
    handles the curves and higher speeds better?
 3. **Challenge:** turn `base_effort` up to 0.4–0.5 on both and watch what happens
    to each. Which one degrades first, and what does that tell you about how much
@@ -142,7 +142,7 @@ positive error changed) — it's the subtle point of the lesson. Expect to re-tu
     {text: 'A dead battery'},
     {text: 'The end of the program'},
   ]}
-  explanation="Both sensors on black at once usually means a crossing line. The two-sensor follower can't tell that apart from 'centered' — which is exactly the problem Lesson 7 solves."
+  explanation="Both sensors on black at once usually means a crossing line. The two-sensor follower can't tell that apart from 'centered' — which is exactly the problem Lesson 2-7 solves."
 />
 
 <TeacherNote title="Differentiation & the cliffhanger">
@@ -151,7 +151,7 @@ positive error changed) — it's the subtle point of the lesson. Expect to re-tu
 drifted right" — and lean on the explorer program. **More challenge:** a speed boost
 on long straights (when error stays near zero), or track at max speed and re-tune.
 End by flagging the last table row: both-sensors-high gives error ≈ 0, so the robot
-*ignores* an intersection. That ambiguity is the hook for Lesson 7.
+*ignores* an intersection. That ambiguity is the hook for Lesson 2-7.
 
 </TeacherNote>
 
