@@ -159,7 +159,7 @@ All are registered globally — **no import lines needed** in `.mdx` files.
 <LessonHeader
   eyebrow="Module 1 · Learning to Drive"
   title="Lesson 1 · Meet the XRP"
-  meta={['50–60 min', 'Phase A · Blockly Foundation', 'No experience needed']} />
+  meta={['50–60 min', 'Blockly Foundation', 'No experience needed']} />
 
 <TeacherBanner>Shown only in teacher mode — the "you're seeing teacher view" note.</TeacherBanner>
 
@@ -531,7 +531,12 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
-  Phase chips A (1–5) / B · Driving Challenges (6–7) / C (8–11); every program
+  the middle header chip names the TOPIC, matching Modules 2–5 ("while loops",
+  "Python data"). Module 1's reads "Blockly Foundation" (1-1 to 1-5), "Driving
+  Challenges" (1-6, 1-7) or "Transition to Python" (1-8 to 1-11) — **the "Phase A ·
+  / B · / C ·" prefixes were dropped 2026-09-20** (Brad: only Module 1 had phases,
+  so the letters implied a course-wide scheme that doesn't exist; the grouping
+  labels stay because Module 1 really does change tools partway through). Every program
   starts with Wait for button press / `board.wait_for_button()` (programs auto-run
   on upload) — **⚠️ not yet true everywhere: none of the 11 Python examples in
   L8–L11 call `board.wait_for_button()`, and five of the nine composed Blockly

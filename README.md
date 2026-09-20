@@ -30,9 +30,12 @@ and open items.
 
 ## Style conventions (enforced across lessons)
 
-- **Phases (Module 1):** Lesson 0 is a no-code kickoff discussion ("What Is a
-  Robot?"); then A · Blockly Foundation (lessons 1–5), B · Driving Challenges (6–7),
-  C · Transition to Python (8–11) — shown in each lesson header.
+- **Lesson numbering is `module-lesson`:** "Lesson 1-7", "Lesson 5-3", in titles,
+  sidebar labels and every cross-reference.
+- **The middle header chip names the topic** — "Blockly Foundation", "while loops",
+  "Python data", "Capstone". In Module 1 that chip also marks the arc: Blockly
+  Foundation (1-1 to 1-5), Driving Challenges (1-6, 1-7), Transition to Python
+  (1-8 to 1-11), with 1-0 a no-code kickoff discussion.
 - **Function names carry from Blockly to Python unchanged:** `square(side_length)`,
   `triangle(side_length)`, `polygon(sides, side_length)`. The Blockly and Python
   versions of a function have the same name and the same parameters, in the same
@@ -105,7 +108,7 @@ example. The available tags:
 
 ```mdx
 <LessonHeader eyebrow="Module 1 · Learning to Drive" title="Lesson 1 · Meet the XRP"
-  meta={['50–60 min', 'Phase A', 'No experience needed']} />
+  meta={['50–60 min', 'Blockly Foundation', 'No experience needed']} />
 
 <Objectives> ...bulleted list... </Objectives>
 
