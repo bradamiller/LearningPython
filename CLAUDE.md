@@ -254,6 +254,30 @@ The <Block name="straight" /> block drives in a straight line.   {/* inline */}
   caption="A stacked program, like the real workspace." />
 ```
 
+**Function-call blocks are generated, not from the dictionary (2026-09-20).** The
+dictionary has no call block, because Blockly builds one per user-defined function
+name. `scripts/make_call_block.py <label> <out.png>` synthesizes one:
+
+```bash
+python3 scripts/make_call_block.py square static/img/blocks/call_square.png
+```
+
+It lifts the **silhouette from a real block's alpha channel**
+(`wait_for_button_press.png`, widened by tiling one constant-profile column), so
+corner radii, the top notch, the bottom tab and their antialiasing are the real
+artwork's and a generated block stacks pixel-perfectly against real ones. Only
+fill `#885498`, border `#6A4377`, highlight `#AA83B6` (all sampled from
+`function_def.png`, so it reads as the Functions category) and the label are
+drawn. Label is Liberation Sans 15px white, anchored on the **ascender line**, not
+the glyph bbox — anchoring on the bbox makes a word with no capitals or descenders
+float low. Existing: `call_square.png` (L1-3).
+
+A no-parameter call block is labelled with **just the function name** — no "call"
+prefix. That's inferred from Brad's real L1-4 screenshot, where a call *with* a
+parameter reads `square with: side_length`. If XRP Code actually shows something
+else for the no-parameter case, regenerate with the right label and fix the L1-3
+prose that points this out.
+
 **Container / C-shaped blocks (Repeat, If, function def):** give the block a
 `children` array and the component draws a real, stretching C — not a bracket.
 `scripts/slice_c_blocks.py` cuts each container image in `static/img/blocks/` into

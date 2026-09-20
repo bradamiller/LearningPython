@@ -113,12 +113,19 @@ nothing to hand back, so there's no return.
 Your main program then becomes short and readable — wait for the button, then
 call `square` as many times as you want:
 
-```text
-Wait for button press
-call square
-call square
-call square
-```
+<BlockProgram
+  blocks={[
+    {name: 'wait_for_button_press'},
+    {name: 'call_square', alt: 'square call block', note: 'the call block is just the function’s name'},
+    {name: 'call_square', alt: 'square call block'},
+    {name: 'call_square', alt: 'square call block'},
+  ]}
+  caption="Three squares, three blocks. Everything about how a square gets drawn lives in the definition — the main program only says when."
+/>
+
+Notice the call block carries no extra wording: it's labelled **square**, because
+that's the name you gave the function. Your own functions turn into blocks that
+sit in the palette alongside the built-in ones.
 
 <KnowledgeCheck
   question="What's the difference between defining a function and calling it?"
