@@ -87,12 +87,12 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://xrpcode.wpi.edu/',
+            href: 'https://xrpcode.wpi.edu/staging',
             label: 'XRP Code IDE',
             position: 'right',
           },
           {
-            href: 'https://github.com/bradamiller/IntoToPython',
+            href: 'https://github.com/bradamiller/LearningPython',
             label: 'GitHub',
             position: 'right',
           },
@@ -110,7 +110,7 @@ const config = {
           {
             title: 'Resources',
             items: [
-              {label: 'XRP Code IDE', href: 'https://xrpcode.wpi.edu/'},
+              {label: 'XRP Code IDE', href: 'https://xrpcode.wpi.edu/staging'},
               {label: 'XRP User Guide', href: 'https://xrpusersguide.readthedocs.io/'},
               {label: 'Support Forum', href: 'https://xrp.discourse.group/'},
             ],

@@ -569,9 +569,11 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   on the symptom. Deeper how-to lives in the **XRPCode chapter of the XRP User
   Guide** (`https://xrpusersguide.readthedocs.io/en/latest/course/XRPCode.html` —
   panels, USB connection, troubleshooting); link there rather than re-documenting
-  the IDE. **Not yet propagated:** the other nine lessons' Resources lists still
-  point at `https://xrpcode.wpi.edu/` (production, no `/staging`) — ask Brad before
-  changing them site-wide.
+  the IDE. **Propagated site-wide (Brad, 2026-09-20):** every link to the IDE now
+  carries `/staging` — the navbar and footer entries in `docusaurus.config.js` and
+  all eight remaining lesson Resources lists. There is no bare
+  `https://xrpcode.wpi.edu/` link left in the site; new links must include
+  `/staging` too.
 - **IMU CALIBRATION: PUT THE ROBOT DOWN BEFORE POWER-ON (Brad, 2026-09-19).** For
   the first few seconds after power-on or reset, the XRP calibrates its IMU, and
   the calibration assumes the robot is completely still. Held in a hand — or
