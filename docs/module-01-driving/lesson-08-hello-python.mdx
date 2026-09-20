@@ -32,6 +32,66 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-01-driving/lesson-08-hello-python" />
 
+## Why switch to Python at all?
+
+Blockly wasn't training wheels. Every idea you've used so far — loops, functions,
+parameters — is a real programming idea, and you learned it without spending a
+single minute on typos. That was the point: get the thinking first.
+
+But Blockly can only offer you the blocks somebody built for it. Python is a
+**general-purpose programming language**, which means it isn't tied to robots, or
+to any one job. It's one of the most widely used languages in the world, and the
+same Python you're about to write also shows up in:
+
+- **Web development** — the servers behind sites and apps
+- **Data science** — analyzing and charting real data sets
+- **Machine learning and artificial intelligence** — most of the field's everyday
+  tools are written in or driven by Python
+- **Automation** — the scripts that do a tedious job so a person doesn't have to
+- and plenty more, from scientific research to finance to visual effects
+
+The practical reason matters just as much. As programs get bigger, the thing that
+saves you isn't writing faster — it's **not having to write it at all**. Python
+gives you access to an enormous body of software **libraries and frameworks**:
+code other people have already written, tested, and handed over for anyone to use.
+Need to read a sensor, talk to a website, do statistics, or draw a graph? Somebody
+has almost certainly published good code for it, and using it is usually a single
+import line.
+
+You're about to meet exactly that in the next section — `XRPLib`, the library that
+makes your robot's motors and sensors a few words of Python instead of a semester
+of electronics. It's the same deal the professionals get, just aimed at a robot
+that fits on a desk.
+
+<KnowledgeCheck
+  question="What's the main advantage of a general-purpose language like Python over Blockly?"
+  options={[
+    {text: 'Python programs always run faster'},
+    {text: "It isn't limited to the blocks someone built, and it opens up libraries other people have already written and tested", correct: true},
+    {text: 'Python makes it impossible to write a program with mistakes in it'},
+    {text: 'Blockly cannot do loops or functions'},
+  ]}
+  explanation="Blockly gave you the ideas, and it can do loops and functions perfectly well. What it can't do is go beyond the blocks provided, or reach the huge collection of ready-made Python libraries you can build on as programs get more complex."
+/>
+
+<TeacherNote title="Answering 'why did we waste time on blocks, then?'">
+
+Somebody asks this every year, usually the student who's already programmed a
+little, and the honest answer lands better than a defensive one: they learned
+loops, functions and parameters without losing a single class period to missing
+colons, and those ideas transfer intact — which they're about to see for
+themselves when the same square program comes out the other side in text.
+
+If you want a concrete hook for the library argument, name something students
+recognize: Instagram's servers run on Django, a Python web framework; Spotify
+leans on Python for the data and recommendation pipelines behind its playlists;
+and the first image of a black hole was assembled with Python libraries. The point
+isn't the trivia, it's that none of those teams wrote their own math, plotting or
+networking code from scratch. Neither will your students, starting with XRPLib in
+the next section.
+
+</TeacherNote>
+
 ## The same program, two ways
 
 Here's the **Straight** block you've used all module, and the Python that does the
@@ -296,7 +356,8 @@ Python is one of the most-used languages in the world, well beyond robots:
 
 ## Wrap-up
 
-- Why learn Python if Blockly works? (More powerful and flexible; it's what real programmers use.)
+- Why learn Python if Blockly works? (It's general-purpose rather than limited to the blocks provided, it's used everywhere from web development to data science to AI, and it lets you build on libraries other people have already written and tested.)
+- Name a job Python does outside robotics. (Web development, data science, machine learning, automation — any of these.)
 - Name two of the five syntax rules. (Indentation, colons, lowercase, parentheses, quotes.)
 - What is `print()` good for? (Showing messages and debugging.)
 
