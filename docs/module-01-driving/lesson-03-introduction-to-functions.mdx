@@ -24,7 +24,8 @@ you like. That's a **function**.
 By the end of this lesson you will be able to:
 
 - Explain what a function is — a named, reusable block of code
-- Define a function in Blockly using the **"to do something"** block
+- Define a function in Blockly using the **"to do something"** block — and say why
+  the version with a **return** value isn't the one you want here
 - Call your function from the main program
 - Recognize when a function will make your code shorter and easier to change
 
@@ -85,6 +86,30 @@ A function has two parts, and keeping them straight is the whole lesson:
   caption="The definition: the square loop now lives inside a function named square."
 />
 
+<Callout title="Two function blocks in the palette — take the first one">
+
+Open the **Functions** category and you'll find *two* definition blocks that look
+almost the same. The one you want says **to do something** and nothing else. The
+other one has a **return** socket on its bottom row — leave that one alone for
+this whole module.
+
+The difference isn't cosmetic. A plain function is a stack block: it snaps into
+your program like any other command. A function with a return value is a
+*rounded* block instead, because it stands for a **value**, not an action — so
+when you go to call it, it won't snap into your program at all. It only fits in
+a slot where a number or a word belongs, like the *cm* box on a Straight block.
+
+If your `square` call block looks rounded and refuses to click into place, that's
+the symptom: you picked the return version. Delete it and build the definition
+again with the plain block.
+
+</Callout>
+
+You'll use `return` eventually — in Lesson 1-10, when you write Python functions
+that *work something out* and hand back the answer, like the turn angle for a
+polygon. But `square` doesn't compute an answer; it drives the robot. There's
+nothing to hand back, so there's no return.
+
 Your main program then becomes short and readable — wait for the button, then
 call `square` as many times as you want:
 
@@ -115,6 +140,17 @@ call square
     {text: '1'},
   ]}
   explanation="Each call draws 4 sides, and you called it 4 times: 4 × 4 = 16."
+/>
+
+<KnowledgeCheck
+  question="You built your square function, but the call block that appeared is rounded and won't snap into your main program. What went wrong?"
+  options={[
+    {text: 'You used the definition block with a return value instead of the plain one', correct: true},
+    {text: 'The function is empty, so there is nothing to call'},
+    {text: 'You have to press Run before the block will connect'},
+    {text: 'Function calls always go inside a Repeat block'},
+  ]}
+  explanation="A function with a return value stands for a value, so its call block is rounded and only fits in a slot where a number belongs — it can't join the program stack. Rebuild the definition with the plain 'to do something' block."
 />
 
 ## Activity · Build reusable shapes
@@ -150,6 +186,15 @@ just to add `call` blocks. **More challenge:** have them build a pattern —
 square, triangle, square, triangle — from four calls. **Watch for:** students who
 *re-define* the function instead of *calling* it. Point them to the ready-made
 `square` block in the Functions palette.
+
+**The return-block slip.** The two definition blocks sit next to each other in the
+palette and read almost identically, so a handful of students will grab the one
+with the return socket every year. They usually don't notice at the definition
+stage — everything looks fine until the call block comes out rounded and won't
+connect, and then they assume they've broken something. Name the two blocks when
+you demo, and when a hand goes up over a call block that won't snap, that's the
+first thing to check. The fix is to delete the definition and rebuild it with the
+plain block; the blocks inside can be dragged out and reused rather than rebuilt.
 
 </TeacherNote>
 

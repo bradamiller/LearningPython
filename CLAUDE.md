@@ -560,6 +560,15 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   program ends, so NO program ends with **Stop motors** / `drivetrain.stop()`.
   Keep stops only where they're functional mid-program (stop → turn; a
   `track_until_cross()` that ends its motion before returning).
+- **BLOCKLY FUNCTIONS: NO RETURN VALUE (Brad, 2026-09-20).** The Functions palette
+  offers two definition blocks — plain **"to do something"** and a version with a
+  **return** socket. Module 1 uses the plain one only. The return version's call
+  block is a rounded value block, so it will not snap into the program stack, and
+  students who grab it think they've broken something. L1-3 calls this out with a
+  Callout, a knowledge check on the rounded-call-block symptom, and a teacher note.
+  `return` is introduced later, in **L1-10**, in Python, for functions that compute
+  an answer (`360 / sides`) — don't frame return as wrong, only as not applicable
+  to functions that drive the robot.
 - **XRP CODE URL AND BROWSER (Brad, 2026-09-18).** The IDE students use is
   **https://xrpcode.wpi.edu/staging**, and it works **only in Google Chrome or
   Microsoft Edge** — the serial and Bluetooth APIs it needs to reach a robot exist
