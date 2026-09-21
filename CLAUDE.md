@@ -256,21 +256,37 @@ The <Block name="straight" /> block drives in a straight line.   {/* inline */}
 
 **Function-call blocks are generated, not from the dictionary (2026-09-20).** The
 dictionary has no call block, because Blockly builds one per user-defined function
-name. `scripts/make_call_block.py <label> <out.png>` synthesizes one:
+name. `scripts/make_call_block.py` synthesizes one, with or without parameters:
 
 ```bash
 python3 scripts/make_call_block.py square static/img/blocks/call_square.png
+python3 scripts/make_call_block.py polygon static/img/blocks/call_polygon_4_30.png \
+    --param sides=4 --param side_length=30
 ```
 
-It lifts the **silhouette from a real block's alpha channel**
-(`wait_for_button_press.png`, widened by tiling one constant-profile column), so
-corner radii, the top notch, the bottom tab and their antialiasing are the real
-artwork's and a generated block stacks pixel-perfectly against real ones. Only
-fill `#885498`, border `#6A4377`, highlight `#AA83B6` (all sampled from
-`function_def.png`, so it reads as the Functions category) and the label are
-drawn. Label is Liberation Sans 15px white, anchored on the **ascender line**, not
-the glyph bbox — anchoring on the bbox makes a word with no capitals or descenders
-float low. Existing: `call_square.png` (L1-3).
+Every **silhouette is lifted from a real block's alpha channel** and stretched
+through one constant-profile row/column, so corner radii, the top notch, the
+bottom tab, the input socket and their antialiasing are the real artwork's and a
+generated block stacks pixel-perfectly against real ones. Only fill `#885498`,
+border `#6A4377`, highlight `#AA83B6` (sampled from `function_def.png`, so it
+reads as the Functions category) and the labels are drawn. Two details that were
+bugs before they were rules: the label is anchored on the **ascender line**, not
+the glyph bbox (bbox anchoring floats a word with no capitals or descenders), and
+the socket is cut with the plug's **exact** alpha, not a dilated one, or a 1px
+transparent seam shows between block and plug.
+
+With parameters the block gets a `name  with:` label row plus one 26px row per
+parameter, each with a real `numeric_const.png` widened through its own field and
+relabelled, plugged into a socket cut in the right edge — the external-input
+layout XRP Code actually uses, confirmed against Brad's `square-function.png`
+screenshot (which is at dictionary scale, so measurements transfer 1:1).
+
+Existing: `call_square.png` (L1-3), `call_square_{20,35,60}.png` (L1-4),
+`call_polygon_{4_30,3_30,6_20,8_15}.png` (L1-5).
+
+**A ```text fence showing block calls is a bug** — use these images. The
+exception is genuine plain-English pseudocode, e.g. L1-11's planning step, which
+is explicitly "not Python" and should stay a text fence.
 
 A no-parameter call block is labelled with **just the function name** — no "call"
 prefix. That's inferred from Brad's real L1-4 screenshot, where a call *with* a

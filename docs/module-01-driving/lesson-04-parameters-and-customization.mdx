@@ -48,11 +48,14 @@ See how the **Straight** block's *cm* slot holds the parameter instead of a fixe
 number, and the call at the bottom fills it in with `35`. Now one function draws
 every size — just pass a different value each time you call it:
 
-```text
-call square (side_length: 35)     → medium
-call square (side_length: 60)     → big
-call square (side_length: 20)     → small
-```
+<BlockProgram
+  blocks={[
+    {name: 'call_square_35', alt: 'square call block passing side_length 35', note: 'medium'},
+    {name: 'call_square_60', alt: 'square call block passing side_length 60', note: 'big'},
+    {name: 'call_square_20', alt: 'square call block passing side_length 20', note: 'small'},
+  ]}
+  caption="One function, three sizes. Only the number in the socket changes."
+/>
 
 Getting there takes two moves that aren't obvious from looking at the blocks:
 first you **add** the parameter to the function, then you **use** its value inside

@@ -69,13 +69,16 @@ works before turning students loose on other shapes.
 Real programmers test one function against many inputs. In your main program, call
 `polygon` with different values and predict each shape before it runs:
 
-```text
-Wait for button press
-call polygon (sides: 4, side_length: 30)
-call polygon (sides: 3, side_length: 30)
-call polygon (sides: 6, side_length: 20)
-call polygon (sides: 8, side_length: 15)
-```
+<BlockProgram
+  blocks={[
+    {name: 'wait_for_button_press'},
+    {name: 'call_polygon_4_30', alt: 'polygon call block with sides 4 and side_length 30'},
+    {name: 'call_polygon_3_30', alt: 'polygon call block with sides 3 and side_length 30'},
+    {name: 'call_polygon_6_20', alt: 'polygon call block with sides 6 and side_length 20'},
+    {name: 'call_polygon_8_15', alt: 'polygon call block with sides 8 and side_length 15'},
+  ]}
+  caption="Four calls to one function. The arguments fill the sockets in order — sides first, then side_length."
+/>
 
 Write down what you expect each line to draw **before** you upload. Then run it
 and see whether the robot agrees with you.
