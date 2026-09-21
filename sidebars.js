@@ -24,9 +24,10 @@ const sidebars = {
         'module-01-driving/lesson-06-differential-drive',
         'module-01-driving/lesson-07-blockly-challenges',
         'module-01-driving/lesson-08-hello-python',
-        'module-01-driving/lesson-09-python-loops',
-        'module-01-driving/lesson-10-python-functions',
-        'module-01-driving/lesson-11-python-final-project',
+        'module-01-driving/lesson-09-variables-and-expressions',
+        'module-01-driving/lesson-10-python-loops',
+        'module-01-driving/lesson-11-python-functions',
+        'module-01-driving/lesson-12-python-final-project',
       ],
     },
     {

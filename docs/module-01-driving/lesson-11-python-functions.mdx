@@ -1,12 +1,12 @@
 ---
-title: "Lesson 1-10 · Python Functions"
-sidebar_label: "1-10 · Python Functions"
-sidebar_position: 10
+title: "Lesson 1-11 · Python Functions"
+sidebar_label: "1-11 · Python Functions"
+sidebar_position: 11
 ---
 
 <LessonHeader
   eyebrow="Module 1 · Learning to Drive"
-  title="Lesson 1-10 · Python Functions"
+  title="Lesson 1-11 · Python Functions"
   meta={['50–60 min', 'Transition to Python', 'def, parameters, return']}
 />
 
@@ -26,11 +26,12 @@ By the end of this lesson you will be able to:
 - Define a function in Python with `def name(parameters):`
 - Call a function with arguments and use the parameters inside its body
 - Return a value from a function and use it
-- Understand that variables inside a function are **local** to it
+- Explain that variables and parameters inside a function are **local** to it — and
+  why a function can still read a name like `drivetrain` from the main program
 
 </Objectives>
 
-<QuizLink id="module-01-driving/lesson-10-python-functions" />
+<QuizLink id="module-01-driving/lesson-11-python-functions" />
 
 ## From "to do something" to `def`
 
@@ -135,6 +136,58 @@ polygon(3, 25)   # triangle
 polygon(8, 15)   # octagon
 ```
 
+## Where a variable lives
+
+Look at `angle` in that last program. It's created inside `polygon`, and it's
+**local** to it: it comes into existence when `polygon` starts running, and it's
+gone the moment `polygon` finishes. Ask for it from the main program and Python
+says it doesn't know the name.
+
+```python
+def polygon(sides, side_length):
+    angle = calculate_angle(sides)      # angle is born here
+    ...                                 # and dies when polygon returns
+
+polygon(4, 30)
+print(angle)          # NameError — there's no angle out here
+```
+
+Parameters work the same way. `sides` and `side_length` are locals too; they're
+just locals that arrive already holding the values you passed in. That's why two
+different functions can both use a parameter called `sides` without interfering —
+each call gets its own.
+
+This is a feature, not a restriction. Because a function's working names are
+sealed inside it, you can write one without checking what every other function in
+your program happens to have called things.
+
+### So why does `drivetrain` work?
+
+Fair question, because it breaks the pattern. Look again:
+
+```python
+drivetrain = DifferentialDrive.get_default_differential_drive()
+
+def square(side_length):
+    for i in range(4):
+        drivetrain.straight(side_length)      # not local — where's this from?
+```
+
+`drivetrain` isn't a parameter and it isn't created inside `square`. It's defined
+out in the main program, and the rule is this: when Python meets a name inside a
+function, it looks for a local one first, and if there isn't one it looks
+**outside**. So a function can *read* names from the surrounding program. That's
+exactly why the three-step XRPLib pattern works — you make the drivetrain once at
+the top and every function you write can reach it.
+
+Reading outward is fine and this course does it constantly. **Assigning** to an
+outside name from inside a function is a different matter, and Python deliberately
+makes it awkward: writing `drivetrain = something` inside a function creates a
+*new local* by that name rather than changing the outer one. We're not going to
+need that in Module 1. When you get to classes in Module 2, `self.` turns out to
+be the clean answer to "how does an object remember something between calls" —
+this is the problem it solves.
+
 <KnowledgeCheck
   question="A variable created inside a function (like angle above) can be used…"
   options={[
@@ -143,8 +196,37 @@ polygon(8, 15)   # octagon
     {text: 'Only after the program ends'},
     {text: 'Only in other functions'},
   ]}
-  explanation="Variables defined in a function are local to it. Code outside can't see angle — which keeps functions self-contained and safe."
+  explanation="Variables defined in a function are local to it: they're created when the function runs and gone when it returns. Code outside can't see angle."
 />
+
+<KnowledgeCheck
+  question="If a function's variables are local, how can square() use drivetrain, which was created in the main program?"
+  options={[
+    {text: 'Because drivetrain is special to XRPLib'},
+    {text: 'When a name is not local, Python looks outside the function for it — functions can read names from the surrounding program', correct: true},
+    {text: 'It does not work; that program has a bug'},
+    {text: 'Because drivetrain is passed in automatically'},
+  ]}
+  explanation="Python checks for a local name first, then looks outward. Reading an outer name works, which is why one drivetrain made at the top serves every function. Assigning to it from inside is the part that doesn't behave the way you'd expect."
+/>
+
+<TeacherNote title="Don't over-promise the sealed box">
+
+The tempting simplification — "functions can't see outside themselves" — is one
+students will immediately disprove, because every robot program in this course
+calls `drivetrain` from inside a function. Teach the actual rule instead: **local
+first, then look outward**. It's no harder and it survives contact with the code
+in front of them.
+
+Keep `global` out of it. It isn't needed anywhere in this course, and the honest
+framing is that the read/write asymmetry is a nudge toward passing values in and
+returning them out — which is the habit Module 2's classes then formalize.
+
+If a student asks what happens when a local has the same name as an outer one, the
+answer is that the local wins inside the function and the outer one is untouched.
+Demonstrating that with two `print()` calls takes thirty seconds and settles it.
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="What's wrong with this?  def multiply(x, y)"
@@ -172,7 +254,7 @@ polygon(8, 15)   # octagon
 fill-in-the-blank skeleton before robot code. **More challenge:** a full shape
 library (star, spiral), default parameters, or functions that call functions.
 Encourage a one-line docstring (`"""Draw a regular polygon."""`) under each def —
-it's the professional habit that pays off in Lesson 1-11's project.
+it's the professional habit that pays off in Lesson 1-12's project.
 
 </TeacherNote>
 
@@ -202,7 +284,7 @@ Functions with parameters and return values are the building blocks of every pro
 
 **Formative:** correct `def` syntax, using parameters in the body, and reading a
 `return`. **Exit ticket:** "Write `add(a, b)` that returns `a + b`." **Preview:**
-Lesson 1-11 is the capstone — students design and build their own complete Python
+Lesson 1-12 is the capstone — students design and build their own complete Python
 program using everything from Module 1.
 
 </TeacherNote>

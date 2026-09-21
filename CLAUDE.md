@@ -22,9 +22,9 @@ checks, and a teacher-notes toggle.
   media-rich lessons).
 - **Audience:** high school students (no prior programming); teachers use the
   same pages with teacher-only notes toggled on.
-- **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (12: kickoff
-  lesson-00-what-is-a-robot + lessons 1–11), Module 2 (10), Module 3 (4),
-  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9) — 45 lessons live. Site builds clean (`npm run build`).
+- **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (13: kickoff
+  lesson-00-what-is-a-robot + lessons 1–12), Module 2 (10), Module 3 (4),
+  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9) — 46 lessons live. Site builds clean (`npm run build`).
   `docs/module-01-driving/lesson-01-meet-the-xrp.mdx` is the canonical template.
 - **Evaluation pass in progress (Brad, since 2026-09-15).** Conversion is done;
   the work now is Brad reading lessons and correcting them. **Module 1 lessons 0–6
@@ -285,7 +285,7 @@ Existing: `call_square.png` (L1-3), `call_square_{20,35,60}.png` (L1-4),
 `call_polygon_{4_30,3_30,6_20,8_15}.png` (L1-5).
 
 **A ```text fence showing block calls is a bug** — use these images. The
-exception is genuine plain-English pseudocode, e.g. L1-11's planning step, which
+exception is genuine plain-English pseudocode, e.g. L1-12's planning step, which
 is explicitly "not Python" and should stay a text fence.
 
 A no-parameter call block is labelled with **just the function name** — no "call"
@@ -391,7 +391,7 @@ Brad's shot). Those are the candidates for replacement as more screenshots arriv
    `BlockProgram`s for any code) → `KnowledgeCheck`s built from the worksheet
    questions → `TeacherNote`s for teacher-only material → real-world `CardGrid`
    → wrap-up → Resources.
-4. Add the page to `sidebars.js` (under its module category — all 45 lessons are
+4. Add the page to `sidebars.js` (under its module category — all 46 lessons are
    listed explicitly there now; no "Coming soon" placeholders remain).
 5. Use **real block vocabulary** (§6) — Straight/Turn/Effort/Sleep, not power %.
 6. `npm start` and eyeball it in both student and teacher mode.
@@ -524,7 +524,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
 - **ACTIVITY HEADINGS, NOT PART NUMBERS (Brad, 2026-09-18).** Lessons are short
   enough that "Part 3" earned nothing, and it never told a student whether to read
   or to do. **All five modules are converted** (M1 first, then M2–M5) — 55
-  activities across the 45 lessons; `grep -rn "^## Part " docs/` stays empty. The
+  activities across the 46 lessons; `grep -rn "^## Part " docs/` stays empty. The
   scheme:
   - A section that is student work is `## Activity · <title>`; everything else is
     just `## <title>` with no number. Lesson 7's `## Challenge 1 · …` headings
@@ -566,14 +566,29 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   en-dash range like "5-4–5-5" is unreadable next to the hyphens. Edge cases:
   Module 1's kickoff is **1-0**, Module 4's overview is **4-0** (its title stays
   "Module Overview · The Big Picture"), and the final-project titles dropped the
-  redundant "Module N" — "Lesson 2-10 · Final Project". File names keep their old
-  `lesson-NN-slug.mdx` form and URLs are unchanged; only display text moved.
+  redundant "Module N" — "Lesson 2-10 · Final Project". File names are
+  `lesson-NN-slug.mdx` with NN matching the lesson number.
+- **MID-MODULE INSERTION IS ALLOWED NOW (Brad, 2026-09-21).** The site's lesson
+  numbers used to be pinned to the source repo's 01–11 slide/worksheet numbering
+  (that's why the kickoff is `lesson-00`, not a renumber of 1–11). Brad has
+  dropped that constraint: "I don't think there is any reason to have the section
+  numbers relate to the prior version of the course any more." So a new lesson
+  goes in at its right place and everything after it shifts. The renumber touches
+  five things, and missing any one of them breaks the build or a link:
+  file name, `sidebar_position`, frontmatter `title` + `sidebar_label`,
+  `<LessonHeader title>`, the `<QuizLink id>` (it is the file path, so it MUST
+  change with the file name), `sidebars.js`'s explicit `items` list, and prose
+  cross-references anywhere in `docs/`. Rename highest-number-first so the moves
+  never collide. `src/data/*.json` and `src/pages/checks/**` are generated — leave
+  them alone, they regenerate. Also re-point the **preview line** in the teacher
+  note of the lesson *before* the insertion: it names what comes next, and an
+  insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   the middle header chip names the TOPIC, matching Modules 2–5 ("while loops",
   "Python data"). Module 1's reads "Blockly Foundation" (1-1 to 1-5), "Driving
-  Challenges" (1-6, 1-7) or "Transition to Python" (1-8 to 1-11) — **the "Phase A ·
+  Challenges" (1-6, 1-7) or "Transition to Python" (1-8 to 1-12) — **the "Phase A ·
   / B · / C ·" prefixes were dropped 2026-09-20** (Brad: only Module 1 had phases,
   so the letters implied a course-wide scheme that doesn't exist; the grouping
   labels stay because Module 1 really does change tools partway through). Every program
@@ -600,13 +615,38 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   program ends, so NO program ends with **Stop motors** / `drivetrain.stop()`.
   Keep stops only where they're functional mid-program (stop → turn; a
   `track_until_cross()` that ends its motion before returning).
+- **VARIABLES, EXPRESSIONS AND SCOPE (Brad, 2026-09-21).** Before this, nothing in
+  the course explained what a variable is: the first assignment students met was
+  `drivetrain = …` in L1-8, presented only as "make an instance", and `snake_case`
+  appeared nowhere in the repo. **L1-9 · Variables & Expressions** now owns it —
+  `=` as "work out the right side, then attach the name", reassignment including
+  `count = count + 1`, snake_case, the Capitalized-class / lowercase-instance
+  convention (which had been living in a teacher note only), arithmetic operators,
+  precedence and parentheses, and one note on `/` always giving a float. Its
+  examples are deliberately real lines from later lessons — `size = 20 + square * 5`
+  (L1-10) and the threshold midpoint `(white + black) / 2` (L2-1) — because a
+  precedence mistake raises no error, it just produces a wrong number.
+  **Deliberately NOT in it:** comparison operators (`<`, `==`, …) stay in L2-2
+  where a `while` condition first needs them, and `%`, `//`, `**` are never used
+  anywhere in the course so teaching them would be padding. The activity is
+  robot-free (predict, then `print()`), which makes it the lesson to reach for when
+  hardware or batteries are unavailable.
+  **Scope lives in L1-11,** rewritten the same day. The old lesson asserted "local"
+  in an objective and discharged it with a single quiz question — while its own
+  example called `drivetrain` from inside a function, which flatly contradicts the
+  naive reading. The rule taught is **local first, then look outward**: locals and
+  parameters die when the function returns, a function *can read* an outer name
+  (this is why one `drivetrain` at the top serves every function), and *assigning*
+  to an outer name makes a new local instead — which is the gap `self.` closes in
+  Module 2. Don't simplify this back to "functions can't see outside themselves",
+  and keep `global` out of the course; it is needed nowhere.
 - **BLOCKLY FUNCTIONS: NO RETURN VALUE (Brad, 2026-09-20).** The Functions palette
   offers two definition blocks — plain **"to do something"** and a version with a
   **return** socket. Module 1 uses the plain one only. The return version's call
   block is a rounded value block, so it will not snap into the program stack, and
   students who grab it think they've broken something. L1-3 calls this out with a
   Callout, a knowledge check on the rounded-call-block symptom, and a teacher note.
-  `return` is introduced later, in **L1-10**, in Python, for functions that compute
+  `return` is introduced later, in **L1-11**, in Python, for functions that compute
   an answer (`360 / sides`) — don't frame return as wrong, only as not applicable
   to functions that drive the robot.
 - **XRP CODE URL AND BROWSER (Brad, 2026-09-18).** The IDE students use is
@@ -727,7 +767,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
 | **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18) |
 | **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
-| **All 45 lessons** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
+| **All 46 lessons** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
 | **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
@@ -1062,11 +1102,12 @@ page is `src/pages/pacing.mdx` — a hand-written intro (materials, robot ratios
 where the natural pauses are) around a `<PacingGuide />`. `pacing.json` is
 gitignored; `npm run pacing` regenerates it and `prestart`/`prebuild` run it.
 
-**Numbers as of the build that added it:** 45 lessons, 2245–2465 minutes of
-estimated class time (37–41 hours), 61 hand-in activities, 181 knowledge checks.
-At 50-minute periods that's 49–53 periods including the two multi-day capstones
-at an assumed 2 periods each — about 16–18 weeks at three periods a week, which
-is where the home page's "18 weeks" comes from.
+**Numbers as of 2026-09-21** (L1-9 added): 46 lessons, 2295–2525 minutes of
+estimated class time (38–42 hours), 60 hand-in activities, 189 knowledge checks.
+At 50-minute periods that's 50–54 periods including the two multi-day capstones
+at an assumed 2 periods each — about 17–18 weeks at three periods a week, which
+is where the home page's "18 weeks" comes from. These are regenerated on every
+build; don't hand-edit them, re-read `extract_pacing`'s output.
 
 **Conventions the extractor depends on** (break these and the guide goes wrong,
 loudly — it exits non-zero and names the file):

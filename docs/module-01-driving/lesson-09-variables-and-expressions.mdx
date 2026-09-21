@@ -1,0 +1,392 @@
+---
+title: "Lesson 1-9 · Variables & Expressions"
+sidebar_label: "1-9 · Variables & Expressions"
+sidebar_position: 9
+---
+
+<LessonHeader
+  eyebrow="Module 1 · Learning to Drive"
+  title="Lesson 1-9 · Variables & Expressions"
+  meta={['50–60 min', 'Transition to Python', 'Names, values, arithmetic']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You've already written a line like `drivetrain = DifferentialDrive.get_default_differential_drive()`
+without anyone explaining the `=`. That single character is doing something
+specific, and once you see what, a lot of Python stops being mysterious. This
+lesson is about the two halves of that line: **values** you work out, and
+**names** you attach to them.
+
+No robot needed today. Everything here runs in XRP Code's terminal with
+`print()`, which makes it the fastest lesson in the module to check your own work.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain what `=` does — work out the right side, then attach the name on the left
+- Reassign a variable, including using its own old value
+- Name variables the way Python programmers do, and say why `Rangefinder` and `rangefinder` are different things
+- Predict the value of an arithmetic expression using operator precedence, and use parentheses to change it
+
+</Objectives>
+
+<QuizLink id="module-01-driving/lesson-09-variables-and-expressions" />
+
+## A name attached to a value
+
+A **variable** is a name you attach to a value so you can use it later. You make
+one by writing a name, an `=`, and a value:
+
+```python
+side_length = 30
+robot_name = "Bolt"
+threshold = 0.5
+```
+
+The `=` is not the equals sign from math class. In math, `x = 5` is a *claim* that
+two things are the same. In Python it's an *instruction*, and it runs in a
+specific order:
+
+> **Work out whatever is on the right. Then attach the name on the left to it.**
+
+Right side first, every time. That order is the whole reason this line works:
+
+```python
+side_length = 20 + 5      # Python works out 25, THEN attaches side_length to it
+```
+
+Python never stores "20 + 5". It stores `25`. The arithmetic is finished and gone
+before the name is attached.
+
+<KnowledgeCheck
+  question="What is the difference between = in math and = in Python?"
+  options={[
+    {text: 'There is no difference'},
+    {text: 'In Python it is an instruction: work out the right side, then attach the name on the left to the result', correct: true},
+    {text: 'In Python it means "is approximately equal to"'},
+    {text: 'In Python it only works with whole numbers'},
+  ]}
+  explanation="Math's = states that two things are equal. Python's = does something: it evaluates the right-hand side and binds the name on the left to that value."
+/>
+
+### A name can be reattached
+
+The word *variable* means it can vary. Attach the name to something else and the
+old value is simply let go:
+
+```python
+side_length = 30
+side_length = 45      # now it's 45; the 30 is gone
+```
+
+And because the right side is worked out *first*, a variable can be built from its
+own current value — which looks impossible until you remember the order:
+
+```python
+count = 0
+count = count + 1     # right side: 0 + 1 = 1. Then count is attached to 1.
+count = count + 1     # right side: 1 + 1 = 2. Then count is attached to 2.
+```
+
+Read that middle line as "count *becomes* count plus one," never as "count equals
+count plus one" — as a claim about equality it's nonsense, which is exactly why
+reading it that way confuses people. You'll write this exact pattern in Module 2
+to count intersections as the robot drives over them.
+
+<KnowledgeCheck
+  question="After these three lines, what is total?  total = 10  /  total = total + 5  /  total = total + 5"
+  options={[
+    {text: '10'},
+    {text: '15'},
+    {text: '20', correct: true},
+    {text: 'It causes an error because total is used to define itself'},
+  ]}
+  explanation="Each line works out the right side using the CURRENT value, then reattaches the name: 10, then 10+5 = 15, then 15+5 = 20."
+/>
+
+<TeacherNote title="The one sentence that prevents a month of confusion">
+
+"Right side first, then attach the name." Say it, write it on the board, and make
+students say it back when they trace `count = count + 1`. Nearly every later
+confusion in this course — the accumulator in 2-7, `error = setpoint - sensor_value`
+in 2-5, the `distances` updates in Module 5 — dissolves if they hold onto the
+order of operations in an assignment.
+
+The math-class collision is real and worth naming out loud: students have spent
+years being told `=` means "these are the same," and `count = count + 1` is the
+first line that flatly contradicts it. Some teachers say "gets" or "becomes" for
+`=` all year. It helps.
+
+</TeacherNote>
+
+## Choosing names
+
+Python lets you name a variable almost anything. Programmers have settled on
+conventions anyway, because code gets read far more often than it gets written.
+
+The style for variables is **`snake_case`**: all lowercase, words joined by
+underscores. You've already been following it — `side_length` in your Blockly
+function was chosen in Lesson 1-4 to be the name you'd want in Python later.
+
+```python
+side_length = 30       # yes
+base_effort = 0.5      # yes
+sideLength = 30        # works, but not the Python style
+SideLength = 30        # works, but this looks like a class (see below)
+s = 30                 # works, but what is it?
+```
+
+Descriptive beats short. `threshold` tells the next person — including you, three
+weeks from now — what the number means; `t` doesn't. The exception is a loop
+counter like `i`, which you'll meet in the next lesson and which everyone
+recognizes.
+
+<Callout kind="tip" title="Capital letters mean something">
+
+Python cares about capitals: `Rangefinder` and `rangefinder` are two different
+names. That's not a nuisance, it's a convention doing real work:
+
+```python
+from XRPLib.rangefinder import Rangefinder            # Rangefinder — the class
+rangefinder = Rangefinder.get_default_rangefinder()   # rangefinder — your variable
+```
+
+**Capitalized** is the class, the "book on the shelf" from Lesson 1-8.
+**lowercase** is your variable, the one actual thing you're going to use. Once you
+see that pattern you can read the three-step XRPLib code for any device and tell
+at a glance which name is which.
+
+</Callout>
+
+<KnowledgeCheck
+  question="In the line  reflectance = Reflectance.get_default_reflectance()  what is the difference between the two spellings?"
+  options={[
+    {text: 'Nothing — Python ignores capital letters'},
+    {text: 'Capitalized Reflectance is the class; lowercase reflectance is the variable holding the sensor you will use', correct: true},
+    {text: 'The capitalized one is a typo that Python fixes'},
+    {text: 'Capitalized names are for numbers, lowercase for text'},
+  ]}
+  explanation="Python is case-sensitive, and the convention is Capitalized for classes, lowercase snake_case for your own variables. Both names are needed and they mean different things."
+/>
+
+## Working out the value: expressions
+
+Anything Python can work out into a single value is an **expression**. `25` is an
+expression. So is `20 + 5`, and so is `side_length * 2`. Expressions are what go
+on the right of an `=`, inside parentheses when you call something, or anywhere
+else a value belongs.
+
+The arithmetic operators are the ones you'd expect, with two spelling changes:
+
+```python
+7 + 2      # 9   addition
+7 - 2      # 5   subtraction
+7 * 2      # 14  multiplication — an asterisk, not ×
+7 / 2      # 3.5 division — a slash, not ÷
+```
+
+Variables can appear anywhere a number can, because by the time Python does the
+arithmetic, the variable has already been replaced by its value:
+
+```python
+sides = 6
+turn_angle = 360 / sides     # right side: 360 / 6 = 60.0
+```
+
+<Callout kind="note" title="Why 60.0 and not 60?">
+
+Division always produces a decimal number in Python, even when it comes out even —
+`360 / 6` is `60.0`, not `60`. Python calls whole numbers **integers** and decimals
+**floats**, and `/` always hands back a float.
+
+This almost never matters for us: `drivetrain.turn(60.0)` turns exactly as far as
+`drivetrain.turn(60)`. It matters for *reading* your own output, so that when a
+`print()` shows `60.0` you know nothing has gone wrong.
+
+</Callout>
+
+### Precedence: which operator goes first
+
+When one expression has several operators, Python doesn't just work left to right.
+It uses the same precedence rule you learned in math: **`*` and `/` happen before
+`+` and `-`.**
+
+```python
+20 + 2 * 5      # 30, not 110 — the 2 * 5 happens first
+```
+
+That isn't a trivia question. Here's a line you'll write in the very next lesson,
+to make each square in a nest bigger than the last:
+
+```python
+size = 20 + square * 5      # square counts 0, 1, 2, 3 → size is 20, 25, 30, 35
+```
+
+It only produces 20, 25, 30, 35 because `square * 5` is worked out first and then
+added to 20. If Python went strictly left to right, `20 + square` would come first
+and the sizes would be wrong.
+
+**Parentheses beat everything.** Put brackets around the part you want done first,
+and it is:
+
+```python
+(20 + 2) * 5     # 110 — now the addition goes first
+```
+
+You'll need this in Module 2, where the threshold that tells the robot line from
+floor is the midpoint of two readings:
+
+```python
+threshold = (white_reading + black_reading) / 2
+```
+
+Drop those parentheses and you get `white_reading + black_reading / 2`, which
+halves only the black reading and hands back a threshold that's nowhere near the
+middle. The robot still runs. It just reads the line wrong, which is a far more
+annoying kind of mistake than a crash.
+
+<KnowledgeCheck
+  question="What is the value of  10 + 4 * 2 ?"
+  options={[
+    {text: '28'},
+    {text: '18', correct: true},
+    {text: '80'},
+    {text: '16'},
+  ]}
+  explanation="Multiplication goes before addition: 4 * 2 = 8 first, then 10 + 8 = 18. To get 28 you would need parentheses: (10 + 4) * 2."
+/>
+
+<KnowledgeCheck
+  question="Your white reading is 0.2 and your black reading is 0.8, and you want the midpoint (0.5). Which line gives it?"
+  options={[
+    {text: 'threshold = white + black / 2'},
+    {text: 'threshold = (white + black) / 2', correct: true},
+    {text: 'threshold = white + black // 2'},
+    {text: 'Both of the first two work'},
+  ]}
+  explanation="Without parentheses, only black is divided: 0.2 + 0.4 = 0.6 — not the midpoint. The parentheses force the addition first: (0.2 + 0.8) / 2 = 0.5."
+/>
+
+<TeacherNote title="Where precedence actually bites">
+
+Resist teaching PEMDAS as a rule to memorize — they have it already. Teach it as a
+thing that silently produces wrong *numbers*. The two examples in this section are
+both real lines from later in this course, which is the point: a precedence
+mistake doesn't raise an error, so the robot drives confidently and wrongly, and
+students hunt for the bug in their motors.
+
+Worth stating plainly: professionals add parentheses they don't strictly need, for
+readability. `20 + (square * 5)` behaves identically and reads better. Nobody will
+think less of a student for writing them.
+
+</TeacherNote>
+
+## Activity · Predict, then print
+
+No robot for this one. Open XRP Code, start a new program, and work through the
+list **on paper first** — write your predicted value next to each line, then run
+it and compare.
+
+1. Write your predictions for all six of these, then type them in and check:
+
+```python
+print(3 + 4 * 2)
+print((3 + 4) * 2)
+print(10 / 4)
+print(10 - 2 - 3)
+print(2 * 3 + 4 * 5)
+print(100 / 10 / 2)
+```
+
+2. Any you got wrong, work out **why** before moving on. Write the order Python
+   used, one step at a time.
+3. Now predict and check this sequence — the accumulator pattern:
+
+```python
+count = 0
+count = count + 3
+count = count * 2
+print(count)
+```
+
+4. Set `sides = 8` and write one line that prints the turn angle for an
+   eight-sided shape. (You worked this out in Lesson 1-5 with blocks.)
+5. **Challenge:** two readings, `white = 0.25` and `black = 0.75`. Write one line
+   that prints the midpoint, and one that gets it *wrong* by leaving out the
+   parentheses. Print both and look at the difference.
+
+<Reveal title="Check your step 1 predictions" hint="write all six down first">
+
+`11` — the `4 * 2` goes first.
+`14` — the parentheses force the addition first.
+`2.5` — division always gives a float.
+`5` — same-precedence operators do run left to right: `(10 - 2) - 3`.
+`26` — both multiplications happen first, then `6 + 20`.
+`5.0` — again left to right: `(100 / 10) / 2`, so `10.0 / 2`.
+
+Step 3 gives `6`: `0 + 3` is 3, then `3 * 2` is 6.
+
+</Reveal>
+
+<TeacherNote title="Running this activity">
+
+This is the lesson to use when robots are unavailable, batteries are flat, or half
+the class is out — it needs nothing but the editor. It's also the best diagnostic
+you'll get before Module 2: a student who can reliably predict these six lines has
+the mental model, and one who can't will struggle with proportional control no
+matter how well the sensor lesson goes.
+
+The two same-precedence cases (`10 - 2 - 3` and `100 / 10 / 2`) are there
+deliberately. Students often over-apply the rule and decide *some* hidden
+precedence must reorder them; the answer is that equal operators simply run left
+to right.
+
+Step 5 is the one to circle back to in Lesson 2-1, when they compute a real
+threshold from their own robot's readings.
+
+</TeacherNote>
+
+## Real-world connections
+
+Naming a value and working out a new one is most of what any program does:
+
+<CardGrid>
+  <InfoCard tag="Games" title="Score and health">
+    `score = score + 100` after a pickup is the same accumulator you just wrote.
+  </InfoCard>
+  <InfoCard tag="Money" title="Totals and tax">
+    Checkout code is a stack of expressions — subtotal, discount, tax, total — each named so the next line can use it.
+  </InfoCard>
+  <InfoCard tag="Science" title="Sensor math">
+    Every instrument converts a raw reading into a real measurement with arithmetic like this, parentheses and all.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What are the two steps Python takes on a line like `size = 20 + 5`? (Work out the right side, then attach the name on the left.)
+- How can `count = count + 1` make sense? (The right side uses the current value first; only then is the name reattached.)
+- Which happens first in `3 + 4 * 2`, and how would you change it? (The multiplication; use parentheses.)
+- What's the difference between `Rangefinder` and `rangefinder`? (Capitalized is the class; lowercase is your variable.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** can a student predict the six expressions in step 1 and explain the
+order for any they missed? Can they trace `count = count + 1`? **Exit ticket:**
+"Write one line that sets `perimeter` to the distance around a square whose side
+is `side_length`" (`perimeter = side_length * 4`). **Preview:** next lesson we
+replace repeated lines with a Python `for` loop — the text version of the Repeat
+block — and the nested version uses `size = 20 + square * 5`, straight out of
+today's precedence section.
+
+</TeacherNote>
+
+
+## Resources
+
+- [XRP Code IDE](https://xrpcode.wpi.edu/staging)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
