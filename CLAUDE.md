@@ -104,7 +104,7 @@ LearningPython/                            # repo root — the site itself
 │   │   ├── blocks/        # 91 real XRP Blockly block PNGs
 │   │   │   ├── c/         # GENERATED slices of the C-shaped blocks (§6)
 │   │   │   └── programs/  # real XRP Code screenshots of whole programs (§6)
-│   │   ├── lesson-01/     # Lesson 0 robot gallery (8 JPGs) + xrp-parts.jpg (Lesson 1)
+│   │   ├── lesson-01/     # Lesson 0 robot gallery (8 JPGs) + xrp-parts.png (Lesson 1)
 │   │   ├── lesson-04/     # gear-icon walkthrough stills, cut from the screencast (§12)
 │   │   ├── lesson-08/     # library-shelf.svg — hand-drawn diagram (§12)
 │   │   ├── lesson-m2-01/  # reflectance-sensor.svg — hand-drawn diagram (§12)
@@ -188,7 +188,7 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
 <Video src="/videos/first-drive.mp4" mp4 caption="..." />         {/* local mp4 */}
 
 <Figure placeholderLabel="Labeled diagram of the XRP" caption="..." />  {/* placeholder */}
-<Figure src="/img/lesson-01/xrp-parts.jpg" alt="..." caption="..." />   {/* real image */}
+<Figure src="/img/lesson-01/xrp-parts.png" alt="..." caption="..." />   {/* real image */}
 
 <CardGrid>
   <InfoCard tag="Warehouses" title="Delivery robots">Real-world connection card.</InfoCard>
@@ -720,7 +720,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | Lesson | What changed |
 |---|---|
 | **M1 L0** | Written from *WhatIsARobot.pdf*; all media wired; scaffolding stripped twice (see §9); table → per-picture `<Decide>` boxes |
-| **M1 L1** | Real `xrp-parts.jpg` diagram; **Bluetooth** added beside USB; square challenge de-spoiled (hands off to L2); trailing `stop_motors` removed; Sleep dropped from the block list and from Part 5 |
+| **M1 L1** | Real `xrp-parts.png` diagram; **Bluetooth** added beside USB; square challenge de-spoiled (hands off to L2); trailing `stop_motors` removed; Sleep dropped from the block list and from Part 5 |
 | **M1 L2** | Rebuilt as the discovery model (straight → turn → 8-block square → find Repeat; triangle fails before `360 ÷ sides`); real Repeat screenshot |
 | **M1 L3** | Function renamed `square`; Sleep-between-calls suggestion removed |
 | **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
@@ -851,7 +851,17 @@ bg = Image.new('RGB', im.size, 'white'); bg.paste(im, mask=im.split()[3])
 bg.save('static/img/lesson-01/xrp-parts.jpg', quality=90)"
 ```
 
-That is where `xrp-parts.jpg` (Lesson 1's labeled kit diagram) came from.
+That is where the FIRST version of Lesson 1's labeled kit diagram came from.
+
+**Superseded 2026-09-21.** Brad supplied a new kit diagram and it is now
+`static/img/lesson-01/xrp-parts.png` — PNG, not JPEG, because the labels are
+black text on white and JPEG rings around them. Processing: trimmed the uneven
+white margin to a uniform 24px (the component caps a figure at 520px tall, so
+margin is wasted height), then quantized to a 256-colour palette — 218KB instead
+of 530KB, with no visible loss at render size. The labels are Wheels and tires,
+Batteries, Drive Motor, Controller, Rangefinder, Reflectance and Castor wheel;
+lesson prose must match those, and the old image's *Line Follower* wording has
+been removed. Note the image spells it "Castor"; the prose uses "caster".
 
 ## 13. Getting changes from this sandbox into Brad's repo
 
