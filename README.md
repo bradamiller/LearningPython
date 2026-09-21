@@ -10,10 +10,16 @@ Driving (4), Module 4 · Manhattan Navigation (overview + 9), and Module 5 ·
 Dijkstra's Algorithm (9). See `CLAUDE.md` for the full project spec, conventions,
 and open items.
 
+**Review status.** Building the lessons and *reviewing* them are separate jobs, and
+only the first is finished. Module 1 has been through Brad's evaluation pass
+lesson by lesson; Modules 2–5 were converted and have had only mechanical sweeps
+(activity headings, trailing `stop()`), not a content read. Treat prose, code and
+claims in Modules 2–5 as unverified until they get that pass.
+
 ## What the site provides
 
 - **Sidebar + breadcrumb + prev/next navigation** across modules and lessons
-- **Colored lesson header** band with duration / phase metadata
+- **Colored lesson header** band with duration / topic metadata
 - **Teacher-mode toggle** — the floating switch (bottom-right). Off = student
   view; on = reveals gray Teacher Notes and the teacher banner. The choice is
   remembered in the browser.
@@ -27,6 +33,12 @@ and open items.
   the real media later
 - **Real XRP Blockly block images** — Module 1 sample programs are built from the
   actual block graphics (from the XRP User Guide); Modules 2–5 are all Python
+- **Generated pacing guide** at `/pacing` — per-module tables of time, activities
+  and checks, with period-length and per-week selectors, plus the required
+  materials list. Built from the lesson files on every build, so it can't drift
+- **"How this course works"** (`docs/how-this-course-works.mdx`, first in the
+  sidebar) — the course philosophy, structure, big ideas, the three places the
+  course can be cut short, and the materials needed to deliver it
 
 ## Style conventions (enforced across lessons)
 
@@ -72,6 +84,36 @@ and open items.
 - **Objectives and headings don't spoil the discovery:** phrase them as outcomes
   ("find a shorter way to repeat…") rather than naming the construct up front.
 - **3–4 learning objectives per lesson.**
+- **Student work is `## Activity · <name>`** — that exact heading gets the red
+  DO THIS badge and is what the pacing guide counts. Don't use "Part 3" or
+  "Exercise".
+- **Answers are hidden according to whether they're handed in.** Something a
+  student checks *after trying* — a worked result, the rule behind a pattern —
+  goes in `<Reveal>` (collapsed, and not printed when closed), always with a
+  `hint` like "try it first". Anything handed in — filled tables, challenge
+  solutions, project code, expected test values — goes in `<TeacherNote>`, which
+  students can't open at all. Never answer a question in the paragraph below it.
+- **Variables are `snake_case`; Capitalized means a class.** `rangefinder` is your
+  variable, `Rangefinder` is the class it came from. Taught in Lesson 1-9.
+- **Python is introduced with its own vocabulary lesson.** Lesson 1-9 covers what
+  `=` actually does, naming, expressions and operator precedence before loops and
+  functions use them.
+
+## Gotchas worth knowing before you edit
+
+- **`:::note` / `:::tip` / `:::caution` admonitions DO NOT RENDER** on this site —
+  they appear as literal `:::` text in the page. Use `<Callout kind="warn|tip|note"
+  title="...">` instead. This one has bitten the site more than once.
+- **A bare `{...}` in prose breaks the build.** MDX parses it as a JSX expression,
+  so a dict literal like `{(0,0): None}` must be inside backticks or a fenced code
+  block.
+- **Any component taking a `src` must run it through `useBaseUrl`**, or the asset
+  404s if the site ever moves to a subpath.
+- **Wide tables overflow.** The content column is about 570px, so a table with 3+
+  prose columns is unreadable on a laptop and worse on a phone. Prefer code blocks
+  or card grids.
+- **SVG diagrams must be drawn for that same ~570px column.** A 900-wide viewBox
+  renders its labels at about 9px. 680×300 is a good starting size.
 
 ## Run it locally
 
@@ -98,7 +140,17 @@ npm run serve   # preview the build locally
 - `src/theme/MDXComponents.js` — registers the components globally so lessons can
   use `<TeacherNote>`, `<KnowledgeCheck>`, etc. with no import lines.
 - `src/css/custom.css` — all styling and the VEX-style color palette.
-- `static/img/` and `static/videos/` — where your graphics and videos go.
+- `src/pages/` — the non-lesson pages: `/checks` (printable knowledge checks) and
+  `/pacing` (the teacher pacing guide).
+- `static/img/` and `static/videos/` — where graphics and videos go. Images are
+  foldered by lesson (`img/lesson-01/`), except block art, which lives in
+  `static/img/blocks/`.
+- `scripts/` — the generators. `extract_checks.js` + `generate_quiz_pages.js` build
+  the printable checks; `extract_pacing.js` builds the pacing data; both run
+  automatically via `prestart`/`prebuild` and their output is gitignored, so the
+  lesson files stay the single source of truth. `slice_c_blocks.py` cuts container
+  block art; `make_call_block.py` generates Blockly function-call block images,
+  which the block dictionary doesn't provide.
 
 ## Authoring a lesson
 
@@ -107,12 +159,20 @@ Each lesson is plain Markdown with a few custom tags. See
 example. The available tags:
 
 ```mdx
-<LessonHeader eyebrow="Module 1 · Learning to Drive" title="Lesson 1 · Meet the XRP"
+<LessonHeader eyebrow="Module 1 · Learning to Drive" title="Lesson 1-1 · Meet the XRP"
   meta={['50–60 min', 'Blockly Foundation', 'No experience needed']} />
 
 <Objectives> ...bulleted list... </Objectives>
 
+<QuizLink id="module-01-driving/lesson-01-meet-the-xrp" />   {/* = the file path */}
+
 <TeacherNote title="Timing tip"> ...teacher-only guidance... </TeacherNote>
+
+<Callout kind="warn" title="Watch out">   {/* ::: admonitions do NOT render */}
+...the thing to watch out for...
+</Callout>
+
+<Reveal title="Check your answer" hint="try it first"> ...worked result... </Reveal>
 
 <KnowledgeCheck
   question="..."
@@ -128,7 +188,20 @@ example. The available tags:
 
 <Figure placeholderLabel="Labeled diagram of the XRP" caption="..." />
 <Figure src="/img/lesson-01/parts.png" alt="..." caption="..." />
+
+{/* Blockly: a composed program, or a real XRP Code screenshot (preferred) */}
+<BlockProgram blocks={[{name: 'wait_for_button_press'}, {name: 'call_square'}]}
+  caption="..." />
+<BlockShot src="/img/blocks/programs/square-function.png" alt="..." caption="..." />
+
+<CardGrid><InfoCard tag="Games" title="...">...</InfoCard></CardGrid>
 ```
+
+Adding a lesson means four things: the `.mdx` file with `sidebar_position`, an
+entry in `sidebars.js`, a duration chip in `meta` (the pacing guide reads it), and
+a `<QuizLink id="...">` matching the file path. Inserting one mid-module also means
+renumbering everything after it — file names, titles, `QuizLink` ids and prose
+cross-references — plus re-pointing the previous lesson's "next lesson" preview.
 
 ## Deploying (GitHub Pages)
 
