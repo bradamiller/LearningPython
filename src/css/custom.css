@@ -1001,3 +1001,71 @@ html[data-theme='dark'] .pacingModule__summary { color: #CED4DA; }
   color: var(--ifm-color-primary);
   margin-right: 0.25rem;
 }
+
+/* ---------- Authoring TODOs (dev server only) ----------
+   Notes about things in a lesson that still need fixing. The <Todo> component
+   renders nothing in a production build, so none of this reaches the deployed
+   site; these rules only ever apply under `npm start`. The "Show TODOs" switch
+   sets html[data-todos='off'] to hide them without a rebuild. */
+.todo {
+  --todo-accent: #c0392b;
+  position: relative;
+  border: 2px dashed var(--todo-accent);
+  border-left-width: 6px;
+  border-left-style: solid;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--todo-accent) 8%, var(--ifm-background-color));
+  padding: 0.9rem 1.1rem 0.95rem;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.todo__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--todo-accent);
+  border-radius: 999px;
+  padding: 0.16rem 0.6rem;
+  margin-bottom: 0.55rem;
+}
+.todo__icon { font-size: 0.85rem; }
+.todo__body { color: var(--ifm-font-color-base); }
+.todo__body code { font-size: 0.86em; }
+
+.todo--bug        { --todo-accent: #c0392b; }
+.todo--blocked    { --todo-accent: #b9770e; }
+.todo--answers    { --todo-accent: #7d3c98; }
+.todo--convention { --todo-accent: #2874a6; }
+.todo--media      { --todo-accent: #117864; }
+
+/* The switch hides them without needing a restart. */
+html[data-todos='off'] .todo { display: none; }
+
+/* Never print them, and never let one leak into a printable check sheet. */
+@media print { .todo { display: none !important; } }
+
+/* The switch itself — stacked above Teacher mode, same shape. Every rule here
+   is scoped to .todoToggle: an unscoped html[data-todos='on'] selector also
+   lights up the Teacher mode switch, which then reads as on when it isn't. */
+.todoToggle { bottom: 4.2rem; }
+html[data-todos='on'] .todoToggle .teacherToggle__track { background: #c0392b; }
+html[data-todos='on'] .todoToggle .teacherToggle__thumb { transform: translateX(18px); }
+.todoToggle__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: #c0392b;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}

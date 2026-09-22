@@ -99,7 +99,9 @@ def desired_heading(self, next_pos):
   explanation="The row is unchanged; the column went 5 → 4 (col −1). Decreasing column is West — heading 3."
 />
 
-{/* TODO-BUG: desired_heading above has no final return, so any pair of positions that is not orthogonally adjacent silently yields None — and turn_to then loops forever, since self.heading never equals None. Add a fallback, or state that the planner guarantees adjacency. Same gap in the L4-8 version. [REVIEW §1.7] */}
+<Todo kind="bug">
+desired_heading above has no final return, so any pair of positions that is not orthogonally adjacent silently yields None — and turn_to then loops forever, since self.heading never equals None. Add a fallback, or state that the planner guarantees adjacency. Same gap in the L4-8 version. [REVIEW §1.7]
+</Todo>
 
 ## Turning with a while loop
 

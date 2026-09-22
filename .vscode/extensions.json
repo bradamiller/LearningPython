@@ -1,8 +1,0 @@
-{
-  // Suggested when the folder is opened. Nothing here is required — the TODO
-  // markers are plain text and `npm run todos` works with no extensions at all.
-  "recommendations": [
-    "Gruntfuggly.todo-tree",
-    "unifiedjs.vscode-mdx"
-  ]
-}

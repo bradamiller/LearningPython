@@ -8,9 +8,11 @@
  *   npm run todos -- --compact  — one line each, for the VS Code task
  *                                 (add --absolute for full paths)
  *
- * A TODO is an MDX comment, so it never reaches a rendered page:
+ * A TODO is a <Todo> component, which renders only on the dev server — it is
+ * compiled to nothing in a production build, so it never reaches the deployed
+ * site. Run `npm start` and use the "Show TODOs" switch to read them in place.
  *
- *   {\/* TODO-CATEGORY: what is wrong — what to do about it. [REVIEW §N] *\/}
+ *   <Todo kind="bug">what is wrong — what to do about it. [REVIEW §N]</Todo>
  *
  * Categories, in the order they're worth attention:
  *   bug         something is wrong and a student can hit it
@@ -42,18 +44,18 @@ function walk(dir) {
 
 const found = [];
 for (const file of walk(DOCS).sort()) {
-  const lines = fs.readFileSync(file, 'utf8').split('\n');
-  lines.forEach((line, i) => {
-    const m = line.match(/\{\/\*\s*TODO-([A-Z]+):\s*([\s\S]*?)\s*\*\/\}/);
-    if (m) {
-      found.push({
-        file: path.relative(path.join(__dirname, '..'), file),
-        line: i + 1,
-        category: m[1].toLowerCase(),
-        text: m[2].replace(/\s+/g, ' '),
-      });
-    }
-  });
+  const src = fs.readFileSync(file, 'utf8');
+  // <Todo kind="bug"> … </Todo>, which may wrap across lines.
+  const rx = /<Todo\s+kind="([a-z]+)"\s*>([\s\S]*?)<\/Todo>/g;
+  let m;
+  while ((m = rx.exec(src)) !== null) {
+    found.push({
+      file: path.relative(path.join(__dirname, '..'), file),
+      line: src.slice(0, m.index).split('\n').length,
+      category: m[1],
+      text: m[2].replace(/\s+/g, ' ').trim(),
+    });
+  }
 }
 
 const args = process.argv.slice(2);

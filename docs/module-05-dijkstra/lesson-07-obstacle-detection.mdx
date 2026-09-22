@@ -93,10 +93,12 @@ The rangefinder says something's ahead — but *which* node? The blocked one is 
 intersection **directly in front of the robot**, and the robot already knows its position
 and heading (0=N, 1=E, 2=S, 3=W from Module 4):
 
+<Todo kind="bug">
+no fallback return, so a heading outside 0 to 3 yields None, which then goes into blocked_list and corrupts it silently. [REVIEW §1.7]
+</Todo>
+
 ```python
 NORTH, EAST, SOUTH, WEST = 0, 1, 2, 3
-
-{/* TODO-BUG: no fallback return, so a heading outside 0 to 3 yields None, which then goes into blocked_list and corrupts it silently. [REVIEW §1.7] */}
 
 def get_next_intersection(current_pos, heading):
     row, col = current_pos

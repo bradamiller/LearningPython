@@ -1,5 +1,11 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
+import remarkStripTodos from './plugins/remark-strip-todos.js';
+
+// Authoring <Todo> notes are for the dev server only. In a production build the
+// remark plugin below deletes them before MDX compiles, so neither the markup
+// nor the note text reaches the deployed site or its JS bundles.
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -42,6 +48,7 @@ const config = {
           sidebarPath: './sidebars.js',
           editUrl: undefined,
           showLastUpdateTime: false,
+          beforeDefaultRemarkPlugins: IS_PROD ? [remarkStripTodos] : [],
         },
         blog: false,
         theme: {

@@ -787,42 +787,44 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
 | **M2/M4/M5 site pages** | ⚠️ Now BEHIND the source — the `separate-classes` merge (2026-09-18) made classes optional in the source only. See §9. |
 
-## 10b. TODO markers in the lessons (added 2026-09-22)
+## 10b. TODO notes in the lessons (added 2026-09-22, reworked 2026-09-23)
 
-Known-broken or unfinished things are flagged **in the lesson file itself**, as an
-MDX comment, so the problem is visible to whoever opens that lesson instead of
-living only in a review document:
+Known-broken or unfinished things are flagged **in the lesson itself**, as a
+`<Todo>` component that renders a coloured box on the page:
 
+```mdx
+<Todo kind="bug">
+loop_count is defined nowhere in this module, so a student who pastes this in
+gets a NameError. [REVIEW §1.7]
+</Todo>
 ```
-TODO-CATEGORY: what is wrong — what to do about it. [REVIEW §N]
-```
 
-wrapped in an MDX comment (brace-slash-star … star-slash-brace). It renders to
-nothing, so students never see it — verified against the built HTML and the
-printable checks.
+**Dev server only.** `src/components/Todo.js` returns null in production, *and*
+`plugins/remark-strip-todos.js` deletes the nodes before MDX compiles them when
+`NODE_ENV === 'production'`. Both are needed: returning null still leaves the
+note's text compiled into the JS bundle as the component's children, which was a
+real leak — several notes say exactly where a lesson's answers are visible. Run
+`npm start` to see them; `npm run build` contains neither the markup nor the words.
 
-`npm run todos` lists them grouped by category, `npm run todos -- bug` filters to
-one, `npm run todos -- --count` gives just the tallies, and `-- --compact` prints one
-line each for tooling. Categories, most urgent first: **BUG** (wrong, and a student
-can hit it), **BLOCKED** (needs Brad's decision or a robot), **ANSWERS** (an answer
-is visible where it shouldn't be), **CONVENTION** (drifts from a rule kept
-elsewhere), **MEDIA** (placeholder or stand-in art).
+A **"Show TODOs"** switch sits above Teacher mode, on by default, with a count of
+how many are on the page. It only appears when the page has at least one, and only
+on the dev server.
 
-**The tag is a plain word on purpose.** It was `TODO(bug)` briefly; VS Code's Todo
-Tree substitutes tags straight into a regex and documents no escaping, so a tag
-containing parentheses is a gamble. `TODO-BUG` has no regex metacharacters.
-`.vscode/` carries the Todo Tree config, a search exclude list and three tasks — the
-first pipes the markers into the Problems panel, so they can be walked with F8.
+Categories, most urgent first: **bug** (wrong, and a student can hit it),
+**blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
+where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
+**media** (placeholder or stand-in art). As of 2026-09-23: 9 bug, 5 blocked,
+7 answers, 10 convention, 2 media — 33 total. `npm run todos` lists them from the
+terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
-As of 2026-09-22: 9 bug, 5 blocked, 7 answers, 10 convention, 2 media — 33 total.
-`scripts/add_todos.py` is the one-shot that placed them and is the record of where
-each came from; `REVIEW-2026-09-21.md` carries the full reasoning each one cites.
-
-Three rules when writing one: **no braces or backticks in the comment body** (a bare
-brace in MDX is parsed as a JSX expression and breaks the build), **never put a
-comment inside a JSX element's attribute list** (put it on the line above the
-element), and **keep it to one line** — `list_todos.js` matches per line. Delete the
-marker in the same commit that fixes the thing.
+Four rules when writing one, each learned the hard way:
+- **Never inside a code fence.** A `<Todo>` between fence markers is literal text
+  in the code block, visible to students. Seven were placed that way and had to be
+  moved out (2026-09-23). Put it *above* the fence.
+- **No braces or backticks in the body** — a bare brace in MDX is a JSX expression
+  and breaks the build; angle brackets break it too.
+- **Never inside a JSX element's attribute list** — put it on the line above.
+- **Delete the note in the same commit that fixes the thing.**
 
 ## 11. Good next steps
 

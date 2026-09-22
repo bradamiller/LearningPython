@@ -6,6 +6,7 @@ import {Block, BlockProgram, BlockShot} from '@site/src/components/Blocks';
 import {QuizSheet, QuizLink, QuizIndex} from '@site/src/components/Quiz';
 import Reveal from '@site/src/components/Reveal';
 import Callout from '@site/src/components/Callout';
+import Todo from '@site/src/components/Todo';
 import {
   LessonHeader,
   Objectives,
@@ -31,6 +32,7 @@ export default {
   QuizIndex,
   Reveal,
   Callout,
+  Todo,
   LessonHeader,
   Objectives,
   TeacherBanner,

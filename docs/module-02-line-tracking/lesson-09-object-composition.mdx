@@ -39,6 +39,10 @@ know about the steering wheel — each part has its own job. Code works the same
 `LineTrack` will **have a** `LineSensor` (for sensing) and **have a** drivetrain (for
 driving), and coordinate them.
 
+<Todo kind="convention">
+base_effort is 0.4 here and in L2-10, but 0.3 in L2-5 through L2-7, with no comment on the change — and L2-5's teacher note tells teachers to start everyone at 0.3. Pick one value or explain the jump. [REVIEW §4]
+</Todo>
+
 ```python
 from XRPLib.differential_drive import DifferentialDrive
 import time
@@ -48,8 +52,6 @@ class LineTrack:
         self.sensor = LineSensor()                                     # has-a LineSensor
         self.drivetrain = DifferentialDrive.get_default_differential_drive()  # has-a drivetrain
         self.base_effort = 0.4
-{/* TODO-CONVENTION: base_effort is 0.4 here and in L2-10, but 0.3 in L2-5 through L2-7, with no comment on the change — and L2-5's teacher note tells teachers to start everyone at 0.3. Pick one value or explain the jump. [REVIEW §4] */}
-
         self.kp = 0.5
 ```
 
@@ -144,9 +146,11 @@ the turns, then each turn method on its own. Expect to tune the sleep duration.
 
 With both classes done, the main program is astonishingly short:
 
-```python
-{/* TODO-BUG: Board is never imported in this lesson, so this main program does not run as printed. Every other lesson in the module imports it. [REVIEW §1.7] */}
+<Todo kind="bug">
+Board is never imported in this lesson, so this main program does not run as printed. Every other lesson in the module imports it. [REVIEW §1.7]
+</Todo>
 
+```python
 board = Board.get_default_board()
 tracker = LineTrack()
 
