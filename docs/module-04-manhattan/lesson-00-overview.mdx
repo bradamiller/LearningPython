@@ -53,6 +53,10 @@ each destination, compute the path, drive it, and update where we are.* You don'
 need to understand `compute_path` or `drive_path` yet — just see that the program is
 short **because the classes do all the work**.
 
+(Those seven lines are the *interesting* part. The real program also opens with the
+class definitions and the `board.wait_for_button()` that every robot program starts
+with — they're left out here so the shape stands out.)
+
 ## Two classes, two jobs
 
 <CardGrid>
@@ -96,7 +100,7 @@ Every lesson in this module builds one piece of that program:
 
 - **Lesson 4-1** — coordinates: the `(row, col)` system
 - **Lesson 4-2** — tuples: storing a position like `(2, 3)`
-- **Lesson 4-3** — lists: storing a path like `[(0,0), (1,0), (2,0)]`
+- **Lesson 4-3** — lists: storing a path like `[(1,0), (2,0), (3,0)]`
 - **Lessons 4-4 and 4-5** — the Manhattan algorithm: computing paths (on paper, then in code)
 - **Lesson 4-6** — testing your code without a robot
 - **Lesson 4-7** — turning logic: headings as numbers

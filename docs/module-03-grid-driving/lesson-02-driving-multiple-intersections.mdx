@@ -67,6 +67,13 @@ repeats it a chosen number of times — with one subtlety: don't clear after the
 **last** one, because you want to *stop* there.
 
 ```python
+# (LineSensor and LineTrack classes from Module 2 go above)
+
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
+
 intersections = 3
 
 for i in range(intersections):

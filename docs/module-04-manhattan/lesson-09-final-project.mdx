@@ -61,6 +61,8 @@ about what each object knows after `drive_path` finishes, and what it doesn't.
 ```python
 HEADING_NAMES = ["N", "E", "S", "W"]
 
+board = Board.get_default_board()
+
 manhattan = Manhattan((0, 0))
 navigator = Navigator((0, 0), 0)      # start heading North
 destinations = [(2, 0), (2, 3), (0, 3), (0, 0)]

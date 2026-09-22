@@ -45,15 +45,24 @@ class Manhattan:
         self.position = start
 
 class Dijkstra:
-    def __init__(self, start, blocked):
+    def __init__(self, start, blocked, rows=4, cols=4):
         self.position = start
         self.blocked = blocked
+        self.rows = rows
+        self.cols = cols
         self.graph = self.build_graph()
 ```
 
-Two additions: a **blocked** list (the obstacles) and a **graph** (built immediately when
-the object is created). Notice `__init__` *calls* `build_graph()` — so the graph is ready
-the moment you make a Dijkstra object.
+The real addition is a **blocked** list (the obstacles) and a **graph** built immediately
+when the object is created. Notice `__init__` *calls* `build_graph()` — so the graph is
+ready the moment you make a Dijkstra object.
+
+`rows` and `cols` have defaults, so `Dijkstra((0,0), [])` still gives you the 4×4 grid
+you've been driving. Manhattan never needed them because its arithmetic works on a grid
+of any size; Dijkstra has to actually *build* the graph, so it has to be told how big
+the grid is. Pass different ones — `Dijkstra((0,0), [(1,1)], rows=3, cols=3)` — and the
+same class plans on a 3×3, which is how you'll test it against the traces you did by
+hand in Lesson 5-3.
 
 <KnowledgeCheck
   question="When is self.graph built?"
@@ -74,27 +83,26 @@ any of the hard part.
 
 ### Step 1 · `build_graph` — build and block in one pass
 
-This is the `build_grid_graph` idea from Lesson 5-2, adapted as a method that also skips
-blocked nodes. It does both jobs at once — skip a node if it's blocked, and only add a
+This is the `build_grid_graph(rows, cols)` function from Lesson 5-2, adapted as a method
+that also skips blocked nodes. It reads its grid size from `self` instead of taking
+parameters, and does both jobs at once — skip a node if it's blocked, and only add a
 neighbor if *that* neighbor isn't blocked:
 
 ```python
 def build_graph(self):
-    rows = 4
-    cols = 4
     graph = {}
-    for row in range(rows):
-        for col in range(cols):
+    for row in range(self.rows):
+        for col in range(self.cols):
             if (row, col) in self.blocked:
                 continue                                   # skip blocked node entirely
             neighbors = []
             if row > 0 and (row - 1, col) not in self.blocked:
                 neighbors.append((row - 1, col))
-            if row < rows - 1 and (row + 1, col) not in self.blocked:
+            if row < self.rows - 1 and (row + 1, col) not in self.blocked:
                 neighbors.append((row + 1, col))
             if col > 0 and (row, col - 1) not in self.blocked:
                 neighbors.append((row, col - 1))
-            if col < cols - 1 and (row, col + 1) not in self.blocked:
+            if col < self.cols - 1 and (row, col + 1) not in self.blocked:
                 neighbors.append((row, col + 1))
             graph[(row, col)] = neighbors
     return graph
@@ -155,8 +163,15 @@ print((1, 1) in d.graph)     # False
 print(d.graph[(0, 1)])       # does NOT include (1,1)
 ```
 
-Block two nodes and you get 14. Each blocked node vanishes from the keys *and* from every
-neighbor list.
+Each blocked node vanishes from the keys *and* from every neighbor list, so blocking two
+nodes on a 4×4 leaves you 14.
+
+Now try a different grid size — this is the one you traced by hand in Lesson 5-3:
+
+```python
+d = Dijkstra((0, 0), [(1, 1)], rows=3, cols=3)
+print(len(d.graph))          # 8 — nine squares minus the blocked one
+```
 
 <KnowledgeCheck
   question="On a 4×4 grid, how many nodes does Dijkstra((0,0), [(1,0),(2,1)]).graph contain?"

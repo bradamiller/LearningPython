@@ -43,11 +43,17 @@ When both sensors read the same, the difference is zero and the robot drives
 straight. When one drifts onto the line, the difference tells you exactly how much
 and which way:
 
-| Position | left | right | error = L − R | Meaning |
+Work out the direction from the readings rather than memorising the table. A high
+reading means *that sensor* is over the line. If the **left** sensor is the one on
+the line, the line is off to the robot's left — which means the **robot** has
+wandered to the **right** of it. The sensor that finds the line points back toward
+where the robot should be.
+
+| Position | left | right | error = L − R | Which way to steer |
 |---|---|---|---|---|
 | Centered | 0.5 | 0.5 | `0.0` | drive straight |
-| Drifted left | 0.8 | 0.2 | `+0.6` | steer left to correct |
-| Drifted right | 0.2 | 0.8 | `−0.6` | steer right to correct |
+| Drifted right | 0.8 | 0.2 | `+0.6` | steer left, back toward the line |
+| Drifted left | 0.2 | 0.8 | `−0.6` | steer right, back toward the line |
 | Both on white | 0.1 | 0.1 | `0.0` | straight (lost line) |
 | Both on black | 0.9 | 0.9 | `0.0` | straight (an intersection!) |
 
@@ -59,12 +65,12 @@ and which way:
 <KnowledgeCheck
   question="The left sensor reads 0.8 and the right reads 0.2. What is the error, and which way has the robot drifted?"
   options={[
-    {text: 'error +0.6, drifted left', correct: true},
-    {text: 'error −0.6, drifted right'},
+    {text: 'error +0.6, drifted right', correct: true},
+    {text: 'error +0.6, drifted left'},
     {text: 'error 0.0, centered'},
     {text: 'error 1.0, at an intersection'},
   ]}
-  explanation="error = 0.8 − 0.2 = +0.6. A positive error means the left sensor is on the line, so the robot drifted left."
+  explanation="error = 0.8 − 0.2 = +0.6. The high reading is on the LEFT, so the line is off to the robot's left — meaning the robot itself has drifted right of the line. It needs to steer left to get back."
 />
 
 ## The control loop (and that negative sign)
@@ -98,9 +104,9 @@ while True:
     time.sleep(0.01)
 ```
 
-Why the minus? A **positive** error means the robot drifted **left**, so it must
-steer left — and in `arcade()` a *negative* turn steers left. Negating the
-correction lines the math up with reality.
+Why the minus? A **positive** error means the robot drifted **right** of the line,
+so it must steer **left** to get back — and in `arcade()` a *negative* turn steers
+left. Negating the correction lines the math up with reality.
 
 <KnowledgeCheck
   question="Why is the correction negated in arcade(base_effort, -correction) here, when Lesson 2-5 didn't negate it?"
@@ -110,7 +116,7 @@ correction lines the math up with reality.
     {text: 'It makes the robot go faster'},
     {text: 'It fixes a bug in arcade()'},
   ]}
-  explanation="With two sensors, a positive error means 'drifted left → steer left', which is a negative turn in arcade — so we negate the correction."
+  explanation="With two sensors, a positive error means 'drifted right → steer left', which is a negative turn in arcade — so we negate the correction."
 />
 
 <TeacherNote title="Teach the sign with the explorer program first">
@@ -147,8 +153,11 @@ positive error changed) — it's the subtle point of the lesson. Expect to re-tu
 
 <TeacherNote title="Differentiation & the cliffhanger">
 
-**More support:** hand out a reference card — "left high = drifted left; right high =
-drifted right" — and lean on the explorer program. **More challenge:** a speed boost
+**More support:** hand out a reference card — "the sensor reading high is the side the
+line is on, so the robot is on the *other* side: left high → drifted right → steer
+left" — and lean on the explorer program. Sliding a robot across a line by hand
+settles this faster than any diagram; the mistake to watch for is students reading
+the high sensor as the direction the robot went. **More challenge:** a speed boost
 on long straights (when error stays near zero), or track at max speed and re-tune.
 End by flagging the last table row: both-sensors-high gives error ≈ 0, so the robot
 *ignores* an intersection. That ambiguity is the hook for Lesson 2-7.
@@ -174,7 +183,7 @@ Comparing two sensors to find a position is a workhorse technique:
 ## Wrap-up
 
 - What's the two-sensor error formula, and why no setpoint? (`left − right`; equal readings already mean zero.)
-- Positive error means the robot drifted which way? (Left.)
+- Positive error means the robot drifted which way? (Right — the left sensor found the line, so the line is left of the robot.)
 - Why the negative sign on the correction? (A positive error needs a left steer, which is a negative turn in `arcade()`.)
 
 <TeacherNote title="Assessment & next lesson">

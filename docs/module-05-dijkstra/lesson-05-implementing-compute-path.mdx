@@ -235,7 +235,7 @@ This exact pattern — explore, relax distances, reconstruct — underlies real 
 
 - What do the three structures hold in code? (Shortest distances, predecessors, finished nodes.)
 - Why check `if new_distance < distances[neighbor]`? (To keep the shortest path.)
-- Why reverse the reconstructed path, and how many steps is a path of N nodes? (It's built backward; N − 1 steps.)
+- Why reverse the reconstructed path, and why drop its first entry? (It's built backward from the destination; the first entry is the robot's own square, which isn't a step.)
 
 <TeacherNote title="The most important lesson in the module — build it in stages">
 
@@ -244,7 +244,10 @@ as shown: initialization (test with prints), find-minimum (test), neighbor updat
 full loop (test), reconstruction (test). Keep the Lesson 5-3 trace table on the board and
 point to the matching column as you write each block — "this loop is the Update Neighbors
 column." The find-minimum pattern trips people up; practice it in isolation ("find the
-smallest number in a list") first. Watch the off-by-one: a path of N nodes has N − 1 steps.
+smallest number in a list") first. Watch the off-by-one at the *reconstruction* end:
+the raw reconstruction includes the start, `path[1:]` drops it, and after that the
+step count is plainly `len(path)` — the same as Manhattan's. A student who leaves the
+slice off gets a path one too long and a robot that lurches on every first step.
 Run their code on the same examples they traced by hand — that's the verification that
 closes the loop.
 

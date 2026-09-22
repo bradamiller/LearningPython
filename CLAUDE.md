@@ -615,6 +615,20 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   program ends, so NO program ends with **Stop motors** / `drivetrain.stop()`.
   Keep stops only where they're functional mid-program (stop → turn; a
   `track_until_cross()` that ends its motion before returning).
+- **M2-L6 DRIFT DIRECTION (fixed 2026-09-22).** With black = 0.8, the sensor reading
+  high is the side the LINE is on, so the robot is on the **other** side: left sensor
+  high → the robot drifted **right** → steer left. The lesson had this inverted in six
+  places (including the teacher's reference card) while the code was correct, so
+  nothing failed and the explanation was still wrong. If you touch two-sensor
+  material, derive the direction; don't copy a remembered table.
+- **DIJKSTRA TAKES A GRID SIZE (fixed 2026-09-22).** `Dijkstra.__init__` is
+  `(self, start, blocked, rows=4, cols=4)` and `build_graph` reads `self.rows` /
+  `self.cols`. The defaults keep `Dijkstra((0,0), [])` working, and the 3×3 that L5-3
+  traces by hand is now reachable — which L5-5 has always instructed students to test
+  against. Verified by running the assembled class: 16/15/14 nodes on the 4×4, 8 on
+  the 3×3, 6 steps across a clear 4×4, and the 3×3 route matches L5-3's hand trace
+  with the start dropped. `Manhattan` still takes only `start`; that constructor
+  difference is real and is the open question in REVIEW's section 2.
 - **VARIABLES, EXPRESSIONS AND SCOPE (Brad, 2026-09-21).** Before this, nothing in
   the course explained what a variable is: the first assignment students met was
   `drivetrain = …` in L1-8, presented only as "make an instance", and `snake_case`

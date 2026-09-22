@@ -38,6 +38,13 @@ intersection, then turn. In code that's `drive_intersections()`, then a turn, th
 `drive_intersections()` again:
 
 ```python
+# (classes from Module 2 and drive_intersections from Lesson 3-2 go above)
+
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
+
 drive_intersections(tracker, 2)   # drive forward 2 intersections
 tracker.turn_right()              # turn right onto the crossing line
 drive_intersections(tracker, 2)   # drive 2 more, now sideways
@@ -96,6 +103,8 @@ many segments each leg is, and where the turns go. Then translate the sketch,
 one leg per line:
 
 ```python
+# (setup as above — board, tracker, then board.wait_for_button())
+
 drive_intersections(tracker, 3)   # leg 1
 tracker.turn_left()               # corner
 drive_intersections(tracker, 1)   # leg 2

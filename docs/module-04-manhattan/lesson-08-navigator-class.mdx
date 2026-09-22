@@ -179,8 +179,14 @@ to reach any heading — which is why the class doesn't need a `turn_left`.
 Now connect the two classes — `Manhattan` computes, `Navigator` drives:
 
 ```python
+# (Manhattan, Navigator and the Module 2 classes go above)
+
+board = Board.get_default_board()
+
 manhattan = Manhattan((0, 0))
 navigator = Navigator((0, 0), 0)     # start heading North
+
+board.wait_for_button()
 
 path = manhattan.compute_path((2, 3))
 print("Path:", path)

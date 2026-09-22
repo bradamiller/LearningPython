@@ -16,8 +16,13 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 A tuple stores one position. A **path** is many positions in order — and for that you
 need a **list**. By the end, you'll represent a route as a list of coordinate tuples
-like `[(0,0), (1,0), (2,0), (2,1), (2,2), (2,3)]`, and build one up step by step —
-exactly what the Manhattan algorithm does next lesson.
+like `[(1,0), (2,0), (2,1), (2,2), (2,3)]`, and build one up step by step — exactly
+what the Manhattan algorithm does next lesson.
+
+That example is the route from `(0,0)` to `(2,3)`, and notice the robot's own
+starting square isn't in it. A path lists the places the robot **drives to**; it's
+already standing on the start, so putting it in the list would mean "drive to where
+you already are." Every path in this module and the next works that way.
 
 <Objectives>
 
@@ -68,12 +73,15 @@ So a *coordinate* is a tuple; a *path* is a list of tuples.
 
 ```python
 path = []
-path.append((0, 0))
 path.append((1, 0))
 path.append((2, 0))
-print(path)        # [(0, 0), (1, 0), (2, 0)]
+path.append((3, 0))
+print(path)        # [(1, 0), (2, 0), (3, 0)]
 print(len(path))   # 3
 ```
+
+That's a robot at `(0,0)` driving three squares down: three places to drive to, so
+`len(path)` is 3 — the number of steps.
 
 Loop through it with a `for` loop:
 
@@ -83,25 +91,25 @@ for step in path:
 ```
 
 <KnowledgeCheck
-  question="Given path = [(0, 0), (1, 0), (2, 0)], what does path[2] return?"
+  question="Given path = [(1, 0), (2, 0), (3, 0)], what does path[2] return?"
   options={[
-    {text: '(1, 0)'},
-    {text: '(2, 0)', correct: true},
+    {text: '(2, 0)'},
+    {text: '(3, 0)', correct: true},
     {text: '2'},
     {text: 'An IndexError'},
   ]}
-  explanation="Indexing starts at 0, so path[2] is the third item: the tuple (2, 0)."
+  explanation="Indexing starts at 0, so path[2] is the third item: the tuple (3, 0)."
 />
 
 <KnowledgeCheck
   question="For that same path, what does path[2][1] return?"
   options={[
-    {text: '2'},
+    {text: '3'},
     {text: '0', correct: true},
-    {text: '(2, 0)'},
+    {text: '(3, 0)'},
     {text: 'An error'},
   ]}
-  explanation="path[2] is (2, 0); then [1] takes its column — 0. Two indexes: which step, then which part of that step."
+  explanation="path[2] is (3, 0); then [1] takes its column — 0. Two indexes: which step, then which part of that step."
 />
 
 ## Activity · Build a path in a loop
@@ -110,10 +118,14 @@ The pattern the whole module depends on: **start empty, append inside a loop.**
 
 ```python
 path = []
-for row in range(5):
+for row in range(1, 5):          # start at 1, not 0 — the robot is already on row 0
     path.append((row, 0))
-print(path)        # [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)]
+print(path)        # [(1, 0), (2, 0), (3, 0), (4, 0)]
 ```
+
+`range(1, 5)` counts 1, 2, 3, 4 — it starts where you tell it to instead of at 0.
+That's the whole trick to leaving the start out: the first square you append is the
+first one the robot actually drives to.
 
 Trace it and you'll see the list grow by one each pass. Change the loop to vary the
 *column* instead, and you build a horizontal path. Combine a "go down" loop and a "go
@@ -121,7 +133,7 @@ right" loop and you've basically written the Manhattan algorithm.
 
 <TeacherNote title="The build-in-a-loop pattern is make-or-break">
 
-Spend real time on Exercise 2 and a trace table — Lesson 4-4's algorithm relies
+Spend real time on the build-in-a-loop activity and a trace table — Lesson 4-4's algorithm relies
 *entirely* on "empty list, append inside a loop." If students don't own this pattern,
 next lesson is brutal. **Demo the classic bug live:** put `append()` *outside* the
 loop (wrong indentation) so only the last item lands, then fix the indentation. Keep
@@ -138,15 +150,15 @@ added:
 ```python
 # WRONG — append is outside the loop
 path = []
-for i in range(3):
-    position = (i, 0)
-path.append(position)     # only runs once → [(2, 0)]
+for row in range(1, 4):
+    position = (row, 0)
+path.append(position)     # only runs once → [(3, 0)]
 
 # CORRECT — append is inside the loop
 path = []
-for i in range(3):
-    position = (i, 0)
-    path.append(position)  # runs each pass → [(0, 0), (1, 0), (2, 0)]
+for row in range(1, 4):
+    position = (row, 0)
+    path.append(position)  # runs each pass → [(1, 0), (2, 0), (3, 0)]
 ```
 
 <KnowledgeCheck
@@ -186,7 +198,7 @@ for i in range(3):
 
 **Formative:** create a list, `append()` in a loop, index into a list of tuples
 (`path[3][1]`), and spot the indentation bug. **Exit ticket:** "Given
-`path = [(0,0),(1,0),(2,0)]`, what is `path[2][1]`?" (0). **Preview:** next lesson we
+`path = [(1,0),(2,0),(3,0)]`, what is `path[2][1]`?" (0). **Preview:** next lesson we
 compute a path *automatically* — the Manhattan algorithm, on paper first.
 
 </TeacherNote>

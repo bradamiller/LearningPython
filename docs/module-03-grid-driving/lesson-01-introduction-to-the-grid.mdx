@@ -106,6 +106,12 @@ follows the line right up to the cross and stops.
 Once you're at an intersection you can turn onto the crossing line:
 
 ```python
+# (LineSensor and LineTrack classes from Module 2 go above)
+
+board = Board.get_default_board()
+tracker = LineTrack()
+
+board.wait_for_button()
 tracker.track_until_cross()
 print("Turning right...")
 tracker.turn_right()
