@@ -2,13 +2,14 @@
 /**
  * List the TODO markers embedded in the lessons.
  *
- *   npm run todos              — everything, grouped by module
- *   npm run todos -- bug       — only one category
- *   npm run todos -- --count   — just the tallies
+ *   npm run todos               — everything, grouped by module
+ *   npm run todos -- bug        — only one category
+ *   npm run todos -- --count    — just the tallies
+ *   npm run todos -- --compact  — one line each, for the VS Code task
  *
  * A TODO is an MDX comment, so it never reaches a rendered page:
  *
- *   {\/* TODO(category): what is wrong — what to do about it. [REVIEW §N] *\/}
+ *   {\/* TODO-CATEGORY: what is wrong — what to do about it. [REVIEW §N] *\/}
  *
  * Categories, in the order they're worth attention:
  *   bug         something is wrong and a student can hit it
@@ -42,19 +43,28 @@ const found = [];
 for (const file of walk(DOCS).sort()) {
   const lines = fs.readFileSync(file, 'utf8').split('\n');
   lines.forEach((line, i) => {
-    const m = line.match(/\{\/\*\s*TODO\(([a-z]+)\):\s*([\s\S]*?)\s*\*\/\}/);
+    const m = line.match(/\{\/\*\s*TODO-([A-Z]+):\s*([\s\S]*?)\s*\*\/\}/);
     if (m) {
       found.push({
         file: path.relative(path.join(__dirname, '..'), file),
         line: i + 1,
-        category: m[1],
+        category: m[1].toLowerCase(),
         text: m[2].replace(/\s+/g, ' '),
       });
     }
   });
 }
 
-const [filter] = process.argv.slice(2);
+const args = process.argv.slice(2);
+if (args.includes('--compact')) {
+  // One line per TODO: "path:line: CATEGORY: message".
+  // The VS Code task's problemMatcher parses exactly this shape.
+  for (const t of found) {
+    console.log(`${t.file}:${t.line}: ${t.category.toUpperCase()}: ${t.text}`);
+  }
+  process.exit(0);
+}
+const [filter] = args;
 const counts = {};
 for (const t of found) counts[t.category] = (counts[t.category] || 0) + 1;
 
@@ -90,7 +100,7 @@ for (const t of shown) {
     console.log(`\n  ${mod}`);
     lastModule = mod;
   }
-  const name = path.basename(t.file, '.mdx');
+  const name = path.basename(t.file);
   console.log(`    ${name}:${t.line}`);
   // Wrap the body so a long note stays readable in a terminal.
   const words = t.text.split(' ');

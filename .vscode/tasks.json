@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // Terminal → Run Task → "TODOs: to Problems panel".
+      // Each marker becomes a clickable warning, so you can walk them with F8.
+      "label": "TODOs: to Problems panel",
+      "type": "shell",
+      "command": "npm run --silent todos -- --compact",
+      "presentation": {"reveal": "silent", "panel": "dedicated", "clear": true},
+      "problemMatcher": {
+        "owner": "curriculum-todo",
+        "source": "todo",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "severity": "warning",
+        "pattern": {
+          "regexp": "^(.*\\.mdx):(\\d+):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "message": 3
+        }
+      }
+    },
+    {
+      "label": "TODOs: readable list",
+      "type": "shell",
+      "command": "npm run --silent todos",
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "TODOs: bugs only",
+      "type": "shell",
+      "command": "npm run --silent todos -- bug",
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    }
+  ]
+}

@@ -794,7 +794,7 @@ MDX comment, so the problem is visible to whoever opens that lesson instead of
 living only in a review document:
 
 ```
-TODO(category): what is wrong — what to do about it. [REVIEW §N]
+TODO-CATEGORY: what is wrong — what to do about it. [REVIEW §N]
 ```
 
 wrapped in an MDX comment (brace-slash-star … star-slash-brace). It renders to
@@ -802,19 +802,27 @@ nothing, so students never see it — verified against the built HTML and the
 printable checks.
 
 `npm run todos` lists them grouped by category, `npm run todos -- bug` filters to
-one, `npm run todos -- --count` gives just the tallies. Categories, most urgent
-first: **bug** (wrong, and a student can hit it), **blocked** (needs Brad's decision
-or a robot), **answers** (an answer is visible where it shouldn't be), **convention**
-(drifts from a rule kept elsewhere), **media** (placeholder or stand-in art).
+one, `npm run todos -- --count` gives just the tallies, and `-- --compact` prints one
+line each for tooling. Categories, most urgent first: **BUG** (wrong, and a student
+can hit it), **BLOCKED** (needs Brad's decision or a robot), **ANSWERS** (an answer
+is visible where it shouldn't be), **CONVENTION** (drifts from a rule kept
+elsewhere), **MEDIA** (placeholder or stand-in art).
+
+**The tag is a plain word on purpose.** It was `TODO(bug)` briefly; VS Code's Todo
+Tree substitutes tags straight into a regex and documents no escaping, so a tag
+containing parentheses is a gamble. `TODO-BUG` has no regex metacharacters.
+`.vscode/` carries the Todo Tree config, a search exclude list and three tasks — the
+first pipes the markers into the Problems panel, so they can be walked with F8.
 
 As of 2026-09-22: 9 bug, 5 blocked, 7 answers, 10 convention, 2 media — 33 total.
 `scripts/add_todos.py` is the one-shot that placed them and is the record of where
 each came from; `REVIEW-2026-09-21.md` carries the full reasoning each one cites.
 
-Two rules when writing one: **no braces or backticks in the comment body** (a bare
-brace in MDX is parsed as a JSX expression and breaks the build), and **never put a
-comment inside a JSX element's attribute list** — put it on the line above the
-element. Delete the marker in the same commit that fixes the thing.
+Three rules when writing one: **no braces or backticks in the comment body** (a bare
+brace in MDX is parsed as a JSX expression and breaks the build), **never put a
+comment inside a JSX element's attribute list** (put it on the line above the
+element), and **keep it to one line** — `list_todos.js` matches per line. Delete the
+marker in the same commit that fixes the thing.
 
 ## 11. Good next steps
 

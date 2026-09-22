@@ -105,15 +105,22 @@ Known problems are flagged in the lesson files as MDX comments, which render to
 nothing — students never see them:
 
 ```bash
-npm run todos            # everything, grouped by category
-npm run todos -- bug     # just one category
-npm run todos -- --count # tallies only
+npm run todos              # everything, grouped by category
+npm run todos -- bug       # just one category
+npm run todos -- --count   # tallies only
 ```
 
-Categories, most urgent first: `bug` (wrong, and a student can hit it), `blocked`
-(needs a decision or a robot first), `answers` (an answer is visible where it
-shouldn't be), `convention` (drifts from a rule kept elsewhere), `media`
-(placeholder art). `REVIEW-2026-09-21.md` has the full reasoning behind each one.
+In VS Code, `Cmd+Shift+F` for `TODO-` finds them with no extension installed. The
+committed `.vscode/` folder adds more: install the recommended **Todo Tree**
+extension for a colour-coded tree in the sidebar, or run **Terminal → Run Task →
+"TODOs: to Problems panel"** to load all of them into the Problems panel as
+clickable warnings you can step through with F8.
+
+Categories, most urgent first: `TODO-BUG` (wrong, and a student can hit it),
+`TODO-BLOCKED` (needs a decision or a robot first), `TODO-ANSWERS` (an answer is
+visible where it shouldn't be), `TODO-CONVENTION` (drifts from a rule kept
+elsewhere), `TODO-MEDIA` (placeholder art). `REVIEW-2026-09-21.md` has the full
+reasoning behind each one.
 
 When you fix something, delete its marker in the same commit.
 

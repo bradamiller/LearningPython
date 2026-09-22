@@ -1,0 +1,65 @@
+{
+  // ---------------------------------------------------------------- Todo Tree
+  // Puts the lesson TODO markers in a tree in the activity bar, grouped and
+  // colour-coded. Markers look like this inside a lesson .mdx file:
+  //
+  //     {/* TODO-BUG: what is wrong — what to do about it. [REVIEW §N] */}
+  //
+  // The tags are plain words on purpose: Todo Tree drops them straight into a
+  // regex, and it does not document escaping, so a tag containing brackets or
+  // parentheses is a gamble. TODO-BUG has no regex metacharacters in it.
+  "todo-tree.general.tags": [
+    "TODO-BUG",
+    "TODO-BLOCKED",
+    "TODO-ANSWERS",
+    "TODO-CONVENTION",
+    "TODO-MEDIA"
+  ],
+
+  // Same as the shipped default, plus `\{/\*` so the MDX comment opener counts
+  // as a comment start. (The default's `/\*` already matches the `/*` inside
+  // `{/*`; this is explicit rather than incidental.)
+  "todo-tree.regex.regex": "(\\{/\\*|//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)",
+
+  // Most urgent first: red for things a student can hit, amber for things
+  // waiting on a decision or a robot, blue-grey for the rest.
+  "todo-tree.highlights.defaultHighlight": {
+    "type": "text-and-comment",
+    "foreground": "#ffffff",
+    "opacity": 80,
+    "gutterIcon": true
+  },
+  "todo-tree.highlights.customHighlight": {
+    "TODO-BUG": {"background": "#c0392b", "icon": "bug", "iconColour": "#c0392b"},
+    "TODO-BLOCKED": {"background": "#b9770e", "icon": "watch", "iconColour": "#b9770e"},
+    "TODO-ANSWERS": {"background": "#7d3c98", "icon": "eye-closed", "iconColour": "#7d3c98"},
+    "TODO-CONVENTION": {"background": "#2874a6", "icon": "checklist", "iconColour": "#2874a6"},
+    "TODO-MEDIA": {"background": "#117864", "icon": "device-camera", "iconColour": "#117864"}
+  },
+
+  // Group by tag so the bugs sit together, and show the whole repo rather than
+  // just open files.
+  "todo-tree.tree.groupedByTag": true,
+  "todo-tree.tree.showCountsInTree": true,
+  "todo-tree.tree.sortTagsBySeverity": false,
+  "todo-tree.filtering.excludeGlobs": [
+    "**/node_modules/**",
+    "**/build/**",
+    "**/.docusaurus/**"
+  ],
+
+  // ------------------------------------------------------------------- Search
+  // Keep generated output out of Cmd+Shift+F results, so searching TODO- finds
+  // only the real markers.
+  "search.exclude": {
+    "build": true,
+    ".docusaurus": true,
+    "node_modules": true,
+    "src/data": true,
+    "src/pages/checks": true
+  },
+
+  // ---------------------------------------------------------------------- MDX
+  "files.associations": {"*.mdx": "mdx"},
+  "[mdx]": {"editor.wordWrap": "on"}
+}
