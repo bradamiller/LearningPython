@@ -2,10 +2,13 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import remarkStripTodos from './plugins/remark-strip-todos.js';
 
-// Authoring <Todo> notes are for the dev server only. In a production build the
-// remark plugin below deletes them before MDX compiles, so neither the markup
-// nor the note text reaches the deployed site or its JS bundles.
-const IS_PROD = process.env.NODE_ENV === 'production';
+// Authoring <Todo> notes ship with the site, hidden behind the "Show TODOs"
+// switch — the same arrangement teacher notes already use. Build with
+// SHOW_TODOS=0 to strip them out entirely (markup and text both) for a release
+// where nobody should be able to find them at all:
+//
+//     SHOW_TODOS=0 npm run build
+const STRIP_TODOS = process.env.SHOW_TODOS === '0';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -48,7 +51,7 @@ const config = {
           sidebarPath: './sidebars.js',
           editUrl: undefined,
           showLastUpdateTime: false,
-          beforeDefaultRemarkPlugins: IS_PROD ? [remarkStripTodos] : [],
+          beforeDefaultRemarkPlugins: STRIP_TODOS ? [remarkStripTodos] : [],
         },
         blog: false,
         theme: {

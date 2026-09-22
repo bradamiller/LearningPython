@@ -9,10 +9,10 @@ import {useLocation} from '@docusaurus/router';
  * switch on sets html[data-teacher='on'], which reveals every <TeacherNote>
  * and teacher banner across the site.
  *
- * Show TODOs: authoring notes about things that still need fixing. These exist
- * only on the dev server — <Todo> renders null in a production build — so this
- * switch is only rendered under `npm start`, and only on a page that actually
- * has one, with a count of how many.
+ * Show TODOs: authoring notes about things that still need fixing. The switch
+ * appears on any page that has at least one, with a count of how many. It
+ * defaults ON under `npm start` (you are there to fix things) and OFF on a built
+ * site (a reader is not), and remembers whichever way you last set it.
  */
 
 const TEACHER_KEY = 'xrp-teacher-mode';
@@ -71,19 +71,20 @@ function TeacherToggle() {
 }
 
 function TodoToggle() {
-  const [on, setOn] = useState(true);       // default ON — that's the point of them
+  // On while authoring, off for a reader — overridden by a remembered choice.
+  const DEFAULT_ON = process.env.NODE_ENV !== 'production';
+  const [on, setOn] = useState(DEFAULT_ON);
   const [count, setCount] = useState(0);
   const {pathname} = useLocation();
 
-  // Default to on, but remember a deliberate "off".
   useEffect(() => {
     try {
       const saved = localStorage.getItem(TODO_KEY);
-      const next = saved === null ? true : saved === 'on';
+      const next = saved === null ? DEFAULT_ON : saved === 'on';
       setOn(next);
       document.documentElement.setAttribute('data-todos', next ? 'on' : 'off');
     } catch (e) {
-      document.documentElement.setAttribute('data-todos', 'on');
+      document.documentElement.setAttribute('data-todos', DEFAULT_ON ? 'on' : 'off');
     }
   }, []);
 
@@ -118,7 +119,7 @@ function TodoToggle() {
       count={count}
       on={on}
       onClick={toggle}
-      title="Authoring notes — things in this lesson that still need fixing. Dev server only."
+      title="Authoring notes — things in this lesson that still need fixing."
     />
   );
 }
@@ -128,7 +129,7 @@ export default function Root({children}) {
     <>
       {children}
       <TeacherToggle />
-      {process.env.NODE_ENV !== 'production' && <TodoToggle />}
+      <TodoToggle />
     </>
   );
 }

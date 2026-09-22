@@ -102,17 +102,18 @@ claims in Modules 2–5 as unverified until they get that pass.
 ## Finding what still needs work
 
 Known problems are flagged in the lessons as `<Todo>` components, which render as
-coloured boxes **on the dev server only**:
+coloured boxes. A **"Show TODOs"** switch sits above Teacher mode, with a count for
+the current page. It appears only on pages that have one, defaults **on** under
+`npm start` and **off** on the built site, and remembers your choice — so the notes
+are there on the deployed site whenever you want them, and invisible to a reader
+who doesn't flip the switch.
+
+The text is in the deployed page source, the same as teacher notes and the answer
+keys. To ship a build where the notes can't be found at all:
 
 ```bash
-npm start                  # then use the "Show TODOs" switch, above Teacher mode
+SHOW_TODOS=0 npm run build     # deletes them before MDX compiles
 ```
-
-The switch shows a count for the current page and is on by default. Nothing about
-them reaches a production build — the component renders null *and* a remark plugin
-strips the nodes before compiling, so neither the markup nor the text is in the
-deployed site or its JavaScript. That matters, because several of the notes say
-where a lesson's answers are visible.
 
 From the terminal:
 

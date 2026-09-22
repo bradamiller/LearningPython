@@ -799,16 +799,27 @@ gets a NameError. [REVIEW §1.7]
 </Todo>
 ```
 
-**Dev server only.** `src/components/Todo.js` returns null in production, *and*
-`plugins/remark-strip-todos.js` deletes the nodes before MDX compiles them when
-`NODE_ENV === 'production'`. Both are needed: returning null still leaves the
-note's text compiled into the JS bundle as the component's children, which was a
-real leak — several notes say exactly where a lesson's answers are visible. Run
-`npm start` to see them; `npm run build` contains neither the markup nor the words.
+**They ship with the site, behind a switch** — the same arrangement teacher notes
+already use. A **"Show TODOs"** toggle sits above Teacher mode with a count for the
+page; it appears only where there is something to show, defaults **on** under
+`npm start` and **off** on a built site, and remembers whichever way it was last
+set. So the notes are readable on the deployed site by flipping the switch, and a
+reader who never touches it sees nothing.
 
-A **"Show TODOs"** switch sits above Teacher mode, on by default, with a count of
-how many are on the page. It only appears when the page has at least one, and only
-on the dev server.
+This was **dev-server-only until 2026-09-23** and that was the wrong call — Brad
+could not see them where he actually reads the course. The honest tradeoff of the
+current arrangement: the note text is in the deployed page source, exactly as
+teacher notes and the public answer-key pages already are (§15). If that ever
+matters, one build strips them completely:
+
+```bash
+SHOW_TODOS=0 npm run build     # markup and text both gone, verified
+```
+
+`plugins/remark-strip-todos.js` does that by deleting the nodes before MDX
+compiles them. Deleting at the *remark* stage is the only thing that works: a
+component returning null still leaves its children compiled into the JS bundle,
+so the words shipped anyway — which is how this was first written, and was wrong.
 
 Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible

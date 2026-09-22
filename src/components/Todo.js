@@ -5,13 +5,15 @@ import React from 'react';
  *
  *   <Todo kind="bug">loop_count is defined nowhere in this module …</Todo>
  *
- * DEVELOPMENT ONLY. This renders `null` in a production build, so the text
- * never reaches the deployed site — not even hidden in the page source. That
- * matters: several of these notes say *where the answers are visible*, which
- * is the last thing to ship to students. Run `npm start` to see them.
+ * These ship with the site and are hidden behind the "Show TODOs" switch beside
+ * Teacher mode — the same arrangement teacher notes use. The switch defaults ON
+ * under `npm start` and OFF on a built site, and only appears on a page that has
+ * at least one note.
  *
- * The "Show TODOs" switch beside Teacher mode hides and shows them while you
- * read; the switch only appears when there is something to switch.
+ * That means the text IS in the page source of the deployed site, exactly as
+ * teacher notes and answer keys already are. To ship a build where the notes
+ * cannot be found at all, build with SHOW_TODOS=0 — a remark plugin then deletes
+ * the nodes before MDX compiles them, so neither markup nor text is emitted.
  *
  * Categories, in the order they are worth attention:
  *   bug         wrong, and a student can hit it
@@ -30,7 +32,6 @@ const KINDS = {
 };
 
 export default function Todo({kind = 'bug', children}) {
-  if (process.env.NODE_ENV === 'production') return null;
   const k = KINDS[kind] ? kind : 'bug';
   const {label, icon} = KINDS[k];
   return (
