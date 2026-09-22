@@ -227,8 +227,12 @@ html[data-teacher='on'] .teacherBanner {
   transition: transform 0.18s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
-html[data-teacher='on'] .teacherToggle__track { background: var(--xrp-red); }
-html[data-teacher='on'] .teacherToggle__thumb { transform: translateX(18px); }
+/* Scoped to the teacher switch. `.teacherToggle` is the shared pill SHAPE and
+   the TODO switch carries it too, so an unscoped rule here paints the TODO
+   switch on whenever teacher mode is on — and it then never appears to change
+   when clicked, because both its states look identical. */
+html[data-teacher='on'] .teacherToggle--teacher .teacherToggle__track { background: var(--xrp-red); }
+html[data-teacher='on'] .teacherToggle--teacher .teacherToggle__thumb { transform: translateX(18px); }
 
 /* ---------- Knowledge check ---------- */
 .knowledgeCheck {
@@ -1051,8 +1055,9 @@ html[data-todos='off'] .todo { display: none; }
 @media print { .todo { display: none !important; } }
 
 /* The switch itself — stacked above Teacher mode, same shape. Every rule here
-   is scoped to .todoToggle: an unscoped html[data-todos='on'] selector also
-   lights up the Teacher mode switch, which then reads as on when it isn't. */
+   is scoped to .todoToggle, and the teacher rules are scoped to
+   .teacherToggle--teacher, because the two switches share the pill class: an
+   unscoped state rule on either one silently drives the other. */
 .todoToggle { bottom: 4.2rem; }
 html[data-todos='on'] .todoToggle .teacherToggle__track { background: #c0392b; }
 html[data-todos='on'] .todoToggle .teacherToggle__thumb { transform: translateX(18px); }

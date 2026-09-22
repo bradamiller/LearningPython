@@ -62,6 +62,7 @@ function TeacherToggle() {
 
   return (
     <Toggle
+      className="teacherToggle--teacher"
       label="Teacher mode"
       on={on}
       onClick={toggle}
