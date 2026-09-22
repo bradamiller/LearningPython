@@ -787,6 +787,35 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
 | **M2/M4/M5 site pages** | ⚠️ Now BEHIND the source — the `separate-classes` merge (2026-09-18) made classes optional in the source only. See §9. |
 
+## 10b. TODO markers in the lessons (added 2026-09-22)
+
+Known-broken or unfinished things are flagged **in the lesson file itself**, as an
+MDX comment, so the problem is visible to whoever opens that lesson instead of
+living only in a review document:
+
+```
+TODO(category): what is wrong — what to do about it. [REVIEW §N]
+```
+
+wrapped in an MDX comment (brace-slash-star … star-slash-brace). It renders to
+nothing, so students never see it — verified against the built HTML and the
+printable checks.
+
+`npm run todos` lists them grouped by category, `npm run todos -- bug` filters to
+one, `npm run todos -- --count` gives just the tallies. Categories, most urgent
+first: **bug** (wrong, and a student can hit it), **blocked** (needs Brad's decision
+or a robot), **answers** (an answer is visible where it shouldn't be), **convention**
+(drifts from a rule kept elsewhere), **media** (placeholder or stand-in art).
+
+As of 2026-09-22: 9 bug, 5 blocked, 7 answers, 10 convention, 2 media — 33 total.
+`scripts/add_todos.py` is the one-shot that placed them and is the record of where
+each came from; `REVIEW-2026-09-21.md` carries the full reasoning each one cites.
+
+Two rules when writing one: **no braces or backticks in the comment body** (a bare
+brace in MDX is parsed as a JSX expression and breaks the build), and **never put a
+comment inside a JSX element's attribute list** — put it on the line above the
+element. Delete the marker in the same commit that fixes the thing.
+
 ## 11. Good next steps
 
 - **Push.** Commits are made here but **`git push` cannot run from the sandbox**

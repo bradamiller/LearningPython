@@ -99,6 +99,24 @@ claims in Modules 2–5 as unverified until they get that pass.
   `=` actually does, naming, expressions and operator precedence before loops and
   functions use them.
 
+## Finding what still needs work
+
+Known problems are flagged in the lesson files as MDX comments, which render to
+nothing — students never see them:
+
+```bash
+npm run todos            # everything, grouped by category
+npm run todos -- bug     # just one category
+npm run todos -- --count # tallies only
+```
+
+Categories, most urgent first: `bug` (wrong, and a student can hit it), `blocked`
+(needs a decision or a robot first), `answers` (an answer is visible where it
+shouldn't be), `convention` (drifts from a rule kept elsewhere), `media`
+(placeholder art). `REVIEW-2026-09-21.md` has the full reasoning behind each one.
+
+When you fix something, delete its marker in the same commit.
+
 ## Gotchas worth knowing before you edit
 
 - **`:::note` / `:::tip` / `:::caution` admonitions DO NOT RENDER** on this site —

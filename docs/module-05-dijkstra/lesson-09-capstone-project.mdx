@@ -100,11 +100,15 @@ for dest in destinations:
         pathfinder = Dijkstra(current, blocked)
         path = pathfinder.compute_path(dest)
         if len(path) == 0:
+{/* TODO(bug): compute_path returns an empty list both for "already there" and for "unreachable", so a round trip that ends where it started reports "No path" and skips its last leg. [REVIEW §1.7] */}
+
             print("No path to", dest); break
 
         rerouted = False
         for next_stop in path:                       # path starts at the NEXT
             distance = rangefinder.distance()        # intersection, not here
+{/* TODO(bug): THRESHOLD is undefined — L5-7 defines OBSTACLE_THRESHOLD. The loop also reads the rangefinder BEFORE turning toward next_stop and then blames next_stop for the reading, so if the next stop is left or right the wrong node gets blocked. And there is no drive call anywhere in this loop, so the robot never moves. [REVIEW §1.7] */}
+
             if distance < THRESHOLD:
                 blocked.append(next_stop)            # obstacle ahead
                 reroute_count += 1
@@ -132,6 +136,8 @@ When an obstacle appears mid-path, you `break` out, having added it to `blocked`
 />
 
 ## Activity · Test in simulation, then drive
+
+{/* TODO(answers): the capstone's core loop is printed on the student page, and the rubric below grades the part it hands over. M4 L9 is the model: skeleton for students, working program in a TeacherNote. [REVIEW §3] */}
 
 Get the whole thing working with a **simulated** rangefinder before the robot — verify
 paths compute, obstacles register, the blocked list grows, and `obstacles.txt` is written
@@ -203,6 +209,8 @@ You've built, in miniature, what real autonomous systems do:
     Connecting tested components into a reliable whole is the core of professional software work.
   </InfoCard>
 </CardGrid>
+
+{/* TODO(convention): the duration chip is 90+ min, and extract_pacing matches digits only, so the plus is silently dropped and the pacing guide records 90 minutes for a project this lesson's own teacher note says spans 2 to 3 days. Use Multi-day, as M2 L10 does. [REVIEW §4] */}
 
 ## Wrap-up
 

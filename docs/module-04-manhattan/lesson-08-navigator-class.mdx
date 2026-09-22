@@ -116,11 +116,15 @@ def drive_path(self, path):
     for next_pos in path:
         needed = self.desired_heading(next_pos)
         if self.heading == needed:
-            self.line_track.drivetrain.straight(8)   # clear the intersection
+    {/* TODO(convention): this reaches two levels into another object (Navigator to LineTrack to DifferentialDrive), which contradicts the delegation point this same lesson makes sixty lines earlier. The 8 is also a bare magic number, and grid spacing is never specified anywhere in M3 or M4. */}
+
+        self.line_track.drivetrain.straight(8)   # clear the intersection
         self.turn_to(needed)
         self.line_track.track_until_cross()
         self.position = next_pos
 ```
+
+{/* TODO(blocked): same turn_right clearing claim as M3 L3 — and drive_path above is built on it, clearing only in the straight-ahead case. If the premise is wrong, every turn leg needs clearing too. Needs a robot on a grid. [REVIEW §1.2] */}
 
 When the robot needs to **turn**, `turn_right()` already drives it off the current
 intersection as part of the turn. But when it's going **straight** (no turn needed), it's

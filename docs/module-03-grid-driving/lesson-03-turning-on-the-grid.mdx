@@ -68,6 +68,8 @@ print("L-shape complete!")
   explanation="Drive to the corner, turn, then continue — the drive/turn/drive order is what makes the L."
 />
 
+{/* TODO(blocked): this whole section rests on a claim that is false in the source — LineTrack.turn_right() is set_effort(0.3, -0.3), a spin in place with no forward travel, so it does NOT drive the robot off the intersection. Whether that actually breaks the path programs depends on sensor spacing and cross geometry, which needs a robot on a real grid to settle. Do not reword this until it has been tested; the same claim is repeated in L3-4 and M4 L8. [REVIEW §1.2] */}
+
 ## No clearing after a turn
 
 There's a nice detail: after `turn_right()` or `turn_left()`, you go **straight into**

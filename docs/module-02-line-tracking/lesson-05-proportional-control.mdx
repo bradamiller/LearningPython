@@ -97,6 +97,8 @@ The sign tells us which way we've drifted; the size tells us how far:
   explanation="error = 0.5 − 0.2 = +0.3. The positive sign says the robot drifted onto white and should steer toward the line."
 />
 
+{/* TODO(blocked): Kp is capitalized here and in L2-6 and L2-7, but L2-9 and L2-10 use self.kp. L1-9 now teaches snake_case for variables and Capitalized for classes, so the bare Kp breaks the course's own rule. Brad to decide: rename to kp throughout, or keep Kp and add a line saying control gains are conventionally capitalized in engineering. Either way the split has to go. [REVIEW §4] */}
+
 ## From error to steering: the gain `Kp`
 
 We don't feed raw error to the motors — we scale it by a **proportional gain**,
@@ -169,6 +171,8 @@ exactly 0.5.
 
 ## Activity · Tuning Kp
 
+{/* TODO(answers): the tuning outcomes are stated right under this heading, before students touch the robot, and the check below then asks exactly that. Move the too-high / too-low results into a Reveal with a hint. [REVIEW §3] */}
+
 `Kp` is yours to tune by watching the robot:
 
 - **Too high** → the robot over-corrects and **oscillates**, weaving rapidly.
@@ -189,6 +193,8 @@ exactly 0.5.
 Print your values while you tune (every 50th pass keeps the console readable):
 
 ```python
+{/* TODO(bug): loop_count is defined nowhere in this module, so a student who pastes this in as instructed gets a NameError on the first pass. Either add a counter to the control loop above or print every pass. [REVIEW §1.7] */}
+
 if loop_count % 50 == 0:
     print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
 ```
