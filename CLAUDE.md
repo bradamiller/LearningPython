@@ -839,6 +839,12 @@ Four rules when writing one, each learned the hard way:
 
 ## 11. Good next steps
 
+**Deferred feature work lives in `BACKLOG.md`** — site search and PDF export are
+both written up there with the research already done (which plugin, which config
+options, and the trap in each). Brad asked for both on 2026-09-23 but wants them
+after the course is closer to finished. `BACKLOG.md` also indexes the parked
+decisions so none of them are only in a chat log.
+
 - **Push.** Commits are made here but **`git push` cannot run from the sandbox**
   (no GitHub credentials) — Brad pushes with `git push origin main`. Always tell him how many commits are waiting.
 - **Continue the evaluation pass** with M1 L7–L11, then Modules 2–5 — applying §9's

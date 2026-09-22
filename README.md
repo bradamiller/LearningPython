@@ -101,6 +101,11 @@ claims in Modules 2–5 as unverified until they get that pass.
 
 ## Finding what still needs work
 
+Three places, by kind: `REVIEW-2026-09-21.md` for defects found in the audit,
+`<Todo>` notes in the lessons for the ones still open (below), and `BACKLOG.md`
+for deferred features — site search and PDF export — plus the decisions waiting
+on Brad.
+
 Known problems are flagged in the lessons as `<Todo>` components, which render as
 coloured boxes. A **"Show TODOs"** switch sits above Teacher mode, with a count for
 the current page. It appears only on pages that have one, defaults **on** under
