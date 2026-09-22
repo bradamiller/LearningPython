@@ -1,13 +1,17 @@
 {
   // ---------------------------------------------------------------- Todo Tree
-  // Puts the lesson TODO markers in a tree in the activity bar, grouped and
-  // colour-coded. Markers look like this inside a lesson .mdx file:
+  // Puts the lesson TODO markers in a tree in the activity bar. Markers look
+  // like this inside a lesson .mdx file:
   //
   //     {/* TODO-BUG: what is wrong — what to do about it. [REVIEW §N] */}
   //
   // The tags are plain words on purpose: Todo Tree drops them straight into a
-  // regex, and it does not document escaping, so a tag containing brackets or
-  // parentheses is a gamble. TODO-BUG has no regex metacharacters in it.
+  // regex and documents no escaping, so a tag with brackets in it is a gamble.
+  //
+  // There is deliberately NO custom "todo-tree.regex.regex" here. The shipped
+  // default already matches these markers (its `/\*` alternative matches the
+  // `/*` inside `{/*`), and a custom regex is one more thing that can silently
+  // match nothing.
   "todo-tree.general.tags": [
     "TODO-BUG",
     "TODO-BLOCKED",
@@ -16,13 +20,8 @@
     "TODO-MEDIA"
   ],
 
-  // Same as the shipped default, plus `\{/\*` so the MDX comment opener counts
-  // as a comment start. (The default's `/\*` already matches the `/*` inside
-  // `{/*`; this is explicit rather than incidental.)
-  "todo-tree.regex.regex": "(\\{/\\*|//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)",
-
   // Most urgent first: red for things a student can hit, amber for things
-  // waiting on a decision or a robot, blue-grey for the rest.
+  // waiting on a decision or a robot, quieter colours for the rest.
   "todo-tree.highlights.defaultHighlight": {
     "type": "text-and-comment",
     "foreground": "#ffffff",
@@ -37,11 +36,11 @@
     "TODO-MEDIA": {"background": "#117864", "icon": "device-camera", "iconColour": "#117864"}
   },
 
-  // Group by tag so the bugs sit together, and show the whole repo rather than
-  // just open files.
-  "todo-tree.tree.groupedByTag": true,
+  // Scan the whole repo (the default, but stated so an empty tree can't be
+  // blamed on it), group by tag, and show counts.
+  "todo-tree.tree.scanMode": "workspace",
+  "todo-tree.tree.grouped": true,
   "todo-tree.tree.showCountsInTree": true,
-  "todo-tree.tree.sortTagsBySeverity": false,
   "todo-tree.filtering.excludeGlobs": [
     "**/node_modules/**",
     "**/build/**",
@@ -49,8 +48,8 @@
   ],
 
   // ------------------------------------------------------------------- Search
-  // Keep generated output out of Cmd+Shift+F results, so searching TODO- finds
-  // only the real markers.
+  // Keep generated output out of Cmd+Shift+F, so searching TODO- finds only the
+  // real markers.
   "search.exclude": {
     "build": true,
     ".docusaurus": true,

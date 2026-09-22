@@ -3,15 +3,23 @@
   "tasks": [
     {
       // Terminal → Run Task → "TODOs: to Problems panel".
-      // Each marker becomes a clickable warning, so you can walk them with F8.
+      // Each marker becomes a clickable warning you can step through with F8.
+      //
+      // The script prints ABSOLUTE paths for this task, and fileLocation is
+      // "absolute" to match: a relative path only resolves if the folder you
+      // opened is exactly this repo, and VS Code silently drops problems whose
+      // file it cannot resolve — which looks identical to "the task did
+      // nothing". reveal is "always" for the same reason: if something fails,
+      // you see it rather than an empty panel.
       "label": "TODOs: to Problems panel",
       "type": "shell",
-      "command": "npm run --silent todos -- --compact",
-      "presentation": {"reveal": "silent", "panel": "dedicated", "clear": true},
+      "command": "npm run --silent todos -- --compact --absolute",
+      "options": {"cwd": "${workspaceFolder}"},
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
       "problemMatcher": {
         "owner": "curriculum-todo",
         "source": "todo",
-        "fileLocation": ["relative", "${workspaceFolder}"],
+        "fileLocation": "absolute",
         "severity": "warning",
         "pattern": {
           "regexp": "^(.*\\.mdx):(\\d+):\\s+(.*)$",
@@ -25,6 +33,7 @@
       "label": "TODOs: readable list",
       "type": "shell",
       "command": "npm run --silent todos",
+      "options": {"cwd": "${workspaceFolder}"},
       "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
       "problemMatcher": []
     },
@@ -32,6 +41,7 @@
       "label": "TODOs: bugs only",
       "type": "shell",
       "command": "npm run --silent todos -- bug",
+      "options": {"cwd": "${workspaceFolder}"},
       "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
       "problemMatcher": []
     }

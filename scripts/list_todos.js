@@ -6,6 +6,7 @@
  *   npm run todos -- bug        — only one category
  *   npm run todos -- --count    — just the tallies
  *   npm run todos -- --compact  — one line each, for the VS Code task
+ *                                 (add --absolute for full paths)
  *
  * A TODO is an MDX comment, so it never reaches a rendered page:
  *
@@ -58,9 +59,14 @@ for (const file of walk(DOCS).sort()) {
 const args = process.argv.slice(2);
 if (args.includes('--compact')) {
   // One line per TODO: "path:line: CATEGORY: message".
-  // The VS Code task's problemMatcher parses exactly this shape.
+  // The VS Code task's problemMatcher parses exactly this shape. With
+  // --absolute the path is absolute, which is what the task uses: a relative
+  // path only resolves when the opened folder is exactly this repo, and VS Code
+  // drops problems whose file it can't find without saying so.
+  const abs = args.includes('--absolute');
   for (const t of found) {
-    console.log(`${t.file}:${t.line}: ${t.category.toUpperCase()}: ${t.text}`);
+    const where = abs ? path.join(__dirname, '..', t.file) : t.file;
+    console.log(`${where}:${t.line}: ${t.category.toUpperCase()}: ${t.text}`);
   }
   process.exit(0);
 }
