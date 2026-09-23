@@ -643,7 +643,12 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the course explained what a variable is: the first assignment students met was
   `drivetrain = …` in L1-8, presented only as "make an instance", and `snake_case`
   appeared nowhere in the repo. **L1-9 · Variables & Expressions** now owns it —
-  `=` as "work out the right side, then attach the name", reassignment including
+  **the memory-box model (Brad, 2026-09-23)** — a variable is a named chunk of the
+  controller's memory; `=` works out the right side and *stores* the result in that
+  box; reassigning *overwrites* what was there. Do NOT go back to "a name attached
+  to a value": Brad found it confusing, and the box model is what makes
+  `count = count + 1` explainable — read the box, add one, write it back, same box
+  twice in one line. Reassignment including
   `count = count + 1`, snake_case, the Capitalized-class / lowercase-instance
   convention (which had been living in a teacher note only), arithmetic operators,
   precedence and parentheses, and one note on `/` always giving a float. Its
