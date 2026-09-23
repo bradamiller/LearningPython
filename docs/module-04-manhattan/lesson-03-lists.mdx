@@ -32,6 +32,8 @@ By the end of this lesson you will be able to:
 - Add items with `append()` and count them with `len()`
 - Loop through a list with a `for` loop
 - Build a list step by step inside a loop, and store a path as a list of tuples
+- Explain what a variable holds when the value is a list, and what happens when two
+  names refer to the same one
 
 </Objectives>
 
@@ -142,6 +144,82 @@ scope tight — they need `[]`, `append()`, `len()`, indexing, and `for`. No `in
 
 </TeacherNote>
 
+## What the variable actually holds
+
+Back in Lesson 1-9, a variable was a named box in the robot's memory and the value
+went in the box. That works perfectly for a number: `side_length = 30` puts a `30`
+in the box.
+
+A list doesn't work that way, and it can't. A list grows — `append()` makes it
+longer — so there's no way to know in advance how big a box to set aside. Instead,
+the list lives somewhere else in memory, and the box holds a **reference** to it:
+a note saying *where* the list is.
+
+That sounds like a technicality until two names hold the same reference:
+
+```python
+path = []
+path.append((1, 0))
+
+same_path = path          # copies the REFERENCE, not the list
+same_path.append((2, 0))
+
+print(path)               # [(1, 0), (2, 0)]  ← path changed too
+```
+
+There is only **one list** here. `path` and `same_path` are two boxes holding the
+same note about where to find it, so appending "through" either name changes the
+one list both of them point at. If a list were copied on assignment, `path` would
+still be one item long — it isn't.
+
+Compare that with a number, where each box holds its own value:
+
+```python
+a = 5
+b = a                     # copies the VALUE
+b = b + 1
+print(a)                  # 5  ← unchanged
+```
+
+<KnowledgeCheck
+  question="After  scores = [10, 20]  /  backup = scores  /  backup.append(30)  what does scores hold?"
+  options={[
+    {text: '[10, 20]  — backup is a separate copy'},
+    {text: '[10, 20, 30]  — both names refer to the same list', correct: true},
+    {text: '[30]'},
+    {text: 'An error — you cannot assign a list to another name'},
+  ]}
+  explanation="backup = scores copies the reference, not the list, so both names point at one list. Appending through either name changes what both see. To get an independent copy you would have to make a new list."
+/>
+
+This is not a trap to avoid — it's the mechanism the rest of the course relies on.
+In Module 5 you'll build a list of blocked intersections, hand it to a planner
+object, and keep adding to it as the robot discovers obstacles. The planner sees
+every new obstacle precisely *because* it holds a reference to your list rather
+than a frozen copy of it.
+
+<TeacherNote title="Where the box model changes, and why">
+
+Lesson 1-9 deliberately teaches the simple version: a variable is a named piece of
+memory, and assignment stores a value in it. That's true and sufficient for
+numbers, and it's what makes `count = count + 1` explainable.
+
+This section is where that model needs its one amendment, and it's worth being
+straight with students that we're refining it rather than correcting a lie: the
+box still holds something, but for a list what it holds is the *address*, not the
+contents. The physical reason is concrete — a list can grow, so it can't live in a
+fixed-size slot.
+
+The demo that lands: two students each hold a slip of paper with the same locker
+number written on it. One of them goes and puts something in the locker. The other
+one's slip hasn't changed, but what they find when they open the locker has. Then
+ask what would need to happen for them to have *separate* lockers.
+
+Don't teach `copy()` or slicing yet — nothing in this course needs an independent
+copy, and the aliasing is load-bearing in Module 5.
+
+</TeacherNote>
+
 ## The most common list bug
 
 Indentation decides what's inside the loop. Get it wrong and only the last item is
@@ -193,6 +271,7 @@ for row in range(1, 4):
 - Tuple vs list — which is for a position, which for a path? (Tuple = position; list = path.)
 - What does `append()` do? (Adds an item to the end.)
 - What's the pattern for building a path? (Start with `[]`, `append()` inside a loop.)
+- If two names refer to the same list and you append through one, what does the other see? (The change — there's only one list; both names hold a reference to it.)
 
 <TeacherNote title="Assessment & next lesson">
 

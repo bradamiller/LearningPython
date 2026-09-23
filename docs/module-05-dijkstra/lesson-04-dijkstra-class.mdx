@@ -57,6 +57,11 @@ The real addition is a **blocked** list (the obstacles) and a **graph** built im
 when the object is created. Notice `__init__` *calls* `build_graph()` — so the graph is
 ready the moment you make a Dijkstra object.
 
+`self.blocked = blocked` is the reference idea from Lesson 4-3 doing real work. It
+does **not** copy the list — the object and whoever created it now hold references
+to the same one. That's exactly what you want in Lesson 5-7, where the robot keeps
+discovering obstacles and appending them to that list as it drives.
+
 `rows` and `cols` have defaults, so `Dijkstra((0,0), [])` still gives you the 4×4 grid
 you've been driving. Manhattan never needed them because its arithmetic works on a grid
 of any size; Dijkstra has to actually *build* the graph, so it has to be told how big
