@@ -643,12 +643,41 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the course explained what a variable is: the first assignment students met was
   `drivetrain = …` in L1-8, presented only as "make an instance", and `snake_case`
   appeared nowhere in the repo. **L1-9 · Variables & Expressions** now owns it —
-  **the memory-box model (Brad, 2026-09-23)** — a variable is a named chunk of the
-  controller's memory; `=` works out the right side and *stores* the result in that
-  box; reassigning *overwrites* what was there. Do NOT go back to "a name attached
-  to a value": Brad found it confusing, and the box model is what makes
-  `count = count + 1` explainable — read the box, add one, write it back, same box
-  twice in one line. Reassignment including
+  **the memory-location model (Brad, 2026-09-23)** — memory is a bank of
+  **locations**, each holding one value and each carrying a number called its
+  **address**; a variable is one of those locations with a **name** you chose; `=`
+  works out the right side and *stores* the result there; reassigning *overwrites*
+  what was there. The picture is a wall of **post office boxes** (Brad's, and it is
+  load-bearing — see below), with the **processor as the clerk**: nothing goes into
+  a location or comes out of one except through it. That is what makes
+  `count = count + 1` explainable — the processor reads the location, adds one,
+  writes it back, same location twice in one line.
+  **Two framings that were tried and rejected, in order:** "a name attached to a
+  value" (Brad, 2026-09-21 — confusing, and it makes `count = count + 1` unexplainable)
+  and then "a labelled box" (Brad, 2026-09-23 — accurate enough but it has to be
+  *retracted* in L4-3, where the box turns out not to contain the list). Don't
+  restore either.
+  **Why post office boxes specifically:** the number is printed on the front and is
+  separate from the contents, so the address is visible from L1-9 onward without
+  being used. That makes L4-3 an **extension** rather than an amendment — no sentence
+  from L1-9 becomes false when references arrive, which is the whole reason for the
+  model. So: L1-9 shows the addresses on the figure and says in one sentence that
+  they exist and aren't needed yet; L4-3 is where they do work. Don't teach addresses
+  in Module 1, and don't hide them from the diagram either.
+  **The honest caveat, for whoever edits this next:** in MicroPython *every* variable
+  holds a reference, integers included. "Numbers live in the location, lists live
+  elsewhere" is itself a simplification — it is safe only because ints are immutable,
+  so no student experiment can catch it out. It was chosen over the fully accurate
+  version because it never needs taking back. Do not "correct" L1-9 into a lecture on
+  object identity.
+  **Figures:** `static/img/lesson-09/memory-locations.svg` (a bank of five locations
+  drawn as box doors: address plate on top, value inside, red name card at the
+  bottom; two unnamed) and `static/img/lesson-m4-03/two-names-one-list.svg` (`path`
+  and `same_path` both holding `5120`, arrows to one list). Both hand-drawn in the
+  course palette per §12. Brad supplied an AI-generated illustration of a post office
+  wall on 2026-09-23; its box labels were garbled, and although they were repainted
+  with real numbers, he chose the drawn SVG instead.
+  **The rest of the lesson covers:** reassignment including
   `count = count + 1`, snake_case, the Capitalized-class / lowercase-instance
   convention (which had been living in a teacher note only), arithmetic operators,
   precedence and parentheses, and one note on `/` always giving a float. Its

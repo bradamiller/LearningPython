@@ -146,33 +146,49 @@ scope tight — they need `[]`, `append()`, `len()`, indexing, and `for`. No `in
 
 ## What the variable actually holds
 
-Back in Lesson 1-9, a variable was a named box in the robot's memory and the value
-went in the box. That works perfectly for a number: `side_length = 30` puts a `30`
-in the box.
+Back in Lesson 1-9, a variable was a named location in memory, and `=` stored a
+value there. That's still true, and for a number it's the whole story:
+`side_length = 30` puts a `30` in that location.
 
-A list doesn't work that way, and it can't. A list grows — `append()` makes it
-longer — so there's no way to know in advance how big a box to set aside. Instead,
-the list lives somewhere else in memory, and the box holds a **reference** to it:
-a note saying *where* the list is.
+Remember the numbers on those locations — the **addresses**. Here is what they're
+for.
 
-That sounds like a technicality until two names hold the same reference:
+A list can't be stored the way a number is, and the reason is physical. A list
+grows: `append()` makes it longer. A memory location is a fixed size, so there is
+no way to set aside one that's guaranteed big enough. Instead the list lives
+somewhere else in memory, in as much room as it needs, and what goes in `path`'s
+location is that area's **address** — the number that says where to find it. An
+address stored in a variable is called a **reference**.
+
+That sounds like a technicality until two names hold the same address:
 
 ```python
 path = []
 path.append((1, 0))
 
-same_path = path          # copies the REFERENCE, not the list
+same_path = path          # copies the ADDRESS, not the list
 same_path.append((2, 0))
 
 print(path)               # [(1, 0), (2, 0)]  ← path changed too
 ```
 
-There is only **one list** here. `path` and `same_path` are two boxes holding the
-same note about where to find it, so appending "through" either name changes the
-one list both of them point at. If a list were copied on assignment, `path` would
-still be one item long — it isn't.
+`same_path = path` obeys exactly the rule you already know: work out the right
+side, then store the result. The right side is what's *in* `path` — an address —
+so that address is what gets stored in `same_path`. Nothing copied the list,
+because the list was never in `path` to begin with.
 
-Compare that with a number, where each box holds its own value:
+<Figure
+  src="/img/lesson-m4-03/two-names-one-list.svg"
+  alt="The memory locations named path and same_path each hold the number 5120, and arrows run from both of them to one list stored at address 5120."
+  caption="Two locations, the same address in each, one list at the end of both arrows."
+/>
+
+There is only **one list** here. `path` and `same_path` hold the same address, so
+appending through either name changes the one list both of them lead to. If a list
+were copied on assignment, `path` would still be one item long — it isn't.
+
+Compare that with a number, which is small and fixed in size, so it really is
+stored in the location itself:
 
 ```python
 a = 5
@@ -189,31 +205,34 @@ print(a)                  # 5  ← unchanged
     {text: '[30]'},
     {text: 'An error — you cannot assign a list to another name'},
   ]}
-  explanation="backup = scores copies the reference, not the list, so both names point at one list. Appending through either name changes what both see. To get an independent copy you would have to make a new list."
+  explanation="backup = scores stores the address that was in scores, not a copy of the list, so both names lead to one list. Appending through either name changes what both see. To get an independent copy you would have to make a new list."
 />
 
 This is not a trap to avoid — it's the mechanism the rest of the course relies on.
 In Module 5 you'll build a list of blocked intersections, hand it to a planner
 object, and keep adding to it as the robot discovers obstacles. The planner sees
-every new obstacle precisely *because* it holds a reference to your list rather
+every new obstacle precisely *because* it holds the address of your list rather
 than a frozen copy of it.
 
-<TeacherNote title="Where the box model changes, and why">
+<TeacherNote title="Nothing from Lesson 1-9 gets taken back here">
 
-Lesson 1-9 deliberately teaches the simple version: a variable is a named piece of
-memory, and assignment stores a value in it. That's true and sufficient for
-numbers, and it's what makes `count = count + 1` explainable.
+Worth being explicit with students, because it's the difference between a model
+they trust and one they suspect: this section **adds** to Lesson 1-9, it doesn't
+correct it. A variable is still a named memory location, and `=` still works out
+the right side and stores the result there. Every one of those sentences is as
+true on this page as it was in Module 1. The only new fact is what the stored
+value *is* for a list — the address that was printed on the location all along.
 
-This section is where that model needs its one amendment, and it's worth being
-straight with students that we're refining it rather than correcting a lie: the
-box still holds something, but for a list what it holds is the *address*, not the
-contents. The physical reason is concrete — a list can grow, so it can't live in a
-fixed-size slot.
+If a student asks why the address exists at all, the physical reason is the honest
+one and they can hold it: a location is a fixed size, a list can grow, so the list
+has to live somewhere with room to grow and the location keeps the number that
+says where.
 
-The demo that lands: two students each hold a slip of paper with the same locker
-number written on it. One of them goes and puts something in the locker. The other
-one's slip hasn't changed, but what they find when they open the locker has. Then
-ask what would need to happen for them to have *separate* lockers.
+The demo that lands: two students each hold a slip of paper with the same post
+office box number on it. One of them goes and puts something in the box. The other
+one's slip hasn't changed — it's the same number it always was — but what they find
+when they open the box has. Then ask what would have to be different for them to
+have *separate* boxes.
 
 Don't teach `copy()` or slicing yet — nothing in this course needs an independent
 copy, and the aliasing is load-bearing in Module 5.
@@ -271,7 +290,7 @@ for row in range(1, 4):
 - Tuple vs list — which is for a position, which for a path? (Tuple = position; list = path.)
 - What does `append()` do? (Adds an item to the end.)
 - What's the pattern for building a path? (Start with `[]`, `append()` inside a loop.)
-- If two names refer to the same list and you append through one, what does the other see? (The change — there's only one list; both names hold a reference to it.)
+- If two names refer to the same list and you append through one, what does the other see? (The change — there's only one list, and both names hold its address.)
 
 <TeacherNote title="Assessment & next lesson">
 

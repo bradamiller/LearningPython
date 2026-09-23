@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" role="img"
+     aria-labelledby="alias-title alias-desc" font-family="Montserrat, Helvetica, Arial, sans-serif">
+  <title id="alias-title">Two names holding the same address</title>
+  <desc id="alias-desc">The memory locations named path and same_path each hold the number 5120, which is
+  the address of a third area of memory where one list lives. Arrows run from both locations to that one
+  list, so appending through either name changes what both names see.</desc>
+
+  <style>
+    .addr  { font-size: 11px; fill: #868E96; letter-spacing: .5px; }
+    .name  { font-size: 13px; font-weight: 700; fill: #D1182C; }
+    .value { font-size: 19px; font-weight: 700; fill: #343A40;
+             font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .item  { font-size: 15px; font-weight: 700; fill: #343A40;
+             font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .hdr   { font-size: 13px; font-weight: 700; fill: #22527B; letter-spacing: .6px; }
+    .cap   { font-size: 12.5px; fill: #495057; }
+    .capb  { font-size: 12.5px; fill: #495057; font-weight: 700; }
+  </style>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#22527B"/>
+    </marker>
+  </defs>
+
+  <text class="hdr" x="24" y="26">TWO NAMES, ONE LIST</text>
+
+  <!-- path -->
+  <g transform="translate(24,48)">
+    <rect width="150" height="88" rx="7" fill="#F8F9FA" stroke="#22527B" stroke-width="2"/>
+    <rect width="150" height="24" rx="7" fill="#E9ECEF"/>
+    <rect y="17" width="150" height="7" fill="#E9ECEF"/>
+    <line x1="0" y1="24" x2="150" y2="24" stroke="#ADB5BD" stroke-width="1"/>
+    <text class="addr" x="75" y="17" text-anchor="middle">2100</text>
+    <text class="value" x="75" y="61" text-anchor="middle">5120</text>
+    <rect x="13" y="66" width="124" height="19" rx="4" fill="#fff" stroke="#D1182C" stroke-width="1.5"/>
+    <text class="name" x="75" y="80" text-anchor="middle">path</text>
+  </g>
+
+  <!-- same_path -->
+  <g transform="translate(24,168)">
+    <rect width="150" height="88" rx="7" fill="#F8F9FA" stroke="#22527B" stroke-width="2"/>
+    <rect width="150" height="24" rx="7" fill="#E9ECEF"/>
+    <rect y="17" width="150" height="7" fill="#E9ECEF"/>
+    <line x1="0" y1="24" x2="150" y2="24" stroke="#ADB5BD" stroke-width="1"/>
+    <text class="addr" x="75" y="17" text-anchor="middle">2104</text>
+    <text class="value" x="75" y="61" text-anchor="middle">5120</text>
+    <rect x="13" y="66" width="124" height="19" rx="4" fill="#fff" stroke="#D1182C" stroke-width="1.5"/>
+    <text class="name" x="75" y="80" text-anchor="middle">same_path</text>
+  </g>
+
+  <!-- arrows -->
+  <path d="M 178 92 C 250 92, 250 140, 316 152" fill="none" stroke="#22527B" stroke-width="2.2"
+        marker-end="url(#arrow)"/>
+  <path d="M 178 212 C 250 212, 250 164, 316 152" fill="none" stroke="#22527B" stroke-width="2.2"
+        marker-end="url(#arrow)"/>
+
+  <!-- the list -->
+  <g transform="translate(324,92)">
+    <rect width="332" height="120" rx="9" fill="#fff" stroke="#22527B" stroke-width="2.5"/>
+    <rect width="332" height="26" rx="9" fill="#22527B"/>
+    <rect y="18" width="332" height="8" fill="#22527B"/>
+    <text x="166" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#fff"
+          letter-spacing=".5px">ADDRESS 5120 — ONE LIST LIVES HERE</text>
+
+    <rect x="22" y="46" width="128" height="34" rx="5" fill="#E9ECEF" stroke="#ADB5BD"/>
+    <text class="item" x="86" y="68" text-anchor="middle">(1, 0)</text>
+    <rect x="166" y="46" width="128" height="34" rx="5" fill="#E9ECEF" stroke="#ADB5BD"/>
+    <text class="item" x="230" y="68" text-anchor="middle">(2, 0)</text>
+
+    <text x="166" y="102" text-anchor="middle" font-size="11.5" fill="#868E96">room to grow, which a
+      fixed-size location does not have</text>
+  </g>
+
+  <!-- annotation -->
+  <text class="cap" x="24" y="278"><tspan class="capb">Both locations hold the same address</tspan>, so
+    appending through either</text>
+  <text class="cap" x="24" y="297">name changes the one list both of them lead to.</text>
+</svg>

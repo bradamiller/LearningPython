@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" role="img"
+     aria-labelledby="memloc-title memloc-desc" font-family="Montserrat, Helvetica, Arial, sans-serif">
+  <title id="memloc-title">Five memory locations in the robot's controller</title>
+  <desc id="memloc-desc">A bank of five compartments in the controller's memory, drawn like post office
+  boxes. Each has its address number on a plate at the top. Three have been given names by a Python
+  program: side_length holds 30, robot_name holds the text Bolt, and threshold holds 0.5. The other two
+  are unnamed and empty.</desc>
+
+  <style>
+    .addr  { font-size: 11px; font-weight: 700; fill: #6C757D; letter-spacing: .6px;
+             font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .name  { font-size: 12.5px; font-weight: 700; fill: #D1182C;
+             font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .value { font-size: 21px; font-weight: 700; fill: #343A40;
+             font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .empty { font-size: 12px; fill: #ADB5BD; font-style: italic; }
+    .cap   { font-size: 12.5px; fill: #495057; }
+    .capb  { font-size: 12.5px; fill: #495057; font-weight: 700; }
+    .hdr   { font-size: 12.5px; font-weight: 700; fill: #22527B; letter-spacing: .8px; }
+  </style>
+
+  <defs>
+    <!-- one box door: address plate on top, value in the middle, name card at the bottom -->
+    <g id="door">
+      <rect width="118" height="150" rx="6" fill="#F8F9FA" stroke="#22527B" stroke-width="2.2"/>
+      <!-- hinge side -->
+      <line x1="10" y1="10" x2="10" y2="140" stroke="#CED4DA" stroke-width="1.5"/>
+      <circle cx="10" cy="34" r="2.6" fill="#ADB5BD"/>
+      <circle cx="10" cy="116" r="2.6" fill="#ADB5BD"/>
+      <!-- address plate -->
+      <rect x="26" y="11" width="80" height="20" rx="3" fill="#E9ECEF" stroke="#ADB5BD" stroke-width="1"/>
+    </g>
+  </defs>
+
+  <text class="hdr" x="24" y="24">MEMORY IN THE CONTROLLER</text>
+
+  <!-- shelf the bank sits on -->
+  <rect x="18" y="36" width="644" height="166" rx="9" fill="#FFFFFF" stroke="#DEE2E6" stroke-width="1.5"/>
+
+  <!-- 2040 · side_length -->
+  <g transform="translate(28,44)">
+    <use href="#door"/>
+    <text class="addr" x="66" y="25" text-anchor="middle">2040</text>
+    <text class="value" x="66" y="86" text-anchor="middle">30</text>
+    <rect x="21" y="106" width="90" height="22" rx="4" fill="#fff" stroke="#D1182C" stroke-width="1.6"/>
+    <text class="name" x="66" y="121" text-anchor="middle">side_length</text>
+  </g>
+
+  <!-- 2044 · robot_name -->
+  <g transform="translate(156,44)">
+    <use href="#door"/>
+    <text class="addr" x="66" y="25" text-anchor="middle">2044</text>
+    <text class="value" x="66" y="86" text-anchor="middle">"Bolt"</text>
+    <rect x="21" y="106" width="90" height="22" rx="4" fill="#fff" stroke="#D1182C" stroke-width="1.6"/>
+    <text class="name" x="66" y="121" text-anchor="middle">robot_name</text>
+  </g>
+
+  <!-- 2048 · threshold -->
+  <g transform="translate(284,44)">
+    <use href="#door"/>
+    <text class="addr" x="66" y="25" text-anchor="middle">2048</text>
+    <text class="value" x="66" y="86" text-anchor="middle">0.5</text>
+    <rect x="21" y="106" width="90" height="22" rx="4" fill="#fff" stroke="#D1182C" stroke-width="1.6"/>
+    <text class="name" x="66" y="121" text-anchor="middle">threshold</text>
+  </g>
+
+  <!-- 2052 · unused -->
+  <g transform="translate(412,44)">
+    <use href="#door"/>
+    <text class="addr" x="66" y="25" text-anchor="middle">2052</text>
+    <text class="empty" x="66" y="90" text-anchor="middle">no name yet</text>
+  </g>
+
+  <!-- 2056 · unused -->
+  <g transform="translate(540,44)">
+    <use href="#door"/>
+    <text class="addr" x="66" y="25" text-anchor="middle">2056</text>
+    <text class="empty" x="66" y="90" text-anchor="middle">no name yet</text>
+  </g>
+
+  <!-- annotations -->
+  <text class="cap" x="24" y="230"><tspan class="capb">The number</tspan> on every location is its
+    address. The hardware puts it there; you will not need it until Lesson 4-3.</text>
+  <text class="cap" x="24" y="252"><tspan class="capb" fill="#D1182C">The name card</tspan> is yours. You
+    put it on by writing <tspan font-family="ui-monospace, Menlo, Consolas, monospace"
+    font-weight="700" fill="#343A40">side_length = 30</tspan>, and you use the name from then on.</text>
+  <text class="cap" x="24" y="274"><tspan class="capb">What is inside</tspan> is the value — one per
+    location. Store something new and the old value is gone.</text>
+  <text class="cap" x="24" y="302" fill="#868E96">Only the processor opens these. Your program tells it
+    which name to go to.</text>
+</svg>

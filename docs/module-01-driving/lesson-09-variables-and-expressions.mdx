@@ -27,7 +27,7 @@ No robot needed today. Everything here runs in XRP Code's terminal with
 
 By the end of this lesson you will be able to:
 
-- Explain what `=` does — work out the right side, then store the result in the named piece of memory on the left
+- Explain what `=` does — work out the right side, then store the result in the named memory location on the left
 - Reassign a variable, including using its own old value
 - Name variables the way Python programmers do, and say why `Rangefinder` and `rangefinder` are different things
 - Predict the value of an arithmetic expression using operator precedence, and use parentheses to change it
@@ -36,16 +36,22 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-01-driving/lesson-09-variables-and-expressions" />
 
-## A named box in the robot's memory
+## A named place in the robot's memory
 
 Your robot's controller has **memory** — physical storage on the board, the same
-way a phone or a laptop has memory. A **variable** is a chunk of that memory with
-a **name** on it, so your program can put something there and find it again later.
+way a phone or a laptop has memory. Memory is a long bank of **locations**, and
+each location can hold one value. A **variable** is one of those locations with a
+**name** that you chose, so your program can put something there and find it again
+later.
 
-Picture a row of boxes with labels on the front. `side_length` is the label; what
-you put inside is the value.
+Think of the wall of boxes at a post office. They sit in one long bank, they all
+work the same way, and each one has its own number on the front. You can look at
+what's in a box, put something in it, or replace what's there with something else
+— and only the clerk behind the wall ever reaches in. On the controller the clerk
+is the **processor**, the chip that runs your program: nothing goes into a location
+or comes out of one except through it.
 
-You create a box and put something in it by writing a name, an `=`, and a value:
+You claim a location and put something in it by writing a name, an `=`, and a value:
 
 ```python
 side_length = 30
@@ -53,15 +59,27 @@ robot_name = "Bolt"
 threshold = 0.5
 ```
 
-After those three lines the robot's memory holds three labelled boxes: one with
-`30` in it, one with `"Bolt"`, one with `0.5`.
+After those three lines the controller's memory has three named locations: one
+holding `30`, one holding `"Bolt"`, one holding `0.5`.
+
+<Figure
+  src="/img/lesson-09/memory-locations.svg"
+  alt="A bank of five memory locations drawn as post office box doors. Each has an address number on a plate. Three carry the name cards side_length, robot_name and threshold and hold 30, the text Bolt, and 0.5; two are unnamed and empty."
+  caption="Three named locations, and two that no program has claimed yet."
+/>
+
+Those numbers on the plates are real. Every location in memory has one, called its
+**address**, and it's there whether or not anything has been stored — exactly like
+the number on a post office box. You won't need addresses for a long time, because
+the *name* is what you use. They come back in Lesson 4-3, where they turn out to
+explain something surprising about lists.
 
 The `=` is not the equals sign from math class. In math, `x = 5` is a *claim* that
 two things are the same. In Python it's an *instruction* — "store this here" — and
 it runs in a specific order:
 
-> **Work out whatever is on the right. Then store that result in the box named on
-> the left.**
+> **Work out whatever is on the right. Then store that result in the location named
+> on the left.**
 
 Right side first, every time. That order is the whole reason this line works:
 
@@ -69,8 +87,8 @@ Right side first, every time. That order is the whole reason this line works:
 side_length = 20 + 5      # Python works out 25, THEN stores 25 in side_length
 ```
 
-The box doesn't hold "20 + 5". It holds `25`. The arithmetic happens first and is
-finished before anything is stored.
+The location doesn't hold "20 + 5". It holds `25`. The arithmetic happens first and
+is finished before anything is stored.
 
 <KnowledgeCheck
   question="What is the difference between = in math and = in Python?"
@@ -85,13 +103,13 @@ finished before anything is stored.
 
 ### Storing something new overwrites what was there
 
-The word *variable* means it can vary. Store a new value in the box and the old
-one is **overwritten** — a box holds exactly one thing, so the new value takes the
-old one's place and the old value is gone:
+The word *variable* means it can vary. Store a new value in the location and the
+old one is **overwritten** — a location holds exactly one value, so the new one
+takes the old one's place and the old value is gone:
 
 ```python
 side_length = 30
-side_length = 45      # the 30 in that box is overwritten; it now holds 45
+side_length = 45      # the 30 in that location is overwritten; it now holds 45
 ```
 
 This is also what makes the strangest-looking line in programming straightforward:
@@ -102,10 +120,10 @@ count = count + 1     # read count (0), add 1, store 1 back in count
 count = count + 1     # read count (1), add 1, store 2 back in count
 ```
 
-Work that first `count = count + 1` in order, right side first. Python goes to the
-`count` box and reads what's in it — `0`. It adds 1, giving `1`. Then it stores
-that `1` back in the `count` box, overwriting the `0`. The same box is used twice
-in one line: read from on the right, written to on the left.
+Work that first `count = count + 1` in order, right side first. The processor goes
+to the location named `count` and reads what's in it — `0`. It adds 1, giving `1`.
+Then it stores that `1` back in `count`, overwriting the `0`. The same location is
+used twice in one line: read from on the right, written to on the left.
 
 Read it as "count *becomes* count plus one," never as "count equals count plus
 one" — as a claim about equality it's nonsense, which is exactly why reading it
@@ -125,22 +143,28 @@ intersections as the robot drives over them.
 
 <TeacherNote title="The one sentence that prevents a month of confusion">
 
-"Work out the right side, then store it in the box on the left." Say it, write it
-on the board, and make students say it back when they trace `count = count + 1`.
+"Work out the right side, then store it in the location on the left." Say it, write
+it on the board, and make students say it back when they trace `count = count + 1`.
 Nearly every later confusion in this course — the accumulator in 2-7,
 `error = setpoint - sensor_value` in 2-5, the `distances` updates in Module 5 —
 dissolves if they hold onto the order.
 
-**Draw the box.** A labelled rectangle on the board with a number in it, erased
-and rewritten as you step through `count = count + 1`, does more than any
-sentence: read the 0 out, add 1 beside it, rub out the 0, write the 1 in. The
-physical erase is the point — students who think both values somehow coexist are
-the ones who get stuck.
+**Draw the location.** A rectangle on the board with `2040` above it, a name card
+under it and a number inside, erased and rewritten as you step through
+`count = count + 1`, does more than any sentence: read the 0 out, add 1 beside it,
+rub out the 0, write the 1 in. The physical erase is the point — students who think
+both values somehow coexist are the ones who get stuck.
 
-**If someone asks about `drivetrain = …`:** the honest short answer is that the box
-holds a note saying *where* the drivetrain object lives, rather than the object
-itself — big things that can grow don't fit in a fixed-size box. That's enough for
-now; Lesson 4-3 makes it precise when lists arrive, and Module 5 depends on it.
+**Leave the address alone unless asked.** It is on the drawing because it is really
+there, and because Lesson 4-3 needs it; nothing in this lesson requires a student to
+use one. If someone does ask what the numbers are for, "that's how the processor
+finds the box — you get to use the name instead" is a complete answer at this stage.
+
+**If someone asks about `drivetrain = …`:** the honest short answer is that the
+location holds the *address* of where the drivetrain object lives, rather than the
+object itself — something that can grow doesn't fit in a fixed-size location. That
+is the same address the plates show, doing a job. That's enough for now; Lesson 4-3
+makes it precise when lists arrive, and Module 5 depends on it.
 
 The math-class collision is real and worth naming out loud: students have spent
 years being told `=` means "these are the same," and `count = count + 1` is the
@@ -394,8 +418,8 @@ Naming a value and working out a new one is most of what any program does:
 
 ## Wrap-up
 
-- What are the two steps Python takes on a line like `size = 20 + 5`? (Work out the right side, then store the result in the box named `size`.)
-- How can `count = count + 1` make sense? (Read what's in the box, add 1, then store the result back in the same box, overwriting what was there.)
+- What are the two steps Python takes on a line like `size = 20 + 5`? (Work out the right side, then store the result in the location named `size`.)
+- How can `count = count + 1` make sense? (Read what's in the location, add 1, then store the result back in the same location, overwriting what was there.)
 - Which happens first in `3 + 4 * 2`, and how would you change it? (The multiplication; use parentheses.)
 - What's the difference between `Rangefinder` and `rangefinder`? (Capitalized is the class; lowercase is your variable.)
 
