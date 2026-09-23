@@ -591,13 +591,23 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   Challenges" (1-6, 1-7) or "Transition to Python" (1-8 to 1-12) — **the "Phase A ·
   / B · / C ·" prefixes were dropped 2026-09-20** (Brad: only Module 1 had phases,
   so the letters implied a course-wide scheme that doesn't exist; the grouping
-  labels stay because Module 1 really does change tools partway through). Every program
-  starts with Wait for button press / `board.wait_for_button()` (programs auto-run
-  on upload) — **⚠️ not yet true everywhere: none of the 11 Python examples in
-  L8–L11 call `board.wait_for_button()`, and five of the nine composed Blockly
-  programs omit the block (L3 ×2, L7, L8, L9 — L3's first one is the deliberate
-  copy-paste "before" figure, so judge it on its own). Module 2 does it right (9
-  of 10 lessons). Fix when those lessons get their review pass;** Python editor is
+  labels stay because Module 1 really does change tools partway through).
+  **WAIT FOR BUTTON — ON PROGRAMS STUDENTS RUN, NOT ON EVERY SNIPPET (Brad,
+  2026-09-23).** A program students type in and press RUN on starts driving the
+  instant it uploads, so it opens with Wait for button press /
+  `board.wait_for_button()`. An *illustrative* snippet — a three-line
+  block-to-Python comparison, a `def` shown on its own, a loop body with no
+  imports, a deliberately broken fragment to debug — does **not** get one: it is
+  never run as printed, and the extra lines bury the one idea the snippet exists
+  to show. Judge by "would a student paste this and press RUN?", not by whether
+  the text contains a drive call. Applied to M1 L8 (its Activity got the wait; its
+  four teaching snippets deliberately did not) and M1 L12 (the project skeleton,
+  inside `main()`); M1 L10's only complete program already had it, and M1 L11 is
+  all definitions and fragments, so neither needed anything. Same judgement was
+  used for the M3–M5 sweep on 2026-09-22, where two fragments were left alone on
+  purpose. **⚠️ Still open:** five of the nine composed Blockly programs omit the
+  block (L3 ×2, L7, L8, L10 — L3's first one is the deliberate copy-paste "before"
+  figure, so judge it on its own). Python editor is
   **XRP Code for everything** — Blockly first, then MicroPython files in the same
   browser editor (`File → New File` → MICROPYTHON; filesystem left, editor middle,
   shell bottom; green RUN button). **Corrected 2026-09-19:** earlier notes and

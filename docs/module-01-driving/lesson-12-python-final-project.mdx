@@ -80,10 +80,6 @@ Main:
   explanation="Build and test in small pieces (unit testing), then integrate. It's far easier to find a bug in one small function than in a giant program."
 />
 
-<Todo kind="convention">
-the project skeleton does not call board.wait_for_button(). Same gap as L1-8 through L1-11. [REVIEW §4]
-</Todo>
-
 ## A clean program structure
 
 Good Python programs have a shape: a docstring at the top, helper functions, a
@@ -97,9 +93,11 @@ Description: <two-sentence overview>
 """
 
 from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
 import time
 
 drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
 
 # ===== HELPER FUNCTIONS =====
 def calculate_angle(sides):
@@ -116,6 +114,7 @@ def polygon(sides, side_length):
 
 def main():
     """Run the project."""
+    board.wait_for_button()
     print("Starting...")
     polygon(4, 30)
     time.sleep(1)

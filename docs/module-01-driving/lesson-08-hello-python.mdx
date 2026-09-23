@@ -92,10 +92,6 @@ the next section.
 
 </TeacherNote>
 
-<Todo kind="convention">
-none of this lesson's Python examples call board.wait_for_button(), so a student uploading one gets a robot that drives immediately. Add it to every runnable program here and in L1-10 through L1-12. [REVIEW §4]
-</Todo>
-
 ## The same program, two ways
 
 Here's the **Straight** block you've used all module, and the Python that does the
@@ -282,8 +278,12 @@ pasting; it builds muscle memory. Then press **RUN**:
 
 ```python
 from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
 
 drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+board.wait_for_button()
 
 print("Driving forward...")
 drivetrain.straight(30)
@@ -293,6 +293,12 @@ drivetrain.straight(-30)
 
 print("Done!")
 ```
+
+`board.wait_for_button()` is the **Wait for button press** block you used all
+through Blockly, in text. It matters more here than it looks: pressing RUN starts
+the program immediately, so without that line the robot drives off the moment you
+upload it — usually off the desk. Put the robot on the floor, press RUN, *then*
+press the button on the robot.
 
 Watch the shell at the bottom: your `print()` messages appear there as the robot
 runs, so you can see exactly where it is in the program.
