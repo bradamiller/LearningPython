@@ -7,7 +7,7 @@ sidebar_position: 6
 <LessonHeader
   eyebrow="Module 1 · Learning to Drive"
   title="Lesson 1-6 · Differential Drive & Motor Control"
-  meta={['50–60 min', 'Driving Challenges', 'Under the hood']}
+  meta={['60–75 min', 'Driving Challenges', 'Under the hood']}
 />
 
 <TeacherBanner>
@@ -27,6 +27,7 @@ By the end of this lesson you will be able to:
 - Explain **differential drive** — steering by running the two wheels at different speeds
 - Predict the robot's motion from what each side's motor is doing
 - Use **Set effort** to control the motors directly (`-1` to `1`), and explain how **effort** differs from **speed**
+- Steer with **Arcade**, and say what changing its **Turn** number does to the size of the circle the robot drives
 - Decide when to use direct motor control vs. the high-level `Straight`/`Turn`
 
 </Objectives>
@@ -330,16 +331,20 @@ the motors when the program ends; `Stop motors` is for stopping mid-program.
 ## Smooth steering with Arcade
 
 Setting two efforts by hand is fiddly. The **Arcade** block is friendlier — you
-give it a forward **speed** and a **turn** amount (like a game controller), and it
-works out the two motor efforts for you.
+give it two numbers, like a game controller, and it works out the two motor efforts
+for you:
+
+- **Straight** — how fast it drives forward (this is the one people call *speed*).
+- **Turn** — how hard it bends, and which way. `0` is dead straight; positive and
+  negative bend opposite ways.
 
 <BlockProgram
   blocks={[
     {name: 'wait_for_button_press'},
-    {name: 'arcade', note: 'speed: 0.5, turn: 0.3  → forward, curving right'},
+    {name: 'arcade', note: 'Straight: 0.5, Turn: 0.3  → forward, curving right'},
     {name: 'sleep', note: '3 seconds — again, a stand-in until we have sensors'},
   ]}
-  caption="Arcade combines speed and steering into one intuitive block."
+  caption="Arcade combines forward motion and steering into one intuitive block."
 />
 
 <KnowledgeCheck
@@ -362,23 +367,130 @@ side's effort across several Set effort blocks.
 
 </TeacherNote>
 
+## Activity · Get a feel for circles
+
+Before you try to draw a shape with curves, you need a feel for what the two
+numbers in **Arcade** actually do to the robot. The fastest way to get it is to
+drive circles and watch them change size.
+
+Put a dry-erase marker in the robot's marker holder and work on a whiteboard
+panel, and the robot draws its own circle for you to measure. No marker? Chalk
+a starting mark on the floor and eyeball it.
+
+### Step 1 · Change one number and watch
+
+Use the three-block program from the section above — wait for button, Arcade,
+Sleep — with **Straight** at `0.5` and a Sleep long enough to come round at least
+once. Now run it three or four times, changing **only Turn** each time:
+
+| Straight | Turn | How big was the circle? |
+|---|---|---|
+| 0.5 | 0.15 | |
+| 0.5 | 0.3 | |
+| 0.5 | 0.5 | |
+| 0.5 | 0.8 | |
+
+You don't need exact measurements here. You're after the *relationship* — one
+sentence you could say out loud about what happens to the circle when the turn
+number goes up. Write it down before you move on.
+
+<KnowledgeCheck
+  question="You run Arcade with Straight 0.5 and Turn 0.3, then change Turn to 0.6. What happens to the circle?"
+  options={[
+    {text: 'It gets bigger'},
+    {text: 'It gets smaller — more turn means a tighter circle', correct: true},
+    {text: 'It stays the same size but the robot goes faster'},
+    {text: 'The robot drives straight'},
+  ]}
+  explanation="Turn is how hard the robot is bending. More bend for the same forward speed means a tighter circle. Turn 0 is no bend at all — a straight line."
+/>
+
+### Step 2 · Find a circle that fits
+
+Now aim for something specific: a circle roughly **12 to 18 inches** (30–45 cm)
+across — about the width of a sheet of paper turned sideways, up to a bit more.
+That size fits on a whiteboard panel and it will fit on your desk space later.
+
+Don't calculate it. Change Turn, run it, look, change it again. Three or four
+tries is normal.
+
+When you've got one you like, **write both numbers down and don't lose them**:
+
+> My circle: Straight ______ Turn ______
+
+Every robot lands on slightly different numbers, and the rest of this lesson
+uses yours.
+
+### Step 3 · Time a half circle
+
+Here's the number you actually need. Keep Straight and Turn exactly as they are,
+and change only the **Sleep** until the robot comes round to face the **opposite**
+direction from where it started — a half circle.
+
+Half of one is easier to judge than a whole one: "is it pointing backwards?" is a
+question you can answer by looking, while "is it back where it started?" is a
+guess. Start from a wall or a tape line so you have something to judge against.
+
+> My half circle takes ______ seconds
+
+A full circle takes twice that, which is the last thing you need for the next
+activity.
+
+<KnowledgeCheck
+  question="Your half circle takes 1.4 seconds. Roughly how long is a full circle at the same Straight and Turn?"
+  options={[
+    {text: 'Still 1.4 seconds'},
+    {text: 'About 2.8 seconds — twice as far around', correct: true},
+    {text: 'About 0.7 seconds'},
+    {text: 'There is no way to tell'},
+  ]}
+  explanation="Nothing about the robot's motion changed — same Straight, same Turn — so going twice as far around the circle takes twice as long."
+/>
+
+<TeacherNote title="Why circles first">
+
+This activity exists because students who go straight to the figure-eight spend
+the period fighting two problems at once: what the numbers do, *and* getting two
+curves to match. Split it and both get easier.
+
+Step 1 is genuinely open. Resist handing over "more turn = tighter circle" — it
+takes about four runs to see, and a student who says it themselves owns it. The
+knowledge check afterwards is the safety net.
+
+**Sizes to expect:** at Straight `0.5`, a Turn somewhere around `0.4`–`0.6` usually
+lands in the 12–18 inch range, but don't publish that — it varies with battery,
+floor and tyre wear, and the hunt is the point. If a group is stuck, ask which
+direction they should move the number rather than which number to use.
+
+**On the markers:** the drawn circle is worth the mess. Students measure it,
+compare it with the group next to them, and discover for themselves that
+identical numbers give different circles — which is the timed-driving problem
+arriving on its own, a full lesson before Module 2 names it.
+
+Step 3's "point the opposite way" test is the one to insist on. Students who try
+to judge a full circle will be out by a quarter turn and won't know it, and that
+error doubles in the figure-eight.
+
+</TeacherNote>
+
 ## Activity · Drive a figure-eight
 
-A figure-eight is two curves that bend opposite ways, joined in the middle. It is
+A figure-eight is two circles that bend opposite ways, joined in the middle. It is
 the shape that proves you really understand what the two numbers in **Arcade** do
 — and `Straight` and `Turn` cannot draw it at all.
 
-1. **One curve first.** Use **Arcade** with a speed of `0.5` and a turn of `0.3`,
-   held long enough to come most of the way around a circle. Adjust the turn
-   number until the circle is about a metre across: bigger turn, tighter circle.
-2. **Write down what worked** — your speed, your turn, and roughly how long the
-   robot ran. You need those numbers twice.
-3. **Mirror it.** Add a second Arcade with the same speed and the *opposite* turn
-   (`-0.3` if the first was `0.3`), held for the same length of time.
-4. **Run the pair.** You should get two loops joined in the middle. If the second
-   loop is a different size from the first, the two halves aren't matched — check
-   that the numbers really are mirror images.
-5. **Challenge** — make the two loops different sizes on purpose, so the path
+You already have everything you need: your Straight, your Turn, and your
+half-circle time from the activity above.
+
+1. **One loop.** Arcade with your Straight and your Turn, and a Sleep of **twice**
+   your half-circle time. That should bring the robot all the way round and back
+   to where it started, pointing the way it began.
+2. **Mirror it.** Add a second Arcade — same Straight, same Sleep, and the
+   **opposite** Turn (`-0.4` if yours was `0.4`).
+3. **Run the pair.** Two loops joined in the middle. If the second loop comes out
+   a different size from the first, the numbers aren't true mirror images —
+   check the sign is the only thing that changed.
+4. **Challenge** — make the two loops different sizes on purpose, so the path
    looks like a lopsided eight. Which number do you change, and which stays?
 
 **You've succeeded when** the robot traces two joined loops and finishes near
@@ -386,17 +498,20 @@ where it began, pointing roughly the way it started.
 
 <TeacherNote title="Running the figure-eight">
 
-Floor space is the limiting factor: about 2 m × 1 m per robot. If that's tight,
-have students drop the speed to `0.3` — smaller loops, same lesson.
+Floor space, with 12–18 inch circles: roughly 1 m × 0.5 m per robot, which is
+usually a desk or one whiteboard panel. Bigger circles need proportionally more,
+so groups who fell in love with a huge circle in Step 2 may need to go back and
+find a smaller one.
 
-This is also where timed driving bites, hard and usefully. Two robots with the
-same numbers will trace visibly different eights, and the same robot will differ
+The first loop rarely closes perfectly, and that's the useful part. Two robots
+with the same numbers trace visibly different eights, and the same robot differs
 between a fresh battery and a tired one. Name it: *the only reason we're timing
 this is that the robot can't yet sense where it is.* That's the thread Module 2
-picks up.
+picks up, and by now students have felt it twice.
 
-Step 2 matters more than it looks — students who don't record their first curve
-end up guessing twice and never get a symmetric eight.
+If a group's eight is lopsided, the fix is almost always that they re-tuned Turn
+for the second loop instead of just negating it. Have them read the two
+Arcade blocks aloud side by side.
 
 </TeacherNote>
 
@@ -425,7 +540,8 @@ Direct motor control is how machines that *don't* drive in straight lines work:
 - How does a differential-drive robot turn? (By running its wheels at different speeds.)
 - What happens to the motors when a Straight block finishes? What about a Set effort block? (Straight stops them; Set effort leaves them running.)
 - Why is timed driving unreliable, and what should a robot stop on instead? (Effort isn't speed — battery and surface change the distance; stop on a sensor reading.)
-- When would you pick `Straight`/`Turn` over `Set effort`? (When you need precise, repeatable distances and angles.)
+- When would you pick the `Straight`/`Turn` blocks over `Set effort`? (When you need precise, repeatable distances and angles.)
+- In the Arcade block, which number changes the size of the circle, and which way? (Turn — bigger Turn, tighter circle.)
 
 <TeacherNote title="Assessment & next lesson">
 

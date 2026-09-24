@@ -693,6 +693,15 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   nodes, 8 on the 3×3 from L5-3's hand trace, the setter replacing rather than accumulating,
   Dijkstra matching Manhattan's 6 steps on a clear 4×4, the L5-6 obstacle test avoiding both
   blocked nodes, and a mid-journey reroute going around a newly discovered obstacle.
+- **ARCADE'S FIRST FIELD IS `Straight`, NOT "speed" (fixed 2026-09-24).** The real block
+  reads `Arcade  Straight: [0.8]  Turn: [0.2]` — checked against the dictionary art in
+  `static/img/blocks/arcade.png`. M1 L6 had been calling it "speed" throughout, which is
+  what it *means* but not what a student sees on the block, so §6's real-vocabulary rule
+  was being broken in the one lesson that introduces it. L6 now names both fields on first
+  use ("**Straight** — how fast it drives forward (this is the one people call *speed*)")
+  and uses `Straight`/`Turn` everywhere after. **Module 2 is deliberately unchanged:**
+  there it's Python (`drivetrain.arcade(base_effort, correction)`) and the argument names
+  are the author's own, so "speed" is fine there.
 - **FAIL WHERE THE PROBLEM IS — `raise` on impossible input (Brad, 2026-09-24).** A
   function that cannot answer the question it was asked ends with a `raise`, not an
   implicit fall-off-the-end. Three places do this and they are the whole set:
@@ -925,7 +934,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L3** | Function renamed `square`; Sleep-between-calls suggestion removed |
 | **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
-| **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18) |
+| **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18); **circles activity added before it** (2026-09-24, Brad) — vary Turn and watch the circle change, find one 12–18 in across, time a half circle, *then* the figure-eight uses those numbers |
 | **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
 | **All 46 lessons** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
@@ -1357,8 +1366,9 @@ page is `src/pages/pacing.mdx` — a hand-written intro (materials, robot ratios
 where the natural pauses are) around a `<PacingGuide />`. `pacing.json` is
 gitignored; `npm run pacing` regenerates it and `prestart`/`prebuild` run it.
 
-**Numbers as of 2026-09-21** (L1-9 added): 46 lessons, 2295–2525 minutes of
-estimated class time (38–42 hours), 60 hand-in activities, 189 knowledge checks.
+**Numbers as of 2026-09-24** (L1-6's circles activity added): 46 lessons,
+2305–2540 minutes of estimated class time (38–42 hours), 61 hand-in activities,
+196 knowledge checks.
 At 50-minute periods that's 50–54 periods including the two multi-day capstones
 at an assumed 2 periods each — about 17–18 weeks at three periods a week, which
 is where the home page's "18 weeks" comes from. These are regenerated on every
