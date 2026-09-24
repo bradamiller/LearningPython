@@ -142,11 +142,11 @@ class LineTrack:
         self.sensor = LineSensor()
         self.drivetrain = DifferentialDrive.get_default_differential_drive()
         self.base_effort = 0.4
-        self.kp = 0.5
+        self.Kp = 0.5
 
     def track_until_cross(self):
         while not self.sensor.is_at_cross():
-            correction = self.sensor.get_error() * self.kp
+            correction = self.sensor.get_error() * self.Kp
             self.drivetrain.arcade(self.base_effort, -correction)
         self.drivetrain.stop()
 

@@ -97,16 +97,29 @@ The sign tells us which way we've drifted; the size tells us how far:
   explanation="error = 0.5 − 0.2 = +0.3. The positive sign says the robot drifted onto white and should steer toward the line."
 />
 
-<Todo kind="blocked">
-Kp is capitalized here and in L2-6 and L2-7, but L2-9 and L2-10 use self.kp. L1-9 now teaches snake_case for variables and Capitalized for classes, so the bare Kp breaks the course's own rule. Brad to decide: rename to kp throughout, or keep Kp and add a line saying control gains are conventionally capitalized in engineering. Either way the split has to go. [REVIEW §4]
-</Todo>
-
 ## From error to steering: the gain `Kp`
 
 We don't feed raw error to the motors — we scale it by a **proportional gain**,
 `Kp`, to set how strongly the robot reacts:
 
 > correction = error × Kp
+
+<Callout kind="note" title="Why this one variable starts with a capital">
+
+Lesson 1-9 gave you the Python rule: `lowercase_with_underscores` for your variables,
+`Capitalized` for classes. `Kp` breaks it, on purpose.
+
+This value isn't really ours to name. Every control-systems textbook, datasheet and
+engineering paper writes the proportional gain as **K<sub>p</sub>** — a capital K for
+"gain", a small p for "proportional" — and a student who searches for PID tuning will
+meet it that way everywhere. Writing `kp` in the code would be more Pythonic and would
+quietly cut the connection to every other thing they will ever read about control.
+
+So the rule with the exception attached: **name your own variables the Python way, and
+when a name comes from the engineering world rather than from you, keep the engineering
+spelling.** `Kp` is the only name in this course that gets the exception.
+
+</Callout>
 
 With `Kp = 0.5`, an error of `+0.3` gives a correction of `+0.15`. Then we steer with
 that correction:

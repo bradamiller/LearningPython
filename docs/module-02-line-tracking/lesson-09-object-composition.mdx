@@ -52,7 +52,7 @@ class LineTrack:
         self.sensor = LineSensor()                                     # has-a LineSensor
         self.drivetrain = DifferentialDrive.get_default_differential_drive()  # has-a drivetrain
         self.base_effort = 0.4
-        self.kp = 0.5
+        self.Kp = 0.5
 ```
 
 When you create a `LineTrack`, it builds its *own* `LineSensor` inside `__init__` —
@@ -79,7 +79,7 @@ using its own sensor and settings:
 def track_until_cross(self):
     while not self.sensor.is_at_cross():
         error = self.sensor.get_error()
-        correction = error * self.kp
+        correction = error * self.Kp
         self.drivetrain.arcade(self.base_effort, -correction)
     self.drivetrain.stop()
 ```

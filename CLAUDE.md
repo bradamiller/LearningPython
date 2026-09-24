@@ -639,6 +639,18 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the 3×3, 6 steps across a clear 4×4, and the 3×3 route matches L5-3's hand trace
   with the start dropped. `Manhattan` still takes only `start`; that constructor
   difference is real and is the open question in REVIEW's section 2.
+- **`Kp` KEEPS ITS CAPITAL — the one exception to snake_case (Brad, 2026-09-24).** The
+  proportional gain is `Kp` everywhere: L2-5, L2-6, L2-7, and as `self.Kp` in L2-9 and
+  L2-10, which previously used `self.kp` and made the course disagree with itself. It is
+  the ONLY name in the course that departs from L1-9's rule, and a `<Callout kind="note">`
+  at its first use in L2-5 says why rather than leaving students to notice the
+  contradiction: every control-systems text, datasheet and paper writes the proportional
+  gain as K-sub-p, so `kp` would be more Pythonic while quietly cutting the link to
+  everything a student will ever read about PID tuning. The rule as stated there: *name
+  your own variables the Python way; when a name comes from the engineering world rather
+  than from you, keep the engineering spelling.* If a second such name ever appears, it
+  joins that sentence — don't start a second explanation somewhere else. L1-9 is
+  deliberately left alone; the exception is explained where it is met, not pre-empted.
 - **FAIL WHERE THE PROBLEM IS — `raise` on impossible input (Brad, 2026-09-24).** A
   function that cannot answer the question it was asked ends with a `raise`, not an
   implicit fall-off-the-end. Three places do this and they are the whole set:
@@ -916,8 +928,8 @@ so the words shipped anyway — which is how this was first written, and was wro
 Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
-**media** (placeholder or stand-in art). As of 2026-09-24: 3 bug, 5 blocked,
-7 answers, 6 convention, 2 media — 23 total. `npm run todos` lists them from the
+**media** (placeholder or stand-in art). As of 2026-09-24: 3 bug, 4 blocked,
+7 answers, 6 convention, 2 media — 22 total. `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
 ### The /todos index (added 2026-09-24)
