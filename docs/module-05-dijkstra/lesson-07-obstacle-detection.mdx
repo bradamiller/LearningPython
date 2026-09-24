@@ -141,26 +141,48 @@ if distance < OBSTACLE_THRESHOLD:
     if blocked_node not in blocked_list:
         blocked_list.append(blocked_node)
 
-    # 4. RECOMPUTE: fresh path from where we are now
-    pathfinder = Dijkstra(current_pos, blocked_list)
+    # 4. RECOMPUTE: tell the planner what you found, then re-plan from here
+    pathfinder.set_blocked_intersections(blocked_list)
+    pathfinder.position = current_pos
     path = pathfinder.compute_path(destination)
 
 # 5. DRIVE: follow the (possibly new) path to the next node
 ```
 
-Every time a new obstacle turns up, you make a fresh Dijkstra with the updated blocked list
-and the robot's *current* position, and get a new path. **Check → detect → update →
-recompute → drive**, over and over.
+**Check → detect → update → recompute → drive**, over and over. This is the loop the whole
+module has been building towards.
+
+Step 4 is the one worth a second look. The planner isn't replaced — it's *told something*.
+`set_blocked_intersections()` hands it the whole updated list and rebuilds its graph
+around the obstacles, and setting `pathfinder.position` is the same "where am I now" line
+you wrote after every leg in Lesson 4-9. Then the same `compute_path` you've been calling
+since Lesson 5-5 returns a route that goes around.
+
+That's a better shape than building a new `Dijkstra` each time. The robot hasn't acquired
+a different planner; it has learned something, and the code should read that way. It also
+means the planner keeps everything else it knows — the grid size especially, which a
+fresh object would need told all over again.
 
 <KnowledgeCheck
   question="When the robot detects a new obstacle, what does it do to reroute?"
   options={[
     {text: 'Stops permanently'},
-    {text: 'Creates a fresh Dijkstra with the updated blocked list and current position, then recomputes the path', correct: true},
+    {text: 'Gives the planner the updated blocked list and its current position, then calls compute_path again', correct: true},
     {text: 'Reverses back to the start'},
     {text: 'Ignores it and drives through'},
   ]}
-  explanation="Detecting an obstacle means reroute, not stop. A new Dijkstra with the updated blocked list and the robot's current position produces a path around it."
+  explanation="Detecting an obstacle means reroute, not stop. set_blocked_intersections rebuilds the graph around what the robot now knows, and compute_path from the current position produces a path around it."
+/>
+
+<KnowledgeCheck
+  question="Why is appending to blocked_list not enough on its own to make the robot go around a new obstacle?"
+  options={[
+    {text: 'The planner has its own private copy of the list'},
+    {text: 'The graph was already built without that obstacle in it, and only set_blocked_intersections rebuilds it', correct: true},
+    {text: 'Lists cannot be changed after they are created'},
+    {text: 'It is enough — the extra call is just for tidiness'},
+  ]}
+  explanation="The planner holds a reference to your list, so it does see the new entry. But the graph it plans on was built earlier, and nothing rebuilds it by itself — which is exactly the job set_blocked_intersections does."
 />
 
 ## Activity · Test in simulation first

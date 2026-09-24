@@ -120,7 +120,7 @@ Not duplicated here — this is the index so nothing gets lost.
 |---|---|
 | `turn_right()` doesn't clear the intersection — needs a robot on a grid | `REVIEW-2026-09-21.md` §1.2, and a `TODO-BLOCKED` in L3-3 |
 | `base_effort` drifting 0.3 → 0.4 between L2-5 and L2-9/L2-10 | `REVIEW` §4, `TODO-CONVENTION` in L2-9. (The `Kp` vs `kp` half of this was settled 2026-09-24: `Kp` everywhere, with the engineering-notation exception explained in L2-5.) |
-| Whether Dijkstra and Manhattan are honestly "interchangeable" | `REVIEW` §2, `TODO-BLOCKED` in L5-4 |
+| Whether Module 5 should end with a program that actually drives the grid | `REVIEW` §2 (the rest of which was settled 2026-09-24 — obstacles moved to `set_blocked_intersections`, so the two planners are now created identically), `TODO-BUG` in L5-9 |
 | Answer-leak pass across Modules 2–5 | `REVIEW` §3, seven `TODO-ANSWERS` notes |
 | Whether `abs()` belongs in L4-4's distance work | Brad, 2026-09-24. L4-4 handles negative distances with four `while` loops and explicitly rejects `abs()`. L4-2's teacher note used to promise `abs()` was coming, which was simply wrong, so the promise is gone. If `abs()` is later brought into L4-4, put the preview back in that note. |
 | A separate teacher guide instead of teacher mode | discussed 2026-09-20; Brad thinking about it |

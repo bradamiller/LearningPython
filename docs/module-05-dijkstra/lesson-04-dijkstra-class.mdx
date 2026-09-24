@@ -15,20 +15,22 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
 Time to turn the concept into code — but in stages. This lesson builds the **class
-structure**: the constructor, the instance variables, and `build_graph` (which creates
-the grid and removes blocked nodes). The `compute_path` algorithm itself waits until
-Lesson 5-5. The class is designed as a **drop-in replacement** for Manhattan — same method
-name, same return type — so the Navigator works with either.
+structure**: the constructor, the instance variables, and `build_graph` (which builds the
+grid *around* the blocked nodes). The `compute_path` algorithm itself waits until
+Lesson 5-5. The class is designed as a **drop-in replacement** for Manhattan — you create
+it the same way and you call it the same way — so the Navigator works with either.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Write the Dijkstra `__init__` with `start` and `blocked` parameters
+- Write the Dijkstra `__init__` with the same `start` parameter Manhattan takes
 - Store `self.position`, `self.blocked`, and `self.graph`
 - Implement `build_graph`, skipping blocked nodes and blocked neighbors
+- Write `set_blocked_intersections()` and say why obstacles are told to the planner
+  afterwards rather than passed in when it is created
 - Write a `compute_path` placeholder that returns an empty list
-- Explain why Dijkstra's interface matches Manhattan's
+- Explain why Dijkstra can stand in for Manhattan anywhere
 
 </Objectives>
 
@@ -37,7 +39,7 @@ By the end of this lesson you will be able to:
 ## A better toolbox
 
 In Module 4 you built the `Manhattan` class — a path planner for a clear grid. `Dijkstra`
-is a better one: same shape, but it can route around obstacles. Compare the constructors:
+is a better one: it can route around obstacles. Compare the constructors:
 
 ```python
 class Manhattan:
@@ -45,47 +47,85 @@ class Manhattan:
         self.position = start
 
 class Dijkstra:
-    def __init__(self, start, blocked, rows=4, cols=4):
+    def __init__(self, start, rows=4, cols=4):
         self.position = start
-        self.blocked = blocked
         self.rows = rows
         self.cols = cols
+        self.blocked = []
         self.graph = self.build_graph()
 ```
 
-The real addition is a **blocked** list (the obstacles) and a **graph** built immediately
-when the object is created. Notice `__init__` *calls* `build_graph()` — so the graph is
-ready the moment you make a Dijkstra object.
+You create them **the same way**. `Manhattan((0, 0))` and `Dijkstra((0, 0))` are both
+valid, both mean "a planner that starts at the top-left corner," and that is not a
+coincidence — it's the whole design, and Lesson 5-6 collects the reward.
 
-`self.blocked = blocked` is the reference idea from Lesson 4-3 doing real work. It
-does **not** copy the list — it stores the address that was passed in, so the object
-and whoever created it now hold the same address and therefore the same list. That's
-exactly what you want in Lesson 5-7, where the robot keeps discovering obstacles and
-appending them to that list as it drives.
+`rows` and `cols` have defaults, so `Dijkstra((0, 0))` gives you the 4×4 grid you've been
+driving. Manhattan never needed them, because its arithmetic works on a grid of any size;
+Dijkstra has to actually *build* the graph, so it has to be told how big. Pass different
+ones — `Dijkstra((0, 0), rows=3, cols=3)` — and the same class plans on a 3×3, which is
+how you'll test it against the traces you did by hand in Lesson 5-3.
 
-`rows` and `cols` have defaults, so `Dijkstra((0,0), [])` still gives you the 4×4 grid
-you've been driving. Manhattan never needed them because its arithmetic works on a grid
-of any size; Dijkstra has to actually *build* the graph, so it has to be told how big
-the grid is. Pass different ones — `Dijkstra((0,0), [(1,1)], rows=3, cols=3)` — and the
-same class plans on a 3×3, which is how you'll test it against the traces you did by
-hand in Lesson 5-3.
+A brand-new Dijkstra starts out believing the grid is completely clear:
+`self.blocked = []`. Which raises the obvious question.
+
+### Telling the planner about obstacles
+
+Obstacles aren't part of what a planner *is* — they're something it **finds out**. The
+robot in Lesson 5-7 doesn't know where anything is when it starts; it discovers a blocked
+intersection halfway through a journey, and then another one after that. So they get
+handed over in their own method:
+
+```python
+def set_blocked_intersections(self, blocked):
+    self.blocked = blocked
+    self.graph = self.build_graph()      # rebuild around the new obstacles
+```
+
+Two lines, and the second one matters. The graph was built around whatever the planner
+knew at the time, so changing `self.blocked` alone would leave a graph that still has
+routes through a node you just blocked. Storing the new list and rebuilding go together —
+that's exactly why this is a method rather than something you do by hand.
+
+<Callout kind="tip" title="Why appending to your own list isn't enough">
+
+`self.blocked = blocked` is the reference idea from Lesson 4-3 doing real work: it stores
+the *address* of your list, so the planner and your program now share one list. Append to
+yours and the planner's `self.blocked` shows the new obstacle immediately — same list.
+
+But `self.graph` is a different object entirely, built earlier, and nothing rebuilds it
+just because a list changed. The planner would agree that (1,1) is blocked while happily
+routing straight through it. Call `set_blocked_intersections()` and the rebuild happens.
+
+</Callout>
 
 <KnowledgeCheck
   question="When is self.graph built?"
   options={[
     {text: 'The first time you call compute_path'},
-    {text: 'Automatically in __init__, when the object is created', correct: true},
+    {text: 'In __init__ when the object is created, and again every time set_blocked_intersections is called', correct: true},
     {text: 'You must call build_graph yourself after creating the object'},
     {text: 'Every time you access it'},
   ]}
-  explanation="The constructor calls self.build_graph() once, so the graph is stored in self.graph and ready to use as soon as the object exists."
+  explanation="The constructor builds it once, from an empty blocked list. After that, the only thing that changes the graph is new obstacle information — which is why set_blocked_intersections rebuilds it."
+/>
+
+<KnowledgeCheck
+  question="Why do obstacles go in a method instead of the constructor, the way rows and cols do?"
+  options={[
+    {text: 'Constructors are only allowed three parameters'},
+    {text: 'Because a robot discovers obstacles while driving — they are something the planner learns, not part of what it is', correct: true},
+    {text: 'To make the class file shorter'},
+    {text: 'Because lists cannot be passed to __init__'},
+  ]}
+  explanation="The grid size is fixed before the robot moves; obstacles turn up one at a time during a journey. Keeping them out of the constructor also makes Dijkstra created exactly like Manhattan, which is what makes the swap in Lesson 5-6 a one-word change."
 />
 
 ## Activity · Build the Dijkstra class
 
 Three steps, the same shape as the Manhattan class: store what has to persist,
 stub out what you haven't written yet, and test the structure before you write
-any of the hard part.
+any of the hard part. `set_blocked_intersections()` from the section above goes into the
+class too — it's two lines and you already have both of them.
 
 ### Step 1 · `build_graph` — build and block in one pass
 
@@ -156,60 +196,68 @@ Returning an empty list of the right *type* means you can test `__init__` and
 
 ### Step 3 · Test the structure
 
-Create objects and check the graph against what you know from Lessons 5-1 and 5-2:
+Create a planner and check the graph against what you know from Lessons 5-1 and 5-2.
+Start clear, then tell it about an obstacle and watch the graph change under you:
 
 ```python
-d = Dijkstra((0, 0), [])
-print(len(d.graph))          # 16 (full 4×4 grid)
+d = Dijkstra((0, 0))
+print(len(d.graph))          # 16 — the full 4×4 grid, nothing blocked yet
 print(d.graph[(1, 1)])       # 4 neighbors
 
-d = Dijkstra((0, 0), [(1, 1)])
+d.set_blocked_intersections([(1, 1)])
 print(len(d.graph))          # 15
 print((1, 1) in d.graph)     # False
 print(d.graph[(0, 1)])       # does NOT include (1,1)
 ```
 
-Each blocked node vanishes from the keys *and* from every neighbor list, so blocking two
-nodes on a 4×4 leaves you 14.
+Each blocked node vanishes from the keys *and* from every neighbor list, so
+`d.set_blocked_intersections([(1, 0), (2, 1)])` leaves you 14.
+
+Notice the second call *replaced* what the planner knew — it didn't add to it. The list
+you hand over is the complete set of obstacles, which is what makes it safe to call over
+and over while driving.
 
 Now try a different grid size — this is the one you traced by hand in Lesson 5-3:
 
 ```python
-d = Dijkstra((0, 0), [(1, 1)], rows=3, cols=3)
+d = Dijkstra((0, 0), rows=3, cols=3)
+d.set_blocked_intersections([(1, 1)])
 print(len(d.graph))          # 8 — nine squares minus the blocked one
 ```
 
 <KnowledgeCheck
-  question="On a 4×4 grid, how many nodes does Dijkstra((0,0), [(1,0),(2,1)]).graph contain?"
+  question="On a 4×4 grid, you create d = Dijkstra((0,0)) and then call d.set_blocked_intersections([(1,0),(2,1)]). How many nodes does d.graph contain?"
   options={[
     {text: '16'},
     {text: '15'},
     {text: '14', correct: true},
     {text: '2'},
   ]}
-  explanation="16 total minus 2 blocked = 14. Both blocked nodes are skipped as keys, and removed from all neighbor lists too."
+  explanation="16 total minus 2 blocked = 14. Both blocked nodes are skipped as keys, and removed from all neighbor lists too. (Straight after the constructor it would have been 16 — a new planner assumes a clear grid.)"
 />
-
-<Todo kind="blocked">
-the interchangeability claim overstates what the code does. Manhattan takes one constructor argument and Dijkstra takes two, so this is not a drop-in replacement; L5-6 calls it a two-line swap but its "before" code uses a variable name students never wrote; and the position-sync line M4 L9 calls the one everyone misses appears nowhere in this module. Decide how honest to make the claim. [REVIEW §2]
-</Todo>
 
 ## The shared interface
 
-Here's the design payoff. Both classes offer `compute_path(destination)` returning a list
-of `(row, col)` tuples:
+Here's the design payoff, and it's worth being precise about what "matches" means. Two
+things have to line up: how you **create** the object, and how you **ask** it for a path.
 
 <CardGrid>
   <InfoCard tag="Module 4" title="Manhattan(start)">
     <code>compute_path(destination)</code> → list of tuples. Fast, but no obstacles.
   </InfoCard>
-  <InfoCard tag="Module 5" title="Dijkstra(start, blocked)">
+  <InfoCard tag="Module 5" title="Dijkstra(start)">
     <code>compute_path(destination)</code> → list of tuples. Handles obstacles.
   </InfoCard>
 </CardGrid>
 
-Because the interface matches, the Navigator can call `pathfinder.compute_path(dest)`
-without caring which class it holds. You'll swap them in Lesson 5-6.
+Same creation, same method name, same return type — right down to both leaving the start
+out of the path they hand back. So the Navigator can call
+`pathfinder.compute_path(dest)` without knowing or caring which planner it's holding, and
+swapping one for the other changes one word. You'll do it in Lesson 5-6.
+
+Dijkstra has `set_blocked_intersections()` on top, which Manhattan doesn't. That's fine,
+and it's worth seeing why: the Navigator never calls it. Extra abilities don't break a
+swap — only a difference in the parts both classes are *used* through would.
 
 <KnowledgeCheck
   question="Why does it matter that Dijkstra's compute_path returns the same type as Manhattan's?"
@@ -225,26 +273,38 @@ without caring which class it holds. You'll swap them in Lesson 5-6.
 <TeacherNote title="Build incrementally; watch the self. mistakes">
 
 Write `__init__`, test it (print the instance variables). Add `build_graph`, test the
-graph. Add the placeholder, test the call. Never dump the whole class at once. Put the
-Manhattan and Dijkstra constructors side by side — students who wobbled on classes in
-Module 4 get another pass here. Common errors: forgetting `self` (`position = start`
-instead of `self.position = start`), and expecting to call `build_graph` manually when the
-constructor already does. Show what a graph looks like if you forget the blocked-neighbor
-checks — a blocked node reappears as someone's neighbor and the path goes wrong.
+graph. Add the setter, test that the graph changes. Add the placeholder, test the call.
+Never dump the whole class at once. Put the Manhattan and Dijkstra constructors side by
+side — students who wobbled on classes in Module 4 get another pass here, and the fact
+that the two lines now look the same is the point of the whole module. Common errors:
+forgetting `self` (`position = start` instead of `self.position = start`), and expecting
+to call `build_graph` manually when the constructor already does. Show what a graph looks
+like if you forget the blocked-neighbor checks — a blocked node reappears as someone's
+neighbor and the path goes wrong.
+
+**The mistake worth staging on purpose:** append to a blocked list *after* handing it to
+the planner and then ask for a path. Because the planner holds a reference to that same
+list (Lesson 4-3), `d.blocked` shows the new obstacle — but `d.graph` was built before it
+existed, so the path drives straight through. Print both and let the class work out why.
+It takes five minutes and it teaches the difference between a value that is shared and a
+result that was computed from it, which is a distinction they'll meet for the rest of
+their lives in code.
 
 </TeacherNote>
 
 ## Wrap-up
 
-- What three things does `__init__` store? (`self.position`, `self.blocked`, `self.graph`.)
+- What four things does `__init__` store? (`self.position`, `self.rows`/`self.cols`, an empty `self.blocked`, and `self.graph`.)
 - What two jobs does `build_graph` do at once? (Builds the grid and excludes blocked nodes.)
-- Why does the interface match Manhattan's? (So Navigator can swap one for the other.)
+- Why does `set_blocked_intersections` rebuild the graph instead of just storing the list? (The graph was built around the old obstacles; storing alone would leave routes through a node you just blocked.)
+- Why are obstacles not a constructor parameter? (The robot discovers them while driving — and keeping them out is what makes `Dijkstra(start)` look exactly like `Manhattan(start)`.)
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** explain each instance variable, predict node counts given a blocked list,
-and confirm blocked nodes appear in no neighbor lists. **Exit ticket:** "For `Dijkstra((0,0),
-[(1,0),(2,1)])` on a 4×4 grid, how many nodes in the graph?" (14). **Preview:** next lesson
+and confirm blocked nodes appear in no neighbor lists. **Exit ticket:** "You create
+`Dijkstra((0,0))` on a 4×4 grid and call `set_blocked_intersections([(1,0),(2,1)])`. How
+many nodes in the graph — and how many were there before that call?" (14, and 16). **Preview:** next lesson
 we fill in `compute_path` with the full algorithm you traced by hand in Lesson 5-3.
 
 </TeacherNote>

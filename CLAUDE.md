@@ -651,6 +651,35 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   than from you, keep the engineering spelling.* If a second such name ever appears, it
   joins that sentence — don't start a second explanation somewhere else. L1-9 is
   deliberately left alone; the exception is explained where it is met, not pre-empted.
+- **OBSTACLES ARE TOLD TO THE PLANNER, NOT PASSED TO IT (Brad, 2026-09-24).** `Dijkstra`
+  is `__init__(self, start, rows=4, cols=4)` with `self.blocked = []`, plus
+  `set_blocked_intersections(blocked)`, which stores the list **and rebuilds the graph**.
+  Both lines matter: `build_graph` builds *around* the blocked nodes in one pass (it does
+  not build-then-prune, and L5-4 argues for that), so storing a new list without rebuilding
+  leaves routes through a node you just blocked.
+  **Why:** `Manhattan(start)` and `Dijkstra(start)` are now created identically, so the
+  L5-6 swap really is one word — the interchangeability the philosophy page has promised
+  since Module 4. The deeper reason is that obstacles are something a planner *discovers*
+  while driving, not part of what it is; `start` is identity, `blocked` is knowledge.
+  **Rejected:** giving `Manhattan` optional `rows`/`cols` to make the signatures match
+  character for character (Brad proposed it). Manhattan's arithmetic works on any grid and
+  would never read them, so they would be parameters that lie about what the class needs;
+  the call sites already match, which is the only place matching matters. If Manhattan ever
+  gains an off-grid `raise` (the L4-7 convention) they become real — a separate decision.
+  **Touched:** L5-4 (constructor comparison flipped to "the same", the setter section, both
+  knowledge checks, Step 3, the InfoCard pair, wrap-up, exit ticket), L5-6 (both test
+  snippets, the swap activity), L5-7 and L5-9 (reactive loops now tell the existing planner
+  rather than building a new one each time). `grep -rn "Dijkstra(" docs/` should show no
+  call passing a blocked list positionally.
+  **The subtlety that is now taught rather than tripped over:** the planner holds a
+  *reference* to your blocked list (L4-3), so appending to yours updates `self.blocked`
+  immediately — but `self.graph` was computed earlier and nothing rebuilds it by itself.
+  That is exactly why the setter exists, and L5-4's teacher note stages the mistake
+  deliberately.
+  **Verified** by assembling the class with L5-5's `compute_path` and running it: 16/15/14
+  nodes, 8 on the 3×3 from L5-3's hand trace, the setter replacing rather than accumulating,
+  Dijkstra matching Manhattan's 6 steps on a clear 4×4, the L5-6 obstacle test avoiding both
+  blocked nodes, and a mid-journey reroute going around a newly discovered obstacle.
 - **FAIL WHERE THE PROBLEM IS — `raise` on impossible input (Brad, 2026-09-24).** A
   function that cannot answer the question it was asked ends with a `raise`, not an
   implicit fall-off-the-end. Three places do this and they are the whole set:
@@ -928,8 +957,8 @@ so the words shipped anyway — which is how this was first written, and was wro
 Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
-**media** (placeholder or stand-in art). As of 2026-09-24: 3 bug, 4 blocked,
-7 answers, 6 convention, 2 media — 22 total. `npm run todos` lists them from the
+**media** (placeholder or stand-in art). As of 2026-09-24: 2 bug, 3 blocked,
+7 answers, 6 convention, 2 media — 20 total. `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
 ### The /todos index (added 2026-09-24)

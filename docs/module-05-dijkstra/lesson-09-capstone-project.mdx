@@ -66,7 +66,7 @@ The whole program has a clear skeleton:
 2. Define destinations
 3. For each destination:
      While not arrived:
-        Compute a path with Dijkstra (from current position, current blocked list)
+        Tell Dijkstra the current blocked list and position, then compute a path
         Walk the path, checking the rangefinder at each intersection
         If obstacle: add to blocked list, recompute
         If clear all the way: arrived
@@ -105,7 +105,8 @@ THRESHOLD is undefined — L5-7 defines OBSTACLE_THRESHOLD. The loop also reads 
 for dest in destinations:
     arrived = False
     while not arrived:
-        pathfinder = Dijkstra(current, blocked)
+        pathfinder.set_blocked_intersections(blocked)
+        pathfinder.position = current
         path = pathfinder.compute_path(dest)
         if len(path) == 0:
             print("No path to", dest); break
@@ -156,8 +157,9 @@ def simulate_rangefinder(next_pos):
 ```
 
 Watch for the classic integration bugs: the blocked list getting reset between destinations
-(it must persist across all of them), `current` not updating after a move, or forgetting to
-make a *new* Dijkstra after the blocked list changes.
+(it must persist across all of them), `current` not updating after a move, or appending to
+the blocked list without calling `set_blocked_intersections()` — the planner sees the new
+entry but keeps planning on the graph it built before.
 
 <KnowledgeCheck
   question="Which is a classic capstone integration bug to watch for?"
@@ -167,7 +169,7 @@ make a *new* Dijkstra after the blocked list changes.
     {text: 'Naming the robot'},
     {text: 'Printing the path'},
   ]}
-  explanation="The blocked list must persist across all destinations in a run. Re-creating it empty for each destination throws away everything learned so far. (Also common: not updating current, or not rebuilding Dijkstra after blocked changes.)"
+  explanation="The blocked list must persist across all destinations in a run. Re-creating it empty for each destination throws away everything learned so far. (Also common: not updating current, or appending to the blocked list without calling set_blocked_intersections, which is what rebuilds the graph.)"
 />
 
 ## The rubric and demo
@@ -229,8 +231,8 @@ the duration chip is 90+ min, and extract_pacing matches digits only, so the plu
 <TeacherNote title="Integration is the hard part — simulate first, celebrate the journey">
 
 Students underestimate how hard connecting working parts is. The recurring bugs: passing a
-stale blocked list, not updating `current`, not rebuilding Dijkstra after the blocked list
-changes, and mis-formatted file I/O. Insist everyone gets the simulation version working
+stale blocked list, not updating `current`, appending to the blocked list without calling
+`set_blocked_intersections()` to rebuild the graph, and mis-formatted file I/O. Insist everyone gets the simulation version working
 before the robot — logic first, hardware second. Use the rubric as a self-assessment
 checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is better and listen for
 "better data," not "the robot is smarter." For 50-minute periods this spans 2–3 days

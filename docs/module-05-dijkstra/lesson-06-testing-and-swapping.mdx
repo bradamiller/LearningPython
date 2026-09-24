@@ -40,7 +40,7 @@ A good test has a **known input**, an **expected output** you worked out yoursel
 should match Manhattan's length) and grids with obstacles (Dijkstra should detour).
 
 ```python
-d = Dijkstra((0, 0), [])
+d = Dijkstra((0, 0))
 path = d.compute_path((3, 3))
 print("Path:", path)
 print("Steps:", len(path))         # expect 6 — the Manhattan distance
@@ -68,7 +68,8 @@ blocked node:
 
 ```python
 blocked = [(1, 0), (2, 2)]
-d = Dijkstra((0, 0), blocked)
+d = Dijkstra((0, 0))
+d.set_blocked_intersections(blocked)
 path = d.compute_path((3, 3))
 print("Path:", path)
 
@@ -96,40 +97,81 @@ it prints PASS only when no blocked node was found.
 
 ## Activity · The two-line swap
 
-<Todo kind="bug">
-the "before" snippet names the planner pathfinder, but the program students actually wrote in M4 L9 names it manhattan throughout — so this is not a two-line change against their own code. It also drops manhattan.position = navigator.position, which M4 L9 flags as the line nearly everyone misses. [REVIEW §2]
-</Todo>
-
-Here's the reward for building Dijkstra with Manhattan's interface. Your Module 4 program
-created a Manhattan planner:
+Here's the reward for building Dijkstra with Manhattan's interface. Open the program you
+wrote for the Lesson 4-9 project — your own file, not a copy of one. Near the top it
+creates the planner:
 
 ```python
 from manhattan import Manhattan
-pathfinder = Manhattan((0, 0))
-# ... navigator uses pathfinder.compute_path(dest)
+
+manhattan = Manhattan((0, 0))
+navigator = Navigator((0, 0), 0)
+# ... then the destination loop: compute_path, drive_path, and the
+#     manhattan.position = navigator.position line after each leg
 ```
 
-Change **two lines** to use Dijkstra — the import and the constructor:
+Change **two lines** — the import, and the object you create:
 
 ```python
 from dijkstra import Dijkstra
-pathfinder = Dijkstra((0, 0), [])     # add a blocked list
-# ... EVERYTHING ELSE STAYS THE SAME
+
+manhattan = Dijkstra((0, 0))          # ← the only real change
+navigator = Navigator((0, 0), 0)
+# ... and the loop below is untouched. All of it.
 ```
 
-The Navigator still calls `pathfinder.compute_path(dest)` exactly as before. It doesn't
-know — or care — which planner it's holding.
+That's the whole swap. The destination loop doesn't change, `drive_path` doesn't change,
+and `manhattan.position = navigator.position` — the line you were warned everyone forgets
+— is still there doing the same job for the same reason. The Navigator calls
+`compute_path(dest)` exactly as before and never finds out that anything happened.
+
+<Callout kind="tip" title="Then rename it, once the robot has driven">
+
+Leaving a Dijkstra planner in a variable called `manhattan` is confusing, and you should
+fix it — but *after* you've watched the robot drive. Make the swap work first with the
+smallest possible change, then rename `manhattan` to `planner` everywhere as a separate
+step. Two changes at once means that when something breaks you don't know which one did
+it, and that habit is worth more than the tidy name.
+
+</Callout>
 
 <KnowledgeCheck
   question="How many lines of the Navigator's own code change to use Dijkstra instead of Manhattan?"
   options={[
     {text: 'Dozens — you rewrite drive_path'},
-    {text: 'Zero — only the import and constructor change; the Navigator code is untouched', correct: true},
+    {text: 'Zero — only the import and the line that creates the planner change; the Navigator code is untouched', correct: true},
     {text: 'Every line that mentions a path'},
     {text: 'You must build a new Navigator class'},
   ]}
-  explanation="The Navigator calls compute_path the same way regardless. Only the two setup lines (import + constructor) change — the whole point of a shared interface."
+  explanation="The Navigator calls compute_path the same way regardless. Only the two setup lines change — the whole point of a shared interface."
 />
+
+<KnowledgeCheck
+  question="After the swap, why does manhattan.position = navigator.position still have to be there?"
+  options={[
+    {text: 'It does not — Dijkstra tracks its own position'},
+    {text: 'Both planners plan from self.position, so whichever one you are holding still has to be told where the robot ended up', correct: true},
+    {text: 'It only matters on grids with obstacles'},
+    {text: 'It resets the graph'},
+  ]}
+  explanation="It is the same line for the same reason as in Lesson 4-9: compute_path starts from self.position, so without the update every leg after the first plans from (0,0). Swapping the planner changes nothing about that."
+/>
+
+### Where the obstacles go now
+
+One thing genuinely is new. A Dijkstra that's never been told anything believes the grid
+is clear, so a straight swap gives you exactly Manhattan's behaviour — which is the right
+way to start, because it proves the swap itself works before obstacles can muddy the
+picture.
+
+When you're ready for a detour, tell the planner what's out there:
+
+```python
+manhattan.set_blocked_intersections([(1, 0), (2, 2)])
+```
+
+That's a line you *add*, not one you change — and it is the one thing you could not have
+done with Manhattan at all.
 
 ## Shared interface = polymorphism
 
@@ -166,7 +208,8 @@ a label for something simple: if two things work the same from the outside, use 
 ## Wrap-up
 
 - What three parts make a good test? (Known input, hand-calculated expected output, a check.)
-- What two lines change to swap in Dijkstra? (The import and the constructor.)
+- What two lines change to swap in Dijkstra? (The import, and the line that creates the planner.)
+- What has to happen before Dijkstra will route around anything? (`set_blocked_intersections()` — a new planner assumes the grid is clear.)
 - What is a shared interface, and what's the swap ability called? (Same method signature/return; polymorphism.)
 
 <TeacherNote title="Make the swap dramatic — and don't over-formalize polymorphism">
@@ -184,7 +227,7 @@ optimal solutions. Save the test files; Lessons 5-7 through 5-9 reuse them.
 ## Note on the interface
 
 Both planners take a **start** when created and a **destination** in `compute_path`:
-`Manhattan((0,0))` and `Dijkstra((0,0), [])` both answer `compute_path((3,3))` with a list
+`Manhattan((0,0))` and `Dijkstra((0,0))` both answer `compute_path((3,3))` with a list
 of grid tuples. That shared shape is exactly what makes the swap a two-line change.
 
 The agreement has to be exact, down to the first element. Neither planner includes
