@@ -26,6 +26,8 @@ By the end of this lesson you will be able to:
 - Explain why only the row **or** the column changes between adjacent intersections
 - Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W
 - Write `desired_heading(next_pos)` returning 0–3 from the coordinate change
+- Raise an error when a function is asked something it cannot answer, and say why that
+  makes a bug easier to find than letting a wrong value travel
 - Trace the `turn_to` while loop, showing the heading update and the wrap from 4 back to 0
 - Describe how `drive_path` uses both to move through a whole path
 
@@ -82,11 +84,16 @@ position from `self` rather than being handed it:
 def desired_heading(self, next_pos):
     row_diff = next_pos[0] - self.position[0]
     col_diff = next_pos[1] - self.position[1]
-    if row_diff == -1: return 0   # North
-    if col_diff ==  1: return 1   # East
-    if row_diff ==  1: return 2   # South
-    if col_diff == -1: return 3   # West
+    if col_diff == 0 and row_diff == -1: return 0   # North
+    if row_diff == 0 and col_diff ==  1: return 1   # East
+    if col_diff == 0 and row_diff ==  1: return 2   # South
+    if row_diff == 0 and col_diff == -1: return 3   # West
+    raise ValueError(f"{self.position} and {next_pos} are not neighbors")
 ```
+
+Each condition checks *both* differences, which is the "one change at a time" rule from
+the top of the lesson written down: North means the row went down by one **and** the
+column didn't move at all.
 
 <KnowledgeCheck
   question="Going from (1,5) to (1,4), what does desired_heading return?"
@@ -99,9 +106,76 @@ def desired_heading(self, next_pos):
   explanation="The row is unchanged; the column went 5 → 4 (col −1). Decreasing column is West — heading 3."
 />
 
-<Todo kind="bug">
-desired_heading above has no final return, so any pair of positions that is not orthogonally adjacent silently yields None — and turn_to then loops forever, since self.heading never equals None. Add a fallback, or state that the planner guarantees adjacency. Same gap in the L4-8 version. [REVIEW §1.7]
-</Todo>
+## Say so when you can't answer
+
+That last line is worth as much as the four above it. If none of the four conditions
+matched, the two positions aren't a single step apart on the grid — they're diagonal,
+or identical, or halfway across the map — and there is simply no heading that answers
+the question. `raise` stops the program on the spot and prints the message.
+
+Leave it out and Python does not complain. **A function that runs off the end without
+returning anything hands back `None`**, silently. So `desired_heading` returns `None`,
+`turn_to(None)` sits in `while self.heading != None:` forever — `self.heading` is only
+ever 0, 1, 2 or 3 — and what you actually *see* is the robot spinning in place until
+you pull the battery out.
+
+Now go and find that bug. The symptom is in `turn_to`, so that's where you'd look, and
+`turn_to` is perfectly correct. The real problem is somewhere else entirely: whatever
+handed `desired_heading` two positions that aren't next to each other. You could read
+that while loop twenty times and never see anything wrong with it, because there is
+nothing wrong with it.
+
+With the `raise`, the program stops on the line that *noticed* the problem and tells
+you the two positions that caused it. Same bug, ten seconds instead of an afternoon.
+
+That's the real reason to write checks like this, and it's worth doing everywhere, not
+just here:
+
+> **When a function is asked something it cannot answer, say so immediately and
+> loudly.** Every check like this shortens the distance between where a bug shows up
+> and where it actually is — and that distance is most of what makes debugging hard.
+
+A wrong value that gets returned doesn't stay put. It travels into the next function,
+and the next, and by the time anything visibly breaks you're a long way from the
+mistake. Stopping it at the door is cheaper than chasing it.
+
+<KnowledgeCheck
+  question="Why does desired_heading end with raise, instead of just letting Python return None?"
+  options={[
+    {text: 'Because None uses more memory'},
+    {text: 'So the program stops at the line that found the problem, instead of breaking later somewhere that is not the cause', correct: true},
+    {text: 'Because every Python function has to end with raise'},
+    {text: 'To make the robot turn faster'},
+  ]}
+  explanation="Without it the bad value travels: desired_heading hands back None, turn_to spins forever, and the symptom appears in code that is perfectly correct. Raising reports the problem where it was discovered, with the values that caused it."
+/>
+
+<TeacherNote title="This is the debugging lesson, not a Python lesson">
+
+`raise` is new here, but nothing about it needs teaching beyond "the program stops and
+prints your message" — students never write `try`/`except` to benefit from it. Don't
+turn this into a detour on exception handling.
+
+What is worth ten minutes: ask the class to predict what they'd see if the `raise` were
+missing, then how they'd go about finding the cause. The answer — "a robot spinning
+forever, and the first place you'd look is the one piece of code that's right" — makes
+the point better than any rule. This is the first time the course asks students to write
+a line whose only job is to make a *future* problem easier to find, and that idea pays
+off for the rest of their programming lives.
+
+If someone asks whether the error can actually happen: with `compute_path` feeding it,
+no — the planner only ever produces adjacent steps. It becomes reachable the moment they
+call `desired_heading` themselves while testing, or wire it into their own project in
+Lesson 4-9. That is exactly when a good error message is worth the most.
+
+**Why each condition tests both differences.** Earlier drafts of this method checked
+only one — `if row_diff == -1: return 0` — which looks equivalent and isn't. Going from
+(2,1) to (3,3) has `row_diff` of 1, so that version returns South and never reaches the
+`raise`, for a pair of positions that is plainly not a step apart. A check with a hole
+in it is worse than no check, because it buys confidence it hasn't earned. Good thing to
+show a fast finisher.
+
+</TeacherNote>
 
 ## Turning with a while loop
 

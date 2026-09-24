@@ -73,15 +73,21 @@ instead of taking a `current` parameter — the object already knows where it is
 def desired_heading(self, next_pos):
     row_diff = next_pos[0] - self.position[0]
     col_diff = next_pos[1] - self.position[1]
-    if row_diff == -1:
+    if col_diff == 0 and row_diff == -1:
         return 0   # North
-    elif col_diff == 1:
+    elif row_diff == 0 and col_diff == 1:
         return 1   # East
-    elif row_diff == 1:
+    elif col_diff == 0 and row_diff == 1:
         return 2   # South
-    elif col_diff == -1:
+    elif row_diff == 0 and col_diff == -1:
         return 3   # West
+    raise ValueError(f"{self.position} and {next_pos} are not neighbors")
 ```
+
+The `raise` comes along from Lesson 4-7 and for the same reason: if the two positions
+aren't neighbours there is no heading to return, and saying so here is what stops a
+wrong value wandering off into `turn_to` to cause trouble that looks like someone
+else's fault.
 
 And `turn_to()` is the while loop from Lesson 4-7 — but now each turn is a *real* turn,
 `self.line_track.turn_right()`, which physically spins the robot:

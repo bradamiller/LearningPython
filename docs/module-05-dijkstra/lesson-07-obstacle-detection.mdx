@@ -93,10 +93,6 @@ The rangefinder says something's ahead — but *which* node? The blocked one is 
 intersection **directly in front of the robot**, and the robot already knows its position
 and heading (0=N, 1=E, 2=S, 3=W from Module 4):
 
-<Todo kind="bug">
-no fallback return, so a heading outside 0 to 3 yields None, which then goes into blocked_list and corrupts it silently. [REVIEW §1.7]
-</Todo>
-
 ```python
 NORTH, EAST, SOUTH, WEST = 0, 1, 2, 3
 
@@ -106,10 +102,17 @@ def get_next_intersection(current_pos, heading):
     if heading == EAST:  return (row, col + 1)
     if heading == SOUTH: return (row + 1, col)
     if heading == WEST:  return (row, col - 1)
+    raise ValueError(f"heading {heading} is not one of 0, 1, 2, 3")
 ```
 
 The obstacle is never the node the robot is *on* — it's the adjacent one the sensor points
 at.
+
+The last line is the same guard you wrote in Lesson 4-7, and this one earns it even
+more. Without it a heading outside 0–3 returns `None`, `None` gets appended to
+`blocked_list`, and the planner then builds its graph around an obstacle that isn't a
+place. Nothing crashes. The robot simply routes badly, in a way that's very hard to
+connect back to a heading that wrapped wrong several minutes earlier.
 
 <KnowledgeCheck
   question="The robot is at (2,1) facing NORTH and the rangefinder reads 8 cm (threshold 15). Which node is blocked?"

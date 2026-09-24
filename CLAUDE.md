@@ -639,6 +639,38 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the 3×3, 6 steps across a clear 4×4, and the 3×3 route matches L5-3's hand trace
   with the start dropped. `Manhattan` still takes only `start`; that constructor
   difference is real and is the open question in REVIEW's section 2.
+- **FAIL WHERE THE PROBLEM IS — `raise` on impossible input (Brad, 2026-09-24).** A
+  function that cannot answer the question it was asked ends with a `raise`, not an
+  implicit fall-off-the-end. Three places do this and they are the whole set:
+  `desired_heading` in **L4-7** and again in **L4-8**, and `get_next_intersection` in
+  **M5 L7**. All three were silently returning `None`, which then travelled — `None`
+  into `turn_to` spins the robot forever (`self.heading` is only ever 0–3), and `None`
+  into `blocked_list` corrupts the graph the planner reasons about without crashing
+  anything.
+  **L4-7 owns the teaching**, in a section called "Say so when you can't answer"; the
+  other two cite it in a sentence. The point Brad asked for, and the one to keep if this
+  is ever rewritten: *checking for failure conditions puts the error where the problem
+  is, which is what makes it findable.* The worked example is that the symptom of the
+  missing check appears in `turn_to`, which is completely correct — so a student hunting
+  the bug reads the one piece of code that isn't wrong. Implicit `None` on fall-through
+  is named explicitly there too; it is a beginner trap and that is the place it bites.
+  **The four conditions now test BOTH differences** (`col_diff == 0 and row_diff == -1`
+  …). The original one-sided form looked equivalent and wasn't: (2,1) → (3,3) has
+  `row_diff` of 1, so it returned South and never reached the `raise` for a pair that is
+  plainly not a step apart. A check with a hole in it is worse than none, since the
+  section's whole claim is that the error lands where the problem is. It also writes down
+  the lesson's own "one change at a time" premise. Verified against every case the lesson
+  states, including the four knowledge-check pairs.
+  **Deliberately NOT taught:** `try`/`except`. Students never catch these — they read the
+  message. (The course's only `try` is M5 L8's `load_obstacles`, and it stays a one-off.)
+  Don't turn L4-7 into an exceptions lesson; its teacher note says so.
+  **Rejected alternative:** returning a sentinel like `-1`. It reproduces the same bug —
+  `turn_to(-1)` loops forever exactly as `turn_to(None)` does — so it only helps at call
+  sites that remember to check, and it puts error-handling noise into the very lessons
+  whose point is that the main program reads as a list of intentions.
+  **Unverified:** an uncaught exception mid-drive leaves the motors running until the
+  program dies. §9's "motors stop when a program ends" rule should cover it, but that
+  rule was written about normal termination — worth one check on a real robot.
 - **VARIABLES, EXPRESSIONS AND SCOPE (Brad, 2026-09-21).** Before this, nothing in
   the course explained what a variable is: the first assignment students met was
   `drivetrain = …` in L1-8, presented only as "make an instance", and `snake_case`
@@ -884,8 +916,8 @@ so the words shipped anyway — which is how this was first written, and was wro
 Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
-**media** (placeholder or stand-in art). As of 2026-09-24: 5 bug, 5 blocked,
-7 answers, 6 convention, 2 media — 25 total. `npm run todos` lists them from the
+**media** (placeholder or stand-in art). As of 2026-09-24: 3 bug, 5 blocked,
+7 answers, 6 convention, 2 media — 23 total. `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
 ### The /todos index (added 2026-09-24)
