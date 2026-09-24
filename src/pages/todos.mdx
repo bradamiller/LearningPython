@@ -1,0 +1,38 @@
+---
+title: TODO Index
+description: Every authoring note in the XRP Python curriculum, grouped by how urgent it is, each one linking to the note in its lesson.
+hide_table_of_contents: true
+---
+
+import TodoIndex from '@site/src/components/TodoIndex';
+
+# TODO index
+
+Every unfinished or known-wrong thing in the course, in one place. This is an
+authoring page, not a student page — it is generated from the `<Todo>` notes
+written into the lessons, so fixing a lesson removes its note from here on the
+next build. Nothing to tick off by hand.
+
+Click a card to land on the note where it lives. The **index** link in the
+corner of every note brings you back. Arriving from here turns "Show TODOs" on
+by itself, so the note is visible even if you had the switch off.
+
+Order is by how much the note matters, not by where it sits in the course: a bug
+a student can hit outranks a convention drift in the same lesson.
+
+<TodoIndex />
+
+## When one is fixed
+
+Delete the `<Todo>` in the same commit that fixes the thing. A note that
+outlives its problem is worse than no note, because the next person has to
+re-derive whether it still applies.
+
+Four rules for writing a new one, each of which was learned by getting it wrong:
+never put one inside a code fence (it renders as literal text a student can
+read), no braces or backticks in the body (a bare brace is a JSX expression and
+breaks the build), never inside another element's attribute list, and cite the
+reasoning in `REVIEW-2026-09-21.md` where there is any.
+
+`npm run todos` prints the same list in a terminal, with `-- bug` to narrow it
+and `-- --count` for just the tallies.

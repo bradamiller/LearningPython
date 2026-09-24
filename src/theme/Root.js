@@ -76,7 +76,15 @@ function TodoToggle() {
   const DEFAULT_ON = process.env.NODE_ENV !== 'production';
   const [on, setOn] = useState(DEFAULT_ON);
   const [count, setCount] = useState(0);
-  const {pathname} = useLocation();
+  const {pathname, hash} = useLocation();
+
+  const apply = (next) => {
+    setOn(next);
+    try {
+      localStorage.setItem(TODO_KEY, next ? 'on' : 'off');
+    } catch (e) {}
+    document.documentElement.setAttribute('data-todos', next ? 'on' : 'off');
+  };
 
   useEffect(() => {
     try {
@@ -89,6 +97,23 @@ function TodoToggle() {
     }
   }, []);
 
+  // Arriving from /todos with a #todo-N hash: switch the notes on and scroll to
+  // the one that was clicked. Without this the browser has nothing to scroll to
+  // — a hidden element has no position — and the link looks broken. Deliberately
+  // persists the choice: you came here to read notes, so leave them on.
+  useEffect(() => {
+    if (!/^#todo-\d+$/.test(hash || '')) return;
+    apply(true);
+    const target = () => document.querySelector(hash);
+    const scroll = () => {
+      const el = target();
+      if (el) el.scrollIntoView({block: 'center'});
+    };
+    // Two frames: one for the attribute to un-hide the note, one for layout.
+    const id = requestAnimationFrame(() => requestAnimationFrame(scroll));
+    return () => cancelAnimationFrame(id);
+  }, [pathname, hash]);
+
   // Count what's on the page. Re-runs per navigation, and once more on the next
   // frame because Docusaurus swaps content after the route changes.
   useEffect(() => {
@@ -98,16 +123,7 @@ function TodoToggle() {
     return () => cancelAnimationFrame(id);
   }, [pathname]);
 
-  const toggle = () => {
-    setOn((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(TODO_KEY, next ? 'on' : 'off');
-      } catch (e) {}
-      document.documentElement.setAttribute('data-todos', next ? 'on' : 'off');
-      return next;
-    });
-  };
+  const toggle = () => apply(!on);
 
   // No switch on a page with nothing to show. (When they're hidden the nodes
   // are still in the DOM, so the count survives being switched off.)

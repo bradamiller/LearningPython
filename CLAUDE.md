@@ -879,9 +879,48 @@ so the words shipped anyway — which is how this was first written, and was wro
 Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
-**media** (placeholder or stand-in art). As of 2026-09-23: 9 bug, 5 blocked,
-7 answers, 10 convention, 2 media — 33 total. `npm run todos` lists them from the
+**media** (placeholder or stand-in art). As of 2026-09-24: 9 bug, 5 blocked,
+7 answers, 6 convention, 2 media — 29 total. `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
+
+### The /todos index (added 2026-09-24)
+
+Every note on one page, grouped by category, each card linking straight to the
+note in its lesson — and an **index** link in the corner of every note box for the
+way back. That loop is the point: pick one, click it, fix the lesson, delete the
+note, return. Generated like the checks and the pacing guide, so a fixed note
+leaves the page by itself:
+
+```
+docs/**/lesson-*.mdx  --scripts/extract_todos.js-->  src/data/todos.json
+                      --src/components/TodoIndex.js-->  /todos
+```
+
+**The navbar tab is gated on the switch** — `.navbar__item--todos` is
+`display:none` unless `html[data-todos='on']`. A tab advertising everything wrong
+with the course is not for students. Consequence worth knowing: the tab only
+appears once TODOs are switched on, which under `npm start` is the default, and on
+the built site happens the moment Brad flips the switch on any lesson that has
+notes. The page itself stays reachable at its URL either way, like the answer keys.
+
+**Three things that had to be got right, and will break quietly if changed:**
+
+- **The anchors are numbered by a remark plugin, not by hand.**
+  `plugins/remark-number-todos.js` stamps `index` on each `<Todo>` in document
+  order and the component renders `id="todo-N"`; `extract_todos.js` counts the same
+  way over the same source. **Change how either one counts and every link lands one
+  note off.** Numbering runs in every build, before the strip plugin.
+- **`<Todo>` calls `useBrokenLinks().collectAnchor(id)`**, the same API headings
+  use. Docusaurus only knows about anchors a component registers, so without it
+  every card on /todos is reported as a broken anchor — 29 false warnings per
+  build, which is exactly how a real one gets missed.
+- **Landing on a hidden note needed two fixes.** Root.js watches for a `#todo-N`
+  hash and switches TODOs on before scrolling (a hidden element has no position, so
+  the browser has nothing to scroll to and the link looks broken), and `.todo` has
+  `scroll-margin-top: 5rem` so the note clears the sticky navbar.
+
+`SHOW_TODOS=0` empties the index too — otherwise the one page listing every
+unfinished thing in the course would survive a strip that removed the notes.
 
 Four rules when writing one, each learned the hard way:
 - **Never inside a code fence.** A `<Todo>` between fence markers is literal text

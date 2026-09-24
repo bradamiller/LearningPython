@@ -1,6 +1,7 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
 import remarkStripTodos from './plugins/remark-strip-todos.js';
+import remarkNumberTodos from './plugins/remark-number-todos.js';
 
 // Authoring <Todo> notes ship with the site, hidden behind the "Show TODOs"
 // switch — the same arrangement teacher notes already use. Build with
@@ -51,7 +52,11 @@ const config = {
           sidebarPath: './sidebars.js',
           editUrl: undefined,
           showLastUpdateTime: false,
-          beforeDefaultRemarkPlugins: STRIP_TODOS ? [remarkStripTodos] : [],
+          // Numbering must run whatever happens — it gives each <Todo> the id
+          // that /todos links to. Stripping, when asked for, then deletes them.
+          beforeDefaultRemarkPlugins: STRIP_TODOS
+            ? [remarkNumberTodos, remarkStripTodos]
+            : [remarkNumberTodos],
         },
         blog: false,
         theme: {
@@ -95,6 +100,15 @@ const config = {
             to: '/pacing',
             label: 'Pacing Guide',
             position: 'left',
+          },
+          {
+            // Authoring page. Hidden unless "Show TODOs" is on — a tab
+            // advertising the course's unfinished bits is not for students.
+            // The CSS gate is html[data-todos='on'] in custom.css.
+            to: '/todos',
+            label: 'TODOs',
+            position: 'left',
+            className: 'navbar__item--todos',
           },
           {
             href: 'https://xrpcode.wpi.edu/staging',

@@ -1006,11 +1006,13 @@ html[data-theme='dark'] .pacingModule__summary { color: #CED4DA; }
   margin-right: 0.25rem;
 }
 
-/* ---------- Authoring TODOs (dev server only) ----------
-   Notes about things in a lesson that still need fixing. The <Todo> component
-   renders nothing in a production build, so none of this reaches the deployed
-   site; these rules only ever apply under `npm start`. The "Show TODOs" switch
-   sets html[data-todos='off'] to hide them without a rebuild. */
+/* ---------- Authoring TODOs ----------
+   Notes about things in a lesson that still need fixing. They ship with the
+   site and are hidden behind the "Show TODOs" switch, which sets
+   html[data-todos='off'] — the same arrangement teacher notes use. (An older
+   version of this comment said "dev server only"; that was the design until
+   2026-09-23, when it turned out to hide the notes from the one person who
+   needed to read them.) SHOW_TODOS=0 builds a site with them removed entirely. */
 .todo {
   --todo-accent: #c0392b;
   position: relative;
@@ -1023,6 +1025,10 @@ html[data-theme='dark'] .pacingModule__summary { color: #CED4DA; }
   margin: 1.5rem 0;
   font-size: 0.92rem;
   line-height: 1.5;
+  /* Landing here from /todos must clear the sticky navbar. Set in CSS rather
+     than as a scroll offset in JS so it applies to the browser's own hash
+     scrolling too. */
+  scroll-margin-top: 5rem;
 }
 .todo__tag {
   display: inline-flex;
@@ -1073,4 +1079,177 @@ html[data-todos='on'] .todoToggle .teacherToggle__thumb { transform: translateX(
   color: #fff;
   font-size: 0.72rem;
   font-weight: 800;
+}
+
+/* The "index" link in the corner of every note — the return leg of the loop
+   that starts on /todos. Sits inside the category pill, so it inherits the
+   accent colour and stays legible on it. */
+.todo__index {
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+.todo__index:hover { color: #fff; text-decoration: underline; }
+
+/* The navbar tab for /todos. Gated on the same switch as the notes themselves:
+   a student browsing the site should not meet a tab listing everything wrong
+   with the course. The page still exists at its URL — like the answer keys,
+   which are already public — this only keeps it out of the furniture. */
+.navbar__item--todos { display: none; }
+html[data-todos='on'] .navbar__item--todos { display: inline-block; }
+
+/* ---------- /todos — the index page ---------- */
+.todoIndex { margin-top: 1.5rem; }
+.todoIndex__empty {
+  padding: 1.25rem;
+  border: 1px dashed var(--xrp-teacher-border, #adb5bd);
+  border-radius: 10px;
+  background: var(--xrp-teacher-bg, #f1f3f5);
+}
+
+.todoIndex__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.todoIndex__chip {
+  --todo-accent: #6c757d;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 2px solid var(--todo-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--todo-accent);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.todoIndex__chip:hover {
+  background: color-mix(in srgb, var(--todo-accent) 12%, transparent);
+}
+.todoIndex__chip--on {
+  background: var(--todo-accent);
+  color: #fff;
+}
+.todoIndex__chip--bug        { --todo-accent: #c0392b; }
+.todoIndex__chip--blocked    { --todo-accent: #b9770e; }
+.todoIndex__chip--answers    { --todo-accent: #7d3c98; }
+.todoIndex__chip--convention { --todo-accent: #2874a6; }
+.todoIndex__chip--media      { --todo-accent: #117864; }
+
+.todoIndex__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.todoIndex__section { margin-bottom: 2.5rem; }
+.todoIndex__heading {
+  --todo-accent: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  color: var(--todo-accent);
+  border-bottom: 2px solid color-mix(in srgb, var(--todo-accent) 35%, transparent);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.3rem;
+}
+.todoIndex__heading--bug        { --todo-accent: #c0392b; }
+.todoIndex__heading--blocked    { --todo-accent: #b9770e; }
+.todoIndex__heading--answers    { --todo-accent: #7d3c98; }
+.todoIndex__heading--convention { --todo-accent: #2874a6; }
+.todoIndex__heading--media      { --todo-accent: #117864; }
+.todoIndex__blurb {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.todoIndex__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.todoIndex__card {
+  --todo-accent: #6c757d;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-left: 5px solid var(--todo-accent);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color, #fff);
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+.todoIndex__card:hover {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+.todoIndex__card--bug        { --todo-accent: #c0392b; }
+.todoIndex__card--blocked    { --todo-accent: #b9770e; }
+.todoIndex__card--answers    { --todo-accent: #7d3c98; }
+.todoIndex__card--convention { --todo-accent: #2874a6; }
+.todoIndex__card--media      { --todo-accent: #117864; }
+
+.todoIndex__link {
+  display: block;
+  padding: 0.85rem 1.1rem;
+  color: inherit;
+  text-decoration: none;
+}
+.todoIndex__link:hover { color: inherit; text-decoration: none; }
+
+.todoIndex__where {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+.todoIndex__lesson {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--todo-accent);
+}
+.todoIndex__module {
+  font-size: 0.76rem;
+  color: var(--ifm-color-emphasis-600);
+}
+.todoIndex__text {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.todoIndex__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-600);
+}
+.todoIndex__cite {
+  font-weight: 700;
+  color: var(--todo-accent);
+}
+.todoIndex__file { font-family: var(--ifm-font-family-monospace); }
+
+@media print {
+  .todoIndex__filters { display: none; }
+  .todoIndex__card { break-inside: avoid; }
 }

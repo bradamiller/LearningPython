@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from '@docusaurus/Link';
+import useBrokenLinks from '@docusaurus/useBrokenLinks';
 
 /**
  * An authoring note about something in this lesson that still needs fixing.
@@ -25,22 +27,34 @@ import React from 'react';
 
 const KINDS = {
   bug: {label: 'Bug', icon: '🐞'},
-  blocked: {label: 'Blocked', icon: '⏸'},
+  blocked: {label: 'Blocked', icon: '⏳'},
   answers: {label: 'Answer leak', icon: '🙈'},
   convention: {label: 'Convention', icon: '📐'},
   media: {label: 'Media', icon: '📷'},
 };
 
-export default function Todo({kind = 'bug', children}) {
+export default function Todo({kind = 'bug', index, children}) {
   const k = KINDS[kind] ? kind : 'bug';
   const {label, icon} = KINDS[k];
+  // `index` is stamped on at build time by plugins/remark-number-todos.js, in
+  // the same document order extract_todos.js counts in — that pairing is what
+  // makes a link from /todos land on this note rather than a neighbour.
+  const id = index ? `todo-${index}` : undefined;
+  // Register the id the way a heading does, so Docusaurus's broken-anchor check
+  // knows #todo-N exists. Without this every link on /todos is reported broken
+  // on each build — 29 false warnings, which is exactly how a real one gets
+  // missed.
+  useBrokenLinks().collectAnchor(id);
   return (
-    <aside className={`todo todo--${k}`} data-todo={k}>
+    <aside className={`todo todo--${k}`} data-todo={k} id={id}>
       <div className="todo__tag">
         <span className="todo__icon" aria-hidden="true">
           {icon}
         </span>
         TODO · {label}
+        <Link className="todo__index" to="/todos" title="All TODOs in the course">
+          index
+        </Link>
       </div>
       <div className="todo__body">{children}</div>
     </aside>
