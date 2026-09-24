@@ -670,13 +670,24 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   so no student experiment can catch it out. It was chosen over the fully accurate
   version because it never needs taking back. Do not "correct" L1-9 into a lecture on
   object identity.
-  **Figures:** `static/img/lesson-09/memory-locations.svg` (a bank of five locations
-  drawn as box doors: address plate on top, value inside, red name card at the
-  bottom; two unnamed) and `static/img/lesson-m4-03/two-names-one-list.svg` (`path`
-  and `same_path` both holding `5120`, arrows to one list). Both hand-drawn in the
-  course palette per §12. Brad supplied an AI-generated illustration of a post office
-  wall on 2026-09-23; its box labels were garbled, and although they were repainted
-  with real numbers, he chose the drawn SVG instead.
+  **Figures — three, and they do different jobs.** L1-9 opens with
+  `static/img/lesson-09/memory-post-office.png`, Brad's illustration of a post office
+  wall, which carries the *analogy*; then
+  `static/img/lesson-09/memory-locations.svg` carries the *mechanism* (a bank of five
+  locations drawn as box doors: address plate on top, value inside, red name card at
+  the bottom; two unnamed). L4-3 has
+  `static/img/lesson-m4-03/two-names-one-list.svg` (`path` and `same_path` both
+  holding `5120`, arrows to one list). The two SVGs are hand-drawn in the course
+  palette per §12.
+  **The PNG was repaired before use and the original is not usable as supplied.** It
+  is AI-generated, and every box label came out as garbled squiggles — fatal for a
+  figure whose subject is *the boxes have numbers*. The plates were detected as
+  near-neutral rectangles, refilled with their own sampled tone and repainted with
+  real numbers (101–105, 111–113, 121–125, …, one series per column), then the
+  leftover garbled marks sitting directly on the box fronts were inpainted with the
+  surrounding tan. If it is ever regenerated or replaced, that pass has to be redone —
+  check at the rendered width (~549 px), not at full size, and in particular check for
+  stray glyphs *above* a plate rather than on it.
   **The rest of the lesson covers:** reassignment including
   `count = count + 1`, snake_case, the Capitalized-class / lowercase-instance
   convention (which had been living in a teacher note only), arithmetic operators,
