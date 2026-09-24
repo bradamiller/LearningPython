@@ -703,10 +703,24 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   equal bodies mean equal orbits, so one pair of Straight/Turn numbers serves both loops.
   The not-to-scale note is on the printable and in the lesson so nobody learns it wrong.
   **Two SVGs, and they are not interchangeable:** `earth-moon.svg` is the tight inline
-  figure (both discs plus the dashed flight path, 680×260) and `earth-moon-cutouts.svg` is
+  figure (both discs plus the dashed flight path, 680×300) and `earth-moon-cutouts.svg` is
   a US-Letter print sheet with cut lines and centre crosses, linked from the lesson's
   Resources. The print sheet was inlined first and rendered as a page of whitespace — a
   printable is not an illustration.
+  **The flight path is real geometry, not a freehand curve (Brad, 2026-09-24).** The first
+  version was drawn with beziers and he was right that it looked wrong — flat on the
+  outsides, oblong on the insides. It is now two true circles of radius `r` with centres
+  `2d` apart, joined by their **internal common tangents**, which meet at the midpoint. A
+  tangent leaves at angle `t` where `sin(t) = r/d`, so `t = 45°` exactly when
+  `d = r / sin 45° = 1.4142 r`. The drawing uses r = 116, d = 164. The derivation is in a
+  comment at the top of the file — keep it there if the art is ever redrawn.
+  **That geometry then gave the lesson two numbers it had been guessing at.** Each tangent
+  touches its circle 135° round from the centre, leaving a **270° arc** on the outside — so
+  "three-quarters of a turn per swing" is exact, not a starting estimate, and the lesson now
+  says so. And the bodies belong `2d = 2.83r` apart, i.e. **about 1.5× the orbit's
+  diameter** (a 14-inch circle wants them ~21 inches apart), which is its own Callout. The
+  18–24 inch spacing already in the lesson happened to match; the rule is now stated rather
+  than implied.
   **The program mixes block kinds on purpose:** the crossings are `Straight` blocks (they
   *finish*, so they land the same every run) and the orbits are Arcade + Sleep (they don't,
   so they need timing). That is this lesson's own finish/don't-finish distinction doing

@@ -1,61 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 228" role="img"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" role="img"
      aria-labelledby="em2-title em2-desc"
      font-family="Montserrat, Helvetica, Arial, sans-serif">
-  <title id="em2-title">The two bodies, and the path between them</title>
-  <desc id="em2-desc">An Earth disc and a Moon disc of equal size, side by side with a cross at each
-  centre, and a dashed figure-eight path looping around each one and crossing between them.</desc>
+  <title id="em2-title">The Earth–Moon–Earth flight path</title>
+  <desc id="em2-desc">An Earth disc and a Moon disc of equal size, side by side. A dashed path makes
+  an infinity symbol around them: three-quarters of a circle around one body, a straight diagonal
+  crossing to the other, three-quarters of a circle the other way around that one, and a straight
+  diagonal back. The two straight crossings meet at forty-five degrees in the middle, where the
+  robot starts and finishes.</desc>
+
+  <!--
+    Real geometry, not a freehand curve. Two equal circles of radius r with their
+    centres 2d apart; the straight crossings are the internal common tangents, which
+    meet at the midpoint. A tangent leaves at angle t where sin(t) = r/d, so t = 45°
+    exactly when d = r/sin(45°) = 1.4142 r. Here r = 116 and d = 164.
+    Each tangent touches its circle 135° round from centre, which leaves a 270° arc
+    on the outside — the three-quarter turn the lesson asks students to start with.
+  -->
 
   <style>
     .name { font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+    .tag  { font-size: 11.5px; font-weight: 700; fill: #D1182C; letter-spacing: .4px; }
+    .part { font-size: 12px; font-weight: 700; fill: #B0142A; letter-spacing: .3px; }
   </style>
 
   <defs>
-    <clipPath id="e2"><circle cx="200" cy="120" r="46"/></clipPath>
-    <marker id="way" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6"
+    <clipPath id="e2"><circle cx="176" cy="150" r="40"/></clipPath>
+    <marker id="way" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5.5" markerHeight="5.5"
             orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#D1182C"/>
     </marker>
   </defs>
 
-  <!-- the flight path: a loop round each body, crossing in the middle -->
-  <path d="M 340 120
-           C 340 40, 250 30, 200 30
-           C 130 30, 116 75, 116 120
-           C 116 165, 130 210, 200 210
-           C 250 210, 340 200, 340 120
-           C 340 40, 430 30, 480 30
-           C 550 30, 564 75, 564 120
-           C 564 165, 550 210, 480 210
-           C 430 210, 340 200, 340 120 Z"
-        fill="none" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="7 5"
-        marker-end="url(#way)"/>
+  <!-- the flight path -->
+  <path d="M 340 150
+           L 422 68
+           A 116 116 0 1 1 422 232
+           L 258 68
+           A 116 116 0 1 0 258 232
+           Z"
+        fill="none" stroke="#D1182C" stroke-width="2.6" stroke-dasharray="8 6"
+        stroke-linecap="round" marker-start="url(#way)"/>
 
   <!-- EARTH -->
   <g>
-    <circle cx="200" cy="120" r="46" fill="#1B6CA8"/>
+    <circle cx="176" cy="150" r="40" fill="#1B6CA8"/>
     <g clip-path="url(#e2)">
-      <path d="M164 104 q10 -14 24 -10 q14 4 10 15 q-3 10 -15 9 q-13 -1 -19 -14z" fill="#3E8E5A"/>
-      <path d="M186 130 q13 -7 24 1 q10 8 3 18 q-8 10 -20 5 q-11 -5 -7 -24z" fill="#3E8E5A"/>
-      <path d="M216 90 q15 -5 22 6 q6 8 -4 13 q-12 5 -21 -5 q-6 -7 3 -14z" fill="#3E8E5A"/>
-      <ellipse cx="182" cy="82" rx="18" ry="7" fill="#EAF2F8" opacity=".5"/>
+      <path d="M145 136 q9 -12 21 -9 q12 4 8 13 q-3 9 -13 8 q-11 -1 -16 -12z" fill="#3E8E5A"/>
+      <path d="M164 159 q11 -6 21 1 q9 7 2 16 q-7 8 -17 4 q-10 -4 -6 -21z" fill="#3E8E5A"/>
+      <path d="M190 123 q13 -4 19 5 q5 7 -4 11 q-10 5 -18 -4 q-5 -6 3 -12z" fill="#3E8E5A"/>
+      <ellipse cx="160" cy="118" rx="16" ry="6" fill="#EAF2F8" opacity=".5"/>
     </g>
-    <circle cx="200" cy="120" r="46" fill="none" stroke="#12496F" stroke-width="2.5"/>
-    <line x1="192" y1="120" x2="208" y2="120" stroke="#fff" stroke-width="2"/>
-    <line x1="200" y1="112" x2="200" y2="128" stroke="#fff" stroke-width="2"/>
-    <text class="name" x="200" y="104" text-anchor="middle" fill="#fff">EARTH</text>
+    <circle cx="176" cy="150" r="40" fill="none" stroke="#12496F" stroke-width="2.5"/>
+    <line x1="169" y1="150" x2="183" y2="150" stroke="#fff" stroke-width="2"/>
+    <line x1="176" y1="143" x2="176" y2="157" stroke="#fff" stroke-width="2"/>
+    <text class="name" x="176" y="136" text-anchor="middle" fill="#fff">EARTH</text>
   </g>
 
   <!-- MOON, the same size -->
   <g>
-    <circle cx="480" cy="120" r="46" fill="#B9BEC4"/>
-    <circle cx="464" cy="106" r="11" fill="#9BA1A8"/>
-    <circle cx="494" cy="96" r="6" fill="#9BA1A8"/>
-    <circle cx="501" cy="130" r="9" fill="#9BA1A8"/>
-    <circle cx="470" cy="142" r="5" fill="#9BA1A8"/>
-    <circle cx="480" cy="120" r="46" fill="none" stroke="#8B9197" stroke-width="2.5"/>
-    <line x1="472" y1="120" x2="488" y2="120" stroke="#5B6166" stroke-width="2"/>
-    <line x1="480" y1="112" x2="480" y2="128" stroke="#5B6166" stroke-width="2"/>
-    <text class="name" x="480" y="104" text-anchor="middle" fill="#495057">MOON</text>
+    <circle cx="504" cy="150" r="40" fill="#B9BEC4"/>
+    <circle cx="490" cy="138" r="10" fill="#9BA1A8"/>
+    <circle cx="517" cy="130" r="5.5" fill="#9BA1A8"/>
+    <circle cx="522" cy="159" r="8" fill="#9BA1A8"/>
+    <circle cx="496" cy="170" r="4.5" fill="#9BA1A8"/>
+    <circle cx="504" cy="150" r="40" fill="none" stroke="#8B9197" stroke-width="2.5"/>
+    <line x1="497" y1="150" x2="511" y2="150" stroke="#5B6166" stroke-width="2"/>
+    <line x1="504" y1="143" x2="504" y2="157" stroke="#5B6166" stroke-width="2"/>
+    <text class="name" x="504" y="136" text-anchor="middle" fill="#495057">MOON</text>
   </g>
 
+  <text class="part" x="176" y="88" text-anchor="middle">¾ turn one way</text>
+  <text class="part" x="504" y="88" text-anchor="middle">¾ turn the other</text>
+  <text class="part" x="340" y="280" text-anchor="middle">the two crossings are straight, and meet at 45°</text>
+  <text class="tag" x="354" y="178">start / finish</text>
 </svg>

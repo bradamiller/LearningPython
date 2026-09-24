@@ -482,8 +482,8 @@ to rejoin its own lunar orbit.
 
 <Figure
   src="/img/lesson-06/earth-moon.svg"
-  alt="An Earth disc and a Moon disc of equal size side by side, with a dashed figure-eight path looping around each and crossing between them."
-  caption="The mission — one loop each way, crossing in the middle. The arrow is where the robot starts and finishes."
+  alt="An Earth disc and a Moon disc of equal size side by side, with a dashed infinity-symbol path: three-quarters of a circle around each body, joined by two straight diagonal crossings that meet at forty-five degrees in the middle."
+  caption="The mission. Three-quarters of a turn around each body, joined by two straight crossings — an infinity symbol, and the robot starts and finishes where they meet."
 />
 
 There's a **printable Earth and Moon** in this lesson's Resources at the bottom of
@@ -504,6 +504,19 @@ The thing to notice on your drawing: **the robot bends one way around the Moon a
 the other way around the Earth.** That's the whole trick, and it's why `Straight`
 and `Turn` blocks can't draw this shape at all.
 
+<Callout kind="tip" title="How far apart should the bodies go?">
+
+About **one and a half times your circle's diameter**. Any closer and the crossings
+are too shallow to see; any further and they get steep and the path stops looking
+like an infinity symbol. At one-and-a-half the two crossings meet at a tidy 45°,
+and each swing works out to three-quarters of a turn — which is where that number
+in the next step comes from.
+
+So a 14-inch circle wants the Earth and Moon about 21 inches apart. If you picked
+a big circle in the last activity, spread them out to match.
+
+</Callout>
+
 ### Step 2 · Build the mission
 
 Four moves, and you already have the numbers for two of them:
@@ -515,9 +528,10 @@ Four moves, and you already have the numbers for two of them:
 | 3 | Orbit the Earth, the other way | Arcade + Sleep | same, with Turn **negated** |
 | 4 | Cross back to the Moon | Straight | the same gap |
 
-For the orbits, start with a Sleep of about **three-quarters** of a full circle —
-1.5 times your half-circle time — and tune from there. You want the robot to come
-out of each swing pointing at the other body.
+For the orbits, use a Sleep of about **three-quarters** of a full circle — 1.5
+times your half-circle time. That is not a guess: with the bodies spaced as above,
+three-quarters of a turn is exactly what brings the robot out of a swing pointing
+at the other body. Tune from there rather than starting from nothing.
 
 Notice which blocks do which job. The crossings use `Straight`, which **finishes**
 — it drives a measured distance and stops itself, so it lands the same way every
