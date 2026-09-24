@@ -194,15 +194,72 @@ the tuning outcomes are stated right under this heading, before students touch t
   explanation="Rapid weaving is over-correction — Kp is too high. Lower it for gentler, smoother steering."
 />
 
-Print your values while you tune (every 50th pass keeps the console readable):
+### Watch the numbers while you tune
 
-<Todo kind="bug">
-loop_count is defined nowhere in this module, so a student who pastes this in as instructed gets a NameError on the first pass. Either add a counter to the control loop above or print every pass. [REVIEW §1.7]
-</Todo>
+Tuning by eye tells you *that* something is wrong. Printing tells you *what*. The
+problem is that your control loop runs hundreds of times a second, so printing every
+pass produces a waterfall nobody can read. Print every **50th** pass instead.
+
+Here's the technique on its own, with no robot involved — type it into XRP Code and
+run it:
 
 ```python
-if loop_count % 50 == 0:
-    print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
+setpoint = 0.5        # the edge your robot steers for
+Kp = 0.5
+
+for i in range(300):
+    # Stand-in for the sensor: a reading that slides from white to black
+    # across the whole run, so it passes over the edge on the way.
+    sensor_value = i / 300
+
+    error = setpoint - sensor_value
+    correction = error * Kp
+
+    if i % 50 == 0:
+        print(f"i={i}  sensor={sensor_value:.2f}  error={error:.2f}  correction={correction:.2f}")
+```
+
+Three hundred passes, six lines of output:
+
+```text
+i=0  sensor=0.00  error=0.50  correction=0.25
+i=50  sensor=0.17  error=0.33  correction=0.17
+i=100  sensor=0.33  error=0.17  correction=0.08
+i=150  sensor=0.50  error=0.00  correction=0.00
+i=200  sensor=0.67  error=-0.17  correction=-0.08
+i=250  sensor=0.83  error=-0.33  correction=-0.17
+```
+
+`%` is the **remainder** operator: `i % 50` is what's left over after dividing `i`
+by 50, so `i % 50 == 0` is true only when `i` is an exact multiple of 50. That's the
+whole trick — one line out of every fifty.
+
+The output is worth reading as more than a formatting demo. The fake reading passes
+the setpoint at `i=150`, and look what happens: the error hits `0.00` and then goes
+**negative**, and the correction follows it. That sign flip is the steering changing
+direction, with no `if/else` anywhere — exactly the claim made earlier in the lesson,
+now in numbers.
+
+### Putting it in your own loop
+
+Your tracking loop is a `while True:`, which has no `i` to count with, so make your
+own counter — the same `count = count + 1` pattern from Lesson 1-9. Change your loop
+to look like this:
+
+```python
+loop_count = 0
+
+while True:
+    sensor_value = reflectance.get_left()
+    error = setpoint - sensor_value
+    correction = error * Kp
+    drivetrain.arcade(base_effort, correction)
+
+    loop_count = loop_count + 1
+    if loop_count % 50 == 0:
+        print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
+
+    time.sleep(0.01)
 ```
 
 <TeacherNote title="Tuning is the fun part">

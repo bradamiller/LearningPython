@@ -696,8 +696,13 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   (L1-10) and the threshold midpoint `(white + black) / 2` (L2-1) — because a
   precedence mistake raises no error, it just produces a wrong number.
   **Deliberately NOT in it:** comparison operators (`<`, `==`, …) stay in L2-2
-  where a `while` condition first needs them, and `%`, `//`, `**` are never used
-  anywhere in the course so teaching them would be padding. The activity is
+  where a `while` condition first needs them, and `//` and `**` are never used
+  anywhere in the course so teaching them would be padding. **`%` is the exception
+  and the note here used to be wrong:** it appears exactly once, in M2 L5's
+  throttled-print line (`i % 50 == 0`), and until 2026-09-24 nothing anywhere had
+  said what it does. It is now explained in one sentence *at that line* rather than
+  taught in L1-9, because one use does not earn a section — but if a second use ever
+  appears, move it into L1-9's operator list. The activity is
   robot-free (predict, then `print()`), which makes it the lesson to reach for when
   hardware or batteries are unavailable.
   **Scope lives in L1-11,** rewritten the same day. The old lesson asserted "local"
@@ -879,8 +884,8 @@ so the words shipped anyway — which is how this was first written, and was wro
 Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
-**media** (placeholder or stand-in art). As of 2026-09-24: 9 bug, 5 blocked,
-7 answers, 6 convention, 2 media — 29 total. `npm run todos` lists them from the
+**media** (placeholder or stand-in art). As of 2026-09-24: 8 bug, 5 blocked,
+7 answers, 6 convention, 2 media — 28 total. `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
 ### The /todos index (added 2026-09-24)
