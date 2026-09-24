@@ -671,6 +671,19 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   snippets, the swap activity), L5-7 and L5-9 (reactive loops now tell the existing planner
   rather than building a new one each time). `grep -rn "Dijkstra(" docs/` should show no
   call passing a blocked list positionally.
+  **`__init__` calls the setter with `[]`** rather than calling `build_graph` itself, so
+  `build_graph()` is invoked from exactly one place in the class. "A brand-new planner is
+  one that has been told there is nothing in the way" is both true and one fewer thing to
+  keep in sync. Brad spotted that the graph is therefore built twice whenever a setter call
+  follows construction; that is intentional and costs a 16-entry dictionary, and the
+  constructor build is not redundant in general — `Dijkstra(start)` with no obstacles ever
+  mentioned is exactly what L5-6's clear-grid test and the swap itself rely on.
+  **Do NOT make the setter prune the existing graph instead.** Deleting the blocked keys
+  and removing them from neighbour lists is a one-way door: `set_blocked_intersections([])`
+  after a block can no longer restore the node (verified — the graph stays at 15). It would
+  appear to work in this course only because the blocked list happens to grow and never
+  shrink within a run, which is an invariant nobody wrote down; the rebuild has no such
+  dependency and matches the taught semantics that the list handed over is the complete set.
   **The subtlety that is now taught rather than tripped over:** the planner holds a
   *reference* to your blocked list (L4-3), so appending to yours updates `self.blocked`
   immediately — but `self.graph` was computed earlier and nothing rebuilds it by itself.

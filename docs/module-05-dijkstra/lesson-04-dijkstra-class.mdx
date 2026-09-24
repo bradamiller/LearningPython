@@ -51,8 +51,7 @@ class Dijkstra:
         self.position = start
         self.rows = rows
         self.cols = cols
-        self.blocked = []
-        self.graph = self.build_graph()
+        self.set_blocked_intersections([])    # nothing in the way, yet
 ```
 
 You create them **the same way**. `Manhattan((0, 0))` and `Dijkstra((0, 0))` are both
@@ -65,8 +64,7 @@ Dijkstra has to actually *build* the graph, so it has to be told how big. Pass d
 ones — `Dijkstra((0, 0), rows=3, cols=3)` — and the same class plans on a 3×3, which is
 how you'll test it against the traces you did by hand in Lesson 5-3.
 
-A brand-new Dijkstra starts out believing the grid is completely clear:
-`self.blocked = []`. Which raises the obvious question.
+That last line is doing two jobs, and it's the more interesting half of the class.
 
 ### Telling the planner about obstacles
 
@@ -85,6 +83,13 @@ Two lines, and the second one matters. The graph was built around whatever the p
 knew at the time, so changing `self.blocked` alone would leave a graph that still has
 routes through a node you just blocked. Storing the new list and rebuilding go together —
 that's exactly why this is a method rather than something you do by hand.
+
+And now look back at `__init__`. It doesn't build the graph itself; it calls this method
+with an empty list. **A brand-new planner is simply one that has been told there is
+nothing in the way** — which is both true and one less place for `build_graph()` to be
+called from. Setting up an object by calling its own methods is a good habit: there's
+exactly one piece of code that knows how to bring the graph in line with the obstacles,
+and everything goes through it.
 
 <Callout kind="tip" title="Why appending to your own list isn't enough">
 
@@ -272,8 +277,13 @@ swap — only a difference in the parts both classes are *used* through would.
 
 <TeacherNote title="Build incrementally; watch the self. mistakes">
 
-Write `__init__`, test it (print the instance variables). Add `build_graph`, test the
-graph. Add the setter, test that the graph changes. Add the placeholder, test the call.
+Build it bottom-up: `build_graph` first, tested on its own, then the setter, then
+`__init__`. Where the methods sit in the file doesn't matter — `__init__` can happily call
+a method written below it, because Python looks it up when the line actually runs — but
+the method does have to be *written* before you create an object. A student who types
+`__init__` and immediately tests it gets an AttributeError until the setter exists; worth
+predicting out loud, so it lands as a rule about when names are looked up rather than
+half an hour of confusion. Test the graph after each step, and add the placeholder last.
 Never dump the whole class at once. Put the Manhattan and Dijkstra constructors side by
 side — students who wobbled on classes in Module 4 get another pass here, and the fact
 that the two lines now look the same is the point of the whole module. Common errors:
@@ -294,7 +304,7 @@ their lives in code.
 
 ## Wrap-up
 
-- What four things does `__init__` store? (`self.position`, `self.rows`/`self.cols`, an empty `self.blocked`, and `self.graph`.)
+- What does `__init__` store, and which part does it hand to another method? (`self.position` and `self.rows`/`self.cols` directly; `set_blocked_intersections([])` does `self.blocked` and `self.graph`.)
 - What two jobs does `build_graph` do at once? (Builds the grid and excludes blocked nodes.)
 - Why does `set_blocked_intersections` rebuild the graph instead of just storing the list? (The graph was built around the old obstacles; storing alone would leave routes through a node you just blocked.)
 - Why are obstacles not a constructor parameter? (The robot discovers them while driving — and keeping them out is what makes `Dijkstra(start)` look exactly like `Manhattan(start)`.)
