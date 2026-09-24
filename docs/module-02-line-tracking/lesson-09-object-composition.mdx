@@ -144,13 +144,20 @@ the turns, then each turn method on its own. Expect to tune the sleep duration.
 
 ## Activity · Three lines to drive a course
 
-With both classes done, the main program is astonishingly short:
-
-<Todo kind="bug">
-Board is never imported in this lesson, so this main program does not run as printed. Every other lesson in the module imports it. [REVIEW §1.7]
-</Todo>
+With both classes done, the part of the file that actually *drives the course* is
+astonishingly short. Here is the whole file, top to bottom:
 
 ```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+import time
+
+# --- your two classes, unchanged ---
+# class LineSensor:  ...   (Lesson 2-8)
+# class LineTrack:   ...   (built up through this lesson)
+
+# --- the program ---
 board = Board.get_default_board()
 tracker = LineTrack()
 
@@ -162,9 +169,16 @@ tracker.track_until_cross()
 print("Done!")
 ```
 
-All the sensor reading and motor control is hidden inside the classes. Compare that
-to the wall of code this was back in Lesson 2-7 — *that's* the payoff of good class
-design.
+Notice who the imports are really for. `Reflectance` is what `LineSensor` needs,
+`DifferentialDrive` and `time` are what `LineTrack` needs, and only `Board` — for the
+button wait — belongs to the program at the bottom. Python needs every import at the
+top of the file whatever line uses it, so they collect there even though three of the
+four are for code you wrote weeks apart.
+
+That bottom section is the point of the lesson. All the sensor reading and motor
+control is hidden inside the classes, so the program reads as a list of intentions.
+Compare it to the wall of code this was back in Lesson 2-7 — *that's* the payoff of
+good class design.
 
 1. Build both classes and run the follow → turn → follow test on the circle-with-cross.
 2. **Challenge:** add a `turn_around()` method that calls `turn_right()` twice.
