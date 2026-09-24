@@ -449,9 +449,9 @@ activity.
 
 <TeacherNote title="Why circles first">
 
-This activity exists because students who go straight to the figure-eight spend
-the period fighting two problems at once: what the numbers do, *and* getting two
-curves to match. Split it and both get easier.
+This activity exists because students who go straight to Earth – Moon – Earth
+spend the period fighting two problems at once: what the numbers do, *and* flying
+a four-part mission with them. Split it and both get easier.
 
 Step 1 is genuinely open. Resist handing over "more turn = tighter circle" — it
 takes about four runs to see, and a student who says it themselves owns it. The
@@ -468,50 +468,115 @@ identical numbers give different circles — which is the timed-driving problem
 arriving on its own, a full lesson before Module 2 names it.
 
 Step 3's "point the opposite way" test is the one to insist on. Students who try
-to judge a full circle will be out by a quarter turn and won't know it, and that
-error doubles in the figure-eight.
+to judge a full circle will be out by a quarter turn and won't know it, and in the
+next activity that error is what makes them miss the Earth.
 
 </TeacherNote>
 
-## Activity · Drive a figure-eight
+## Activity · Earth – Moon – Earth
 
-A figure-eight is two circles that bend opposite ways, joined in the middle. It is
-the shape that proves you really understand what the two numbers in **Arcade** do
-— and `Straight` and `Turn` cannot draw it at all.
+Tape an **Earth** and a **Moon** to your whiteboard panel, about 18–24 inches
+(45–60 cm) apart. Your robot is a spacecraft, and its mission is to swing around
+the Moon, cross to the Earth, swing around the Earth the other way, and come back
+to rejoin its own lunar orbit.
 
-You already have everything you need: your Straight, your Turn, and your
-half-circle time from the activity above.
+<Figure
+  src="/img/lesson-06/earth-moon.svg"
+  alt="An Earth disc and a Moon disc of equal size side by side, with a dashed figure-eight path looping around each and crossing between them."
+  caption="The mission — one loop each way, crossing in the middle. The arrow is where the robot starts and finishes."
+/>
 
-1. **One loop.** Arcade with your Straight and your Turn, and a Sleep of **twice**
-   your half-circle time. That should bring the robot all the way round and back
-   to where it started, pointing the way it began.
-2. **Mirror it.** Add a second Arcade — same Straight, same Sleep, and the
-   **opposite** Turn (`-0.4` if yours was `0.4`).
-3. **Run the pair.** Two loops joined in the middle. If the second loop comes out
-   a different size from the first, the numbers aren't true mirror images —
-   check the sign is the only thing that changed.
-4. **Challenge** — make the two loops different sizes on purpose, so the path
-   looks like a lopsided eight. Which number do you change, and which stays?
+There's a **printable Earth and Moon** in this lesson's Resources at the bottom of
+the page — print it, cut both discs out, tape them down.
 
-**You've succeeded when** the robot traces two joined loops and finishes near
-where it began, pointing roughly the way it started.
+The two bodies are drawn the same size, which is not remotely true and is very
+convenient: it means both of your orbits are the same size, so the numbers you
+found in the last activity work for each of them. (The real Moon is about a
+quarter of Earth's width, and thirty Earths would fit in the gap between them.)
 
-<TeacherNote title="Running the figure-eight">
+### Step 1 · Plan the mission on paper
 
-Floor space, with 12–18 inch circles: roughly 1 m × 0.5 m per robot, which is
-usually a desk or one whiteboard panel. Bigger circles need proportionally more,
-so groups who fell in love with a huge circle in Step 2 may need to go back and
-find a smaller one.
+Before you touch a block, draw the path. Mark where the robot starts, which way it
+goes round the Moon, where it crosses to the Earth, and which way it goes round
+*that*. You should end up with a shape you recognise.
 
-The first loop rarely closes perfectly, and that's the useful part. Two robots
-with the same numbers trace visibly different eights, and the same robot differs
-between a fresh battery and a tired one. Name it: *the only reason we're timing
-this is that the robot can't yet sense where it is.* That's the thread Module 2
-picks up, and by now students have felt it twice.
+The thing to notice on your drawing: **the robot bends one way around the Moon and
+the other way around the Earth.** That's the whole trick, and it's why `Straight`
+and `Turn` blocks can't draw this shape at all.
 
-If a group's eight is lopsided, the fix is almost always that they re-tuned Turn
-for the second loop instead of just negating it. Have them read the two
-Arcade blocks aloud side by side.
+### Step 2 · Build the mission
+
+Four moves, and you already have the numbers for two of them:
+
+| # | Move | Block | The number |
+|---|---|---|---|
+| 1 | Orbit the Moon | Arcade + Sleep | your Straight and Turn |
+| 2 | Cross to the Earth | Straight | the gap, in cm |
+| 3 | Orbit the Earth, the other way | Arcade + Sleep | same, with Turn **negated** |
+| 4 | Cross back to the Moon | Straight | the same gap |
+
+For the orbits, start with a Sleep of about **three-quarters** of a full circle —
+1.5 times your half-circle time — and tune from there. You want the robot to come
+out of each swing pointing at the other body.
+
+Notice which blocks do which job. The crossings use `Straight`, which **finishes**
+— it drives a measured distance and stops itself, so it lands the same way every
+run. The orbits have to use Arcade, which doesn't finish, so they need a Sleep to
+say when to stop. That's the distinction from earlier in this lesson, doing real
+work in one program.
+
+### Step 3 · Fly it, then fix it
+
+It will not work first time. That's the job:
+
+- **Overshooting the turn round the Moon** — the robot leaves pointing the wrong
+  way. Shorten that Sleep.
+- **Missing the Earth entirely** — the crossing distance is wrong, or the orbit
+  before it left the robot off-heading. Fix the heading first; the distance can't
+  be right until the direction is.
+- **A lopsided path** — the two Turn values aren't true mirror images. Check the
+  sign is the *only* thing that changed between them.
+
+**You've succeeded when** the marker traces a path that loops the Moon, crosses to
+the Earth, loops it the other way, and comes back to meet where it started.
+
+**Challenge** — move the two bodies further apart without changing the size of
+your orbits. Which of the four numbers has to change, and which don't?
+
+<Callout kind="tip" title="No whiteboard panel or cutouts?">
+
+Two sticky notes on the floor work, or two chalk marks. You lose the drawn path,
+so judge it by eye instead: does the robot pass close to each marker, and does it
+finish where it began? Everything else about the activity is the same.
+
+</Callout>
+
+<TeacherNote title="Running Earth – Moon – Earth">
+
+**Why this framing.** It's the same figure-eight the shape has always been, but a
+mission gives students a reason to care whether the robot arrives *pointing the
+right way*, which is the part that actually teaches heading. "Your eight is
+lopsided" gets a shrug; "you missed the Earth" does not.
+
+**Space:** with 12–18 inch orbits and the bodies 18–24 inches apart, the whole
+path fits in roughly 1 m × 0.5 m — a desk or one panel. Groups who fell in love
+with a huge circle in the last activity will need to go back and find a smaller
+one, which is a fair consequence rather than a failure.
+
+**Step 1 is not optional.** Students who skip the drawing tune four numbers at
+once with no idea which one is wrong. The drawing tells them what *should* happen,
+so a wrong run becomes information.
+
+The first flight rarely closes, and that is the useful part. Two robots with
+identical numbers fly visibly different missions, and the same robot differs on a
+fresh battery. Name it: *the only reason we're timing this is that the robot can't
+yet sense where it is.* Module 2 picks that thread up, and by now students have
+felt it three times.
+
+**If you want the science:** the Apollo missions really did fly a figure-eight.
+The free-return trajectory loops behind the Moon and lets the Moon's gravity throw
+the spacecraft back toward Earth, so that if the engines fail, the crew comes home
+anyway. It's what saved Apollo 13. Worth ninety seconds, not a lesson.
 
 </TeacherNote>
 
@@ -532,6 +597,9 @@ Direct motor control is how machines that *don't* drive in straight lines work:
   </InfoCard>
   <InfoCard tag="Heavy equipment" title="Skid-steer loaders">
     Construction "skid steers" turn by driving their left and right wheels at different speeds.
+  </InfoCard>
+  <InfoCard tag="Spaceflight" title="The free-return trajectory">
+    Apollo flew a real figure-eight: loop behind the Moon, let its gravity throw you back at Earth. It brought Apollo 13 home.
   </InfoCard>
 </CardGrid>
 
@@ -556,5 +624,6 @@ control — the capstone of the Blockly phase.
 
 ## Resources
 
+- [Printable Earth and Moon](/img/lesson-06/earth-moon-cutouts.svg) — one sheet, both discs the same size, with cut lines and centre marks
 - [XRP Code IDE](https://xrpcode.wpi.edu/staging)
 - [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

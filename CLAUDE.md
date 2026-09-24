@@ -693,6 +693,26 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   nodes, 8 on the 3×3 from L5-3's hand trace, the setter replacing rather than accumulating,
   Dijkstra matching Manhattan's 6 steps on a clear 4×4, the L5-6 obstacle test avoiding both
   blocked nodes, and a mid-journey reroute going around a newly discovered obstacle.
+- **L1-6's FIGURE-EIGHT IS "EARTH – MOON – EARTH" (Brad, 2026-09-24).** Brad has run this
+  with students before: tape an Earth and a Moon to a whiteboard panel 18–24 in (45–60 cm)
+  apart, orbit the Moon, cross to the Earth, orbit it the other way, cross back and rejoin.
+  Same figure-eight, but a mission gives students a reason to care whether the robot ends up
+  *pointing the right way*, which is the part that teaches heading — "your eight is
+  lopsided" gets a shrug, "you missed the Earth" does not.
+  **Both bodies are drawn the same size (Brad).** Not remotely true and entirely deliberate:
+  equal bodies mean equal orbits, so one pair of Straight/Turn numbers serves both loops.
+  The not-to-scale note is on the printable and in the lesson so nobody learns it wrong.
+  **Two SVGs, and they are not interchangeable:** `earth-moon.svg` is the tight inline
+  figure (both discs plus the dashed flight path, 680×260) and `earth-moon-cutouts.svg` is
+  a US-Letter print sheet with cut lines and centre crosses, linked from the lesson's
+  Resources. The print sheet was inlined first and rendered as a page of whitespace — a
+  printable is not an illustration.
+  **The program mixes block kinds on purpose:** the crossings are `Straight` blocks (they
+  *finish*, so they land the same every run) and the orbits are Arcade + Sleep (they don't,
+  so they need timing). That is this lesson's own finish/don't-finish distinction doing
+  real work, and the lesson says so.
+  The Apollo free-return trajectory really is a figure-eight and really did bring Apollo 13
+  home; it's a real-world card and a line in the teacher note, deliberately not a section.
 - **ARCADE'S FIRST FIELD IS `Straight`, NOT "speed" (fixed 2026-09-24).** The real block
   reads `Arcade  Straight: [0.8]  Turn: [0.2]` — checked against the dictionary art in
   `static/img/blocks/arcade.png`. M1 L6 had been calling it "speed" throughout, which is
@@ -934,7 +954,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L3** | Function renamed `square`; Sleep-between-calls suggestion removed |
 | **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
-| **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18); **circles activity added before it** (2026-09-24, Brad) — vary Turn and watch the circle change, find one 12–18 in across, time a half circle, *then* the figure-eight uses those numbers |
+| **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18); **circles activity added before it** (2026-09-24, Brad) — vary Turn and watch the circle change, find one 12–18 in across, time a half circle; the figure-eight then **reframed as Earth – Moon – Earth** (2026-09-24, Brad's own earlier exercise) and uses those numbers |
 | **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
 | **All 46 lessons** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
