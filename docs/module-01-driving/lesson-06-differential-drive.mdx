@@ -482,8 +482,8 @@ to rejoin its own lunar orbit.
 
 <Figure
   src="/img/lesson-06/earth-moon.svg"
-  alt="An Earth disc and a Moon disc of equal size side by side, with a dashed infinity-symbol path: three-quarters of a circle around each body, joined by two straight diagonal crossings that meet at forty-five degrees in the middle."
-  caption="The mission. Three-quarters of a turn around each body, joined by two straight crossings — an infinity symbol, and the robot starts and finishes where they meet."
+  alt="An Earth disc and a Moon disc of equal size side by side, making an infinity symbol: a dashed three-quarter circle around each body, joined by two solid straight diagonals that cross at forty-five degrees in the middle. Dots mark the four points where a curve becomes a straight line."
+  caption="All four moves. Dashed is curved and timed; solid is straight and measured; the dots are where one becomes the other. The robot starts and finishes at the crossing."
 />
 
 There's a **printable Earth and Moon** in this lesson's Resources at the bottom of
@@ -533,11 +533,13 @@ times your half-circle time. That is not a guess: with the bodies spaced as abov
 three-quarters of a turn is exactly what brings the robot out of a swing pointing
 at the other body. Tune from there rather than starting from nothing.
 
-Notice which blocks do which job. The crossings use `Straight`, which **finishes**
-— it drives a measured distance and stops itself, so it lands the same way every
-run. The orbits have to use Arcade, which doesn't finish, so they need a Sleep to
-say when to stop. That's the distinction from earlier in this lesson, doing real
-work in one program.
+Notice which blocks do which job — it's why the picture above draws them
+differently. The crossings use `Straight`, which **finishes**: it drives a measured
+distance and stops itself, so it lands the same way every run, and it's drawn
+solid. The swings have to use Arcade, which doesn't finish, so they need a Sleep to
+say when to stop, and they're drawn dashed because a time is a much shakier thing
+to rely on than a distance. That's the distinction from earlier in this lesson,
+doing real work in one program.
 
 ### Step 3 · Fly it, then fix it
 

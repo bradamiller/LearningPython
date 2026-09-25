@@ -31,15 +31,33 @@
     </marker>
   </defs>
 
-  <!-- the flight path -->
-  <path d="M 340 150
-           L 422 68
-           A 116 116 0 1 1 422 232
-           L 258 68
-           A 116 116 0 1 0 258 232
-           Z"
-        fill="none" stroke="#D1182C" stroke-width="2.6" stroke-dasharray="8 6"
-        stroke-linecap="round" marker-start="url(#way)"/>
+  <!--
+    Drawn as four separate pieces rather than one path, because the two KINDS of
+    move should not look alike: the arcs are Arcade + Sleep (timed, approximate, so
+    dashed) and the crossings are Straight blocks (measured, repeatable, so solid).
+    Joined as one dashed path they read as a single smooth curve and the straight
+    sections vanish, which is exactly the confusion this figure exists to prevent.
+  -->
+
+  <!-- the two swings: 270° each, Arcade + Sleep -->
+  <path d="M 422 68 A 116 116 0 1 1 422 232" fill="none" stroke="#D1182C"
+        stroke-width="2.6" stroke-dasharray="8 6" stroke-linecap="round"/>
+  <path d="M 258 68 A 116 116 0 1 0 258 232" fill="none" stroke="#D1182C"
+        stroke-width="2.6" stroke-dasharray="8 6" stroke-linecap="round"/>
+
+  <!-- the two crossings: straight, at 45°, Straight blocks -->
+  <line x1="258" y1="232" x2="340" y2="150" stroke="#D1182C" stroke-width="3.4"/>
+  <line x1="340" y1="150" x2="422" y2="68" stroke="#D1182C" stroke-width="3.4"
+        marker-start="url(#way)"/>
+  <line x1="258" y1="68" x2="422" y2="232" stroke="#D1182C" stroke-width="3.4"/>
+
+  <!-- where a curve becomes a line, and back again -->
+  <g fill="#fff" stroke="#D1182C" stroke-width="2">
+    <circle cx="422" cy="68" r="4"/>
+    <circle cx="422" cy="232" r="4"/>
+    <circle cx="258" cy="68" r="4"/>
+    <circle cx="258" cy="232" r="4"/>
+  </g>
 
   <!-- EARTH -->
   <g>
@@ -71,6 +89,6 @@
 
   <text class="part" x="176" y="88" text-anchor="middle">¾ turn one way</text>
   <text class="part" x="504" y="88" text-anchor="middle">¾ turn the other</text>
-  <text class="part" x="340" y="280" text-anchor="middle">the two crossings are straight, and meet at 45°</text>
+  <text class="part" x="340" y="280" text-anchor="middle">solid = straight, driven a measured distance · dashed = curved, driven for a time</text>
   <text class="tag" x="354" y="178">start / finish</text>
 </svg>

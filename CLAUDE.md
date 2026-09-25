@@ -714,6 +714,15 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   tangent leaves at angle `t` where `sin(t) = r/d`, so `t = 45°` exactly when
   `d = r / sin 45° = 1.4142 r`. The drawing uses r = 116, d = 164. The derivation is in a
   comment at the top of the file — keep it there if the art is ever redrawn.
+  **The two kinds of move are drawn differently, and that is load-bearing (Brad,
+  2026-09-25).** Drawn as one dashed path the crossings were geometrically straight and
+  *visually invisible*: a tangent joins an arc smoothly, so the eye reads a single
+  continuous curve and Brad reasonably reported that the picture had no straight sections
+  in it. The arcs are now dashed (Arcade + Sleep — timed, approximate) and the crossings
+  solid and thicker (a `Straight` block — measured, repeatable), with open dots at the four
+  tangent points marking where one becomes the other. That happens to be the lesson's own
+  finish/don't-finish distinction, so the figure now teaches the four-move table beneath it.
+  Don't merge it back into one path for tidiness; the file says so too.
   **That geometry then gave the lesson two numbers it had been guessing at.** Each tangent
   touches its circle 135° round from the centre, leaving a **270° arc** on the outside — so
   "three-quarters of a turn per swing" is exact, not a starting estimate, and the lesson now
