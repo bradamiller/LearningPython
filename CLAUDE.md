@@ -1159,6 +1159,20 @@ lesson's convention — higher means darker). Note the folder naming: Module 1
 lessons use `lesson-NN/`, so anything outside Module 1 needs a module-qualified
 name like `lesson-m2-01/`.
 
+**⚠️ CHANGING A `static/` FILE IN PLACE LEAVES VIEWERS ON THE OLD ONE (2026-09-25).**
+Docusaurus serves anything a component's `src` points at from `static/` at a stable,
+**unhashed** URL, so a browser that has already fetched `/img/x.svg` keeps showing its
+cached copy no matter how many times the bytes change. This bit hard on L1-6's flight-path
+figure: the drawing was replaced twice under one filename, and Brad was shown the *first*
+version next to the *third* version's caption — HTML fresh, image stale — which reads as
+"the picture doesn't match the words" rather than as a caching problem. Fixed by renaming
+to `earth-moon-path.svg`; a new URL cannot be served from an old cache.
+**So: when you materially redraw a `static/` asset that is already deployed, rename it.**
+A hard refresh fixes it for the person standing in front of you and nobody else. (Assets
+referenced from *markdown links* rather than a component `src` are different — Docusaurus
+copies those to `/assets/files/<name>-<hash>.<ext>` and they bust their own cache. That is
+why the printable cutout sheet never had this problem.)
+
 **Hand-drawn SVG diagrams.** Where a photo doesn't exist and a stock image would
 only be decorative, draw it: `static/img/lesson-08/library-shelf.svg` (XRPLib as a
 shelf of books, with DifferentialDrive taken down) is the worked example. Inline
