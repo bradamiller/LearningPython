@@ -24,9 +24,9 @@ together. That's exactly what real software engineers do.
 
 By the end of this project you will be able to:
 
-- Integrate Dijkstra, the Navigator, rangefinder detection, and file memory into one program
+- Integrate Dijkstra, the Navigator and rangefinder detection into one program
 - Visit four or more destinations while detecting and avoiding obstacles
-- Save and load obstacles so knowledge persists between runs
+- Start a run from the obstacles a previous run discovered, and report what this one found
 - Demonstrate learning: Run 2 outperforms Run 1, with numbers to prove it
 - Debug integration issues where individually-working parts don't cooperate
 
@@ -39,12 +39,13 @@ By the end of this project you will be able to:
 Your robot is an autonomous delivery vehicle. It must visit four or more grid destinations
 in sequence, and for each leg: plan a path, drive it while watching for obstacles, and
 reroute whenever the rangefinder finds one. Everything you need already exists — Dijkstra
-(Lessons 5-4 and 5-5), the swap into Navigator (Lesson 5-6), detection (Lesson 5-7), and file memory
-(Lesson 5-8). Today you connect them.
+(Lessons 5-4 and 5-5), the swap into Navigator (Lesson 5-6), detection (Lesson 5-7), and
+carrying knowledge between runs (Lesson 5-8). Today you connect them.
 
-You'll demonstrate with **two runs**: Run 1 (delete the obstacle file, discover obstacles
-the hard way, save them) and Run 2 (load the file, plan around known obstacles, reroute
-less). The drop in step count between runs *is* the learning.
+You'll demonstrate with **two runs**: Run 1 starts with an empty blocked list, discovers
+obstacles the hard way, and prints what it found; Run 2 starts with that list typed in, so
+it plans around them and reroutes less. The drop in step count between runs *is* the
+learning.
 
 <KnowledgeCheck
   question="What is the main challenge of the capstone?"
@@ -62,30 +63,30 @@ less). The drop in step count between runs *is* the learning.
 The whole program has a clear skeleton:
 
 ```
-1. Load obstacles from file
+1. Start the blocked list — empty on Run 1, last run's discoveries on Run 2
 2. Define destinations
 3. For each destination:
      While not arrived:
         Tell Dijkstra the current blocked list and position, then compute a path
         Walk the path, checking the rangefinder at each intersection
-        If obstacle: add to blocked list, recompute
+        If obstacle: add to blocked list, tell Dijkstra again, recompute
         If clear all the way: arrived
-4. Save obstacles to file
+4. Print the blocked list — this is what you type in for the next run
 5. Print results (steps, reroutes)
 ```
 
-The **blocked list is the thread** tying it together: `load_obstacles` produces it,
-`Dijkstra` consumes it, detection appends to it, and `save_obstacles` writes it out.
+The **blocked list is the thread** tying it together: step 1 sets it, `Dijkstra` plans
+from it, detection appends to it, and step 4 hands it to the next run.
 
 <KnowledgeCheck
-  question="What single data structure connects loading, pathfinding, detection, and saving?"
+  question="What single data structure connects the start of the run, pathfinding, detection, and what you carry into the next run?"
   options={[
     {text: 'The distances dictionary'},
-    {text: 'The blocked list — loaded, fed to Dijkstra, appended to on detection, then saved', correct: true},
+    {text: 'The blocked list — set at the start, planned from, appended to on detection, then printed at the end', correct: true},
     {text: 'The visited list'},
     {text: 'The heading number'},
   ]}
-  explanation="The blocked list flows through every stage: file → Dijkstra → detection → file. If it doesn't flow correctly, the whole system breaks."
+  explanation="The blocked list flows through every stage: start → Dijkstra → detection → the next run. If it doesn't flow correctly, the whole system breaks."
 />
 
 ## The navigation loop
@@ -147,8 +148,9 @@ the capstone's core loop is printed on the student page, and the rubric below gr
 </Todo>
 
 Get the whole thing working with a **simulated** rangefinder before the robot — verify
-paths compute, obstacles register, the blocked list grows, and `obstacles.txt` is written
-correctly. Then swap in the real sensor and the `DifferentialDrive`.
+paths compute, obstacles register, the blocked list grows, and the list printed at the end
+is the one you'd want to start the next run with. Then swap in the real sensor and the
+`DifferentialDrive`.
 
 ```python
 ACTUAL_OBSTACLES = [(1, 0), (2, 2), (1, 3)]
@@ -182,7 +184,7 @@ You're graded on the integrated system, component by component:
 | Navigator integration | 10 | Robot physically drives the computed paths |
 | Obstacle detection | 10 | Rangefinder detects and updates the blocked list |
 | Path recomputation | 10 | Reroutes correctly around discovered obstacles |
-| Experience (file I/O) | 10 | Obstacles saved after Run 1, loaded for Run 2 |
+| Experience | 10 | Run 1 prints what it found; Run 2 starts from that list |
 | Demonstration | 5 | Run 1 discovers & reroutes; Run 2 avoids known obstacles |
 | Code quality | 5 | Readable, uses functions/classes, meaningful comments |
 
@@ -195,11 +197,11 @@ obstacles after a few runs), or a text-grid map of the route.
   question="In the demo, what evidence shows the robot 'learned'?"
   options={[
     {text: 'It drives faster'},
-    {text: 'Run 2 has fewer reroutes and/or fewer steps than Run 1, because it loaded known obstacles', correct: true},
+    {text: 'Run 2 has fewer reroutes and/or fewer steps than Run 1, because it started out knowing where the obstacles were', correct: true},
     {text: 'It makes a sound at each node'},
-    {text: 'The obstacles.txt file is empty'},
+    {text: 'Run 2 visits fewer destinations'},
   ]}
-  explanation="The measurable improvement from Run 1 to Run 2 — fewer reroutes and steps — is the evidence. Same algorithm, better data from the saved file."
+  explanation="The measurable improvement from Run 1 to Run 2 — fewer reroutes and steps — is the evidence. Same algorithm, better data to start from."
 />
 
 ## Real-world connections
@@ -224,15 +226,15 @@ the duration chip is 90+ min, and extract_pacing matches digits only, so the plu
 
 ## Wrap-up
 
-- What connects all the components? (The blocked list flowing file → Dijkstra → detection → file.)
+- What connects all the components? (The blocked list — set at the start, planned from, appended to on detection, printed for the next run.)
 - Why test in simulation before the robot? (Separate logic bugs from hardware bugs.)
 - What proves the robot learned? (Run 2's measured improvement over Run 1.)
 
 <TeacherNote title="Integration is the hard part — simulate first, celebrate the journey">
 
 Students underestimate how hard connecting working parts is. The recurring bugs: passing a
-stale blocked list, not updating `current`, appending to the blocked list without calling
-`set_blocked_intersections()` to rebuild the graph, and mis-formatted file I/O. Insist everyone gets the simulation version working
+stale blocked list, not updating `current`, and appending to the blocked list without
+calling `set_blocked_intersections()` to rebuild the graph. Insist everyone gets the simulation version working
 before the robot — logic first, hardware second. Use the rubric as a self-assessment
 checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is better and listen for
 "better data," not "the robot is smarter." For 50-minute periods this spans 2–3 days

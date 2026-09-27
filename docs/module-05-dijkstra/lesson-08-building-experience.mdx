@@ -7,7 +7,7 @@ sidebar_position: 8
 <LessonHeader
   eyebrow="Module 5 · Dijkstra's Algorithm"
   title="Lesson 5-8 · Building Experience"
-  meta={['55 min', 'Memory + file I/O', 'The robot learns']}
+  meta={['50 min', 'Better data, same algorithm', 'The robot learns']}
 />
 
 <TeacherBanner>
@@ -27,7 +27,7 @@ By the end of this lesson you will be able to:
 - Keep a blocked list across runs so the robot pre-plans around known obstacles
 - Compare Run 1 and Run 2 with metrics (steps, reroutes)
 - Explain the GPS/Waze analogy for crowd-sourced obstacle data
-- (Challenge) Save and load the blocked list with a file so it survives restarts
+- Carry what one run discovered into the next by handing the blocked list back in
 
 </Objectives>
 
@@ -104,42 +104,46 @@ relevant obstacle and its paths are optimal from the start — that's **converge
   explanation="The robot only discovers obstacles it drives toward. A new route can reach nodes Run 1 skipped, so Run 2 can still find something new — feeding Run 3 even better data."
 />
 
-## Activity · Persistence with a file
+## Activity · Carry what you learned into the next run
 
-Within one program run, a list variable persists between function calls. But close the
-program and it's gone — Python variables don't survive a restart. To keep knowledge across
-*separate* runs, save it to a **file**:
+Within one program run, a list variable persists between function calls. But close
+the program and it's gone — Python variables don't survive a restart. So how does
+Run 2 begin already knowing what Run 1 found out?
+
+You tell it. At the end of the run, print what the robot learned:
 
 ```python
-def save_obstacles(blocked, filename="obstacles.txt"):
-    with open(filename, "w") as f:
-        for node in blocked:
-            f.write(f"{node[0]},{node[1]}\n")     # one "row,col" per line
-
-def load_obstacles(filename="obstacles.txt"):
-    blocked = []
-    try:
-        with open(filename, "r") as f:
-            for line in f:
-                row, col = line.strip().split(",")
-                blocked.append((int(row), int(col)))
-    except FileNotFoundError:
-        pass                                       # no file yet → start fresh
-    return blocked
+print("Obstacles found:", blocked)
+# → Obstacles found: [(1, 2), (2, 2), (3, 0)]
 ```
 
-Load at the start, save at the end. Now the robot's experience survives being powered off —
-run it a third time and the file holds obstacles from every prior run.
+Then type that list into the top of your program, where the blocked list starts out:
+
+```python
+blocked = [(1, 2), (2, 2), (3, 0)]        # what Run 1 discovered
+pathfinder = Dijkstra((0, 0))
+pathfinder.set_blocked_intersections(blocked)
+```
+
+Run it again. The robot plans around all three from its very first path and never
+reroutes for them — and if it finds a fourth, print the list again and carry that
+across too.
+
+That's the whole lesson in two lines of typing: **you are the memory.** The robot
+found the obstacles, you carried them from one run to the next, and the algorithm
+never changed. A real system would write the list somewhere and read it back itself
+rather than waiting for a person — but *what* gets carried across, and what it's
+worth, is exactly what you just did by hand.
 
 <KnowledgeCheck
-  question="Why is a file needed to remember obstacles between separate program runs?"
+  question="Run 1 finishes and prints [(1,2), (2,2)]. What has to happen for Run 2 to start out knowing about those two obstacles?"
   options={[
-    {text: 'Files are faster than lists'},
-    {text: 'Python variables disappear when the program stops — a file stores the data on disk so it survives a restart', correct: true},
-    {text: 'The blocked list is too big for memory'},
-    {text: 'It is not needed'},
+    {text: 'Nothing — the robot remembers them automatically'},
+    {text: 'That list has to be given to the planner again at the start of Run 2, because a variable does not survive the program ending', correct: true},
+    {text: 'Run 2 has to drive the same route as Run 1'},
+    {text: 'Dijkstra has to be rewritten'},
   ]}
-  explanation="A list variable lives only while the program runs. Writing the blocked list to a file (and reading it back) is what makes the knowledge persist across restarts."
+  explanation="A list lives only while the program runs. Run 2 starts out knowing exactly what it is handed — which is why you print the list at the end of one run and set it at the start of the next."
 />
 
 ## Real-world connections
@@ -154,7 +158,7 @@ Systems that accumulate and reuse experience are everywhere:
     Machine-learning systems improve as they accumulate examples — the same "better data, better results" idea.
   </InfoCard>
   <InfoCard tag="Apps" title="Saved state">
-    Games, editors, and browsers save progress to files so you pick up where you left off.
+    Games, editors and browsers store your progress before closing — the automatic version of carrying your blocked list across by hand.
   </InfoCard>
 </CardGrid>
 
@@ -162,7 +166,7 @@ Systems that accumulate and reuse experience are everywhere:
 
 - What actually changes between Run 1 and Run 2? (The data — the blocked list — not the algorithm.)
 - How do you show Run 2 is better? (Measure steps and reroutes.)
-- Why a file instead of just a variable? (Variables vanish on restart; files persist.)
+- What has to happen between Run 1 and Run 2 for the robot to keep what it learned? (The list has to be handed back in — a variable doesn't survive the program ending.)
 
 <TeacherNote title="The Waze analogy lands; make Run 1 vs Run 2 dramatic">
 
@@ -170,8 +174,14 @@ Frame memory with Waze — students get it instantly ("what if Waze forgot every
 report when you closed the app?"). Set up the grid so Run 1 has 2–3 reroutes; the contrast
 with a zero-reroute Run 2 is the "aha." Use the simulation (`two_run_navigation.py`) before
 hardware so the concept lands without sensor noise. Insist on recorded numbers — steps,
-reroutes — the quantitative comparison convinces far more than "it felt faster." The file
-I/O challenge is optional but a genuinely useful real-world skill. Be honest about limits:
+reroutes — the quantitative comparison convinces far more than "it felt faster."
+
+**Carrying the list by hand is the point, not a shortcut.** Typing Run 1's discoveries
+into the top of the program makes the "same algorithm, better data" claim something
+students do with their own fingers, and it keeps the lesson about navigation instead of
+about file formats. If someone asks why the robot can't save it itself — good question,
+that is exactly what a real one does, and it changes nothing about *what* is carried.
+Be honest about limits:
 what if an obstacle *moves*? Real systems need to forget stale data, not just accumulate —
 good discussion for advanced students. Connect lightly to machine learning: accumulate
 data, make better decisions.
@@ -195,8 +205,9 @@ data, make better decisions.
 
 **Formative:** explain Run 2's improvement, pre-load a blocked list, and articulate the
 Waze analogy. **Exit ticket:** "Run 1 took 12 steps / 3 reroutes; Run 2 took 8 / 0. Explain
-why." **Preview:** the capstone — combine Dijkstra, the Navigator, the rangefinder, and file
-memory into one complete autonomous system, and demonstrate Run 1 vs. Run 2.
+why." **Preview:** the capstone — combine Dijkstra, the Navigator, the rangefinder and the
+obstacles already learned into one complete autonomous system, and demonstrate Run 1
+vs. Run 2.
 
 </TeacherNote>
 
@@ -204,4 +215,4 @@ memory into one complete autonomous system, and demonstrate Run 1 vs. Run 2.
 ## Resources
 
 - [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
-- [Python file I/O](https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files)
+- [Python lists](https://docs.python.org/3/tutorial/datastructures.html)

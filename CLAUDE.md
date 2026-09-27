@@ -651,6 +651,24 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   than from you, keep the engineering spelling.* If a second such name ever appears, it
   joins that sentence — don't start a second explanation somewhere else. L1-9 is
   deliberately left alone; the exception is explained where it is met, not pre-empted.
+- **NO FILE PERSISTENCE — THE BLOCKED LIST IS CARRIED BY HAND (Brad, 2026-09-27).** M5 L8
+  used to save and load `obstacles.txt` with `save_obstacles` / `load_obstacles`. That is
+  gone. Run 1 **prints** what it discovered; the student **types that list into the top of
+  the program** for Run 2 and hands it to the planner with `set_blocked_intersections()`.
+  Rangefinder discoveries during a run still go through the same setter, unchanged.
+  **Why it is better, not just simpler:** the lesson's claim is "same algorithm, better
+  data", and copying the list across makes the student the one supplying the better data —
+  they do the point with their own fingers. It also keeps a module about graph search from
+  spending a section on `open`, `with`, line parsing and `FileNotFoundError`, none of which
+  appear anywhere else in the course. The lesson says plainly that a real system would do
+  this for itself, and that *what* gets carried is identical either way.
+  **This removed the course's last `try`/`except` and its only `with`**, which settles the
+  inconsistency with L4-7's decision not to teach exception handling.
+  **Touched:** L5-8 (the activity, its knowledge check, objectives, meta chip 'Memory +
+  file I/O' → 'Better data, same algorithm', wrap-up, both teacher notes, Resources) and
+  L5-9 (objectives, the brief, the program skeleton, the thread paragraph and its check, the
+  simulation note, the rubric row, the demo check, wrap-up, teacher note).
+  `grep -rn "obstacles.txt\|save_obstacles\|load_obstacles" docs/` should stay empty.
 - **OBSTACLES ARE TOLD TO THE PLANNER, NOT PASSED TO IT (Brad, 2026-09-24).** `Dijkstra`
   is `__init__(self, start, rows=4, cols=4)` with `self.blocked = []`, plus
   `set_blocked_intersections(blocked)`, which stores the list **and rebuilds the graph**.
@@ -768,7 +786,9 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the lesson's own "one change at a time" premise. Verified against every case the lesson
   states, including the four knowledge-check pairs.
   **Deliberately NOT taught:** `try`/`except`. Students never catch these — they read the
-  message. (The course's only `try` is M5 L8's `load_obstacles`, and it stays a one-off.)
+  message. As of 2026-09-27 the course contains **no** `try`, `except` or `with` at all: the
+  only one had been M5 L8's `load_obstacles`, and that went when file persistence did (see
+  below). So `raise` is now the course's whole exception story, which is the intended shape.
   Don't turn L4-7 into an exceptions lesson; its teacher note says so.
   **Rejected alternative:** returning a sentinel like `-1`. It reproduces the same bug —
   `turn_to(-1)` loops forever exactly as `turn_to(None)` does — so it only helps at call
@@ -1423,8 +1443,8 @@ page is `src/pages/pacing.mdx` — a hand-written intro (materials, robot ratios
 where the natural pauses are) around a `<PacingGuide />`. `pacing.json` is
 gitignored; `npm run pacing` regenerates it and `prestart`/`prebuild` run it.
 
-**Numbers as of 2026-09-24** (L1-6's circles activity added): 46 lessons,
-2305–2540 minutes of estimated class time (38–42 hours), 61 hand-in activities,
+**Numbers as of 2026-09-27** (L5-8 lost its file-I/O activity): 46 lessons,
+2300–2535 minutes of estimated class time (38–42 hours), 61 hand-in activities,
 196 knowledge checks.
 At 50-minute periods that's 50–54 periods including the two multi-day capstones
 at an assumed 2 periods each — about 17–18 weeks at three periods a week, which
