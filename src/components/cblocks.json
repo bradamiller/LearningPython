@@ -31,6 +31,14 @@
     "footW": 200,
     "spineW": 22
   },
+  "function_def_square": {
+    "barH": 31,
+    "barW": 200,
+    "doH": 17,
+    "footH": 13,
+    "footW": 200,
+    "spineW": 22
+  },
   "if_do": {
     "barH": 31,
     "barW": 68,
@@ -40,6 +48,14 @@
     "spineW": 38
   },
   "repeat": {
+    "barH": 41,
+    "barW": 162,
+    "doH": 17,
+    "footH": 17,
+    "footW": 162,
+    "spineW": 38
+  },
+  "repeat_4": {
     "barH": 41,
     "barW": 162,
     "doH": 17,

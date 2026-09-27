@@ -372,8 +372,38 @@ at 10, so change the count to 4"). Swap it if Brad re-shoots with 4.
 *and* a real screenshot: the eight-block square is composed, the Repeat reveal is
 Brad's shot). Those are the candidates for replacement as more screenshots arrive.
 
-**Composed-block limitation:** `BlockProgram` images show fixed field values
-(e.g. `cm: 20`); use the `note` prop for a different intended value.
+**Composed-block limitation — SOLVED for field values (2026-09-27).** Dictionary
+art carries whatever value a block has when you first drag it out: `cm: 20`,
+`repeat 10 times`, `to do something`. Lessons used to paper over that with a note
+beside the block ("← cm: 30"), which means a figure whose whole job is "this
+Blockly equals that Python" showed values disagreeing with the Python beside it.
+Brad caught exactly that in L1-11 on 2026-09-27. **Students compare the pictures;
+they do not read the apology.** So repaint the field instead:
+
+```bash
+python3 scripts/relabel_block.py straight straight_cm30 0 30
+python3 scripts/relabel_block.py repeat   repeat_4      0 4
+python3 scripts/relabel_block.py function_def function_def_square 0 square
+#                                <src>    <out>  <field #, L→R>  <new text>
+python3 scripts/slice_c_blocks.py     # REQUIRED if the block is a container
+```
+
+Everything but the glyphs is the real artwork, same principle as
+`make_call_block.py`. Four things it learned the hard way, all of them still in
+the code as comments: erase **only** the old glyphs (repainting the whole paper
+squares off a rounded inset, and tiling a row to get the tone right smears the
+corners across it); match glyph pixels by **distance from the paper colour**, not
+brightness, or antialiasing and descender tails survive; the ink is the *darkest*
+tone and the paper the *lightest*, never medians of either; and a descender can be
+drawn **past the bottom of its field** onto the block body, so flat text fields get
+an extra sweep below — but pill fields must not, or their bottom edge is repainted
+as a pale scar.
+It does not resize a field, and refuses text wider than the one it has. Narrower
+text leaves a roomy box, which is what Blockly looks like mid-edit and reads fine.
+**Naming:** `<block>_<value>` — `straight_cm30`, `repeat_4`, `function_def_square`.
+**Existing:** those three, used by L1-10 and L1-11. **Still on default values with
+correcting notes:** L1-3's figures and the other composed programs in §6's list —
+worth a sweep.
 
 ## 7. Authoring a new lesson (the repeatable process)
 
