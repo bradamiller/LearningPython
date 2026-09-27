@@ -35,7 +35,33 @@ By the end of this lesson you will be able to:
 
 ## From "to do something" to `def`
 
-Here's the reusable square, Blockly on top and Python below:
+Here's the reusable square you built in Lesson 1-3, Blockly first and Python below.
+In Blockly it's two separate things in the workspace — the definition off to one
+side, and the calls in the main program:
+
+<BlockProgram
+  blocks={[
+    {name: 'function_def', note: 'named "square"', children: [
+      {name: 'repeat', note: 'repeat 4 times', children: [
+        {name: 'straight', note: 'cm: 30'},
+        {name: 'turn', note: 'Deg: 90'},
+      ]},
+    ]},
+  ]}
+  caption="The definition. It doesn't drive anything on its own — it says what a square is."
+/>
+
+<BlockProgram
+  blocks={[
+    {name: 'call_square', alt: 'square call block'},
+    {name: 'call_square', alt: 'square call block'},
+    {name: 'call_square', alt: 'square call block'},
+  ]}
+  caption="The calls. Three squares, three blocks."
+/>
+
+In Python both halves live in the same file — the `def` block first, then the calls
+underneath it:
 
 ```python
 def square():
