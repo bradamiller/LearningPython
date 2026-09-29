@@ -910,6 +910,30 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **DEFAULT PARAMETERS ARE TAUGHT IN L1-11 (Brad, 2026-09-29).** L1-11's activity had a
+  challenge saying "give your function a default value — `def square(side_length=30):`"
+  with no explanation anywhere of what a default is or how it behaves. Brad's call was
+  teach it properly or cut the challenge.
+  **Taught, because it is not a one-off.** `Dijkstra(start, rows=4, cols=4)` in L5-4 is
+  the same feature, and those defaults are load-bearing there — they are what lets
+  `Dijkstra((0, 0))` stay short while the 3×3 from L5-3 stays reachable. Cutting the
+  challenge would have left that constructor unexplained four modules later.
+  **New section "Giving a parameter a default"**, placed just before the activity so it
+  is fresh when the challenge uses it: the `=30` is a *fallback*, not an assignment that
+  runs; the call wins when it supplies a value; **defaulted parameters go last**, because
+  arguments fill from the left and a gap in the middle would be ambiguous. One knowledge
+  check (`polygon(6)` → hexagon with 30 cm sides) and a teacher note that points forward
+  to L5-4 and names the predictable misreading — students read `=` in a `def` line as an
+  assignment that executes.
+  **The challenge was rewritten** to use `polygon`, the function they build in step 1,
+  and to check both call forms: `polygon(6)` and `polygon(6, 50)`. The old one introduced
+  a `square` that step 1 never defined.
+  Objective 2 absorbed it rather than adding a fifth (§9 keeps lessons to 3–4), the
+  wrap-up gained a question, and "default parameters" came out of the differentiation
+  note's More-challenge list since it is no longer an extension.
+  **Check the duration chip if more goes into this lesson** — it is still `50–60 min`
+  and now carries one more section and a sixth knowledge check.
+
 - **CODE IN PROSE GOES IN A CODE BLOCK, NOT AN INLINE SPAN (Brad, 2026-09-29).** Brad
   flagged L1-9's opening, where
   `drivetrain = DifferentialDrive.get_default_differential_drive()` sat inline and broke
