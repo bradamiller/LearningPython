@@ -3,7 +3,7 @@
      font-family="Montserrat, Helvetica, Arial, sans-serif">
   <title id="em-title">Printable Earth and Moon markers for the Earth–Moon–Earth activity</title>
   <desc id="em-desc">A US Letter sheet holding an Earth disc and a Moon disc, both the same size,
-  about three inches across, each with a cut line and a centre cross, for taping to a whiteboard
+  about three inches across, each with a cut line and a center cross, for taping to a whiteboard
   panel as the two bodies the robot orbits in Lesson 1-6.</desc>
 
   <style>
@@ -23,7 +23,7 @@
   <text class="hdr" x="64" y="80">EARTH – MOON – EARTH · LESSON 1-6</text>
   <text class="note" x="64" y="110">Cut both discs out along the dashed line and tape them to your
     whiteboard panel, about 18–24 inches</text>
-  <text class="note" x="64" y="132">(45–60 cm) apart. The little cross marks the centre — that's the
+  <text class="note" x="64" y="132">(45–60 cm) apart. The little cross marks the center — that's the
     point your robot orbits around.</text>
 
   <!-- ===== EARTH — 3 inches across ===== -->

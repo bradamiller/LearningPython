@@ -277,7 +277,7 @@ transparent seam shows between block and plug.
 
 With parameters the block gets a `name  with:` label row plus one 26px row per
 parameter, each with a real `numeric_const.png` widened through its own field and
-relabelled, plugged into a socket cut in the right edge — the external-input
+relabeled, plugged into a socket cut in the right edge — the external-input
 layout XRP Code actually uses, confirmed against Brad's `square-function.png`
 screenshot (which is at dictionary scale, so measurements transfer 1:1).
 
@@ -288,7 +288,7 @@ Existing: `call_square.png` (L1-3), `call_square_{20,35,60}.png` (L1-4),
 exception is genuine plain-English pseudocode, e.g. L1-12's planning step, which
 is explicitly "not Python" and should stay a text fence.
 
-A no-parameter call block is labelled with **just the function name** — no "call"
+A no-parameter call block is labeled with **just the function name** — no "call"
 prefix. That's inferred from Brad's real L1-4 screenshot, where a call *with* a
 parameter reads `square with: side_length`. If XRP Code actually shows something
 else for the no-parameter case, regenerate with the right label and fix the L1-3
@@ -392,7 +392,7 @@ Everything but the glyphs is the real artwork, same principle as
 `make_call_block.py`. Four things it learned the hard way, all of them still in
 the code as comments: erase **only** the old glyphs (repainting the whole paper
 squares off a rounded inset, and tiling a row to get the tone right smears the
-corners across it); match glyph pixels by **distance from the paper colour**, not
+corners across it); match glyph pixels by **distance from the paper color**, not
 brightness, or antialiasing and descender tails survive; the ink is the *darkest*
 tone and the paper the *lightest*, never medians of either; and a descender can be
 drawn **past the bottom of its field** onto the block body, so flat text fields get
@@ -727,7 +727,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   constructor build is not redundant in general — `Dijkstra(start)` with no obstacles ever
   mentioned is exactly what L5-6's clear-grid test and the swap itself rely on.
   **Do NOT make the setter prune the existing graph instead.** Deleting the blocked keys
-  and removing them from neighbour lists is a one-way door: `set_blocked_intersections([])`
+  and removing them from neighbor lists is a one-way door: `set_blocked_intersections([])`
   after a block can no longer restore the node (verified — the graph stays at 15). It would
   appear to work in this course only because the blocked list happens to grow and never
   shrink within a run, which is an invariant nobody wrote down; the rebuild has no such
@@ -752,12 +752,12 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   The not-to-scale note is on the printable and in the lesson so nobody learns it wrong.
   **Two SVGs, and they are not interchangeable:** `earth-moon.svg` is the tight inline
   figure (both discs plus the dashed flight path, 680×300) and `earth-moon-cutouts.svg` is
-  a US-Letter print sheet with cut lines and centre crosses, linked from the lesson's
+  a US-Letter print sheet with cut lines and center crosses, linked from the lesson's
   Resources. The print sheet was inlined first and rendered as a page of whitespace — a
   printable is not an illustration.
   **The flight path is real geometry, not a freehand curve (Brad, 2026-09-24).** The first
   version was drawn with beziers and he was right that it looked wrong — flat on the
-  outsides, oblong on the insides. It is now two true circles of radius `r` with centres
+  outsides, oblong on the insides. It is now two true circles of radius `r` with centers
   `2d` apart, joined by their **internal common tangents**, which meet at the midpoint. A
   tangent leaves at angle `t` where `sin(t) = r/d`, so `t = 45°` exactly when
   `d = r / sin 45° = 1.4142 r`. The drawing uses r = 116, d = 164. The derivation is in a
@@ -772,7 +772,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   finish/don't-finish distinction, so the figure now teaches the four-move table beneath it.
   Don't merge it back into one path for tidiness; the file says so too.
   **That geometry then gave the lesson two numbers it had been guessing at.** Each tangent
-  touches its circle 135° round from the centre, leaving a **270° arc** on the outside — so
+  touches its circle 135° round from the center, leaving a **270° arc** on the outside — so
   "three-quarters of a turn per swing" is exact, not a starting estimate, and the lesson now
   says so. And the bodies belong `2d = 2.83r` apart, i.e. **about 1.5× the orbit's
   diameter** (a 14-inch circle wants them ~21 inches apart), which is its own Callout. The
@@ -842,7 +842,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   writes it back, same location twice in one line.
   **Two framings that were tried and rejected, in order:** "a name attached to a
   value" (Brad, 2026-09-21 — confusing, and it makes `count = count + 1` unexplainable)
-  and then "a labelled box" (Brad, 2026-09-23 — accurate enough but it has to be
+  and then "a labeled box" (Brad, 2026-09-23 — accurate enough but it has to be
   *retracted* in L4-3, where the box turns out not to contain the list). Don't
   restore either.
   **Why post office boxes specifically:** the number is printed on the front and is
@@ -902,6 +902,21 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **AMERICAN SPELLING THROUGHOUT (Brad, 2026-09-29).** Brad caught "centre" in L1-10's
+  nest-of-squares activity. It was not alone — a sweep turned up **19** British spellings
+  across student-facing content: centre, colour, neighbour, behaviour, organise, recognise,
+  labelled and grey, spread over 10 lessons, both Earth–Moon SVGs and one component
+  comment. All fixed, and this file was swept too. `aria-labelledby` is the HTML attribute
+  spelling and stays. The sweep, if it is ever needed again:
+
+  ```bash
+  grep -rniE "\b(centre|colour|neighbour|behaviour|organise|recognise|labelled|grey)\w*\b" \
+      docs/ src/ static/img --include=*.mdx --include=*.js --include=*.svg
+  ```
+
+  Neither SVG needed a cache-busting rename (§12): the cutout sheet is markdown-linked so
+  its URL is hashed, and the path SVG's only changes were in comments.
+
 - **FILES STUDENTS CREATE ARE NAMED `lesson_M_N_<what_it_does>.py` (Brad, 2026-09-29).**
   L1-8's activity said `lesson_08_first_drive.py`, which was the only lesson-numbered
   filename in the course and used the *old* two-digit numbering rather than the
@@ -943,7 +958,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   place, so both lessons still carry 6.
   **A brace aside is in L1-10 on purpose:** most languages use `{ }` and treat indentation
   as a courtesy, Python made the indentation itself the rule, so the shape on the page and
-  the behaviour can never disagree. It is one paragraph and it earns the "a stray space is
+  the behavior can never disagree. It is one paragraph and it earns the "a stray space is
   a real error" point that the teacher note already made.
 
 - **BLOCKLY FUNCTIONS: NO RETURN VALUE (Brad, 2026-09-20).** The Functions palette
@@ -1073,7 +1088,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
 | **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18); **circles activity added before it** (2026-09-24, Brad) — vary Turn and watch the circle change, find one 12–18 in across, time a half circle; the figure-eight then **reframed as Earth – Moon – Earth** (2026-09-24, Brad's own earlier exercise) and uses those numbers |
 | **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
-| **All 46 lessons** | Part numbers dropped; student-work sections relabelled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
+| **All 46 lessons** | Part numbers dropped; student-work sections relabeled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
 | **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |
 | **Not yet reviewed** | **M1 L7–L11** (L10–11 got the rename only) **and all of Modules 2–5** (beyond the stop() sweep) |
@@ -1082,7 +1097,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 ## 10b. TODO notes in the lessons (added 2026-09-22, reworked 2026-09-23)
 
 Known-broken or unfinished things are flagged **in the lesson itself**, as a
-`<Todo>` component that renders a coloured box on the page:
+`<Todo>` component that renders a colored box on the page:
 
 ```mdx
 <Todo kind="bug">
@@ -1312,7 +1327,7 @@ That is where the FIRST version of Lesson 1's labeled kit diagram came from.
 `static/img/lesson-01/xrp-parts.png` — PNG, not JPEG, because the labels are
 black text on white and JPEG rings around them. Processing: trimmed the uneven
 white margin to a uniform 24px (the component caps a figure at 520px tall, so
-margin is wasted height), then quantized to a 256-colour palette — 218KB instead
+margin is wasted height), then quantized to a 256-color palette — 218KB instead
 of 530KB, with no visible loss at render size. The labels are Wheels and tires,
 Batteries, Drive Motor, Controller, Rangefinder, Reflectance and Castor wheel;
 lesson prose must match those, and the old image's *Line Follower* wording has

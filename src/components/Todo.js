@@ -38,7 +38,7 @@ export default function Todo({kind = 'bug', index, children}) {
   const {label, icon} = KINDS[k];
   // `index` is stamped on at build time by plugins/remark-number-todos.js, in
   // the same document order extract_todos.js counts in — that pairing is what
-  // makes a link from /todos land on this note rather than a neighbour.
+  // makes a link from /todos land on this note rather than a neighbor.
   const id = index ? `todo-${index}` : undefined;
   // Register the id the way a heading does, so Docusaurus's broken-anchor check
   // knows #todo-N exists. Without this every link on /todos is reported broken

@@ -10,10 +10,10 @@
 
   <!--
     Real geometry, not a freehand curve. Two equal circles of radius r with their
-    centres 2d apart; the straight crossings are the internal common tangents, which
+    centers 2d apart; the straight crossings are the internal common tangents, which
     meet at the midpoint. A tangent leaves at angle t where sin(t) = r/d, so t = 45°
     exactly when d = r/sin(45°) = 1.4142 r. Here r = 116 and d = 164.
-    Each tangent touches its circle 135° round from centre, which leaves a 270° arc
+    Each tangent touches its circle 135° round from center, which leaves a 270° arc
     on the outside — the three-quarter turn the lesson asks students to start with.
   -->
 
