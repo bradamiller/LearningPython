@@ -902,6 +902,19 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **FILES STUDENTS CREATE ARE NAMED `lesson_M_N_<what_it_does>.py` (Brad, 2026-09-29).**
+  L1-8's activity said `lesson_08_first_drive.py`, which was the only lesson-numbered
+  filename in the course and used the *old* two-digit numbering rather than the
+  `module-lesson` scheme everything else follows (§9). It is now
+  **`lesson_1_8_first_drive.py`** — underscores, because a dot or hyphen in a module name
+  is trouble and snake_case is what L1-9 teaches one lesson later. The lesson number comes
+  first so a student's growing pile of files on the robot sorts into course order.
+  **This is the only file the course tells a student to create by name.** If a second one
+  ever appears, follow the same shape rather than inventing a bare descriptive name.
+  *(Not to be confused with the two simulation scripts named in M5 teacher notes — those
+  are references to source-repo files that don't ship with the site, flagged as TODOs in
+  L5-7 and L5-8 on the same day.)*
+
 - **THE FIVE SYNTAX RULES ARE SPLIT 3 + 2 (Brad, 2026-09-29).** L1-8 still calls the
   section **"The five syntax rules"** and still promises five, but teaches only
   **lowercase, parentheses, quotes** — the three that apply to a flat list of one-line
