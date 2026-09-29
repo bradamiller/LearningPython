@@ -145,7 +145,7 @@ def calculate_angle(sides):
     return 360 / sides
 
 angle = calculate_angle(6)
-print(f"Hexagon angle: {angle}")     # → Hexagon angle: 60.0
+print(f"Hexagon angle: {angle}")     # -> Hexagon angle: 60.0
 ```
 
 You can then build bigger functions from smaller ones — a `polygon` that uses
@@ -176,7 +176,7 @@ def polygon(sides, side_length):
     ...                                 # and dies when polygon returns
 
 polygon(4, 30)
-print(angle)          # NameError — there's no angle out here
+print(angle)          # NameError -- there's no angle out here
 ```
 
 Parameters work the same way. `sides` and `side_length` are locals too; they're
@@ -197,7 +197,7 @@ drivetrain = DifferentialDrive.get_default_differential_drive()
 
 def square(side_length):
     for i in range(4):
-        drivetrain.straight(side_length)      # not local — where's this from?
+        drivetrain.straight(side_length)      # not local -- where's this from?
 ```
 
 `drivetrain` isn't a parameter and it isn't created inside `square`. It's defined
@@ -283,8 +283,8 @@ The `=30` doesn't run when the function is defined. It sits there as a **fallbac
 for the calls that don't supply one:
 
 ```python
-square()      # no argument given → side_length is 30
-square(50)    # argument given → side_length is 50
+square()      # no argument given -> side_length is 30
+square(50)    # argument given -> side_length is 50
 ```
 
 Nothing else about the parameter changed. `side_length` is still a local name that

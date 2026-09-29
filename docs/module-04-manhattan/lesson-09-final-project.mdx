@@ -74,7 +74,7 @@ for dest in destinations:
     path = manhattan.compute_path(dest)
     print("Path:", path)
     navigator.drive_path(path)
-    manhattan.position = navigator.position   # ← the key line
+    manhattan.position = navigator.position   # <- the key line
     print("Arrived at:", navigator.position)
 ```
 
@@ -132,7 +132,7 @@ which piece. Build up:
 3. **Full sequence.** Run all four. Watch the straight-through intersections and the turns.
 
 ```python
-# Level 1 — desktop only
+# Level 1 -- desktop only
 manhattan = Manhattan((0, 0))
 for dest in [(2, 0), (2, 3), (0, 3), (0, 0)]:
     path = manhattan.compute_path(dest)

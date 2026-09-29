@@ -253,10 +253,10 @@ wrinkle to it.
 Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N):
 
 ```
-At (0,0) N, next (1,0): row+1 → want S(2). turn 0→1→2. drive to (1,0).
-At (1,0) S, next (2,0): row+1 → want S(2). already S. drive to (2,0).
-At (2,0) S, next (2,1): col+1 → want E(1). turn 2→3→0→1. drive to (2,1).
-At (2,1) E, next (2,2): col+1 → want E(1). already E. drive to (2,2).
+At (0,0) N, next (1,0): row+1 -> want S(2). turn 0->1->2. drive to (1,0).
+At (1,0) S, next (2,0): row+1 -> want S(2). already S. drive to (2,0).
+At (2,0) S, next (2,1): col+1 -> want E(1). turn 2->3->0->1. drive to (2,1).
+At (2,1) E, next (2,2): col+1 -> want E(1). already E. drive to (2,2).
 ```
 
 Notice `self.position` gets updated every step — otherwise the *next* `desired_heading`

@@ -88,7 +88,7 @@ left = reflectance.get_left()
 
 while left < threshold:
     drivetrain.set_effort(0.3, 0.3)
-    left = reflectance.get_left()   # ← read again every pass!
+    left = reflectance.get_left()   # <- read again every pass!
 
 print("Line detected! Sensor value:", left)
 ```

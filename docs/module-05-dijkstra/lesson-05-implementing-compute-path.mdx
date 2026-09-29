@@ -50,7 +50,7 @@ def compute_path(self, destination):
     visited = []
 
     for node in self.graph:
-        distances[node] = 999999      # "infinity" — no path found yet
+        distances[node] = 999999      # "infinity" -- no path found yet
 
     distances[self.position] = 0       # start is 0 from itself
     previous[self.position] = None     # nothing before the start
@@ -111,7 +111,7 @@ for neighbor in self.graph[current]:
             distances[neighbor] = new_distance
             previous[neighbor] = current
 
-visited.append(current)      # done with current — AFTER updating neighbors
+visited.append(current)      # done with current -- AFTER updating neighbors
 ```
 
 This check:
@@ -191,7 +191,7 @@ Follow `previous` backward from the destination, then flip the list:
         current = previous[current]
 
     path.reverse()
-    return path[1:]      # the robot is already at the start — leave it out
+    return path[1:]      # the robot is already at the start -- leave it out
 ```
 
 That last line matters more than it looks. Reconstruction naturally produces the

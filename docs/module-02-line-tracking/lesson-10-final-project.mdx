@@ -163,14 +163,14 @@ board = Board.get_default_board()
 tracker = LineTrack()
 
 board.wait_for_button()
-print("Module 2 Final Project — starting!")
+print("Module 2 Final Project -- starting!")
 
 for i in range(4):
-    print("Leg", i + 1, "— following line to the cross...")
+    print("Leg", i + 1, "-- following line to the cross...")
     tracker.track_until_cross()
     print("Cross detected! Reversing...")
     tracker.turn_right()
-    tracker.turn_right()      # two right turns ≈ 180° reversal
+    tracker.turn_right()      # two right turns ~ 180 deg reversal
 
 print("Complete! 4 reversals done.")
 ```

@@ -910,6 +910,28 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **CODE FENCES ARE ASCII-ONLY, AND THE BUILD ENFORCES IT (Brad, 2026-09-29).** Brad hit a
+  `\u2190` (left arrow) in a comment inside M2 L2's `while` program: it renders beautifully
+  on the page, and **XRP Code rejects it** when a student pastes the block in. That is the
+  worst shape a bug can have here — invisible to whoever wrote it, and it costs a class ten
+  minutes at the exact moment they are trying to run their first sensor loop.
+  A sweep found **86 lines across 27 lessons**: `->` x38, em dash x35, middot x14,
+  `<-` x9, plus `x`, `!=`, `/`, a Unicode minus, `~` and `deg`. All fixed. The spellings
+  the course now uses inside code: `<-` `->` for arrows, `--` for a dash, `!=` for
+  not-equal, `x` for times, `/` for divide, `~` for approximately, `deg` for degrees.
+  **`scripts/check_code_ascii.js` runs from `prestart` and `prebuild`** and fails the build
+  with the file, line, character, code point and the suggested ASCII spelling. Verified by
+  planting an arrow and watching it exit 1. Without a guard this recurs constantly, because
+  the nice character is what you naturally type — and nothing on the rendered page ever
+  looks wrong.
+  **Two lines had to be rewritten rather than mechanically replaced.** L1-9's operator table
+  had `# multiplication -- an asterisk, not x` and `# division -- a slash, not /`, where the
+  symbol being warned against was the whole point. That commentary moved into the prose
+  under the block, where `\u00d7` and `\u00f7` can be shown properly; the fence now holds
+  four bare lines of arithmetic. **When a non-ASCII character is the subject rather than
+  decoration, move the sentence out of the fence — do not "fix" it in place.**
+  Note this file and §6's `<src> <out> <field #, L->R>` line were swept too.
+
 - **M2 L1 SAYS THE FIRST SENSOR PROGRAM RUNS ONCE AND EXITS (Brad, 2026-09-29).** The
   lesson showed a read-both-sensors program, then offered a `for` loop version with only
   "To watch the values change as you slide the robot across the line, put the read in a

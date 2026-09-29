@@ -80,7 +80,7 @@ for i in range(intersections):
     print("Driving to intersection", i + 1)
     tracker.track_until_cross()
 
-    # Clear — but not after the final intersection
+    # Clear -- but not after the final intersection
     if i < intersections - 1:
         tracker.drivetrain.set_effort(0.3, 0.3)
         time.sleep(0.3)

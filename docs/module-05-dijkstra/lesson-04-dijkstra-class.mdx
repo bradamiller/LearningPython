@@ -207,7 +207,7 @@ Start clear, then tell it about an obstacle and watch the graph change under you
 
 ```python
 d = Dijkstra((0, 0))
-print(len(d.graph))          # 16 — the full 4×4 grid, nothing blocked yet
+print(len(d.graph))          # 16 -- the full 4x4 grid, nothing blocked yet
 print(d.graph[(1, 1)])       # 4 neighbors
 
 d.set_blocked_intersections([(1, 1)])
@@ -228,7 +228,7 @@ Now try a different grid size — this is the one you traced by hand in Lesson 5
 ```python
 d = Dijkstra((0, 0), rows=3, cols=3)
 d.set_blocked_intersections([(1, 1)])
-print(len(d.graph))          # 8 — nine squares minus the blocked one
+print(len(d.graph))          # 8 -- nine squares minus the blocked one
 ```
 
 <KnowledgeCheck

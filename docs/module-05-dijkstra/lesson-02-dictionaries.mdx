@@ -42,7 +42,7 @@ key to any value:
 ```python
 scores = {"Alice": 95, "Bob": 87}
 graph = {}                         # empty, ready to fill
-graph[(0, 0)] = [(0, 1), (1, 0)]   # node (0,0) → its neighbor list
+graph[(0, 0)] = [(0, 1), (1, 0)]   # node (0,0) -> its neighbor list
 ```
 
 For our graph, the **keys are node tuples** and the **values are lists of neighbor
@@ -68,10 +68,10 @@ Look up a value with square brackets, and check whether a key exists with `in`:
 graph = {(0, 0): [(0, 1), (1, 0)], (0, 1): [(0, 0), (0, 2), (1, 1)]}
 
 print(graph[(0, 0)])       # [(0, 1), (1, 0)]
-print(len(graph[(0, 0)]))  # 2  — number of neighbors
+print(len(graph[(0, 0)]))  # 2  -- number of neighbors
 
 print((0, 0) in graph)     # True
-print((2, 2) in graph)     # False — not added
+print((2, 2) in graph)     # False -- not added
 ```
 
 `in` matters a lot here: **a blocked node simply isn't in the graph**, so

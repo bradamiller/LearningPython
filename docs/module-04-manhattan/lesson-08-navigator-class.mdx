@@ -176,12 +176,12 @@ how many right turns get it there. Watch what happens when the count passes 3.
 <Reveal title="Check your trace" hint="paper first">
 
 ```
-Step 1: next (1,0). needed = 2 (S). heading 0 ≠ 2:
-          turn_right → heading 1;  turn_right → heading 2 → stop.
-        track_until_cross → arrive (1,0).
-Step 2: next (1,1). needed = 1 (E). heading 2 ≠ 1:
-          turn_right → 3;  turn_right → 0 (wrapped);  turn_right → 1 → stop.
-        track_until_cross → arrive (1,1).
+Step 1: next (1,0). needed = 2 (S). heading 0 != 2:
+          turn_right -> heading 1;  turn_right -> heading 2 -> stop.
+        track_until_cross -> arrive (1,0).
+Step 2: next (1,1). needed = 1 (E). heading 2 != 1:
+          turn_right -> 3;  turn_right -> 0 (wrapped);  turn_right -> 1 -> stop.
+        track_until_cross -> arrive (1,1).
 ```
 
 Step 2 is the one worth noticing: three right turns to face East, wrapping 3 → 0

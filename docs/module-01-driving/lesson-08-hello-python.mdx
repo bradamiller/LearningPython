@@ -199,17 +199,17 @@ Numbering them 1, 2, 3 makes it look like three lines you write together. They
 aren't, and a real program makes the difference obvious:
 
 ```python
-from XRPLib.differential_drive import DifferentialDrive    # 1 · once, at the top
-from XRPLib.board import Board                             # 1 · once, at the top
+from XRPLib.differential_drive import DifferentialDrive    # 1 - once, at the top
+from XRPLib.board import Board                             # 1 - once, at the top
 
-drivetrain = DifferentialDrive.get_default_differential_drive()   # 2 · once
-board = Board.get_default_board()                                 # 2 · once
+drivetrain = DifferentialDrive.get_default_differential_drive()   # 2 - once
+board = Board.get_default_board()                                 # 2 - once
 
-board.wait_for_button()                 # 3 · use it
+board.wait_for_button()                 # 3 - use it
 print("Driving forward...")
-drivetrain.straight(30)                 # 3 · use it
-drivetrain.turn(90)                     # 3 · use it
-drivetrain.straight(30)                 # 3 · use it again, and again
+drivetrain.straight(30)                 # 3 - use it
+drivetrain.turn(90)                     # 3 - use it
+drivetrain.straight(30)                 # 3 - use it again, and again
 print("Done!")
 ```
 
@@ -229,9 +229,9 @@ to the right are **comments**: a `#` tells Python to ignore the rest of that lin
 so everything after it is there for the human reading the code, not for the robot.
 
 ```python
-from XRPLib.reflectance import Reflectance            # 1 · import the class
-reflectance = Reflectance.get_default_reflectance()   # 2 · make an instance
-reflectance.get_left()                                # 3 · use it
+from XRPLib.reflectance import Reflectance            # 1 - import the class
+reflectance = Reflectance.get_default_reflectance()   # 2 - make an instance
+reflectance.get_left()                                # 3 - use it
 ```
 
 A comment can also sit on a line of its own, and either way you can write whatever
@@ -242,9 +242,9 @@ than one restating what the code plainly does.
 And the **rangefinder**, later on:
 
 ```python
-from XRPLib.rangefinder import Rangefinder            # 1 · import the class
-rangefinder = Rangefinder.get_default_rangefinder()   # 2 · make an instance
-rangefinder.distance()                                # 3 · use it
+from XRPLib.rangefinder import Rangefinder            # 1 - import the class
+rangefinder = Rangefinder.get_default_rangefinder()   # 2 - make an instance
+rangefinder.distance()                                # 3 - use it
 ```
 
 Line them up beside the drivetrain and only the names differ. That's the whole

@@ -213,8 +213,8 @@ Python cares about capitals: `Rangefinder` and `rangefinder` are two different
 names. That's not a nuisance, it's a convention doing real work:
 
 ```python
-from XRPLib.rangefinder import Rangefinder            # Rangefinder — the class
-rangefinder = Rangefinder.get_default_rangefinder()   # rangefinder — your variable
+from XRPLib.rangefinder import Rangefinder            # Rangefinder -- the class
+rangefinder = Rangefinder.get_default_rangefinder()   # rangefinder -- your variable
 ```
 
 **Capitalized** is the class, the "book on the shelf" from Lesson 1-8.
@@ -242,14 +242,19 @@ expression. So is `20 + 5`, and so is `side_length * 2`. Expressions are what go
 on the right of an `=`, inside parentheses when you call something, or anywhere
 else a value belongs.
 
-The arithmetic operators are the ones you'd expect, with two spelling changes:
+The arithmetic operators are the ones you'd expect:
 
 ```python
-7 + 2      # 9   addition
-7 - 2      # 5   subtraction
-7 * 2      # 14  multiplication — an asterisk, not ×
-7 / 2      # 3.5 division — a slash, not ÷
+7 + 2      # 9
+7 - 2      # 5
+7 * 2      # 14
+7 / 2      # 3.5
 ```
+
+Two of them are spelled differently from the way you'd write them by hand. Multiply
+is an asterisk `*`, not a × sign, and divide is a forward slash `/`, not a ÷ sign —
+neither of those symbols is on a keyboard, which is why every programming language
+picked something else.
 
 Variables can appear anywhere a number can, because by the time Python does the
 arithmetic, the variable has already been replaced by its value:
@@ -278,14 +283,14 @@ It uses the same precedence rule you learned in math: **`*` and `/` happen befor
 `+` and `-`.**
 
 ```python
-20 + 2 * 5      # 30, not 110 — the 2 * 5 happens first
+20 + 2 * 5      # 30, not 110 -- the 2 * 5 happens first
 ```
 
 That isn't a trivia question. Here's a line you'll write in the very next lesson,
 to make each square in a nest bigger than the last:
 
 ```python
-size = 20 + square * 5      # square counts 0, 1, 2, 3 → size is 20, 25, 30, 35
+size = 20 + square * 5      # square counts 0, 1, 2, 3 -> size is 20, 25, 30, 35
 ```
 
 It only produces 20, 25, 30, 35 because `square * 5` is worked out first and then
@@ -296,7 +301,7 @@ and the sizes would be wrong.
 and it is:
 
 ```python
-(20 + 2) * 5     # 110 — now the addition goes first
+(20 + 2) * 5     # 110 -- now the addition goes first
 ```
 
 You'll need this in Module 2, where the threshold that tells the robot line from

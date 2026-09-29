@@ -46,8 +46,8 @@ it's **mutable** (it can grow and change):
 
 ```python
 numbers = [1, 2, 3, 4, 5]
-print(numbers[0])     # 1   — indexing works like tuples
-print(len(numbers))   # 5   — how many items
+print(numbers[0])     # 1   -- indexing works like tuples
+print(len(numbers))   # 5   -- how many items
 ```
 
 | | Tuple | List |
@@ -120,7 +120,7 @@ The pattern the whole module depends on: **start empty, append inside a loop.**
 
 ```python
 path = []
-for row in range(1, 5):          # start at 1, not 0 — the robot is already on row 0
+for row in range(1, 5):          # start at 1, not 0 -- the robot is already on row 0
     path.append((row, 0))
 print(path)        # [(1, 0), (2, 0), (3, 0), (4, 0)]
 ```
@@ -169,7 +169,7 @@ path.append((1, 0))
 same_path = path          # copies the ADDRESS, not the list
 same_path.append((2, 0))
 
-print(path)               # [(1, 0), (2, 0)]  ← path changed too
+print(path)               # [(1, 0), (2, 0)]  <- path changed too
 ```
 
 `same_path = path` obeys exactly the rule you already know: work out the right
@@ -194,7 +194,7 @@ stored in the location itself:
 a = 5
 b = a                     # copies the VALUE
 b = b + 1
-print(a)                  # 5  ← unchanged
+print(a)                  # 5  <- unchanged
 ```
 
 <KnowledgeCheck
@@ -246,17 +246,17 @@ Indentation decides what's inside the loop. Get it wrong and only the last item 
 added:
 
 ```python
-# WRONG — append is outside the loop
+# WRONG -- append is outside the loop
 path = []
 for row in range(1, 4):
     position = (row, 0)
-path.append(position)     # only runs once → [(3, 0)]
+path.append(position)     # only runs once -> [(3, 0)]
 
-# CORRECT — append is inside the loop
+# CORRECT -- append is inside the loop
 path = []
 for row in range(1, 4):
     position = (row, 0)
-    path.append(position)  # runs each pass → [(1, 0), (2, 0), (3, 0)]
+    path.append(position)  # runs each pass -> [(1, 0), (2, 0), (3, 0)]
 ```
 
 <KnowledgeCheck

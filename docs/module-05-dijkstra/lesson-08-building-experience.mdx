@@ -39,8 +39,8 @@ The Dijkstra algorithm doesn't change between runs. The Navigator doesn't change
 **input** changes — the blocked list starts with more information:
 
 ```
-Run 1: empty blocked list  → discover obstacles the hard way → many reroutes
-Run 2: pre-loaded list     → plan around known obstacles      → few or no reroutes
+Run 1: empty blocked list  -> discover obstacles the hard way -> many reroutes
+Run 2: pre-loaded list     -> plan around known obstacles      -> few or no reroutes
 ```
 
 **Better data leads to better performance.** The robot isn't running a smarter algorithm on
@@ -114,7 +114,7 @@ You tell it. At the end of the run, print what the robot learned:
 
 ```python
 print("Obstacles found:", blocked)
-# → Obstacles found: [(1, 2), (2, 2), (3, 0)]
+# -> Obstacles found: [(1, 2), (2, 2), (3, 0)]
 ```
 
 Then type that list into the top of your program, where the blocked list starts out:

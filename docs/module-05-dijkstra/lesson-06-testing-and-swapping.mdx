@@ -43,7 +43,7 @@ should match Manhattan's length) and grids with obstacles (Dijkstra should detou
 d = Dijkstra((0, 0))
 path = d.compute_path((3, 3))
 print("Path:", path)
-print("Steps:", len(path))         # expect 6 — the Manhattan distance
+print("Steps:", len(path))         # expect 6 -- the Manhattan distance
 ```
 
 On a clear 4×4 grid, the path from (0,0) to (3,3) is 6 steps. The *route* Dijkstra picks
@@ -115,7 +115,7 @@ Change **two lines** — the import, and the object you create:
 ```python
 from dijkstra import Dijkstra
 
-manhattan = Dijkstra((0, 0))          # ← the only real change
+manhattan = Dijkstra((0, 0))          # <- the only real change
 navigator = Navigator((0, 0), 0)
 # ... and the loop below is untouched. All of it.
 ```
