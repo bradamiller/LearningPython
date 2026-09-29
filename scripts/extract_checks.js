@@ -86,7 +86,9 @@ function stringProp(block, name) {
   const dq = block.match(new RegExp(`${name}="([^"]*)"`));
   if (dq) return dq[1];
   const expr = block.match(new RegExp(`${name}=\\{'((?:[^'\\\\]|\\\\.)*)'\\}`));
-  if (expr) return expr[1].replace(/\\'/g, "'");
+  // \n in a {'…'} question is a real line break (a multi-line code trace);
+  // without this the printable sheet prints a literal backslash-n.
+  if (expr) return expr[1].replace(/\\'/g, "'").replace(/\\n/g, '\n');
   return null;
 }
 

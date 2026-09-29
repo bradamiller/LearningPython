@@ -183,6 +183,18 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
     on a wrong option does nothing. `title` is optional on TeacherNote (default
     "Teacher Note") and Objectives (default "Learning Objectives"). */}
 
+{/* A question that quotes several lines of code puts each on its own line, with
+    \n inside the {'…'} form (2026-09-29). Do NOT separate them with slashes —
+    `total = 10  /  total = total + 5` reads as division, which is fatal in a
+    lesson about arithmetic, and Brad caught exactly that in L1-9. Three pieces
+    make it work and all three are needed: `white-space: pre-line` on
+    `.knowledgeCheck__q` AND `.quizSheet__q`, and `stringProp` in
+    extract_checks.js unescaping \n — without that last one the printable sheet
+    prints a literal backslash-n. Fixed in L1-9 and M4-L3, the only two. */}
+<KnowledgeCheck
+  question={'After these three lines, what is total?\ntotal = 10\ntotal = total + 5\ntotal = total + 5'}
+  options={[…]} />
+
 <Video placeholderLabel="Intro clip (1–2 min)" caption="..." />   {/* placeholder */}
 <Video src="https://www.youtube.com/embed/XXXX" caption="..." />  {/* YouTube/Vimeo */}
 <Video src="/videos/first-drive.mp4" mp4 caption="..." />         {/* local mp4 */}
