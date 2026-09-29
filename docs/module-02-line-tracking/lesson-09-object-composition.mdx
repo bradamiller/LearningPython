@@ -84,9 +84,15 @@ def track_until_cross(self):
     self.drivetrain.stop()
 ```
 
-`while not self.sensor.is_at_cross():` keeps following until both sensors hit the
-cross — then it stops. All the messy sensor math is hidden behind
-`self.sensor.get_error()` and `self.sensor.is_at_cross()`.
+This line:
+
+```python
+while not self.sensor.is_at_cross():
+```
+
+keeps following until both sensors hit the cross — then it stops. All the messy
+sensor math is hidden behind `self.sensor.get_error()` and
+`self.sensor.is_at_cross()`.
 
 ## Turning to find the line again
 

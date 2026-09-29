@@ -53,6 +53,7 @@ export function QuizSheet({id, answers = false}) {
         {checks.map((c, i) => (
           <li className="quizSheet__item" key={i}>
             <p className="quizSheet__q">{c.question}</p>
+            {c.code && <pre className="quizSheet__code">{c.code}</pre>}
             <ol className="quizSheet__options">
               {c.options.map((o, j) => (
                 <li

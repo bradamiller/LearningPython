@@ -163,7 +163,8 @@ Building and blocking together is cleaner than building the full graph and then 
 nodes in a second pass — a blocked node never enters the graph at all.
 
 <KnowledgeCheck
-  question="What does `if (row, col) in self.blocked: continue` do?"
+  question="What does this line do?"
+  code={'if (row, col) in self.blocked:\n    continue'}
   options={[
     {text: 'Adds the node with an empty neighbor list'},
     {text: 'Skips a blocked node so it never becomes a key in the graph', correct: true},

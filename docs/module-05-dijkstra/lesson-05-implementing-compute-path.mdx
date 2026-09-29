@@ -114,11 +114,18 @@ for neighbor in self.graph[current]:
 visited.append(current)      # done with current — AFTER updating neighbors
 ```
 
-The `if new_distance < distances[neighbor]` check is what keeps the *shortest* path — if
-you always updated, a longer route could overwrite a shorter one already found.
+This check:
+
+```python
+if new_distance < distances[neighbor]:
+```
+
+is what keeps the *shortest* path — if you always updated, a longer route could
+overwrite a shorter one already found.
 
 <KnowledgeCheck
-  question="Why the check `if new_distance < distances[neighbor]` before updating?"
+  question="Why this check before updating?"
+  code={'if new_distance < distances[neighbor]:'}
   options={[
     {text: 'To skip blocked nodes'},
     {text: 'So a longer path never overwrites a shorter one already found', correct: true},
@@ -234,7 +241,11 @@ This exact pattern — explore, relax distances, reconstruct — underlies real 
 ## Wrap-up
 
 - What do the three structures hold in code? (Shortest distances, predecessors, finished nodes.)
-- Why check `if new_distance < distances[neighbor]`? (To keep the shortest path.)
+- Why this check? (To keep the shortest path.)
+
+  ```python
+  if new_distance < distances[neighbor]:
+  ```
 - Why reverse the reconstructed path, and why drop its first entry? (It's built backward from the destination; the first entry is the robot's own square, which isn't a step.)
 
 <TeacherNote title="The most important lesson in the module — build it in stages">

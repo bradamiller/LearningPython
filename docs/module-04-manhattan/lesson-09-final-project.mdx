@@ -78,7 +78,11 @@ for dest in destinations:
     print("Arrived at:", navigator.position)
 ```
 
-`manhattan.position = navigator.position` is the line nearly everyone misses, and
+```python
+manhattan.position = navigator.position
+```
+
+That is the line nearly everyone misses, and
 the failure is instructive rather than obvious: leg one works perfectly, and every
 later leg is computed from (0,0). If a student's robot drives a sensible first
 route and then wanders, ask what `manhattan` thinks its position is.
@@ -204,7 +208,11 @@ The plan-then-execute structure you just built is fundamental to real autonomous
 
 ## Wrap-up
 
-- What's the one line that makes multi-leg journeys work? (`manhattan.position = navigator.position` after each leg.)
+- What's the one line that makes multi-leg journeys work? After each leg:
+
+  ```python
+  manhattan.position = navigator.position
+  ```
 - Why create the objects once instead of per destination? (Classes hold state — position and heading — across operations.)
 - What are the three testing levels? (Manhattan alone, one leg, full sequence.)
 

@@ -120,10 +120,16 @@ navigator = Navigator((0, 0), 0)
 # ... and the loop below is untouched. All of it.
 ```
 
-That's the whole swap. The destination loop doesn't change, `drive_path` doesn't change,
-and `manhattan.position = navigator.position` — the line you were warned everyone forgets
-— is still there doing the same job for the same reason. The Navigator calls
-`compute_path(dest)` exactly as before and never finds out that anything happened.
+That's the whole swap. The destination loop doesn't change and `drive_path` doesn't
+change. Even this line — the one you were warned everyone forgets — is still there,
+doing the same job for the same reason:
+
+```python
+manhattan.position = navigator.position
+```
+
+The Navigator calls `compute_path(dest)` exactly as before and never finds out that
+anything happened.
 
 <Callout kind="tip" title="Then rename it, once the robot has driven">
 

@@ -183,16 +183,12 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
     on a wrong option does nothing. `title` is optional on TeacherNote (default
     "Teacher Note") and Objectives (default "Learning Objectives"). */}
 
-{/* A question that quotes several lines of code puts each on its own line, with
-    \n inside the {'…'} form (2026-09-29). Do NOT separate them with slashes —
-    `total = 10  /  total = total + 5` reads as division, which is fatal in a
-    lesson about arithmetic, and Brad caught exactly that in L1-9. Three pieces
-    make it work and all three are needed: `white-space: pre-line` on
-    `.knowledgeCheck__q` AND `.quizSheet__q`, and `stringProp` in
-    extract_checks.js unescaping \n — without that last one the printable sheet
-    prints a literal backslash-n. Fixed in L1-9 and M4-L3, the only two. */}
+{/* Code in a question goes in the `code` prop, never in the question string
+    (2026-09-29). It renders as a real code block — monospace on the grey panel —
+    on the page AND on the printable sheet. */}
 <KnowledgeCheck
-  question={'After these three lines, what is total?\ntotal = 10\ntotal = total + 5\ntotal = total + 5'}
+  question="After these three lines, what is total?"
+  code={'total = 10\ntotal = total + 5\ntotal = total + 5'}
   options={[…]} />
 
 <Video placeholderLabel="Intro clip (1–2 min)" caption="..." />   {/* placeholder */}
@@ -914,6 +910,47 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **CODE IN PROSE GOES IN A CODE BLOCK, NOT AN INLINE SPAN (Brad, 2026-09-29).** Brad
+  flagged L1-9's opening, where
+  `drivetrain = DifferentialDrive.get_default_differential_drive()` sat inline and broke
+  across two lines mid-sentence. His rule, and it applies course-wide: **a complete
+  statement gets its own line, in a fenced block**, so the monospace and the grey panel
+  say "this is code" before anyone reads a character of it. A sweep found **18** of them
+  across 9 lessons; all 18 are now blocks.
+  **Inline spans are still right for referring to a name** — `drivetrain`, `range(4)`,
+  `self.position`, `print()`. The line is whether it is a *statement being shown* or a
+  *name being mentioned*. The sweep that finds violations:
+
+  ```bash
+  # inline spans outside fences that look like statements and are long enough to wrap
+  python3 - <<'EOF'
+  import re, pathlib
+  for p in sorted(pathlib.Path('docs').rglob('*.mdx')):
+      fence = False
+      for i, l in enumerate(p.read_text().split('\n'), 1):
+          if l.lstrip().startswith('```'): fence = not fence; continue
+          if fence: continue
+          for m in re.finditer(r'`([^`\n]+)`', l):
+              t = m.group(1)
+              if ((' = ' in t) or re.match(r'^(for|while|if|def|class|from|import|return|raise)\b', t)) and len(t) >= 34:
+                  print(f'{len(t):3d}  {p.name}:{i}  {t}')
+  EOF
+  ```
+
+  **Several sentences had to be restructured, not just split** — "What does
+  `current_row, current_col = self.position` do?" became "What does this line do?" with
+  the block beneath, and M5-L6's list of things-that-didn't-change was rebuilt so the
+  block sits at the end of the sentence rather than inside it. Splitting without
+  rewriting leaves a sentence with a hole in it.
+  **Two improvements fell out of the sweep.** L1-8's three-step pattern was a numbered
+  list with the statement crammed into each item; it is now three bold headings with a
+  block each, which is the shape the section was always describing. And L1-10's exit
+  ticket had `for i in range(6): straight(...); turn(60)` — a semicolon one-liner the
+  course never teaches — now written out properly over three lines.
+  **In knowledge checks this is the `code` prop** (§5), not a fenced block: `question`
+  stays prose, `code` carries the trace, and both the interactive check and the printable
+  sheet render it. Four checks use it — L1-9, M4-L3, M5-L4, M5-L5.
+
 - **THE NEST-OF-SQUARES ACTIVITY IS THREE STEPS (Brad, 2026-09-29).** It had five; two
   are gone. **The centering challenge is dropped outright** — "what would you add between
   squares to center them all on one point?" needs a diagonal move and a compensating turn,

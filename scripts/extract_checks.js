@@ -136,6 +136,7 @@ function main() {
 
       for (const block of checkBlocks(src)) {
         const question = stringProp(block, 'question');
+        const code = stringProp(block, 'code');   // optional multi-line code trace
         const explanation = stringProp(block, 'explanation');
         const options = optionsProp(block);
         if (!question || !options || !options.length) {
@@ -145,7 +146,8 @@ function main() {
         if (options.filter((o) => o.correct).length !== 1) {
           problems.push(`${moduleDir}/${file}: "${question.slice(0, 50)}…" needs exactly one correct option`);
         }
-        checks.push({question, options, explanation});
+        checks.push(code ? {question, code, options, explanation}
+                           : {question, options, explanation});
       }
 
       if (!checks.length) continue;

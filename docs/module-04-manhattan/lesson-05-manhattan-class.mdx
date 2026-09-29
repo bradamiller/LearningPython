@@ -249,7 +249,13 @@ The "store it once, reuse it" pattern of objects is everywhere in real software:
 ## Wrap-up
 
 - What are the three changes from function to method? (Move inside the class, add `self`, replace `start` with `self.position`.)
-- What does `current_row, current_col = self.position` do, and what's it called? (Tuple unpacking — pulls both numbers out at once.)
+- What does this line do, and what's it called?
+
+  ```python
+  current_row, current_col = self.position
+  ```
+
+  (Tuple unpacking — pulls both numbers out at once.)
 - Which variables need `self.`? (Only data that persists — `self.position`; the rest are local.)
 
 <TeacherNote title="Assessment & next lesson">

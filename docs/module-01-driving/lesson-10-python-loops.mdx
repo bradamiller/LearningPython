@@ -319,9 +319,19 @@ Loops are how software handles "do this for every…" without endless copy-paste
 
 **Formative:** correct `for` syntax, right `range` value for a shape, correct
 reading of indentation, and — for the nested section — whether a student can say
-which loop a given line belongs to and why. **Exit ticket:** "Write a loop to draw
-a hexagon" (`for i in range(6): straight(...); turn(60)`); for a stretch, "how
-would you draw three hexagons of different sizes?" **Preview:** next lesson we wrap
+which loop a given line belongs to and why.
+
+**Exit ticket:** "Write a loop to draw a hexagon." What you're looking for:
+
+```python
+for i in range(6):
+    drivetrain.straight(20)
+    drivetrain.turn(60)
+```
+
+For a stretch, "how would you draw three hexagons of different sizes?"
+
+**Preview:** next lesson we wrap
 loops inside **Python functions** with parameters — the text version of Lessons 1-3 through 1-5. Worth flagging there: the nested squares program is crying out to become
 `square(side_length)` called from a loop.
 

@@ -14,7 +14,12 @@ sidebar_position: 9
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-You've already written a line like `drivetrain = DifferentialDrive.get_default_differential_drive()`
+You've already written a line like this one:
+
+```python
+drivetrain = DifferentialDrive.get_default_differential_drive()
+```
+
 without anyone explaining the `=`. That single character is doing something
 specific, and once you see what, a lot of Python stops being mysterious. This
 lesson is about the two halves of that line: the **value** on the right, and the
@@ -137,7 +142,8 @@ that way confuses people. You'll write this exact pattern in Module 2 to count
 intersections as the robot drives over them.
 
 <KnowledgeCheck
-  question={'After these three lines, what is total?\ntotal = 10\ntotal = total + 5\ntotal = total + 5'}
+  question="After these three lines, what is total?"
+  code={'total = 10\ntotal = total + 5\ntotal = total + 5'}
   options={[
     {text: '10'},
     {text: '15'},

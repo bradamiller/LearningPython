@@ -110,11 +110,23 @@ drivetrain.straight(30)
 
 Reading it line by line:
 
-- `from XRPLib… import DifferentialDrive` — bring in the robot-control library.
-- `drivetrain = …get_default_differential_drive()` — get the robot's wheels as an
-  object you can command.
-- `drivetrain.straight(30)` — drive straight 30 cm. (Use a negative number to go
-  backward, just like the block.)
+```python
+from XRPLib.differential_drive import DifferentialDrive
+```
+
+Bring in the robot-control library.
+
+```python
+drivetrain = DifferentialDrive.get_default_differential_drive()
+```
+
+Get the robot's wheels as an object you can command.
+
+```python
+drivetrain.straight(30)
+```
+
+Drive straight 30 cm. Use a negative number to go backward, just like the block.
 
 ### What's a library?
 
@@ -134,7 +146,12 @@ don't read the whole shelf. You take down the one book you need, when you need i
   caption="XRPLib is the shelf; each class is a book. An import takes one book down — and what's written inside it are the commands you can use."
 />
 
-That's what `import` does. `from XRPLib.differential_drive import DifferentialDrive`
+That's what `import` does. This line:
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+```
+
 takes the **DifferentialDrive** book off the shelf and opens it on your desk.
 What's written inside are the things a drivetrain can do: `straight()`, `turn()`,
 `set_effort()`. Leave the book on the shelf and Python has no idea those words
@@ -149,15 +166,32 @@ Those three lines aren't a driving recipe. They're how you use **any** piece of
 hardware in XRPLib, so once you have the shape you can read code for a device
 you've never touched:
 
-1. **Import the class.** `from XRPLib.differential_drive import DifferentialDrive`
-   tells Python where the code for that piece of hardware lives. Nothing happens
-   to the robot yet.
-2. **Make an instance.** `drivetrain = DifferentialDrive.get_default_differential_drive()`
-   hands you an object that stands for the real hardware bolted to your robot.
-   The name on the left is yours to pick — `drivetrain` is just a good one.
-3. **Use it.** `drivetrain.straight(30)` — instance name, a dot, then what you
-   want it to do. That `instance.method()` shape is most of the Python you'll
-   write from here on.
+**1 · Import the class.**
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+```
+
+This tells Python where the code for that piece of hardware lives. Nothing
+happens to the robot yet.
+
+**2 · Make an instance.**
+
+```python
+drivetrain = DifferentialDrive.get_default_differential_drive()
+```
+
+This hands you an object that stands for the real hardware bolted to your robot.
+The name on the left is yours to pick — `drivetrain` is just a good one.
+
+**3 · Use it.**
+
+```python
+drivetrain.straight(30)
+```
+
+Instance name, a dot, then what you want it to do. That `instance.method()` shape
+is most of the Python you'll write from here on.
 
 The device changes; the three steps don't. Here is the **reflectance sensor** you
 meet in the next module — read it against the drivetrain code above:

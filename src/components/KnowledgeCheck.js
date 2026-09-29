@@ -15,8 +15,17 @@ import React, {useState} from 'react';
  *     ]}
  *     explanation="Independent wheel speeds are how a differential-drive robot turns."
  *   />
+ *
+ * A question about a few lines of code passes them as `code`, NOT jammed into
+ * the question string. It renders as a real code block, and the printable sheet
+ * (Quiz.js) renders the same thing, so the handout matches the page:
+ *
+ *   <KnowledgeCheck
+ *     question="After these three lines, what is total?"
+ *     code={'total = 10\ntotal = total + 5\ntotal = total + 5'}
+ *     options={[…]} />
  */
-export default function KnowledgeCheck({question, options = [], explanation}) {
+export default function KnowledgeCheck({question, code, options = [], explanation}) {
   const [picked, setPicked] = useState(null);
   const answered = picked !== null;
   const correctIndex = options.findIndex((o) => o.correct);
@@ -28,6 +37,7 @@ export default function KnowledgeCheck({question, options = [], explanation}) {
         <span className="knowledgeCheck__badge">Knowledge Check</span>
       </div>
       <p className="knowledgeCheck__q">{question}</p>
+      {code && <pre className="knowledgeCheck__code">{code}</pre>}
 
       {options.map((opt, i) => {
         let cls = 'kcOption';

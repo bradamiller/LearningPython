@@ -36,8 +36,13 @@ By the end of this lesson you will be able to:
 
 Python ships with thousands of ready-made tools grouped into **modules** — think of
 each as a toolbox. To use one, you `import` it at the top of your file. You've done
-this already for the robot (`from XRPLib.reflectance import Reflectance`); for random
-numbers you import Python's built-in `random`:
+this already for the robot:
+
+```python
+from XRPLib.reflectance import Reflectance
+```
+
+For random numbers you import Python's built-in `random`:
 
 ```python
 import random
@@ -134,8 +139,12 @@ mid-range band explores best. Good moment to note computer randomness is really
 2. Try three different ranges — `randint(170, 190)`, `randint(90, 270)` and
    `randint(45, 315)` — and write down, for each, how the robot's coverage of the
    circle changes. Which one explores best, and why?
-3. **Challenge:** randomize the *speed* too — `speed = random.randint(20, 50) / 100`
-   gives an effort from 0.2 to 0.5.
+3. **Challenge:** randomize the *speed* too. This line gives an effort from 0.2 to
+   0.5:
+
+   ```python
+   speed = random.randint(20, 50) / 100
+   ```
 
 <TeacherNote title="Differentiation">
 
