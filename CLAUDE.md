@@ -910,6 +910,26 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **THE THREE STEPS ARE NOT THREE CONSECUTIVE LINES (Brad, 2026-09-29).** L1-8 teaches
+  import the class → make an instance → use it, and every example squashed all three
+  together, which reads as a three-line recipe you write as a unit. **It isn't.** Steps 1
+  and 2 are setup that happens **once, at the top of the file**; step 3 is the actual
+  program and happens wherever the robot needs that device, as often as it likes —
+  twenty lines later, inside a loop, inside a function.
+  **New subsection "Steps 1 and 2 happen once. Step 3 happens all day."**, placed
+  immediately after step 3 so the reader has it *before* meeting the compressed
+  reflectance and rangefinder examples, with a realistic program showing setup at the top
+  and four separate uses below. Both compressed examples now say in a following sentence
+  that they are squashed for comparison, and that in a real program the first two lines
+  would be up with the other setup and the third down where the sensor is actually read
+  ("quite possibly inside a loop, running hundreds of times").
+  **Why it matters beyond tidiness:** the failure is silent. A student who copies the
+  three-line unit re-imports the class or builds a second drivetrain further down the
+  file, and nothing breaks loudly — so it survives into Module 2 and beyond, where the
+  pattern is reused constantly. The teacher note names that symptom and points at the
+  lesson's own Activity, where setup and use are twelve lines apart.
+  A seventh knowledge check asks where the three steps actually go; L1-8 now carries 7.
+
 - **NO `main()` AND NO `if __name__ == "__main__":` — XRP CODE SUPPLIES THEM (Brad,
   2026-09-29).** L1-12's project skeleton wrapped everything in a `def main():` and closed
   with the `__name__` guard, described as "the professional way to say run `main()` when

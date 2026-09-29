@@ -193,6 +193,36 @@ drivetrain.straight(30)
 Instance name, a dot, then what you want it to do. That `instance.method()` shape
 is most of the Python you'll write from here on.
 
+### Steps 1 and 2 happen once. Step 3 happens all day.
+
+Numbering them 1, 2, 3 makes it look like three lines you write together. They
+aren't, and a real program makes the difference obvious:
+
+```python
+from XRPLib.differential_drive import DifferentialDrive    # 1 · once, at the top
+from XRPLib.board import Board                             # 1 · once, at the top
+
+drivetrain = DifferentialDrive.get_default_differential_drive()   # 2 · once
+board = Board.get_default_board()                                 # 2 · once
+
+board.wait_for_button()                 # 3 · use it
+print("Driving forward...")
+drivetrain.straight(30)                 # 3 · use it
+drivetrain.turn(90)                     # 3 · use it
+drivetrain.straight(30)                 # 3 · use it again, and again
+print("Done!")
+```
+
+**Steps 1 and 2 are setup.** They belong at the top of the file, they run once, and
+you never repeat them — importing the same class twice or making a second
+drivetrain gains you nothing. **Step 3 is the actual program.** It might come
+twenty lines later, it might come inside a function you write in Lesson 1-11, and
+it will happen as many times as your robot has things to do.
+
+So when you see the three steps stacked together below, read them as a *summary of
+the shape* rather than a block to copy. Every one of them says: set this up at the
+top, then use it wherever you need it.
+
 The device changes; the three steps don't. Here is the **reflectance sensor** you
 meet in the next module — read it against the drivetrain code above. The notes off
 to the right are **comments**: a `#` tells Python to ignore the rest of that line,
@@ -221,6 +251,11 @@ Line them up beside the drivetrain and only the names differ. That's the whole
 trick: when a new device shows up, you already know two thirds of the code before
 anyone explains it.
 
+Both of those are squashed into three lines so you can compare them. In a real
+program the first two lines of each would be up at the top with all the other
+setup, and the third would be down wherever the robot actually needs to read that
+sensor — quite possibly inside a loop, running hundreds of times.
+
 <Callout kind="tip" title="Let the editor do the spelling">
 
 Those class names are long, and Python is fussy about capitals (`Rangefinder`, not
@@ -246,6 +281,17 @@ yet — which is a useful hint in itself.
   explanation="Importing the class makes Rangefinder available; it does not create rangefinder. The middle step — rangefinder = Rangefinder.get_default_rangefinder() — is what gives that name an object to stand for the hardware."
 />
 
+<KnowledgeCheck
+  question="Where do the three steps actually go in a real program?"
+  options={[
+    {text: 'Steps 1 and 2 go near the top and run once; step 3 goes wherever the program needs that device, as often as it likes', correct: true},
+    {text: 'All three must be written together, in that order, every time'},
+    {text: 'Step 2 has to be repeated before each use of the device'},
+    {text: 'They can go in any order as long as all three are present'},
+  ]}
+  explanation="Setup happens once: one import, one instance. Using the device is the actual program — it can be twenty lines later, inside a loop, or inside a function, and it happens as many times as you need. The three-line examples are squashed together only to show the shape."
+/>
+
 <TeacherNote title="The three steps are the spine of Modules 2–5">
 
 Worth slowing down on, because every later module reuses it: import the class,
@@ -256,6 +302,13 @@ memorise these particular three lines meet each new device as a fresh mystery.
 A good board exercise: write the three rows of the table with the device column
 filled in and the rest blank, and have students complete the reflectance row from
 the drivetrain one before they've seen any sensor code. Most can.
+
+**The numbering has one side effect to head off:** because the examples stack the
+three lines together, some students copy them as a unit and end up re-importing or
+re-creating the drivetrain further down the file, or inside a function. Nothing
+breaks loudly, which is why it survives. Say it plainly once — steps 1 and 2 are
+setup that happens once at the top, step 3 is the program — and point at the
+Activity below, where the two are twelve lines apart.
 
 Note the capital/lowercase convention while you're here — `Rangefinder` is the
 class, `rangefinder` is their variable — and point out that the editor's
