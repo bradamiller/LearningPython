@@ -571,7 +571,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     never "see Part 4". `grep -rn "Part [0-9]" docs/module-01-driving/` stays empty.
   - Every lesson should have at least one activity. Two M1 lessons had none and got
     new ones on 2026-09-18: **L6 · Drive a figure-eight** (two mirrored Arcade
-    curves — the shape `Straight`/`Turn` cannot draw) and **L9 · Draw a nest of
+    curves — the shape `Straight`/`Turn` cannot draw) and **L1-10 · Draw a nest of
     squares**, which needed a new teaching section first (**A loop inside a loop**,
     nested `for` loops where the outer counter sets each square's size — Brad's
     design). **The one lesson still without an activity is M2 L8
@@ -902,6 +902,21 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **THE NEST-OF-SQUARES ACTIVITY IS THREE STEPS (Brad, 2026-09-29).** It had five; two
+  are gone. **The centering challenge is dropped outright** — "what would you add between
+  squares to center them all on one point?" needs a diagonal move and a compensating turn,
+  which is geometry Module 1 has not taught and cannot check. **The 5 cm → 10 cm step is
+  gone too**: it changes a number and re-runs, which teaches nothing the six-squares step
+  has not already taught better.
+  What survives is the shape Brad wanted — **four squares growing to six**, then the shrink
+  challenge. Step 2 is the load-bearing one: only the outer `range(4)` changes, and the two
+  `range(4)`s meaning different things is half the point of the exercise.
+  The teacher note lost its centering paragraph and now points at the shrink challenge as
+  the early-finisher task, naming both answers (`35 - square * 5`, or `range(3, -1, -1)`)
+  since students find the first and the second is the showier one.
+  **Note the lesson is 1-10, not 1-9** — CLAUDE.md said L9 in two places, stale since L1-9
+  (Variables) was inserted on 2026-09-21 and pushed loops down one. Fixed in the same pass.
+
 - **AMERICAN SPELLING THROUGHOUT (Brad, 2026-09-29).** Brad caught "centre" in L1-10's
   nest-of-squares activity. It was not alone — a sweep turned up **19** British spellings
   across student-facing content: centre, colour, neighbour, behaviour, organise, recognise,
@@ -1087,7 +1102,7 @@ signal of what he cares about when you touch an unreviewed lesson.
 | **M1 L4** | Parameter renamed `side_length` to match the screenshot; function renamed `square` |
 | **M1 L5** | Rebuilt from Brad's screenshot: `polygon (sides, side_length)`, no effort parameter |
 | **M1 L6** | Built from Brad's Keynote motor deck (stills + clips); "effort ≠ speed" section added; re-framed to finishing vs. non-finishing blocks, timed driving demoted; **figure-eight activity added** (2026-09-18); **circles activity added before it** (2026-09-24, Brad) — vary Turn and watch the circle change, find one 12–18 in across, time a half circle; the figure-eight then **reframed as Earth – Moon – Earth** (2026-09-24, Brad's own earlier exercise) and uses those numbers |
-| **M1 L9** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
+| **M1 L10** | **New "A loop inside a loop" section + nest-of-squares activity** (2026-09-18) — nested `for` loops, outer counter sets the size; objectives and wrap-up updated |
 | **All 46 lessons** | Part numbers dropped; student-work sections relabeled `Activity · …` with a DO THIS badge — M1 then M2–M5 (2026-09-18). This was a *labelling* pass on M2–M5, not a content review: their prose still hasn't had Brad's eye. |
 | **M1 L10–11** | Python aligned to the Blockly names/params (`square`, `polygon(sides, side_length)`) — naming only; these lessons have NOT had a full review (their examples still skip `board.wait_for_button()`) |
 | **M2 L2/L7/L10** | Trailing `drivetrain.stop()` removed from end-of-program examples |

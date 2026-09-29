@@ -266,11 +266,8 @@ reality, not a bug in their code.
    how many **turns** it will make. Check them against what you see.
 2. Change it to draw **six** squares. What did you have to change — and what
    stayed the same?
-3. Change the step from `5` cm to `10` cm and run it again.
-4. **Challenge** — make the squares *shrink* instead of grow, so the largest is
+3. **Challenge** — make the squares *shrink* instead of grow, so the largest is
    drawn first. There are two ways to do it: change the arithmetic, or count down.
-5. **Challenge** — right now every square starts from the same corner. What would
-   you add between squares to center them all on one point instead?
 
 <Reveal title="Check your step 1 predictions" hint="write yours down first">
 
@@ -285,11 +282,13 @@ the floor, that's wheel slip and corner error, not arithmetic.
 Step 2 is the real check: the answer is "change `range(4)` in the outer loop" —
 the inner loop and the size formula are untouched, which is exactly the payoff of
 nesting. If a student changes the inner `range(4)`, they get four-sided shapes
-turning into something else and will see it immediately.
+turning into something else and will see it immediately. Note that the two
+`range(4)`s mean different things, which is half the reason this is worth doing:
+one counts squares, the other counts sides.
 
-Step 5 has no single right answer and is worth discussing rather than solving:
-before each square, drive half the step distance diagonally and turn back. It is
-fiddly on purpose — a good place to stop if time runs short.
+Step 3 is the one to reach for if a group finishes early. Counting down with
+`range(3, -1, -1)` is the showier answer, but `35 - square * 5` is the one most
+students find, and it is worth saying that both are right.
 
 </TeacherNote>
 
