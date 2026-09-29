@@ -61,7 +61,7 @@ Professionals design before they build. On paper first:
 3. **Pseudocode** — the flow in plain English, not Python:
 
 ```text
-Main:
+Program:
     set up the robot
     for each shape in my design:
         draw the shape
@@ -82,8 +82,9 @@ Main:
 
 ## A clean program structure
 
-Good Python programs have a shape: a docstring at the top, helper functions, a
-`main()`, and one line that runs it. Use this as your skeleton:
+Good Python programs have a shape: a docstring at the top saying what this is,
+then the imports and setup, then your functions, and finally the handful of lines
+that actually run the show. Use this as your skeleton:
 
 ```python
 """
@@ -112,22 +113,24 @@ def polygon(sides, side_length):
         drivetrain.straight(side_length)
         drivetrain.turn(angle)
 
-def main():
-    """Run the project."""
-    board.wait_for_button()
-    print("Starting...")
-    polygon(4, 30)
-    time.sleep(1)
-    polygon(6, 25)
-    print("Done!")
-
 # ===== RUN =====
-if __name__ == "__main__":
-    main()
+board.wait_for_button()
+
+print("Starting...")
+polygon(4, 30)
+time.sleep(1)
+polygon(6, 25)
+print("Done!")
 ```
 
-That last block (`if __name__ == "__main__":`) is the professional way to say "run
-`main()` when this file is the program." You'll see it in real Python everywhere.
+Everything above the `# ===== RUN =====` line *defines* things; nothing happens
+until the lines beneath it. That split is the point of the layout — someone opening
+your file can read the last few lines to find out what the program does, then go
+looking for the function that does it.
+
+Order still matters, the way it has since Lesson 1-11: a function has to be defined
+above the line that calls it, which is why the running code sits at the bottom
+rather than the top.
 
 ### The two kinds of note in that program
 
@@ -208,7 +211,7 @@ they see the docstring come back out of a function they wrote themselves.
 Work the same loop engineers use:
 
 1. **Build** one function; **test** it on its own with a few inputs.
-2. **Integrate** — call it from `main()` alongside the others; test the flow.
+2. **Integrate** — call it from the run section alongside the others; test the flow.
 3. **Instrument** — sprinkle `print()` messages so you can see what's happening.
 4. **Polish** — add a one-line docstring to each function, add comments where a
    line needs a *why*, remove leftover debug prints, and make your names clear.

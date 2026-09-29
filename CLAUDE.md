@@ -639,8 +639,8 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   never run as printed, and the extra lines bury the one idea the snippet exists
   to show. Judge by "would a student paste this and press RUN?", not by whether
   the text contains a drive call. Applied to M1 L8 (its Activity got the wait; its
-  four teaching snippets deliberately did not) and M1 L12 (the project skeleton,
-  inside `main()`); M1 L10's only complete program already had it, and M1 L11 is
+  four teaching snippets deliberately did not) and M1 L12 (the project skeleton, at
+  the top of its run section); M1 L10's only complete program already had it, and M1 L11 is
   all definitions and fragments, so neither needed anything. Same judgement was
   used for the M3–M5 sweep on 2026-09-22, where two fragments were left alone on
   purpose. **⚠️ Still open:** five of the nine composed Blockly programs omit the
@@ -910,6 +910,28 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **NO `main()` AND NO `if __name__ == "__main__":` — XRP CODE SUPPLIES THEM (Brad,
+  2026-09-29).** L1-12's project skeleton wrapped everything in a `def main():` and closed
+  with the `__name__` guard, described as "the professional way to say run `main()` when
+  this file is the program." **XRP Code already does this** — a student writes functions
+  and then plain executable lines, and the IDE runs what is in the file. Both were
+  ceremony copied from desktop Python, and the guard in particular is unexplainable at
+  this level: it turns on a dunder variable and an import/run distinction that has no
+  meaning in a course where a file is only ever run directly.
+  **The skeleton now ends with a `# ===== RUN =====` banner and the bare lines**
+  (`board.wait_for_button()`, the prints, the `polygon` calls), which is also the shape
+  every other capstone in the course already uses — M2-L10, M4-L9 and M5-L9 have never had
+  a `main()`, so L1-12 was the only file in 46 lessons teaching a structure the rest of the
+  course contradicts. `grep -rn "__name__\|def main" docs/` stays empty.
+  **What the section teaches instead**, because the layout still needs a reason: everything
+  above the RUN banner *defines*, everything below it *happens*, so a reader finds out what
+  the program does from the last few lines and then goes looking for the function. That
+  also re-states L1-11's ordering rule — definitions above their calls — which is now what
+  puts the running code at the bottom.
+  **Also changed:** the planning section's pseudocode said `Main:` (it now says `Program:`,
+  since it named a function that no longer exists) and the activity's Integrate step said
+  "call it from `main()`".
+
 - **COMMENTS AND DOCSTRINGS ARE TAUGHT — `#` IN L1-8, `"""` IN L1-12 (Brad, 2026-09-29).**
   Neither had ever been explained. `#` comments appear in student-facing code from L1-8
   onward and the word "docstring" was used three times (L1-11's teacher note, L1-12 twice)
