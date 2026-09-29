@@ -902,6 +902,37 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **THE FIVE SYNTAX RULES ARE SPLIT 3 + 2 (Brad, 2026-09-29).** L1-8 still calls the
+  section **"The five syntax rules"** and still promises five, but teaches only
+  **lowercase, parentheses, quotes** — the three that apply to a flat list of one-line
+  instructions, which is all L1-8 writes. **Colons and indentation move to L1-10**, as
+  rules **4 and 5**, in a section headed *"The two syntax rules you were promised"* that
+  opens by naming the debt ("Remember Lesson 1-8 saying there were five, and then only
+  showing you three?").
+  **Why the promise is kept rather than the count reduced:** the two held-back rules only
+  mean anything once code has an *inside*, and the `for` loop in L1-10 is the first thing
+  in the course that does. Teaching them in L1-8 is five rules memorized and three
+  practiced. Leaving them out silently would be worse — a student who counts three under a
+  heading that says five assumes the page is broken. The promise makes the gap deliberate
+  and gives L1-10 a payoff to open on, so **do not "fix" the heading to say three.**
+  **Parentheses got the fuller explanation Brad asked for:** they are what tells Python the
+  name is a **function call**, and what goes inside them are the **arguments** — some
+  functions take one, some several, some none, and the parentheses go in either way. That
+  replaces the old one-line "function calls need them, even when empty", which said what
+  to type without saying what it meant.
+  **Touched:** L1-8 (the section, its objective line, the wrap-up questions, a new teacher
+  note on the split, and the `print()` teacher note — which had named indentation as the
+  #1 stumble in a lesson where nothing is indented; it now says so and points at L1-10) and
+  L1-10 (the new section, the intro paragraph, the objective, and "Indentation decides what
+  repeats" reworded as rule 5 in action rather than re-introducing the idea).
+  **The colon knowledge check moved with the rule** — `for i in range(4)` was being asked
+  in L1-8, two lessons before colons were taught. L1-8 got a parentheses question in its
+  place, so both lessons still carry 6.
+  **A brace aside is in L1-10 on purpose:** most languages use `{ }` and treat indentation
+  as a courtesy, Python made the indentation itself the rule, so the shape on the page and
+  the behaviour can never disagree. It is one paragraph and it earns the "a stray space is
+  a real error" point that the teacher note already made.
+
 - **BLOCKLY FUNCTIONS: NO RETURN VALUE (Brad, 2026-09-20).** The Functions palette
   offers two definition blocks — plain **"to do something"** and a version with a
   **return** socket. Module 1 uses the plain one only. The return version's call

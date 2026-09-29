@@ -24,7 +24,7 @@ concept. It's the same thinking, typed instead of dragged.
 By the end of this lesson you will be able to:
 
 - Explain why we move from Blockly to Python, and translate a block into the equivalent Python code
-- Follow Python's core syntax rules: indentation, colons, lowercase, parentheses, quotes
+- Follow the first three of Python's five syntax rules: lowercase, parentheses, quotes
 - Use the three-step XRPLib pattern — import the class, make an instance, call its methods — to drive the robot from Python
 - Use `print()` to show messages and debug
 
@@ -234,14 +234,21 @@ mistakes with it.
 
 ## The five syntax rules
 
-Blockly never let you make a spelling mistake. Python will, so five rules matter:
+Blockly never let you make a spelling mistake. Python will, so five rules matter.
+Here are the three you need today:
 
-1. **Indentation** — spaces at the start of a line group code together. It's not
-   decoration; it's how Python knows what's inside a loop.
-2. **Colons** — a `:` ends lines that start a block (`for`, `if`, `def`).
-3. **Lowercase** — `print` is not `Print`. Names are case-sensitive.
-4. **Parentheses** — function calls need them: `print()`, even when empty.
-5. **Quotes** — text goes in quotes: `print("hello")`.
+1. **Lowercase** — `print` is not `Print`. Names are case-sensitive.
+2. **Parentheses** — they're what tells Python "this name is a **function call** —
+   go run it." `print` on its own just names the function; `print()` runs it. Inside
+   the parentheses go the **arguments**: the values you're handing the function to
+   work with. Some functions need one (`print("hello")`), some need several
+   (`drivetrain.straight(30)`), and some need none at all — but the parentheses go
+   in either way, empty or not.
+3. **Quotes** — text goes in quotes: `print("hello")`.
+
+The other two are about writing code that spans *several* lines, and every program
+in this lesson is a straight list of one-line instructions. You'll meet them in
+Lesson 1-10, at the moment you need them.
 
 <KnowledgeCheck
   question="Which line is written correctly?"
@@ -255,15 +262,28 @@ Blockly never let you make a spelling mistake. Python will, so five rules matter
 />
 
 <KnowledgeCheck
-  question="What's wrong with this line?  for i in range(4)"
+  question="What do the parentheses in board.wait_for_button() do?"
   options={[
-    {text: 'range should be capitalized'},
-    {text: 'It is missing the colon at the end — for i in range(4):', correct: true},
-    {text: 'It needs quotes around the 4'},
-    {text: 'Nothing is wrong'},
+    {text: 'They tell Python to call the function — and anything inside them is an argument passed to it', correct: true},
+    {text: 'They are decoration; Python ignores them'},
+    {text: 'They mean the function returns nothing'},
+    {text: 'They are only needed when there is something inside them'},
   ]}
-  explanation="Lines that start a block (for, if, def) must end with a colon."
+  explanation="Parentheses are what turns a name into a call. wait_for_button needs no arguments, so they're empty — but leave them off and Python just names the function without running it."
 />
+
+<TeacherNote title="Why three now and two later">
+
+The two held back — colons and indentation — only make sense once there is a
+*block* of code to belong to, and the first one arrives in Lesson 1-10's `for`
+loop. Introducing them here means five rules memorized and three practiced, with
+the other two half-forgotten by the time they matter.
+
+Don't let it read as something skipped. The lesson promises two more by name, and
+Lesson 1-10 opens by collecting on that promise — students should recognize it as
+a debt being paid, not a surprise.
+
+</TeacherNote>
 
 ## Activity · Write your first Python program
 
@@ -318,9 +338,11 @@ runs, so you can see exactly where it is in the program.
 
 Encourage *liberal* use of `print()` — a message before and after each action
 turns an invisible program into a visible one. This is the habit that makes the
-Python lessons debuggable. Also expect indentation to be the #1 stumble: a
-whitespace-visible editor and auto-indent help a lot. Let students hit real syntax
-errors and practice reading the messages; that's the skill.
+Python lessons debuggable. Let students hit real syntax errors and practice reading
+the messages; that's the skill, and the errors here are the easy kind — one line,
+one mistake. (Indentation is the #1 stumble overall, but it can't happen yet:
+nothing in this lesson is indented. It arrives with the `for` loop in Lesson 1-10,
+where a whitespace-visible editor and auto-indent earn their keep.)
 
 </TeacherNote>
 
@@ -368,7 +390,8 @@ Python is one of the most-used languages in the world, well beyond robots:
 
 - Why learn Python if Blockly works? (It's general-purpose rather than limited to the blocks provided, it's used everywhere from web development to data science to AI, and it lets you build on libraries other people have already written and tested.)
 - Name a job Python does outside robotics. (Web development, data science, machine learning, automation — any of these.)
-- Name two of the five syntax rules. (Indentation, colons, lowercase, parentheses, quotes.)
+- Name the three syntax rules from this lesson. (Lowercase, parentheses, quotes — colons and indentation are still to come.)
+- What do the parentheses in `print()` tell Python? (That the name is a function call — run it; anything inside them is an argument.)
 - What is `print()` good for? (Showing messages and debugging.)
 
 <TeacherNote title="Assessment & next lesson">

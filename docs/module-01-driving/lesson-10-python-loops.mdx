@@ -17,8 +17,10 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Remember the **Repeat** block that made shapes so much shorter? Python has the
 same tool: the **`for` loop**. In this lesson you'll write loops in text and use
 them to draw the shapes you already know — proving the logic is identical, only
-the syntax changed. Then you'll do something Blockly made awkward: put a loop
-*inside* another loop.
+the syntax changed. You'll also collect the two syntax rules Lesson 1-8 promised
+and didn't deliver, because a loop is the first thing you've written that has an
+*inside*. Then you'll do something Blockly made awkward: put a loop inside another
+loop.
 
 <Objectives>
 
@@ -26,7 +28,8 @@ By the end of this lesson you will be able to:
 
 - Write a Python `for` loop and use it to repeat robot commands
 - Explain what `range(n)` produces and why counting starts at `0`
-- Use indentation to define exactly what's inside the loop
+- Apply the last two of Python's five syntax rules — colons and indentation — to
+  say exactly what's inside the loop
 - Nest one loop inside another, using the outer counter to change what the inner
   loop draws
 
@@ -59,7 +62,40 @@ Breaking down that first line:
 - `for` — the keyword that starts a loop.
 - `i` — a counter variable (you can use it or ignore it).
 - `range(4)` — produces the numbers `0, 1, 2, 3` — four of them.
-- `:` — required, and everything **indented** under it is the loop body.
+- `:` — required. More on that in a moment.
+
+## The two syntax rules you were promised
+
+Remember Lesson 1-8 saying there were five syntax rules, and then only showing you
+three? Here are the other two. They were held back because they'd have been
+meaningless then: every program in that lesson was a flat list of one-line
+instructions, and these two rules exist to answer a question that list never
+raised — *which lines belong to which?*
+
+The `for` loop is the first thing in this course that has an **inside**. So:
+
+4. **Colons** — a `:` ends any line that opens a block. `for i in range(4):`
+   is a promise that lines belonging to this loop follow. `if` and `def` do the
+   same, which you'll see soon enough.
+5. **Indentation** — the spaces at the start of a line say what's *inside* the
+   block the colon opened. Indented means in; back at the margin means out.
+
+Most languages use curly braces `{ }` for this and treat indentation as a courtesy
+to whoever reads it next. Python took the braces away and made the indentation
+itself the rule, so the shape of the code on the page and what the code actually
+does can never disagree. That's a real advantage — and it also means a stray space
+is a genuine error, not a style nitpick.
+
+<KnowledgeCheck
+  question="What's wrong with this line?  for i in range(4)"
+  options={[
+    {text: 'range should be capitalized'},
+    {text: 'It is missing the colon at the end — for i in range(4):', correct: true},
+    {text: 'It needs quotes around the 4'},
+    {text: 'Nothing is wrong'},
+  ]}
+  explanation="Rule 4: a line that opens a block must end with a colon. for, if and def all follow it."
+/>
 
 <KnowledgeCheck
   question="What numbers does range(4) produce?"
@@ -84,8 +120,8 @@ see the error message.
 
 ## Indentation decides what repeats
 
-Indentation isn't decoration — it's how Python knows which lines are inside the
-loop. Compare:
+Rule 5 in action. Compare these two programs — the only difference is where one
+line starts:
 
 ```python
 for i in range(4):
