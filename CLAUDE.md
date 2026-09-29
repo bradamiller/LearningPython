@@ -910,6 +910,32 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **COMMENTS AND DOCSTRINGS ARE TAUGHT — `#` IN L1-8, `"""` IN L1-12 (Brad, 2026-09-29).**
+  Neither had ever been explained. `#` comments appear in student-facing code from L1-8
+  onward and the word "docstring" was used three times (L1-11's teacher note, L1-12 twice)
+  without ever being defined, while L1-12's project skeleton showed a module docstring, a
+  function docstring and `# ===== BANNER =====` comments all at once.
+  **Each is taught where it is first met**, the same rule as `%` and the syntax rules:
+  - **L1-8**, at the reflectance/rangefinder snippets whose `# 1 · import the class`
+    annotations are the first comments in the course: a `#` means Python ignores the rest
+    of the line, comments can stand alone, and they cost nothing to run — so prefer the
+    one that records *why*, not the one that restates the code.
+  - **L1-12**, new section "The two kinds of note in that program", right after the
+    skeleton: what a docstring *is* (a string as the first thing in a file, class or
+    function), what triple quotes buy (multi-line), and the one real difference —
+    **Python keeps a docstring and throws a comment away**, which is why
+    `help(calculate_angle)` and editor hovers work. Summed up as *docstring for what a
+    function is for, comment for why a line is the way it is.*
+  **The stale-comment argument is the one that lands**, and it is in a Callout and the
+  teacher note: `# turn 90 degrees` above `drivetrain.turn(90)` is noise, and becomes a
+  lie the moment the call changes to 120. The teacher note has that as a two-minute demo.
+  **L1-11's teacher note was adjusted** — it told teachers to encourage docstrings one
+  lesson before docstrings existed; it now says to keep it to "a sentence in quotes" and
+  leave the mechanics to L1-12. The polish step in L1-12's activity now names both kinds.
+  **Self-inflicted, worth remembering:** the first draft of this section wrote "labelled
+  regions" — the exact British spelling swept out of the course two commits earlier. Run
+  the §9 spelling sweep after writing new prose, not just when Brad reports one.
+
 - **DEFAULT PARAMETERS ARE TAUGHT IN L1-11 (Brad, 2026-09-29).** L1-11's activity had a
   challenge saying "give your function a default value — `def square(side_length=30):`"
   with no explanation anywhere of what a default is or how it behaves. Brad's call was

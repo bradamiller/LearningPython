@@ -129,6 +129,80 @@ if __name__ == "__main__":
 That last block (`if __name__ == "__main__":`) is the professional way to say "run
 `main()` when this file is the program." You'll see it in real Python everywhere.
 
+### The two kinds of note in that program
+
+Look again at the skeleton and you'll see notes written in two different ways.
+
+The `#` lines are **comments**, the kind you met in Lesson 1-8: Python ignores
+everything after the `#`. The banner lines are doing a job you'll appreciate on a
+long file — dividing it into labeled regions you can find at a glance:
+
+```python
+# ===== HELPER FUNCTIONS =====
+```
+
+The triple-quoted pieces are different. A string in quotes, written on its own as
+the **first thing inside** a function, a class or a file, is a **docstring** — short
+for *documentation string*. Triple quotes are ordinary Python quotes with one extra
+ability: the text can run across several lines, which is why the one at the top of
+the file can hold a title, a team and a description:
+
+```python
+def calculate_angle(sides):
+    """Return the exterior angle of a regular polygon."""
+    return 360 / sides
+```
+
+The practical difference is that a docstring doesn't vanish the way a comment does.
+Python keeps it, attached to the thing it describes, so tools can read it back —
+`help(calculate_angle)` prints that sentence, and your editor shows it when you
+hover over a call. A `#` comment above the `def` would look almost identical on
+screen and be gone the moment the file is loaded.
+
+So: **docstring for what a function is for, comment for why a line is the way it
+is.** One sentence, present tense, saying what the caller gets — "Return the
+exterior angle of a regular polygon", not "This function calculates…".
+
+<Callout kind="tip" title="Write them for the person who opens this in six months">
+
+That person is usually you. The comment worth writing is the one that records
+something the code can't say on its own — why the effort is `0.5` and not `0.8`,
+which surface you measured the turn on, what you already tried that didn't work.
+A comment that just renames the line beneath it (`# turn 90 degrees` above
+`drivetrain.turn(90)`) is noise, and worse, it's a lie waiting to happen: change
+the code and the comment quietly goes stale.
+
+</Callout>
+
+<KnowledgeCheck
+  question="What is the difference between these two ways of describing a function?"
+  code={'# Return the exterior angle\ndef calculate_angle(sides):\n    """Return the exterior angle."""'}
+  options={[
+    {text: 'The docstring is kept by Python and can be read back by tools like help(); the comment is discarded', correct: true},
+    {text: 'There is no difference — both are ignored by Python'},
+    {text: 'The comment is kept and the docstring is discarded'},
+    {text: 'Docstrings are only allowed at the top of a file'},
+  ]}
+  explanation="Both are for humans, but only the docstring survives: Python attaches it to the function, so help() and your editor can show it. A comment is thrown away once the file is read."
+/>
+
+<TeacherNote title="The comment conversation worth having">
+
+Students arrive with one of two habits: comment nothing, or comment every line
+because a previous class graded on it. Neither survives contact with a real
+program. The line that lands is that a comment is **a message to a future
+reader**, and the test is whether it says something the code cannot.
+
+A demonstration that takes two minutes: put `# turn 90 degrees` above a
+`drivetrain.turn(90)`, then change the call to `turn(120)` and ask what the
+comment is now. Stale comments are worse than none, because people believe them.
+
+Don't grade docstrings on wording. One clear sentence per function is the whole
+ask at this stage; `help()` in the shell is a nice payoff to demonstrate once, so
+they see the docstring come back out of a function they wrote themselves.
+
+</TeacherNote>
+
 ## Activity · Build, test, and polish
 
 Work the same loop engineers use:
@@ -136,8 +210,8 @@ Work the same loop engineers use:
 1. **Build** one function; **test** it on its own with a few inputs.
 2. **Integrate** — call it from `main()` alongside the others; test the flow.
 3. **Instrument** — sprinkle `print()` messages so you can see what's happening.
-4. **Polish** — add a one-line docstring to each function, remove leftover debug
-   prints, and make your names clear.
+4. **Polish** — add a one-line docstring to each function, add comments where a
+   line needs a *why*, remove leftover debug prints, and make your names clear.
 
 <KnowledgeCheck
   question="Your program runs but the robot behaves differently each time on the same code. Most likely cause?"

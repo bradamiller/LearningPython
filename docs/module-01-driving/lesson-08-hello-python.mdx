@@ -194,13 +194,20 @@ Instance name, a dot, then what you want it to do. That `instance.method()` shap
 is most of the Python you'll write from here on.
 
 The device changes; the three steps don't. Here is the **reflectance sensor** you
-meet in the next module — read it against the drivetrain code above:
+meet in the next module — read it against the drivetrain code above. The notes off
+to the right are **comments**: a `#` tells Python to ignore the rest of that line,
+so everything after it is there for the human reading the code, not for the robot.
 
 ```python
 from XRPLib.reflectance import Reflectance            # 1 · import the class
 reflectance = Reflectance.get_default_reflectance()   # 2 · make an instance
 reflectance.get_left()                                # 3 · use it
 ```
+
+A comment can also sit on a line of its own, and either way you can write whatever
+you like after the `#` — Python never looks at it. They cost nothing to run, so use
+them freely: a line explaining *why* you picked a number is worth far more later
+than one restating what the code plainly does.
 
 And the **rangefinder**, later on:
 
