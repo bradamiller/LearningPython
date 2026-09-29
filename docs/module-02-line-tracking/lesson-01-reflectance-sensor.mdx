@@ -87,8 +87,19 @@ print("Left sensor:", left)
 print("Right sensor:", right)
 ```
 
-To watch the values change as you slide the robot across the line, put the read in
-a loop:
+Run it and you get two numbers. Then the program ends.
+
+That's worth sitting with for a second, because it's the first thing that will
+frustrate you. Those two `get_left()` and `get_right()` calls happen **once**, at
+the instant you press the button — they are a snapshot, not a live feed. Python
+reaches the bottom of the file and the program is over, so sliding the robot across
+the tape afterwards changes nothing on screen. The numbers you're looking at are
+from wherever the robot was sitting when you pressed the button, and they'll stay
+that way until you press RUN again.
+
+Which is a problem, because what you actually want to know is how the readings
+*change* as the robot moves. To see that, the reading has to happen over and over
+— so put it in a loop:
 
 ```python
 import time
@@ -99,6 +110,12 @@ for i in range(50):
     print("Left:", left, "  Right:", right)
     time.sleep(0.1)
 ```
+
+Same two lines doing the reading; they just run fifty times now, a tenth of a
+second apart, which gives you about five seconds to slide the robot across the tape
+and watch the numbers follow it. That shift — from *read it once* to *keep reading*
+— is the whole idea behind the `while` loop in the next lesson, where the robot
+reads its sensors for as long as it's driving.
 
 <Figure
   placeholderLabel="Screen recording — sliding the robot across the tape while sensor values print"

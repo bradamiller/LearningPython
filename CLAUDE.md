@@ -910,6 +910,24 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
   and keep `global` out of the course; it is needed nowhere.
+- **M2 L1 SAYS THE FIRST SENSOR PROGRAM RUNS ONCE AND EXITS (Brad, 2026-09-29).** The
+  lesson showed a read-both-sensors program, then offered a `for` loop version with only
+  "To watch the values change as you slide the robot across the line, put the read in a
+  loop" between them. Nothing said the first program *stops* — so a student presses RUN,
+  gets two numbers, slides the robot, and watches nothing happen, with no idea whether the
+  sensor is broken, the robot is disconnected, or that is simply what the program does.
+  The prose now names it: the two calls are **a snapshot, not a live feed**, Python reaches
+  the bottom of the file and the program is over, and the numbers stay frozen until RUN is
+  pressed again.
+  **It also turns the loop into something needed rather than offered**, which is §9's
+  experiential rule applied to a two-paragraph transition: state what you actually want to
+  know (how the readings *change*), observe that one reading cannot tell you, then reach
+  for the loop. The passage closes by naming the shift from *read once* to *keep reading*
+  as the idea behind L2-2's `while` loop — L2-2's own meta chip is "while loops", so the
+  forward reference is exact.
+  Worth applying elsewhere: any lesson that shows a one-shot program next to a looping one
+  should say which is which. This was the first place it bit.
+
 - **THE THREE STEPS ARE NOT THREE CONSECUTIVE LINES (Brad, 2026-09-29).** L1-8 teaches
   import the class → make an instance → use it, and every example squashed all three
   together, which reads as a three-line recipe you write as a unit. **It isn't.** Steps 1
