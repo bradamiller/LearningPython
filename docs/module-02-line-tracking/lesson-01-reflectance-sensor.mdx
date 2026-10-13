@@ -99,7 +99,42 @@ that way until you press RUN again.
 
 Which is a problem, because what you actually want to know is how the readings
 *change* as the robot moves. To see that, the reading has to happen over and over
-— so put it in a loop:
+— so it goes in a loop. Before you write that loop, though, there's one new tool
+you'll need.
+
+### Pausing a program with `time.sleep()`
+
+A loop with nothing slowing it down runs *fast*. Fifty sensor readings would print
+in a fraction of a second — long before you could move the robot — and then the
+loop would be over. You need the program to take a short breath between readings.
+
+Python comes with a built-in module called `time` for exactly this. It isn't part
+of XRPLib; it ships with Python itself (and with MicroPython, the version of Python
+running on the XRP). Like any module, you bring it into your program with an
+`import` at the top:
+
+```python
+import time
+```
+
+That one line gives you access to everything in the module. The piece you want is
+`sleep()`, and you reach it with a dot — `time.sleep()` means "the `sleep`
+function that lives in the `time` module," the same way `reflectance.get_left()`
+means "the `get_left` method that belongs to the reflectance sensor."
+
+`time.sleep()` takes one number: **how many seconds to pause**. Whole numbers and
+decimals both work:
+
+- `time.sleep(1)` — wait one second
+- `time.sleep(0.5)` — wait half a second
+- `time.sleep(0.1)` — wait a tenth of a second
+
+While it's sleeping, your program simply stops at that line and does nothing until
+the time is up; then it carries on with the next line. (Anything already in motion
+keeps going, though — if the motors were running when the program went to sleep,
+they're still running.)
+
+Now put the reading in a loop, with a short sleep at the end of each pass:
 
 ```python
 import time
