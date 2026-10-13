@@ -146,8 +146,30 @@ it's not indented.
 
 ## Use the counter
 
-The loop variable isn't just for counting — you can *use* it. This prints which
-side it's drawing as it goes:
+The loop variable isn't just for counting — you can *use* it. Say you want the
+robot to report which side it's drawing as it goes. You already know `print()`,
+and `print()` will take several things at once if you separate them with commas:
+
+```python
+for i in range(5):
+    print("Drawing side", i + 1, "of 5")
+    drivetrain.straight(20)
+    drivetrain.turn(72)
+```
+
+Python prints each item in turn and puts a space between them:
+
+```text
+Drawing side 1 of 5
+Drawing side 2 of 5
+Drawing side 3 of 5
+...
+```
+
+We use `i + 1` so the messages read "1, 2, 3…" instead of "0, 1, 2…" — `range(5)`
+counts from 0, but people count from 1.
+
+That works. Now here's the same message written a second way:
 
 ```python
 for i in range(5):
@@ -156,8 +178,74 @@ for i in range(5):
     drivetrain.turn(72)
 ```
 
-The `f"…{i + 1}…"` is an **f-string** — it drops the value of `i + 1` right into
-the text. We use `i + 1` so the messages read "1, 2, 3…" instead of "0, 1, 2…".
+Run it and the output is identical. The text in quotes is an **f-string** (the
+*f* is for *formatted*): one piece of text with a slot in it, where Python drops
+in the value of `i + 1`.
+
+### The rules for f-strings
+
+1. **Put an `f` right before the opening quote** — `f"…"`, with no space between
+   them.
+2. **Curly braces `{ }` mark a slot.** Python works out whatever is inside the
+   braces and puts the answer into the text at that spot. It can be a variable
+   (`{i}`), a calculation (`{i + 1}`, `{360 / 5}`), or anything else that
+   produces a value.
+3. **Everything outside the braces is printed exactly as you typed it**, spaces
+   and punctuation included. Python adds nothing.
+4. **You can have as many slots as you like** in one f-string:
+   `f"Side {i + 1}: drive {length} cm, turn {angle} degrees"`.
+5. **Forget the `f` and the braces stop working.** Without it, `"Drawing side {i + 1}
+   of 5"` is ordinary text, and Python prints the braces and the words inside them
+   literally — `Drawing side {i + 1} of 5`, five times. If you ever see curly
+   braces in your output, look for a missing `f`.
+
+<KnowledgeCheck
+  question={'i is 2. What does print("Side {i + 1}") show?'}
+  options={[
+    {text: 'Side 3'},
+    {text: 'Side 2'},
+    {text: 'Side {i + 1}', correct: true},
+    {text: 'An error'},
+  ]}
+  explanation={'There is no f before the quote, so it is ordinary text and the braces are just characters. Add the f, as in f"Side {i + 1}", and it shows Side 3.'}
+/>
+
+### Why bother, if commas already work?
+
+For a short message the two are interchangeable. F-strings win as the message
+grows, for three reasons.
+
+**You can read it.** An f-string looks like the line it will print. The comma
+version is chopped into pieces, and you have to assemble it in your head —
+especially once there are several values:
+
+```python
+print("Side", i + 1, "- drive", length, "cm, turn", angle, "degrees")
+print(f"Side {i + 1} - drive {length} cm, turn {angle} degrees")
+```
+
+**You control the spacing.** Commas *always* put a space between items, whether
+you want one or not. Try printing a fraction like `1/5`:
+
+```python
+print("Side", i + 1, "/", 5)     # Side 1 / 5
+print(f"Side {i + 1}/5")         # Side 1/5
+```
+
+There's no way to make the comma version print `1/5` — the spaces come with the
+commas. In an f-string, the only spaces are the ones you typed.
+
+**It's a value, not just a printout.** Commas only mean "several things" inside
+`print()`. An f-string is a complete piece of text you can store in a variable and
+use later:
+
+```python
+message = f"Drawing side {i + 1} of 5"
+print(message)
+```
+
+You'll lean on that later in the course, along with a few extra tricks f-strings
+have — like rounding a long sensor reading to two decimal places as you print it.
 
 <KnowledgeCheck
   question="You want a loop to run 6 times to draw a hexagon. What goes in the range?"
