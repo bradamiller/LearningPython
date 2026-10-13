@@ -178,18 +178,34 @@ print(sensor.is_at_cross())    # True / False
 
 ## Before and after
 
-See what the class buys you. The old tangled way:
+You didn't need a class to organize this code. Plain functions, which you've used
+since Lesson 1-11, can do most of it. Here is the same sensor logic as functions,
+with the same names as the methods:
 
 ```python
 reflectance = Reflectance.get_default_reflectance()
 threshold = 0.5
-left = reflectance.get_left()
-right = reflectance.get_right()
-error = left - right
-at_cross = left > threshold and right > threshold
+
+def get_left():
+    return reflectance.get_left()
+
+def get_right():
+    return reflectance.get_right()
+
+def get_error():
+    return get_left() - get_right()
+
+def is_at_cross():
+    return get_left() > threshold and get_right() > threshold
+
+def is_off_line():
+    return get_left() < threshold and get_right() < threshold
+
+error = get_error()
+at_cross = is_at_cross()
 ```
 
-The class way:
+And here is how the class version is used:
 
 ```python
 sensor = LineSensor()
@@ -197,9 +213,29 @@ error = sensor.get_error()
 at_cross = sensor.is_at_cross()
 ```
 
-Same behavior, but the second reads like plain language and can be dropped into any
-program. Test yours with a loop that prints the error while you slide the robot over
-the line by hand.
+Compare the functions with the `LineSensor` class above, line by line. Only four
+things change, and they're the same four every time:
+
+- The functions move inside `class LineSensor:`, and each one gets `self` as its
+  first parameter.
+- `reflectance` and `threshold` stop being separate variables at the top of the
+  file. They become the object's own data, set up once in `__init__` as
+  `self.reflectance` and `self.threshold`.
+- Inside the methods, those values and calls to other methods get `self.` in front:
+  `threshold` becomes `self.threshold`, `get_left()` becomes `self.get_left()`.
+- Calls from outside go through the object: `get_error()` becomes
+  `sensor.get_error()`.
+
+So what does the class add? The functions version works, but its parts are spread
+out. Every function depends on two variables defined somewhere else in the file, and
+copying the sensor code into a new program means remembering to bring all of it. A
+class keeps the data and the functions that use it together as one unit, so
+`LineSensor()` brings everything. And because each object has its own
+`self.threshold`, you can make two sensors with two different thresholds, which a
+single `threshold` variable can't do.
+
+Test your class with a loop that prints the error while you slide the robot over the
+line by hand.
 
 <TeacherNote title="Watch for these syntax slips & differentiation">
 
