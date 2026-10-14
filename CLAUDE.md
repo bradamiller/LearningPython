@@ -909,7 +909,10 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   (this is why one `drivetrain` at the top serves every function), and *assigning*
   to an outer name makes a new local instead — which is the gap `self.` closes in
   Module 2. Don't simplify this back to "functions can't see outside themselves",
-  and keep `global` out of the course; it is needed nowhere.
+  and keep `global` out of the course; it is needed nowhere. *(Amended 2026-10-14:
+  the source's 2-8 teaches `global` for `set_threshold()`, and the design review
+  kept that — see the decisions doc, D7. It is still needed nowhere else, and the
+  planner design was shaped so `add_blocked` doesn't need it either.)*
 - **CODE FENCES ARE ASCII-ONLY, AND THE BUILD ENFORCES IT (Brad, 2026-09-29).** Brad hit a
   `\u2190` (left arrow) in a comment inside M2 L2's `while` program: it renders beautifully
   on the page, and **XRP Code rejects it** when a student pastes the block in. That is the
@@ -1229,14 +1232,26 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     functions; L6's swap is a `compute_path(algorithm, ...)` dispatch function in
     the functions track, with true polymorphism as the extension; L7–L9 call the
     functions directly.
-  - Site pages need the same primary/extension split, and probably a visual
-    treatment for "Optional Extension" (a collapsible, or reuse of the
-    `TeacherNote` pattern). **DO NOT start this yet — Brad is deliberately
-    deferring it (2026-09-18): he wants the course's overall structure settled
-    first, then he'll come back to the class-first question.** When he does, the
-    open decision is how an Optional Extension should look on a page.** Note this also resolves how M4/M5 relate — see the
-    `compute_path` bullet below, which the functions-first shape may settle on its
-    own.
+  - **✅ DECIDED 2026-10-14 — read `<IntoToPython>/teacher-guide/course-design-decisions.md`
+    before touching M2 L8+, M4 or M5 on the site.** The deferral above is over.
+    Brad settled the shape in a design review: functions-first with class
+    extensions gated *per student* on working code (not a course-wide track);
+    extensions are `LineSensor`, `LineTrack`, `Navigator` and the planners;
+    planners are stateless (`compute_path(position, destination)`, path excludes
+    the start, `add_blocked(intersection)`, graph rebuilt from the blocked list
+    each call, no XRPLib imports); the Navigator is the sole owner of position
+    and heading, so the 4-9 sync step is gone; paper testing is structural
+    (print-then-button-then-drive, property checks); **Module 5 teaches BFS as
+    the required planner and Dijkstra as a duplicate-and-edit extension** on a
+    weighted edge whose physical form is still open; `global` IS taught in 2-8
+    (supersedes the "keep `global` out" line in this file).
+    **Sequencing: source first, then ONE port to the site.** The source repo's
+    code is being rewritten first (phase 2), then its lessons (phase 3), and only
+    then does the site get M2 L8–10, M4 and M5 ported (phase 4), together with an
+    Optional Extension collapsible whose first screen is a side-by-side
+    (functions left, class right, names aligned) and a build-time name-parity
+    check modeled on `check_code_ascii.js`. Until phase 4, the site's M2 L8+/M4/M5
+    pages stay as they are — do not partially port.
   - Also per that guide, still stale in the SOURCE (not the site): M2 L8–L9 slide
     outlines + `.pptx`, the root `generate_pptx_lesson*.py` scripts, and the
     `.html`/`.pdf` worksheet renders for M4–M5.
