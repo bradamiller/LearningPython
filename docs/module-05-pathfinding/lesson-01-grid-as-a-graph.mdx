@@ -141,8 +141,9 @@ Without the obstacle, the Manhattan distance is only 2. **Obstacles make paths
 longer** — and Manhattan distance becomes just a lower bound, not the real answer.
 
 One more idea for later: our grid is **unweighted** — every edge costs 1 step. (In a
-*weighted* graph, a highway edge might cost less than a side-street edge.) Dijkstra's
-algorithm handles both; we'll use the unweighted case.
+*weighted* graph, a highway edge might cost less than a side-street edge.) This module
+uses the unweighted case; the optional Module 6 is about what changes when edges have
+different costs.
 
 <KnowledgeCheck
   question="With (1,0) blocked, the shortest path from (0,0) to (2,0) is 4 steps, but the Manhattan distance is 2. What does that tell you?"
@@ -179,7 +180,7 @@ Graphs run a huge amount of the technology you use:
 
 <TeacherNote title="Make Manhattan's failure vivid — and keep it on paper">
 
-This lesson is the *why* for Dijkstra's. Spend real time on the hook: show a blocked cell
+This lesson is the *why* for the whole module. Spend real time on the hook: show a blocked cell
 sitting on Manhattan's route and let students feel that the old algorithm is stuck. Draw
 big graphs on the whole board; have students come up, cross out blocked nodes, and trace
 detours with markers. Clear up the word "graph" immediately — in CS it's a network of

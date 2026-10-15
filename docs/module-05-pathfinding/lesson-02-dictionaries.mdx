@@ -17,7 +17,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 You drew the grid graph on paper. Now you'll store it in Python using a **dictionary** —
 where each key is a `(row, col)` node and each value is a list of that node's neighbors.
 By the end you'll have a `build_grid_graph(rows, cols)` function that generates the whole
-graph automatically, ready for Dijkstra's algorithm.
+graph automatically, ready for the search in Lesson 5-3.
 
 <Objectives>
 
@@ -187,7 +187,8 @@ Key-value lookup is one of the most-used tools in all of programming:
 Show a plain dictionary (`{"name": "Alice"}`) before the tuple-keyed graph. Have students
 open their Lesson 5-1 drawings and translate each node into a key-value pair — makes the
 paper-to-code jump concrete. `build_grid_graph` is the core deliverable: every student
-needs a working copy, since it becomes a method of the Dijkstra class in Lesson 5-4. Spend
+needs a working copy, since Lesson 5-4's `build_graph()` is this function with the blocked
+check folded in. Spend
 extra time on the two-step removal — forgetting to clean neighbor lists is the #1 bug in
 later lessons. Remind them: tuples can be dict keys, lists cannot (keys must be
 immutable).
