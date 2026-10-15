@@ -13,12 +13,13 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "checks": "node scripts/extract_checks.js && node scripts/generate_quiz_pages.js",
-    "prestart": "npm run ascii && npm run checks && npm run pacing && npm run todos:data",
-    "prebuild": "npm run ascii && npm run checks && npm run pacing && npm run todos:data",
+    "prestart": "npm run lint && npm run checks && npm run pacing && npm run todos:data",
+    "prebuild": "npm run lint && npm run checks && npm run pacing && npm run todos:data",
     "pacing": "node scripts/extract_pacing.js",
     "todos": "node scripts/list_todos.js",
     "todos:data": "node scripts/extract_todos.js",
-    "ascii": "node scripts/check_code_ascii.js"
+    "ascii": "node scripts/check_code_ascii.js",
+    "lint": "node scripts/check_code_ascii.js && node scripts/check_extensions.js"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

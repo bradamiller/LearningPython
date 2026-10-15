@@ -20,6 +20,11 @@ import React, {useState} from 'react';
  * the functions version works on the robot; it earns no extra credit. Override
  * with `gate="…"` when a lesson needs different wording. Closed content is not
  * printed.
+ *
+ * NO MARKDOWN HEADINGS INSIDE. Children are not rendered until the box is
+ * opened, but Docusaurus builds the page outline from the source, so a `###`
+ * in here becomes an outline entry that scrolls nowhere (2026-10-15, M2 L8).
+ * Use **bold text** for sub-sections; scripts/check_extensions.js enforces it.
  */
 export default function OptionalExtension({
   title,

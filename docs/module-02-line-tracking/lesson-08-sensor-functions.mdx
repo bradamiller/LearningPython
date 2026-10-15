@@ -16,7 +16,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Your line-following programs work — but the sensor reading, the threshold test, and the
 control math are all tangled together in one loop. In Module 1 you tidied repeated
-driving code into `draw_polygon()`. This lesson does the same for the sensors: five
+driving code into `polygon()`. This lesson does the same for the sensors: five
 small, well-named functions you can call from anywhere. Nothing here is new syntax. The
 one new idea is functions that **share** a sensor and a threshold without being handed
 them every call.
@@ -68,7 +68,7 @@ THRESHOLD = 0.5
 
 A variable created outside every function is a **global variable**: every function
 below it in the file can read it without being handed it. You've been doing this since
-Module 1 — `drivetrain` is a global that `draw_polygon()` used without a parameter.
+Module 1 — `drivetrain` is a global that `polygon()` used without a parameter.
 
 `THRESHOLD` is in capitals by convention. That spelling says *this is a setting, not a
 value that changes as the program runs*. Python doesn't enforce it; readers rely on it.
@@ -254,7 +254,7 @@ functions below, and every one of them depends on both globals. A **class** keep
 data and the functions that use it together as one unit. This is the first class in
 the course, and it is small on purpose.
 
-### What a class is
+**What a class is**
 
 A class is a blueprint that groups related **data** and **actions** together.
 
@@ -276,7 +276,7 @@ A class is a blueprint that groups related **data** and **actions** together.
 You've used classes all along — `DifferentialDrive`, `Reflectance` and `Board` are
 classes. Now you'll write one.
 
-### `__init__` and `self`
+**`__init__` and `self`**
 
 ```python
 class LineSensor:
@@ -296,7 +296,7 @@ sensor = LineSensor()     # __init__ runs now
 print(sensor.threshold)   # 0.5
 ```
 
-### Methods
+**Methods**
 
 A **method** is a function that lives inside a class and takes `self` as its first
 parameter — that's how it reaches the object's own data.

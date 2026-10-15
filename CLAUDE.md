@@ -22,9 +22,11 @@ checks, and a teacher-notes toggle.
   media-rich lessons).
 - **Audience:** high school students (no prior programming); teachers use the
   same pages with teacher-only notes toggled on.
-- **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (13: kickoff
-  lesson-00-what-is-a-robot + lessons 1–12), Module 2 (10), Module 3 (4),
-  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9), Module 6 (overview only, optional) — 46 lessons + 1 overview live. Site builds clean (`npm run build`).
+- **Status (current, 2026-10-15):** **ALL SIX MODULES ARE BUILT.** Module 1 (13:
+  kickoff lesson-00-what-is-a-robot + lessons 1–12), Module 2 (10), Module 3 (4),
+  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9, BFS pathfinding),
+  Module 6 (6: overview + lessons 1–5, Dijkstra, optional) — 50 numbered lessons +
+  2 overviews = 52 pages. Site builds clean (`npm run build`).
   `docs/module-01-driving/lesson-01-meet-the-xrp.mdx` is the canonical template.
 - **Evaluation pass in progress (Brad, since 2026-09-15).** Conversion is done;
   the work now is Brad reading lessons and correcting them. **Module 1 lessons 0–6
@@ -76,8 +78,8 @@ LearningPython/                            # repo root — the site itself
 │   ├── module-02-line-tracking/          # 10 lessons (all Python) — DONE
 │   ├── module-03-grid-driving/           # 4 lessons — DONE
 │   ├── module-04-manhattan/              # lesson-00-overview + lessons 1–9 — DONE
-│   ├── module-05-pathfinding/            # lessons 1–9 (no overview) — renamed 2026-10-14; L3–L6 await the BFS rewrite
-│   └── module-06-dijkstra/               # OPTIONAL — lesson-00-overview only until the source's Module 6 is written
+│   ├── module-05-pathfinding/            # lessons 1–9 (no overview) — BFS as the required planner — DONE
+│   └── module-06-dijkstra/               # OPTIONAL — lesson-00-overview + lessons 1–5 — DONE
 ├── src/
 │   ├── components/
 │   │   ├── Lesson.js      # LessonHeader, Objectives, TeacherBanner, CardGrid, InfoCard, Decide
@@ -931,6 +933,42 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the source's 2-8 teaches `global` for `set_threshold()`, and the design review
   kept that — see the decisions doc, D7. It is still needed nowhere else, and the
   planner design was shaped so `add_blocked` doesn't need it either.)*
+- **CONSISTENCY PASS AFTER THE MODULE 5/6 REWORK (2026-10-15).** A full verification —
+  fresh `npm ci && npm run build`, every `Lesson N-M` cross-reference resolved against the
+  lesson inventory, every `def`/`class` signature compared across modules, the recorded
+  grep invariants — found the structure sound and six drifts, all in content written after
+  the 2026-09-29 pass. Fixed in one commit:
+  - **The overview pages still described five modules.** `index.mdx` had "## The five
+    modules" over six cards and a "5 modules" chip; `how-this-course-works.mdx` said
+    "5 modules · 45 lessons" and, worse, described the swap as Manhattan → "Module 5's
+    `Dijkstra` planner". Module 5 is BFS; Dijkstra is Module 6. That page is the one
+    students are told to read first.
+  - **`draw_polygon()` ×3** in M2 L8 and M3 L2 — the name retired on 2026-09-17; they were
+    the only back-references to Module 1's `polygon` outside Module 1, so every one was wrong.
+  - **L1-11's defaults teacher note** cited `Dijkstra(start, rows=4, cols=4)` in Lesson 5-4
+    and the 3×3 from 5-3. All three stale: 5-4 is BFS functions, the class is
+    `BFS(rows=4, cols=4)` with no `start`, and it lives in L5-5's extension and L6-5. Nothing
+    in the course overrides those defaults any more, so the "reaches the 3×3" claim was
+    dropped rather than re-pointed.
+  - **Three dead outline links on M2 L8.** `###` headings inside an `<OptionalExtension>`
+    go into Docusaurus's page outline, but a closed extension renders no children, so the
+    anchors don't exist until the box is opened. Demoted to bold; **`scripts/check_extensions.js`
+    now fails the build on any heading inside an extension** (`npm run lint` runs it with the
+    ASCII check from prestart/prebuild; verified by planting one). Rule recorded in the
+    component's doc comment too.
+  - "behaviour" in M4 L8, and two British spellings in CSS comments.
+  - This file's status line and tree still said Module 6 was overview-only.
+  **How to re-run the verification** — the invariant greps in §9, plus:
+
+  ```bash
+  npm run lint && npm run build 2>&1 | grep -iE "broken|\[ERROR\]"   # must print nothing
+  ```
+
+  and the cross-reference resolver: every `Lessons? N-M` in `docs/` must match a
+  frontmatter `title: "Lesson N-M …"`. The identifier check is a def/class signature
+  diff across modules; function-vs-`self` method pairs are the intended two tracks, and
+  `compute_path(self, position, destination)` must agree in M4, M5 and M6.
+
 - **CODE FENCES ARE ASCII-ONLY, AND THE BUILD ENFORCES IT (Brad, 2026-09-29).** Brad hit a
   `\u2190` (left arrow) in a comment inside M2 L2's `while` program: it renders beautifully
   on the page, and **XRP Code rejects it** when a student pastes the block in. That is the
@@ -1817,10 +1855,11 @@ design intent, not decoration, so don't contradict them in a lesson:**
    small.
 2. **Each reusable part is an object** — and that's as far as the OOP goes. This
    is NOT an OOP course; the aim is a feel for how a program can be structured.
-3. **The swap is the payoff.** `Manhattan` and `Dijkstra` answer the same request,
-   so the navigator doesn't care which it holds: get Manhattan working, then hand
-   it a Dijkstra with almost no other change. The site keeps this promise as of
-   2026-09-19 — both planners exclude the start from the path they return (§9).
+3. **The swap is the payoff.** Manhattan and the BFS planner answer the same
+   request, so the navigator doesn't care which it holds: get Manhattan working,
+   then hand it BFS with almost no other change — and Module 6 does it a third time
+   with Dijkstra. All three use `compute_path(self, position, destination)` and
+   exclude the start from the path they return (§9); verified 2026-10-15.
 4. **Planners are testable without a robot** — they're arithmetic that returns a
    list of intersections. M4 L6 is the worked example.
 

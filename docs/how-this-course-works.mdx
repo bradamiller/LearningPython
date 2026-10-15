@@ -9,7 +9,7 @@ import Materials from './_partials/materials.mdx';
 <LessonHeader
   eyebrow="Before you begin"
   title="How this course works"
-  meta={['Read first', 'Students & teachers', '5 modules · 45 lessons']}
+  meta={['Read first', 'Students & teachers', '6 modules · 52 lessons']}
 />
 
 This page is the shape of the course: what you'll build, why it's arranged this
@@ -53,12 +53,13 @@ write next.
 
 Two things make the payoff concrete, and both happen in the last two modules.
 
-**You can swap one part for another.** Module 4's `Manhattan` planner and Module
-5's `Dijkstra` planner are asked for a route the same way. The navigator that
-drives the route doesn't care which one it's holding. So you get Manhattan
-working first — simpler, no obstacles — and then hand the navigator a Dijkstra
-instead, with almost nothing else changing. Feeling that swap work is worth more
-than any explanation of why interfaces matter.
+**You can swap one part for another.** Module 4's Manhattan planner and Module
+5's breadth-first-search planner are asked for a route the same way. The navigator
+that drives the route doesn't care which one it's holding. So you get Manhattan
+working first — simpler, no obstacles — and then hand the navigator the BFS planner
+instead, with almost nothing else changing. (Module 6 does it a third time, with
+Dijkstra.) Feeling that swap work is worth more than any explanation of why
+interfaces matter.
 
 **You can test without the robot.** A route planner is just arithmetic: give it a
 start and a destination and it hands back a list of intersections. You can build

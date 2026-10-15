@@ -657,7 +657,7 @@ html[data-teacher='on'] .teacherNote--inline {
   padding: 0.5rem 0.7rem;
   margin: 0 0 0.6rem;
 }
-/* On paper a grey fill wastes toner and can print muddy — keep the border and
+/* On paper a gray fill wastes toner and can print muddy — keep the border and
    the monospace, drop the fill. */
 @media print {
   .quizSheet__code { background: none; border-color: #999; }
@@ -1113,7 +1113,7 @@ html[data-todos='on'] .todoToggle .teacherToggle__thumb { transform: translateX(
 
 /* The "index" link in the corner of every note — the return leg of the loop
    that starts on /todos. Sits inside the category pill, so it inherits the
-   accent colour and stays legible on it. */
+   accent color and stays legible on it. */
 .todo__index {
   margin-left: 0.5rem;
   padding-left: 0.5rem;

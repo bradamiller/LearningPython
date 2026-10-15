@@ -316,14 +316,14 @@ means counting from the left always works.
   explanation="Arguments fill parameters from the left, so the 6 goes to sides. No second argument was given, so side_length falls back to its default of 30."
 />
 
-<TeacherNote title="Defaults come back in Module 5">
+<TeacherNote title="Defaults come back in the planner classes">
 
-Worth a sentence now so it isn't a surprise later: `Dijkstra(start, rows=4, cols=4)`
-in Lesson 5-4 is this exact feature. Nearly every grid in the course is 4×4, so the
-planner is almost always built as `Dijkstra((0, 0))` — but the same class still
-handles the 3×3 that Lesson 5-3 traces by hand, because the defaults can be
-overridden. That is the argument for defaults in one example: the common case stays
-short without the uncommon case becoming impossible.
+Worth a sentence now so it isn't a surprise later: the planner classes are built as
+`BFS(rows=4, cols=4)` — in Lesson 5-5's class extension, and again in Lesson 6-5 for
+every student who reaches the optional module. Nearly every grid in the course is
+4×4, so the class is almost always made as plain `BFS()`, while a different grid is
+one argument away. That is the argument for defaults in one example: the common case
+stays short without the uncommon case becoming impossible.
 
 The mistake to watch for here is a student reading `=` in a `def` line as an
 assignment that runs. It doesn't; it's a value parked for later. A quick way to
