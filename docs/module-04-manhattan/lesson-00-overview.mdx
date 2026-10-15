@@ -25,7 +25,7 @@ figures out each route and drives it, intersection by intersection.
 By the end of this overview you will be able to:
 
 - Describe the goal of Module 4: autonomous multi-destination navigation
-- Name the two classes — `Manhattan` (plans) and `Navigator` (drives) — and each one's job
+- Name the two halves — the **planner** (`compute_manhattan_path`) and the **driver** (`drive_path`) — and each one's job
 - Read the short main program and explain it in plain English
 - Explain **top-down design**: start with the big picture, then build each piece
 
@@ -38,59 +38,61 @@ By the end of this overview you will be able to:
 Here's the *entire* main program you're building toward. Seven lines:
 
 ```python
-manhattan = Manhattan((0, 0))
-navigator = Navigator((0, 0), 0)
+position = (0, 0)
+heading = 0                      # facing North
 destinations = [(2, 0), (2, 3), (0, 3)]
 
 for dest in destinations:
-    path = manhattan.compute_path(dest)
-    navigator.drive_path(path)
-    manhattan.position = navigator.position
+    path = compute_manhattan_path(position, dest)
+    print("Path:", path)
+    position, heading = drive_path(path, position, heading)
 ```
 
-In plain English: *make a planner and a driver, both starting at corner (0, 0); for
-each destination, compute the path, drive it, and update where we are.* You don't
-need to understand `compute_path` or `drive_path` yet — just see that the program is
-short **because the classes do all the work**.
+In plain English: *start at corner (0, 0) facing North; for each destination, compute
+the path from where we are, print it, drive it, and remember where we ended up.* You
+don't need to understand `compute_manhattan_path` or `drive_path` yet — just see that
+the program is short **because the functions do all the work**.
 
 (Those seven lines are the *interesting* part. The real program also opens with the
-class definitions and the `board.wait_for_button()` that every robot program starts
+function definitions and the `board.wait_for_button()` that every robot program starts
 with — they're left out here so the shape stands out.)
 
 <Todo kind="convention">
 this lesson has no Activity and no Real-world connections section. It is an overview, so that may be deliberate — but it is the only non-capstone lesson without either. [REVIEW §4]
 </Todo>
 
-## Two classes, two jobs
+## Two halves, two jobs
 
 <CardGrid>
-  <InfoCard tag="Planner" title="Manhattan">
-    Given where you are and where you want to go, it computes a <strong>list of intersections</strong> to follow. It never touches the robot.
+  <InfoCard tag="Planner" title="compute_manhattan_path">
+    Told where the robot is and where it wants to go, it computes a <strong>list of intersections</strong> to follow. It never touches the robot.
   </InfoCard>
-  <InfoCard tag="Driver" title="Navigator">
-    Given that list, it <strong>drives the robot</strong> through each intersection — turning and line-following. It never decides the route.
+  <InfoCard tag="Driver" title="drive_path">
+    Given that list, it <strong>drives the robot</strong> through each intersection — turning and line-following — and reports where it ended up. It never decides the route.
   </InfoCard>
 </CardGrid>
 
-`Manhattan` produces a path; `Navigator` consumes it. Each class has exactly one
+The planner produces a path; the driver consumes it. Each half has exactly one
 responsibility — that's called **separation of concerns**, and it makes bugs easy to
-find: a wrong route is a `Manhattan` problem; a wrong turn is a `Navigator` problem.
+find: a wrong route is a planner problem; a wrong turn is a driver problem. And because
+the planner is *told* where the robot is rather than remembering, the printed path is
+always checkable before the robot moves.
 
 <KnowledgeCheck
-  question="Which class decides the route, and which one drives the robot?"
+  question="Which half decides the route, and which one drives the robot?"
   options={[
-    {text: 'Manhattan drives; Navigator plans'},
-    {text: 'Manhattan plans the path; Navigator drives it', correct: true},
+    {text: 'drive_path plans; compute_manhattan_path drives'},
+    {text: 'compute_manhattan_path plans the path; drive_path drives it', correct: true},
     {text: 'They both do both jobs'},
-    {text: 'LineTrack does everything'},
+    {text: 'track_to_intersection does everything'},
   ]}
-  explanation="Manhattan computes the list of intersections (planning); Navigator drives through them (execution). One job each."
+  explanation="compute_manhattan_path computes the list of intersections (planning); drive_path drives through them (execution). One job each."
 />
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
 
 The whole point of this lesson is *shape, not detail*. Resist explaining how
-anything works; deflect "how does compute_path work?" with "that's exactly Lessons 4-4
+anything works; deflect "how does compute_manhattan_path work?" with "that's exactly Lessons 4-4
 and 5." Tell students plainly: "You're not meant to understand every line yet — by
 Lesson 4-9 you will, because you'll have built each piece." Consider printing the
 seven-line main program on a card students keep and revisit at the start of each
@@ -105,19 +107,21 @@ Every lesson in this module builds one piece of that program:
 - **Lesson 4-1** — coordinates: the `(row, col)` system
 - **Lesson 4-2** — tuples: storing a position like `(2, 3)`
 - **Lesson 4-3** — lists: storing a path like `[(1,0), (2,0), (3,0)]`
-- **Lessons 4-4 and 4-5** — the Manhattan algorithm: computing paths (on paper, then in code)
+- **Lesson 4-4** — the Manhattan algorithm: computing paths (on paper, then in code)
+- **Lesson 4-5** — the planner function: its name, its promises, and why it is told where the robot is
 - **Lesson 4-6** — testing your code without a robot
 - **Lesson 4-7** — turning logic: headings as numbers
-- **Lesson 4-8** — the `Navigator` class, built on your Module 2 `LineTrack`
+- **Lesson 4-8** — driving the path, built on your Module 2 line-tracking functions
 - **Lesson 4-9** — the final project: it all comes together
 
-Notice `Navigator` reuses `LineTrack` from Module 2 for the actual driving — you're
-not starting from scratch. That's the payoff of building reusable classes.
+Notice `drive_path` reuses the Module 2 functions for the actual driving — you're not
+starting from scratch. That's the payoff of building a toolkit. (If you did the Module 2
+class extensions, Lessons 4-5 and 4-8 each have an optional class version too.)
 
 ## Wrap-up
 
 - What will the robot do by the end of the module? (Visit multiple destinations on its own.)
-- What are the two classes and their jobs? (`Manhattan` plans; `Navigator` drives.)
+- What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
 - What does top-down design mean? (Start with the big goal, break it into buildable pieces.)
 
 <TeacherNote title="Teaching note">

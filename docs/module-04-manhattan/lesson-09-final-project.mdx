@@ -7,7 +7,7 @@ sidebar_position: 9
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-9 · Final Project"
-  meta={['90 min', 'Project day', 'Multi-destination delivery']}
+  meta={['Multi-day', 'Project day', 'Multi-destination delivery']}
 />
 
 <TeacherBanner>
@@ -17,16 +17,17 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Everything comes together. Your robot is a **delivery drone on a city grid**: it starts
 at home base and must visit a series of destinations in order, computing a fresh path for
 each leg and driving it autonomously. You already built every piece — today you connect
-`Manhattan` and `Navigator` into one working system.
+`compute_manhattan_path()` and `drive_path()` into one working system.
 
 <Objectives>
 
 By the end of this project you will be able to:
 
-- Integrate the `Manhattan` and `Navigator` classes into one program
+- Integrate the planner and the driving functions into one program
 - Write a main loop that computes and drives a path to each destination in a list
-- Update `manhattan.position` after each leg so the next path starts correctly
-- Test incrementally — Manhattan alone, then one leg, then the full sequence
+- Carry `position` and `heading` from one leg into the next by assigning from `drive_path()`'s return
+- Print the first leg's path before the button, and say why only the first
+- Test incrementally — planner alone, then one leg, then the full sequence
 - Demonstrate a working multi-destination run on the XRP robot
 
 </Objectives>
@@ -36,88 +37,106 @@ By the end of this project you will be able to:
 ## The mission
 
 Four destinations, visited in order, starting and (optionally) ending at home base
-(0,0). The two classes do the heavy lifting: `Manhattan.compute_path(dest)` returns the
-list of intersections, and `Navigator.drive_path(path)` turns and drives it. Your job is
-the **main program** that orchestrates them — about ten lines.
+(0,0). The two halves do the heavy lifting: `compute_manhattan_path(position, dest)`
+returns the list of intersections, and `drive_path(path, position, heading)` turns and
+drives it. Your job is the **main program** that connects them — about ten lines.
 
 Write it yourself. The shape you need:
 
 ```python
-# create one Manhattan and one Navigator, before the loop
+# position and heading start at home, facing North
 # list your destinations in the order to visit them
-# wait for the button
+# plan the FIRST leg and print it, then wait for the button
 # for each destination:
-#     compute the path
+#     compute the path from where the robot is
+#     print it
 #     drive it
-#     ... and make sure the planner knows where the robot ended up
-#     print progress so you can follow along
+#     ... and keep position and heading up to date
+#     print where the robot arrived
 ```
 
-That last comment is the one that decides whether the second leg works. Think
-about what each object knows after `drive_path` finishes, and what it doesn't.
+That second-to-last comment is the one that decides whether the second leg works. Think
+about what the main program knows after `drive_path()` finishes, and what it doesn't —
+unless you ask.
 
 <TeacherNote title="Working main program (teacher copy)">
 
 ```python
-HEADING_NAMES = ["N", "E", "S", "W"]
-
 board = Board.get_default_board()
 
-manhattan = Manhattan((0, 0))
-navigator = Navigator((0, 0), 0)      # start heading North
+position = (0, 0)
+heading = 0                   # start facing North
 destinations = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
+print("Planned path for leg 1:", compute_manhattan_path(position, destinations[0]))
 board.wait_for_button()
 
 for dest in destinations:
     print("--- Navigating to", dest, "---")
-    path = manhattan.compute_path(dest)
+    path = compute_manhattan_path(position, dest)
     print("Path:", path)
-    navigator.drive_path(path)
-    manhattan.position = navigator.position   # <- the key line
-    print("Arrived at:", navigator.position)
+    position, heading = drive_path(path, position, heading)   # <- the key line
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 ```
 
 ```python
-manhattan.position = navigator.position
+position, heading = drive_path(path, position, heading)
 ```
 
-That is the line nearly everyone misses, and
-the failure is instructive rather than obvious: leg one works perfectly, and every
-later leg is computed from (0,0). If a student's robot drives a sensible first
-route and then wanders, ask what `manhattan` thinks its position is.
+That is the line nearly everyone gets half right: they call `drive_path` and throw the
+return value away. The failure is instructive rather than obvious — leg one works
+perfectly, and every later leg is planned from (0,0) facing North. If a student's robot
+drives a sensible first route and then wanders, ask what `position` is in their main
+program after leg 1. The full file is `lesson-09-final-project.py` in the solutions.
 
 </TeacherNote>
 
 <KnowledgeCheck
-  question="Why is the line manhattan.position = navigator.position necessary each leg?"
+  question="Why must the main program write position, heading = drive_path(...) rather than just drive_path(...)?"
   options={[
+    {text: 'Python requires return values to be assigned'},
+    {text: 'drive_path only changes its own copies; the main program learns where the robot ended up only by assigning from the return, and the next path is planned from that', correct: true},
     {text: 'It resets the robot to (0,0)'},
-    {text: 'So the next compute_path() starts from where the robot actually is now, not the original start', correct: true},
-    {text: 'It updates the heading'},
     {text: 'It is not necessary'},
   ]}
-  explanation="Manhattan doesn't automatically know the robot moved. Without updating its position, every leg after the first would compute a path from (0,0) — the wrong starting point."
+  explanation="position and heading inside drive_path are the function's own variables. Without the assignment, the main program's position stays (0,0) and every leg after the first is planned from the wrong place."
 />
 
-## Create objects once, reuse them
+## Only the first leg is printed before the button
 
-A common mistake is making new `Manhattan` and `Navigator` objects for every destination.
-Don't — **create them once** before the loop and reuse them. That's the whole point of
-classes: they hold state (position and heading) across many operations. And the
-Navigator's heading **carries over** between legs: if it finished a leg facing East, it
-starts the next one facing East. That's realistic, and it's why the turn math needs the
-true current heading.
+Lesson 4-8's habit — plan, print, button, drive — appears here with one limit. The main
+program prints the path for leg 1 before the button. It can't print legs 2, 3 and 4 yet,
+because each of them is planned from wherever the previous leg actually finished.
+Instead, each leg is printed as it's planned, just before the robot drives it. (In
+Module 5, where obstacles can appear mid-run, this becomes the only way it *could* work.)
 
 <KnowledgeCheck
-  question="At the start of leg 2, what is the Navigator's heading?"
+  question="Why does the program print the plan for leg 1 before the button, but not for legs 2 to 4?"
+  options={[
+    {text: 'print() can only be called once before wait_for_button()'},
+    {text: 'Later legs are planned from wherever the previous leg ends, which is known only once the robot gets there', correct: true},
+    {text: 'Leg 1 is the only one that uses compute_manhattan_path'},
+    {text: 'To save battery'},
+  ]}
+  explanation="Each leg is planned from the robot's current position. Leg 1 is the only one whose starting position is known before the robot moves."
+/>
+
+## The heading carries over
+
+`heading` is not reset between legs. If the robot finished leg 1 facing East, it starts
+leg 2 facing East — that's what `drive_path` returned, and that's the truth on the
+floor. It's exactly why `turn_to()` has to work from the real current heading rather than
+assuming North: the Lesson 4-7 `% 4` arithmetic handles any starting direction.
+
+<KnowledgeCheck
+  question="At the start of leg 2, what is the robot's heading?"
   options={[
     {text: 'Always reset to 0 (North)'},
-    {text: 'Whatever heading it ended leg 1 with', correct: true},
+    {text: 'Whatever heading drive_path returned at the end of leg 1', correct: true},
     {text: 'Always 2 (South)'},
     {text: 'Random'},
   ]}
-  explanation="The Navigator keeps its state. It begins each leg facing however it finished the last — which is exactly why turn_to() must work from the real current heading."
+  explanation="The main program keeps heading from one leg to the next by assigning it from drive_path's return. The robot begins each leg facing however it finished the last — which is why turn_to() works from the true current heading."
 />
 
 ## Activity · Test in three levels
@@ -125,41 +144,48 @@ true current heading.
 Do **not** jump straight to the full run on the robot. If something breaks, you won't know
 which piece. Build up:
 
-1. **Manhattan alone (no robot).** Loop the destinations, print each path, set
-   `manhattan.position = dest` between them. Confirm every path looks right on screen.
+1. **Planner alone (no robot).** Loop the destinations, print each path, set `position =
+   dest` between them. Confirm every path looks right on screen — this is the Lesson 4-6
+   test, run on today's destinations.
 2. **One leg on the robot.** Place the robot at (0,0) facing North, run a single short
-   destination. Correct turns? Arrives at the right cell?
+   destination. Correct turns? Wheels on the right intersection at the end?
 3. **Full sequence.** Run all four. Watch the straight-through intersections and the turns.
 
 ```python
 # Level 1 -- desktop only
-manhattan = Manhattan((0, 0))
+position = (0, 0)
 for dest in [(2, 0), (2, 3), (0, 3), (0, 0)]:
-    path = manhattan.compute_path(dest)
+    path = compute_manhattan_path(position, dest)
     print("To", dest, ":", path, " steps:", len(path))
-    manhattan.position = dest
+    position = dest
 ```
 
 <KnowledgeCheck
   question="On the second leg the robot drives a clearly wrong path. What's the first thing to check?"
   options={[
     {text: 'The battery voltage'},
-    {text: 'Whether manhattan.position was updated after leg 1', correct: true},
+    {text: 'Whether position and heading were assigned from drive_path after leg 1', correct: true},
     {text: 'The color of the grid lines'},
     {text: 'The HEADING_NAMES list'},
   ]}
-  explanation="A wrong path on leg 2+ almost always means the position update was skipped, so compute_path started from (0,0) instead of where the robot really is. Check that line first."
+  explanation="A wrong path on leg 2+ almost always means the return value was dropped, so leg 2 was planned from (0,0) facing North instead of where the robot really is. Check that line first — and the printed path for leg 2 will confirm it."
 />
 
 <TeacherNote title="Project day — short intro, incremental testing, and celebrate">
 
 Keep the intro brief; this is a build-and-test day. The single most common bug is the
-missing `manhattan.position` update — when leg-2 paths look wrong, check that line first.
-Push level-by-level testing hard; the students who write everything at once and can't find
-the break are the ones who skipped Manhattan-only testing. Watch battery drain on long
-multi-turn runs and charge between attempts. When a robot finishes the whole sequence, let
-the class watch — it's the payoff of nine lessons. For 50-minute periods, plan two days:
-planning + desktop testing, then robot day.
+dropped return value from `drive_path` — when leg-2 paths look wrong, check that line
+first; the printed path for leg 2 (planned from (0,0) again) gives it away on screen
+before the robot moves. Push level-by-level testing hard; the students who write
+everything at once and can't find the break are the ones who skipped planner-only
+testing. Watch battery drain on long multi-turn runs and charge between attempts. When
+a robot finishes the whole sequence, let the class watch — it's the payoff of nine
+lessons. For 50-minute periods, plan two days: planning + desktop testing, then robot
+day.
+
+**Class track:** students who did the extensions run the same project with
+`navigator = Navigator((0, 0), 0)` and `navigator.drive_path(path)`; there is no return
+value to drop, which is the point of the Lesson 4-8 side-by-side. Same rubric.
 
 </TeacherNote>
 
@@ -169,22 +195,23 @@ You're graded on the whole system working together:
 
 | Category | Points | What it takes |
 |---|---|---|
-| Manhattan class | 10 | Computes correct paths for any start/destination |
-| Navigator class | 15 | Correct `__init__`, `desired_heading`, `turn_to`, `drive_path`; position & heading updated |
-| Main program | 10 | Both objects, 4+ destinations, loops and drives each, updates `manhattan.position` |
+| Planner | 10 | `compute_manhattan_path` correct for any position and destination; Lesson 4-6 tests pass |
+| Driving functions | 15 | Correct `desired_heading`, `turn_to`, `drive_path`; wheels on the cross at every arrival; position and heading returned |
+| Main program | 10 | 4+ destinations, prints leg 1 before the button, drives each leg, assigns `position, heading` from `drive_path` |
 | Robot demo | 10 | Physically visits all destinations with correct turns |
 | Planning & docs | 5 | Planning worksheet, a hand-trace of one leg, testing checklist followed |
 
 **If you finish early**, try an extension: add a "return home" leg, do a round trip
-(destinations forward then reversed), let the user type destinations, or count total cells
-driven and turns made across the whole journey.
+(destinations forward then reversed), let the user type destinations, count total
+intersections driven and turns made across the whole journey — or, if you did the class
+extensions, a `Navigator` object so the main loop has nothing to pass back and forth.
 
 <KnowledgeCheck
   question="You want the robot to end where it began. What's the simplest change?"
   options={[
-    {text: 'Create a new Navigator facing North at the end'},
+    {text: 'Reset position to (0, 0) at the end'},
     {text: 'Add (0, 0) as the final destination in the list', correct: true},
-    {text: 'Reverse the LineTrack motors'},
+    {text: 'Reverse the motors'},
     {text: 'Restart the program'},
   ]}
   explanation="The loop already computes and drives a path to each destination. Just append home (0,0) to the list and the last leg drives the robot back."
@@ -208,22 +235,22 @@ The plan-then-execute structure you just built is fundamental to real autonomous
 
 ## Wrap-up
 
-- What's the one line that makes multi-leg journeys work? After each leg:
+- What's the one line that makes multi-leg journeys work? For each leg:
 
   ```python
-  manhattan.position = navigator.position
+  position, heading = drive_path(path, position, heading)
   ```
-- Why create the objects once instead of per destination? (Classes hold state — position and heading — across operations.)
-- What are the three testing levels? (Manhattan alone, one leg, full sequence.)
+- Why is only leg 1 printed before the button? (Later legs are planned from where the robot actually ends up.)
+- What are the three testing levels? (Planner alone, one leg, full sequence.)
 
 <TeacherNote title="You built a system">
 
 Step back and name what students accomplished across Module 4: coordinate systems and
-tuples, lists and iteration, algorithm design, two collaborating classes, a testing
-discipline, and hardware integration. The plan-vs-execute split (`Manhattan` vs.
-`Navigator`) is a real software-architecture principle they'll meet again — in Module 5,
-where Dijkstra's algorithm replaces the Manhattan planner but the `Navigator` keeps
-driving, unchanged. That swap is the reward for keeping the two concerns separate.
+tuples, lists and iteration, algorithm design, a planner and a driver that know nothing
+about each other, a testing discipline, and hardware integration. The plan-vs-drive
+split is a real software-architecture principle they'll meet again — in Module 5, where
+breadth-first search replaces the Manhattan planner but `drive_path` keeps driving,
+unchanged. That swap is the reward for keeping the two concerns separate.
 
 </TeacherNote>
 

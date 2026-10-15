@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 600" width="760" height="600" role="img"
+     aria-labelledby="haTitle haDesc">
+  <title id="haTitle">self is the address: the plan says what to do, the address says which house</title>
+  <desc id="haDesc">At the top, a blue blueprint labeled "class House:" lists two methods,
+    __init__(self, color) and paint(self). Below it stand three houses built from the plan, each with
+    an address plaque: a red one at 12 Oak St, a yellow one at 48 Elm St, a blue one at 7 Pine Rd.
+    Under each is the code that built it. At the bottom, the call elm.paint() is shown with an arrow
+    to the yellow house, and the note: inside paint(), self is 48 Elm St -- the one house this call
+    is about.</desc>
+
+  <style>
+    .lbl   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #22527B; }
+    .note  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #6C757D; }
+    .big   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #343A40; }
+    .code  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; font-weight: 700; fill: #343A40; }
+    .codeh { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; font-weight: 700; fill: #D1182C; }
+    .bp    { stroke: #FFFFFF; stroke-width: 1.6; fill: none; }
+    .bpthin{ stroke: #FFFFFF; stroke-width: 1; fill: none; opacity: 0.85; }
+    .bptxt { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; fill: #FFFFFF; }
+    .bpbig { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 15px; font-weight: 700; fill: #FFFFFF; }
+    .house { stroke: #343A40; stroke-width: 1.5; }
+    .plaque{ fill: #FFFFFF; stroke: #343A40; stroke-width: 1.2; }
+    .addr  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; fill: #343A40; }
+  </style>
+
+  <rect x="0" y="0" width="760" height="600" fill="#FFFFFF"/>
+
+  <!-- ============================ THE PLAN ============================ -->
+  <text class="lbl" x="380" y="24" text-anchor="middle">The class: one plan, written once</text>
+  <rect x="190" y="36" width="380" height="150" rx="4" fill="#22527B"/>
+  <rect x="198" y="44" width="364" height="134" class="bpthin" stroke-dasharray="3 3"/>
+
+  <!-- small house elevation -->
+  <g transform="translate(210,56)">
+    <rect x="14" y="40" width="76" height="52" class="bp"/>
+    <path d="M 8 40 L 52 8 L 96 40" class="bp"/>
+    <rect x="44" y="64" width="16" height="28" class="bp"/>
+    <rect x="22" y="50" width="14" height="12" class="bp"/>
+    <rect x="68" y="50" width="14" height="12" class="bp"/>
+    <path d="M 0 92 H 104" class="bpthin"/>
+  </g>
+
+  <!-- code on the sheet -->
+  <text class="bpbig" x="340" y="72">class House:</text>
+  <text class="bptxt" x="340" y="96">def __init__(self, color):</text>
+  <text class="bptxt" x="372" y="114">self.color = color</text>
+  <text class="bptxt" x="340" y="140">def paint(self):</text>
+  <text class="bptxt" x="372" y="158">print("painting", self.color)</text>
+
+  <!-- ============================ ARROWS ============================ -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ADB5BD"/>
+    </marker>
+    <marker id="arrowred" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D1182C"/>
+    </marker>
+  </defs>
+  <g stroke="#ADB5BD" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M 330 190 C 290 225, 200 225, 160 262"/>
+    <path d="M 380 190 C 380 225, 380 225, 380 262"/>
+    <path d="M 430 190 C 470 225, 560 225, 600 262"/>
+  </g>
+  <text class="note" x="380" y="238" text-anchor="middle">House(...) builds one; each gets its own address</text>
+
+  <!-- ============================ THE HOUSES ============================ -->
+  <!-- 1: red, 12 Oak St -->
+  <g transform="translate(80,270)">
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#6D4C41" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#D1182C" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#F2C14E" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="96" y="104" width="38" height="16" rx="2" class="plaque"/>
+    <text class="addr" x="115" y="116" text-anchor="middle">12 Oak</text>
+    <text class="code" x="80" y="166" text-anchor="middle">oak = House("red")</text>
+  </g>
+
+  <!-- 2: yellow, 48 Elm St -->
+  <g transform="translate(300,270)">
+    <rect x="110" y="18" width="14" height="30" fill="#8D6E63" class="house"/>
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#455A64" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#F2C14E" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#22527B" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="96" y="104" width="38" height="16" rx="2" class="plaque"/>
+    <text class="addr" x="115" y="116" text-anchor="middle">48 Elm</text>
+    <text class="code" x="80" y="166" text-anchor="middle">elm = House("yellow")</text>
+  </g>
+
+  <!-- 3: blue, 7 Pine Rd -->
+  <g transform="translate(520,270)">
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#37474F" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#4A90D9" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#263238" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#FFF8E1" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#FFF8E1" class="house"/>
+    <rect x="96" y="104" width="38" height="16" rx="2" class="plaque"/>
+    <text class="addr" x="115" y="116" text-anchor="middle">7 Pine</text>
+    <text class="code" x="80" y="166" text-anchor="middle">pine = House("blue")</text>
+  </g>
+
+  <!-- ground -->
+  <path d="M 60 410 H 700" stroke="#ADB5BD" stroke-width="2"/>
+
+  <!-- ============================ THE CALL ============================ -->
+  <rect x="150" y="440" width="460" height="130" rx="6" fill="#FFF8E1" stroke="#F2C14E" stroke-width="1.5"/>
+  <text class="codeh" x="180" y="470">elm.paint()</text>
+  <text class="big" x="290" y="470">means "paint the house at 48 Elm."</text>
+  <text class="note" x="180" y="498">The plan says what painting is. The address says which house.</text>
+  <text class="code" x="180" y="526">def paint(self):</text>
+  <text class="note" x="330" y="526">inside this call,</text>
+  <text class="codeh" x="445" y="526">self</text>
+  <text class="note" x="484" y="526">is 48 Elm -- nothing else.</text>
+  <text class="note" x="180" y="552">Call oak.paint() instead and the same plan runs with self = 12 Oak.</text>
+
+  <!-- red arrow from the call box up to the yellow house's plaque -->
+  <path d="M 330 440 C 340 425, 390 420, 400 392" stroke="#D1182C" stroke-width="2" fill="none" marker-end="url(#arrowred)"/>
+</svg>
