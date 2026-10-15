@@ -324,6 +324,20 @@ runs with `self` meaning 12 Oak. **`self` is the address of the one object this 
 about.** That's all it is. `self.color` is "the color at this address"; `self.position`
 is "the position of this navigator, not any other".
 
+Think of a method as a **work order written once for every house, with a blank for the
+address.** That's why `self` is the first parameter in the `def` — it's the blank. And
+when you call `elm.paint()`, Python fills the blank in from the object you pointed at —
+that's why `self` is absent from the call. Two errors everyone makes become easy to read:
+
+- `def paint():` with no `self` — a work order with no address blank. Python says
+  *"takes 0 positional arguments but 1 was given"*: it tried to fill in the blank and
+  found none.
+- `color` instead of `self.color` inside the method — a work order that names a color
+  with no address attached. Python says *"NameError: name 'color' is not defined"*.
+
+Two identical houses are still two houses. `Navigator((0, 0), 0)` and
+`Navigator((3, 3), 2)` are two objects from one plan with different numbers on the door.
+
 Now the Navigator. Its constructor takes the start position and heading — the first
 time a constructor in this course is handed real data — and stores them at its own
 address:
