@@ -14,37 +14,108 @@ sidebar_position: 8
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-In Lesson 5-7 the robot rediscovered every obstacle from scratch each run — like being
-surprised by the same construction zone every morning. This lesson gives it **memory**: it
-remembers obstacles from one run and plans smarter on the next. Just like Waze learns from
-drivers, the robot learns from its own experience.
+In Lesson 5-7 the robot detected one obstacle and re-planned once, then the loop
+stopped with a `break`. Two things are missing. First, the robot should *keep going*:
+follow the new path, and if it finds another wall, re-plan again, until it arrives.
+Second, it rediscovers every obstacle from scratch each run — like being surprised
+by the same construction zone every morning. This lesson fixes both: a loop that
+re-plans until arrival, and a way to start Run 2 knowing what Run 1 found out.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
+- Wrap Lesson 5-7's detect-and-reroute step in a `while` loop that runs until the robot arrives
 - Explain why remembering obstacles improves navigation
-- Keep a blocked list across runs so the robot pre-plans around known obstacles
+- Start a run with obstacles already known, so the planner avoids them from the first path
 - Compare Run 1 and Run 2 with metrics (steps, reroutes)
 - Explain the GPS/Waze analogy for crowd-sourced obstacle data
-- Carry what one run discovered into the next by handing the blocked list back in
 
 </Objectives>
 
-<Todo kind="blocked">
-Module 5 now teaches breadth-first search; Dijkstra's algorithm moved to the
-optional Module 6 (2026-10-14). This page is the old Dijkstra-first version and is
-being rewritten from the new source code (source phase 3). Code names below are
-also out of date: `track_until_cross` is now `track_to_intersection`, `turn_right`
-is `turn_clockwise`, `clear_intersection` is `drive_past_intersection`.
-</Todo>
-
 <QuizLink id="module-05-pathfinding/lesson-08-building-experience" />
+
+## From `break` to "until you arrive"
+
+Lesson 5-7's loop broke out as soon as it re-planned. Put that whole `for` loop inside a
+`while`, and have the `while` end only when the `for` loop ran all the way through
+without a reroute:
+
+```python
+def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
+    step_count = 0
+    reroute_count = 0
+
+    arrived = False
+    while not arrived:
+        path = compute_bfs_path(position, destination)
+        print("  Path from", position, ":", path)
+
+        if len(path) == 0:
+            print("No path to", destination, "!")
+            return position, heading, step_count, reroute_count
+
+        rerouted = False
+        for next_pos in path:
+            needed = desired_heading(position, next_pos)
+            heading = turn_to(heading, needed)
+
+            distance = rangefinder.distance()          # look before driving
+            if distance < obstacle_cm:
+                add_blocked(next_pos)
+                print("  OBSTACLE at", next_pos, "! Rerouting...")
+                reroute_count = reroute_count + 1
+                rerouted = True
+                break
+            else:
+                track_to_intersection()
+                drive_past_intersection()
+                position = next_pos
+                step_count = step_count + 1
+
+        if not rerouted:
+            arrived = True
+
+    return position, heading, step_count, reroute_count
+```
+
+Read the shape, not the lines: **plan, follow, and if something got in the way, plan
+again from here.** The inner `for` is Lesson 5-7 unchanged. The `rerouted` flag is how
+the `while` finds out whether the `for` finished or broke out early. And the function
+returns the robot's new `position` and `heading`, because the caller will need them
+to plan the *next* trip — Lesson 5-9 strings several of these together.
+
+The empty-path check matters now in a way it didn't on paper. If the robot gets
+boxed in, `compute_bfs_path()` returns `[]` (Lesson 5-5). Without the check, the
+`for` loop would run zero times, `rerouted` would stay `False`, and the robot would
+declare itself arrived at the wrong intersection.
+
+<KnowledgeCheck
+  question="In navigate_with_detection(), what makes the while loop finally stop?"
+  options={[
+    {text: 'A fixed number of iterations'},
+    {text: 'The for loop over the path finishes without a single reroute, so rerouted stays False and arrived becomes True', correct: true},
+    {text: 'The rangefinder returns 0'},
+    {text: 'compute_bfs_path returns the same path twice'},
+  ]}
+  explanation="Each pass plans a path and tries to follow it. If a wall turns up, the for loop breaks with rerouted = True and the while plans again from the new position. Only a complete, uninterrupted pass sets arrived."
+/>
+
+<KnowledgeCheck
+  question="Why does the function return position and heading, not just the step counts?"
+  options={[
+    {text: 'Python requires functions to return at least two values'},
+    {text: 'So the next trip can be planned from where the robot actually ended up, facing the way it actually faces', correct: true},
+    {text: 'To reset them to (0, 0) and 0'},
+    {text: 'For the print statement only'},
+  ]}
+  explanation="position and heading are local variables inside the function. The caller only learns their new values if the function hands them back — and Lesson 5-9 needs them to chain several destinations."
+/>
 
 ## Why memory matters
 
-The Dijkstra algorithm doesn't change between runs. The Navigator doesn't change. Only the
-**input** changes — the blocked list starts with more information:
+The BFS planner doesn't change between runs. The driving functions don't change. Only
+the **input** changes — the blocked list starts with more information:
 
 ```
 Run 1: empty blocked list  -> discover obstacles the hard way -> many reroutes
@@ -62,13 +133,59 @@ Run 2 — it's running the *same* algorithm on better information.
     {text: 'Its motors get faster'},
     {text: 'It skips destinations'},
   ]}
-  explanation="Same Dijkstra, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
+  explanation="Same BFS, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
+/>
+
+## Activity · Carry what you learned into the next run
+
+Within one program run, `BLOCKED` persists between function calls — that's why the
+`while` loop above works. But close the program and it's gone; Python variables don't
+survive a restart. So how does Run 2 begin already knowing what Run 1 found out?
+
+You tell it. The program already prints the list at the end of the run:
+
+```python
+print("All known obstacles:", BLOCKED)
+# -> All known obstacles: [(1, 2), (2, 2), (3, 0)]
+```
+
+Type that list into the top of your program, and hand each intersection to the
+planner the same way everything else reaches it:
+
+```python
+KNOWN_OBSTACLES = [(1, 2), (2, 2), (3, 0)]      # what Run 1 discovered
+
+for intersection in KNOWN_OBSTACLES:
+    add_blocked(intersection)
+```
+
+Run it again. The robot plans around all three from its very first path and never
+reroutes for them — and if it finds a fourth, the printed list at the end has four
+entries, ready to carry across to Run 3.
+
+That's the whole lesson in two lines of typing: **you are the memory.** The robot
+found the obstacles, you carried them from one run to the next, and the algorithm
+never changed. Notice too that the planner has now been told about walls three
+different ways — by a test script in 5-6, by the rangefinder in 5-7, and by you here —
+and every one of them was a call to `add_blocked()`. A real system would write the
+list somewhere and read it back itself rather than waiting for a person, but *what*
+gets carried across, and what it's worth, is exactly what you just did by hand.
+
+<KnowledgeCheck
+  question="Run 1 finishes and prints [(1,2), (2,2)]. What has to happen for Run 2 to start out knowing about those two obstacles?"
+  options={[
+    {text: 'Nothing — the robot remembers them automatically'},
+    {text: 'That list has to be handed to add_blocked() again at the start of Run 2, because a variable does not survive the program ending', correct: true},
+    {text: 'Run 2 has to drive the same route as Run 1'},
+    {text: 'compute_bfs_path has to be rewritten'},
+  ]}
+  explanation="A list lives only while the program runs. Run 2 starts out knowing exactly what it is handed — which is why you print the list at the end of one run and type it into KNOWN_OBSTACLES at the start of the next."
 />
 
 ## Activity · Measure the improvement
 
-"It seemed faster" isn't evidence — **measure**. Track total steps, reroutes, and newly
-discovered obstacles for each run:
+"It seemed faster" isn't evidence — **measure**. The function already counts steps and
+reroutes; write them down for each run:
 
 ```
 Metric              Run 1    Run 2
@@ -79,9 +196,6 @@ Total steps         ____     ____
 
 Fill it in from your own two runs — the numbers are the evidence, and they'll
 differ with your grid and where the obstacles sit.
-
-Keeping the same `blocked_list` variable across both runs is all it takes — its Run 1
-discoveries are already there when Run 2 begins.
 
 <KnowledgeCheck
   question="Run 1 took 12 steps with 3 reroutes; Run 2 took 8 steps with 0 reroutes. Why the change?"
@@ -96,10 +210,11 @@ discoveries are already there when Run 2 begins.
 
 ## Could Run 2 still find new obstacles?
 
-Yes. Run 2 avoids everything it *already* knows, but its smarter route may pass nodes Run 1
-never visited — and one of those could be blocked. So Run 2 can still discover something
-new, and Run 3 would start with even more knowledge. Eventually the robot knows every
-relevant obstacle and its paths are optimal from the start — that's **convergence**.
+Yes. Run 2 avoids everything it *already* knows, but its smarter route may pass
+intersections Run 1 never visited — and one of those could be blocked. So Run 2 can
+still discover something new, and Run 3 would start with even more knowledge.
+Eventually the robot knows every relevant obstacle and its paths are right from the
+start — that's **convergence**.
 
 <KnowledgeCheck
   question="Can Run 2 discover an obstacle Run 1 never found?"
@@ -109,49 +224,7 @@ relevant obstacle and its paths are optimal from the start — that's **converge
     {text: 'No — obstacles never change'},
     {text: 'Only if the grid grows'},
   ]}
-  explanation="The robot only discovers obstacles it drives toward. A new route can reach nodes Run 1 skipped, so Run 2 can still find something new — feeding Run 3 even better data."
-/>
-
-## Activity · Carry what you learned into the next run
-
-Within one program run, a list variable persists between function calls. But close
-the program and it's gone — Python variables don't survive a restart. So how does
-Run 2 begin already knowing what Run 1 found out?
-
-You tell it. At the end of the run, print what the robot learned:
-
-```python
-print("Obstacles found:", blocked)
-# -> Obstacles found: [(1, 2), (2, 2), (3, 0)]
-```
-
-Then type that list into the top of your program, where the blocked list starts out:
-
-```python
-blocked = [(1, 2), (2, 2), (3, 0)]        # what Run 1 discovered
-pathfinder = Dijkstra((0, 0))
-pathfinder.set_blocked_intersections(blocked)
-```
-
-Run it again. The robot plans around all three from its very first path and never
-reroutes for them — and if it finds a fourth, print the list again and carry that
-across too.
-
-That's the whole lesson in two lines of typing: **you are the memory.** The robot
-found the obstacles, you carried them from one run to the next, and the algorithm
-never changed. A real system would write the list somewhere and read it back itself
-rather than waiting for a person — but *what* gets carried across, and what it's
-worth, is exactly what you just did by hand.
-
-<KnowledgeCheck
-  question="Run 1 finishes and prints [(1,2), (2,2)]. What has to happen for Run 2 to start out knowing about those two obstacles?"
-  options={[
-    {text: 'Nothing — the robot remembers them automatically'},
-    {text: 'That list has to be given to the planner again at the start of Run 2, because a variable does not survive the program ending', correct: true},
-    {text: 'Run 2 has to drive the same route as Run 1'},
-    {text: 'Dijkstra has to be rewritten'},
-  ]}
-  explanation="A list lives only while the program runs. Run 2 starts out knowing exactly what it is handed — which is why you print the list at the end of one run and set it at the start of the next."
+  explanation="The robot only discovers obstacles it drives toward. A new route can reach intersections Run 1 skipped, so Run 2 can still find something new — feeding Run 3 even better data."
 />
 
 ## Real-world connections
@@ -172,34 +245,33 @@ Systems that accumulate and reuse experience are everywhere:
 
 ## Wrap-up
 
+- What turns Lesson 5-7's single reroute into "drive until you arrive"? (A `while not arrived` loop around the `for`, with a `rerouted` flag.)
 - What actually changes between Run 1 and Run 2? (The data — the blocked list — not the algorithm.)
 - How do you show Run 2 is better? (Measure steps and reroutes.)
-- What has to happen between Run 1 and Run 2 for the robot to keep what it learned? (The list has to be handed back in — a variable doesn't survive the program ending.)
-
-<Todo kind="blocked">
-The teacher note below points at a simulation called two_run_navigation.py that
-does not ship with the site — the same dangling reference as L5-7. Its opening
-sentence also still frames the lesson around memory, which was the file-persistence
-framing this lesson no longer uses.
-</Todo>
+- What has to happen between runs for the robot to keep what it learned? (The list has to be handed back to `add_blocked()` — a variable doesn't survive the program ending.)
 
 <TeacherNote title="The Waze analogy lands; make Run 1 vs Run 2 dramatic">
 
-Frame memory with Waze — students get it instantly ("what if Waze forgot every traffic
-report when you closed the app?"). Set up the grid so Run 1 has 2–3 reroutes; the contrast
-with a zero-reroute Run 2 is the "aha." Use the simulation (`two_run_navigation.py`) before
-hardware so the concept lands without sensor noise. Insist on recorded numbers — steps,
-reroutes — the quantitative comparison convinces far more than "it felt faster."
+Spend the first fifteen minutes on the `while` loop — trace it on the board with a
+path that hits one wall, so students see the `for` break, `rerouted` go `True`, and
+the `while` plan again from the new position. The `rerouted` flag is the only new
+Python idea in the lesson.
+
+Then frame memory with Waze — students get it instantly ("what if Waze forgot every
+traffic report when you closed the app?"). Set up the grid so Run 1 has 2–3 reroutes;
+the contrast with a zero-reroute Run 2 is the "aha." Students can prove the loop in
+software first with Lesson 5-7's `simulate_rangefinder()` swapped in for the real
+sensor. Insist on recorded numbers — steps, reroutes — the quantitative comparison
+convinces far more than "it felt faster."
 
 **Carrying the list by hand is the point, not a shortcut.** Typing Run 1's discoveries
-into the top of the program makes the "same algorithm, better data" claim something
-students do with their own fingers, and it keeps the lesson about navigation instead of
-about file formats. If someone asks why the robot can't save it itself — good question,
-that is exactly what a real one does, and it changes nothing about *what* is carried.
-Be honest about limits:
-what if an obstacle *moves*? Real systems need to forget stale data, not just accumulate —
-good discussion for advanced students. Connect lightly to machine learning: accumulate
-data, make better decisions.
+into `KNOWN_OBSTACLES` makes the "same algorithm, better data" claim something
+students do with their own fingers, and it keeps the lesson about navigation instead
+of about file formats. If someone asks why the robot can't save it itself — good
+question, that is exactly what a real one does, and it changes nothing about *what*
+is carried. Be honest about limits: what if an obstacle *moves*? Real systems need to
+forget stale data, not just accumulate — good discussion for advanced students.
+Connect lightly to machine learning: accumulate data, make better decisions.
 
 </TeacherNote>
 
@@ -209,20 +281,20 @@ data, make better decisions.
   question="What is 'convergence' in this context?"
   options={[
     {text: 'The robot running out of battery'},
-    {text: 'After enough runs the robot knows all relevant obstacles, so its paths are optimal from the start and no more reroutes happen', correct: true},
-    {text: 'Two robots meeting at a node'},
+    {text: 'After enough runs the robot knows all relevant obstacles, so its paths are right from the start and no more reroutes happen', correct: true},
+    {text: 'Two robots meeting at an intersection'},
     {text: 'The grid shrinking over time'},
   ]}
-  explanation="Each run can add knowledge until there's nothing new to learn. At that point paths are optimal immediately — the robot's map has converged."
+  explanation="Each run can add knowledge until there's nothing new to learn. At that point paths are right immediately — the robot's map has converged."
 />
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** explain Run 2's improvement, pre-load a blocked list, and articulate the
-Waze analogy. **Exit ticket:** "Run 1 took 12 steps / 3 reroutes; Run 2 took 8 / 0. Explain
-why." **Preview:** the capstone — combine Dijkstra, the Navigator, the rangefinder and the
-obstacles already learned into one complete autonomous system, and demonstrate Run 1
-vs. Run 2.
+**Formative:** trace the `while` loop through one reroute; pre-load a blocked list;
+articulate the Waze analogy. **Exit ticket:** "Run 1 took 12 steps / 3 reroutes; Run 2
+took 8 / 0. Explain why." **Preview:** the capstone — chain `navigate_with_detection()`
+across several destinations, with the rangefinder and the obstacles already learned,
+into one complete autonomous system, and demonstrate Run 1 vs. Run 2.
 
 </TeacherNote>
 

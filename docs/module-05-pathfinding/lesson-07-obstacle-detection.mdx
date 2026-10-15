@@ -6,18 +6,19 @@ sidebar_position: 7
 
 <LessonHeader
   eyebrow="Module 5 · Pathfinding Around Obstacles"
-  title="Lesson 5-7 · Obstacle Detection"
-  meta={['60 min', 'Python + robot', 'The robot gets eyes']}
+  title="Lesson 5-7 · Obstacle Detection with the Rangefinder"
+  meta={['60 min', 'Sensor integration', 'Robot required']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Until now you've typed the blocked list by hand. Now the robot discovers obstacles on its
-own, using the **ultrasonic rangefinder**. At each intersection it checks ahead, and if
-something's blocking the next node, it adds it to the blocked list and asks Dijkstra for a
-fresh path. The robot stops following a script and starts reacting to its world.
+Until now the blocked list has been filled in by hand — by you, in a test. Now the
+robot fills it in itself, using the **ultrasonic rangefinder**. The planner was tested
+on paper in Lesson 5-6; nothing about it changes today. The only new thing is
+*detection*: look before you drive, and if something is there, call `add_blocked()`
+— the exact call your tests made — and ask for a new path.
 
 <Objectives>
 
@@ -25,19 +26,11 @@ By the end of this lesson you will be able to:
 
 - Initialize the XRP rangefinder and read a distance
 - Explain how an ultrasonic rangefinder measures distance
-- Use a threshold to decide whether the next intersection is blocked
-- Work out which node is ahead from position and heading
-- Run the **check → detect → update → recompute → drive** loop
+- Use a threshold to decide whether the intersection ahead is blocked
+- Say which intersection a reading refers to, and why the path already tells you
+- Add one rangefinder check to Module 4's driving loop and re-plan when it fires
 
 </Objectives>
-
-<Todo kind="blocked">
-Module 5 now teaches breadth-first search; Dijkstra's algorithm moved to the
-optional Module 6 (2026-10-14). This page is the old Dijkstra-first version and is
-being rewritten from the new source code (source phase 3). Code names below are
-also out of date: `track_until_cross` is now `track_to_intersection`, `turn_right`
-is `turn_clockwise`, `clear_intersection` is `drive_past_intersection`.
-</Todo>
 
 <QuizLink id="module-05-pathfinding/lesson-07-obstacle-detection" />
 
@@ -75,14 +68,18 @@ distance — you use a **threshold**. Measure with the next intersection blocked
 cm) and clear (say ~50 cm), then pick a cutoff between them:
 
 ```python
-OBSTACLE_THRESHOLD = 15   # cm -- tune to your grid spacing
+OBSTACLE_CM = 15     # rangefinder reading closer than this means blocked
 
 distance = rangefinder.distance()
-if distance < OBSTACLE_THRESHOLD:
+if distance < OBSTACLE_CM:
     print("OBSTACLE DETECTED")
 else:
     print("Path is clear")
 ```
+
+It's named `OBSTACLE_CM`, not `THRESHOLD`, because the file already has a
+`THRESHOLD` — the reflectance one from Lesson 2-8 — and two settings with the same
+name is a bug waiting to happen.
 
 <KnowledgeCheck
   question="Why use a threshold instead of checking for an exact distance?"
@@ -95,108 +92,128 @@ else:
   explanation="Ultrasonic readings fluctuate with angle, surface, and noise. A threshold ('closer than 15 cm = blocked') absorbs that variation; an exact-match check would fail constantly."
 />
 
-## Which node is blocked?
+## Which intersection is blocked?
 
-The rangefinder says something's ahead — but *which* node? The blocked one is the
-intersection **directly in front of the robot**, and the robot already knows its position
-and heading (0=N, 1=E, 2=S, 3=W from Module 4):
+The rangefinder says something is ahead — but *which* intersection? It's the one
+directly in front of the robot. And here's the nice part: you already know which
+one that is, without any new code. Look at Module 4's driving loop:
 
 ```python
-NORTH, EAST, SOUTH, WEST = 0, 1, 2, 3
-
-def get_next_intersection(current_pos, heading):
-    row, col = current_pos
-    if heading == NORTH: return (row - 1, col)
-    if heading == EAST:  return (row, col + 1)
-    if heading == SOUTH: return (row + 1, col)
-    if heading == WEST:  return (row, col - 1)
-    raise ValueError(f"heading {heading} is not one of 0, 1, 2, 3")
+for next_pos in path:
+    needed = desired_heading(position, next_pos)
+    heading = turn_to(heading, needed)
+    track_to_intersection()
+    drive_past_intersection()
+    position = next_pos
 ```
 
-The obstacle is never the node the robot is *on* — it's the adjacent one the sensor points
-at.
-
-The last line is the same guard you wrote in Lesson 4-7, and this one earns it even
-more. Without it a heading outside 0–3 returns `None`, `None` gets appended to
-`blocked_list`, and the planner then builds its graph around an obstacle that isn't a
-place. Nothing crashes. The robot simply routes badly, in a way that's very hard to
-connect back to a heading that wrapped wrong several minutes earlier.
+After `turn_to()`, the robot is facing `next_pos` — that's what turning to the needed
+heading *means*. So if the rangefinder sees something right then, the blocked
+intersection is `next_pos`. The path already told you.
 
 <KnowledgeCheck
-  question="The robot is at (2,1) facing NORTH and the rangefinder reads 8 cm (threshold 15). Which node is blocked?"
+  question="The robot is at (2,1), has just turned to face the next step on its path, (1,1), and the rangefinder reads 8 cm. Which intersection is blocked?"
   options={[
     {text: '(2,1) — where the robot is'},
-    {text: '(1,1) — the node directly ahead (north is row − 1)', correct: true},
+    {text: '(1,1) — the next step on the path, which the robot is now facing', correct: true},
     {text: '(3,1)'},
-    {text: '(2,2)'},
+    {text: 'It depends on the heading number'},
   ]}
-  explanation="Facing north means the next node is row − 1: (1,1). The robot sits on a clear node; the obstacle is the adjacent one it faces."
+  explanation="turn_to(heading, needed) pointed the robot at next_pos. Whatever the sensor sees now is at next_pos. The robot sits on a clear intersection; the obstacle is the one it faces."
 />
 
-## The five-step loop
+## The loop: Module 4's, plus one check
 
-At each intersection, the robot runs the same cycle — the core of reactive robotics:
+Here is the whole obstacle-detection loop. It is `drive_path()` from Lesson 4-8 with
+exactly one step added, between turning and driving:
 
 ```python
-# 1. CHECK: read the rangefinder
-distance = rangefinder.distance()
+for next_pos in path:
 
-# 2. DETECT: is the next node blocked?
-if distance < OBSTACLE_THRESHOLD:
-    blocked_node = get_next_intersection(current_pos, heading)
+    # Turn to face the next intersection (the wheels are over the current one)
+    needed = desired_heading(position, next_pos)
+    heading = turn_to(heading, needed)
 
-    # 3. UPDATE: remember the obstacle
-    if blocked_node not in blocked_list:
-        blocked_list.append(blocked_node)
+    # NEW: look ahead before driving
+    distance = rangefinder.distance()
+    print("At", position, "facing", HEADING_NAMES[heading], "- ahead:", distance, "cm")
 
-    # 4. RECOMPUTE: tell the planner what you found, then re-plan from here
-    pathfinder.set_blocked_intersections(blocked_list)
-    pathfinder.position = current_pos
-    path = pathfinder.compute_path(destination)
+    if distance < OBSTACLE_CM:
+        # Obstacle! Tell the planner, the same way the tests did.
+        add_blocked(next_pos)
+        print("Obstacle at", next_pos, "! Rerouting...")
 
-# 5. DRIVE: follow the (possibly new) path to the next node
+        # Ask for a new path from where we are. The planner rebuilds its
+        # graph from BLOCKED, so the wall is already missing from it.
+        path = compute_bfs_path(position, destination)
+        print("New path:", path)
+        break      # start following the new path (Lesson 5-8 wraps this in a loop)
+    else:
+        track_to_intersection()
+        drive_past_intersection()
+        position = next_pos
+        print("Drove to", position)
 ```
 
-**Check → detect → update → recompute → drive**, over and over. This is the loop the whole
-module has been building towards.
+Three things to notice.
 
-Step 4 is the one worth a second look. The planner isn't replaced — it's *told something*.
-`set_blocked_intersections()` hands it the whole updated list and rebuilds its graph
-around the obstacles, and setting `pathfinder.position` is the same "where am I now" line
-you wrote after every leg in Lesson 4-9. Then the same `compute_path` you've been calling
-since Lesson 5-5 returns a route that goes around.
+**`add_blocked(next_pos)` is the same call your Lesson 5-6 harness made.** The planner
+can't tell whether an obstacle came from a test script or a sensor. That's why
+passing the paper tests means the robot will re-plan correctly: it's the same code,
+fed the same way.
 
-That's a better shape than building a new `Dijkstra` each time. The robot hasn't acquired
-a different planner; it has learned something, and the code should read that way. It also
-means the planner keeps everything else it knows — the grid size especially, which a
-fresh object would need told all over again.
+**Re-planning is one line, from where the robot is.** `compute_bfs_path(position,
+destination)` — Rule 1 from Lesson 5-4. The planner rebuilds its graph from `BLOCKED`
+every call, so the wall it was just told about is already gone from it. There is no
+"rebuild the graph" step to forget.
+
+**The robot is parked when it re-plans.** `drive_past_intersection()` runs after every
+track, so when the loop comes back around to turn toward the new path's first step,
+the wheels are still over the intersection it re-planned from. Nothing moves the
+robot during a re-plan.
 
 <KnowledgeCheck
   question="When the robot detects a new obstacle, what does it do to reroute?"
   options={[
     {text: 'Stops permanently'},
-    {text: 'Gives the planner the updated blocked list and its current position, then calls compute_path again', correct: true},
+    {text: 'Calls add_blocked(next_pos), then compute_bfs_path(position, destination) from where it is', correct: true},
     {text: 'Reverses back to the start'},
     {text: 'Ignores it and drives through'},
   ]}
-  explanation="Detecting an obstacle means reroute, not stop. set_blocked_intersections rebuilds the graph around what the robot now knows, and compute_path from the current position produces a path around it."
+  explanation="Detecting an obstacle means reroute, not stop. add_blocked tells the planner; compute_bfs_path from the current position returns a path around it, because the planner rebuilds its graph from BLOCKED on every call."
 />
 
 <KnowledgeCheck
-  question="Why is appending to blocked_list not enough on its own to make the robot go around a new obstacle?"
+  question="Why does the robot not need a separate 'rebuild the graph' step after add_blocked()?"
   options={[
-    {text: 'The planner has its own private copy of the list'},
-    {text: 'The graph was already built without that obstacle in it, and only set_blocked_intersections rebuilds it', correct: true},
-    {text: 'Lists cannot be changed after they are created'},
-    {text: 'It is enough — the extra call is just for tidiness'},
+    {text: 'Because compute_bfs_path builds the graph from BLOCKED every time it is called', correct: true},
+    {text: 'Because the graph is never rebuilt — obstacles are checked while driving'},
+    {text: 'Because add_blocked rebuilds the graph itself'},
+    {text: 'It does need one — the code above is missing it'},
   ]}
-  explanation="The planner holds a reference to your list, so it does see the new entry. But the graph it plans on was built earlier, and nothing rebuilds it by itself — which is exactly the job set_blocked_intersections does."
+  explanation="Lesson 5-4 put build_graph() inside the planner precisely so that a wall found at step 3 is already missing from the graph used at step 4."
 />
 
-## Activity · Test in simulation first
+## Print the plan before the button
 
-Before the robot, prove the *logic* works by faking the sensor — return a short distance
-when the next node is a pretend obstacle:
+One more habit, and it's two lines: plan and *print* the path before the robot moves.
+
+```python
+path = compute_bfs_path(position, destination)
+print("Planned path:", path)
+
+board.wait_for_button()
+```
+
+Read it before you press the button. Is it what you expected? This is the Lesson 5-6
+paper test built into every run, and it's your first diagnostic when something goes
+wrong: if the printed path is right and the robot still goes wrong, the bug is in the
+driving, not the planner.
+
+## Activity · Simulate first, then drive
+
+Before the robot, prove the *detection logic* works by faking the sensor — return a
+short distance when the next intersection is a pretend obstacle:
 
 ```python
 simulated_obstacles = [(1, 1), (2, 2)]
@@ -205,19 +222,24 @@ def simulate_rangefinder(next_pos):
     return 8.0 if next_pos in simulated_obstacles else 50.0
 ```
 
-Run the whole loop with this stand-in; confirm the path reroutes and the blocked list
-grows. *Then* swap in the real `rangefinder.distance()`. Separating software bugs from
-hardware bugs saves enormous frustration.
+Run the loop with this stand-in and confirm two things on screen: the blocked list
+grows when the robot "sees" an obstacle, and the new path goes around it. *Then* swap
+in the real `rangefinder.distance()`. Separating software bugs from hardware bugs
+saves enormous frustration, and notice what's being simulated: only the sensor. The
+planner needs no simulation, because it was already tested in Lesson 5-6.
+
+Then on the grid: put a box on one intersection of the printed path. Press the
+button. Watch the robot stop, print "Rerouting...", print the new path, and take it.
 
 <KnowledgeCheck
   question="Why test with a simulated rangefinder before using the real one?"
   options={[
     {text: 'The real sensor never works'},
-    {text: 'To verify the detect-update-recompute logic in software first, separating code bugs from hardware bugs', correct: true},
+    {text: 'To verify the detect-and-reroute logic in software first, separating code bugs from hardware bugs', correct: true},
     {text: 'Simulation is required by Python'},
     {text: 'To avoid writing the loop'},
   ]}
-  explanation="A simulated sensor lets you confirm the rerouting logic on screen. Once that's solid, real-sensor problems are clearly hardware, not logic — much easier to debug."
+  explanation="A simulated sensor lets you confirm the detection logic on screen. Once that's solid, real-sensor problems are clearly hardware, not logic — and the planner itself was already proven in Lesson 5-6."
 />
 
 ## Real-world connections
@@ -238,29 +260,38 @@ Sense → decide → act is the loop behind every autonomous machine:
 
 ## Wrap-up
 
-- What three lines read the rangefinder? (Import, get_default, `.distance()`.)
-- Which node does an obstacle reading refer to? (The next intersection ahead, from position + heading.)
-- What are the five steps of the loop? (Check, detect, update, recompute, drive.)
-
-<Todo kind="blocked">
-The teacher note below says to get test_detection_sim.py working before touching
-the robot, but no such file ships with the site or exists anywhere in this repo —
-it is a reference to a script in the source curriculum. Either add the simulation
-to Resources or drop the sentence. Same problem in L5-8 with two_run_navigation.py.
-</Todo>
+- What three lines read the rangefinder? (Import, `get_default_rangefinder()`, `.distance()`.)
+- Which intersection does an obstacle reading refer to? (`next_pos` — the robot just turned to face it.)
+- What is the one line that tells the planner? (`add_blocked(next_pos)` — the same one the tests used.)
+- Why no "rebuild the graph" step? (The planner rebuilds from `BLOCKED` on every call.)
 
 <TeacherNote title="Calibrate the threshold ahead of class; simulate before hardware">
 
-The right threshold depends on grid spacing, obstacle material, and the sensor — test it
-yourself and have a value ready. Expect variability: soft or angled surfaces read
-inconsistently, which is a good real-world-sensor talking point. The "which node is
-blocked" logic confuses students — demonstrate physically: stand on an intersection, face a
-direction, point to the node ahead. Have everyone get `test_detection_sim.py` working
-before touching the robot; separating software from hardware debugging is the whole game.
-Place demo obstacles *on* the planned path so the reroute is visible and dramatic.
+The right threshold depends on grid spacing, obstacle material and the sensor — test
+it yourself and have a value ready. Expect variability: soft or angled surfaces read
+inconsistently, which is a good real-world-sensor talking point. "Which intersection
+is blocked" used to confuse students when it was computed from the heading;
+demonstrate the new reasoning physically — stand on an intersection, turn to face the
+next one on the path, point at it. Have everyone run the simulated-rangefinder
+version (the `simulate_rangefinder()` function above, swapped in for
+`rangefinder.distance()`) before touching the robot. Place demo obstacles *on* the
+printed path so the reroute is visible and dramatic.
+
+**Hardware note:** the driving functions are Module 4's, unchanged — turns end on a
+sensor, and `drive_past_intersection()` parks the wheels over each intersection. If
+the robot overshoots or misses a turn here, it did in Module 4 too; tune there.
 
 </TeacherNote>
 
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** the three rangefinder lines; why `next_pos` is the blocked one; the
+one-line reroute. **Exit ticket:** "Why can the planner not tell a sensor from a test
+script?" (Both call `add_blocked()`.) **Preview:** next lesson the `break` above
+becomes a `while` loop that keeps re-planning until the robot arrives, and the robot
+saves what it found so the *next* run starts out knowing it.
+
+</TeacherNote>
 
 ## Resources
 

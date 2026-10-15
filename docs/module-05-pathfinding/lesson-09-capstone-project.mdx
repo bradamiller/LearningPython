@@ -7,7 +7,7 @@ sidebar_position: 9
 <LessonHeader
   eyebrow="Module 5 · Pathfinding Around Obstacles"
   title="Lesson 5-9 · Capstone Project"
-  meta={['90+ min', 'Full integration', 'Your graduation project']}
+  meta={['Multi-day', 'Full integration', 'Your graduation project']}
 />
 
 <TeacherBanner>
@@ -15,16 +15,16 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
 This is it — every piece you've built, assembled into one autonomous system. The robot
-visits several destinations, plans with Dijkstra, senses obstacles with the rangefinder,
-reroutes on the fly, and remembers what it learned in a file so the next run is smarter. You
-won't write much new code; the challenge is **integration** — making working parts work
+visits several destinations, plans with BFS, senses obstacles with the rangefinder,
+reroutes on the fly, and starts the next run knowing what this one found. You won't
+write much new code; the challenge is **integration** — making working parts work
 together. That's exactly what real software engineers do.
 
 <Objectives>
 
 By the end of this project you will be able to:
 
-- Integrate Dijkstra, the Navigator and rangefinder detection into one program
+- Integrate the BFS planner, Module 4's driving toolkit and rangefinder detection into one program
 - Visit four or more destinations while detecting and avoiding obstacles
 - Start a run from the obstacles a previous run discovered, and report what this one found
 - Demonstrate learning: Run 2 outperforms Run 1, with numbers to prove it
@@ -32,23 +32,16 @@ By the end of this project you will be able to:
 
 </Objectives>
 
-<Todo kind="blocked">
-Module 5 now teaches breadth-first search; Dijkstra's algorithm moved to the
-optional Module 6 (2026-10-14). This page is the old Dijkstra-first version and is
-being rewritten from the new source code (source phase 3). Code names below are
-also out of date: `track_until_cross` is now `track_to_intersection`, `turn_right`
-is `turn_clockwise`, `clear_intersection` is `drive_past_intersection`.
-</Todo>
-
 <QuizLink id="module-05-pathfinding/lesson-09-capstone-project" />
 
 ## The mission
 
 Your robot is an autonomous delivery vehicle. It must visit four or more grid destinations
 in sequence, and for each leg: plan a path, drive it while watching for obstacles, and
-reroute whenever the rangefinder finds one. Everything you need already exists — Dijkstra
-(Lessons 5-4 and 5-5), the swap into Navigator (Lesson 5-6), detection (Lesson 5-7), and
-carrying knowledge between runs (Lesson 5-8). Today you connect them.
+reroute whenever the rangefinder finds one. Everything you need already exists — the
+planner (Lessons 5-4 and 5-5) and its paper tests (5-6), detection (5-7), the
+drive-until-you-arrive loop and carrying knowledge between runs (5-8). Today you
+connect them.
 
 You'll demonstrate with **two runs**: Run 1 starts with an empty blocked list, discovers
 obstacles the hard way, and prints what it found; Run 2 starts with that list typed in, so
@@ -61,7 +54,7 @@ learning.
     {text: 'Inventing a new pathfinding algorithm'},
     {text: 'Integrating components you already built so they work together as one system', correct: true},
     {text: 'Building a new robot from parts'},
-    {text: 'Rewriting Dijkstra from scratch'},
+    {text: 'Rewriting BFS from scratch'},
   ]}
   explanation="Every component already exists and was tested in earlier lessons. The capstone is about connecting them correctly — integration, not new algorithms."
 />
@@ -71,94 +64,101 @@ learning.
 The whole program has a clear skeleton:
 
 ```
-1. Start the blocked list -- empty on Run 1, last run's discoveries on Run 2
+1. Hand KNOWN_OBSTACLES to add_blocked() -- empty on Run 1, last run's list on Run 2
 2. Define destinations
-3. For each destination:
-     While not arrived:
-        Tell Dijkstra the current blocked list and position, then compute a path
-        Walk the path, checking the rangefinder at each intersection
-        If obstacle: add to blocked list, tell Dijkstra again, recompute
-        If clear all the way: arrived
-4. Print the blocked list -- this is what you type in for the next run
-5. Print results (steps, reroutes)
+3. Print the plan for leg 1, wait for the button
+4. For each destination:
+     navigate_with_detection() -- plan, follow, re-plan until arrived (Lesson 5-8)
+     add its steps and reroutes to the totals
+5. Print the blocked list -- this is what you type in for the next run
+6. Print results (steps, reroutes)
 ```
 
-The **blocked list is the thread** tying it together: step 1 sets it, `Dijkstra` plans
-from it, detection appends to it, and step 4 hands it to the next run.
+The **blocked list is the thread** tying it together: step 1 fills it, the planner
+reads it on every call, detection adds to it, and step 5 hands it to the next run. And
+every one of those goes through `add_blocked()` — the planner never knows which.
 
 <KnowledgeCheck
   question="What single data structure connects the start of the run, pathfinding, detection, and what you carry into the next run?"
   options={[
-    {text: 'The distances dictionary'},
-    {text: 'The blocked list — set at the start, planned from, appended to on detection, then printed at the end', correct: true},
-    {text: 'The visited list'},
+    {text: 'The previous dictionary'},
+    {text: 'The blocked list — filled at the start, planned from, added to on detection, then printed at the end', correct: true},
+    {text: 'The to_visit list'},
     {text: 'The heading number'},
   ]}
-  explanation="The blocked list flows through every stage: start → Dijkstra → detection → the next run. If it doesn't flow correctly, the whole system breaks."
+  explanation="BLOCKED flows through every stage: start → planner → detection → the next run. If it doesn't flow correctly, the whole system breaks."
 />
 
-## The navigation loop
+## The destination loop
 
-The core is a nested loop — destinations on the outside, rerouting in the middle, walking a
-single path on the inside:
-
-<Todo kind="bug">
-compute_path returns an empty list both for "already there" and for "unreachable", so a round trip that ends where it started reports "No path" and skips its last leg. [REVIEW §1.7]
-</Todo>
-
-<Todo kind="bug">
-THRESHOLD is undefined — L5-7 defines OBSTACLE_THRESHOLD. The loop also reads the rangefinder BEFORE turning toward next_stop and then blames next_stop for the reading, so if the next stop is left or right the wrong node gets blocked. And there is no drive call anywhere in this loop, so the robot never moves. [REVIEW §1.7]
-</Todo>
+Lesson 5-8's `navigate_with_detection()` already handles one trip — plan, follow,
+re-plan until arrival — and returns where the robot ended up. The capstone's new code
+is the loop that calls it once per destination, feeding each trip's end position and
+heading into the next:
 
 ```python
-for dest in destinations:
-    arrived = False
-    while not arrived:
-        pathfinder.set_blocked_intersections(blocked)
-        pathfinder.position = current
-        path = pathfinder.compute_path(dest)
-        if len(path) == 0:
-            print("No path to", dest); break
+position = (0, 0)
+heading = 0                      # 0 = N, 1 = E, 2 = S, 3 = W, as in Module 4
+destinations = [(1, 3), (3, 3), (3, 0), (0, 0)]
 
-        rerouted = False
-        for next_stop in path:                       # path starts at the NEXT
-            distance = rangefinder.distance()        # intersection, not here
-            if distance < THRESHOLD:
-                blocked.append(next_stop)            # obstacle ahead
-                reroute_count += 1
-                rerouted = True
-                break
-            current = next_stop                      # drive one intersection
-            step_count += 1
+print("Planned path for leg 1:", compute_bfs_path(position, destinations[0]))
+board.wait_for_button()
 
-        if not rerouted:
-            arrived = True
+total_steps = 0
+total_reroutes = 0
+
+for i in range(len(destinations)):
+    dest = destinations[i]
+    print("--- Leg", i + 1, ": Heading to", dest, "---")
+
+    position, heading, steps, reroutes = navigate_with_detection(
+        position, heading, dest, rangefinder, OBSTACLE_CM
+    )
+
+    total_steps = total_steps + steps
+    total_reroutes = total_reroutes + reroutes
+    print("  Arrived at", dest)
+
+print("=== FINAL REPORT ===")
+print("Total steps:", total_steps)
+print("Total reroutes:", total_reroutes)
+print("Obstacles discovered:", BLOCKED)
 ```
 
-When an obstacle appears mid-path, you `break` out, having added it to `blocked` — and the
-`while` loop computes a fresh path from where you now stand.
+Two details are easy to get wrong. `position` and `heading` must be **assigned from the
+return value** — forget the `position, heading, ... =` part and the second leg plans from
+(0, 0) while the robot sits somewhere else. And only the *first* leg is printed before
+the button, because later legs are planned from wherever the robot actually ends up,
+including around obstacles it hasn't found yet.
 
 <KnowledgeCheck
-  question="When an obstacle is found partway along a path, why break out of the inner for loop?"
+  question="Why can the program print the plan for leg 1 before the button, but not for legs 2 to 4?"
   options={[
-    {text: 'To end the program'},
-    {text: 'To stop walking the now-invalid path and let the while loop recompute a fresh one from the current position', correct: true},
-    {text: 'To skip the destination'},
-    {text: 'To save the file early'},
+    {text: 'compute_bfs_path only works once per program'},
+    {text: 'Later legs are planned from wherever leg 1 actually ends, with whatever obstacles were found on the way — neither is known yet', correct: true},
+    {text: 'Printing more than one path would overflow the screen'},
+    {text: 'The button only allows one print'},
   ]}
-  explanation="The rest of the current path may run through the new obstacle, so it's invalid. Breaking out returns to the while loop, which builds a new path from where the robot is."
+  explanation="Each leg is planned when it starts, from the robot's real position and the current BLOCKED list. Leg 1 is the only one whose inputs are known before the robot moves."
 />
 
-## Activity · Test in simulation, then drive
+<KnowledgeCheck
+  question="A team's robot drives leg 1 correctly, then on leg 2 turns the wrong way and tracks off the grid. The most likely cause?"
+  options={[
+    {text: 'The rangefinder threshold is too low'},
+    {text: 'They called navigate_with_detection() without assigning its returned position and heading, so leg 2 was planned from the starting point', correct: true},
+    {text: 'BFS found a non-shortest path'},
+    {text: 'The destinations list is too long'},
+  ]}
+  explanation="If position and heading are not updated from the return value, the planner thinks the robot is still at (0, 0) facing north. The path it produces is right for that spot and wrong for where the robot is."
+/>
 
-<Todo kind="answers">
-the capstone's core loop is printed on the student page, and the rubric below grades the part it hands over. M4 L9 is the model: skeleton for students, working program in a TeacherNote. [REVIEW §3]
-</Todo>
+## Activity · Simulate, then drive
 
 Get the whole thing working with a **simulated** rangefinder before the robot — verify
-paths compute, obstacles register, the blocked list grows, and the list printed at the end
-is the one you'd want to start the next run with. Then swap in the real sensor and the
-`DifferentialDrive`.
+paths compute, obstacles register, the blocked list grows across all four legs, and the
+list printed at the end is the one you'd want to start the next run with. Then swap in
+the real sensor.
 
 ```python
 ACTUAL_OBSTACLES = [(1, 0), (2, 2), (1, 3)]
@@ -166,10 +166,11 @@ def simulate_rangefinder(next_pos):
     return 8.0 if next_pos in ACTUAL_OBSTACLES else 50.0
 ```
 
-Watch for the classic integration bugs: the blocked list getting reset between destinations
-(it must persist across all of them), `current` not updating after a move, or appending to
-the blocked list without calling `set_blocked_intersections()` — the planner sees the new
-entry but keeps planning on the graph it built before.
+Watch for the classic integration bugs: the blocked list getting reset between
+destinations (one `BLOCKED` for the whole run — never call `clear_blocked()` between
+legs), `position` and `heading` not assigned from the return value, and a destination
+that is itself in `KNOWN_OBSTACLES` (the planner returns `[]` and the leg is skipped
+with "No path").
 
 <KnowledgeCheck
   question="Which is a classic capstone integration bug to watch for?"
@@ -179,7 +180,7 @@ entry but keeps planning on the graph it built before.
     {text: 'Naming the robot'},
     {text: 'Printing the path'},
   ]}
-  explanation="The blocked list must persist across all destinations in a run. Re-creating it empty for each destination throws away everything learned so far. (Also common: not updating current, or appending to the blocked list without calling set_blocked_intersections, which is what rebuilds the graph.)"
+  explanation="BLOCKED must persist across all destinations in a run. Clearing it for each leg throws away everything learned so far. (Also common: not assigning position and heading from navigate_with_detection's return value.)"
 />
 
 ## The rubric and demo
@@ -188,25 +189,27 @@ You're graded on the integrated system, component by component:
 
 | Category | Points | What it takes |
 |---|---|---|
-| Dijkstra pathfinding | 10 | Correct, shortest paths from the class |
-| Navigator integration | 10 | Robot physically drives the computed paths |
-| Obstacle detection | 10 | Rangefinder detects and updates the blocked list |
-| Path recomputation | 10 | Reroutes correctly around discovered obstacles |
+| BFS pathfinding | 10 | Correct shortest paths; the Lesson 5-6 tests pass |
+| Driving integration | 10 | Robot physically drives the computed paths, leg after leg |
+| Obstacle detection | 10 | Rangefinder detects and `add_blocked()` updates the list |
+| Re-planning | 10 | Reroutes correctly around discovered obstacles |
 | Experience | 10 | Run 1 prints what it found; Run 2 starts from that list |
 | Demonstration | 5 | Run 1 discovers & reroutes; Run 2 avoids known obstacles |
-| Code quality | 5 | Readable, uses functions/classes, meaningful comments |
+| Code quality | 5 | Readable, uses functions, meaningful comments |
 
 For the demo, run twice and have your numbers ready: "Run 1 took X steps with Y reroutes;
-Run 2 took A steps with B reroutes." **Finished early?** Try an extension — live mid-segment
-detection, visiting the nearest destination next, obstacle expiration (re-check old
-obstacles after a few runs), or a text-grid map of the route.
+Run 2 took A steps with B reroutes." **Finished early?** Try an extension — visiting the
+nearest destination next, obstacle expiration (re-check old obstacles after a few runs),
+a `print_grid()` map of the route after each leg, or — if you did the class extensions —
+a `Navigator` object that owns `position` and `heading` so the destination loop has
+nothing to pass back and forth.
 
 <KnowledgeCheck
   question="In the demo, what evidence shows the robot 'learned'?"
   options={[
     {text: 'It drives faster'},
     {text: 'Run 2 has fewer reroutes and/or fewer steps than Run 1, because it started out knowing where the obstacles were', correct: true},
-    {text: 'It makes a sound at each node'},
+    {text: 'It makes a sound at each intersection'},
     {text: 'Run 2 visits fewer destinations'},
   ]}
   explanation="The measurable improvement from Run 1 to Run 2 — fewer reroutes and steps — is the evidence. Same algorithm, better data to start from."
@@ -228,27 +231,28 @@ You've built, in miniature, what real autonomous systems do:
   </InfoCard>
 </CardGrid>
 
-<Todo kind="convention">
-the duration chip is 90+ min, and extract_pacing matches digits only, so the plus is silently dropped and the pacing guide records 90 minutes for a project this lesson's own teacher note says spans 2 to 3 days. Use Multi-day, as M2 L10 does. [REVIEW §4]
-</Todo>
-
 ## Wrap-up
 
-- What connects all the components? (The blocked list — set at the start, planned from, appended to on detection, printed for the next run.)
+- What connects all the components? (The blocked list — filled at the start, planned from, added to on detection, printed for the next run.)
 - Why test in simulation before the robot? (Separate logic bugs from hardware bugs.)
 - What proves the robot learned? (Run 2's measured improvement over Run 1.)
 
 <TeacherNote title="Integration is the hard part — simulate first, celebrate the journey">
 
-Students underestimate how hard connecting working parts is. The recurring bugs: passing a
-stale blocked list, not updating `current`, and appending to the blocked list without
-calling `set_blocked_intersections()` to rebuild the graph. Insist everyone gets the simulation version working
-before the robot — logic first, hardware second. Use the rubric as a self-assessment
-checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is better and listen for
-"better data," not "the robot is smarter." For 50-minute periods this spans 2–3 days
-(assembly/simulation, robot testing, demos). Finally: take a moment to mark how far students
-have come — from "Hello, World" to an autonomous robot that navigates, senses, and learns.
-That's a real accomplishment.
+Students underestimate how hard connecting working parts is. The recurring bugs: not
+assigning `position, heading` from the return value, clearing `BLOCKED` between legs, and
+a destination that sits on a known obstacle. Insist everyone gets the simulation version
+working before the robot — logic first, hardware second. Use the rubric as a
+self-assessment checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is
+better and listen for "better data," not "the robot is smarter." For 50-minute periods
+this spans 2–3 days (assembly/simulation, robot testing, demos). Finally: take a moment
+to mark how far students have come — from "Hello, World" to an autonomous robot that
+navigates, senses, and learns. That's a real accomplishment.
+
+**The full program** is `lesson-09-capstone.py` in the module's solutions folder; the
+student starter has the destination loop and `KNOWN_OBSTACLES` as TODOs, with the
+toolkit functions already in place. Students who did the class extensions can run the
+same capstone with `Navigator` and `BFS` objects; nothing in the rubric changes.
 
 </TeacherNote>
 
@@ -256,11 +260,13 @@ That's a real accomplishment.
 
 <TeacherNote title="The whole journey">
 
-Trace the arc for students: Module 1 Python foundations, Module 2 sensors and classes,
-Module 3 the grid, Module 4 Manhattan pathfinding and the Navigator, Module 5 graphs,
-Dijkstra, sensing, and learning. The plan-vs-execute split (planner + Navigator) and the
-shared-interface swap are ideas they'll meet again in any serious software work. These
-skills open doors to CS (data structures, algorithms, AI), robotics (SLAM, motion
+Trace the arc for students: Module 1 Python foundations, Module 2 sensors and functions,
+Module 3 the grid, Module 4 Manhattan pathfinding and turning at intersections, Module 5
+graphs, BFS, sensing, and learning. The plan-vs-drive split (a planner that is *told*
+where the robot is, driving functions that don't know what a path is) and the shared
+planner interface are ideas they'll meet again in any serious software work. If there is
+time, Module 6 adds Dijkstra's algorithm as a third planner behind the same interface.
+These skills open doors to CS (data structures, algorithms, AI), robotics (SLAM, motion
 planning), and software engineering (integration, testing, modular design).
 
 </TeacherNote>
