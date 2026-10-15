@@ -15,7 +15,7 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-Time to turn the concept into code — but in stages. In Lesson 2-8 you organized the
+Time to turn the concept into code — but in stages. In Lesson 2-7 you organized the
 sensor code into a toolkit of functions that share a couple of variables at the top
 of the file. Today the pathfinding code gets the same treatment: the grid settings
 and a shared list of blocked intersections, a function that adds to that list, a
@@ -46,7 +46,7 @@ it's half right. The problem is *when* the robot learns about obstacles: one at 
 time, in the middle of driving. Something has to keep the list between one path and
 the next. That something is a variable at the top of the file that every function
 can see — exactly the way `reflectance` and `THRESHOLD` sat at the top of the
-Lesson 2-8 toolkit:
+Lesson 2-7 toolkit:
 
 ```python
 ROWS = 4
@@ -106,11 +106,11 @@ Why the `if`? The robot may see the same wall twice. A list with `(2, 0)` in it
 twice is harmless but untidy, and it would make the printed grid confusing.
 
 Now the question that catches people: does this need `global BLOCKED`? In Lesson
-2-8, `set_threshold()` needed `global THRESHOLD`. The difference is what each
+2-7, `set_threshold()` needed `global THRESHOLD`. The difference is what each
 function does to the name:
 
 ```python
-def set_threshold(new_value):     # Lesson 2-8
+def set_threshold(new_value):     # Lesson 2-7
     global THRESHOLD              # needed: this line REASSIGNS the name
     THRESHOLD = new_value
 
@@ -125,7 +125,7 @@ it. The toolkit also has a `clear_blocked()` that empties the list in place (`po
 until it's empty) so tests can start fresh.
 
 <KnowledgeCheck
-  question="Why does add_blocked() not need `global BLOCKED`, when set_threshold() in Lesson 2-8 needed `global THRESHOLD`?"
+  question="Why does add_blocked() not need `global BLOCKED`, when set_threshold() in Lesson 2-7 needed `global THRESHOLD`?"
   options={[
     {text: 'append changes the list in place; set_threshold reassigns the name', correct: true},
     {text: 'Lists are always global'},

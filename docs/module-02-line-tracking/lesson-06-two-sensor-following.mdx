@@ -152,7 +152,7 @@ positive error changed) — it's the subtle point of the lesson. Expect to re-tu
     {text: 'A dead battery'},
     {text: 'The end of the program'},
   ]}
-  explanation="Both sensors on black at once usually means a crossing line. The two-sensor follower can't tell that apart from 'centered' — which is exactly the problem Lesson 2-7 solves."
+  explanation="Both sensors on black at once usually means a crossing line. The two-sensor follower can't tell that apart from 'centered' — which is exactly the problem Lessons 2-7 and 2-8 solve."
 />
 
 <TeacherNote title="Differentiation & the cliffhanger">
@@ -164,7 +164,7 @@ settles this faster than any diagram; the mistake to watch for is students readi
 the high sensor as the direction the robot went. **More challenge:** a speed boost
 on long straights (when error stays near zero), or track at max speed and re-tune.
 End by flagging the last table row: both-sensors-high gives error ≈ 0, so the robot
-*ignores* an intersection. That ambiguity is the hook for Lesson 2-7.
+*ignores* an intersection. That ambiguity is the hook for Lesson 2-7's `is_at_cross()`.
 
 </TeacherNote>
 
@@ -195,7 +195,8 @@ Comparing two sensors to find a position is a workhorse technique:
 **Formative:** compute `left − right`, predict drift direction and steer, and explain
 the negated correction. **Exit ticket:** "Both sensors read 0.9 — what's the error,
 and what might it physically mean?" (≈0; an intersection). **Preview:** next lesson
-we detect that intersection with `left > threshold and right > threshold`.
+packages the sensor reading into five functions — one of them, `is_at_cross()`,
+detects that intersection with `left > threshold and right > threshold`.
 
 </TeacherNote>
 

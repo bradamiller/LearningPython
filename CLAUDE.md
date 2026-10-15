@@ -933,6 +933,38 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the source's 2-8 teaches `global` for `set_threshold()`, and the design review
   kept that — see the decisions doc, D7. It is still needed nowhere else, and the
   planner design was shaped so `add_blocked` doesn't need it either.)*
+- **SENSOR FUNCTIONS COME BEFORE THE ROBOT DRIVES ON THEM — M2 L7 AND L8 SWAPPED
+  (Brad, 2026-10-15).** Brad: "They should have written the functions they needed in
+  the line sensor section", and "write all the line sensor functions at the same time,
+  and test them as they are written, so when they go forward and do line tracking they
+  have everything they need written and tested." So the order is now **2-7 Sensor
+  Functions** (`lesson-07-sensor-functions.mdx`, was 2-8) → **2-8 Detecting
+  Intersections** (`lesson-08-detecting-intersections.mdx`, was 2-7) → 2-9. Mentions of
+  "M2 L8" / "2-8" dated before 2026-10-15 elsewhere in this file mean the sensor-functions
+  lesson, and "2-7" the intersections lesson. What changed inside them:
+  - 2-7 introduces the cross itself (it used to be a lesson later) so `is_at_cross()`
+    can be tested on real tape the moment it's written; the activity is one function,
+    one test with a print loop and the robot slid by hand (steps 1–5, `set_threshold()`
+    last). The file is `lesson_2_7_sensors.py` and is carried into 2-8 and 2-9.
+  - 2-8 no longer has the `if/else`-inside-`while True` follower. It re-tests
+    `is_at_cross()` on a *moving* robot with Lesson 2-2's drive-to-the-edge loop
+    (Brad's test: robot some distance from a perpendicular line, drive forward
+    `while not is_at_cross()`), then writes `track_to_intersection()` as the 2-6 loop
+    with the condition replaced — "the looking is in the condition, the following is
+    in the body." Then follow/`turn(180)`/follow, and the count-four challenge
+    (teacher copy). The old `time.sleep(0.3)` after the 180 is gone: `turn()` blocks and
+    the pivot leaves the sensors on the circle behind the robot, so there was never
+    anything to clear; the teacher note explains that without pre-teaching 2-9's
+    `drive_past_intersection()`.
+  - 2-9 therefore adds three functions, not four; its step 1 re-tests
+    `track_to_intersection()` after the settings go to capitals and `BASE_EFFORT` goes
+    to 0.4. `is_at_cross()`/`track_to_intersection()` knowledge checks moved to 2-8.
+  - Brad's reference for the shape is `~/GitHub/RBE100X/linetrack.py` (`LineTrack`
+    with `LineSensors`; `at_cross()` there is `is_at_cross()` here — the course keeps
+    the `is_` prefix it insists on in 2-7).
+  - Source-repo solution files are still named for the old numbers
+    (`lesson-08-linesensor-class-addon.py`); the site now cites `lesson-07-…` and
+    `lesson-08-detecting-intersections.py`. Rename in `IntoToPython` when porting.
 - **ONCE A STUDENT BUILDS A CLASS, THEY USE IT FROM THEN ON (Brad, 2026-10-15).** The
   extensions are additive — every gate says "after your functions version works" — so a
   class-track student has both versions. The course had never said which to use next, and
@@ -1791,8 +1823,9 @@ Brad: the lesson text gave the code for the exercises — "at the bottom of 2-9,
 the code for the LineTrack class is given" — so students could copy instead of
 write. Asked for outlines ("list all the methods, but not the code that goes in
 the methods"), for the one-at-a-time functions to be *tested* one at a time before
-the big program, and for teachers to keep the complete code. **M2 L9 is the model;
-Brad is reviewing it before the pattern is swept across the other ~13 lessons**
+the big program, and for teachers to keep the complete code. **M2 L9 is the model
+(and 2-7/2-8 followed the same day); Brad is reviewing before the pattern is swept
+across the other ~13 lessons**
 (M4 L4–L8, M5 L2–L6, M6 L2/L3, M1 L11 — the ones with full `def`/`class` bodies in
 required text). The pattern as built in 2-9:
 
