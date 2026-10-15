@@ -1245,6 +1245,13 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     the required planner and Dijkstra as a duplicate-and-edit extension** on a
     weighted edge whose physical form is still open; `global` IS taught in 2-8
     (supersedes the "keep `global` out" line in this file).
+    **Later the same day: Dijkstra became its own optional Module 6.** In the
+    source, `module-05-dijkstra/` is now `module-05-pathfinding/` ("Pathfinding
+    Around Obstacles", BFS, the capstone) and `module-06-dijkstra/` is a new
+    optional module (five lessons: time the slow segment, weights, BFS -> Dijkstra
+    in two changes, drive it, the class extension). The site still has
+    `docs/module-05-dijkstra/`; phase 4 renames it and adds Module 6 to
+    `sidebars.js`.
     **Sequencing: source first, then ONE port to the site.** The source repo's
     code is being rewritten first (phase 2), then its lessons (phase 3), and only
     then does the site get M2 L8–10, M4 and M5 ported (phase 4), together with an
