@@ -52,6 +52,25 @@ Lesson 2-9 driving toolkit has the four functions that do it all:
 - `turn_clockwise()` — turn onto the perpendicular line to the right.
 - `turn_counterclockwise()` — turn onto the perpendicular line to the left.
 
+<Callout kind="note" title="If you built the LineTrack class">
+
+Use it — that's what it's for. Every call in this module is written with the function
+name; yours is the same name on your object:
+
+```python
+tracker = LineTrack()
+
+tracker.track_to_intersection()
+tracker.drive_past_intersection()
+```
+
+Notice what you *don't* have to carry along: no threshold constant at the top of the
+file, no sensor to hand in, nothing shared through `global`. The tracker brought its
+sensor and its settings with it. That is what the class bought you, and it shows up on
+every line from here to the end of the course.
+
+</Callout>
+
 <KnowledgeCheck
   question="Do you need to change your driving toolkit to drive on the grid?"
   options={[

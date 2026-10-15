@@ -933,6 +933,45 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   the source's 2-8 teaches `global` for `set_threshold()`, and the design review
   kept that — see the decisions doc, D7. It is still needed nowhere else, and the
   planner design was shaped so `add_blocked` doesn't need it either.)*
+- **ONCE A STUDENT BUILDS A CLASS, THEY USE IT FROM THEN ON (Brad, 2026-10-15).** The
+  extensions are additive — every gate says "after your functions version works" — so a
+  class-track student has both versions. The course had never said which to use next, and
+  Module 3 (no extensions) consumed the toolkit with bare function names and no comment.
+  Brad's rule: **a student who has written the class should use it, or they never see the
+  benefit of the encapsulation.** Not a course-wide track; a per-student commitment that
+  starts the moment the extension works.
+  **Where the rule is stated, and why there:**
+  - **End of L2-9's `LineTrack` extension** — the fork is fully open here (both M2 classes
+    exist), so this is the one place to say "from here on, use your class," and that the
+    lessons will show function names because that is what everyone has.
+  - **L2-10's brief** — the first project after the fork; says up front to build it on the
+    objects. (Its wrap-up already said "you have the same thing as objects"; now it says
+    that is the version they should have used.)
+  - **L3-1, a `<Callout kind="note">` right after the four-function list** — the first
+    *consumption* of the toolkit, and the place the encapsulation payoff is first visible:
+    no threshold constant, no sensor to hand in, no `global`; "the tracker brought its
+    sensor and settings with it." That paragraph is the whole reason for the rule, so it
+    is student-facing, not a teacher note.
+  - **L4-9 and L5-9 teacher notes** — "can run with objects" became "should run on their
+    objects, not the functions"; 4-9 is named as the first time encapsulation pays off in a
+    whole program rather than a snippet.
+  - **The component's gate text** gained "Once it works, use it from here on," so all six
+    extensions carry the rule without any page repeating it.
+  **`how-this-course-works.mdx` was wrong on this and is rewritten.** It listed "Skip the
+  classes" as a cut point that costs "the neat swap between planners," and its teacher note
+  called the swap "the only thing lost." Neither survives the functions-first rework:
+  functions are the baseline, not a cut, and L5-6 does the swap by passing the planner
+  *function* to the harness. The paragraph is now "Classes are an extension, not a
+  requirement," with the use-it-from-then-on rule, and the note says the functions route
+  does the swap too.
+  **Design consequence worth knowing:** the translation burden is on the class-track
+  student for every required code block after L2-9 (`tracker.` in front of the same name).
+  That is deliberate — the names match 1:1 by design so it is mechanical, and spelling it
+  out once at 3-1 is the whole cost. Do NOT start showing both forms in required text; the
+  SideBySide belongs inside extensions only. The chain is coherent end to end:
+  `LineSensor` → `LineTrack` → `Navigator` (4-8 does `self.line_track = LineTrack()`) →
+  `BFS`/`Dijkstra` objects → the 6-5 harness.
+
 - **CONSISTENCY PASS AFTER THE MODULE 5/6 REWORK (2026-10-15).** A full verification —
   fresh `npm ci && npm run build`, every `Lesson N-M` cross-reference resolved against the
   lesson inventory, every `def`/`class` signature compared across modules, the recorded

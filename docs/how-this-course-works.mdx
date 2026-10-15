@@ -125,11 +125,15 @@ shown when the teacher-mode switch at the corner of the page is on. A
 The full run is 46 lessons, plus an optional Module 6. It's designed so you can
 stop at several sensible places without the ending feeling arbitrary.
 
-**Skip the classes.** Classes are the tidiest way to package a reusable part, but
-they're also the hardest idea in the course for most students, and nothing about
-the course's structure depends on them. The same components can be written as
-plain functions that take what they need as parameters. You lose the neat swap
-between planners; you keep every other idea.
+**Classes are an extension, not a requirement.** Every reusable part in the course
+is built first as plain functions, and that version is complete — the planner swap,
+the capstones, all of it. Where a lesson has a class version of the same working
+code, it sits in an *optional extension* at the end, for students who have the
+functions working and want to see the parts packaged as objects. A student who
+starts down that road should stay on it: once you've built `LineTrack`, use
+`tracker.track_to_intersection()` from then on, or you never feel what the
+packaging bought you. A student who skips every extension loses nothing the
+course depends on.
 
 **Stop after Manhattan.** Module 4 ends with a robot that plans a route and drives
 it autonomously — a satisfying finish on its own. Module 5 is the same story told
@@ -157,8 +161,9 @@ week's problem often don't notice that they're standing on four weeks of their
 own work until someone points.
 
 And the cut points above are pedagogical, not just scheduling. A group that
-struggles with classes is not a group that should be pushed through classes to
-reach Dijkstra — the functions route reaches the same place, and the
-planner-swap payoff is the only thing lost.
+struggles with classes is not a group that should be pushed through them — the
+functions route reaches every capstone and does the planner swap too. The one
+rule worth holding students to: whoever *does* build a class should use it from
+that lesson on. The extension is there to be lived with, not filed.
 
 </TeacherNote>

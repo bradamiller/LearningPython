@@ -28,7 +28,7 @@ import React, {useState} from 'react';
  */
 export default function OptionalExtension({
   title,
-  gate = 'Do this after your functions version works on the robot. It is not graded; it is for when there is time.',
+  gate = 'Do this after your functions version works on the robot. It is not graded; it is for when there is time. Once it works, use it from here on.',
   children,
 }) {
   const [open, setOpen] = useState(false);
