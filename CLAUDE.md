@@ -1864,6 +1864,9 @@ required text). The pattern as built in 2-9:
   2-2 `set_effort()` moved *above* the activity (it was explained after the given
   program), and the infinite-loop section now sits *after* the activity, written to
   be read once a student's robot has driven forever — the trap is the lesson.
+  2-3 (same day) follows the same shape: the pseudocode block *is* the commented
+  outline, the full bounce program is teacher-only, and the `or` upgrade is stated
+  as a condition in prose rather than an `if/else` block with the drive calls.
 
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
