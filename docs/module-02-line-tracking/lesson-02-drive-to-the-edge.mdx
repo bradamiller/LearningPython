@@ -133,6 +133,19 @@ only while **both** sensors are still on white, so the robot stops when *either*
 hits the line — you'll need `and` between two conditions, and a second sensor read
 inside the loop. (More on `and` and `or` next lesson.)
 
+### Step 3 · Tidy it
+
+Once step 2 works, try reading the sensors *in the condition itself*:
+
+```python
+while reflectance.get_left() < threshold and reflectance.get_right() < threshold:
+```
+
+Now there's no variable to remember to update — the sensors are read fresh every
+time the condition is checked, which is every pass. Your loop body shrinks to one
+line, and the two reads before the loop go away. Most sensor loops in this course
+are written this way.
+
 ## The infinite-loop trap
 
 Did your robot drive forever in step 1? Then your loop is missing its most important
@@ -141,7 +154,8 @@ condition never changes — so the condition never becomes false, and the robot 
 until you catch it. That's an **infinite loop**, and it is the most common bug in
 every sensor program you'll ever write.
 
-> The rule: always update the variable your `while` loop is checking, inside the loop.
+> The rule: always update the variable your `while` loop is checking, inside the loop —
+> or put the sensor call in the condition, so there's no variable to forget.
 
 <KnowledgeCheck
   question="A student's robot drives forward and never stops, even over the line. What did they most likely forget?"
@@ -167,6 +181,8 @@ every sensor program you'll ever write.
 
 <Reveal title="Check your loop" hint="run yours on the robot first">
 
+Step 1, with a variable:
+
 ```python
 left = reflectance.get_left()
 
@@ -178,16 +194,27 @@ drivetrain.stop()
 print("Line detected! Sensor value:", left)
 ```
 
+Step 3, with the reads in the condition:
+
+```python
+while reflectance.get_left() < threshold and reflectance.get_right() < threshold:
+    drivetrain.set_effort(0.3, 0.3)
+
+drivetrain.stop()
+print("Line detected!")
+```
+
 </Reveal>
 
 <TeacherNote title="Solution (teacher copy)">
 
-The complete program with the step 2 challenge, as `lesson-02-drive-to-the-edge.py`
-in the Module 2 solutions. This lesson used to hand students the whole program; now
+The complete program in its step 3 form, as `lesson-02-drive-to-the-edge.py` in
+the Module 2 solutions. This lesson used to hand students the whole program; now
 the setup is given and the loop is theirs, because they have every piece by this
 point. Expect a third of the room to write the infinite loop on the first try — that
 is the lesson, and the section below the activity is written to be read *after* it
-happens.
+happens. The variable version (step 1) is the one that *can* fall into the trap, which
+is why students write it first; the condition-read version is where they end up.
 
 ```python
 from XRPLib.reflectance import Reflectance
@@ -202,16 +229,11 @@ threshold = 0.5
 
 board.wait_for_button()
 
-left = reflectance.get_left()
-right = reflectance.get_right()
-
-while left < threshold and right < threshold:
+while reflectance.get_left() < threshold and reflectance.get_right() < threshold:
     drivetrain.set_effort(0.3, 0.3)
-    left = reflectance.get_left()
-    right = reflectance.get_right()
 
 drivetrain.stop()
-print("Line detected! Left:", left, " Right:", right)
+print("Line detected!")
 ```
 
 </TeacherNote>
