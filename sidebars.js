@@ -83,7 +83,7 @@ const sidebars = {
       items: [
         'module-05-pathfinding/lesson-01-grid-as-a-graph',
         'module-05-pathfinding/lesson-02-dictionaries',
-        'module-05-pathfinding/lesson-03-dijkstras-concept',
+        'module-05-pathfinding/lesson-03-bfs-concept',
         'module-05-pathfinding/lesson-04-dijkstra-class',
         'module-05-pathfinding/lesson-05-implementing-compute-path',
         'module-05-pathfinding/lesson-06-testing-and-swapping',
