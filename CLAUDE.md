@@ -1785,6 +1785,46 @@ above as you go — it's much cheaper than another audit.
 below it are close enough that a student can read one off the other; the coordinates
 were changed so they no longer coincide, but the two are still adjacent.
 
+### 15b. Skeletons, not answers, for the functions students write (2026-10-15)
+
+Brad: the lesson text gave the code for the exercises — "at the bottom of 2-9, all
+the code for the LineTrack class is given" — so students could copy instead of
+write. Asked for outlines ("list all the methods, but not the code that goes in
+the methods"), for the one-at-a-time functions to be *tested* one at a time before
+the big program, and for teachers to keep the complete code. **M2 L9 is the model;
+Brad is reviewing it before the pattern is swept across the other ~13 lessons**
+(M4 L4–L8, M5 L2–L6, M6 L2/L3, M1 L11 — the ones with full `def`/`class` bodies in
+required text). The pattern as built in 2-9:
+
+- **Outline in required text.** `def` line, then the algorithm as numbered `#`
+  comments, then `pass`. The prose explains what ends the function and why; it does
+  not quote the implementation line. Comment lines stay short enough not to overflow
+  the code block at ~1100px (two short comments beat one long one).
+- **`pass` is taught once, up front**, as "nothing here yet" — so the file runs with
+  every body a placeholder, and so the `pass` inside the sensor-wait loop is the same
+  word with the same meaning rather than a new idea.
+- **The activity builds one function per step and tests it on the robot before the
+  next** (track alone on the circle; add drive-past and check the axle is on the
+  tape; one turn, with the two symptoms and which way to adjust the blind angle; the
+  mirror turn; then the four-line program). The build-and-test-in-order sequence
+  moved out of the teacher note into these steps — it's for the student, not the
+  teacher. Teacher note keeps the classroom consequence (pairs spread out; fine).
+- **Bodies behind one `<Reveal title="Check your …" hint="write and test … first">`**
+  after the activity, with a line saying a different-but-working version is fine.
+  Reveal = tier 1 of §15 (student may check after trying; closed, not printed).
+- **Complete file in `<TeacherNote title="Solution (teacher copy)">`** at the end
+  of the activity, named as the file in the source repo's `code/solutions/`. Tier 2.
+  Teachers see it in teacher mode; this is the "teacher's guide" for now — a
+  separate generated solutions page is still an option if Brad wants one.
+- **Class extension: `__init__` given, methods outlined.** The constructor is the new
+  idea (composition), so it stays; the methods are `pass` with one comment saying
+  "your function, with `self.` in front of the sensor, drivetrain and settings". A
+  second `<Reveal>` holds the translated methods. The SideBySide and the "From here
+  on, use your class" paragraph are unchanged.
+- **Teaching code is not an answer.** The settings block, the whole-file shape and the
+  four-line program stay as full code — they show structure, not a body the student
+  was asked to write.
+
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
 The site started as `curriculum-site/` inside `IntoToPython`, alongside the source
