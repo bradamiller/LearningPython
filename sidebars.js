@@ -98,6 +98,11 @@ const sidebars = {
       collapsed: true,
       items: [
         'module-06-dijkstra/lesson-00-overview',
+        'module-06-dijkstra/lesson-01-fewest-steps-isnt-fastest',
+        'module-06-dijkstra/lesson-02-weights-in-the-graph',
+        'module-06-dijkstra/lesson-03-from-bfs-to-dijkstra',
+        'module-06-dijkstra/lesson-04-drive-it',
+        'module-06-dijkstra/lesson-05-three-planners-one-harness',
       ],
     },
   ],

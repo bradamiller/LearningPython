@@ -15,19 +15,13 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-<Todo kind="blocked">
-Module 6 is new (2026-10-14). This overview is the only page so far; the five
-lessons are being written in the source curriculum first and arrive here as they
-are finished. Until then the sidebar shows just this page.
-</Todo>
-
 Module 5 ended with a robot that finds its own way around blocked intersections.
 It uses breadth-first search, which finds the path with the **fewest steps**, and
 on a grid where every block takes the same time, that is also the fastest path.
 
 But what if one block *doesn't* take the same time? Suppose one segment of the
 grid takes a long, winding detour between two intersections, so that driving it
-takes as long as three ordinary blocks. The map still says it's one step. BFS
+takes as long as five ordinary blocks. The map still says it's one step. BFS
 will happily send the robot down it, because BFS only counts steps.
 
 This module fixes that. **Dijkstra's algorithm** is your BFS with two changes,

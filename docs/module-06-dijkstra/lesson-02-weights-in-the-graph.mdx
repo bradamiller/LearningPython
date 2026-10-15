@@ -1,0 +1,211 @@
+---
+title: "Lesson 6-2 · Weights in the Graph"
+sidebar_label: "6-2 · Weights in the Graph"
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Module 6 · Dijkstra's Algorithm (Optional)"
+  title="Lesson 6-2 · Weights in the Graph"
+  meta={['50 min', 'No robot needed', 'A new harness property']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You have a weight. Now the program needs it. This lesson adds a list of slow segments
+next to the blocked list, a `weight()` function that answers "what does this edge
+cost?", and a `path_cost()` that adds a route up — and then adds *cost* to the Module 5
+harness as one more thing it checks. BFS, unchanged, fails that check. On paper, with
+the path printed, before any robot is involved. That failure is the reason the next
+lesson exists.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Store slow segments as `(a, b, weight)` entries and add one with `add_slow_edge()`
+- Write `weight(a, b)` so it returns the slow cost in either direction and 1 otherwise
+- Write `path_cost(position, path)` by walking the path and summing weights
+- Add a cost check to the harness and explain what a FAIL line means
+- State BFS's limitation precisely: it minimizes steps, and cost is not steps
+
+</Objectives>
+
+<QuizLink id="module-06-dijkstra/lesson-02-weights-in-the-graph" />
+
+## A second list, next to `BLOCKED`
+
+Module 5 kept the things the planner needs to know about the grid in one list,
+`BLOCKED`, fed through `add_blocked()`. Slow segments get the same treatment:
+
+```python
+BLOCKED = []
+SLOW_EDGES = []      # each entry is (intersection_a, intersection_b, cost)
+
+def add_slow_edge(a, b, cost):
+    SLOW_EDGES.append((a, b, cost))
+```
+
+A slow segment is a property of the *edge* between two intersections, not of either
+intersection, so the entry holds both ends and the weight you measured:
+`add_slow_edge((0, 1), (0, 2), 5)`.
+
+Then one function answers the question every planner will ask:
+
+```python
+def weight(a, b):
+    for (x, y, cost) in SLOW_EDGES:
+        if (a == x and b == y) or (a == y and b == x):
+            return cost
+    return 1
+```
+
+Read the `if` carefully. The robot might drive the segment from (0, 1) to (0, 2) or
+from (0, 2) to (0, 1), and it's slow both ways, so `weight()` matches the pair in either
+order. Anything not in the list costs 1 — a normal block.
+
+<KnowledgeCheck
+  question="SLOW_EDGES holds ((0, 1), (0, 2), 5). What do weight((0, 2), (0, 1)) and weight((1, 1), (1, 2)) return?"
+  options={[
+    {text: '5 and 5'},
+    {text: '5 and 1 — the slow segment matches in either order; a segment not in the list is a normal block', correct: true},
+    {text: '1 and 1'},
+    {text: 'An error, because the first pair is backwards'},
+  ]}
+  explanation="The or in the if makes the match direction-free; the final return 1 is the default for every ordinary segment."
+/>
+
+## Adding up a route
+
+A path from the planner is a list of intersections to drive to, not including the
+start. Its cost is the weight of every segment driven: from the start to the first
+step, from that step to the next, and so on.
+
+```python
+def path_cost(position, path):
+    total = 0
+    here = position
+    for step in path:
+        total = total + weight(here, step)
+        here = step
+    return total
+```
+
+`here` starts at the robot's position and moves forward one step each pass — the same
+shape as `drive_path()`'s `position = next_pos`. For `[(0, 1), (0, 2), (0, 3)]` from
+(0, 0), with the slow edge at 5, that's 1 + 5 + 1 = 7.
+
+<KnowledgeCheck
+  question="Why does path_cost() need the position parameter, when the path is right there?"
+  options={[
+    {text: 'It does not; position is unused'},
+    {text: 'The path excludes the start (Lesson 4-5\'s promise 1), so the first segment runs from position to path[0], and only the caller knows position', correct: true},
+    {text: 'To check the path is not empty'},
+    {text: 'Because weight() requires three arguments'},
+  ]}
+  explanation="Every planner in the course returns the intersections to drive TO. The segment from where the robot is to the first of those is part of the trip, and its weight counts."
+/>
+
+## Activity · Add cost to the harness
+
+The Module 5 harness checks five properties of a path. Add a sixth: the path's cost
+equals the cheapest possible. For now you work out the cheapest by hand — trace the
+routes on the grid and add them up — and type the number in; the next lesson writes
+the planner that finds it.
+
+```python
+def check_cost(test_name, position, destination, path, expected_cost):
+    cost = path_cost(position, path)
+    if cost == expected_cost:
+        print("PASS:", test_name, "- cost", cost)
+    else:
+        print("FAIL:", test_name, "- cost", cost, "but the cheapest route costs", expected_cost)
+        print("      path:", path)
+```
+
+Run it against BFS twice:
+
+```python
+# No slow edges: BFS is fine
+path = compute_bfs_path((0, 0), (0, 3))
+check_cost("open row", (0, 0), (0, 3), path, 3)
+
+# The slow segment, weight 5
+add_slow_edge((0, 1), (0, 2), 5)
+path = compute_bfs_path((0, 0), (0, 3))
+check_cost("slow row", (0, 0), (0, 3), path, 5)
+```
+
+```
+PASS: open row - cost 3
+FAIL: slow row - cost 7 but the cheapest route costs 5
+      path: [(0, 1), (0, 2), (0, 3)]
+```
+
+There it is. Not a crash, not a wrong turn on the floor: a FAIL line with the path
+printed, and you can see exactly what BFS did. It drove the slow road, because it
+counts steps and 3 is less than 5.
+
+<KnowledgeCheck
+  question="BFS passes every Module 5 property on the slow grid and fails only the cost check. What does that tell you?"
+  options={[
+    {text: 'BFS is broken and must be rewritten from scratch'},
+    {text: 'BFS does exactly what it promises — fewest steps — and cost is a different thing it was never asked to minimize', correct: true},
+    {text: 'The harness is wrong'},
+    {text: 'The slow segment should be blocked instead'},
+  ]}
+  explanation="A property test tells you precisely which promise failed. The path is valid, connected, unblocked and shortest in steps. It is not cheapest — and nothing in BFS ever looks at a weight."
+/>
+
+<TeacherNote title="On paper, with the path printed — that is the pedagogy">
+
+This is Lesson 5-6's idea doing its job: the failure is a FAIL line with the offending
+path, found at a desk, not a robot taking the long way while everyone wonders. Make
+students write the expected cost by hand before they run the check; if they let the
+program tell them what to expect, the test tests nothing (Lesson 4-6's point).
+
+Two things to watch. The `or` in `weight()` is easy to drop, and then the check passes
+or fails depending on which way the robot happens to drive the segment — a good bug to
+plant. And `path_cost()` must start from `position`, not from `path[0]`; students who
+start at `path[0]` miss the first segment and get costs one too small.
+
+Name the limitation exactly: *BFS minimizes steps; it never looks at a weight.* Don't
+say BFS is wrong. Next lesson keeps 90% of it.
+
+</TeacherNote>
+
+## Real-world connections
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Edge attributes">
+    Road networks store a speed, a length and a toll on every edge — exactly a weight table, far larger than yours.
+  </InfoCard>
+  <InfoCard tag="Testing" title="A new requirement, a new test">
+    When the requirement changed from "fewest steps" to "least time", the first move was a test for it, not a rewrite. Working code that fails a new test is the normal way software grows.
+  </InfoCard>
+  <InfoCard tag="Networks" title="Symmetric links">
+    Most links cost the same in both directions, which is what the or in weight() encodes; one-way streets are the exception, and a good extension question.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Where does a slow segment live, and how does it get there? (`SLOW_EDGES`, via `add_slow_edge(a, b, cost)`.)
+- What does `weight(a, b)` return for an ordinary segment? (1.)
+- Why does `path_cost()` take `position`? (The path excludes the start.)
+- What exactly did BFS fail? (The cost check — it minimized steps, as promised.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** write `weight()` with the `or`; trace `path_cost()` on a three-step path;
+read a FAIL line and say what BFS did. **Exit ticket:** "Why does BFS pass the
+open-grid cost check and fail the slow one?" **Preview:** copy `compute_bfs_path`,
+rename it, change two lines, and the FAIL becomes a PASS.
+
+</TeacherNote>
+
+## Resources
+
+- `module-06-dijkstra/code/solutions/lesson-02-weights.py` in the source repository

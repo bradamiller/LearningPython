@@ -1,0 +1,271 @@
+---
+title: "Lesson 6-3 · From BFS to Dijkstra"
+sidebar_label: "6-3 · From BFS to Dijkstra"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 6 · Dijkstra's Algorithm (Optional)"
+  title="Lesson 6-3 · From BFS to Dijkstra"
+  meta={['60 min', 'No robot needed', 'Two changes to a copy']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+BFS fails the cost check because it never looks at a weight. The fix is not a new
+algorithm written from scratch. It is your BFS, copied, renamed, and changed in two
+places in the middle. Everything else — the graph, `add_blocked()`, the `previous`
+dictionary, the walk-back — stays exactly as you wrote it in Module 5. The result is
+**Dijkstra's algorithm**, and by the end of the lesson you'll have three planners
+running through one harness.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Duplicate `compute_bfs_path()` as `compute_dijkstra_path()` and keep the parts that don't change
+- Make change 1: take the **closest** intersection off `to_visit`, not the oldest
+- Make change 2: add the segment's **weight**, and keep the cheaper total when an intersection is reached again
+- Read a `print_grid()` of costs and explain each number
+- Run Manhattan, BFS and Dijkstra through the same harness and say where they agree and disagree
+
+</Objectives>
+
+<QuizLink id="module-06-dijkstra/lesson-03-from-bfs-to-dijkstra" />
+
+## Start by copying
+
+Copy `compute_bfs_path()` in full and rename the copy `compute_dijkstra_path()`. Don't
+change anything else yet. Run the harness: the copy passes everything BFS passes and
+fails the same cost check, which is what you'd expect from identical code. Now you
+have a safe place to make two changes.
+
+## Change 1 · Closest first, not oldest first
+
+BFS takes intersections off `to_visit` in the order they went on — `to_visit.pop(0)`
+— and that works because every step costs the same: the oldest entry is always one of
+the closest. With weights that's no longer true. An intersection reached by a cheap
+detour may be closer, in cost, than one that went on the list earlier by a slow road.
+
+So Dijkstra keeps a second dictionary, `distance`, holding the cheapest cost found so
+far to each intersection, and takes the one with the smallest value:
+
+```python
+def closest(intersections, distance):
+    best = intersections[0]
+    for node in intersections:
+        if distance[node] < distance[best]:
+            best = node
+    return best
+```
+
+and in the planner:
+
+```python
+    distance = {position: 0}                 # NEW
+    to_visit = [position]
+
+    while len(to_visit) > 0:
+        current = closest(to_visit, distance)    # CHANGED: was to_visit.pop(0)
+        to_visit.remove(current)
+```
+
+That's a plain loop looking for a minimum — the same pattern as finding the biggest
+number in a list in Module 1.
+
+<KnowledgeCheck
+  question="Why can BFS get away with taking the oldest intersection off to_visit, and Dijkstra cannot?"
+  options={[
+    {text: 'BFS lists are shorter'},
+    {text: 'When every step costs 1, the oldest entry is always among the closest; with weights, something that went on later by a cheap route can be closer than something that went on earlier by a slow one', correct: true},
+    {text: 'Dijkstra uses a dictionary and BFS uses a list'},
+    {text: 'It can; the change is only for speed'},
+  ]}
+  explanation="BFS's rings are rings of steps and rings of cost at once. Weights break that: cost no longer grows in step with order of discovery, so the planner has to look up which waiting intersection is cheapest."
+/>
+
+## Change 2 · Add the weight, and keep the cheaper way
+
+BFS marks a neighbor the first time it sees it and never reconsiders; the first way to
+reach it is always a shortest way, in steps. Dijkstra adds the edge's weight to get the
+cost of reaching the neighbor *this* way, and if that beats what it already had, it
+updates:
+
+```python
+        for neighbor in graph[current]:
+            new_distance = distance[current] + weight(current, neighbor)   # CHANGED: was "+1 step"
+            if neighbor not in distance or new_distance < distance[neighbor]:  # CHANGED: keep the cheaper way
+                distance[neighbor] = new_distance
+                previous[neighbor] = current
+                if neighbor not in to_visit:
+                    to_visit.append(neighbor)
+```
+
+Compare it with the BFS lines it replaces:
+
+<SideBySide left="BFS (Module 5)" right="Dijkstra">
+<div>
+
+```python
+for neighbor in graph[current]:
+    if neighbor not in previous:
+        previous[neighbor] = current
+        to_visit.append(neighbor)
+```
+
+</div>
+<div>
+
+```python
+for neighbor in graph[current]:
+    new_distance = distance[current] + weight(current, neighbor)
+    if neighbor not in distance or new_distance < distance[neighbor]:
+        distance[neighbor] = new_distance
+        previous[neighbor] = current
+        if neighbor not in to_visit:
+            to_visit.append(neighbor)
+```
+
+</div>
+</SideBySide>
+
+`previous[neighbor] = current` is still how the path gets remembered, and the walk-back
+at the end of the function is untouched. The only new idea is that `previous` can be
+*overwritten* when a cheaper way turns up.
+
+<KnowledgeCheck
+  question="In Dijkstra, what happens when the planner reaches an intersection it has already recorded, by a cheaper route?"
+  options={[
+    {text: 'Nothing — the first way found is kept, as in BFS'},
+    {text: 'distance and previous for that intersection are overwritten with the cheaper total and the new way in', correct: true},
+    {text: 'The planner stops and returns the path'},
+    {text: 'The intersection is added to BLOCKED'},
+  ]}
+  explanation="That is change 2. BFS never reconsiders because its first discovery is already shortest in steps. Dijkstra may find a cheaper way later and must keep it, including the previous pointer that the walk-back will follow."
+/>
+
+## Activity · Make the two changes
+
+Work on your copy, in this order, running the harness after each:
+
+1. Add `distance = {position: 0}` and swap `to_visit.pop(0)` for
+   `closest()` + `remove()`. Harness: still passes the Module 5 properties.
+2. Replace the neighbor loop with the weighted version. Harness: the cost check now
+   **passes**.
+3. In your Lesson 5-6 harness file, add the cost check from Lesson 6-2 and run all
+   three planners through `run_all_tests()`, handing each in by name:
+
+```python
+run_all_tests("Manhattan", compute_manhattan_path)
+run_all_tests("BFS",       compute_bfs_path)
+run_all_tests("Dijkstra",  compute_dijkstra_path)
+```
+
+Expected: Manhattan fails the blocked tests (it can't avoid walls) and the cost check;
+BFS passes everything except cost on the slow grid; Dijkstra passes everything. On the
+*open* grid with no slow edges, all three agree on every path length. (The solution
+file's `compare()` prints the BFS and Dijkstra answers side by side for the same cases.)
+
+```
+--- (0,0) to (0,3), slow edge (0,1)-(0,2) weight 5 ---
+  BFS       steps: 3  cost: 7   [(0, 1), (0, 2), (0, 3)]
+  Dijkstra  steps: 5  cost: 5   [(1, 0), (1, 1), (1, 2), (0, 2), (0, 3)]
+```
+
+<KnowledgeCheck
+  question="On a grid with no blocked intersections and no slow edges, how do the three planners' paths compare?"
+  options={[
+    {text: 'Dijkstra\'s paths are shorter'},
+    {text: 'All three are the same length; the planners only disagree when a wall or a slow segment gives them a reason to', correct: true},
+    {text: 'Manhattan fails'},
+    {text: 'BFS and Dijkstra return []'},
+  ]}
+  explanation="Without obstacles, every planner finds a shortest Manhattan route. Walls separate Manhattan from the other two; weights separate BFS from Dijkstra. Each upgrade earns its keep on exactly the grid that needs it."
+/>
+
+## The cost grid
+
+Dijkstra's `distance` dictionary is a map of how far everything is, in cost, from the
+start. `print_grid()` from Module 5 draws it:
+
+```python
+print_grid(ROWS, COLS, BLOCKED, dijkstra_distances((0, 0)))
+```
+
+```
+       0  1  2  3
+    -------------
+ 0 |   0  1  4  5
+ 1 |   1  2  3  4
+ 2 |   2  3  4  5
+ 3 |   3  4  5  6
+```
+
+Read across row 0: (0, 1) costs 1, then (0, 2) costs **4**, not 2. The slow segment
+would make it 1 + 5 = 6; going down to (1, 1), across to (1, 2) and up costs 1 + 1 + 1
++ 1 = 4, so 4 is what gets kept. That one cell is change 2 doing its job. Everywhere
+else, the numbers are Module 5's BFS rings.
+
+<KnowledgeCheck
+  question="In the cost grid above, why is (0, 2) a 4 rather than a 2?"
+  options={[
+    {text: 'A typo in the grid'},
+    {text: 'Reaching it along row 0 costs 1 + 5 = 6 because of the slow segment; the detour through row 1 costs 4, and Dijkstra keeps the cheaper total', correct: true},
+    {text: 'Because (0, 2) is blocked'},
+    {text: 'Because the grid is 4 wide'},
+  ]}
+  explanation="Every other cell matches the BFS ring numbers. (0, 2) is the one place the slow segment is on the direct route, and the printed 4 is the cheaper way round it."
+/>
+
+<TeacherNote title="Copy first, change second — and stop at two changes">
+
+The lesson's shape is the point: a working thing, copied, changed in two marked places,
+tested after each. Students who try to write Dijkstra fresh get lost in `to_visit`
+bookkeeping; students who copy BFS and change two lines have it working in twenty
+minutes and can explain both changes.
+
+`closest()` is a linear scan. Real implementations use a priority queue, and the old
+version of this material taught one; don't. For a 4×4 grid the scan is instant, and
+the queue is machinery that obscures the two ideas. If a student asks, "a priority
+queue is a faster way to do what `closest()` does" is the whole answer.
+
+The cost grid is where the understanding shows. Ask students to point at the one cell
+that differs from BFS and say why before they look at the explanation.
+
+</TeacherNote>
+
+## Real-world connections
+
+<CardGrid>
+  <InfoCard tag="History" title="1956">
+    Edsger Dijkstra designed this in about twenty minutes, in his head, in a cafe, as a demonstration for a new computer. It is still the standard.
+  </InfoCard>
+  <InfoCard tag="Maps" title="Under every route">
+    Map apps run Dijkstra's algorithm (and descendants of it) over road networks with millions of weighted edges.
+  </InfoCard>
+  <InfoCard tag="Engineering" title="Upgrade by diff">
+    Changing two lines of tested code and re-running the tests is how most real improvements ship. The copy you kept is the rollback.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What are the two changes? (Closest first; add the weight and keep the cheaper total.)
+- What is `distance`? (The cheapest cost found so far to each intersection.)
+- Where do the three planners disagree? (Walls split off Manhattan; weights split BFS from Dijkstra.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** point to the two changed regions in the copy; explain `closest()`;
+explain one cell of the cost grid. **Exit ticket:** "Why does Dijkstra sometimes
+overwrite `previous[neighbor]`, when BFS never does?" **Preview:** the robot drives
+the slow grid twice — a BFS run and a Dijkstra run — and the class times both.
+
+</TeacherNote>
+
+## Resources
+
+- `module-06-dijkstra/code/solutions/lesson-03-from-bfs-to-dijkstra.py` in the source repository
+- [Dijkstra's algorithm (Wikipedia)](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)

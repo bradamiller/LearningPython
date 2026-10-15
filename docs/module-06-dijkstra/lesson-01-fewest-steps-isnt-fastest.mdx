@@ -1,0 +1,200 @@
+---
+title: "Lesson 6-1 · When Fewest Steps Isn't Fastest"
+sidebar_label: "6-1 · Fewest Steps Isn't Fastest"
+sidebar_position: 1
+---
+
+<LessonHeader
+  eyebrow="Module 6 · Dijkstra's Algorithm (Optional)"
+  title="Lesson 6-1 · When Fewest Steps Isn't Fastest"
+  meta={['45 min', 'Stopwatch and paper', 'What a weight means']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Module 5's planner finds the path with the fewest steps, and on your grid so far that
+has always been the fastest path too — every block took the same time. Today one block
+doesn't. Your teacher has changed one segment of the grid so the tape takes a long
+detour between two neighboring intersections. The map still says one step. Your robot
+will take a lot longer than one step to drive it. This lesson is about measuring that,
+and turning it into a number the planner can use.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Explain why the shortest path in steps is not always the fastest in time
+- Time a normal block and the slow segment with a stopwatch, and turn the ratio into a **weight**
+- Add up the cost of a route by hand, with and without the slow segment
+- Predict which of two routes BFS will choose, and whether it is the faster one
+- Say why a slow segment that costs exactly three blocks is not slow enough to matter
+
+</Objectives>
+
+<QuizLink id="module-06-dijkstra/lesson-01-fewest-steps-isnt-fastest" />
+
+## The grid has a slow road
+
+Look at the grid. One segment between two adjacent intersections is no longer a
+straight piece of tape — it winds back and forth before it arrives. Line following
+still works on it; the sensors don't care that the tape wiggles. But the robot has to
+drive the whole length of the wiggle.
+
+To the Module 5 graph, that segment is still one edge: `(0, 1)` is a neighbor of
+`(0, 2)`, full stop. `build_graph()` has no way to say "this neighbor is far." And
+`compute_bfs_path()` counts edges. So from (0, 0) to (0, 3) it will pick the straight
+row — three steps — and send the robot down the slow road, every time.
+
+<KnowledgeCheck
+  question="Why does compute_bfs_path() choose the slow road without hesitation?"
+  options={[
+    {text: 'It has a bug'},
+    {text: 'It counts steps, and the slow road is one step like any other — the graph has no way to say an edge is long', correct: true},
+    {text: 'It prefers rows to columns'},
+    {text: 'It always chooses the first neighbor in the list'},
+  ]}
+  explanation="BFS finds the path with the fewest edges. Nothing in the graph or the planner knows one edge takes longer to drive than another. That information does not exist yet — this module adds it."
+/>
+
+## Activity · Measure it
+
+A planner needs a number, not "it's slow." Get one with a stopwatch:
+
+1. Time the robot driving one **normal** block, intersection to intersection, with
+   `track_to_intersection()`. Do it three times and average.
+2. Time the robot driving the **slow** segment the same way, three times, average.
+3. Divide: slow time ÷ normal time. That ratio is the segment's **weight** — how many
+   normal blocks' worth of time it costs.
+
+```
+Normal block:   4.1 s   4.0 s   4.2 s    average 4.1 s
+Slow segment:  19.8 s  20.5 s  20.1 s    average 20.1 s
+
+weight = 20.1 / 4.1 = 4.9  -> call it 5
+```
+
+Round to a whole number. The planner doesn't need two decimal places; it needs to know
+that this edge is about five times worse than the others. Write your weight down —
+Lesson 6-2 types it into the program.
+
+<KnowledgeCheck
+  question="A normal block takes 4 seconds and the slow segment takes 16. What is its weight?"
+  options={[
+    {text: '16'},
+    {text: '4 — it costs four normal blocks\' worth of time', correct: true},
+    {text: '12'},
+    {text: '0.25'},
+  ]}
+  explanation="weight = slow time / normal time = 16 / 4 = 4. A weight is measured in blocks, not seconds, so the same number works whatever speed the robot drives at."
+/>
+
+## Cost on paper
+
+Now compare two routes from (0, 0) to (0, 3) on a 4×4 grid, with the slow segment
+between (0, 1) and (0, 2) at weight 5. A route's **cost** is the sum of its edge
+weights — 1 for a normal block, 5 for the slow one.
+
+```
+Route A, straight along row 0:
+  (0,0) -> (0,1) -> (0,2) -> (0,3)
+  cost =    1   +    5   +    1    = 7       (3 steps)
+
+Route B, down and around through row 1:
+  (0,0) -> (1,0) -> (1,1) -> (1,2) -> (1,3) -> (0,3)
+  cost =    1   +    1   +    1   +    1   +    1    = 5       (5 steps)
+```
+
+Route A has fewer steps. Route B is faster. BFS picks A.
+
+<KnowledgeCheck
+  question="With the slow segment at weight 5, which route does BFS choose from (0,0) to (0,3), and what does it cost?"
+  options={[
+    {text: 'Route B, cost 5 — BFS finds the cheapest path'},
+    {text: 'Route A, cost 7 — BFS finds the fewest steps, and A has 3 steps to B\'s 5', correct: true},
+    {text: 'Route A, cost 3'},
+    {text: 'Neither; it reports no path'},
+  ]}
+  explanation="BFS compares 3 steps against 5 steps and takes 3. It never sees the 7, because cost is not something it computes. The robot pays the extra time on the floor."
+/>
+
+## Why three isn't enough
+
+Try the same comparison with the slow segment at weight **3**. Route A costs
+1 + 3 + 1 = 5. Route B still costs 5. They tie — and going round one segment on an
+open grid always takes exactly three normal blocks, so a weight of three is the
+break-even point. For the two planners in this module to *disagree*, the slow segment
+has to be clearly worse than the detour around it: a weight of 4 or more. If your
+stopwatch gave you 3, ask your teacher to make the detour longer.
+
+<KnowledgeCheck
+  question="The slow segment measures weight 3. From (0,0) to (0,3), what happens?"
+  options={[
+    {text: 'The detour is faster by 2'},
+    {text: 'The straight route costs 1+3+1 = 5 and the detour costs 5 — a tie, so the slow road is not slow enough to change the answer', correct: true},
+    {text: 'The straight route is faster by 2'},
+    {text: 'BFS reports no path'},
+  ]}
+  explanation="Going round one segment costs three normal blocks on an open grid, so weight 3 exactly breaks even. The module needs the slow segment to be worse than that."
+/>
+
+<TeacherNote title="Set the grid up first, and make the detour long">
+
+Do this before class: re-tape one segment between two adjacent intersections as a
+winding detour long enough that the drive takes at least four normal blocks' time
+(five is better; it makes the numbers unambiguous). Keep the detour's tape the same
+width and the curves gentle enough for line following; test it with
+`track_to_intersection()` before students arrive. The two intersections it joins
+must still read as crosses, and the segment should be on an obvious shortest-steps
+route — between (0,1) and (0,2) on a 4×4 grid, with trips along row 0, works well.
+
+The stopwatch activity is the heart of the lesson. The weight has to come from a
+measurement students made, or the module is just arithmetic. Three timings each and
+an average also quietly revisits why we measure more than once.
+
+If your detour comes out at exactly weight 3, the module falls flat (the tie above).
+Lengthen it.
+
+**Physical setup is still being tried on a real grid.** The winding detour is the
+leading option because it needs nothing under the tape and does not disturb the
+reflectance sensors; if you find a better one, note it in the source repository's
+`module-06-dijkstra/README.md`.
+
+</TeacherNote>
+
+## Real-world connections
+
+Every real router works in time or cost, not hops:
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Fastest, not shortest">
+    A map app's route is rarely the fewest turns or the fewest miles; it is the least time, with each road weighted by its speed.
+  </InfoCard>
+  <InfoCard tag="Networks" title="Link costs">
+    Internet routers weight links by bandwidth and delay; a path with more hops over fast links beats a short path over a slow one.
+  </InfoCard>
+  <InfoCard tag="Logistics" title="Toll roads and traffic">
+    Delivery routing adds tolls, traffic and loading time to distance. The cheapest route is the one with the smallest total.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does a weight mean? (How many normal blocks' worth of time a segment costs.)
+- How do you get one? (Time the slow segment, divide by a normal block, round.)
+- What is a route's cost? (The sum of its edge weights.)
+- Why isn't weight 3 enough? (The detour around one segment is 3 blocks; it ties.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** compute a weight from two timings; add up two routes by hand; say which
+BFS picks. **Exit ticket:** "Weight 4, from (0,0) to (0,3): cost of each route, and
+which is faster?" (A: 6, B: 5; B.) **Preview:** next lesson the weight goes into the
+program, the harness learns to add up cost, and BFS fails the new test on paper.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

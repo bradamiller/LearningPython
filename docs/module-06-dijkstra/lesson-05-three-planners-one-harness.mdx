@@ -1,0 +1,206 @@
+---
+title: "Lesson 6-5 · Three Planners, One Harness"
+sidebar_label: "6-5 · Three Planners (Extension)"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 6 · Dijkstra's Algorithm (Optional)"
+  title="Lesson 6-5 · Three Planners, One Harness"
+  meta={['45 min', 'Optional extension', 'Classes track only']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+This lesson is for students who built the `Manhattan` and `BFS` classes in Lessons 4-5
+and 5-5. It adds the third one, `Dijkstra`, and runs all three as objects through the
+Module 5 class harness. The harness never finds out which one it is holding. That
+property has a name — **polymorphism** — and this is the cleanest place in the course
+to see it.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write the `Dijkstra` class by copying `BFS` and making the same two changes as Lesson 6-3
+- Give it `add_slow_edge()` and `weight()` as methods, with the slow list inside the object
+- Run `Manhattan()`, `BFS()` and `Dijkstra()` through one harness and read the results
+- Explain why the harness can treat three different classes the same way
+
+</Objectives>
+
+<QuizLink id="module-06-dijkstra/lesson-05-three-planners-one-harness" />
+
+## The third class
+
+`BFS` from Lesson 5-5 holds its blocked list in `self.blocked` and exposes
+`add_blocked()`, `clear_blocked()` and `compute_path(position, destination)`. `Dijkstra`
+is a copy of it with two additions and the two changes:
+
+```python
+class Dijkstra:
+    def __init__(self, rows=4, cols=4):
+        self.rows = rows
+        self.cols = cols
+        self.blocked = []
+        self.slow_edges = []                     # NEW: lives inside the planner
+
+    def add_blocked(self, intersection):
+        if intersection not in self.blocked:
+            self.blocked.append(intersection)
+
+    def clear_blocked(self):
+        self.blocked = []
+
+    def add_slow_edge(self, a, b, cost):         # NEW
+        self.slow_edges.append((a, b, cost))
+
+    def weight(self, a, b):                      # NEW
+        for (x, y, cost) in self.slow_edges:
+            if (a == x and b == y) or (a == y and b == x):
+                return cost
+        return 1
+
+    def compute_path(self, position, destination):
+        graph = build_graph(self.rows, self.cols, self.blocked)
+        # ... the Lesson 6-3 body, with self.weight(...) and self.closest(...) ...
+```
+
+Same shape as the other two: `compute_path(position, destination)`, told the position
+every call, returning a path that excludes the start. The slow list is the planner's
+own data, as the blocked list already was, so there is no global for anyone else to
+touch.
+
+<KnowledgeCheck
+  question="Where does the slow-edge list live in the class version, and why?"
+  options={[
+    {text: 'In a global SLOW_EDGES, as in Lesson 6-2'},
+    {text: 'Inside the Dijkstra object as self.slow_edges, like self.blocked — it is the planner\'s own knowledge of the grid, reached only through add_slow_edge()', correct: true},
+    {text: 'Inside the harness'},
+    {text: 'In the Navigator'},
+  ]}
+  explanation="A class keeps its data with the methods that use it. The blocked list moved inside BFS in Lesson 5-5 for the same reason; the slow list follows it."
+/>
+
+## One harness, three objects
+
+The Lesson 5-6 class harness is handed an object and calls its methods:
+
+```python
+run_all_tests("Manhattan", Manhattan())
+run_all_tests("BFS",       BFS())
+run_all_tests("Dijkstra",  Dijkstra())
+```
+
+Inside, every line is `planner.add_blocked(...)`, `planner.clear_blocked()`,
+`planner.compute_path(position, destination)`. Nothing in the harness names a class.
+For the cost check, the harness calls `planner.add_slow_edge(...)` and keeps its own
+record of the slow edges — as it already kept its own record of blocks in Lesson 5-6 —
+so the cost it adds up uses the true weights whichever planner it is testing. That
+call means `Manhattan` and `BFS` need an `add_slow_edge()` too, even though they ignore
+it, exactly as `Manhattan.add_blocked()` did nothing in Module 5:
+
+```python
+class BFS:
+    # ...
+    def add_slow_edge(self, a, b, cost):
+        pass        # BFS does not plan by cost; it accepts the call and ignores it
+```
+
+<SideBySide left="Functions (6-3)" right="Objects (6-5)">
+<div>
+
+```python
+run_all_tests("Dijkstra", compute_dijkstra_path)
+
+path = planner(position, destination)
+add_slow_edge((0, 1), (0, 2), 5)
+```
+
+</div>
+<div>
+
+```python
+run_all_tests("Dijkstra", Dijkstra())
+
+path = planner.compute_path(position, destination)
+planner.add_slow_edge((0, 1), (0, 2), 5)
+```
+
+</div>
+</SideBySide>
+
+Three classes, one set of method names, one harness that works on any of them. That is
+polymorphism: code written against a *shape* — the names a planner answers to — rather
+than against one particular class. You have been using it since Lesson 5-6, where the
+harness was handed a function. Objects make the shape explicit: it is the list of
+methods.
+
+<KnowledgeCheck
+  question="Why must BFS have an add_slow_edge() method that does nothing?"
+  options={[
+    {text: 'Python requires every class to have the same methods'},
+    {text: 'So the harness can call planner.add_slow_edge() on whichever planner it holds without checking which one — the same reason Manhattan has an add_blocked() that does nothing', correct: true},
+    {text: 'Because BFS secretly uses weights'},
+    {text: 'It does not; the harness skips BFS'},
+  ]}
+  explanation="The harness is written against the shape. A planner that cannot use a piece of information still has to accept it, or the harness would need an if for every class — which is exactly what polymorphism avoids."
+/>
+
+## Activity · Build it, test it, read the results
+
+1. Copy your `BFS` class, rename it `Dijkstra`, add `self.slow_edges`,
+   `add_slow_edge()` and `weight()`, and make the Lesson 6-3 two changes inside
+   `compute_path()` (`closest()` can be a method or a plain function).
+2. Give `Manhattan` and `BFS` an `add_slow_edge()` that does nothing.
+3. Add the cost check to the class harness and run all three.
+
+Expected, on the slow grid:
+
+```
+=== Manhattan ===   blocked tests FAIL, cost FAIL
+=== BFS ===         blocked tests PASS, cost FAIL
+=== Dijkstra ===    everything PASS
+```
+
+Each planner fails exactly the tests that describe what it cannot do, and the harness
+that showed you that is the one you wrote in Lesson 5-6, unchanged.
+
+<TeacherNote title="Polymorphism, named once, after students have used it twice">
+
+The word is introduced here because students have now *done* the thing three times:
+the Lesson 5-6 function swap, the Lesson 5-6 class extension, and this. Name it, point
+at the harness, and move on; a lecture on OOP terminology would undo the lightness that
+made the class track work.
+
+The `add_slow_edge()` that does nothing is the teaching moment. Ask why it has to exist
+and let students find the `if planner is BFS` they'd otherwise need in the harness.
+
+Everything else is Lesson 6-3 with `self.` in front. Students who did 6-3 carefully
+finish this in half an hour. The file is
+`lesson-05-three-planners-class-addon.py` in the Module 6 solutions.
+
+</TeacherNote>
+
+## Wrap-up
+
+- What does `Dijkstra` add to `BFS`? (A slow list with two methods, and the two changes.)
+- Why can one harness test three classes? (They answer to the same method names.)
+- What is that called? (Polymorphism.)
+
+<TeacherNote title="Assessment & the end of the course">
+
+**Formative:** the three-planner harness output; an explanation of the empty
+`add_slow_edge()`. **Exit ticket:** "What would the harness need if `BFS` lacked
+`add_slow_edge()`?" (An `if` per class — the thing polymorphism removes.) This is the
+last lesson in the course. Students have a robot that follows lines, drives a grid,
+plans around obstacles, and now plans by time — and three planners they can swap with
+one name.
+
+</TeacherNote>
+
+## Resources
+
+- `module-06-dijkstra/code/solutions/lesson-05-three-planners-class-addon.py` in the source repository

@@ -1,0 +1,185 @@
+---
+title: "Lesson 6-4 · Drive It"
+sidebar_label: "6-4 · Drive It"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 6 · Dijkstra's Algorithm (Optional)"
+  title="Lesson 6-4 · Drive It"
+  meta={['50 min', 'Robot required', 'Steps versus seconds']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Two planners, one grid, one trip. The robot drives from (0, 0) to (0, 3) planned by
+BFS, and then the same trip planned by Dijkstra, and the class times both. BFS takes
+fewer steps. Dijkstra arrives first. Nothing about the driving changes — it is Module
+4's `drive_path()`, with the planner's name the only Module 6 line in the program.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Type a measured slow segment into the program with `add_slow_edge()`
+- Swap the planner by changing one name, and print both planners' paths and costs before the button
+- Time two runs and relate the seconds to the costs the program printed
+- Explain why the driving functions did not change
+
+</Objectives>
+
+<QuizLink id="module-06-dijkstra/lesson-04-drive-it" />
+
+## One name changes
+
+The program is Module 4's driving toolkit plus Module 6's two planners. The main
+program chooses:
+
+```python
+SLOW_SEGMENT = ((0, 1), (0, 2), 5)          # what you measured in Lesson 6-1
+add_slow_edge(SLOW_SEGMENT[0], SLOW_SEGMENT[1], SLOW_SEGMENT[2])
+
+position = (0, 0)
+heading = 0
+destination = (0, 3)
+
+PLANNER_NAME = "BFS"          # or "Dijkstra" -- change this between runs
+
+if PLANNER_NAME == "Dijkstra":
+    planner = compute_dijkstra_path
+else:
+    planner = compute_bfs_path
+```
+
+Then, before the button, print *both* plans — so the comparison is on the screen before
+either run happens:
+
+```python
+for (name, p) in [("BFS", compute_bfs_path), ("Dijkstra", compute_dijkstra_path)]:
+    path = p(position, destination)
+    print(name.ljust(9), "steps:", len(path), " cost:", path_cost(position, path), " ", path)
+
+path = planner(position, destination)
+board.wait_for_button()
+
+start_time = time.time()
+position, heading = drive_path(path, position, heading)
+elapsed = time.time() - start_time
+
+print(PLANNER_NAME, "took", round(elapsed, 1), "seconds for", len(path), "steps")
+```
+
+```
+BFS       steps: 3  cost: 7   [(0, 1), (0, 2), (0, 3)]
+Dijkstra  steps: 5  cost: 5   [(1, 0), (1, 1), (1, 2), (0, 2), (0, 3)]
+```
+
+`planner = compute_dijkstra_path` is the Lesson 5-6 swap: a function handed around by
+name. `drive_path()` is handed a list of intersections and has no idea which planner
+produced it.
+
+<KnowledgeCheck
+  question="How much of the driving code changes between the BFS run and the Dijkstra run?"
+  options={[
+    {text: 'drive_path() needs a weight parameter'},
+    {text: 'None of it — the planner returns a list of intersections either way, and drive_path() drives lists', correct: true},
+    {text: 'turn_to() has to know about the slow segment'},
+    {text: 'track_to_intersection() runs slower on purpose'},
+  ]}
+  explanation="The plan-versus-drive split from Lesson 4-5 pays off a third time. The driving functions never knew what a path meant, so a path chosen for cost instead of steps is just another list."
+/>
+
+## Activity · Two runs, one stopwatch
+
+1. Type your measured slow segment into `SLOW_SEGMENT`. Check the printed costs
+   match what you worked out on paper in Lesson 6-1.
+2. `PLANNER_NAME = "BFS"`. Read the printed path, press the button, start a stopwatch
+   with the robot. Record the time. Watch it take the slow road.
+3. `PLANNER_NAME = "Dijkstra"`. Same start, same destination. Record the time. Watch it
+   go round.
+4. Fill in the table:
+
+```
+Planner    steps   cost   seconds
+BFS         ___    ___     ___
+Dijkstra    ___    ___     ___
+```
+
+The program's own `elapsed` is a check on your stopwatch. The two should tell the same
+story: more steps, fewer seconds.
+
+<KnowledgeCheck
+  question="A team's Dijkstra run takes 5 steps and 21 seconds; their BFS run takes 3 steps and 29 seconds. A normal block is about 4 seconds. Do the numbers make sense?"
+  options={[
+    {text: 'No — more steps must take more time'},
+    {text: 'Yes — 5 normal blocks is about 20 s; 2 normal blocks plus a weight-5 segment is about 28 s', correct: true},
+    {text: 'No — BFS should always be faster'},
+    {text: 'Only if the battery was changed between runs'},
+  ]}
+  explanation="Cost predicts time: 5 blocks' worth against 7 blocks' worth, at about 4 seconds a block. The stopwatch agreeing with the cost column is the point of the lesson."
+/>
+
+<KnowledgeCheck
+  question="Both runs produce the same path and the same time. What is the most likely cause?"
+  options={[
+    {text: 'Dijkstra is broken'},
+    {text: 'SLOW_SEGMENT was not typed in (or its weight is 3 or less), so the two planners have no reason to disagree', correct: true},
+    {text: 'The robot is too fast'},
+    {text: 'drive_path() ignores the planner'},
+  ]}
+  explanation="The printed plans before the button show this at once. With no slow edge, or a weight that ties with the detour, Dijkstra and BFS agree — as they should."
+/>
+
+<TeacherNote title="Make it a class event">
+
+Run the two trips back to back with the whole class watching and one student on a
+stopwatch. The robot visibly choosing the long way round and arriving sooner is the
+module's payoff; let it land before the discussion.
+
+Before the button, have students read both printed plans aloud and predict the two
+times from the costs and the per-block time they measured in 6-1. Then compare.
+Discrepancies are a good conversation: turns cost time too (the detour has more of
+them), which is why the predicted gap is usually a little bigger than the measured
+one. That is also a fair place to mention what the course left out — a planner that
+weights turns needs to know the heading, and that is a bigger change than two lines.
+
+If the two plans match, the slow segment is missing or too light. Fix the setup, not
+the code.
+
+</TeacherNote>
+
+## Real-world connections
+
+<CardGrid>
+  <InfoCard tag="Maps" title="The long way that's quicker">
+    A map app routing you onto the highway for three extra miles is this run, at scale: more distance, less time.
+  </InfoCard>
+  <InfoCard tag="Testing" title="Predict, then measure">
+    Writing down the expected time before the run, from the cost, is the same discipline as writing the expected path before running a test.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Swappable planners">
+    Real robot stacks run several planners behind one interface and switch by configuration, not by rewriting the driver.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What is the one Module 6 line in the driving program? (Which planner `planner` is set to.)
+- What predicted the stopwatch? (The cost column.)
+- Why did the robot's driving code not change? (It drives lists; it never knew what a path meant.)
+
+<TeacherNote title="Assessment & what's next">
+
+**Formative:** the two-run table filled in, with costs and times that agree. **Exit
+ticket:** "In one sentence, why did the 5-step route win?" **Next:** Lesson 6-5 is an
+optional extension for students who did the class track: the `Dijkstra` class and all
+three planners as objects through the Module 5 class harness. For everyone else, the
+course ends here — with a robot that plans by time.
+
+</TeacherNote>
+
+## Resources
+
+- `module-06-dijkstra/code/solutions/lesson-04-drive-it.py` in the source repository
