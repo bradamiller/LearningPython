@@ -1,269 +1,332 @@
 ---
 title: "Lesson 5-6 · Testing and Swapping"
-sidebar_label: "5-6 · Testing & Swapping"
+sidebar_label: "5-6 · Testing and Swapping"
 sidebar_position: 6
 ---
 
 <LessonHeader
   eyebrow="Module 5 · Pathfinding Around Obstacles"
   title="Lesson 5-6 · Testing and Swapping"
-  meta={['55 min', 'Testing + design', 'The two-line swap']}
+  meta={['50–60 min', 'Testing by properties', 'One harness, any planner']}
 />
 
 <TeacherBanner>
-Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
 </TeacherBanner>
 
-Your Dijkstra class works — now prove it, then experience the payoff of good design. Because
-Dijkstra and Manhattan share the same interface, you can drop Dijkstra into your Module 4
-Navigator by changing **two lines**. The robot drives exactly as before, but now it can
-route around obstacles.
+Your planner passes five tests. Now test it *properly* — and meet a testing idea
+that will outlast this course. Then, with one small trick, point the same tests at
+Module 4's Manhattan planner and watch it fail on paper, for exactly the reason
+this module exists.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Write tests that verify Dijkstra matches Manhattan on a clear grid
-- Write tests that verify Dijkstra reroutes around blocked nodes
-- Explain what a **shared interface** is and why it matters
-- Swap Dijkstra into the Navigator by changing only the import and constructor
-- Explain **polymorphism** in plain terms
+- Explain why an exact-match test is wrong for BFS and right for Manhattan
+- Name the five properties every correct path has, and write each as one `if`
+- Explain why the walled-off case needs its own test
+- Hand a function to another function, and explain what `planner(position, destination)` does inside the harness
+- Run one harness against Manhattan and BFS and explain every FAIL line
+- Write a main program that works with either planner by changing one name
 
 </Objectives>
 
-<Todo kind="blocked">
-Module 5 now teaches breadth-first search; Dijkstra's algorithm moved to the
-optional Module 6 (2026-10-14). This page is the old Dijkstra-first version and is
-being rewritten from the new source code (source phase 3). Code names below are
-also out of date: `track_until_cross` is now `track_to_intersection`, `turn_right`
-is `turn_clockwise`, `clear_intersection` is `drive_past_intersection`.
-</Todo>
-
 <QuizLink id="module-05-pathfinding/lesson-06-testing-and-swapping" />
 
-## What makes a good test
+## Two right answers, one test
 
-A good test has a **known input**, an **expected output** you worked out yourself, and a
-**check** that compares actual to expected. Test two scenarios: clear grids (Dijkstra
-should match Manhattan's length) and grids with obstacles (Dijkstra should detour).
+Compare your Lesson 5-5 Test 1 path with a classmate's. If they're different, good.
+If not, here's another correct one:
 
 ```python
-d = Dijkstra((0, 0))
-path = d.compute_path((3, 3))
-print("Path:", path)
-print("Steps:", len(path))         # expect 6 -- the Manhattan distance
+[(1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3)]   # yours, maybe
+[(0, 1), (0, 2), (0, 3), (1, 3), (2, 3), (3, 3)]   # also six steps, also right
 ```
 
-On a clear 4×4 grid, the path from (0,0) to (3,3) is 6 steps. The *route* Dijkstra picks
-may differ from Manhattan's, but the **step count** must match — because there are many
-shortest paths of equal length.
+Now here's the test from Module 4's Lesson 4-6:
+
+```python
+if actual_path == expected_path:
+    print("PASS")
+```
+
+One of those two correct paths gets marked FAIL. Module 4's test was fine, because
+Manhattan has exactly one answer. BFS doesn't. We need a different kind of test.
+
+## Test what must be true
+
+Forget the exact list. What has to be true of *any* correct path from `(0, 0)` to
+`(3, 3)`? Five things:
+
+1. The first step is next to the start.
+2. The last step is the destination.
+3. Every step is next to the one before it.
+4. No step is a blocked intersection.
+5. With nothing blocked, the number of steps is the Manhattan distance.
+
+Five one-line checks. Together they're *stricter* than an exact match — an exact
+match can't tell you a path is valid, only that it's the one you expected — and they
+allow every correct answer. That's a **property test**: check what must be true,
+not what you happened to expect.
 
 <KnowledgeCheck
-  question="On a clear grid, why check the step count rather than the exact path?"
+  question="Why are the five property checks stronger than comparing with one expected path?"
   options={[
-    {text: 'The exact path is impossible to compute'},
-    {text: 'There can be several shortest paths of the same length — Dijkstra may pick a different valid one', correct: true},
-    {text: 'Step count is easier to type'},
-    {text: 'The path is always the same'},
+    {text: 'They check that a path is valid, and they accept every correct answer instead of just one', correct: true},
+    {text: 'They run faster'},
+    {text: 'They do not need to know the destination'},
+    {text: 'They are not stronger — an exact match is always better'},
   ]}
-  explanation="Multiple routes can tie for shortest. What must match is the optimal length; the specific cells may legitimately differ between the two algorithms."
+  explanation="An exact match passes only the path you wrote down, even if your expectation was wrong. The properties check validity directly, and any shortest path passes."
 />
 
-## Activity · Test the obstacle case
+## Activity · Build the harness
 
-Block a node on the direct route and confirm Dijkstra both detours *and* never steps on a
-blocked node:
+Open `lesson-06-testing.py`. The two planners and the test runner are given; the
+checks are yours to write.
+
+### Step 1 · Two helpers
 
 ```python
-blocked = [(1, 0), (2, 2)]
-d = Dijkstra((0, 0))
-d.set_blocked_intersections(blocked)
-path = d.compute_path((3, 3))
-print("Path:", path)
+def manhattan_distance(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-for node in path:
-    if node in blocked:
-        print("ERROR: path goes through", node)
-        break
-else:
-    print("PASS: path avoids all blocked nodes")
+def is_neighbor(a, b):
+    return manhattan_distance(a, b) == 1
 ```
 
-That `for/else` is handy: the `else` runs only if the loop finishes *without* `break` — so
-it prints PASS only when no blocked node was found.
+### Step 2 · `check_path()` returns a list of problems
+
+One `if` per property. An empty list means the path is good:
+
+```python
+def check_path(path, position, destination):
+    problems = []
+    if len(path) == 0:
+        if position != destination:
+            problems.append("empty path, but the robot is not at the destination")
+        return problems
+    if not is_neighbor(position, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if path[-1] != destination:
+        problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
+    for i in range(1, len(path)):
+        if not is_neighbor(path[i - 1], path[i]):
+            problems.append("step " + str(path[i]) + " is not next to " + str(path[i - 1]))
+    for step in path:
+        if step in BLOCKED:
+            problems.append("drives through blocked intersection " + str(step))
+    return problems
+```
+
+Returning *problems* rather than True/False is deliberate. A test that says only
+FAIL is a test you'll ignore; "drives through blocked intersection (1, 0)" tells you
+what to fix. The fifth property, the step count, is checked by `run_test()`, which
+is given the expected count by the caller.
+
+One case this function can't judge: an empty path when the destination is walled
+off is *correct*, but `check_path` can't tell "walled off" from "forgot to look."
+So the walled-off case gets its own small test, `run_no_path_test()`, where the only
+right answer is `[]`.
 
 <KnowledgeCheck
-  question="In a for/else loop, when does the else block run?"
+  question="A planner returns [(0,1), (0,3)] for (0,0) to (0,3). Which property fails, and what does the FAIL line say?"
   options={[
-    {text: 'Every time, always'},
-    {text: 'Only if the loop finishes without hitting break', correct: true},
-    {text: 'Only if break is hit'},
-    {text: 'Never'},
+    {text: 'Property 3: "step (0, 3) is not next to (0, 1)"', correct: true},
+    {text: 'Property 1: the first step is not next to the start'},
+    {text: 'Property 2: the last step is not the destination'},
+    {text: 'Nothing fails — it reaches the destination'},
   ]}
-  explanation="The else clause of a for loop runs only when the loop completes normally. A break skips it — perfect for 'passed unless we found a problem' checks."
+  explanation="(0,1) and (0,3) are two apart. The first step is fine, the last step is the destination, but the middle is a gap — and the step count (2 instead of 3) fails too."
 />
 
-## Activity · The two-line swap
+### Step 3 · Hand the harness its planner
 
-Here's the reward for building Dijkstra with Manhattan's interface. Open the program you
-wrote for the Lesson 4-9 project — your own file, not a copy of one. Near the top it
-creates the planner:
+Here's the one new Python idea in the lesson:
 
 ```python
-from manhattan import Manhattan
+def run_test(test_name, planner, position, destination, expected_steps):
+    path = planner(position, destination)
+    ...
 
-manhattan = Manhattan((0, 0))
-navigator = Navigator((0, 0), 0)
-# ... then the destination loop: compute_path, drive_path, and the
-#     manhattan.position = navigator.position line after each leg
+run_all_tests("Manhattan", compute_manhattan_path)
+run_all_tests("BFS", compute_bfs_path)
 ```
 
-Change **two lines** — the import, and the object you create:
+Look at the last two lines. `compute_bfs_path` — no parentheses — is the function
+*itself*, handed to `run_all_tests` the way you'd hand it a number or a list. Inside
+`run_test`, `planner` holds that function, and `planner(position, destination)`
+calls whichever one was handed in. Both planners have the same shape, so the harness
+never needs to know which one it has.
 
-```python
-from dijkstra import Dijkstra
+Try it at the prompt before writing the harness: `f = compute_bfs_path`, then
+`f((0, 0), (3, 3))`.
 
-manhattan = Dijkstra((0, 0))          # <- the only real change
-navigator = Navigator((0, 0), 0)
-# ... and the loop below is untouched. All of it.
-```
-
-That's the whole swap. The destination loop doesn't change and `drive_path` doesn't
-change. Even this line — the one you were warned everyone forgets — is still there,
-doing the same job for the same reason:
-
-```python
-manhattan.position = navigator.position
-```
-
-The Navigator calls `compute_path(dest)` exactly as before and never finds out that
-anything happened.
-
-<Callout kind="tip" title="Then rename it, once the robot has driven">
-
-Leaving a Dijkstra planner in a variable called `manhattan` is confusing, and you should
-fix it — but *after* you've watched the robot drive. Make the swap work first with the
-smallest possible change, then rename `manhattan` to `planner` everywhere as a separate
-step. Two changes at once means that when something breaks you don't know which one did
-it, and that habit is worth more than the tidy name.
-
+<Callout kind="tip" title="No parentheses when you hand it over">
+`run_all_tests("BFS", compute_bfs_path)` passes the function. `run_all_tests("BFS",
+compute_bfs_path())` *calls* it first, with no arguments, and passes the result —
+an error. The parentheses are the difference between "here is the planner" and
+"here is what the planner said."
 </Callout>
 
 <KnowledgeCheck
-  question="How many lines of the Navigator's own code change to use Dijkstra instead of Manhattan?"
+  question={'Inside run_test, what does `path = planner(position, destination)` do when the harness was called with run_all_tests("BFS", compute_bfs_path)?'}
   options={[
-    {text: 'Dozens — you rewrite drive_path'},
-    {text: 'Zero — only the import and the line that creates the planner change; the Navigator code is untouched', correct: true},
-    {text: 'Every line that mentions a path'},
-    {text: 'You must build a new Navigator class'},
+    {text: 'Calls compute_bfs_path(position, destination) — whichever planner was handed in', correct: true},
+    {text: 'Calls every planner in the file'},
+    {text: 'Looks up a planner named "BFS"'},
+    {text: 'Causes an error, because planner is a parameter'},
   ]}
-  explanation="The Navigator calls compute_path the same way regardless. Only the two setup lines change — the whole point of a shared interface."
+  explanation="planner is a parameter holding a function. Calling it calls the function that was passed in. Hand it compute_manhattan_path instead and the same line tests Manhattan."
 />
 
-<KnowledgeCheck
-  question="After the swap, why does manhattan.position = navigator.position still have to be there?"
-  options={[
-    {text: 'It does not — Dijkstra tracks its own position'},
-    {text: 'Both planners plan from self.position, so whichever one you are holding still has to be told where the robot ended up', correct: true},
-    {text: 'It only matters on grids with obstacles'},
-    {text: 'It resets the graph'},
-  ]}
-  explanation="It is the same line for the same reason as in Lesson 4-9: compute_path starts from self.position, so without the update every leg after the first plans from (0,0). Swapping the planner changes nothing about that."
-/>
+## Activity · Run it against both
 
-### Where the obstacles go now
+Run the harness. BFS should pass 6 of 6. Then read Manhattan's lines carefully:
 
-One thing genuinely is new. A Dijkstra that's never been told anything believes the grid
-is clear, so a straight swap gives you exactly Manhattan's behavior — which is the right
-way to start, because it proves the swap itself works before obstacles can muddy the
-picture.
-
-When you're ready for a detour, tell the planner what's out there:
-
-```python
-manhattan.set_blocked_intersections([(1, 0), (2, 2)])
+```text
+========== Manhattan ==========
+  PASS  open (0, 0) to (3, 3)  [(1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3)]
+  PASS  open (0, 0) to (0, 3)  [(0, 1), (0, 2), (0, 3)]
+  PASS  open (2, 1) to (0, 3)  [(1, 1), (0, 1), (0, 2), (0, 3)]
+  PASS  open (1, 1) to (1, 1)  []
+  FAIL  wall at (1,0),(1,1): (0,0) to (3,0)  [(1, 0), (2, 0), (3, 0)]
+          - drives through blocked intersection (1, 0)
+          - expected 7 steps, got 3
+  FAIL  walled off: (0,0) to (3,0)  [(1, 0), (2, 0), (3, 0)]
+          - there is no way through, so the path should be empty
+Manhattan: 4 of 6 passed
 ```
 
-That's a line you *add*, not one you change — and it is the one thing you could not have
-done with Manhattan at all.
+Manhattan isn't broken. It's doing exactly what it was built to do in Module 4 —
+rows, then columns — and it has no idea what a wall is. The harness just showed,
+on paper, with the path printed, why this module exists.
 
-## Shared interface = polymorphism
+Then the same swap in a main program. Block `(2, 0)` and run two trips with each
+planner. The only thing that changes between the two blocks of code is the
+planner's name:
 
-When two classes offer the same method names, parameters, and return types, code that uses
-one automatically works with the other. That's a **shared interface**, and the ability to
-swap them is called **polymorphism** ("many forms").
+```python
+def navigate(planner, position, destination):
+    path = planner(position, destination)
+    print("  Path from", position, "to", destination, ":", path, " Steps:", len(path))
+    return destination       # where the robot would be after driving it
+
+position = navigate(compute_manhattan_path, (0, 0), (3, 3))   # through the wall
+position = navigate(compute_bfs_path, (0, 0), (3, 3))         # around it
+```
+
+Finally, break a property on purpose and watch the harness catch it: make
+`compute_bfs_path` return `path[1:]` (drop the first step), then `path + [destination]`.
+Which property catches each?
+
+<TeacherNote title="Answers, and the two things to listen for">
+
+Dropping the first step: property 1, "first step (2, 0) is not next to the start
+(0, 0)". Appending the destination again: property 3, "step (3, 3) is not next to
+(3, 3)" — an intersection isn't its own neighbor — plus the step count.
+
+Listen for two things. First, the parentheses slip in the `run_all_tests` call;
+the prompt demo (`f = compute_bfs_path`) prevents most of it. Second, let students
+*discover* Manhattan's FAIL lines by running it, rather than telling them in
+advance. "Run it against Manhattan and read what it says" lands harder than any
+explanation. Challenge for early finishers: add a sixth property, "no intersection
+appears twice." Can BFS ever fail it? Could a buggy planner?
+
+The property-versus-exact lesson generalizes far beyond this course; say so.
+
+</TeacherNote>
+
+<OptionalExtension title="The harness with planner objects">
+
+With the `BFS` and `Manhattan` classes from Lesson 5-5, the harness is handed an
+*object* instead of a function, and calls its methods. Everything else is identical:
+
+<SideBySide left="Functions — what you have" right="Class — the extension">
+
+```python
+run_all_tests("Manhattan", compute_manhattan_path)
+run_all_tests("BFS", compute_bfs_path)
+
+# inside the harness:
+path = planner(position, destination)
+add_blocked((1, 0))
+clear_blocked()
+```
+
+```python
+run_all_tests("Manhattan", Manhattan())
+run_all_tests("BFS", BFS())
+
+# inside the harness:
+path = planner.compute_path(position, destination)
+planner.add_blocked((1, 0))
+planner.clear_blocked()
+```
+
+</SideBySide>
+
+Because both classes have `add_blocked()`, `clear_blocked()` and `compute_path()`,
+the harness never needs to know which one it holds. `Manhattan.add_blocked()` does
+nothing, so `Manhattan()` fails the same two tests for the same reason — which is
+the correct result.
+
+One wrinkle: property 4 needs to know what's blocked, and with objects the blocked
+list lives *inside* the planner. The class harness in
+`lesson-06-testing-class-addon.py` keeps its own small record — `block(planner, x)`
+calls `planner.add_blocked(x)` and notes it — so the check stays honest. Why not just
+read `planner.blocked` directly? `Manhattan` has no such attribute, and the harness
+isn't supposed to know what's inside a planner.
+
+<KnowledgeCheck
+  question="With planner objects, why does the harness keep its own record of what it blocked instead of reading planner.blocked?"
+  options={[
+    {text: 'The harness is not supposed to know what is inside a planner — and Manhattan has no blocked list at all', correct: true},
+    {text: 'Objects cannot have lists'},
+    {text: 'planner.blocked is always empty'},
+    {text: 'It does read planner.blocked — the text is wrong'},
+  ]}
+  explanation="The whole point of the swap is that the harness only uses the three shared methods. Reaching inside one planner would tie the harness to that planner."
+/>
+
+</OptionalExtension>
+
+## Real-world connections
 
 <CardGrid>
-  <InfoCard tag="Everyday" title="USB-C">
-    One connector, many devices. The port doesn't care what's plugged in — same interface.
+  <InfoCard tag="Software" title="Property-based testing">
+    Professional test tools generate thousands of random inputs and check properties, exactly as this harness checks paths — because for most real programs there is no single expected answer.
   </InfoCard>
-  <InfoCard tag="Everyday" title="Power outlets">
-    Any appliance with a standard plug works in any outlet. Shared interface, swappable devices.
+  <InfoCard tag="Design" title="Plug-in parts">
+    Handing a function (or object) to code that doesn't know which one it got is how programs are built from swappable parts: sort orders, file formats, planners.
   </InfoCard>
-  <InfoCard tag="Code" title="Pathfinders">
-    Navigator + compute_path() = any planner that fits the interface. Manhattan or Dijkstra, its choice.
+  <InfoCard tag="Robotics" title="Test before you drive">
+    Everything the harness checks here is checked without a robot. Real robot teams test the planner on a laptop for the same reason: it's faster, and it separates "the algorithm is wrong" from "the robot drove wrong."
   </InfoCard>
 </CardGrid>
 
-You've been *using* polymorphism the moment you swapped planners — the fancy word is just
-a label for something simple: if two things work the same from the outside, use either.
-
-<KnowledgeCheck
-  question="The swap works because Dijkstra is 'better' than Manhattan. True or false?"
-  options={[
-    {text: 'True — better classes are always swappable'},
-    {text: 'False — the swap works because they share the same interface, not because of quality', correct: true},
-    {text: 'True — Manhattan is broken'},
-    {text: 'False — you cannot swap classes in Python'},
-  ]}
-  explanation="Swappability comes from interface compatibility (same method name, params, return type), not from which class is 'better.' A worse class with the same interface would swap just as cleanly."
-/>
-
 ## Wrap-up
 
-- What three parts make a good test? (Known input, hand-calculated expected output, a check.)
-- What two lines change to swap in Dijkstra? (The import, and the line that creates the planner.)
-- What has to happen before Dijkstra will route around anything? (`set_blocked_intersections()` — a new planner assumes the grid is clear.)
-- What is a shared interface, and what's the swap ability called? (Same method signature/return; polymorphism.)
-
-<TeacherNote title="Make the swap dramatic — and don't over-formalize polymorphism">
-
-The two-line swap is the concrete payoff for the careful design in Lessons 5-4 and 5-5; show the
-old code, make the change live, run it. Spend time on *testing* before the swap even though
-students want the "cool part" — hand-calculate expected paths, don't copy code output.
-Keep polymorphism light: "if two things work the same from the outside, you can use either"
-is enough; USB-C and outlets make it concrete. Let students notice Manhattan and Dijkstra
-sometimes return different paths of equal length — a good teaching moment about multiple
-optimal solutions. Save the test files; Lessons 5-7 through 5-9 reuse them.
-
-</TeacherNote>
-
-## Note on the interface
-
-Both planners take a **start** when created and a **destination** in `compute_path`:
-`Manhattan((0,0))` and `Dijkstra((0,0))` both answer `compute_path((3,3))` with a list
-of grid tuples. That shared shape is exactly what makes the swap a two-line change.
-
-The agreement has to be exact, down to the first element. Neither planner includes
-the robot's current position in what it returns — it's already there — so both step
-counts are plain `len(path)` and `Navigator.drive_path` can drive either list
-without knowing which planner produced it. If one of them returned the start and
-the other didn't, the swap would still *run*, and the robot would quietly waste its
-first move on every route. That's the kind of bug a shared interface is supposed to
-prevent, and it only works if both sides honour it.
+- Why not compare with one expected path? (BFS has many correct answers; the properties allow all of them and check validity.)
+- What are the five properties? (Starts next to the start; ends at the destination; every step a neighbor; no blocked step; Manhattan-distance length on an open grid.)
+- Why does walled-off get its own test? (`check_path` can't tell it from a broken planner's `[]`.)
+- What's passed in `run_all_tests("BFS", compute_bfs_path)`? (The function itself.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** write a test with a hand-calculated expected result, identify the two swap
-lines, and explain "shared interface" in their own words. **Exit ticket:** "What two lines
-change to swap Manhattan for Dijkstra? Write both versions." **Preview:** next lesson the
-robot gets *eyes* — the rangefinder detects obstacles in real time and feeds them to
-Dijkstra for live rerouting.
+**Formative:** the five properties from memory; the no-parentheses explanation;
+Manhattan's FAIL lines read and explained. **Exit ticket:** the `[(0,1), (0,3)]`
+question above. **Preview:** next lesson the planner goes on the robot. The
+rangefinder loop calls `add_blocked()` exactly as this harness did — the planner
+can't tell the difference, which is why passing these tests means the robot will
+re-plan correctly. (Module 6, if you do it, adds a third planner to this same
+harness, unchanged.)
 
 </TeacherNote>
-
 
 ## Resources
 
 - [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
-- [Polymorphism (overview)](https://en.wikipedia.org/wiki/Polymorphism_(computer_science))
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
