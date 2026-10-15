@@ -1,0 +1,388 @@
+---
+title: "Lesson 2-8 · Sensor Functions"
+sidebar_label: "2-8 · Sensor Functions"
+sidebar_position: 8
+---
+
+<LessonHeader
+  eyebrow="Module 2 · Line Tracking"
+  title="Lesson 2-8 · Sensor Functions"
+  meta={['60 min', 'A toolkit of functions', 'Global variables']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your line-following programs work — but the sensor reading, the threshold test, and the
+control math are all tangled together in one loop. In Module 1 you tidied repeated
+driving code into `draw_polygon()`. This lesson does the same for the sensors: five
+small, well-named functions you can call from anywhere. Nothing here is new syntax. The
+one new idea is functions that **share** a sensor and a threshold without being handed
+them every call.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write a toolkit of sensor functions — `get_left()`, `get_right()`, `get_error()`, `is_at_cross()`, `is_either_on_line()` — with no parameters
+- Explain how those functions share `reflectance` and `THRESHOLD` through **global variables**
+- Have one function call another instead of repeating its logic
+- Say when a function needs the `global` keyword, and when it doesn't
+- Test the toolkit by sliding the robot over the line and reading the printout
+
+</Objectives>
+
+<QuizLink id="module-02-line-tracking/lesson-08-sensor-functions" />
+
+## The goal: code that reads like English
+
+Here is the Lesson 2-7 loop with the sensor logic pulled out into functions:
+
+```python
+while True:
+    if is_at_cross():
+        drivetrain.stop()
+        print("Cross!")
+    else:
+        correction = get_error() * Kp
+        drivetrain.arcade(base_effort, -correction)
+```
+
+`is_at_cross()` is far clearer than `left > 0.5 and right > 0.5` scattered through the
+program, and `get_error()` says what the subtraction *means*. Next lesson, the driving
+functions are built on exactly these five.
+
+## Shared, not passed: global variables
+
+The functions need the same two things: the reflectance sensor, and the threshold. You
+could pass both into every function as parameters. Instead, create them **once, at the
+top of the file**, outside any function:
+
+```python
+from XRPLib.reflectance import Reflectance
+
+reflectance = Reflectance.get_default_reflectance()
+THRESHOLD = 0.5
+```
+
+A variable created outside every function is a **global variable**: every function
+below it in the file can read it without being handed it. You've been doing this since
+Module 1 — `drivetrain` is a global that `draw_polygon()` used without a parameter.
+
+`THRESHOLD` is in capitals by convention. That spelling says *this is a setting, not a
+value that changes as the program runs*. Python doesn't enforce it; readers rely on it.
+
+<KnowledgeCheck
+  question="Why can get_left() use reflectance when it was never passed in as a parameter?"
+  options={[
+    {text: 'Python passes the first variable in the file automatically'},
+    {text: 'reflectance is a global variable — created outside every function, so every function below it can read it', correct: true},
+    {text: 'get_left() creates its own reflectance each call'},
+    {text: 'It cannot; this is a bug'},
+  ]}
+  explanation="A name created at the top level of the file is visible inside every function. drivetrain has worked this way since Module 1; reflectance and THRESHOLD work the same way here."
+/>
+
+## The five functions
+
+```python
+def get_left():
+    return reflectance.get_left()
+
+def get_right():
+    return reflectance.get_right()
+
+def get_error():
+    return get_left() - get_right()
+
+def is_at_cross():
+    return get_left() > THRESHOLD and get_right() > THRESHOLD
+
+def is_either_on_line():
+    return get_left() > THRESHOLD or get_right() > THRESHOLD
+```
+
+Two things to notice. First, `get_error()` doesn't read the sensor itself — it calls
+`get_left()` and `get_right()`. One place knows how to read the hardware; everything
+else goes through it. Second, the last two start with `is_` because they answer a
+yes/no question and return `True` or `False`. `is_at_cross()` is both sensors dark;
+`is_either_on_line()` is *at least one* dark — that's the test a turn will need in
+Lesson 2-9, to know when the robot has swung round far enough to find the next line.
+
+<KnowledgeCheck
+  question="Both sensors read 0.2 with THRESHOLD = 0.5. What do is_at_cross() and is_either_on_line() return?"
+  options={[
+    {text: 'True and True'},
+    {text: 'False and False — neither reading is above the threshold, so neither the and nor the or is satisfied', correct: true},
+    {text: 'False and True'},
+    {text: 'True and False'},
+  ]}
+  explanation="0.2 > 0.5 is False for both sensors. and needs both True; or needs at least one. Both come out False: the robot is off the line entirely."
+/>
+
+<KnowledgeCheck
+  question="Why does get_error() call get_left() instead of reflectance.get_left()?"
+  options={[
+    {text: 'reflectance.get_left() is slower'},
+    {text: 'So only one function knows how the hardware is read — if the sensor changes, you fix get_left() and everything else keeps working', correct: true},
+    {text: 'Functions cannot use global variables twice'},
+    {text: 'It makes no difference either way'},
+  ]}
+  explanation="Functions calling functions keeps each job in one place. get_error() means left minus right; how a reading is taken is get_left()'s business."
+/>
+
+## When `global` is needed — and when it isn't
+
+Every function above *reads* `THRESHOLD`, and none of them needed anything special.
+Reading a global is free. **Assigning** to one is different. Try a function that
+changes the threshold:
+
+```python
+def set_threshold(new_value):
+    THRESHOLD = new_value        # looks right; does nothing useful
+```
+
+Call `set_threshold(0.3)` and then print `THRESHOLD` — still `0.5`. Inside a
+function, assigning to a name creates a **new local variable** with that name, which
+vanishes when the function returns. The global was never touched. To tell Python you
+mean the one at the top of the file:
+
+```python
+def set_threshold(new_value):
+    global THRESHOLD
+    THRESHOLD = new_value
+```
+
+That's the whole rule: **read a global freely; to assign to it, declare `global` first.**
+You'll need this rarely — settings in capitals aren't supposed to change — but when
+you do, the silent failure without it is the kind of bug that costs an afternoon.
+
+<KnowledgeCheck
+  question="Why does set_threshold() need the global keyword when is_at_cross() does not?"
+  options={[
+    {text: 'Because set_threshold takes a parameter'},
+    {text: 'is_at_cross() only reads THRESHOLD; set_threshold() assigns to it, and without global the assignment makes a throwaway local variable instead', correct: true},
+    {text: 'Every function that mentions THRESHOLD needs global'},
+    {text: 'Because THRESHOLD is in capitals'},
+  ]}
+  explanation="Reading a global needs nothing. Assigning inside a function creates a local unless you declare global first — and the real THRESHOLD stays 0.5, with no error to tell you."
+/>
+
+## Activity · Test the toolkit by hand
+
+Put the five functions in a file with this test loop, run it, and slide the robot across
+the line by hand:
+
+```python
+from XRPLib.board import Board
+import time
+
+board = Board.get_default_board()
+board.wait_for_button()
+
+while True:
+    error = get_error()
+    cross = is_at_cross()
+    on_line = is_either_on_line()
+    print("Error:", round(error, 2), " Cross:", cross, " On line:", on_line)
+    time.sleep(0.5)
+```
+
+Check four positions and write down what you see: centered on the line (error near
+zero, on line `True`), off to one side (error positive or negative, on line `True`),
+completely off the line (`False`, `False`), and on a cross (`True`, `True`). Then add
+`set_threshold()` with and without `global`, and watch which version actually changes
+the printed results.
+
+<TeacherNote title="Nothing new but the sharing — keep the focus there">
+
+Students already know `def`, parameters and `return`. The lesson is about five
+functions sharing two globals, and the `global` keyword for the one case where a
+function assigns. Live-code the functions one at a time, testing after each with the
+print loop. Have students predict the two Booleans before each slide of the robot.
+
+The `set_threshold()` demo without `global` is worth doing live: the silent no-op is
+more convincing than any rule. Then ask why the course avoids needing `global` at
+all (settings in capitals aren't supposed to change). The limitation to name out loud:
+one `THRESHOLD` for the whole program means one sensor setting. That is the problem
+the class extension below solves, for students who get that far.
+
+**The names are the Module 4 and 5 vocabulary.** `is_at_cross()` and
+`is_either_on_line()` are used unchanged through the end of the course, so insist on
+the `is_` prefix for Booleans now.
+
+</TeacherNote>
+
+## Real-world connections
+
+Toolkits of small functions sharing a little state are how driver code is written:
+
+<CardGrid>
+  <InfoCard tag="Hardware" title="Device drivers">
+    A sensor library is a handful of functions around one shared device handle — exactly this shape.
+  </InfoCard>
+  <InfoCard tag="Libraries" title="Everything you import">
+    XRPLib's own reflectance module is functions and settings bundled the same way.
+  </InfoCard>
+  <InfoCard tag="Teams" title="One place to fix">
+    When the hardware changes, one function changes. Everyone who called it is unaffected.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Where do `reflectance` and `THRESHOLD` live, and why can every function see them? (At the top of the file, outside any function — they're globals.)
+- Why does `get_error()` call `get_left()` rather than the hardware? (One place knows how to read the sensor.)
+- When do you need `global`? (Only to assign to a global inside a function.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** write `is_either_on_line()` from its description; explain why
+`get_error()` needs no parameters; predict the two Booleans for a robot position.
+**Exit ticket:** "Why does `set_threshold()` need `global` and `is_at_cross()` not?"
+**Preview:** next lesson builds the *driving* toolkit on top of these five:
+follow the line to an intersection, drive past it, and turn until a sensor finds the
+next line.
+
+</TeacherNote>
+
+<OptionalExtension title="The LineSensor class">
+
+The five functions work, but their parts are spread out: two globals at the top, five
+functions below, and every one of them depends on both globals. A **class** keeps the
+data and the functions that use it together as one unit. This is the first class in
+the course, and it is small on purpose.
+
+### What a class is
+
+A class is a blueprint that groups related **data** and **actions** together.
+
+<Figure
+  src="/img/lesson-m2-08/class-and-objects.svg"
+  alt="An architect's blueprint of a house labeled 'class House:' with four arrows leading down to four built houses. All four have the same shape, roof, door and windows, but one is red, one is yellow with a chimney, one is blue with a dark door, and one is green with flower boxes. Under each house is the code that built it: House('red'), House('yellow'), House('blue'), House('green')."
+  caption="One plan, many houses. The class is the drawing; each object is a house built from it. They all follow the plan, and each one can still be a little different."
+/>
+
+- **The class is just a definition.** Writing `class House:` is like drawing the plan.
+  Nothing gets built. You can't live in a blueprint, and you can't call `get_error()`
+  on the `LineSensor` class itself.
+- **An object is one thing built from it.** `House("red")` builds one house;
+  `LineSensor()` builds one sensor object. The parentheses are what build it. The word
+  for a built object is an **instance**.
+- **You can build as many as you want from one plan,** and each can be a little
+  different, depending on what you pass to the **constructor** when you build it.
+
+You've used classes all along — `DifferentialDrive`, `Reflectance` and `Board` are
+classes. Now you'll write one.
+
+### `__init__` and `self`
+
+```python
+class LineSensor:
+    def __init__(self):
+        self.reflectance = Reflectance.get_default_reflectance()
+        self.threshold = 0.5
+```
+
+- `class LineSensor:` defines a new type (capitalized by convention).
+- `def __init__(self):` is the **constructor** — Python runs it automatically when you
+  write `LineSensor()`.
+- `self` is the object itself. `self.threshold = 0.5` means "*this* object's threshold
+  is 0.5", and it sticks around as long as the object does.
+
+```python
+sensor = LineSensor()     # __init__ runs now
+print(sensor.threshold)   # 0.5
+```
+
+### Methods
+
+A **method** is a function that lives inside a class and takes `self` as its first
+parameter — that's how it reaches the object's own data.
+
+<SideBySide>
+<div>
+
+```python
+reflectance = Reflectance.get_default_reflectance()
+THRESHOLD = 0.5
+
+def get_left():
+    return reflectance.get_left()
+
+def get_right():
+    return reflectance.get_right()
+
+def get_error():
+    return get_left() - get_right()
+
+def is_at_cross():
+    return get_left() > THRESHOLD and get_right() > THRESHOLD
+
+def is_either_on_line():
+    return get_left() > THRESHOLD or get_right() > THRESHOLD
+
+
+error = get_error()
+```
+
+</div>
+<div>
+
+```python
+class LineSensor:
+    def __init__(self):
+        self.reflectance = Reflectance.get_default_reflectance()
+        self.threshold = 0.5
+
+    def get_left(self):
+        return self.reflectance.get_left()
+
+    def get_right(self):
+        return self.reflectance.get_right()
+
+    def get_error(self):
+        return self.get_left() - self.get_right()
+
+    def is_at_cross(self):
+        return self.get_left() > self.threshold and self.get_right() > self.threshold
+
+    def is_either_on_line(self):
+        return self.get_left() > self.threshold or self.get_right() > self.threshold
+
+sensor = LineSensor()
+error = sensor.get_error()
+```
+
+</div>
+</SideBySide>
+
+Compare them line by line. Only four things change, and they're the same four every
+time:
+
+- The functions move inside `class LineSensor:`, and each gets `self` as its first
+  parameter.
+- `reflectance` and `THRESHOLD` stop being globals. They become the object's own data,
+  set up once in `__init__` as `self.reflectance` and `self.threshold`.
+- Inside the methods, those values and calls to sibling methods get `self.` in front.
+- Calls from outside go through the object: `get_error()` becomes `sensor.get_error()`.
+  You never pass `self` yourself; Python supplies it.
+
+So what does the class buy? `LineSensor()` brings everything with it — copy the class
+into a new program and nothing is forgotten. And because each object has its own
+`self.threshold`, two sensor objects can have two different thresholds, which one
+global `THRESHOLD` can't do — and no `global` keyword anywhere, because a method
+assigns to `self.threshold` like any attribute.
+
+The classic slips: forgetting `self` in a method's parameter list; forgetting `self.`
+in front of an attribute or a sibling method; mis-indenting a method out of the class.
+(Lesson 4-8's extension has the picture that makes those errors easy to read.) The file
+is `lesson-08-linesensor-class-addon.py` in the Module 2 solutions.
+
+</OptionalExtension>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [Python scopes and the global statement](https://docs.python.org/3/reference/simple_stmts.html#the-global-statement)

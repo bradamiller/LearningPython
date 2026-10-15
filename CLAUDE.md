@@ -601,9 +601,8 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     curves — the shape `Straight`/`Turn` cannot draw) and **L1-10 · Draw a nest of
     squares**, which needed a new teaching section first (**A loop inside a loop**,
     nested `for` loops where the outer counter sets each square's size — Brad's
-    design). **The one lesson still without an activity is M2 L8
-    (Introduction to Classes)** — pure concept teaching, and due for rewrite when
-    the classes-optional reshape reaches the site, so nothing was invented for it.
+    design). M2 L8 got its activity (test the toolkit by hand) when it became
+    **Sensor Functions** on 2026-10-14.
   - Staged builds in M4/M5 follow the same one-activity-many-steps rule: the
     Manhattan algorithm (2 steps), the Manhattan class (3), the Dijkstra class (3)
     and `compute_path` (5 — the whole lesson is one activity). Each opens with a
@@ -1240,17 +1239,19 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   2/4/5 page on the site still teaches the old class-first version.** The gap, by
   page:
   - **M2:** source renamed `08-introduction-to-classes` → `08-sensor-functions`
-    and `09-object-composition` → `09-line-tracking-functions`; the site still has
-    `lesson-08-introduction-to-classes.mdx` / `lesson-09-object-composition.mdx`
-    (file names, sidebar labels and content all class-first). L10 combines them.
+    and `09-object-composition` → `09-line-tracking-functions`. **Site ported
+    2026-10-14:** `lesson-08-sensor-functions.mdx` / `lesson-09-line-tracking-functions.mdx`,
+    classes in `<OptionalExtension>` blocks; L10 is functions-first.
   - **M4:** L5 (`Manhattan` class) and L8 (`Navigator` class) are now
     `compute_manhattan_path` + `desired_heading`/`turn_to`/`drive_path` functions,
     with the class as the extension; L9's main program has a functions version
-    that skips the `manhattan.position = navigator.position` sync step.
-  - **M5:** L4–L5 build `build_dijkstra_graph`/`compute_dijkstra_path` as
-    functions; L6's swap is a `compute_path(algorithm, ...)` dispatch function in
-    the functions track, with true polymorphism as the extension; L7–L9 call the
-    functions directly.
+    that skips the `manhattan.position = navigator.position` sync step. **Site
+    ported 2026-10-14:** `lesson-05-manhattan-function.mdx`,
+    `lesson-08-driving-the-path.mdx` (with the house-address `self` figure,
+    `static/img/lesson-m4-08/house-address.svg`), L0/L6/L7/L9 updated.
+  - **M5:** BFS is the required planner; `compute_bfs_path`, `add_blocked`, the
+    property harness, function-passing swap; L7–L9 drive with M4's toolkit.
+    **Site ported 2026-10-14** (all nine pages under `module-05-pathfinding/`).
   - **✅ DECIDED 2026-10-14 — read `<IntoToPython>/teacher-guide/course-design-decisions.md`
     before touching M2 L8+, M4 or M5 on the site.** The deferral above is over.
     Brad settled the shape in a design review: functions-first with class

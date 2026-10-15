@@ -7,24 +7,24 @@ sidebar_position: 10
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
   title="Lesson 2-10 · Final Project"
-  meta={['Multi-day', 'Capstone', 'Two cooperating classes']}
+  meta={['Multi-day', 'Capstone', 'Two cooperating toolkits']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Time to put it all together. Using your `LineSensor` and `LineTrack` classes, you'll
+Time to put it all together. Using your sensor toolkit and driving toolkit, you'll
 build a program that follows the taped circle, detects the cross, reverses direction,
 and repeats — four times — then stops. It's the capstone of everything in Module 2:
-sensors, control loops, decisions, classes, and composition.
+sensors, control loops, decisions, and functions built on functions.
 
 <Objectives>
 
 By the end of this project you will be able to:
 
-- Combine multiple classes into one complete, working program
-- Write a short, readable main program that orchestrates class methods
+- Combine both toolkits into one complete, working program
+- Write a short, readable main program that is mostly calls to your own functions
 - Test and debug a real robot behavior systematically
 - Explain and demonstrate your design
 
@@ -36,7 +36,7 @@ By the end of this project you will be able to:
 
 Your robot must:
 
-1. Follow the taped circle with `track_until_cross()`.
+1. Follow the taped circle with `track_to_intersection()`.
 2. Detect the cross intersection.
 3. Reverse direction.
 4. Keep following, and repeat for **4 total reversals**.
@@ -44,10 +44,10 @@ Your robot must:
 
 <CardGrid>
   <InfoCard tag="Option A" title="Standard">
-    The mission above, using your existing classes unchanged. Focus on a clean main program and solid debugging.
+    The mission above, using your existing toolkits unchanged. Focus on a clean main program and solid debugging.
   </InfoCard>
   <InfoCard tag="Option B" title="Enhanced">
-    Add a turn_around() method, time each leg, and flash the LED or beep at every reversal.
+    Add a turn_around() function, count each leg, and flash the LED or beep at every reversal.
   </InfoCard>
   <InfoCard tag="Option C" title="Advanced">
     Add line-loss recovery, or speed up on later laps. Invent your own twist (teacher-approved).
@@ -57,25 +57,25 @@ Your robot must:
 ## Activity · Plan before you build
 
 Pseudocode the main program first, in plain English, before you type any Python.
-It will be shorter than you expect, because the classes do the heavy lifting —
+It will be shorter than you expect, because the toolkits do the heavy lifting —
 each line of your plan is close to one line of code.
 
 <Reveal title="Compare with one possible plan" hint="write yours first">
 
 ```text
-create a LineTrack
 wait for the button
 
 repeat 4 times:
-    follow the line until a cross
+    follow the line to the cross
+    drive past it so the wheels are on the cross
     print which leg we're on
     turn around
 
 stop and print "Done!"
 ```
 
-If yours has more steps than this, look for work you're doing by hand that a class
-method already does for you.
+If yours has more steps than this, look for work you're doing by hand that a toolkit
+function already does for you.
 
 </Reveal>
 
@@ -83,94 +83,101 @@ method already does for you.
   question="For the final project, do you need to rewrite the sensor and driving logic from scratch?"
   options={[
     {text: 'Yes — copy it all into the main program'},
-    {text: 'No — reuse your tested LineSensor and LineTrack classes', correct: true},
-    {text: 'Yes — classes cannot be reused in a new program'},
+    {text: 'No — reuse your tested sensor and driving toolkits', correct: true},
+    {text: 'Yes — functions cannot be reused in a new program'},
     {text: 'Only the sensor part'},
   ]}
-  explanation="That's the whole point of building the classes: the main program just creates a LineTrack and calls its methods."
+  explanation="That's the whole point of building the toolkits: the main program is a handful of calls to functions you already tested."
 />
 
 ## Build it in pieces
 
-You have every part already: `LineSensor` from Lesson 2-8, `LineTrack` from Lesson 2-9,
-and the reversal trick you worked out above. What's left is assembling them and
+You have every part already: the sensor toolkit from Lesson 2-8, the driving toolkit
+from Lesson 2-9, and the reversal trick you worked out above. What's left is assembling them and
 tuning — which is most of what real robot work is.
 
 Build in this order, testing each before adding the next:
 
-1. `track_until_cross()` alone — does it follow the line and stop at the cross?
-2. One `turn_right()` — does it find the line again?
-3. One full reversal — two right turns, then following back the other way.
+1. `track_to_intersection()` then `drive_past_intersection()` — does it stop with the wheels on the cross?
+2. One `turn_clockwise()` — does it find the line again?
+3. One full reversal — two clockwise turns, then following back the other way.
 4. The loop that does it four times.
 
 <TeacherNote title="Reference program (teacher copy)">
 
-The whole thing, both classes plus a main program that reverses four times (two
-right turns make a ~180° reversal on the line). Use it to unstick a team, not as a
-handout — the assembly and tuning is the graded work.
+The whole thing: both toolkits plus a main program that reverses four times (two
+clockwise sensor-ended turns make a 180° reversal on the line). Use it to unstick a
+team, not as a handout — the assembly and tuning is the graded work. The file is
+`lesson-10-final-project.py` in the Module 2 solutions; the class version is
+`lesson-10-final-project-class-addon.py`.
 
 ```python
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
 from XRPLib.board import Board
-import time
 
+# ===== Sensor toolkit (Lesson 2-8) =====
+reflectance = Reflectance.get_default_reflectance()
+THRESHOLD = 0.5
 
-class LineSensor:
-    def __init__(self):
-        self.reflectance = Reflectance.get_default_reflectance()
-        self.threshold = 0.5
+def get_left():
+    return reflectance.get_left()
 
-    def get_left(self):
-        return self.reflectance.get_left()
+def get_right():
+    return reflectance.get_right()
 
-    def get_right(self):
-        return self.reflectance.get_right()
+def get_error():
+    return get_left() - get_right()
 
-    def get_error(self):
-        return self.get_left() - self.get_right()
+def is_at_cross():
+    return get_left() > THRESHOLD and get_right() > THRESHOLD
 
-    def is_at_cross(self):
-        return self.get_left() > self.threshold and self.get_right() > self.threshold
+def is_either_on_line():
+    return get_left() > THRESHOLD or get_right() > THRESHOLD
 
-    def is_off_line(self):
-        return self.get_left() < self.threshold and self.get_right() < self.threshold
+# ===== Driving toolkit (Lesson 2-9) =====
+drivetrain = DifferentialDrive.get_default_differential_drive()
+BASE_EFFORT = 0.4
+KP = 0.5
+TURN_EFFORT = 0.25
 
+def drive_past_intersection():
+    drivetrain.straight(8.75, 0.5)
 
-class LineTrack:
-    def __init__(self):
-        self.sensor = LineSensor()
-        self.drivetrain = DifferentialDrive.get_default_differential_drive()
-        self.base_effort = 0.4
-        self.Kp = 0.5
+def track_to_intersection():
+    while not is_at_cross():
+        error = get_error()
+        correction = error * KP
+        drivetrain.arcade(BASE_EFFORT, -correction)
+    drivetrain.stop()
 
-    def track_until_cross(self):
-        while not self.sensor.is_at_cross():
-            correction = self.sensor.get_error() * self.Kp
-            self.drivetrain.arcade(self.base_effort, -correction)
-        self.drivetrain.stop()
+def turn_clockwise():
+    drivetrain.turn(-60, TURN_EFFORT)
+    drivetrain.arcade(0, -TURN_EFFORT)
+    while not is_either_on_line():
+        pass
+    drivetrain.stop()
 
-    def turn_right(self):
-        self.drivetrain.set_effort(0.3, -0.3)
-        time.sleep(0.5)
-        while self.sensor.is_off_line():
-            pass
-        self.drivetrain.stop()
-
+def turn_counterclockwise():
+    drivetrain.turn(60, TURN_EFFORT)
+    drivetrain.arcade(0, TURN_EFFORT)
+    while not is_either_on_line():
+        pass
+    drivetrain.stop()
 
 # ===== MAIN PROGRAM =====
 board = Board.get_default_board()
-tracker = LineTrack()
 
 board.wait_for_button()
 print("Module 2 Final Project -- starting!")
 
 for i in range(4):
     print("Leg", i + 1, "-- following line to the cross...")
-    tracker.track_until_cross()
+    track_to_intersection()
+    drive_past_intersection()
     print("Cross detected! Reversing...")
-    tracker.turn_right()
-    tracker.turn_right()      # two right turns ~ 180 deg reversal
+    turn_clockwise()
+    turn_clockwise()      # two sensor-ended turns = 180 deg reversal
 
 print("Complete! 4 reversals done.")
 ```
@@ -180,10 +187,11 @@ print("Complete! 4 reversals done.")
 <TeacherNote title="Run it as a build, and test in pieces">
 
 Treat this as a multi-day arc: plan → build → test → present. Insist on **incremental
-testing** — `track_until_cross()` alone, then one turn, then one full reversal, then
-the four-rep loop. The common fixes are all *tuning*: threshold (cross not detected),
-the turn `time.sleep()` (loses the line after turning), and `base_effort` (overshoots
-the cross) — frame that tuning as the real engineering, not failure. Two successful
+testing** — `track_to_intersection()` alone, then one turn, then one full reversal,
+then the four-rep loop. The common fixes are all *tuning*: `THRESHOLD` (cross not
+detected), the blind part of the turn or `TURN_EFFORT` (the loop ends on the old line,
+or spins past the new one), and `BASE_EFFORT` (overshoots the cross) — frame that
+tuning as the real engineering, not failure. Two successful
 reversals already demonstrate mastery; four is the goal.
 
 </TeacherNote>
@@ -192,19 +200,19 @@ reversals already demonstrate mastery; four is the goal.
 
 Work up in stages, and keep a note of what you tuned:
 
-1. Does `track_until_cross()` follow and stop at the cross?
+1. Does `track_to_intersection()` follow and stop at the cross, with `drive_past_intersection()` leaving the wheels on it?
 2. Does one turn-around find the line again?
 3. Does one full reversal work end to end?
 4. Do all four reversals run and stop?
 
-Then demo it and reflect: what was hardest, how did classes make the project easier,
-and what would you add with more time?
+Then demo it and reflect: what was hardest, how did the toolkits make the project
+easier, and what would you add with more time?
 
 <KnowledgeCheck
   question="Your robot follows the line but blows past the cross without stopping. What's the best first thing to try?"
   options={[
-    {text: 'Rewrite both classes'},
-    {text: 'Lower base_effort (and/or check the threshold) so it detects the cross in time', correct: true},
+    {text: 'Rewrite both toolkits'},
+    {text: 'Lower BASE_EFFORT (and/or check THRESHOLD) so it detects the cross in time', correct: true},
     {text: 'Delete the turn methods'},
     {text: 'Increase Kp to 5'},
   ]}
@@ -214,19 +222,20 @@ and what would you add with more time?
 ## You built a robot that thinks 🎉
 
 Look back at the journey: you started Module 2 reading a single sensor value, and
-you're finishing it with two cooperating classes that follow a line, detect
-intersections, and navigate a course. That `LineSensor`/`LineTrack` design — sensing
-and driving cleanly separated and composed — is exactly how professional robot code
-is structured, and you'll build directly on it next.
+you're finishing it with two cooperating toolkits that follow a line, detect
+intersections, and navigate a course. That design — sensing and driving cleanly
+separated, each built on the layer below — is exactly how professional robot code is
+structured, and you'll build directly on it next. (If you did the class extensions,
+you have the same thing as `LineSensor` and `LineTrack` objects.)
 
 <TeacherNote title="Assessment & what's next">
 
 The final project is the summative assessment (a 50-point rubric across code
 organization, functionality, testing/debugging, and presentation works well). Reward
 process and tuning, not just a flawless demo. **Coming in Module 3 · Grid Driving:**
-`LineTrack` goes onto a taped grid — `track_until_cross()` becomes the way the robot
-drives from one intersection to the next, the foundation for the navigation and
-pathfinding in Modules 4 and 5.
+the driving toolkit goes onto a taped grid — `track_to_intersection()` and
+`drive_past_intersection()` become the way the robot drives from one intersection to
+the next, the foundation for the navigation and pathfinding in Modules 4 and 5.
 
 </TeacherNote>
 
