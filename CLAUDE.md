@@ -1857,6 +1857,13 @@ required text). The pattern as built in 2-9:
 - **Teaching code is not an answer.** The settings block, the whole-file shape and the
   four-line program stay as full code — they show structure, not a body the student
   was asked to write.
+- **Setup given, loop theirs (2-2, Brad 2026-10-15).** "They should write the program,
+  or at least the loop part, as an exercise — give them the code up to the
+  `wait_for_button` call." So for a first-of-its-kind program the imports, objects,
+  settings and `wait_for_button()` are given and the rest is a comment outline. In
+  2-2 `set_effort()` moved *above* the activity (it was explained after the given
+  program), and the infinite-loop section now sits *after* the activity, written to
+  be read once a student's robot has driven forever — the trap is the lesson.
 
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
