@@ -1867,6 +1867,9 @@ required text). The pattern as built in 2-9:
   2-3 (same day) follows the same shape: the pseudocode block *is* the commented
   outline, the full bounce program is teacher-only, and the `or` upgrade is stated
   as a condition in prose rather than an `if/else` block with the drive calls.
+  2-4 likewise: the change from 2-3 is given as a commented outline of the `if`
+  branch, the branch is behind a Reveal, the program is teacher-only, and the
+  random-speed challenge is a description (the `/ 100` trick is the exercise).
 
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
