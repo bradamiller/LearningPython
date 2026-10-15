@@ -27,7 +27,7 @@ By the end of this lesson you will be able to:
 - Explain a **setpoint** and why the line's edge (~0.5) is ours
 - Compute **error** as `setpoint − sensor_reading`, and read its sign
 - Turn error into a steering **correction** with a gain `Kp`
-- Steer continuously with `arcade()` inside a `while True` loop
+- Write the control loop from the two formulas and `arcade()`, given the setup
 - Tune `Kp` by watching the robot and adjusting
 
 </Objectives>
@@ -143,10 +143,12 @@ Bigger error → bigger correction → sharper steer. When the robot is right on
   explanation="correction = error × Kp = 0.3 × 0.6 = 0.18."
 />
 
-## The complete control loop
+## The control loop
 
 Every pass: read the sensor, compute error, compute correction, steer. Hundreds of
-times a second.
+times a second. You have all four pieces — the sensor read from Lesson 2-1, the two
+formulas above, and `arcade()` — and you've written `while True:` loops since Lesson
+2-3. So the setup is given, and the loop is yours:
 
 ```python
 from XRPLib.differential_drive import DifferentialDrive
@@ -164,13 +166,16 @@ base_effort = 0.3     # forward speed
 
 board.wait_for_button()
 
-while True:
-    sensor_value = reflectance.get_left()
-    error = setpoint - sensor_value
-    correction = error * Kp
-    drivetrain.arcade(base_effort, correction)
-    time.sleep(0.01)
+# loop forever:
+#     read the left sensor
+#     error = setpoint minus the reading
+#     correction = error times Kp
+#     steer: arcade() with base_effort and the correction
+#     time.sleep(0.01), so the loop doesn't flood the processor
 ```
+
+Four lines in the loop and a pause — and no `if/else` anywhere. The sign of the error
+does the deciding.
 
 <TeacherNote title="This is a big conceptual leap">
 
@@ -184,17 +189,33 @@ exactly 0.5.
 
 </TeacherNote>
 
-## Activity · Tuning Kp
+## Activity · Follow the line, then tune it
 
-<Todo kind="answers">
-the tuning outcomes are stated right under this heading, before students touch the robot, and the check below then asks exactly that. Move the too-high / too-low results into a Reveal with a hint. [REVIEW §3]
-</Todo>
+### Step 1 · Write the loop and run it
 
-`Kp` is yours to tune by watching the robot:
+Turn the comments into code. Put the robot so the left sensor sits on the edge of
+the line, press the button, and watch. It should hold the edge, nudging left and
+right as the line curves. If it drives straight off, check the sign of your error
+calculation against the table above; if it spins in place, check the order of the
+two arguments to `arcade()`.
+
+### Step 2 · Tune Kp
+
+`Kp` is yours to tune by watching the robot. Run the loop three times — with `Kp` at
+0.2, at 0.5 and at 1.0 — and write down, for each, what the robot does on a curve.
+Then decide: which of the three is too high, which too low, and what does each one
+*look* like?
+
+<Reveal title="What too high and too low look like" hint="try all three values first">
 
 - **Too high** → the robot over-corrects and **oscillates**, weaving rapidly.
 - **Too low** → it reacts sluggishly and **drifts off** the line.
 - **Just right** → smooth tracking with small corrections.
+
+Where "just right" falls depends on your surface, your tape and your speed — there
+is no single correct number, only the relationship.
+
+</Reveal>
 
 <KnowledgeCheck
   question="Your robot follows the line but weaves back and forth rapidly, never settling. What should you do to Kp?"
@@ -253,11 +274,30 @@ the setpoint at `i=150`, and look what happens: the error hits `0.00` and then g
 direction, with no `if/else` anywhere — exactly the claim made earlier in the lesson,
 now in numbers.
 
-### Putting it in your own loop
+### Step 3 · Put it in your own loop
 
 Your tracking loop is a `while True:`, which has no `i` to count with, so make your
-own counter — the same `count = count + 1` pattern from Lesson 1-9. Change your loop
-to look like this:
+own counter — the same `count = count + 1` pattern from Lesson 1-9. Three additions:
+a counter set to zero *before* the loop; a line at the end of the loop body that adds
+one to it; and an `if` that prints the sensor value, error and correction only when
+the counter is a multiple of 50. Run it and tune `Kp` again, this time reading the
+numbers: a too-high `Kp` shows up as a correction that flips sign on nearly every
+printed line.
+
+<Reveal title="Check your loop" hint="run yours on the robot first">
+
+Step 1:
+
+```python
+while True:
+    sensor_value = reflectance.get_left()
+    error = setpoint - sensor_value
+    correction = error * Kp
+    drivetrain.arcade(base_effort, correction)
+    time.sleep(0.01)
+```
+
+Step 3 adds the counter:
 
 ```python
 loop_count = 0
@@ -274,6 +314,47 @@ while True:
 
     time.sleep(0.01)
 ```
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The complete program in its step 3 form, as `lesson-05-proportional-control.py` in
+the Module 2 solutions. The loop is behind the student reveal above; what students
+have to produce themselves is the four-line body from the two formulas, the three
+tuning observations, and the counter.
+
+```python
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.reflectance import Reflectance
+from XRPLib.board import Board
+import time
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+reflectance = Reflectance.get_default_reflectance()
+board = Board.get_default_board()
+
+setpoint = 0.5
+Kp = 0.5
+base_effort = 0.3
+loop_count = 0
+
+board.wait_for_button()
+
+while True:
+    sensor_value = reflectance.get_left()
+    error = setpoint - sensor_value
+    correction = error * Kp
+    drivetrain.arcade(base_effort, correction)
+
+    loop_count = loop_count + 1
+    if loop_count % 50 == 0:
+        print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
+
+    time.sleep(0.01)
+```
+
+</TeacherNote>
 
 <TeacherNote title="Tuning is the fun part">
 

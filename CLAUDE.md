@@ -1870,6 +1870,15 @@ required text). The pattern as built in 2-9:
   2-4 likewise: the change from 2-3 is given as a commented outline of the `if`
   branch, the branch is behind a Reveal, the program is teacher-only, and the
   random-speed challenge is a description (the `/ 100` trick is the exercise).
+  2-5 likewise: the loop body is a five-comment outline under the given setup (the
+  formulas are taught above it, so the outline is the assembly, not the answer); the
+  tuning outcomes moved into a Reveal after a three-value experiment (closing the old
+  §3 Todo); the counter-printing loop is three described additions with the code in
+  the Reveal; the standalone `%` demo stays as teaching code (no robot, not an answer).
+  2-6 likewise: outline under the given setup with the negated correction named in
+  the outline (the sign is the concept, taught above it); the hand-slide explorer
+  program the teacher note used to run *for* students is now student step 1, written
+  from a description.
 
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
