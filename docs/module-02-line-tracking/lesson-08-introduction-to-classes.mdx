@@ -43,6 +43,33 @@ Think of a TV remote: its *data* is the current channel and volume; its *actions
 are change-channel and volume-up. The class describes what every remote is like;
 an actual remote you hold is an **object** built from that blueprint.
 
+<Figure
+  src="/img/lesson-m2-08/class-and-objects.svg"
+  alt="An architect's blueprint of a house labeled 'class House:' with four arrows leading down to four built houses. All four have the same shape, roof, door and windows, but one is red, one is yellow with a chimney, one is blue with a dark door, and one is green with flower boxes. Under each house is the code that built it: House('red'), House('yellow'), House('blue'), House('green')."
+  caption="One plan, many houses. The class is the drawing; each object is a house built from it. They all follow the plan, and each one can still be a little different."
+/>
+
+The picture is worth sitting with, because it answers the question students ask
+most about classes: *if I wrote the class, why do I still have to "create" one?*
+
+- **The class is just a definition.** Writing `class House:` is like drawing the
+  plan. Nothing gets built. You can't live in a blueprint, and you can't call
+  `get_error()` on the `LineSensor` class itself. The code sits there, waiting to
+  be used.
+- **An object is one thing built from it.** `House("red")` builds one house.
+  `LineSensor()` builds one sensor object. Building is what the parentheses do,
+  and it's the only way to get something you can actually use. The word for a
+  built object is an **instance** — an instance of the class.
+- **You can build as many as you want, from the same plan.** The drawing was made
+  once; the street has four houses on it. Every one has the same shape, the same
+  roof, the same door in the same place, because they came from the same plan.
+- **Each one can still be a little different.** The red house and the green house
+  are both exactly the plan, with different paint and different flower boxes. In
+  code, those small differences come from what you pass to the **constructor**
+  when you build the object: `House("red")` and `House("green")` run the same
+  `__init__`, with a different argument. Two `LineSensor` objects could have two
+  different thresholds the same way, each remembering its own.
+
 You've used classes all along — `DifferentialDrive`, `Reflectance`, and `Board` are
 all classes. Now you'll write your own. The goal is code that reads like English:
 

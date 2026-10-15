@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" width="760" height="560" role="img"
+     aria-labelledby="coTitle coDesc">
+  <title id="coTitle">A class is a plan; objects are the houses built from it</title>
+  <desc id="coDesc">At the top, a blue architect's blueprint shows the front of a house with
+    dimension lines and the label "class House:". Four arrows lead down to four built houses
+    that all follow the same plan: same shape, same roof, same door and windows. Each one
+    differs slightly from the others: a red one, a yellow one with a chimney, a blue one with a
+    dark door, and a green one with flower boxes. Under each house is the code that built it:
+    House("red"), House("yellow"), House("blue"), House("green").</desc>
+
+  <style>
+    .lbl   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #22527B; }
+    .note  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #6C757D; }
+    .code  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; font-weight: 700; fill: #343A40; }
+    .bp    { stroke: #FFFFFF; stroke-width: 1.6; fill: none; }
+    .bpthin{ stroke: #FFFFFF; stroke-width: 1; fill: none; opacity: 0.85; }
+    .bptxt { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; fill: #FFFFFF; }
+    .bpbig { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 15px; font-weight: 700; fill: #FFFFFF; }
+    .house { stroke: #343A40; stroke-width: 1.5; }
+  </style>
+
+  <rect x="0" y="0" width="760" height="560" fill="#FFFFFF"/>
+
+  <!-- ============================ THE PLAN (class) ============================ -->
+  <text class="lbl" x="380" y="24" text-anchor="middle">The class: one plan</text>
+
+  <!-- blueprint sheet -->
+  <rect x="215" y="36" width="330" height="200" rx="4" fill="#22527B"/>
+  <rect x="223" y="44" width="314" height="184" class="bpthin" stroke-dasharray="3 3"/>
+
+  <!-- house elevation, drawn in white line -->
+  <g transform="translate(335,50)">
+    <!-- walls -->
+    <rect x="20" y="60" width="120" height="80" class="bp"/>
+    <!-- roof -->
+    <path d="M 10 60 L 80 10 L 150 60" class="bp"/>
+    <!-- door -->
+    <rect x="68" y="98" width="24" height="42" class="bp"/>
+    <circle cx="87" cy="120" r="1.6" fill="#FFFFFF"/>
+    <!-- windows -->
+    <rect x="32" y="76" width="22" height="20" class="bp"/>
+    <path d="M 43 76 v 20 M 32 86 h 22" class="bpthin"/>
+    <rect x="106" y="76" width="22" height="20" class="bp"/>
+    <path d="M 117 76 v 20 M 106 86 h 22" class="bpthin"/>
+    <!-- ground line -->
+    <path d="M 0 140 H 160" class="bpthin"/>
+    <!-- dimension: width -->
+    <path d="M 20 156 H 140 M 20 150 V 162 M 140 150 V 162" class="bpthin"/>
+    <text class="bptxt" x="80" y="153" text-anchor="middle">8 m</text>
+    <!-- dimension: height -->
+    <path d="M 160 60 V 140 M 154 60 H 166 M 154 140 H 166" class="bpthin"/>
+    <text class="bptxt" x="172" y="104">4 m</text>
+  </g>
+
+  <!-- title block -->
+  <rect x="223" y="196" width="118" height="32" class="bpthin"/>
+  <text class="bpbig" x="232" y="217">class House:</text>
+  <text class="bptxt" x="485" y="222" text-anchor="middle">sheet 1 of 1</text>
+
+  <!-- ============================ ARROWS ============================ -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ADB5BD"/>
+    </marker>
+  </defs>
+  <g stroke="#ADB5BD" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M 340 240 C 300 275, 170 270, 110 318"/>
+    <path d="M 365 240 C 350 275, 300 275, 290 318"/>
+    <path d="M 395 240 C 410 275, 460 275, 470 318"/>
+    <path d="M 420 240 C 460 275, 590 270, 650 318"/>
+  </g>
+  <text class="note" x="380" y="282" text-anchor="middle">House(...) builds one from the plan</text>
+
+  <!-- ============================ THE OBJECTS (instances) ============================ -->
+  <text class="lbl" x="380" y="540" text-anchor="middle">The objects: many houses, all built from that one plan</text>
+
+  <!-- house template: translate(cx-60, 330); walls 120x80 at y=60..140 -> absolute 390..470 -->
+
+  <!-- 1: red -->
+  <g transform="translate(50,330)">
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#6D4C41" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#D1182C" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#F2C14E" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <text class="code" x="80" y="172" text-anchor="middle">House("red")</text>
+  </g>
+
+  <!-- 2: yellow, with a chimney -->
+  <g transform="translate(230,330)">
+    <rect x="110" y="18" width="14" height="30" fill="#8D6E63" class="house"/>
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#455A64" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#F2C14E" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#22527B" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <text class="code" x="80" y="172" text-anchor="middle">House("yellow")</text>
+  </g>
+
+  <!-- 3: blue, dark door -->
+  <g transform="translate(410,330)">
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#37474F" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#4A90D9" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#263238" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#FFF8E1" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#FFF8E1" class="house"/>
+    <text class="code" x="80" y="172" text-anchor="middle">House("blue")</text>
+  </g>
+
+  <!-- 4: green, with flower boxes -->
+  <g transform="translate(590,330)">
+    <path d="M 10 60 L 80 10 L 150 60 Z" fill="#5D4037" class="house"/>
+    <rect x="20" y="60" width="120" height="80" fill="#5C9E5C" class="house"/>
+    <rect x="68" y="98" width="24" height="42" fill="#D1182C" class="house"/>
+    <rect x="32" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="106" y="76" width="22" height="20" fill="#CDEBFF" class="house"/>
+    <rect x="30" y="96" width="26" height="6" fill="#8D6E63" class="house"/>
+    <rect x="104" y="96" width="26" height="6" fill="#8D6E63" class="house"/>
+    <circle cx="36" cy="95" r="2.5" fill="#E53935"/><circle cx="43" cy="94" r="2.5" fill="#F2C14E"/><circle cx="50" cy="95" r="2.5" fill="#E53935"/>
+    <circle cx="110" cy="95" r="2.5" fill="#F2C14E"/><circle cx="117" cy="94" r="2.5" fill="#E53935"/><circle cx="124" cy="95" r="2.5" fill="#F2C14E"/>
+    <text class="code" x="80" y="172" text-anchor="middle">House("green")</text>
+  </g>
+
+  <!-- ground -->
+  <path d="M 40 470 H 720" stroke="#ADB5BD" stroke-width="2"/>
+</svg>
