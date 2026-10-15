@@ -22,7 +22,8 @@ const MODULE_TITLES = {
   'module-02-line-tracking': 'Module 2 · Line Tracking',
   'module-03-grid-driving': 'Module 3 · Grid Driving',
   'module-04-manhattan': "Module 4 · Manhattan Navigation",
-  'module-05-dijkstra': "Module 5 · Dijkstra's Algorithm",
+  'module-05-pathfinding': 'Module 5 · Pathfinding Around Obstacles',
+  'module-06-dijkstra': "Module 6 · Dijkstra's Algorithm (optional)",
 };
 
 /** Front matter value, e.g. title: "Lesson 1 · Meet the XRP" */

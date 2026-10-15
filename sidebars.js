@@ -2,7 +2,8 @@
 
 /**
  * Curriculum sidebar. Mirrors the module/lesson folder structure.
- * All 45 lessons across the five modules are real pages — no placeholders.
+ * Modules 1-5 are real pages. Module 6 (optional) has an overview page; its
+ * lessons arrive as the source curriculum's Module 6 is written.
  * Add a new lesson's doc id here under its module category.
  *
  * @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
@@ -77,18 +78,26 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: "Module 5 · Dijkstra's Algorithm",
+      label: 'Module 5 · Pathfinding Around Obstacles',
       collapsed: true,
       items: [
-        'module-05-dijkstra/lesson-01-grid-as-a-graph',
-        'module-05-dijkstra/lesson-02-dictionaries',
-        'module-05-dijkstra/lesson-03-dijkstras-concept',
-        'module-05-dijkstra/lesson-04-dijkstra-class',
-        'module-05-dijkstra/lesson-05-implementing-compute-path',
-        'module-05-dijkstra/lesson-06-testing-and-swapping',
-        'module-05-dijkstra/lesson-07-obstacle-detection',
-        'module-05-dijkstra/lesson-08-building-experience',
-        'module-05-dijkstra/lesson-09-capstone-project',
+        'module-05-pathfinding/lesson-01-grid-as-a-graph',
+        'module-05-pathfinding/lesson-02-dictionaries',
+        'module-05-pathfinding/lesson-03-dijkstras-concept',
+        'module-05-pathfinding/lesson-04-dijkstra-class',
+        'module-05-pathfinding/lesson-05-implementing-compute-path',
+        'module-05-pathfinding/lesson-06-testing-and-swapping',
+        'module-05-pathfinding/lesson-07-obstacle-detection',
+        'module-05-pathfinding/lesson-08-building-experience',
+        'module-05-pathfinding/lesson-09-capstone-project',
+      ],
+    },
+    {
+      type: 'category',
+      label: "Module 6 · Dijkstra's Algorithm (optional)",
+      collapsed: true,
+      items: [
+        'module-06-dijkstra/lesson-00-overview',
       ],
     },
   ],

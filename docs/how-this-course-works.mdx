@@ -97,9 +97,13 @@ intersection to the next," the unit of movement everything after it uses.
 **Module 4 · Manhattan Navigation** introduces coordinates, lists and an
 algorithm: work out a route, then drive it.
 
-**Module 5 · Dijkstra's Algorithm** replaces that route planner with one that
-handles obstacles, and — if you go the whole way — one that re-plans when the
-robot discovers a blocked intersection while driving.
+**Module 5 · Pathfinding Around Obstacles** replaces that route planner with one
+that handles obstacles (breadth-first search), and — if you go the whole way — one
+that re-plans when the robot discovers a blocked intersection while driving.
+
+**Module 6 · Dijkstra's Algorithm** is optional: the same planner with one upgrade,
+for a grid where some segments are slower than others. The course is complete
+without it.
 
 Underneath, the big ideas arrive in this order: sequence and repetition, then
 abstraction through functions and parameters, then sensing and feedback, then
@@ -117,8 +121,8 @@ shown when the teacher-mode switch at the corner of the page is on. A
 
 ## The course can be made shorter
 
-The full run is 45 lessons. It's designed so you can stop at three sensible
-places without the ending feeling arbitrary.
+The full run is 46 lessons, plus an optional Module 6. It's designed so you can
+stop at several sensible places without the ending feeling arbitrary.
 
 **Skip the classes.** Classes are the tidiest way to package a reusable part, but
 they're also the hardest idea in the course for most students, and nothing about
@@ -130,10 +134,13 @@ between planners; you keep every other idea.
 it autonomously — a satisfying finish on its own. Module 5 is the same story told
 with a better algorithm.
 
-**Do Dijkstra, but not the discovery part.** Module 5's algorithm can be taught
-with a map of obstacles known up front. Adding the code that finds blocked
+**Do the pathfinding, but not the discovery part.** Module 5's algorithm can be
+taught with a map of obstacles known up front. Adding the code that finds blocked
 intersections *while driving* and re-plans around them is the most demanding work
 in the course, and it's the natural thing to drop if you're short on time.
+
+**Leave out Module 6.** Dijkstra's algorithm is its own optional module precisely
+so that it can be skipped as a unit. Nothing depends on it.
 
 ## What you need
 

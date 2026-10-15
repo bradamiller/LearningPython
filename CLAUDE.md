@@ -24,7 +24,7 @@ checks, and a teacher-notes toggle.
   same pages with teacher-only notes toggled on.
 - **Status (current):** **ALL FIVE MODULES ARE BUILT.** Module 1 (13: kickoff
   lesson-00-what-is-a-robot + lessons 1–12), Module 2 (10), Module 3 (4),
-  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9) — 46 lessons live. Site builds clean (`npm run build`).
+  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9), Module 6 (overview only, optional) — 46 lessons + 1 overview live. Site builds clean (`npm run build`).
   `docs/module-01-driving/lesson-01-meet-the-xrp.mdx` is the canonical template.
 - **Evaluation pass in progress (Brad, since 2026-09-15).** Conversion is done;
   the work now is Brad reading lessons and correcting them. **Module 1 lessons 0–6
@@ -49,7 +49,7 @@ machine at `/Users/bradmiller/GitHub/IntoToPython`, and on GitHub at
 sandbox holds a copy of THIS repo only, so reach the source through the device
 bridge (§13) — it has to be a connected folder before you can read it:
 
-- `<IntoToPython>/module-01-driving/` … `<IntoToPython>/module-05-dijkstra/`, each with:
+- `<IntoToPython>/module-01-driving/` … `<IntoToPython>/module-06-dijkstra/` (Module 5 is `module-05-pathfinding/` since 2026-10-14), each with:
   - `lessons/NN-*.md` — teacher lesson plans (objectives, key concepts, lesson flow, exercises, misconceptions, assessment)
   - `worksheets/NN-*.md` — student worksheets (great source for knowledge-check questions)
   - `code/starter/` and `code/solutions/` — Python/Blockly code
@@ -76,7 +76,8 @@ LearningPython/                            # repo root — the site itself
 │   ├── module-02-line-tracking/          # 10 lessons (all Python) — DONE
 │   ├── module-03-grid-driving/           # 4 lessons — DONE
 │   ├── module-04-manhattan/              # lesson-00-overview + lessons 1–9 — DONE
-│   └── module-05-dijkstra/               # lessons 1–9 (no overview) — DONE
+│   ├── module-05-pathfinding/            # lessons 1–9 (no overview) — renamed 2026-10-14; L3–L6 await the BFS rewrite
+│   └── module-06-dijkstra/               # OPTIONAL — lesson-00-overview only until the source's Module 6 is written
 ├── src/
 │   ├── components/
 │   │   ├── Lesson.js      # LessonHeader, Objectives, TeacherBanner, CardGrid, InfoCard, Decide
@@ -1250,8 +1251,10 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     Around Obstacles", BFS, the capstone) and `module-06-dijkstra/` is a new
     optional module (five lessons: time the slow segment, weights, BFS -> Dijkstra
     in two changes, drive it, the class extension). The site still has
-    `docs/module-05-dijkstra/`; phase 4 renames it and adds Module 6 to
-    `sidebars.js`.
+    `docs/module-05-dijkstra/` — **renamed to `docs/module-05-pathfinding/` and
+    Module 6 (overview page only) added to `sidebars.js` on 2026-10-14**; the
+    lesson content ports follow, one lesson at a time, as each source lesson is
+    rewritten (source first, then its site page).
     **Sequencing: source first, then ONE port to the site.** The source repo's
     code is being rewritten first (phase 2), then its lessons (phase 3), and only
     then does the site get M2 L8–10, M4 and M5 ported (phase 4), together with an

@@ -33,7 +33,8 @@ const MODULE_ORDER = [
   'module-02-line-tracking',
   'module-03-grid-driving',
   'module-04-manhattan',
-  'module-05-dijkstra',
+  'module-05-pathfinding',
+  'module-06-dijkstra',
 ];
 
 const MODULE_TITLES = {
@@ -41,7 +42,8 @@ const MODULE_TITLES = {
   'module-02-line-tracking': 'Module 2 · Line Tracking',
   'module-03-grid-driving': 'Module 3 · Grid Driving',
   'module-04-manhattan': 'Module 4 · Manhattan Navigation',
-  'module-05-dijkstra': "Module 5 · Dijkstra's Algorithm",
+  'module-05-pathfinding': 'Module 5 · Pathfinding Around Obstacles',
+  'module-06-dijkstra': "Module 6 · Dijkstra's Algorithm (optional)",
 };
 
 /** Most urgent first — the order the index and the counts are shown in. */

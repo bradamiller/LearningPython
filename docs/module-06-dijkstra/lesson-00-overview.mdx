@@ -1,0 +1,102 @@
+---
+title: "Module 6 · Dijkstra's Algorithm (Optional)"
+sidebar_label: "6-0 · Overview"
+sidebar_position: 0
+---
+
+<LessonHeader
+  eyebrow="Module 6 · Dijkstra's Algorithm"
+  title="The Same Algorithm, One Upgrade"
+  meta={['Optional module', '1–2 weeks', 'After Module 5']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+<Todo kind="blocked">
+Module 6 is new (2026-10-14). This overview is the only page so far; the five
+lessons are being written in the source curriculum first and arrive here as they
+are finished. Until then the sidebar shows just this page.
+</Todo>
+
+Module 5 ended with a robot that finds its own way around blocked intersections.
+It uses breadth-first search, which finds the path with the **fewest steps**, and
+on a grid where every block takes the same time, that is also the fastest path.
+
+But what if one block *doesn't* take the same time? Suppose one segment of the
+grid takes a long, winding detour between two intersections, so that driving it
+takes as long as three ordinary blocks. The map still says it's one step. BFS
+will happily send the robot down it, because BFS only counts steps.
+
+This module fixes that. **Dijkstra's algorithm** is your BFS with two changes,
+and it finds the path that takes the least *time*, not the fewest steps.
+
+<Objectives>
+
+By the end of this module you will be able to:
+
+- Measure a slow segment and turn it into a number: its **weight**
+- Add a cost check to the Module 5 test harness, and show BFS failing it
+- Turn your `compute_bfs_path()` into `compute_dijkstra_path()` by making two changes to a copy
+- Read a cost grid and explain every number on it
+- Run three planners through one harness and say exactly where they agree and disagree
+
+</Objectives>
+
+## What this module is not
+
+It is not a new kind of programming. There is no new Python syntax in it. The graph,
+`add_blocked()`, the `previous` dictionary, the walk-back and the harness are all
+the ones you built in Module 5, unchanged. The two changes are in the middle of
+one function:
+
+1. Take the **closest** intersection off the to-visit list instead of the oldest one.
+2. Add the segment's **weight** instead of counting one step, and keep the cheaper
+   total if you reach the same place a second time.
+
+That's it. The rest of the module is about seeing *why* those two changes matter.
+
+## The lessons
+
+| Lesson | What happens |
+|---|---|
+| **6-1 · When Fewest Steps Isn't Fastest** | Time a normal block and the slow segment with a stopwatch. Work out, on paper, which of two routes is really faster. |
+| **6-2 · Weights in the Graph** | Give the slow segment a weight. Add "total cost" to the harness as something it checks — and watch BFS fail it. |
+| **6-3 · From BFS to Dijkstra** | Copy your BFS, rename it, make the two changes. Print the cost grid. Run Manhattan, BFS and Dijkstra through the same tests. |
+| **6-4 · Drive It** | The robot on the slow-segment grid: a BFS run, then a Dijkstra run, side by side. |
+| **6-5 · Three Planners, One Harness** *(optional extension)* | The `Dijkstra` class, and all three planners as objects through the Module 5 class harness. |
+
+<TeacherNote title="Why this is a separate, optional module">
+
+The course is complete at the end of Module 5; nothing later depends on this. It
+is its own module, rather than an extension inside Module 5, for two reasons. A
+module is the unit you plan by, so it can be dropped cleanly. And Dijkstra only
+makes sense if the **physical grid changes**: one segment has to be genuinely
+slow, something students can time. That is a whole-class setup, not a
+per-student extra. The leading candidate is a winding tape detour between two
+adjacent intersections, which needs nothing under the tape and does not disturb
+line following. Try it on your grid before scheduling the module.
+
+**Pacing:** 1–2 weeks (weeks 19–20 of an 18-week course, or a second semester).
+
+</TeacherNote>
+
+<KnowledgeCheck
+  question="On a grid where every segment takes the same time, how do BFS and Dijkstra's algorithm compare?"
+  options={[
+    {text: 'Dijkstra finds a shorter path'},
+    {text: 'They find paths of the same length — Dijkstra only differs when segments have different costs', correct: true},
+    {text: 'BFS finds a shorter path'},
+    {text: 'Dijkstra cannot run on a grid'},
+  ]}
+  explanation="With every segment costing 1, fewest steps and least cost are the same thing, so the two agree on every test. The slow segment is what separates them."
+/>
+
+<QuizLink id="module-06-dijkstra/lesson-00-overview" />
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
