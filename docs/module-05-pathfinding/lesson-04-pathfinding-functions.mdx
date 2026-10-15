@@ -1,0 +1,272 @@
+---
+title: "Lesson 5-4 · The Pathfinding Functions"
+sidebar_label: "5-4 · Pathfinding Functions"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Pathfinding Around Obstacles"
+  title="Lesson 5-4 · The Pathfinding Functions"
+  meta={['45 min', 'Function toolkits', 'Two rules for planners']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+Time to turn the concept into code — but in stages. In Lesson 2-8 you organized the
+sensor code into a toolkit of functions that share a couple of variables at the top
+of the file. Today the pathfinding code gets the same treatment: the grid settings
+and a shared list of blocked intersections, a function that adds to that list, a
+function that builds the graph around it, and a `compute_bfs_path()` that is only a
+placeholder. Lesson 5-5 fills it in with the ripples from Lesson 5-3.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Write `add_blocked(intersection)` so an intersection is recorded once, even if told twice
+- Write `build_graph(rows, cols, blocked)` so blocked intersections are neither keys nor anyone's neighbor
+- State the two rules every planner follows: the position is passed in; the path leaves the start out
+- Explain why the blocked list is shared at the top of the file, and why the graph is rebuilt from it on every call
+
+</Objectives>
+
+<QuizLink id="module-05-pathfinding/lesson-04-pathfinding-functions" />
+
+## Where does the robot keep what it has learned?
+
+Three lessons from now the robot will be driving, see a box in the way with its
+rangefinder, and have to plan a new route around it. So: where does it write down
+that the box is there?
+
+"Pass the blocked list to the function" is the first answer most people give, and
+it's half right. The problem is *when* the robot learns about obstacles: one at a
+time, in the middle of driving. Something has to keep the list between one path and
+the next. That something is a variable at the top of the file that every function
+can see — exactly the way `reflectance` and `THRESHOLD` sat at the top of the
+Lesson 2-8 toolkit:
+
+```python
+ROWS = 4
+COLS = 4
+BLOCKED = []     # intersections the robot must not drive through
+```
+
+Capital letters, like `THRESHOLD`, because these are settings rather than things
+that change in the middle of a calculation. `BLOCKED` does grow — but only through
+one function.
+
+## Two rules we will never break
+
+Before any code, two rules that every planner in this course follows, and that
+nothing later ever breaks. Keep them in view all module.
+
+**Rule 1 — the planner is told where the robot is.** Every planner looks like
+`compute_something_path(position, destination)`. It never remembers the position
+between calls. The driving code already knows where the robot is; if the planner
+kept its own copy, the two could disagree, and a planner that believes the robot is
+somewhere it isn't will plan from the wrong place. One owner.
+
+**Rule 2 — the path is the list of intersections to drive *to*.** The start is not
+in it. So `len(path)` is the number of steps, and "already there" is `[]`.
+
+`compute_manhattan_path` from Module 4 already follows both. Check:
+`compute_manhattan_path((0, 0), (0, 2))` returns `[(0, 1), (0, 2)]` — two steps,
+no start.
+
+<KnowledgeCheck
+  question="Why must a planner be TOLD the robot's position instead of remembering it?"
+  options={[
+    {text: 'So the planner and the driving code can never disagree about where the robot is', correct: true},
+    {text: 'Because functions cannot store values between calls'},
+    {text: 'To make the path shorter'},
+    {text: 'Because the position changes while the path is being computed'},
+  ]}
+  explanation="The driving code owns the position. Two copies of the same fact is how a planner ends up planning from an intersection the robot left three steps ago."
+/>
+
+## Activity · Build the toolkit
+
+Open `lesson-04-pathfinding-functions.py` from the starter code and work through it
+in three steps.
+
+### Step 1 · `add_blocked()`
+
+The one way anyone tells the planner about an obstacle:
+
+```python
+def add_blocked(intersection):
+    if intersection not in BLOCKED:
+        BLOCKED.append(intersection)
+```
+
+Why the `if`? The robot may see the same wall twice. A list with `(2, 0)` in it
+twice is harmless but untidy, and it would make the printed grid confusing.
+
+Now the question that catches people: does this need `global BLOCKED`? In Lesson
+2-8, `set_threshold()` needed `global THRESHOLD`. The difference is what each
+function does to the name:
+
+```python
+def set_threshold(new_value):     # Lesson 2-8
+    global THRESHOLD              # needed: this line REASSIGNS the name
+    THRESHOLD = new_value
+
+def add_blocked(intersection):    # today
+    if intersection not in BLOCKED:
+        BLOCKED.append(intersection)   # not needed: this CHANGES the list
+```
+
+`global` is for *reassigning* a module-level name. `append` doesn't reassign
+anything — `BLOCKED` still names the same list; the list just has one more thing in
+it. The toolkit also has a `clear_blocked()` that empties the list in place (`pop()`
+until it's empty) so tests can start fresh.
+
+<KnowledgeCheck
+  question="Why does add_blocked() not need `global BLOCKED`, when set_threshold() in Lesson 2-8 needed `global THRESHOLD`?"
+  options={[
+    {text: 'append changes the list in place; set_threshold reassigns the name', correct: true},
+    {text: 'Lists are always global'},
+    {text: 'BLOCKED is in capital letters'},
+    {text: 'It does need it — the code above is wrong'},
+  ]}
+  explanation="`global` is needed only to reassign a module-level name. Appending to a list changes the list that BLOCKED already names; the name itself is untouched."
+/>
+
+### Step 2 · `build_graph()` — Lesson 5-2's two functions become one
+
+In Lesson 5-2 you built the graph with `build_grid_graph()` and then took blocked
+intersections out with `remove_blocked()`. Today one function does both: while
+building, skip anything blocked.
+
+```python
+def build_graph(rows, cols, blocked):
+    graph = {}
+    for r in range(rows):
+        for c in range(cols):
+            if (r, c) in blocked:
+                continue
+            neighbors = []
+            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in blocked:
+                    neighbors.append((nr, nc))
+            graph[(r, c)] = neighbors
+    return graph
+```
+
+There are two `in blocked` checks, and both are needed. The first keeps a blocked
+intersection from becoming a key. The second keeps it out of every *other*
+intersection's neighbor list. Miss the second and the graph still has edges leading
+into the wall.
+
+The four `(dr, dc)` pairs are up, down, left, right, in that order. That's the order
+Lesson 5-3's trace checked neighbors, which is why its printed path matched the
+table.
+
+<KnowledgeCheck
+  question="(1,1) is blocked. Someone wrote build_graph with the first `in blocked` check but forgot the second. What is wrong with the result?"
+  options={[
+    {text: '(1,1) is not a key, but it still appears in its neighbors’ lists — there are edges into the wall', correct: true},
+    {text: '(1,1) is a key with an empty neighbor list'},
+    {text: 'Nothing — the first check is enough'},
+    {text: 'The graph has 16 keys instead of 15'},
+  ]}
+  explanation="The first check removes (1,1) as a key. Only the second check removes it from the lists of (0,1), (1,0), (1,2) and (2,1). Without it, a search could step into the wall."
+/>
+
+### Step 3 · The placeholder
+
+```python
+def compute_bfs_path(position, destination):
+    graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
+    print("compute_bfs_path is not written yet!")
+    return []
+```
+
+Notice that it builds the graph *itself*, from `BLOCKED`, every time it's called.
+Why not build the graph once at the top of the file? Because a wall the robot finds
+at step 3 has to be gone from the graph it plans step 4 on. Rebuilding on every
+call makes that automatic; there is no "forgot to rebuild" bug to have. On a 4×4
+grid the rebuild visits sixteen intersections and takes no time worth measuring.
+
+## Try it
+
+Run the program. It builds the open graph, prints it, then blocks `(1, 1)` and
+rebuilds:
+
+```text
+===== Graph with (1,1) blocked =====
+Blocked: [(1, 1)]
+Number of intersections: 15
+(1,1) in graph? False
+Neighbors of (0,1): [(0, 0), (0, 2)]  <- (1,1) is gone from the list
+Blocked after adding (1,1) again: [(1, 1)]
+compute_bfs_path is not written yet!
+
+Path: []
+```
+
+Three things to check against the list of what `build_graph` promises: fifteen
+keys, `(1, 1)` is not one of them, and `(1, 1)` is gone from `(0, 1)`'s neighbors.
+Then the placeholder's empty path — which is, for now, the right answer to nothing.
+
+Before you leave, write down (don't run) what these should return once Lesson 5-5
+is finished, with nothing blocked:
+
+- `compute_bfs_path((0, 0), (0, 2))`
+- `compute_bfs_path((2, 2), (2, 2))`
+
+<TeacherNote title="Answers, and what to listen for">
+
+`[(0, 1), (0, 2)]` and `[]` — Rule 2 both times. The exit ticket is the `global`
+question above; students who can explain reassign-vs-change-in-place have the whole
+idea. The other thing to listen for during the activity is the second `in blocked`
+check: a `build_graph` that drops blocked keys but still lists them as neighbors is
+the single most common bug, and it only shows up as a search that walks into a wall
+in Lesson 5-5. Catch it here.
+
+**Challenge for students who finish early:** `add_blocked((1, 0))`,
+`add_blocked((1, 1))`, rebuild, and print the whole graph. Which row-0 intersections
+can still reach row 2, and through what? Then: "Using only `build_graph` and the
+ripples idea, write `is_reachable(a, b)`." They'll write most of Lesson 5-5 a day
+early, which is fine.
+
+</TeacherNote>
+
+## Real-world connections
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Road closures">
+    A navigation app keeps one shared list of closed roads and rebuilds its routing graph from it — exactly this toolkit, at city scale.
+  </InfoCard>
+  <InfoCard tag="Software" title="One owner per fact">
+    Rule 1 is a general principle: keep one copy of each piece of state, and tell everything else. Copies drift apart.
+  </InfoCard>
+  <InfoCard tag="Robotics" title="Maps that grow">
+    A robot vacuum's map starts empty and fills in as bumps and sensors report walls — the robot's BLOCKED list, with thousands of entries.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What are the two planner rules? (Told the position; path excludes the start.)
+- Who calls `add_blocked()`? (A paper test in 5-6, the rangefinder in 5-7, a saved file in 5-8.)
+- Why is the graph rebuilt on every call? (So a just-found obstacle is already missing from it.)
+- Why no `global` in `add_blocked()`? (Appending changes the list; it doesn't reassign the name.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** the two rules from memory; the second-`in blocked` bug caught; the
+`global` explanation. **Exit ticket:** "Why doesn't `add_blocked()` need `global`?"
+**Preview:** next lesson the placeholder becomes real — `previous`, `to_visit`, and
+the walk-back from Lesson 5-3, in about twenty lines.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
