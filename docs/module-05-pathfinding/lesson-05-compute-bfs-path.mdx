@@ -1,0 +1,346 @@
+---
+title: "Lesson 5-5 · Implementing compute_bfs_path()"
+sidebar_label: "5-5 · compute_bfs_path()"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Pathfinding Around Obstacles"
+  title="Lesson 5-5 · Implementing compute_bfs_path()"
+  meta={['50–60 min', 'The algorithm in code', 'Build in three stages']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+This is the heart of Module 5: turning the hand trace from Lesson 5-3 into working
+Python. The function is about twenty lines, and there isn't a line in it you
+haven't already done with a pencil. You'll build it in three stages, run the
+paper tests after each, and finish by comparing the program's grid of ring numbers
+with your own.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Match each line of `compute_bfs_path()` to a step of the paper method
+- Explain why `to_visit.pop(0)` (oldest first) matters, and what `pop()` would do instead
+- Explain why `if neighbor not in previous` is the whole "numbered once" rule
+- Write the walk-back so the path leaves the start out, and say why "already there" gives `[]`
+- Return `[]` when the destination is walled off
+
+</Objectives>
+
+<QuizLink id="module-05-pathfinding/lesson-05-compute-bfs-path" />
+
+## Every line is a pencil step
+
+Here is the search loop from the end of Lesson 5-3, with the pencil step beside each
+line:
+
+```python
+previous = {position: None}        # the first row of the came-from table
+to_visit = [position]              # the list beside the grid, with the start on it
+
+while len(to_visit) > 0:
+    current = to_visit.pop(0)              # take the OLDEST one off the front
+    if current == destination:
+        break                              # it got its number -- stop
+    for neighbor in graph[current]:        # look at each neighbor
+        if neighbor not in previous:       # only if it has no number yet
+            previous[neighbor] = current   # write "came from"
+            to_visit.append(neighbor)      # add it to the END of the list
+```
+
+Two things worth noticing before you type anything. `previous` does double duty:
+it records where each intersection came from, *and* — because an intersection
+only gets an entry when it's reached — "is a key in `previous`" means "has a number."
+That's why `if neighbor not in previous` is the whole numbered-once rule. And the
+list is used as a **queue**: things go on the end and come off the front, so a ring
+is always finished before the next one starts.
+
+<KnowledgeCheck
+  question="In the loop above, what does `if neighbor not in previous:` mean in pencil terms?"
+  options={[
+    {text: '"Only if this intersection has no number yet"', correct: true},
+    {text: '"Only if this intersection is not blocked"'},
+    {text: '"Only if this intersection is the destination"'},
+    {text: '"Only if we have not visited the current intersection"'},
+  ]}
+  explanation="An intersection gets an entry in previous the first time it's reached, so not-in-previous means not-yet-numbered. Blocked intersections never come up at all — they aren't in the graph."
+/>
+
+## Activity · Build it in three stages
+
+Open `lesson-05-compute-bfs-path.py`. The toolkit from Lesson 5-4 is already there;
+`compute_bfs_path()` is the part to fill in. Build it in the three stages below and
+run after each one.
+
+### Step 1 · Setup and the guard
+
+```python
+def compute_bfs_path(position, destination):
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if position not in graph or destination not in graph:
+        return []
+    previous = {position: None}
+    to_visit = [position]
+```
+
+The guard covers a start or destination that is itself blocked: it isn't in the
+graph, so there is nothing to search. Return `[]` at once.
+
+### Step 2 · The search
+
+Add the loop from the top of the page. Then, temporarily, put `print(previous)`
+right after it and run on the 3×3 with `(1, 1)` blocked, `(0, 0)` to `(2, 2)`. The
+printed dictionary should match your Lesson 5-3 came-from table exactly, keys in
+the same order.
+
+Ask yourself what happens to `to_visit` if the destination is walled off. It empties
+out, the `while` ends, and `destination` never appears in `previous`. Keep that in
+mind for the last stage.
+
+### Step 3 · The walk-back
+
+```python
+    if destination not in previous:
+        return []
+    path = []
+    current = destination
+    while current != position:
+        path.append(current)
+        current = previous[current]
+    path.reverse()
+    return path
+```
+
+Why `while current != position` and not `while current is not None`? Both would
+end the loop, but stopping *at* the start means the start is never appended — which
+is Rule 2 from Lesson 5-4 with no trimming needed afterwards. And it gives you
+"already there" for free: when `position == destination`, the loop never runs and
+the path is `[]`.
+
+<KnowledgeCheck
+  question="A classmate writes the walk-back as `while current is not None:` and their straight-line test prints Steps: 4 instead of 3. What is in their path that shouldn't be?"
+  options={[
+    {text: 'The start — the loop ran one extra time and appended it', correct: true},
+    {text: 'The destination — it should be left out'},
+    {text: 'A blocked intersection'},
+    {text: 'Nothing — 4 is correct'},
+  ]}
+  explanation="Running until None appends the start before stopping. Rule 2 says the path is the intersections to drive TO; the robot is already on the start."
+/>
+
+## Run the five paper tests
+
+The tests at the bottom of the file are the grids you traced by hand. Uncomment
+them one at a time. The step counts have to match; the exact path may differ from
+yours and still be right.
+
+```text
+=== Test 1: no obstacles, (0,0) to (3,3) ===
+Path: [(1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3)]
+Steps: 6 (expect 6)
+
+=== Test 2: straight line, (0,0) to (0,3) ===
+Path: [(0, 1), (0, 2), (0, 3)]
+Steps: 3 (expect 3)
+
+=== Test 3: already there, (2,2) to (2,2) ===
+Path: []
+Steps: 0 (expect 0)
+
+=== Test 4: wall across the grid, (0,0) to (3,0) ===
+Blocked: [(1, 0), (1, 1)]
+Path: [(0, 1), (0, 2), (1, 2), (2, 2), (3, 2), (3, 1), (3, 0)]
+Steps: 7 (expect 7 -- around the wall)
+
+=== Test 5: destination walled off ===
+Blocked: [(1, 0), (1, 1), (1, 2), (1, 3)]
+Path: []
+Steps: 0 (expect 0 -- no way through)
+```
+
+Tests 3 and 5 both return `[]`, for different reasons: one because the walk-back
+loop never ran, the other because the destination was never reached. Next lesson
+the test harness tells those two apart.
+
+## Activity · Break it on purpose
+
+Once all five pass, break the function two ways and watch what happens. Put each
+back before the next.
+
+1. **Change `pop(0)` to `pop()`.** Run Test 1 and count the steps. It's longer. With
+   `pop()` the search takes the *newest* intersection, so it dives down one path
+   before finishing the ring; the first route it finds isn't necessarily shortest.
+   That has a name — depth-first search — and it's a fine algorithm for other jobs,
+   but not this one.
+2. **Delete `if neighbor not in previous:`** (keep the two lines under it, one indent
+   level out). Run Test 1. Intersections get their "came from" overwritten by later,
+   longer routes, and the walk-back can chase its own tail forever. If it hangs,
+   stop it with Ctrl-C. That one line is the numbered-once rule, and without it
+   nothing works.
+
+<KnowledgeCheck
+  question="You change pop(0) to pop() and the open-grid test prints Steps: 10 instead of 6. What changed?"
+  options={[
+    {text: 'The search now takes the newest intersection first and dives down one route before finishing the ring', correct: true},
+    {text: 'The graph lost some neighbors'},
+    {text: 'The walk-back went the wrong way'},
+    {text: 'Nothing — 10 is also a shortest path'},
+  ]}
+  explanation="Oldest-first (a queue) finishes each ring before the next. Newest-first (a stack) is depth-first search: it finds a path, but not necessarily a shortest one."
+/>
+
+## The picture
+
+The file also has `bfs_rings(position)`, which is the same search without the
+`break` — it keeps going until every reachable intersection has a ring number — and
+`print_grid()`, which draws them. Uncomment the block at the bottom:
+
+```text
+=== Rings from (0,0) with (1,0) and (1,1) blocked ===
+       0  1  2  3
+    -------------
+ 0 |   0  1  2  3
+ 1 |   X  X  3  4
+ 2 |   6  5  4  5
+ 3 |   7  6  5  6
+```
+
+That's your Lesson 5-3 wall grid, drawn by the program. The path Test 4 printed is
+one route down these numbers, 1, 2, 3 … to the 7.
+
+<TeacherNote title="Stages, breakage, and what to keep out of the room">
+
+Three stages, run after each; students who type the whole thing and then debug lose
+the mapping to the paper method, which is the point. The break-it activity is not
+optional: seeing `pop()` give a longer path is what makes "oldest first" stick, and
+seeing the missing `not in previous` hang the program is what makes "numbered once"
+stick. Keep `distances`, `999999` and "closest first" out of the room; a student who
+asks about roads that take longer gets "Module 6 — and it's two changes to this
+function."
+
+**Exit ticket:** the `while current is not None` question above.
+
+</TeacherNote>
+
+<OptionalExtension title="The BFS class">
+
+Two reasons to wrap the toolkit in a class, and it's worth saying both. `BFS` is a
+class because it has setup to hold: the grid size and the blocked list. `Manhattan`
+gets a class too, but *only* so that it has the same shape as `BFS` — then one main
+program and one test harness (next lesson) work with either by changing one name.
+That second reason is the swap, and it's the point.
+
+Neither class remembers where the robot is. Rule 1 holds for classes too.
+
+<SideBySide left="Functions — what you have" right="Class — the extension">
+
+```python
+ROWS = 4
+COLS = 4
+BLOCKED = []
+
+def add_blocked(intersection):
+    if intersection not in BLOCKED:
+        BLOCKED.append(intersection)
+
+def compute_bfs_path(position, destination):
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    ...   # the function body
+
+
+add_blocked((1, 1))
+path = compute_bfs_path((0, 0), (3, 3))
+```
+
+```python
+class BFS:
+    def __init__(self, rows=4, cols=4):
+        self.rows = rows
+        self.cols = cols
+        self.blocked = []
+
+    def add_blocked(self, intersection):
+        if intersection not in self.blocked:
+            self.blocked.append(intersection)
+
+    def compute_path(self, position, destination):
+        graph = build_graph(self.rows, self.cols, self.blocked)
+        ...   # the function body, unchanged
+
+planner = BFS()
+planner.add_blocked((1, 1))
+path = planner.compute_path((0, 0), (3, 3))
+```
+
+</SideBySide>
+
+The same four changes as every extension so far: the functions move inside
+`class BFS:` and gain `self`; the shared variables move into `__init__` as
+`self.rows`, `self.cols`, `self.blocked`; inside the methods they gain `self.`;
+from outside, calls go through the object.
+
+`Manhattan` gets the matching shape, with an `add_blocked()` that deliberately does
+nothing:
+
+```python
+class Manhattan:
+    def __init__(self):
+        pass        # no setup -- it is a class only to match BFS
+
+    def add_blocked(self, intersection):
+        # Manhattan cannot route around obstacles. This exists so every
+        # planner can be tested the same way. It deliberately does nothing.
+        pass
+
+    def compute_path(self, position, destination):
+        ...   # compute_manhattan_path, unchanged
+```
+
+Why give `Manhattan` a method that does nothing? Because next lesson's harness calls
+`planner.add_blocked(...)` on whatever planner it's handed. If `Manhattan` didn't
+have one, the harness would need to know which planner it had — and the whole point
+of the swap is that it doesn't.
+
+`lesson-05-bfs-class-addon.py` runs the wall test against both objects. `BFS` goes
+around; `Manhattan` drives straight through — the same calls, different objects.
+
+<KnowledgeCheck
+  question="Why is Manhattan given an add_blocked() method that does nothing?"
+  options={[
+    {text: 'So every planner has the same shape and the harness never has to know which one it holds', correct: true},
+    {text: 'Because Manhattan can route around obstacles if told about them'},
+    {text: 'Python requires every class to have the same methods'},
+    {text: 'It is a bug'},
+  ]}
+  explanation="The swap only works if every planner answers the same two calls. Manhattan ignores add_blocked, and the harness shows the consequence: it drives through the wall."
+/>
+
+</OptionalExtension>
+
+## Wrap-up
+
+- Which line is "take the oldest one"? (`to_visit.pop(0)`.) What would `pop()` do? (Newest first — depth-first, not shortest.)
+- Which line is "numbered once"? (`if neighbor not in previous`.)
+- Why does the walk-back stop at `position`? (So the start is never appended — Rule 2.)
+- Two cases return `[]`. What are they? (Already there; walled off.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** the line-to-pencil mapping; five tests passing in order; the two
+breakages explained, not just observed. **Preview:** next lesson we test this
+properly. On an open grid there are many shortest paths, so instead of one expected
+list the harness checks what must be true of any correct answer — and then the same
+harness runs against Manhattan, which fails the wall tests on paper.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

@@ -85,7 +85,7 @@ const sidebars = {
         'module-05-pathfinding/lesson-02-dictionaries',
         'module-05-pathfinding/lesson-03-bfs-concept',
         'module-05-pathfinding/lesson-04-pathfinding-functions',
-        'module-05-pathfinding/lesson-05-implementing-compute-path',
+        'module-05-pathfinding/lesson-05-compute-bfs-path',
         'module-05-pathfinding/lesson-06-testing-and-swapping',
         'module-05-pathfinding/lesson-07-obstacle-detection',
         'module-05-pathfinding/lesson-08-building-experience',

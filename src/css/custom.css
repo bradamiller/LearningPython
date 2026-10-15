@@ -1283,3 +1283,78 @@ html[data-todos='on'] .navbar__item--todos { display: inline-block; }
   .todoIndex__filters { display: none; }
   .todoIndex__card { break-inside: avoid; }
 }
+
+/* ---------------------------------------------------------------------------
+   Optional Extension — the classes track (src/components/OptionalExtension.js).
+   Closed by default; the header carries the standing "after it works, not
+   graded" rule. SideBySide puts the functions and class versions next to each
+   other with the same names aligned.
+   ------------------------------------------------------------------------ */
+.ext {
+  border: 1px solid #C5D8EA;
+  border-radius: 10px;
+  margin: 1.8rem 0;
+  background: #F8FAFC;
+  overflow: hidden;
+}
+[data-theme='dark'] .ext { background: #1f2a35; border-color: #35506b; }
+.ext--open { border-color: var(--xrp-blue, #22527B); }
+.ext__button {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  background: var(--xrp-blue, #22527B);
+  color: #fff;
+  border: 0;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+.ext__button:hover { background: #1b4367; }
+.ext__chip {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  white-space: nowrap;
+}
+.ext__title { flex: 1; }
+.ext__chevron { font-size: 0.9em; }
+.ext__gate {
+  padding: 0.5rem 1rem;
+  font-size: 0.86rem;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-700);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.ext__body { padding: 0.4rem 1rem 1rem; }
+.ext__body > :first-child { margin-top: 0.8rem; }
+@media print {
+  .ext__button { background: none; color: #000; border-bottom: 1px solid #000; }
+  .ext__chip { border: 1px solid #000; }
+}
+
+.sbs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin: 1rem 0 1.2rem;
+}
+@media (max-width: 820px) { .sbs { grid-template-columns: 1fr; } }
+.sbs__col { min-width: 0; }
+.sbs__col pre { margin: 0; }
+.sbs__head {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--xrp-blue, #22527B);
+  margin-bottom: 0.35rem;
+}
+[data-theme='dark'] .sbs__head { color: var(--ifm-color-primary-lightest); }

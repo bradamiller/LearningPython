@@ -7,6 +7,7 @@ import {QuizSheet, QuizLink, QuizIndex} from '@site/src/components/Quiz';
 import Reveal from '@site/src/components/Reveal';
 import Callout from '@site/src/components/Callout';
 import Todo from '@site/src/components/Todo';
+import OptionalExtension, {SideBySide} from '@site/src/components/OptionalExtension';
 import {
   LessonHeader,
   Objectives,
@@ -33,6 +34,8 @@ export default {
   Reveal,
   Callout,
   Todo,
+  OptionalExtension,
+  SideBySide,
   LessonHeader,
   Objectives,
   TeacherBanner,

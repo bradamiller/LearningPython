@@ -227,6 +227,24 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
     kind: warn (amber, default) | tip (blue) | note (gray). */}
 <Callout title="Give the robot a few seconds of stillness">…</Callout>
 <Callout kind="tip" title="Proof of concept">…</Callout>
+
+{/* Optional Extension — the classes track, per student (decisions doc D1).
+    Closed by default; the header carries the standing rule "after the
+    functions version works; not graded" (override with gate="…"). Put the
+    class version of the lesson's working code in here, opening with a
+    SideBySide: exactly two fenced code blocks, functions left, class right,
+    the same names aligned. Closed content doesn't print. Added 2026-10-14. */}
+<OptionalExtension title="The BFS class">
+  <SideBySide left="Functions — what you have" right="Class — the extension">
+    ```python
+    …
+    ```
+    ```python
+    …
+    ```
+  </SideBySide>
+  …prose, knowledge checks, the four mechanical changes…
+</OptionalExtension>
 ```
 
 **⚠️ Docusaurus `:::` admonitions DO NOT RENDER on this site** — they come out as
