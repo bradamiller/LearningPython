@@ -16,8 +16,8 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Time to tie the module together. Your robot will drive a complete **square** on the
 grid — two intersections per side, turn right at each corner, four times — and end
-up right back where it started. Same `LineTrack` class, no new Python: just your
-tools, put to work.
+up right back where it started. Same two toolkits, no new Python: just your tools,
+put to work.
 
 <Objectives>
 
@@ -42,35 +42,30 @@ each of the 4 corners. Done right, it finishes where it began.
   caption="Four sides, four right turns, back to start. One loop iteration draws one side."
 />
 
-**Your program must:** use the `LineTrack` class, drive the square with a `for` loop
-(not four copied blocks), print progress, and return to start.
+**Your program must:** use the Module 2 toolkits unchanged, drive the square with a
+`for` loop (not four copied blocks), print progress, and return to start.
 
 ## One loop, four sides
 
 The whole square is a four-iteration loop: each pass drives one side, then turns the
-corner. Two pieces to write — a `drive_intersections(tracker, count)` helper (you
-built this in Lesson 3-2) and the loop that calls it and turns.
+corner. Two pieces to write — the `drive_intersections(count)` helper (you built
+this in Lesson 3-2) and the loop that calls it and turns.
 
 Sketch the loop body in English first: what happens once per side?
 
-<Todo kind="answers">
-this Reveal holds the module's graded final project. Project code is tier-b — it belongs in a TeacherNote, where students cannot open it. [REVIEW §3]
-</Todo>
+Sketch it in English, then write it. The loop body is two calls and a print or two;
+if yours is longer, ask what the extra lines are for.
 
-<Reveal title="Compare with a working version" hint="write yours first">
+<TeacherNote title="Reference program (teacher copy)">
+
+The main program, under both Module 2 toolkits and Lesson 3-2's helper. Use it to
+unstick a team; the loop is the graded work. The file is
+`lesson-04-final-project.py` in the Module 3 solutions.
 
 ```python
-# (LineSensor and LineTrack classes from Module 2 go above)
-
-def drive_intersections(tracker, count):
-    for i in range(count):
-        tracker.track_until_cross()
-        if i < count - 1:
-            tracker.drivetrain.set_effort(0.3, 0.3)
-            time.sleep(0.3)
+# (both Module 2 toolkits and drive_intersections from Lesson 3-2 go above)
 
 board = Board.get_default_board()
-tracker = LineTrack()
 
 board.wait_for_button()
 print("Module 3 Final Project -- Square Pattern!")
@@ -79,28 +74,24 @@ sides = 2                     # intersections per side
 
 for leg in range(4):
     print("Side", leg + 1, "of 4")
-    drive_intersections(tracker, sides)
+    drive_intersections(sides)
     print("  Turning right...")
-    tracker.turn_right()
+    turn_clockwise()
 
 print("Square complete! Back at start.")
 ```
 
-The `if i < count - 1` guard matters: you clear *between* intersections on a side,
-but not after the last one, because the turn clears that corner itself.
+There is nothing between `drive_intersections()` and `turn_clockwise()`: the helper
+leaves the robot parked on the corner, and the turn ends with a sensor on the next
+side's line.
 
-</Reveal>
+</TeacherNote>
 
-<Todo kind="blocked">
-repeats the turn_right clearing claim — see the TODO in L3-3. Settle it on a robot first. [REVIEW §1.2]
-</Todo>
-
-Notice there's no separate clear before `turn_right()` — the turn clears the corner
-itself (Lesson 3-3). Four right turns add up to a full 360°, which is why the robot
-comes back around.
+Four right turns add up to a full 360°, which is why the robot comes back around to
+its starting heading as well as its starting intersection.
 
 <KnowledgeCheck
-  question="The square loop runs turn_right() once per side, four times. How many total degrees does the robot turn?"
+  question="The square loop runs turn_clockwise() once per side, four times. How many total degrees does the robot turn?"
   options={[
     {text: '90°'},
     {text: '180°'},
@@ -114,27 +105,28 @@ comes back around.
 
 Don't run all four sides first. Build up:
 
-1. **One side** — comment out the loop; run one `drive_intersections(2)` + `turn_right()`.
+1. **One side** — comment out the loop; run one `drive_intersections(2)` + `turn_clockwise()`.
 2. **Two sides** — `range(2)`. What shape should that give you? Predict, then run.
 3. **Full square** — `range(4)`; does it close back to the start?
 
 <KnowledgeCheck
-  question="A student wrote `for leg in range(3):` and added a clear step right before turn_right(). What are the two bugs?"
+  question="A student wrote `for leg in range(3):` and added a second drive_past_intersection() right before turn_clockwise(). What are the two bugs?"
   options={[
     {text: 'Nothing is wrong'},
-    {text: 'range(3) only makes 3 sides (needs 4), and clearing before the turn double-clears the corner', correct: true},
-    {text: 'turn_right() should be turn_left(), and sides should be 4'},
+    {text: 'range(3) only makes 3 sides (needs 4), and the extra drive-past carries the wheels 8.75 cm beyond the corner before the turn', correct: true},
+    {text: 'turn_clockwise() should be turn_counterclockwise(), and sides should be 4'},
     {text: 'The loop should be a while loop, and print is missing'},
   ]}
-  explanation="A square needs range(4). And since turn_right() already clears the intersection, an extra clear before it pushes the robot past the corner — drop it."
+  explanation="A square needs range(4). And drive_intersections() already ends with the wheels on the corner; a second drive-past moves them off it, so the turn pivots in the wrong place."
 />
 
 <TeacherNote title="Run it as a build; tuning is the lesson">
 
 Treat this as plan → build → test → present, and insist on **incremental testing** —
 one side, then two, then four. The common fixes are all tuning: turns that aren't
-quite 90° (the square drifts open), a clear time that skips or overshoots, or too
-much `base_effort`. Frame that as real engineering. Returning *approximately* to
+quite 90° (the blind part of the turn too long or `TURN_EFFORT` too high, so the
+sensor-ended finish spins past the line), a `drive_past_intersection()` distance
+that doesn't match the robot's sensor-to-axle gap, or too much `BASE_EFFORT`. Frame that as real engineering. Returning *approximately* to
 start is success; a perfectly closed square on real tape is a bonus. Two clean sides
 already show mastery of the concept.
 
@@ -152,7 +144,7 @@ Once the square works, try a variation:
     Use a list `[2, 3, 2, 3]` and index it by `leg` so opposite sides differ.
   </InfoCard>
   <InfoCard tag="Mirror" title="Left-turn square">
-    Swap in `turn_left()` to drive the square the other way around.
+    Swap in `turn_counterclockwise()` to drive the square the other way around.
   </InfoCard>
 </CardGrid>
 
@@ -167,14 +159,14 @@ Demo your square and think back:
 
 ## Nice work — Module 3 done 🎉
 
-You reused a class you wrote weeks ago on a brand-new surface, learned to clear
-intersections and count segments, and sequenced drives and turns into real paths.
+You reused a toolkit you wrote weeks ago on a brand-new surface, learned to count
+intersections, and sequenced drives and turns into real paths.
 Every route here was one *you* planned and hard-coded. That's about to change.
 
 <TeacherNote title="Assessment & what's next">
 
-The square is the summative assessment (a 50-point rubric across using the class,
-using a loop, completing four sides, returning to start, and progress prints works
+The square is the summative assessment (a 50-point rubric across using the toolkit
+unchanged, using a loop, completing four sides, returning to start, and progress prints works
 well). Reward the tuning process. **Coming in Module 4 · Manhattan Navigation:**
 instead of you hard-coding the path, the *computer* calculates it — "go to row 2,
 column 3" and the robot works out the drives and turns itself, using coordinates,

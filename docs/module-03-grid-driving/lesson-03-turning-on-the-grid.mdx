@@ -23,7 +23,7 @@ sequence of "drive some segments, turn, drive some more."
 By the end of this lesson you will be able to:
 
 - Sequence drive and turn operations into a path
-- Turn at intersections with `turn_right()` and `turn_left()`
+- Turn at intersections with `turn_clockwise()` and `turn_counterclockwise()`, and say why the turn pivots on the intersection
 - Navigate an L-shaped path
 - Plan a path on paper before you write the code
 
@@ -38,16 +38,15 @@ intersection, then turn. In code that's `drive_intersections()`, then a turn, th
 `drive_intersections()` again:
 
 ```python
-# (classes from Module 2 and drive_intersections from Lesson 3-2 go above)
+# (both Module 2 toolkits and drive_intersections from Lesson 3-2 go above)
 
 board = Board.get_default_board()
-tracker = LineTrack()
 
 board.wait_for_button()
 
-drive_intersections(tracker, 2)   # drive forward 2 intersections
-tracker.turn_right()              # turn right onto the crossing line
-drive_intersections(tracker, 2)   # drive 2 more, now sideways
+drive_intersections(2)      # drive forward 2 intersections
+turn_clockwise()            # turn right onto the crossing line
+drive_intersections(2)      # drive 2 more, now sideways
 
 print("L-shape complete!")
 ```
@@ -60,43 +59,53 @@ print("L-shape complete!")
 <KnowledgeCheck
   question="Which sequence drives an L-shape — two segments, a right turn, then two more segments?"
   options={[
-    {text: 'turn_right(); drive_intersections(2); drive_intersections(2)'},
-    {text: 'drive_intersections(2); turn_right(); drive_intersections(2)', correct: true},
+    {text: 'turn_clockwise(); drive_intersections(2); drive_intersections(2)'},
+    {text: 'drive_intersections(2); turn_clockwise(); drive_intersections(2)', correct: true},
     {text: 'drive_intersections(4)'},
-    {text: 'turn_right(); turn_right()'},
+    {text: 'turn_clockwise(); turn_clockwise()'},
   ]}
   explanation="Drive to the corner, turn, then continue — the drive/turn/drive order is what makes the L."
 />
 
-<Todo kind="blocked">
-this whole section rests on a claim that is false in the source — LineTrack.turn_right() is set_effort(0.3, -0.3), a spin in place with no forward travel, so it does NOT drive the robot off the intersection. Whether that actually breaks the path programs depends on sensor spacing and cross geometry, which needs a robot on a real grid to settle. Do not reword this until it has been tested; the same claim is repeated in L3-4 and M4 L8. [REVIEW §1.2]
-</Todo>
+## Why the turn lands on the new line
 
-## No clearing after a turn
-
-There's a nice detail: after `turn_right()` or `turn_left()`, you go **straight into**
-the next drive — no clearing needed. That's because the turn methods already drive
-forward off the intersection as part of turning, so the robot is past the cross when
-the turn finishes.
+Look at what `drive_intersections()` leaves behind: the robot parked with its wheels
+over the last intersection, sensors just past it. That is exactly the position a turn
+needs. The robot pivots about its wheels, so with the wheels on the cross it spins
+*on* the intersection, and the blind 60° plus the sensor-ended finish from Lesson 2-9
+bring the sensors down on the crossing line. After the turn, the next
+`drive_intersections()` starts with a line to follow — no extra step in between.
 
 <KnowledgeCheck
-  question="After tracker.turn_right(), do you need to clear the intersection before the next drive_intersections()?"
+  question="After turn_clockwise(), what has to happen before the next drive_intersections()?"
   options={[
-    {text: 'Yes — always clear before driving'},
-    {text: 'No — the turn already moves the robot off the intersection', correct: true},
-    {text: 'Only on the last turn'},
-    {text: 'Only if the battery is low'},
+    {text: 'A drive_past_intersection() to clear the cross'},
+    {text: 'Nothing — the turn ends with a sensor on the new line, and the next track_to_intersection() follows it from there', correct: true},
+    {text: 'A short time.sleep()'},
+    {text: 'A second turn to straighten up'},
   ]}
-  explanation="turn_right() and turn_left() drive forward as part of turning, so the robot has already cleared the cross — go straight into the next drive."
+  explanation="The turn finishes when is_either_on_line() sees the crossing line. The robot is on the intersection, facing the new direction, with a sensor on tape — ready to track."
+/>
+
+<KnowledgeCheck
+  question="A student calls turn_clockwise() right after track_to_intersection(), skipping drive_past_intersection(). What goes wrong?"
+  options={[
+    {text: 'Nothing — the turn works the same'},
+    {text: 'The wheels are still short of the intersection, so the robot pivots in front of it and the sensors come down off the new line', correct: true},
+    {text: 'The robot turns the wrong way'},
+    {text: 'The turn takes twice as long'},
+  ]}
+  explanation="The sensors reach the cross before the wheels do. Turning before the drive-past spins the robot around a point short of the intersection; the sensor-ended turn then hunts for a line that is not where it expects."
 />
 
 <TeacherNote title="Two rules that trip students up">
 
-Reinforce two things: (1) the robot must be **at an intersection** to turn — you
-can't turn mid-segment; and (2) you clear *before* the next drive when going
-straight through, but you **don't** clear after a turn (the turn cleared for you).
-Getting these two backwards is the source of most "my path is off by one
-intersection" bugs.
+Reinforce two things: (1) the robot must be **parked on an intersection** to turn —
+you can't turn mid-segment, and `drive_intersections()` always leaves it parked; and
+(2) the arrival pair is `track_to_intersection()` *then* `drive_past_intersection()`,
+every time — a turn before the drive-past pivots in the wrong place. Students who
+hand-write the pair sometimes drop the second half; `drive_intersections()` exists
+partly so they can't.
 
 </TeacherNote>
 
@@ -107,15 +116,15 @@ many segments each leg is, and where the turns go. Then translate the sketch,
 one leg per line:
 
 ```python
-# (setup as above -- board, tracker, then board.wait_for_button())
+# (setup as above -- board, then board.wait_for_button())
 
-drive_intersections(tracker, 3)   # leg 1
-tracker.turn_left()               # corner
-drive_intersections(tracker, 1)   # leg 2
+drive_intersections(3)         # leg 1
+turn_counterclockwise()        # corner
+drive_intersections(1)         # leg 2
 ```
 
 <KnowledgeCheck
-  question="Starting at the top-left facing right, the robot runs: drive_intersections(3), turn_right(), drive_intersections(2). Where does it end up?"
+  question="Starting at the top-left facing right, the robot runs: drive_intersections(3), turn_clockwise(), drive_intersections(2). Where does it end up?"
   options={[
     {text: 'Back at the start'},
     {text: '3 intersections right of start, then 2 intersections down from there', correct: true},
@@ -154,14 +163,14 @@ Turn-by-turn sequencing on a grid is exactly how routed navigation works:
 ## Wrap-up
 
 - What's the basic shape of any grid path? (A sequence of drives and turns.)
-- Do you clear after a turn? (No — the turn already cleared the intersection.)
-- Where must the robot be to turn? (At an intersection.)
+- What has to come before a turn? (The arrival pair — the robot parked on the intersection.)
+- What comes after a turn? (The next drive — a sensor is already on the new line.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** sequence drives and turns for a described path, and explain the
-no-clear-after-turn rule. **Exit ticket:** "Write the calls for 'drive 2, turn left,
-drive 1.'" **Preview:** the final project puts four drive-and-turn legs in a loop to
+**Formative:** sequence drives and turns for a described path, and explain why the
+turn must wait for the drive-past. **Exit ticket:** "Write the calls for 'drive 2,
+turn left, drive 1.'" **Preview:** the final project puts four drive-and-turn legs in a loop to
 trace a complete square that returns to the start.
 
 </TeacherNote>

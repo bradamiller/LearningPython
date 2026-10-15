@@ -7,70 +7,79 @@ sidebar_position: 2
 <LessonHeader
   eyebrow="Module 3 · Grid Driving"
   title="Lesson 3-2 · Driving Multiple Intersections"
-  meta={['40–50 min', 'for loops on the grid', 'Clearing the cross']}
+  meta={['40–50 min', 'for loops on the grid', 'Counting intersections']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Reaching the *first* intersection is easy. But call `track_until_cross()` again and
-the robot won't budge. This lesson explains why — and gives you the one trick you
-need to drive across a whole grid.
+Reaching the *first* intersection is easy. Reaching the *third* is the same two calls,
+three times — and that is what a `for` loop is for. This lesson turns "arrive at an
+intersection" into a building block you can repeat a chosen number of times, and
+looks closely at why the second call works at all.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Explain why the robot must "clear" an intersection before continuing
+- Explain why `track_to_intersection()` called twice in a row would not move the robot without `drive_past_intersection()` between them
 - Drive past one intersection to reach the next
 - Use a `for` loop to drive a chosen number of intersections
-- Know why you skip the clear after the *last* intersection
+- Write a `drive_intersections(count)` helper and use it
 
 </Objectives>
 
 <QuizLink id="module-03-grid-driving/lesson-02-driving-multiple-intersections" />
 
-## Why the robot gets stuck
+## Why the second call works
 
-When `track_until_cross()` stops, the robot is sitting *on* the intersection — both
-sensors still read high. Call `track_until_cross()` again and its loop condition
-(`is_at_cross()`) is already true, so it thinks it has already arrived and does
-nothing.
+Try a thought experiment. Suppose you called `track_to_intersection()` twice in a row
+with nothing in between. The first call stops with both sensors on the cross. The second
+call's loop condition — `not is_at_cross()` — is already `False`, so the loop body never
+runs: the robot "arrives" instantly, without moving.
 
-The fix is to **clear the cross**: drive forward just a bit so the sensors move off
-the intersection and back onto a plain line, *then* look for the next one.
+That is the second job of `drive_past_intersection()`, the one Lesson 2-9 mentioned.
+Driving 8.75 cm forward parks the wheels on the intersection, *and* carries the sensors
+past the tape onto plain line. Now the next `track_to_intersection()` has a line to follow
+and a new cross to find.
 
-```python
-# Clear the intersection: nudge forward past it
-tracker.drivetrain.set_effort(0.3, 0.3)
-time.sleep(0.3)
-```
-
-So the pattern is: **detect → clear → detect → clear → …**
+So the pattern for driving across the grid is just the arrival pair, repeated:
+**track, drive past, track, drive past, …** — and because the drive-past parks the
+wheels on the intersection, the robot always ends up sitting on the last one, ready to
+turn.
 
 <KnowledgeCheck
-  question="Why does a second track_until_cross() call right after the first do nothing?"
+  question="Why would a second track_to_intersection() call right after the first do nothing, without drive_past_intersection() between them?"
   options={[
-    {text: 'The method can only be called once'},
-    {text: 'The robot is still on the intersection, so is_at_cross() is already true and the loop exits immediately', correct: true},
+    {text: 'The function can only be called once'},
+    {text: 'The sensors are still on the cross, so is_at_cross() is already True and the loop exits immediately', correct: true},
     {text: 'The battery needs a rest'},
-    {text: 'You must call turn_right() in between'},
+    {text: 'You must call turn_clockwise() in between'},
   ]}
-  explanation="After stopping, both sensors are still on the cross. The follow loop only runs while NOT at a cross, so it exits at once — until you clear the intersection."
+  explanation="After stopping, both sensors are still on the cross. The follow loop only runs while NOT at a cross, so it exits at once. drive_past_intersection() moves the sensors onto plain line first."
+/>
+
+<KnowledgeCheck
+  question="After track, drive past, track, drive past, where is the robot?"
+  options={[
+    {text: 'Halfway between the second and third intersections'},
+    {text: 'Parked with its wheels on the second intersection, sensors just past it', correct: true},
+    {text: 'On the first intersection'},
+    {text: 'It depends on the battery'},
+  ]}
+  explanation="Each drive-past ends with the wheels over the cross the sensors just found. Two pairs, two intersections, and the robot is sitting on the second one — which is why there is no special case for the last intersection."
 />
 
 ## Drive a set number with a `for` loop
 
-Doing detect-and-clear by hand for each intersection is repetitive. A `for` loop
-repeats it a chosen number of times — with one subtlety: don't clear after the
-**last** one, because you want to *stop* there.
+Writing the pair out by hand for each intersection is repetitive. A `for` loop repeats
+it a chosen number of times:
 
 ```python
-# (LineSensor and LineTrack classes from Module 2 go above)
+# (both Module 2 toolkits go above)
 
 board = Board.get_default_board()
-tracker = LineTrack()
 
 board.wait_for_button()
 
@@ -78,76 +87,83 @@ intersections = 3
 
 for i in range(intersections):
     print("Driving to intersection", i + 1)
-    tracker.track_until_cross()
+    track_to_intersection()
+    drive_past_intersection()
 
-    # Clear -- but not after the final intersection
-    if i < intersections - 1:
-        tracker.drivetrain.set_effort(0.3, 0.3)
-        time.sleep(0.3)
-
-print("Done! Passed", intersections, "intersections.")
+print("Done! Parked on intersection", intersections)
 ```
 
-The `if i < intersections - 1:` guard is what leaves the robot parked on the last
-intersection, ready to turn.
+Nothing in the loop body changes from one pass to the next — the only thing `i` is
+used for is the print. And there is no special case for the last intersection: the
+drive-past parks the robot on it, which is exactly where you want to be.
 
 <KnowledgeCheck
-  question="In a loop that drives 3 intersections, why is the clear step skipped on the last iteration?"
+  question="A student worries that drive_past_intersection() on the last loop pass will carry the robot off the final intersection. Are they right?"
   options={[
-    {text: 'To save battery'},
-    {text: 'So the robot stops ON the final intersection instead of driving past it', correct: true},
-    {text: 'Because clearing only works twice'},
-    {text: 'It is a mistake — you should always clear'},
+    {text: 'Yes — the last pass should skip it'},
+    {text: 'No — drive_past_intersection() moves the wheels ONTO the intersection, not past it; the robot ends parked on the last cross', correct: true},
+    {text: 'Yes — it should be called twice on the last pass'},
+    {text: 'It depends on the grid spacing'},
   ]}
-  explanation="You want to end parked on the last intersection (ready to turn). Clearing there would drive the robot past it."
+  explanation="The name says what the sensors do, not the wheels. The sensors end up past the cross; the wheels end up on it. Every arrival ends the same way, last one included."
 />
 
-<TeacherNote title="Timing is the whole game here">
+<TeacherNote title="The off-by-one is gone; the thought experiment is the lesson">
 
-The `time.sleep(0.3)` clear is a tuning knob: too short and the robot re-detects the
-same cross; too long and it overshoots the next one. Have students adjust it (0.3 →
-0.4/0.5) for their grid spacing and speed. The off-by-one on the last intersection
-is the conceptual point — walk the loop with `i = 0, 1, 2` on the board and show
-where the guard fires.
+Older versions of this lesson taught a timed nudge after each intersection, with an
+`if i < count - 1` guard to skip it on the last one. The toolkit's
+`drive_past_intersection()` replaces both: it is a fixed distance, and it parks the
+wheels on the cross rather than past it, so there is nothing to skip. Spend the saved
+time on the thought experiment at the top — trace two `track_to_intersection()` calls
+with no drive-past on the board and have students say why the second one returns at
+once. Then walk the loop with `i = 0, 1, 2` and have them say where the robot is after
+each pass.
 
 </TeacherNote>
 
-## Activity · Package it as a helper
+## Activity · Write the helper
 
-<Todo kind="answers">
-the activity prints the finished helper function immediately after asking students to write it. [REVIEW §3]
-</Todo>
+You'll drive runs of intersections constantly from here on, so wrap the loop in a
+function. Write `drive_intersections(count)` yourself: one parameter, a `for` loop, the
+arrival pair inside it, and a print so you can follow along. Then replace the loop in
+your program with a single call, `drive_intersections(3)`, and run it.
 
-Since you'll drive segments constantly, wrap the pattern in a reusable function:
+<Reveal title="Compare with one version" hint="write yours first">
 
 ```python
-def drive_intersections(tracker, count):
+def drive_intersections(count):
     for i in range(count):
-        tracker.track_until_cross()
-        if i < count - 1:
-            tracker.drivetrain.set_effort(0.3, 0.3)
-            time.sleep(0.3)
+        print("  Intersection", i + 1, "of", count)
+        track_to_intersection()
+        drive_past_intersection()
 ```
 
-Now `drive_intersections(tracker, 4)` drives four segments in one clean line — a
-building block you'll lean on in the next two lessons.
+If yours has an `if` in it, ask what it is guarding against — and whether
+`drive_past_intersection()` actually drives the robot past anything.
+
+</Reveal>
+
+Now `drive_intersections(4)` drives four segments in one clean line — a building block
+you'll lean on in the next two lessons, and the same shape as `draw_polygon()` from
+Module 1: a loop and a count, packaged.
 
 <KnowledgeCheck
-  question="A student's loop clears after EVERY intersection, including the last. What goes wrong?"
+  question="A student's drive_intersections(count) calls track_to_intersection() on every pass but drive_past_intersection() only on the first. What happens with count = 3?"
   options={[
-    {text: 'Nothing — it works fine'},
-    {text: 'The robot drives past the final intersection instead of stopping on it', correct: true},
-    {text: 'The robot never moves'},
+    {text: 'It works — only the first intersection needs clearing'},
+    {text: 'The robot reaches the second intersection and then the third track_to_intersection() returns instantly, so it never reaches the third', correct: true},
+    {text: 'The robot drives past all three'},
     {text: 'It turns instead of driving'},
   ]}
-  explanation="Clearing after the last intersection nudges the robot off it, so it ends up past the spot it was supposed to stop on. The i < count − 1 guard prevents that."
+  explanation="Pass 2 ends with the sensors on the second cross and no drive-past. Pass 3's loop condition is already False, so the robot reports arriving at intersection 3 while parked short of the second."
 />
 
 <TeacherNote title="Differentiation">
 
-**More support:** have students do two intersections with hand-written detect →
-clear → detect before introducing the loop. **More challenge:** parameterize speed,
-or add a running print of the intersection count and confirm it matches reality.
+**More support:** have students write two intersections by hand — the pair, twice —
+before introducing the loop. **More challenge:** add a parameter for speed by
+changing `BASE_EFFORT` before the loop and restoring it after (which needs
+`global` — Lesson 2-8), or print a running count and confirm it matches the grid.
 
 </TeacherNote>
 
@@ -169,16 +185,16 @@ or add a running print of the intersection count and confirm it matches reality.
 
 ## Wrap-up
 
-- Why must the robot clear an intersection before continuing? (It's still on the cross, so it would "detect" the same one.)
-- What loop drives a set number of segments? (A `for` loop over `range(count)`.)
-- Why skip the clear on the last iteration? (To stop *on* the final intersection.)
+- Why does `drive_past_intersection()` have to come between two tracks? (The sensors are still on the cross; the second track would return at once.)
+- What loop drives a set number of segments? (A `for` loop over `range(count)`, with the arrival pair inside.)
+- Where is the robot after the last pass? (Parked on the last intersection — the drive-past puts the wheels on it.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** explain clearing, and drive exactly N intersections with a loop.
-**Exit ticket:** "Why don't we clear after the last intersection?" (so it stops
-there). **Preview:** next lesson adds turns — sequencing drives and turns to
-navigate L-shaped paths across the grid.
+**Formative:** explain the thought experiment, and drive exactly N intersections
+with a loop. **Exit ticket:** "Why is there no special case for the last
+intersection?" (the drive-past parks on it, not past it). **Preview:** next lesson adds
+turns — sequencing drives and turns to navigate L-shaped paths across the grid.
 
 </TeacherNote>
 
