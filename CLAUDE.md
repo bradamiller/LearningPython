@@ -1908,8 +1908,16 @@ goes further):
   (Brad: "giving comments for the test functions and they can write them on their
   own … test-driven-development-light"). Level 3, Modules 4–5: signature plus
   one-line docstring (the algorithm was done on paper in the lesson text); the lesson
-  says "write a test that …" and the student names and writes it. The capstone's skeleton is a list of names. A lesson may drop back a level
-  for one genuinely new thing (first class, BFS) without apology.
+  says "write a test that …" and the student names and writes it. The capstone's skeleton is a list of names.
+  **The module level is a default, not a rule per function** (Brad, 2026-10-18: "the
+  early functions, or the especially complex ones, can have more or less pseudocode as
+  comments"). Pick the level by how hard the function is for *that* student at *that*
+  point: a one-line helper in Module 3 gets a bare signature; the navigation functions
+  — `turn_toward()`, `drive_to()`, `drive_path()` in Modules 3–4, BFS's queue loop and
+  path reconstruction in Module 5 — keep a fuller comment outline even late, because
+  that is where students need the hand-holding. A composition of pieces they have
+  already written and tested gets less; something genuinely new (first class, first
+  queue) gets more.
 - **Class track: same file, class skeletons.** The class version of a section is pasted
   *in place of* the function section, settings become attributes, the object is created
   right under its class (`sensor = LineSensor()`, `tracker = LineTrack()`), and the test
