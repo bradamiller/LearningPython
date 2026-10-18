@@ -14,9 +14,9 @@ sidebar_position: 8
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Last lesson you wrote and tested five sensor functions by sliding the robot over the
-tape by hand. Now the robot drives on them. The follower from Lesson 2-6 ran forever;
-this lesson gives it a reason to stop — the cross — and the stopping is done by a
+Last lesson you finished the sensor toolkit and tested all five functions by sliding
+the robot over the tape by hand. Now the robot drives on the whole of it. Your
+follower in `test_follow()` runs forever; this lesson gives it a reason to stop — the cross — and the stopping is done by a
 function you already trust. First `is_at_cross()` gets one more test, this time with
 the robot moving. Then it goes in charge of the follower's loop.
 
@@ -35,19 +35,16 @@ By the end of this lesson you will be able to:
 
 ## This lesson's skeleton
 
-Paste this into `robot.py` under the LINE SENSOR section, above `RUN`. It starts the
-**LINE TRACKING** section, which the next lesson finishes.
+Paste this into `robot.py` above `RUN` — it lands at the end of the LINE TRACKING
+section, which is where it belongs. The first real driving *function* goes in next to
+the test that has been doing the job so far.
 
 ```python
-# ===== LINE TRACKING (Lesson 2-8) =====
-# Drives the robot along the line using the LINE SENSOR
-# functions above. track_to_intersection() is the two-sensor
-# follower from Lesson 2-6 with a reason to stop: it follows
-# until is_at_cross() says the robot is on a crossing line.
-# Lesson 2-9 adds the functions that park on the cross and
-# turn to the next line.
-BASE_EFFORT = 0.3        # forward speed while following
-KP = 0.5                 # proportional gain, from Lesson 2-5
+# --- Lesson 2-8: follow to a cross ---
+# track_to_intersection() is the follower from test_follow()
+# with a reason to stop: it follows until is_at_cross() says
+# the robot is on a crossing line. Lesson 2-9 adds the
+# functions that park on the cross and turn to the next line.
 
 def track_to_intersection():
     # until is_at_cross():
@@ -78,9 +75,8 @@ def test_reverse():
     print("Done!")
 ```
 
-`KP` and `BASE_EFFORT` are the `Kp` and `base_effort` you tuned in Lessons 2-5 and
-2-6, in capitals now because they're file-level settings like `THRESHOLD` — the
-convention from last lesson.
+The outline's body is the body of `test_follow()`. The difference is all in the
+`while` line.
 
 ## One more test, moving this time
 
@@ -107,10 +103,10 @@ stops before the tape, something lighter than the floor counted as black.
 
 ## Follow until the cross
 
-Now the follower. Your Lesson 2-6 loop was `while True:` — it followed forever. Change
-the condition, and the *looking* is done by the loop condition while the *following*
-is done inside the loop. With the toolkit, the body is two lines, and the outline in
-the skeleton says which two.
+Now the follower. `test_follow()` is `while True:` — it follows forever. Change the
+condition, and the *looking* is done by the loop condition while the *following* is
+done inside the loop. The body is the two lines you already have, and the outline in
+the skeleton says so.
 
 Read the `while` line as a sentence: *while not at a cross, follow.* Nothing inside
 the loop checks for the cross — that's the condition's job. Nothing in the condition
@@ -145,7 +141,7 @@ An earlier version of this lesson did the cross check and the following in one
 `if/else` inside a `while True`, before the sensor functions existed. Students got it
 working but couldn't say which half was broken when it wasn't. Now the sensor
 functions arrive already tested, `is_at_cross()` gets one more test at driving speed,
-and `track_to_intersection()` is the Lesson 2-6 loop with the condition replaced.
+and `track_to_intersection()` is `test_follow()`'s loop with the condition replaced.
 Keep that separation visible — every function in Lesson 2-9 follows it, and it's why
 the final project assembles rather than debugs.
 
@@ -161,7 +157,8 @@ positive); a wide, crisp taped cross and a little tuning handle it.
 
 ## Activity · Drive on the toolkit
 
-The skeleton is pasted in; the run block still waits for the button before every test.
+The skeleton is pasted in at the end of the LINE TRACKING section; the run block still
+waits for the button before every test.
 
 ### Step 1 · is_at_cross(), moving
 
@@ -171,8 +168,8 @@ Don't go on until it does.
 
 ### Step 2 · track_to_intersection()
 
-Write the body, and set the run call to `test_track()`. Put the robot on the circle,
-pointed along it. It should follow the line around and stop at the cross. If it
+Write the body — start by copying the loop out of `test_follow()` — and set the run
+call to `test_track()`. Put the robot on the circle, pointed along it. It should follow the line around and stop at the cross. If it
 weaves, this is the same gain you tuned in Lesson 2-6; if it stops somewhere that
 isn't the cross, step 1 already told you the cross check is fine, so look at where the
 follower put the sensors.
@@ -206,22 +203,17 @@ If yours reads the error a different way and passes the test, keep yours.
 
 <TeacherNote title="Solution (teacher copy)">
 
-The LINE TRACKING section of `robot.py` at the end of this lesson, with the step 4
-challenge; the start block and the LINE SENSOR section are unchanged from the Lesson
-2-7 teacher copy. The file is `lesson-08-detecting-intersections.py` in the Module 2
+This lesson's addition to the LINE TRACKING section of `robot.py`, with the step 4
+challenge; the rest of the file is as the Lesson 2-7 teacher copy left it. The file is `lesson-08-detecting-intersections.py` in the Module 2
 solutions. `test_count()` is hand-in work; the function body is behind the student
 reveal above.
 
 ```python
-# ===== LINE TRACKING (Lesson 2-8) =====
-# Drives the robot along the line using the LINE SENSOR
-# functions above. track_to_intersection() is the two-sensor
-# follower from Lesson 2-6 with a reason to stop: it follows
-# until is_at_cross() says the robot is on a crossing line.
-# Lesson 2-9 adds the functions that park on the cross and
-# turn to the next line.
-BASE_EFFORT = 0.3
-KP = 0.5
+# --- Lesson 2-8: follow to a cross ---
+# track_to_intersection() is the follower from test_follow()
+# with a reason to stop: it follows until is_at_cross() says
+# the robot is on a crossing line. Lesson 2-9 adds the
+# functions that park on the cross and turn to the next line.
 
 def track_to_intersection():
     while not is_at_cross():

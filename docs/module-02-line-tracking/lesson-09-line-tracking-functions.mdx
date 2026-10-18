@@ -37,12 +37,12 @@ By the end of this lesson you will be able to:
 
 ## This lesson's skeleton
 
-Paste this into `robot.py` under the Lesson 2-8 section, above `RUN`. It finishes the
-LINE TRACKING section: one setting, three function outlines, and the tests for them.
+Paste this into `robot.py` above `RUN`, at the end of the LINE TRACKING section. It
+finishes that section: one setting, three function outlines, and the tests for them.
 
 ```python
-# ===== LINE TRACKING, continued (Lesson 2-9) =====
-# Completes the driving toolkit begun in Lesson 2-8.
+# --- Lesson 2-9: park on the cross, turn to the next line ---
+# Completes the driving toolkit begun in Lesson 2-5.
 # track_to_intersection() stops with the SENSORS on the cross;
 # drive_past_intersection() moves the WHEELS onto it. The two
 # turns spin until a LINE SENSOR function sees the next line,
@@ -88,7 +88,7 @@ def test_course():
     print("Done!")
 ```
 
-One more change, in the 2-8 section: raise `BASE_EFFORT` to **0.4**. Now that the
+One more change, in the LINE TRACKING settings: raise `BASE_EFFORT` to **0.4**. Now that the
 steering is tuned the robot can go a little faster; if yours weaves at 0.4, drop it
 back.
 
@@ -293,15 +293,15 @@ a `track_for_distance()` using the drivetrain's encoders rather than a timer.
 
 <TeacherNote title="Solution (teacher copy)">
 
-The Lesson 2-9 section of `robot.py`, with the challenge; the start block and the
-Lesson 2-7 and 2-8 sections are unchanged from their teacher copies apart from
+This lesson's addition to the LINE TRACKING section of `robot.py`, with the
+challenge; the rest of the file is as the Lesson 2-8 teacher copy left it apart from
 `BASE_EFFORT = 0.4`. The file is `lesson-09-line-tracking-functions.py` in the Module
 2 solutions. Students see only the outlines and the three bodies behind the "Check
 your three new functions" reveal, which is closed by default and not printed.
 
 ```python
-# ===== LINE TRACKING, continued (Lesson 2-9) =====
-# Completes the driving toolkit begun in Lesson 2-8.
+# --- Lesson 2-9: park on the cross, turn to the next line ---
+# Completes the driving toolkit begun in Lesson 2-5.
 # track_to_intersection() stops with the SENSORS on the cross;
 # drive_past_intersection() moves the WHEELS onto it. The two
 # turns spin until a LINE SENSOR function sees the next line,
@@ -401,11 +401,11 @@ for driving, and coordinates them. One object holding another is called
 **composition**.
 
 This is the class-track skeleton for the whole LINE TRACKING section. Paste it in
-place of the Lesson 2-8 and 2-9 function sections (settings included — they're
-attributes now), and move your four bodies into the four methods.
+place of the section's settings and four functions (keep the test functions), and
+move your four bodies into the four methods.
 
 ```python
-# ===== LINE TRACKING (Lessons 2-8 and 2-9, class version) =====
+# ===== LINE TRACKING (class version) =====
 # One LineTrack object drives the robot along the line. It HAS
 # A LineSensor (built in __init__, so you never make one
 # separately) and asks it the questions; it HAS the drivetrain

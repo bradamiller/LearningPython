@@ -1885,10 +1885,24 @@ required text). The pattern as built in 2-9:
 Brad's design, agreed 2026-10-18, now the model in M2 L7–L9 (he is reviewing before it
 goes further):
 
-- **One file for the course, `robot.py`, born in 2-7.** The start block (imports, the
-  three objects, a `# ===== RUN =====` block with `board.wait_for_button()` and one
-  test call) is a code block in 2-7 that students copy once. Module 1 and 2-2…2-6
-  stay standalone scratch programs. Everything from 2-7 on is pasted into this file.
+- **One file for the course, `robot.py`, born in 2-1** (moved from 2-7 on
+  2026-10-18 — Brad: "let them write functions as they go almost from the start …
+  testing all the functions as they go and updating them until they are final").
+  The start block (imports, the three objects, a `# ===== RUN =====` block with
+  `board.wait_for_button()` and one test call) is a code block in 2-1 that students
+  copy once. Module 1 stays standalone. **The sensor toolkit accrues one function per
+  lesson, each tested in the lesson that needs it:** `get_left()`/`get_right()` +
+  `test_sensors()` in 2-1; `THRESHOLD` and `test_drive_to_line()` in 2-2;
+  `is_either_on_line()` + `test_bounce()` in 2-3 (the function IS the `or` being
+  taught); `test_random_bounce()` in 2-4; `SETPOINT` + one-sensor `get_error()` and the
+  `# ===== LINE TRACKING =====` section (`BASE_EFFORT`, `KP`, `test_follow()`) in 2-5;
+  `get_error()` **rewritten** two-sensor and `SETPOINT` deleted in 2-6 (the showcase:
+  the loop barely changes, only the function did); `is_at_cross()`, `global`, the
+  whole-toolkit test and the LineSensor class in 2-7, now titled "Finishing the Sensor
+  Toolkit" (file name unchanged). 2-8 and 2-9 add to the end of LINE TRACKING with
+  `# --- Lesson 2-x: … ---` sub-banners. Module 2's scratch tests (`test_bounce()` etc.)
+  stay in the file: "by the end of the module your file is a record of everything the
+  robot has learned to do."
 - **Each lesson gives a skeleton to paste above `RUN`.** One copyable code block
   (Docusaurus gives it a copy button) containing: a banner `# ===== SECTION (Lesson
   x-y) =====`; **a 3–5 line comment under the banner saying what the section does and
@@ -1926,9 +1940,10 @@ goes further):
 - **Teacher copy = the section as it stands at the end of the lesson**, plus the run
   block, with a sentence saying earlier sections are unchanged — not the whole file
   every time. Student Reveal holds only the bodies.
-- **Settings are capitals from the first paste** (`KP`, `BASE_EFFORT`, `TURN_EFFORT`,
-  `THRESHOLD`); 2-8's skeleton introduces `KP`/`BASE_EFFORT` and says why. 2-9 raises
-  `BASE_EFFORT` to 0.4 as an edit to the 2-8 section (no rename step any more).
+- **Settings are capitals from the first paste** (`THRESHOLD` in 2-2, `SETPOINT`/`KP`/
+  `BASE_EFFORT` in 2-5, `TURN_EFFORT` in 2-9). 2-5's `Kp` callout now ends: in the
+  file it's `KP` because settings are capitals; in prose it stays `Kp`. 2-9 raises
+  `BASE_EFFORT` to 0.4 as an edit to the LINE TRACKING settings.
 - **Still to carry through** once Brad approves: 2-10, Module 3, 4, 5 (and 6), each
   with its own section/skeleton/tests at the right hint level; the solutions in the
   source repo become the filled file per lesson.

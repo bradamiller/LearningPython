@@ -27,7 +27,7 @@ By the end of this lesson you will be able to:
 - Explain a **setpoint** and why the line's edge (~0.5) is ours
 - Compute **error** as `setpoint − sensor_reading`, and read its sign
 - Turn error into a steering **correction** with a gain `Kp`
-- Write the control loop from the two formulas and `arcade()`, given the setup
+- Write `get_error()` and the control loop from the two formulas and `arcade()`, in your `robot.py`
 - Tune `Kp` by watching the robot and adjusting
 
 </Objectives>
@@ -117,7 +117,9 @@ quietly cut the connection to every other thing they will ever read about contro
 
 So the rule with the exception attached: **name your own variables the Python way, and
 when a name comes from the engineering world rather than from you, keep the engineering
-spelling.** `Kp` is the only name in this course that gets the exception.
+spelling.** `Kp` is the only name in this course that gets the exception. In
+`robot.py` it's a file-level setting, and settings are written in capitals like
+`THRESHOLD` — so there it's `KP`; in these pages, when we talk about it, it's `Kp`.
 
 </Callout>
 
@@ -125,7 +127,7 @@ With `Kp = 0.5`, an error of `+0.3` gives a correction of `+0.15`. Then we steer
 that correction:
 
 ```python
-drivetrain.arcade(base_effort, correction)
+drivetrain.arcade(BASE_EFFORT, correction)
 ```
 
 Bigger error → bigger correction → sharper steer. When the robot is right on the edge
@@ -143,39 +145,47 @@ Bigger error → bigger correction → sharper steer. When the robot is right on
   explanation="correction = error × Kp = 0.3 × 0.6 = 0.18."
 />
 
-## The control loop
+## This lesson's additions to `robot.py`
 
-Every pass: read the sensor, compute error, compute correction, steer. Hundreds of
-times a second. You have all four pieces — the sensor read from Lesson 2-1, the two
-formulas above, and `arcade()` — and you've written `while True:` loops since Lesson
-2-3. So the setup is given, and the loop is yours:
+Every pass of the control loop: read the sensor, compute error, compute correction,
+steer. Hundreds of times a second. Two of those steps become part of your file.
+
+**In the LINE SENSOR section**, the error becomes a function. It's a sensor question —
+*how far off the edge am I?* — so it lives with the sensor functions, and the setpoint
+is its setting. Add both under `THRESHOLD`:
 
 ```python
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.reflectance import Reflectance
-from XRPLib.board import Board
-import time
+SETPOINT = 0.5           # the reading at the edge of the line
 
-drivetrain = DifferentialDrive.get_default_differential_drive()
-reflectance = Reflectance.get_default_reflectance()
-board = Board.get_default_board()
-
-setpoint = 0.5        # target: the edge of the line
-Kp = 0.5              # proportional gain -- tune this!
-base_effort = 0.3     # forward speed
-
-board.wait_for_button()
-
-# loop forever:
-#     read the left sensor
-#     error = setpoint minus the reading
-#     correction = error times Kp
-#     steer: arcade() with base_effort and the correction
-#     time.sleep(0.01), so the loop doesn't flood the processor
+def get_error():
+    # return SETPOINT minus the left reading
+    pass
 ```
 
-Four lines in the loop and a pause — and no `if/else` anywhere. The sign of the error
-does the deciding.
+**A new section** starts here, for everything that drives on the line. Paste it above
+`RUN`. The test is the exercise: the loop's outline is inside it.
+
+```python
+# ===== LINE TRACKING =====
+# Drives the robot along the line using the LINE SENSOR functions above.
+# Starts with the proportional follower: read the error, scale it by KP,
+# steer with arcade(). Grows over the module into following to a cross,
+# parking on it, and turning to the next line.
+BASE_EFFORT = 0.3        # forward speed while following
+KP = 0.5                 # proportional gain -- tune this!
+
+def test_follow():
+    # loop forever:
+    #     error = get_error()
+    #     correction = error times KP
+    #     steer: arcade() with BASE_EFFORT and the correction
+    #     time.sleep(0.01), so the loop doesn't flood the processor
+    pass
+```
+
+Three lines in the loop and a pause — and no `if/else` anywhere. The sign of the error
+does the deciding. You have every piece: `get_error()` is one subtraction, and
+`arcade()` was the first thing in this lesson.
 
 <TeacherNote title="This is a big conceptual leap">
 
@@ -193,15 +203,16 @@ exactly 0.5.
 
 ### Step 1 · Write the loop and run it
 
-Turn the comments into code. Put the robot so the left sensor sits on the edge of
-the line, press the button, and watch. It should hold the edge, nudging left and
+Write `get_error()` and turn the comments in `test_follow()` into code; set the run
+line to `test_follow()`. Put the robot so the left sensor sits on the edge of the
+line, press the button, and watch. It should hold the edge, nudging left and
 right as the line curves. If it drives straight off, check the sign of your error
 calculation against the table above; if it spins in place, check the order of the
 two arguments to `arcade()`.
 
 ### Step 2 · Tune Kp
 
-`Kp` is yours to tune by watching the robot. Run the loop three times — with `Kp` at
+`Kp` is yours to tune by watching the robot. Run the test three times — with `KP` at
 0.2, at 0.5 and at 1.0 — and write down, for each, what the robot does on a curve.
 Then decide: which of the three is too high, which too low, and what does each one
 *look* like?
@@ -223,7 +234,7 @@ is no single correct number, only the relationship.
     {text: 'Increase it — it needs to react harder'},
     {text: 'Decrease it — it is over-correcting', correct: true},
     {text: 'Set it to 0'},
-    {text: 'Leave Kp; increase base_effort instead'},
+    {text: 'Leave KP; increase BASE_EFFORT instead'},
   ]}
   explanation="Rapid weaving is over-correction — Kp is too high. Lower it for gentler, smoother steering."
 />
@@ -238,16 +249,16 @@ Here's the technique on its own, with no robot involved — type it into XRP Cod
 run it:
 
 ```python
-setpoint = 0.5        # the edge your robot steers for
-Kp = 0.5
+SETPOINT = 0.5        # the edge your robot steers for
+KP = 0.5
 
 for i in range(300):
     # Stand-in for the sensor: a reading that slides from white to black
     # across the whole run, so it passes over the edge on the way.
     sensor_value = i / 300
 
-    error = setpoint - sensor_value
-    correction = error * Kp
+    error = SETPOINT - sensor_value
+    correction = error * KP
 
     if i % 50 == 0:
         print(f"i={i}  sensor={sensor_value:.2f}  error={error:.2f}  correction={correction:.2f}")
@@ -277,81 +288,93 @@ now in numbers.
 ### Step 3 · Put it in your own loop
 
 Your tracking loop is a `while True:`, which has no `i` to count with, so make your
-own counter — the same `count = count + 1` pattern from Lesson 1-9. Three additions:
-a counter set to zero *before* the loop; a line at the end of the loop body that adds
-one to it; and an `if` that prints the sensor value, error and correction only when
-the counter is a multiple of 50. Run it and tune `Kp` again, this time reading the
-numbers: a too-high `Kp` shows up as a correction that flips sign on nearly every
+own counter — the same `count = count + 1` pattern from Lesson 1-9. Three additions
+to `test_follow()`: a counter set to zero *before* the loop; a line at the end of the
+loop body that adds one to it; and an `if` that prints the error and correction only
+when the counter is a multiple of 50. Run it and tune `KP` again, this time reading
+the numbers: a too-high gain shows up as a correction that flips sign on nearly every
 printed line.
 
-<Reveal title="Check your loop" hint="run yours on the robot first">
+<Reveal title="Check your function and test" hint="run yours on the robot first">
+
+```python
+def get_error():
+    return SETPOINT - get_left()
+```
 
 Step 1:
 
 ```python
-while True:
-    sensor_value = reflectance.get_left()
-    error = setpoint - sensor_value
-    correction = error * Kp
-    drivetrain.arcade(base_effort, correction)
-    time.sleep(0.01)
+def test_follow():
+    while True:
+        error = get_error()
+        correction = error * KP
+        drivetrain.arcade(BASE_EFFORT, correction)
+        time.sleep(0.01)
 ```
 
 Step 3 adds the counter:
 
 ```python
-loop_count = 0
+def test_follow():
+    loop_count = 0
+    while True:
+        error = get_error()
+        correction = error * KP
+        drivetrain.arcade(BASE_EFFORT, correction)
 
-while True:
-    sensor_value = reflectance.get_left()
-    error = setpoint - sensor_value
-    correction = error * Kp
-    drivetrain.arcade(base_effort, correction)
+        loop_count = loop_count + 1
+        if loop_count % 50 == 0:
+            print(f"error={error:.2f} correction={correction:.2f}")
 
-    loop_count = loop_count + 1
-    if loop_count % 50 == 0:
-        print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
-
-    time.sleep(0.01)
+        time.sleep(0.01)
 ```
 
 </Reveal>
 
 <TeacherNote title="Solution (teacher copy)">
 
-The complete program in its step 3 form, as `lesson-05-proportional-control.py` in
-the Module 2 solutions. The loop is behind the student reveal above; what students
-have to produce themselves is the four-line body from the two formulas, the three
-tuning observations, and the counter.
+The additions to `robot.py` this lesson, in their step 3 form; the rest of the file
+is as the Lesson 2-4 teacher copy left it. The file is
+`lesson-05-proportional-control.py` in the Module 2 solutions. What students have to
+produce themselves is the one-line `get_error()`, the three-line loop body from the
+two formulas, the three tuning observations, and the counter. Note `get_error()` is
+*one-sensor* here — next lesson rewrites it for two sensors, and the loop in
+`test_follow()` barely changes. That is the point of putting the error behind a
+function today.
 
 ```python
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.reflectance import Reflectance
-from XRPLib.board import Board
-import time
+# in the LINE SENSOR section, under THRESHOLD:
+SETPOINT = 0.5
 
-drivetrain = DifferentialDrive.get_default_differential_drive()
-reflectance = Reflectance.get_default_reflectance()
-board = Board.get_default_board()
+def get_error():
+    return SETPOINT - get_left()
 
-setpoint = 0.5
-Kp = 0.5
-base_effort = 0.3
-loop_count = 0
+# above RUN:
+# ===== LINE TRACKING =====
+# Drives the robot along the line using the LINE SENSOR functions above.
+# Starts with the proportional follower: read the error, scale it by KP,
+# steer with arcade(). Grows over the module into following to a cross,
+# parking on it, and turning to the next line.
+BASE_EFFORT = 0.3
+KP = 0.5
 
+def test_follow():
+    loop_count = 0
+    while True:
+        error = get_error()
+        correction = error * KP
+        drivetrain.arcade(BASE_EFFORT, correction)
+
+        loop_count = loop_count + 1
+        if loop_count % 50 == 0:
+            print(f"error={error:.2f} correction={correction:.2f}")
+
+        time.sleep(0.01)
+
+# ===== RUN =====
 board.wait_for_button()
-
-while True:
-    sensor_value = reflectance.get_left()
-    error = setpoint - sensor_value
-    correction = error * Kp
-    drivetrain.arcade(base_effort, correction)
-
-    loop_count = loop_count + 1
-    if loop_count % 50 == 0:
-        print(f"sensor={sensor_value:.2f} error={error:.2f} correction={correction:.2f}")
-
-    time.sleep(0.01)
+test_follow()
 ```
 
 </TeacherNote>
@@ -361,7 +384,7 @@ while True:
 There's no single "right" `Kp` — it depends on the surface, the tape, and the base
 speed. The goal isn't a magic number but understanding the *relationship*: higher Kp
 = stronger reaction = risk of oscillation. Let students run the tuning table from the
-worksheet and feel it. Start everyone at `base_effort = 0.3` or lower so the robot is
+worksheet and feel it. Start everyone at `BASE_EFFORT = 0.3` or lower so the robot is
 observable; speed can come once tracking is stable.
 
 </TeacherNote>

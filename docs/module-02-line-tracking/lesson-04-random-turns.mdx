@@ -26,7 +26,7 @@ By the end of this lesson you will be able to:
 - Explain what a module is and use `import` to bring one in
 - Generate random integers with `random.randint(a, b)`
 - Say why always turning 180° traps the robot in a pattern
-- Modify your bounce program, from an outline, to turn a random angle each time
+- Write a random-angle version of your bounce test, from an outline
 
 </Objectives>
 
@@ -84,14 +84,20 @@ The only change from Lesson 2-3 is in the `if` branch: instead of a fixed
 program moves. In outline:
 
 ```python
-import random          # at the top, with the other imports
+import random          # at the top of robot.py, with the other imports
 
-# ... your Lesson 2-3 setup and loop, with the if branch becoming:
-#     stop
-#     pick a random whole number of degrees between 90 and 270
-#     print it, so you can see each choice
-#     turn by that many degrees
+def test_random_bounce():
+    # a copy of test_bounce(), with the if branch becoming:
+    #     stop
+    #     pick a random whole number of degrees between 90 and 270
+    #     print it, so you can see each choice
+    #     turn by that many degrees
+    pass
 ```
+
+Paste the new test above `RUN` and keep `test_bounce()` as it is — by the end of the
+module your file is a record of everything the robot has learned to do, and the
+fixed-angle bounce is part of that.
 
 Each bounce now picks a fresh angle between 90° and 270°, so the robot fans out and
 covers the whole circle instead of pacing the same line. Why that range and not 0 to
@@ -125,8 +131,9 @@ mid-range band explores best. Good moment to note computer randomness is really
 
 ### Step 1 · The random turn
 
-Open your Lesson 2-3 program, add `import random` at the top, and change the `if`
-branch as outlined above. Run it: the printed angle should be different on (almost)
+Add `import random` at the top of `robot.py`, copy the body of `test_bounce()` into
+`test_random_bounce()`, and change the `if` branch as outlined. Set the run line to
+`test_random_bounce()` and run it: the printed angle should be different on (almost)
 every bounce, and the robot should wander the whole circle instead of pacing one line.
 
 ### Step 2 · Try three ranges
@@ -141,52 +148,47 @@ and why?
 1. Pick a whole number in a range you choose, divide it to get an effort between
 0.2 and 0.5, and drive at that speed until the next bounce.
 
-<Reveal title="Check your if branch" hint="run yours on the robot first">
+<Reveal title="Check your test" hint="run yours on the robot first">
 
 ```python
-    if left > threshold or right > threshold:
-        drivetrain.stop()
-        angle = random.randint(90, 270)          # a different turn each time
-        print("Line detected! Turning", angle, "degrees")
-        drivetrain.turn(angle)
+def test_random_bounce():
+    while True:
+        if is_either_on_line():
+            drivetrain.stop()
+            angle = random.randint(90, 270)      # a different turn each time
+            print("Line detected! Turning", angle, "degrees")
+            drivetrain.turn(angle)
+        else:
+            drivetrain.set_effort(0.3, 0.3)
 ```
 
 </Reveal>
 
 <TeacherNote title="Solution (teacher copy)">
 
-The complete program with the step 3 challenge, as `lesson-04-random-turns.py` in
-the Module 2 solutions. Step 3 is hand-in work; the step 1 branch is behind the
-student reveal above. The division trick in step 3 (`randint(20, 50) / 100`) is the
-part students have to find; most try `randint(0.2, 0.5)` first and get an error.
+The addition to `robot.py` this lesson, with the step 3 challenge; the rest of the
+file is as the Lesson 2-3 teacher copy left it, plus `import random` at the top. The
+file is `lesson-04-random-turns.py` in the Module 2 solutions. Step 3 is hand-in
+work; the step 1 test is behind the student reveal above. The division trick in step
+3 (`randint(20, 50) / 100`) is the part students have to find; most try
+`randint(0.2, 0.5)` first and get an error.
 
 ```python
-from XRPLib.reflectance import Reflectance
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.board import Board
-import random
+def test_random_bounce():
+    speed = 0.3
+    while True:
+        if is_either_on_line():
+            drivetrain.stop()
+            angle = random.randint(90, 270)
+            speed = random.randint(20, 50) / 100
+            print("Turning", angle, "degrees, then speed", speed)
+            drivetrain.turn(angle)
+        else:
+            drivetrain.set_effort(speed, speed)
 
-reflectance = Reflectance.get_default_reflectance()
-drivetrain = DifferentialDrive.get_default_differential_drive()
-board = Board.get_default_board()
-
-threshold = 0.5
-speed = 0.3
-
+# ===== RUN =====
 board.wait_for_button()
-
-while True:
-    left = reflectance.get_left()
-    right = reflectance.get_right()
-
-    if left > threshold or right > threshold:
-        drivetrain.stop()
-        angle = random.randint(90, 270)
-        speed = random.randint(20, 50) / 100
-        print("Line detected! Turning", angle, "degrees, then speed", speed)
-        drivetrain.turn(angle)
-    else:
-        drivetrain.set_effort(speed, speed)
+test_random_bounce()
 ```
 
 </TeacherNote>

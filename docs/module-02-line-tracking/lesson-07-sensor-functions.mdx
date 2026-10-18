@@ -1,38 +1,36 @@
 ---
-title: "Lesson 2-7 · Sensor Functions"
-sidebar_label: "2-7 · Sensor Functions"
+title: "Lesson 2-7 · Finishing the Sensor Toolkit"
+sidebar_label: "2-7 · Sensor Toolkit"
 sidebar_position: 7
 ---
 
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
-  title="Lesson 2-7 · Sensor Functions"
-  meta={['60 min', 'One file for the course', 'Global variables', 'Test as you write']}
+  title="Lesson 2-7 · Finishing the Sensor Toolkit"
+  meta={['60 min', 'A toolkit of functions', 'Global variables', 'Test as you write']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Your line follower works — but the sensor reading, the threshold test and the control
-math are all tangled together in one loop, and the next three lessons need to ask the
-sensors more questions, not fewer. In Module 1 you tidied repeated driving code into
-`polygon()`. This lesson does the same for the sensors: five small, well-named
-functions, each written and **tested before the next one**, so that when the robot
-starts driving on them you already know every one is right. Nothing here is new syntax.
-The one new idea is functions that **share** a sensor and a threshold without being
-handed them every call.
+Look at the LINE SENSOR section of `robot.py`. Without making a fuss about it, you've
+built a toolkit: `get_left()` and `get_right()` since Lesson 2-1, `is_either_on_line()`
+since the bounce, and a `get_error()` you've already rewritten once. Each one was
+written when a program needed it and tested before that program ran. This lesson adds
+the last function the module needs, puts a name to something those functions have been
+doing all along — sharing `reflectance` and `THRESHOLD` without being handed them — and
+tests the whole toolkit in one go, because from next lesson on the robot drives on it.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Write a toolkit of sensor functions — `get_left()`, `get_right()`, `get_error()`, `is_at_cross()`, `is_either_on_line()` — with no parameters
+- Write `is_at_cross()`, completing the sensor toolkit — `get_left()`, `get_right()`, `get_error()`, `is_either_on_line()`, `is_at_cross()`
 - Explain how those functions share `reflectance` and `THRESHOLD` through **global variables**
-- Have one function call another instead of repeating its logic
+- Say why one function calls another instead of repeating its logic
 - Say when a function needs the `global` keyword, and when it doesn't
-- Start the one program file you'll build on for the rest of the course, and know where new code goes in it
-- Test each function as you write it, by sliding the robot over the line and reading the printout
+- Test the whole toolkit by sliding the robot over the line and reading the printout
 
 </Objectives>
 
@@ -45,66 +43,26 @@ crossing line*, and with the sensor logic in functions, that loop reads as a sen
 
 ```python
 while not is_at_cross():
-    correction = get_error() * Kp
-    drivetrain.arcade(base_effort, -correction)
+    correction = get_error() * KP
+    drivetrain.arcade(BASE_EFFORT, -correction)
 ```
 
-`is_at_cross()` is far clearer than `left > 0.5 and right > 0.5` scattered through the
-program, and `get_error()` says what the subtraction *means*. Every driving function in
-Lessons 2-8 and 2-9 is built on exactly these five — so this is the lesson to get them
-right.
-
-## One file, for the rest of the course
-
-Until now every lesson started a new program. From here on you have **one file**, and
-each lesson adds to it: the sensor functions today, the driving functions over the next
-two lessons, grid driving in Module 3, and so on to the end. Create it now — call it
-`robot.py` — and paste in this start:
-
-```python
-from XRPLib.reflectance import Reflectance
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.board import Board
-import time
-
-reflectance = Reflectance.get_default_reflectance()
-drivetrain = DifferentialDrive.get_default_differential_drive()
-board = Board.get_default_board()
-
-
-# ===== RUN =====
-board.wait_for_button()
-# call ONE test function here
-```
-
-Two rules keep it working all year. **New code goes above the `RUN` block, never
-below it.** Python runs a file top to bottom, so the run block has to be the last
-thing, and everything it calls has to be defined above it. Each lesson gives you a
-**skeleton** to paste in there: a banner comment naming the section, the settings it
-needs, the outlines of the functions you're going to write, and a **test function**
-that exercises them. Then the one line under `RUN` calls whichever test you're working
-on. **One test at a time** — change the call, don't stack them.
-
-Every banner is followed by a short comment saying what the section does and how it
-leans on the sections before it. By Module 5 those comments are the table of contents
-of your robot — read them before you read the code.
+`is_at_cross()` is far clearer than `left > 0.5 and right > 0.5` would be in the
+middle of a loop, and `get_error()` says what the subtraction *means*. Every driving
+function in Lessons 2-8 and 2-9 is built on these five — so this is the lesson to be
+sure of them.
 
 ## Shared, not passed: global variables
 
-The functions need the same two things: the reflectance sensor, and the threshold. You
-could pass both into every function as parameters. Instead, create them **once, at the
-top of the file**, outside any function:
-
-```python
-from XRPLib.reflectance import Reflectance
-
-reflectance = Reflectance.get_default_reflectance()
-THRESHOLD = 0.5
-```
+The functions need the same two things: the reflectance sensor, and the threshold.
+You could have passed both into every function as parameters. Instead they were
+created **once, at the top of the file**, outside any function — `reflectance` in the
+start block, `THRESHOLD` at the top of the section — and every function just used them.
 
 A variable created outside every function is a **global variable**: every function
 below it in the file can read it without being handed it. You've been doing this since
-Module 1 — `drivetrain` is a global that `polygon()` used without a parameter.
+Module 1 — `drivetrain` is a global that `polygon()` used without a parameter — and
+Lesson 2-1 said so in passing; now it has a name.
 
 `THRESHOLD` is in capitals by convention. That spelling says *this is a setting, not a
 value that changes as the program runs*. Python doesn't enforce it; readers rely on it.
@@ -120,69 +78,29 @@ value that changes as the program runs*. Python doesn't enforce it; readers rely
   explanation="A name created at the top level of the file is visible inside every function. drivetrain has worked this way since Module 1; reflectance and THRESHOLD work the same way here."
 />
 
-## The five functions
+## The last function: `is_at_cross()`
 
-Here is this lesson's skeleton. Copy it and paste it into `robot.py` above the `RUN`
-block. Each function is an outline — the `def` line, a comment saying what it returns,
-and `pass`, which means "nothing here yet" and holds the place of a body so the file
-still runs while you fill them in one at a time.
+Your LINE SENSOR section has four functions. Here is the fifth — add it under
+`is_either_on_line()`:
 
 ```python
-# ===== LINE SENSOR (Lesson 2-7) =====
-# Reads the two reflectance sensors and answers questions
-# about them: how far off the line we are (get_error) and
-# whether we are on a cross or on a line at all. Nothing in
-# here drives. Everything that drives, from the next lesson
-# on, asks these functions instead of the hardware.
-THRESHOLD = 0.5          # use YOUR edge value from Lesson 2-1
-
-def get_left():
-    # return the left reflectance reading
-    pass
-
-def get_right():
-    # return the right reflectance reading
-    pass
-
-def get_error():
-    # return left minus right -- call your two functions
-    # above, not the hardware
-    pass
-
 def is_at_cross():
     # return True when BOTH readings are above THRESHOLD
     pass
-
-def is_either_on_line():
-    # return True when AT LEAST ONE reading is above THRESHOLD
-    pass
-
-def test_sensors():
-    # prints the readings twice a second while you slide the
-    # robot by hand
-    while True:
-        print("Left:", round(get_left(), 2),
-              " Right:", round(get_right(), 2))
-        time.sleep(0.5)
 ```
 
-(`reflectance` and `THRESHOLD` sit at the top of the file and the top of the section,
-so the functions can use them — that was the previous section's point.)
-
-Two things to notice about the design. First, `get_error()` should not read the sensor
-itself — it calls `get_left()` and `get_right()`. One place knows how to read the
-hardware; everything else goes through it. Second, the last two start with `is_`
-because they answer a yes/no question and return `True` or `False` — a Boolean is a
-value like any other, and `return` can hand one back just as it handed back a number
-in Lesson 1-11.
-
-What are they asking? During normal following, one sensor is darker than the other.
+What is it asking? During normal following, one sensor is darker than the other.
 Where a second taped line **crosses** the one you're following, *both* sensors sit on
 black at once — that's what `is_at_cross()` detects, and `and` is the right word
-because both must be true (`or`, which you met in Lesson 2-3, would fire during
-normal following). `is_either_on_line()` is the looser question, *at least one* dark:
-that's the test a turn will need in Lesson 2-9, to know when the robot has swung
-around far enough to find the next line.
+because both must be true (`or`, the word in `is_either_on_line()`, would fire during
+normal following). The two `is_` functions are a pair: *at least one* dark, and *both*
+dark. The first ends a turn in Lesson 2-9; the second ends a follow in Lesson 2-8.
+
+Two things to notice about the toolkit now that it's whole. First, nothing but
+`get_left()` and `get_right()` touches `reflectance` — `get_error()` and both `is_`
+functions call those two. One place knows how to read the hardware; everything else
+goes through it. Second, the toolkit is the *vocabulary* of the rest of the course:
+these five names are used, unchanged, through Module 5.
 
 <Figure
   placeholderLabel="Diagram — robot following the circle, then reaching the taped cross with both sensors on black"
@@ -259,52 +177,42 @@ you do, the silent failure without it is the kind of bug that costs an afternoon
   explanation="Reading a global needs nothing. Assigning inside a function creates a local unless you declare global first — and the real THRESHOLD stays 0.5, with no error to tell you."
 />
 
-## Activity · Write one, test one
+## Activity · Finish it, then test all five
 
-Under `RUN`, make the call `test_sensors()`. It prints whatever you ask it to, twice a
-second, while you slide the robot over the tape by hand — so each function gets tested
-the moment it exists, with nothing else in the way. Before you start, add a straight
-strip of tape **across** your circle so that it crosses the line in two places —
-that's the cross the last two functions are about, and it stays on the floor for the
+Before you start, add a straight strip of tape **across** your circle so that it
+crosses the line in two places — that's the cross, and it stays on the floor for the
 rest of the module.
 
-### Step 1 · get_left() and get_right()
+### Step 1 · is_at_cross()
 
-Write both bodies and run. Slide the robot so one sensor, then the other, crosses the
-tape. Each number should jump from your Lesson 2-1 floor reading to your tape reading
-— and the *right* number should move when the *right* sensor is on tape. If they're
-swapped, you've found it now instead of in a driving program.
+Write the body. Add `" Cross:", is_at_cross()` to the print in `test_sensors()`, set
+the run line to `test_sensors()`, and slide the robot along the circle: `False` all
+the way around, then `True` only when both sensors sit on the crossing strip. If it's
+`True` on the plain circle, the threshold is too low; if it never goes `True` on the
+cross, too high.
 
-### Step 2 · get_error()
+### Step 2 · The whole toolkit
 
-Write it so it calls the two functions from step 1. Add `" Error:", round(get_error(), 2)`
-to the print line in `test_sensors()`. Centered on the line the error is near zero;
-drifted to one side it goes positive, to the other negative. Check that the sign
-matches Lesson 2-6.
+`test_sensors()` should now print all five: left, right, error, on-line, cross. Check
+four positions and write down what you see — centered on the line (`False`, `True`),
+off to one side (error positive or negative; `False`, `True`), completely off the line
+(`False`, `False`), and on the cross (`True`, `True`).
 
-### Step 3 · is_at_cross()
-
-Write it and add `" Cross:", is_at_cross()` to the print. Slide the robot along the
-circle: `False` all the way around, then `True` only when both sensors sit on the
-crossing strip. If it's `True` on the plain circle, the threshold is too low; if it
-never goes `True` on the cross, too high.
-
-### Step 4 · is_either_on_line()
-
-Write it and add `" On line:", is_either_on_line()`. Now check four positions and
-write down what you see: centered on the line (`False`, `True`), off to one side
-(`False`, `True`), completely off the line (`False`, `False`), and on the cross
-(`True`, `True`).
-
-### Step 5 · set_threshold()
+### Step 3 · set_threshold()
 
 Add `set_threshold()` to the section *without* `global`, call `set_threshold(0.9)` as
 the first line of `test_sensors()`, and slide over the cross: `is_at_cross()` still
 fires, because the real `THRESHOLD` never changed. Add the `global` line and run again
 — now nothing reads as tape. Take the call out again when you're done; the function
-can stay. Next lesson starts from this file exactly as you leave it.
+can stay.
 
-<Reveal title="Check your five functions" hint="write and test all five first">
+### Step 4 · Nothing broke
+
+Set the run line to `test_follow()` and run it once. The toolkit changed under it
+this lesson, and the follower should not care. From here on this section is finished:
+the next lessons *use* it and don't touch it.
+
+<Reveal title="Check your toolkit" hint="test all five first">
 
 ```python
 def get_left():
@@ -316,37 +224,28 @@ def get_right():
 def get_error():
     return get_left() - get_right()
 
-def is_at_cross():
-    return get_left() > THRESHOLD and get_right() > THRESHOLD
-
 def is_either_on_line():
     return get_left() > THRESHOLD or get_right() > THRESHOLD
+
+def is_at_cross():
+    return get_left() > THRESHOLD and get_right() > THRESHOLD
 ```
 
 </Reveal>
 
 <TeacherNote title="Solution (teacher copy)">
 
-`robot.py` as it stands at the end of this lesson — the start block, the LINE SENSOR
-section filled in, and the test as it reads after step 4. The file is
-`lesson-07-sensor-functions.py` in the Module 2 solutions.
+The LINE SENSOR section of `robot.py` in its finished form, and the test as it reads
+after step 2; the rest of the file is as the Lesson 2-6 teacher copy left it. The
+file is `lesson-07-sensor-functions.py` in the Module 2 solutions.
 
 ```python
-from XRPLib.reflectance import Reflectance
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.board import Board
-import time
-
-reflectance = Reflectance.get_default_reflectance()
-drivetrain = DifferentialDrive.get_default_differential_drive()
-board = Board.get_default_board()
-
-# ===== LINE SENSOR (Lesson 2-7) =====
-# Reads the two reflectance sensors and answers questions
-# about them: how far off the line we are (get_error) and
-# whether we are on a cross or on a line at all. Nothing in
-# here drives. Everything that drives, from the next lesson
-# on, asks these functions instead of the hardware.
+# ===== LINE SENSOR =====
+# Reads the two reflectance sensors and answers questions about them.
+# Starts here with the two raw readings; over this module it grows to
+# answer "how far off the line am I?" and "am I on a line? on a cross?"
+# Nothing in here drives. Everything that drives asks these functions
+# instead of the hardware.
 THRESHOLD = 0.5
 
 def get_left():
@@ -358,22 +257,22 @@ def get_right():
 def get_error():
     return get_left() - get_right()
 
-def is_at_cross():
-    return get_left() > THRESHOLD and get_right() > THRESHOLD
-
 def is_either_on_line():
     return get_left() > THRESHOLD or get_right() > THRESHOLD
+
+def is_at_cross():
+    return get_left() > THRESHOLD and get_right() > THRESHOLD
 
 def set_threshold(new_value):
     global THRESHOLD
     THRESHOLD = new_value
 
 def test_sensors():
-    while True:
+    for i in range(50):
         print("Left:", round(get_left(), 2), " Right:", round(get_right(), 2),
               " Error:", round(get_error(), 2),
-              " Cross:", is_at_cross(), " On line:", is_either_on_line())
-        time.sleep(0.5)
+              " On line:", is_either_on_line(), " Cross:", is_at_cross())
+        time.sleep(0.1)
 
 # ===== RUN =====
 board.wait_for_button()
@@ -384,14 +283,11 @@ test_sensors()
 
 <TeacherNote title="Nothing new but the sharing — keep the focus there">
 
-Students already know `def`, parameters and `return`. The lesson is about five
-functions sharing two globals, and the `global` keyword for the one case where a
-function assigns — and, quietly, about the **one file** that every later lesson
-pastes into. Make the two file rules a ritual today (new code above `RUN`; one test
-call), because they're what keeps Module 5's file readable. The activity is
-deliberately one-function-one-test: nothing drives, so a wrong reading can only be
-the function just written. Have students predict the
-two Booleans before each slide of the robot. The payoff comes in Lessons 2-8 and 2-9,
+Four of the five functions already exist — written one at a time in Lessons 2-1, 2-3,
+2-5 and 2-6, each when a program first needed it. This lesson adds the fifth and,
+mostly, *names* what has been going on: the sharing of two globals, and the `global`
+keyword for the one case where a function assigns. Have students predict the two
+Booleans before each slide of the robot. The payoff comes in Lessons 2-8 and 2-9,
 which build driving functions on these five and never debug a sensor.
 
 The `set_threshold()` demo without `global` is worth doing live: the silent no-op is
@@ -402,9 +298,8 @@ the class extension below solves, for students who get that far.
 
 **The names are the Module 4 and 5 vocabulary.** `is_at_cross()` and
 `is_either_on_line()` are used unchanged through the end of the course, so insist on
-the `is_` prefix for Booleans now. The cross itself used to be introduced a lesson
-later than the function that detects it; it's here now so the function can be tested
-on real tape the moment it's written.
+the `is_` prefix for Booleans now. The cross is introduced here, with the function
+that detects it, so the function can be tested on real tape the moment it's written.
 
 </TeacherNote>
 
@@ -432,7 +327,7 @@ Toolkits of small functions sharing a little state are how driver code is writte
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** write `is_either_on_line()` from its description; explain why
+**Formative:** write `is_at_cross()` from its description; explain why
 `get_error()` needs no parameters; predict the two Booleans for a robot position.
 **Exit ticket:** "Why does `set_threshold()` need `global` and `is_at_cross()` not?"
 **Preview:** next lesson the robot *drives* on these five — follow the line until
@@ -554,7 +449,9 @@ assigns to `self.threshold` like any attribute.
 
 **Build it.** This is the class-track skeleton for the section. Paste it in place of
 the LINE SENSOR functions (keep `THRESHOLD` out — it's `self.threshold` now), and
-translate your five bodies into the five methods. The object is created right under
+translate your five bodies into the five methods. Your tests (`test_sensors()`,
+`test_bounce()`, `test_follow()` and the rest) stay where they are; each sensor call
+in them gets `sensor.` in front. The object is created right under
 its class, and `test_sensors()` changes to call `sensor.get_left()` and so on.
 
 ```python
@@ -587,8 +484,9 @@ class LineSensor:
 sensor = LineSensor()
 ```
 
-Run `test_sensors()` again when you're done: same four positions, same answers. From
-here on the lessons' skeletons come in both versions, and you take the class one.
+Run `test_sensors()` again when you're done: same four positions, same answers — and
+then `test_follow()`, which should drive exactly as before. From here on the lessons'
+skeletons come in both versions, and you take the class one.
 
 <Reveal title="Check your LineSensor" hint="translate all five methods first">
 

@@ -7,7 +7,7 @@ sidebar_position: 1
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
   title="Lesson 2-1 · The Reflectance Sensor"
-  meta={['50–60 min', 'Sensors', 'First look at sensing']}
+  meta={['50–60 min', 'Sensors', 'First look at sensing', 'One file for the course']}
 />
 
 <TeacherBanner>
@@ -26,6 +26,7 @@ By the end of this lesson you will be able to:
 
 - Explain how a reflectance sensor tells light surfaces from dark ones
 - Read the left and right sensors with `get_left()` and `get_right()`
+- Start `robot.py`, the one program file you'll build on for the rest of the course, and write your first two functions in it
 - Interpret sensor values (roughly `0.0` on white to `1.0` on black)
 - Pick a **threshold** that separates "on the line" from "off the line"
 - Record calibration data for your own robot and tape
@@ -134,23 +135,97 @@ the time is up; then it carries on with the next line. (Anything already in moti
 keeps going, though — if the motors were running when the program went to sleep,
 they're still running.)
 
-Now put the reading in a loop, with a short sleep at the end of each pass:
+## One file, for the rest of the course
+
+The loop you're about to write is the first piece of code you'll *keep*. Until now
+every lesson started a new program. From here on you have **one file**, and each
+lesson adds to it: the sensor functions through this module, the driving functions,
+grid driving in Module 3, and so on to the end. Create it now — call it `robot.py` —
+and paste in this start:
 
 ```python
+from XRPLib.reflectance import Reflectance
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
 import time
 
-for i in range(50):
-    left = reflectance.get_left()
-    right = reflectance.get_right()
-    print("Left:", left, "  Right:", right)
-    time.sleep(0.1)
+reflectance = Reflectance.get_default_reflectance()
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+
+# ===== RUN =====
+board.wait_for_button()
+# call ONE test function here
 ```
 
-Same two lines doing the reading; they just run fifty times now, a tenth of a
-second apart, which gives you about five seconds to slide the robot across the tape
-and watch the numbers follow it. That shift — from *read it once* to *keep reading*
-— is the whole idea behind the `while` loop in the next lesson, where the robot
-reads its sensors for as long as it's driving.
+Two rules keep it working all year. **New code goes above the `RUN` block, never
+below it.** Python runs a file top to bottom, so the run block has to be the last
+thing, and everything it calls has to be defined above it. Each lesson gives you a
+**skeleton** to paste in there: a banner comment naming the section, a few lines
+saying what the section does, the settings it needs, the outlines of the functions
+you're going to write, and a **test function** that exercises them. Then the one
+line under `RUN` calls whichever test you're working on. **One test at a time** —
+change the call, don't stack them.
+
+### Your first two functions
+
+Here is this lesson's skeleton. Paste it above `RUN`.
+
+```python
+# ===== LINE SENSOR =====
+# Reads the two reflectance sensors and answers questions about them.
+# Starts here with the two raw readings; over this module it grows to
+# answer "how far off the line am I?" and "am I on a line? on a cross?"
+# Nothing in here drives. Everything that drives asks these functions
+# instead of the hardware.
+
+def get_left():
+    # return the left reflectance reading
+    pass
+
+def get_right():
+    # return the right reflectance reading
+    pass
+
+def test_sensors():
+    # prints both readings 50 times, a tenth of a second apart
+    for i in range(50):
+        print("Left:", get_left(), "  Right:", get_right())
+        time.sleep(0.1)
+```
+
+`get_left()` and `get_right()` are one line each: they `return` the reading from
+`reflectance`. You wrote functions with `return` in Lesson 1-11, and the only new
+thing here is that these use `reflectance` without being handed it — it was created at
+the top of the file, outside any function, so every function below can see it, the
+same way `polygon()` used `drivetrain` in Module 1.
+
+Why wrap one line in a function? Because from now on **every** program you write
+asks for a sensor reading by *this* name, and only this one place knows how the
+hardware is read. In six lessons these two will be the bottom of a toolkit of
+functions, and they will not have changed. `pass` means "nothing here yet" — it holds
+the place of the body so the file runs before you've written one; delete it when the
+real line goes in.
+
+Write the two bodies, set the run line to `test_sensors()`, and run. Same two
+readings as before; they just happen fifty times now, a tenth of a second apart,
+which gives you about five seconds to slide the robot across the tape and watch the
+numbers follow it. That shift — from *read it once* to *keep reading* — is the whole
+idea behind the `while` loop in the next lesson, where the robot reads its sensors for
+as long as it's driving.
+
+<Reveal title="Check your two functions" hint="run test_sensors() first">
+
+```python
+def get_left():
+    return reflectance.get_left()
+
+def get_right():
+    return reflectance.get_right()
+```
+
+</Reveal>
 
 <Figure
   placeholderLabel="Screen recording — sliding the robot across the tape while sensor values print"
@@ -165,13 +240,20 @@ they shift the values (calibration handles this). Emphasize `print()` as the
 number-one debugging tool all module. Have students **save their calibration data**;
 they'll reuse it in Lessons 2-2 through 2-8.
 
+**This is also where `robot.py` is born.** Make the two file rules a ritual today —
+new code above `RUN`, one test call — because they're what keeps Module 5's file
+readable. The two wrapper functions are deliberately trivial: the point is that
+students call `get_left()` from here to the end of the course, and that when the
+sensor toolkit is finished in Lesson 2-7 these two have been in use for six lessons.
+
 </TeacherNote>
 
 ## Activity · Calibrate and pick a threshold
 
 Every surface and every roll of tape is a little different, so you **calibrate** —
-measure your own values — instead of trusting a textbook number. Record readings in
-three positions: both sensors on white, both on the black line, and one on the edge.
+measure your own values — instead of trusting a textbook number. Run
+`test_sensors()` and record readings in three positions: both sensors on white, both
+on the black line, and one on the edge.
 
 Then pick a **threshold** halfway between your highest white reading and your lowest
 black reading. That's the number your programs will use to decide "on the line" vs.
@@ -237,8 +319,9 @@ Reflectance sensing shows up all over the automated world:
 
 **Formative:** can students read and interpret sensor values, and explain how the
 sensor works? **Exit ticket:** given white avg 0.2 and black avg 0.8, choose a
-threshold (0.5). **Preview:** next lesson we use a `while` loop with this threshold
-to drive forward until the robot detects the line, then stop.
+threshold (0.5). **Preview:** next lesson `THRESHOLD` goes into the LINE SENSOR
+section and a `while` loop drives the robot forward until `get_left()` says it has
+found the line.
 
 </TeacherNote>
 

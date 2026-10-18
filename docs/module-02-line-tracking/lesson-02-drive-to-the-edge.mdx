@@ -25,7 +25,7 @@ By the end of this lesson you will be able to:
 - Write a `while` loop that repeats until a condition changes
 - Use comparison operators (`<`, `>`, `==`, `!=`, `<=`, `>=`)
 - Drive the robot with `set_effort()` while checking a sensor each pass
-- Write a drive-until-the-line program from a comment outline
+- Write a drive-until-the-line test function from a comment outline, in your `robot.py`
 - Explain why the sensor must be re-read *inside* the loop
 - Say how a `while` loop differs from a `for` loop
 
@@ -41,9 +41,9 @@ you don't know how many steps it'll take. That's a job for `while`, which repeat
 long as a condition stays true:
 
 ```python
-while left < threshold:
+while left < THRESHOLD:
     # this runs over and over while the sensor is on white
-    # the moment left >= threshold, the loop stops
+    # the moment left >= THRESHOLD, the loop stops
 ```
 
 A `while` loop needs a **condition** — a test that's either `True` or `False`. We
@@ -92,43 +92,46 @@ line before it can stop.
 
 </TeacherNote>
 
-## Activity · Drive until the line
+## This lesson's additions to `robot.py`
 
-You know everything this program needs: how to read the sensor (Lesson 2-1), how to
-write a `while` loop, and now how to drive inside one. So the setup is given, and the
-rest is yours:
+Two things. First, the threshold you picked last lesson becomes a **setting** in the
+LINE SENSOR section — add this line right under the section's comment, above
+`get_left()`. Capitals mean *this is a setting, not a value that changes while the
+program runs*; Python doesn't enforce that, readers rely on it.
 
 ```python
-from XRPLib.reflectance import Reflectance
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.board import Board
-
-reflectance = Reflectance.get_default_reflectance()
-drivetrain = DifferentialDrive.get_default_differential_drive()
-board = Board.get_default_board()
-
-threshold = 0.5   # use YOUR value from Lesson 2-1
-
-board.wait_for_button()
-
-# read the left sensor into a variable
-# while that reading says "white":
-#     drive forward
-#     read the sensor again
-# stop the motors
-# print the reading that ended the loop
+THRESHOLD = 0.5          # use YOUR value from Lesson 2-1
 ```
+
+Second, a test function to paste above `RUN`. This time the test *is* the exercise:
+the outline is inside it, and you write the body.
+
+```python
+def test_drive_to_line():
+    # read the left sensor into a variable
+    # while that reading says "white":
+    #     drive forward
+    #     read the sensor again
+    # stop the motors
+    # print the reading that ended the loop
+    pass
+```
+
+You know everything it needs: `get_left()` from last lesson, `THRESHOLD`, how to
+write a `while` loop, and now how to drive inside one.
+
+## Activity · Drive until the line
 
 ### Step 1 · Write it and run it
 
-Turn the comments into code. Start the robot inside the taped circle pointing at an
-edge, press the button, and watch it stop at the line. If it stops as soon as you
-press the button, the sensor was already reading "black" — check your threshold. If it
-never stops, read on.
+Turn the comments into code and set the run line to `test_drive_to_line()`. Start the
+robot inside the taped circle pointing at an edge, press the button, and watch it stop
+at the line. If it stops as soon as you press the button, the sensor was already
+reading "black" — check your threshold. If it never stops, read on.
 
 ### Step 2 · Either sensor
 
-Switch to the right sensor and make sure it still works. Then make the loop keep going
+Switch to `get_right()` and make sure it still works. Then make the loop keep going
 only while **both** sensors are still on white, so the robot stops when *either* one
 hits the line — you'll need `and` between two conditions, and a second sensor read
 inside the loop. (More on `and` and `or` next lesson.)
@@ -138,7 +141,7 @@ inside the loop. (More on `and` and `or` next lesson.)
 Once step 2 works, try reading the sensors *in the condition itself*:
 
 ```python
-while reflectance.get_left() < threshold and reflectance.get_right() < threshold:
+while get_left() < THRESHOLD and get_right() < THRESHOLD:
 ```
 
 Now there's no variable to remember to update — the sensors are read fresh every
@@ -169,7 +172,7 @@ every sensor program you'll ever write.
 />
 
 <KnowledgeCheck
-  question="The threshold is 0.5 and the sensor reads 0.3. Is `left < threshold` True or False?"
+  question="THRESHOLD is 0.5 and the sensor reads 0.3. Is `left < THRESHOLD` True or False?"
   options={[
     {text: 'True — 0.3 is less than 0.5', correct: true},
     {text: 'False — 0.3 is greater than 0.5'},
@@ -179,61 +182,81 @@ every sensor program you'll ever write.
   explanation="0.3 < 0.5 is True, so the loop keeps running — the robot is still on white and should keep driving."
 />
 
-<Reveal title="Check your loop" hint="run yours on the robot first">
+<Reveal title="Check your test" hint="run yours on the robot first">
 
 Step 1, with a variable:
 
 ```python
-left = reflectance.get_left()
-
-while left < threshold:
-    drivetrain.set_effort(0.3, 0.3)
-    left = reflectance.get_left()   # <- read again every pass!
-
-drivetrain.stop()
-print("Line detected! Sensor value:", left)
+def test_drive_to_line():
+    left = get_left()
+    while left < THRESHOLD:
+        drivetrain.set_effort(0.3, 0.3)
+        left = get_left()            # <- read again every pass!
+    drivetrain.stop()
+    print("Line detected! Sensor value:", left)
 ```
 
 Step 3, with the reads in the condition:
 
 ```python
-while reflectance.get_left() < threshold and reflectance.get_right() < threshold:
-    drivetrain.set_effort(0.3, 0.3)
-
-drivetrain.stop()
-print("Line detected!")
+def test_drive_to_line():
+    while get_left() < THRESHOLD and get_right() < THRESHOLD:
+        drivetrain.set_effort(0.3, 0.3)
+    drivetrain.stop()
+    print("Line detected!")
 ```
 
 </Reveal>
 
 <TeacherNote title="Solution (teacher copy)">
 
-The complete program in its step 3 form, as `lesson-02-drive-to-the-edge.py` in
-the Module 2 solutions. This lesson used to hand students the whole program; now
-the setup is given and the loop is theirs, because they have every piece by this
-point. Expect a third of the room to write the infinite loop on the first try — that
-is the lesson, and the section below the activity is written to be read *after* it
-happens. The variable version (step 1) is the one that *can* fall into the trap, which
-is why students write it first; the condition-read version is where they end up.
+`robot.py` at the end of this lesson, in its step 3 form. The file is
+`lesson-02-drive-to-the-edge.py` in the Module 2 solutions. This lesson used to hand
+students the whole program; now the setup is the file they already have, and the loop
+is theirs, because they have every piece by this point. Expect a third of the room to
+write the infinite loop on the first try — that is the lesson, and the section below
+the activity is written to be read *after* it happens. The variable version (step 1)
+is the one that *can* fall into the trap, which is why students write it first; the
+condition-read version is where they end up.
 
 ```python
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
 from XRPLib.board import Board
+import time
 
 reflectance = Reflectance.get_default_reflectance()
 drivetrain = DifferentialDrive.get_default_differential_drive()
 board = Board.get_default_board()
 
-threshold = 0.5
+# ===== LINE SENSOR =====
+# Reads the two reflectance sensors and answers questions about them.
+# Starts here with the two raw readings; over this module it grows to
+# answer "how far off the line am I?" and "am I on a line? on a cross?"
+# Nothing in here drives. Everything that drives asks these functions
+# instead of the hardware.
+THRESHOLD = 0.5
 
+def get_left():
+    return reflectance.get_left()
+
+def get_right():
+    return reflectance.get_right()
+
+def test_sensors():
+    for i in range(50):
+        print("Left:", get_left(), "  Right:", get_right())
+        time.sleep(0.1)
+
+def test_drive_to_line():
+    while get_left() < THRESHOLD and get_right() < THRESHOLD:
+        drivetrain.set_effort(0.3, 0.3)
+    drivetrain.stop()
+    print("Line detected!")
+
+# ===== RUN =====
 board.wait_for_button()
-
-while reflectance.get_left() < threshold and reflectance.get_right() < threshold:
-    drivetrain.set_effort(0.3, 0.3)
-
-drivetrain.stop()
-print("Line detected!")
+test_drive_to_line()
 ```
 
 </TeacherNote>
@@ -242,7 +265,7 @@ print("Line detected!")
 
 **More support:** start with a non-robot counting loop (`count = 0; while count <
 5: ...`) so the loop mechanics are clear before sensors enter, and give the first
-line (`left = reflectance.get_left()`) of the body. Use effort `0.2` so there's time
+line (`left = get_left()`) of the body. Use effort `0.2` so there's time
 to observe. **More challenge:** count the loop iterations before the line is found,
 or flash the LED on detection.
 

@@ -15,7 +15,7 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-Time to turn the concept into code — but in stages. In Lesson 2-7 you organized the
+Time to turn the concept into code — but in stages. Across Module 2 you built the
 sensor code into a toolkit of functions that share a couple of variables at the top
 of the file. Today the pathfinding code gets the same treatment: the grid settings
 and a shared list of blocked intersections, a function that adds to that list, a
@@ -45,8 +45,8 @@ that the box is there?
 it's half right. The problem is *when* the robot learns about obstacles: one at a
 time, in the middle of driving. Something has to keep the list between one path and
 the next. That something is a variable at the top of the file that every function
-can see — exactly the way `reflectance` and `THRESHOLD` sat at the top of the
-Lesson 2-7 toolkit:
+can see — exactly the way `reflectance` and `THRESHOLD` sit at the top of the
+LINE SENSOR section of `robot.py`:
 
 ```python
 ROWS = 4
