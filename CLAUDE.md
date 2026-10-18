@@ -1880,6 +1880,51 @@ required text). The pattern as built in 2-9:
   program the teacher note used to run *for* students is now student step 1, written
   from a description.
 
+### 15c. The one growing file: `robot.py`, pasted skeletons, test functions (Brad, 2026-10-18)
+
+Brad's design, agreed 2026-10-18, now the model in M2 L7–L9 (he is reviewing before it
+goes further):
+
+- **One file for the course, `robot.py`, born in 2-7.** The start block (imports, the
+  three objects, a `# ===== RUN =====` block with `board.wait_for_button()` and one
+  test call) is a code block in 2-7 that students copy once. Module 1 and 2-2…2-6
+  stay standalone scratch programs. Everything from 2-7 on is pasted into this file.
+- **Each lesson gives a skeleton to paste above `RUN`.** One copyable code block
+  (Docusaurus gives it a copy button) containing: a banner `# ===== SECTION (Lesson
+  x-y) =====`; **a 3–5 line comment under the banner saying what the section does and
+  how it leans on the sections before it** (Brad: "describes what the functions/classes
+  in that section do and how it relates to past sections" — by Module 5 these are the
+  file's table of contents); the section's settings in capitals; the function outlines;
+  and that lesson's `test_…()` functions. Sections accrue in course order, so they are
+  grouped by functionality without pre-drawn empty sections.
+- **Two file rules, said in 2-7 and never again:** new code goes above `RUN` (Python
+  runs top to bottom; the run block must be last) and the run block calls **one** test
+  at a time. Activity steps say "set the run call to `test_turn()`".
+- **Hint level fades by module.** Signatures never fade (they are the 1:1 naming
+  contract). Level 1, Module 2: outline = numbered `#` comments for every step, tests
+  given in full. Level 2, end of Module 2 through Module 3: a docstring saying what the
+  function does and what ends it, no steps; **tests become outlines too** — the
+  `def test_…():` line and a comment saying what the test should do, body theirs
+  (Brad: "giving comments for the test functions and they can write them on their
+  own … test-driven-development-light"). Level 3, Modules 4–5: signature plus
+  one-line docstring (the algorithm was done on paper in the lesson text); the lesson
+  says "write a test that …" and the student names and writes it. The capstone's skeleton is a list of names. A lesson may drop back a level
+  for one genuinely new thing (first class, BFS) without apology.
+- **Class track: same file, class skeletons.** The class version of a section is pasted
+  *in place of* the function section, settings become attributes, the object is created
+  right under its class (`sensor = LineSensor()`, `tracker = LineTrack()`), and the test
+  functions get the object prefix. 2-7's extension carries the LineSensor skeleton;
+  2-9's carries LineTrack (which replaces both the 2-8 and 2-9 function sections).
+- **Teacher copy = the section as it stands at the end of the lesson**, plus the run
+  block, with a sentence saying earlier sections are unchanged — not the whole file
+  every time. Student Reveal holds only the bodies.
+- **Settings are capitals from the first paste** (`KP`, `BASE_EFFORT`, `TURN_EFFORT`,
+  `THRESHOLD`); 2-8's skeleton introduces `KP`/`BASE_EFFORT` and says why. 2-9 raises
+  `BASE_EFFORT` to 0.4 as an edit to the 2-8 section (no rename step any more).
+- **Still to carry through** once Brad approves: 2-10, Module 3, 4, 5 (and 6), each
+  with its own section/skeleton/tests at the right hint level; the solutions in the
+  source repo become the filled file per lesson.
+
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
 The site started as `curriculum-site/` inside `IntoToPython`, alongside the source

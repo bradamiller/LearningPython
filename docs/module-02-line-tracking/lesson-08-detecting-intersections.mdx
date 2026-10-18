@@ -33,30 +33,66 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-02-line-tracking/lesson-08-detecting-intersections" />
 
+## This lesson's skeleton
+
+Paste this into `robot.py` under the LINE SENSOR section, above `RUN`. It starts the
+**LINE TRACKING** section, which the next lesson finishes.
+
+```python
+# ===== LINE TRACKING (Lesson 2-8) =====
+# Drives the robot along the line using the LINE SENSOR
+# functions above. track_to_intersection() is the two-sensor
+# follower from Lesson 2-6 with a reason to stop: it follows
+# until is_at_cross() says the robot is on a crossing line.
+# Lesson 2-9 adds the functions that park on the cross and
+# turn to the next line.
+BASE_EFFORT = 0.3        # forward speed while following
+KP = 0.5                 # proportional gain, from Lesson 2-5
+
+def track_to_intersection():
+    # until is_at_cross():
+    #     correction = get_error() * KP
+    #     steer with arcade(BASE_EFFORT, -correction)
+    # then stop the motors
+    pass
+
+def test_cross_moving():
+    # robot 20-30 cm from a straight line, square on: drive
+    # until the cross check fires
+    while not is_at_cross():
+        drivetrain.set_effort(0.3, 0.3)
+    drivetrain.stop()
+    print("Cross!")
+
+def test_track():
+    # robot on the circle, pointed along it: follow to the
+    # cross and stop
+    track_to_intersection()
+    print("Done!")
+
+def test_reverse():
+    # follow to the cross, turn around, follow back to it
+    track_to_intersection()
+    drivetrain.turn(180)
+    track_to_intersection()
+    print("Done!")
+```
+
+`KP` and `BASE_EFFORT` are the `Kp` and `base_effort` you tuned in Lessons 2-5 and
+2-6, in capitals now because they're file-level settings like `THRESHOLD` — the
+convention from last lesson.
+
 ## One more test, moving this time
 
 Sliding the robot by hand showed that `is_at_cross()` reads the tape correctly. It
 didn't show whether a *driving* robot gets a clean reading at the moment both sensors
-arrive on the strip. So test that by itself, before any line following is in the
-program. Put the robot 20 to 30 cm from a straight taped line, square to it, and
-drive straight ahead until the function says stop:
-
-```python
-board.wait_for_button()
-
-while not is_at_cross():
-    drivetrain.set_effort(0.3, 0.3)
-
-drivetrain.stop()
-print("Cross!")
-```
-
-That's Lesson 2-2's drive-to-the-edge program with the condition swapped for a
-function call. If the robot stops with both sensors on the tape, `is_at_cross()`
-works at driving speed, and anything that goes wrong *later* is not its fault. If it
-drives straight through, the sensors crossed the tape faster than the loop read them —
-drop the effort to 0.2 — or the threshold is too high. If it stops before the tape,
-something lighter than the floor counted as black.
+arrive on the strip. `test_cross_moving()` checks that by itself, before any line
+following is in the program: it's Lesson 2-2's drive-to-the-edge program with the
+condition swapped for a function call. If the robot stops with both sensors on the
+tape, `is_at_cross()` works at driving speed, and anything that goes wrong *later* is
+not its fault. If it drives straight through, the sensors crossed the tape faster than
+the loop read them — drop the effort to 0.2 — or the threshold is too high. If it
+stops before the tape, something lighter than the floor counted as black.
 
 <KnowledgeCheck
   question="Why test is_at_cross() with a straight drive before using it in the line follower?"
@@ -73,24 +109,13 @@ something lighter than the floor counted as black.
 
 Now the follower. Your Lesson 2-6 loop was `while True:` — it followed forever. Change
 the condition, and the *looking* is done by the loop condition while the *following*
-is done inside the loop. With the toolkit, the body is two lines:
-
-```python
-def track_to_intersection():
-    # until is_at_cross():
-    #     correction = get_error() * Kp
-    #     steer with arcade(base_effort, -correction)
-    # then stop the motors
-    pass
-```
+is done inside the loop. With the toolkit, the body is two lines, and the outline in
+the skeleton says which two.
 
 Read the `while` line as a sentence: *while not at a cross, follow.* Nothing inside
 the loop checks for the cross — that's the condition's job. Nothing in the condition
 steers — that's the body's job. When both sensors reach the cross, `is_at_cross()`
 returns `True`, the loop ends, and the robot stops.
-
-`pass` means "nothing here yet." It holds the place of the body so the file runs
-while the function is still an outline; delete it when the real body goes in.
 
 <KnowledgeCheck
   question="What makes track_to_intersection() stop?"
@@ -136,45 +161,42 @@ positive); a wide, crisp taped cross and a little tuning handle it.
 
 ## Activity · Drive on the toolkit
 
-Open your `lesson_2_7_sensors.py` file, add `drivetrain` and the two settings from
-Lesson 2-6 (`Kp` and `base_effort`), and take out the hand-test loop. For every test,
-the program waits for the button first.
+The skeleton is pasted in; the run block still waits for the button before every test.
 
 ### Step 1 · is_at_cross(), moving
 
-Run the straight-drive test above: robot 20 to 30 cm from a straight line, square on.
-It should stop with both sensors on the tape. Try it from three distances. Don't go on
-until it does.
+Set the run call to `test_cross_moving()`. Robot 20 to 30 cm from a straight line,
+square on. It should stop with both sensors on the tape. Try it from three distances.
+Don't go on until it does.
 
 ### Step 2 · track_to_intersection()
 
-Write the body under the sensor functions. Put the robot on the circle, pointed along
-it, and have the program call `track_to_intersection()` once after the button. It
-should follow the line around and stop at the cross. If it weaves, this is the same
-`Kp` you tuned in Lesson 2-6; if it stops somewhere that isn't the cross, step 1
-already told you the cross check is fine, so look at where the follower put the
-sensors.
+Write the body, and set the run call to `test_track()`. Put the robot on the circle,
+pointed along it. It should follow the line around and stop at the cross. If it
+weaves, this is the same gain you tuned in Lesson 2-6; if it stops somewhere that
+isn't the cross, step 1 already told you the cross check is fine, so look at where the
+follower put the sensors.
 
 ### Step 3 · Follow, reverse, follow
 
-After the button, call `track_to_intersection()`, then `drivetrain.turn(180)`, then
-`track_to_intersection()` again. The robot follows to the cross, turns around, and
-follows back the other way to the same cross. Where are the sensors after the turn?
-Watch closely — it matters next lesson.
+Set the run call to `test_reverse()`. The robot follows to the cross, turns around,
+and follows back the other way to the same cross. Where are the sensors after the
+turn? Watch closely — it matters next lesson.
 
 ### Step 4 · Challenge — count the crossings
 
-Make the robot reverse at the cross **four times** and stop, printing the count at each
-cross: "Cross # 1", "Cross # 2", and so on, then "Done!". You know a loop that runs a
-fixed number of times. This is a direct preview of the Module 2 final project.
+Write `test_count()`: the robot reverses at the cross **four times** and stops,
+printing the count at each cross — "Cross # 1", "Cross # 2", and so on, then "Done!".
+You know a loop that runs a fixed number of times. This is a direct preview of the
+Module 2 final project.
 
 <Reveal title="Check your track_to_intersection()" hint="write it and test it on the circle first">
 
 ```python
 def track_to_intersection():
     while not is_at_cross():
-        correction = get_error() * Kp
-        drivetrain.arcade(base_effort, -correction)
+        correction = get_error() * KP
+        drivetrain.arcade(BASE_EFFORT, -correction)
     drivetrain.stop()
 ```
 
@@ -184,57 +206,61 @@ If yours reads the error a different way and passes the test, keep yours.
 
 <TeacherNote title="Solution (teacher copy)">
 
-The complete file with the step 4 challenge, as `lesson-08-detecting-intersections.py`
-in the Module 2 solutions. The challenge is hand-in work; the function body is behind
-the student reveal above.
+The LINE TRACKING section of `robot.py` at the end of this lesson, with the step 4
+challenge; the start block and the LINE SENSOR section are unchanged from the Lesson
+2-7 teacher copy. The file is `lesson-08-detecting-intersections.py` in the Module 2
+solutions. `test_count()` is hand-in work; the function body is behind the student
+reveal above.
 
 ```python
-from XRPLib.reflectance import Reflectance
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.board import Board
-
-# --- sensor toolkit (Lesson 2-7) ---
-reflectance = Reflectance.get_default_reflectance()
-THRESHOLD = 0.5
-
-def get_left():
-    return reflectance.get_left()
-
-def get_right():
-    return reflectance.get_right()
-
-def get_error():
-    return get_left() - get_right()
-
-def is_at_cross():
-    return get_left() > THRESHOLD and get_right() > THRESHOLD
-
-def is_either_on_line():
-    return get_left() > THRESHOLD or get_right() > THRESHOLD
-
-# --- driving (this lesson) ---
-drivetrain = DifferentialDrive.get_default_differential_drive()
-Kp = 0.5
-base_effort = 0.3
+# ===== LINE TRACKING (Lesson 2-8) =====
+# Drives the robot along the line using the LINE SENSOR
+# functions above. track_to_intersection() is the two-sensor
+# follower from Lesson 2-6 with a reason to stop: it follows
+# until is_at_cross() says the robot is on a crossing line.
+# Lesson 2-9 adds the functions that park on the cross and
+# turn to the next line.
+BASE_EFFORT = 0.3
+KP = 0.5
 
 def track_to_intersection():
     while not is_at_cross():
-        correction = get_error() * Kp
-        drivetrain.arcade(base_effort, -correction)
+        correction = get_error() * KP
+        drivetrain.arcade(BASE_EFFORT, -correction)
     drivetrain.stop()
 
-# --- the program ---
-board = Board.get_default_board()
+def test_cross_moving():
+    while not is_at_cross():
+        drivetrain.set_effort(0.3, 0.3)
+    drivetrain.stop()
+    print("Cross!")
 
-board.wait_for_button()
-
-for count in range(4):
+def test_track():
     track_to_intersection()
-    print("Cross #", count + 1)
-    drivetrain.turn(180)
+    print("Done!")
 
-print("Done!")
+def test_reverse():
+    track_to_intersection()
+    drivetrain.turn(180)
+    track_to_intersection()
+    print("Done!")
+
+def test_count():
+    for count in range(4):
+        track_to_intersection()
+        print("Cross #", count + 1)
+        drivetrain.turn(180)
+    print("Done!")
+
+# ===== RUN =====
+board.wait_for_button()
+test_count()
 ```
+
+**Class track:** the section is the same with `sensor.is_at_cross()` and
+`sensor.get_error()`; the class version of the whole driving toolkit (`LineTrack`)
+comes in Lesson 2-9's extension, so for this one lesson class-track students write
+`track_to_intersection()` as a plain function calling their `sensor` object.
 
 </TeacherNote>
 
