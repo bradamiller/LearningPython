@@ -16,8 +16,10 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Your path is a list of intersections — but the robot has a **heading**, a direction it's
 currently facing, and driving forward only works if it's already pointed the right way.
-This lesson designs the turning logic on paper: how to figure out which way to face, and
-how to turn until you're facing it. The code comes next lesson.
+This lesson opens the last section of `robot.py`, the NAVIGATOR, and designs the turning
+logic: how to figure out which way to face, and how to turn until you're facing it. The
+first piece is pure arithmetic, so you write and test it today, on screen; the two that
+move the robot are designed on paper here and written next lesson.
 
 <Objectives>
 
@@ -25,7 +27,7 @@ By the end of this lesson you will be able to:
 
 - Explain why only the row **or** the column changes between adjacent intersections
 - Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W
-- Write `desired_heading(position, next_pos)` returning 0–3 from the coordinate change
+- Open the NAVIGATOR section of `robot.py` and write `desired_heading(position, next_pos)` in it, returning 0–3 from the coordinate change, with a paper test
 - Raise an error when a function is asked something it cannot answer, and say why that
   makes a bug easier to find than letting a wrong value travel
 - Count quarter turns with `(desired - heading) % 4`, and explain why 3 clockwise turns become 1 counterclockwise
@@ -65,35 +67,44 @@ so moving *down* means the row number *increases*. Down is South.
 ## Heading as a number
 
 Store the robot's facing as a number 0–3, clockwise from North: **0 = N, 1 = E, 2 = S,
-3 = W.** A handy list converts back to letters for display:
-
-```python
-HEADING_NAMES = ["N", "E", "S", "W"]
-# HEADING_NAMES[2] -> "S"
-```
+3 = W.** A handy list, `HEADING_NAMES`, converts back to letters for display —
+`HEADING_NAMES[2]` is `"S"` — and it is the one setting of the section you're about to
+paste.
 
 Why numbers? Because **each clockwise turn just adds 1** — and when you'd reach 4, you
 wrap back to 0 (like an odometer rolling over). That single rule is the whole turning
 mechanism.
 
-The `desired_heading` function compares where the robot is now with where it's going
-next, and returns the matching number. Like the planner, it is *told* the position
-rather than remembering it:
+## This lesson's skeleton
+
+The last section of the file. Paste it into `robot.py` above `RUN`, after the
+MANHATTAN PLANNER section: the heading names, and the one function you write today.
 
 ```python
+# ===== NAVIGATOR =====
+# Drives a planned path. The MANHATTAN PLANNER section says
+# WHERE to go (a list of intersections); this section works
+# out which way to face at each one and does the driving with
+# the LINE TRACKING functions. It is the only code that knows
+# the robot's position and heading, and it hands both back.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
 def desired_heading(position, next_pos):
-    row_diff = next_pos[0] - position[0]
-    col_diff = next_pos[1] - position[1]
-    if col_diff == 0 and row_diff == -1: return 0   # North
-    if row_diff == 0 and col_diff ==  1: return 1   # East
-    if col_diff == 0 and row_diff ==  1: return 2   # South
-    if row_diff == 0 and col_diff == -1: return 3   # West
-    raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away; raise if it is not."""
+    # 1. row_diff and col_diff: next_pos minus position
+    # 2. one if per direction, from the table above; each
+    #    checks BOTH differences, because the other one is 0
+    # 3. none matched: raise ValueError, naming both positions
+    pass
 ```
 
-Each condition checks *both* differences, which is the "one change at a time" rule from
-the top of the lesson written down: North means the row went down by one **and** the
-column didn't move at all.
+`desired_heading` compares where the robot is now with where it's going next, and
+returns the matching number from the table. Like the planner, it is *told* the position
+rather than remembering it. Step 2 is the table as four `if` lines, and each condition
+checks *both* differences, which is the "one change at a time" rule from the top of the
+lesson written down: North means the row went down by one **and** the column didn't
+move at all.
 
 <KnowledgeCheck
   question="Going from (1,5) to (1,4), what does desired_heading return?"
@@ -108,12 +119,21 @@ column didn't move at all.
 
 ## Say so when you can't answer
 
-That last line is worth as much as the four above it. If none of the four conditions
-matched, the two positions aren't a single step apart on the grid — they're diagonal,
-or identical, or halfway across the map — and there is simply no heading that answers
-the question. `raise` stops the program on the spot and prints the message.
+Step 3 of the outline is worth as much as the four lines above it. If none of the four
+conditions matched, the two positions aren't a single step apart on the grid — they're
+diagonal, or identical, or halfway across the map — and there is simply no heading that
+answers the question. `raise` is new, and it does one thing: it stops the program on
+the spot and prints your message.
 
-Leave it out and Python does not complain. **A function that runs off the end without
+```python
+raise ValueError("what went wrong, in words")
+```
+
+`ValueError` is Python's name for "the values I was given make no sense"; the message
+is yours. Make it name the two positions — `str(position)` turns a tuple into text you
+can add to a string — so the person reading it knows exactly which pair caused it.
+
+Leave the `raise` out and Python does not complain. **A function that runs off the end without
 returning anything hands back `None`**, silently. So `desired_heading` returns `None`,
 and the next line, `turn_to(heading, None)`, tries to subtract `None` from a number.
 *That* is where Python finally stops: an error about `NoneType` and `int`, pointing at
@@ -165,8 +185,9 @@ off for the rest of their programming lives.
 
 If someone asks whether the error can actually happen: with `compute_manhattan_path` feeding it,
 no — the planner only ever produces adjacent steps. It becomes reachable the moment they
-call `desired_heading` themselves while testing, or wire it into their own project in
-Lesson 4-9. That is exactly when a good error message is worth the most.
+call `desired_heading` themselves — the diagonal call at the end of `test_headings()`
+does exactly that, on purpose — or wire it into their own project in Lesson 4-9. That
+is exactly when a good error message is worth the most.
 
 **Why each condition tests both differences.** Earlier drafts of this function checked
 only one — `if row_diff == -1: return 0` — which looks equivalent and isn't. Going from
@@ -174,6 +195,80 @@ only one — `if row_diff == -1: return 0` — which looks equivalent and isn't.
 `raise`, for a pair of positions that is plainly not a step apart. A check with a hole
 in it is worse than no check, because it buys confidence it hasn't earned. Good thing to
 show a fast finisher.
+
+</TeacherNote>
+
+## Activity · Write it, then ask it the four questions
+
+Write the body of `desired_heading()` from the outline. Then a paper test —
+`test_headings()` — that prints the heading from `(1, 1)` to each of its four
+neighbors: `(0, 1)`, `(1, 2)`, `(2, 1)` and `(1, 0)`. Work out the four answers from the
+table before you run it, and print `HEADING_NAMES[...]` of each result next to the
+number so you can read it. Set the run line to `test_headings()`; the robot stays on
+the desk.
+
+Then add one more call at the *end* of the test: `(1, 1)` to `(2, 2)`, a diagonal.
+Run it again. The four answers print as before, and then the program stops with your
+message — read it, and check that it names both positions. That is the `raise` doing
+its job, and the reason the call goes last: nothing after it runs.
+
+<Reveal title="Check your desired_heading()" hint="run test_headings() first">
+
+```python
+def desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away; raise if it is not."""
+    row_diff = next_pos[0] - position[0]
+    col_diff = next_pos[1] - position[1]
+    if col_diff == 0 and row_diff == -1: return 0   # North
+    if row_diff == 0 and col_diff ==  1: return 1   # East
+    if col_diff == 0 and row_diff ==  1: return 2   # South
+    if row_diff == 0 and col_diff == -1: return 3   # West
+    raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+```
+
+The four neighbors of `(1, 1)` come out 0, 1, 2, 3 — N, E, S, W — in the order the
+test lists them.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The NAVIGATOR section of `robot.py` as this lesson leaves it, plus the run block; the
+rest of the file is as the Lesson 4-6 teacher copy left it. The file is
+`lesson-07-the-challenge-of-turning.py` in the Module 4 solutions. The diagonal call
+is commented out here so the file runs clean; students leave it in to see the error.
+
+```python
+# ===== NAVIGATOR =====
+# Drives a planned path. The MANHATTAN PLANNER section says
+# WHERE to go (a list of intersections); this section works
+# out which way to face at each one and does the driving with
+# the LINE TRACKING functions. It is the only code that knows
+# the robot's position and heading, and it hands both back.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
+def desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away; raise if it is not."""
+    row_diff = next_pos[0] - position[0]
+    col_diff = next_pos[1] - position[1]
+    if col_diff == 0 and row_diff == -1: return 0   # North
+    if row_diff == 0 and col_diff ==  1: return 1   # East
+    if col_diff == 0 and row_diff ==  1: return 2   # South
+    if row_diff == 0 and col_diff == -1: return 3   # West
+    raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+
+def test_headings():
+    for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
+        heading = desired_heading((1, 1), next_pos)
+        print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
+    # desired_heading((1, 1), (2, 2))   # diagonal: stops here
+
+# ===== RUN =====
+board.wait_for_button()
+test_headings()
+```
 
 </TeacherNote>
 
@@ -205,21 +300,14 @@ Three clockwise turns is the long way round, though — the robot would spin 270
 the other way does the same job. So the one special case: **3 clockwise is 1
 counterclockwise.**
 
-```python
-def turn_to(heading, desired):
-    turns = (desired - heading) % 4
-    if turns == 3:
-        turn_counterclockwise()
-    else:
-        for i in range(turns):
-            turn_clockwise()
-    return desired
-```
-
-`turn_clockwise()` and `turn_counterclockwise()` are the Module 2 functions that turn
-the robot until the sensors find the next line. The function returns the new heading,
-which is simply `desired`, so the caller can write `heading = turn_to(heading, needed)`
-and keep its own record up to date — the same "told, not remembered" rule as the planner.
+That is the whole design of `turn_to(heading, desired)`, the function you write next
+lesson: work out `turns`; if it is 3, one `turn_counterclockwise()`; otherwise
+`turn_clockwise()` that many times — a `for` loop over `range(turns)`, which for 0 does
+nothing at all. `turn_clockwise()` and `turn_counterclockwise()` are the Module 2
+functions that turn the robot until the sensors find the next line. The function
+returns the new heading, which is simply `desired`, so the caller can write
+`heading = turn_to(heading, needed)` and keep its own record up to date — the same
+"told, not remembered" rule as the planner.
 
 <KnowledgeCheck
   question="Starting at heading 0 (N) and wanting heading 3 (W), what does turn_to do?"
@@ -245,8 +333,9 @@ and keep its own record up to date — the same "told, not remembered" rule as t
 
 <TeacherNote title="Paper-heavy on purpose — fill in the table, don't count ahead">
 
-Resist jumping to code. Students need to work the `% 4` table by hand, especially the
-negative rows, before Lesson 4-8. Get them physically standing and turning clockwise one
+Resist jumping to the driving code — `desired_heading()` is the only function written
+today, and it runs on the desk. Students need to work the `% 4` table by hand, especially
+the negative rows, before Lesson 4-8 hands them the `turn_to()` outline. Get them physically standing and turning clockwise one
 step at a time, calling out 0, 1, 2, 3, 0 — the kinesthetic bit cements it — then ask
 "from South to East, which way is shorter?" and let them feel the 270° vs 90° answer.
 The grid orientation (row 0 on top, "down is South") is the #1 confusion; draw it,
@@ -261,28 +350,36 @@ based ones are — but fewer is still better.
 
 </TeacherNote>
 
-## Activity · Putting it together: `drive_path`
+## Activity · Putting it together: `drive_path` on paper
 
 With those two helpers, driving the whole path is short — for each intersection, figure
-out the heading, turn to it, drive forward one, update position:
+out the heading, turn to it, drive forward one, update position. Here is the design as
+you'll meet it in next lesson's skeleton:
 
 ```python
 def drive_path(path, position, heading):
-    for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
-        track_to_intersection()          # drive to the next intersection
-        position = next_pos
-    return position, heading
+    """Turn and drive through every intersection in path, from
+    position facing heading; return the final (position, heading)."""
+    # for each next_pos in path:
+    #     1. needed = desired_heading(position, next_pos)
+    #     2. heading = turn_to(heading, needed)
+    #     3. drive to the next intersection (LINE TRACKING)
+    #     4. position = next_pos -- the robot is there now
+    # return position, heading
+    pass
 ```
 
-`track_to_intersection()` is the Module 2 function that follows the line until both
-sensors hit a crossing — that's how the robot drives exactly one intersection without
-measuring any distance. The function returns `position` and `heading` at the end,
-because the caller will want to plan the *next* path from wherever the robot ended up.
-This is the paper version; Lesson 4-8 adds one real-world wrinkle to it.
+Step 3 is `track_to_intersection()`, the Module 2 function that follows the line until
+both sensors hit a crossing — that's how the robot drives exactly one intersection
+without measuring any distance. The function returns `position` and `heading` at the
+end, because the caller will want to plan the *next* path from wherever the robot ended
+up. This is the paper version; Lesson 4-8 adds one real-world wrinkle to step 3.
 
-Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N):
+Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N), one
+line per step — next intersection, heading needed, the `% 4` arithmetic, what the robot
+does:
+
+<Reveal title="Check your trace" hint="all four lines first">
 
 ```
 At (0,0) N, next (1,0): row+1 -> want S(2). (2-0)%4 = 2: two clockwise. drive to (1,0).
@@ -290,6 +387,8 @@ At (1,0) S, next (2,0): row+1 -> want S(2). (2-2)%4 = 0: no turn.      drive to 
 At (2,0) S, next (2,1): col+1 -> want E(1). (1-2)%4 = 3: one ccw.      drive to (2,1).
 At (2,1) E, next (2,2): col+1 -> want E(1). (1-1)%4 = 0: no turn.      drive to (2,2).
 ```
+
+</Reveal>
 
 Notice `position` gets updated every step — otherwise the *next* `desired_heading`
 would compare against the wrong current spot. And `heading` is updated from `turn_to`'s

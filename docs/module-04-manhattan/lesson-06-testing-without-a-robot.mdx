@@ -25,7 +25,7 @@ By the end of this lesson you will be able to:
 - Explain why testing on screen is faster than debugging on the robot
 - Describe **separation of concerns** — planning (math) vs. driving (hardware)
 - Hand-calculate an expected path, then compare it to the actual output
-- Write a reusable `run_test()` helper and a suite of test cases
+- Add a reusable `run_test()` helper to the MANHATTAN PLANNER section, and a test that runs a suite of six cases through it
 - Debug a failing test with print statements
 
 </Objectives>
@@ -98,23 +98,33 @@ right.
   explanation="Testing needs an independent source of truth. You trace the path by hand first; the whole point is to catch the case where the code disagrees with the correct answer."
 />
 
-## Activity · A reusable `run_test()` helper
+## This lesson's skeleton
 
-That compare-and-report pattern repeats for every case, so wrap it in a function:
+That compare-and-report pattern repeats for every case, so it becomes a function.
+Paste this into `robot.py` at the end of the MANHATTAN PLANNER section — it is a
+*harness*: a function whose only job is to test another one.
 
 ```python
+# --- Lesson 4-6: the test harness ---
+# run_test() asks the planner for a path and compares it
+# with one you traced by hand, printing PASS or FAIL. A
+# planner test from here on is a list of run_test() calls.
+
 def run_test(test_name, position, destination, expected):
-    actual = compute_manhattan_path(position, destination)
-    if actual == expected:
-        print(test_name, "- PASS")
-    else:
-        print(test_name, "- FAIL")
-        print("  Expected:", expected)
-        print("  Actual:  ", actual)
+    """Plan position -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    pass
 ```
 
-Now each test is a single line — and a good suite covers **every direction and every edge
-case**. Here's one case worked out, and the five your suite still needs:
+The body is the expected-vs-actual block above with the four values coming in as
+parameters: on a FAIL, print both lists so the difference is on screen. Write it, then
+the test that uses it.
+
+## Activity · A suite of cases
+
+Each case is now a single line — and a good suite covers **every direction and every
+edge case**. Write `test_planner()`: six `run_test()` calls. Here's one case worked out,
+and the five your suite still needs:
 
 ```python
 run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])
@@ -130,18 +140,74 @@ point: a test whose expected value came from the program's own output proves
 nothing except that the program agrees with itself. If a test fails, one of two
 things is wrong — your trace or your code — and finding out which is the skill.
 
-If you only ever test (0,0) → (2,3), a bug that only shows up going *backward* will slip
-right past you.
+Set the run line to `test_planner()`. Six PASS lines is the goal; the robot does not
+move. If you only ever test (0,0) → (2,3), a bug that only shows up going *backward*
+will slip right past you.
 
-<TeacherNote title="Expected values (teacher copy)">
+<Reveal title="Check your run_test()" hint="write it and run all six cases first">
 
-Backward left `[(1,3), (0,3), (0,2), (0,1), (0,0)]`; same row `[(1,1), (1,2), (1,3)]`;
-same column `[(1,2), (2,2), (3,2)]`; same spot `[]`; one step `[(0,1)]`.
+```python
+def run_test(test_name, position, destination, expected):
+    """Plan position -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    actual = compute_manhattan_path(position, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+```
 
-Don't hand these out — the hand-tracing *is* the lesson. Use them to check work
-quickly, and watch for the student who runs the code first and pastes the output
-into `expected`: that student's suite will pass on day one and hide a real bug on
-day three.
+If you built the `Manhattan` class, the first line is `planner.compute_path(position,
+destination)` and nothing else changes.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the MANHATTAN PLANNER section of `robot.py`, with the five
+expected values, plus the run block; the rest of the file is as the Lesson 4-5 teacher
+copy left it. The file is `lesson-06-testing-without-a-robot.py` in the Module 4
+solutions.
+
+Don't hand the expected values out — the hand-tracing *is* the lesson. Use them to
+check work quickly, and watch for the student who runs the code first and pastes the
+output into `expected`: that student's suite will pass on day one and hide a real bug
+on day three.
+
+```python
+# --- Lesson 4-6: the test harness ---
+# run_test() asks the planner for a path and compares it
+# with one you traced by hand, printing PASS or FAIL. A
+# planner test from here on is a list of run_test() calls.
+
+def run_test(test_name, position, destination, expected):
+    """Plan position -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    actual = compute_manhattan_path(position, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+
+def test_planner():
+    run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])
+    run_test("Backward left", (2, 3), (0, 0), [(1,3), (0,3), (0,2), (0,1), (0,0)])
+    run_test("Same row",      (1, 0), (1, 3), [(1,1), (1,2), (1,3)])
+    run_test("Same column",   (0, 2), (3, 2), [(1,2), (2,2), (3,2)])
+    run_test("Same spot",     (1, 1), (1, 1), [])
+    run_test("One step",      (0, 0), (0, 1), [(0,1)])
+
+# ===== RUN =====
+board.wait_for_button()
+test_planner()
+```
+
+**Class track:** `run_test()` calls `planner.compute_path(position, destination)`;
+the suite is identical.
 
 </TeacherNote>
 
@@ -169,27 +235,19 @@ floor.* Five minutes of testing saves thirty minutes chasing a robot.
 
 ## Activity · Debug a failing test
 
-When a test fails, don't guess — add print statements inside `compute_manhattan_path` to watch the
-logic run:
+When a test fails, don't guess — add print statements inside `compute_manhattan_path`
+to watch the logic run. One at the top, and one inside each loop right after the
+`append`:
 
 ```python
-def compute_manhattan_path(position, destination):
-    print("Computing from", position, "to", destination)
-    path = []
-    current_row, current_col = position
-    dest_row, dest_col = destination
-
-    while current_row < dest_row:
-        current_row = current_row + 1
-        path.append((current_row, current_col))
-        print("  added:", (current_row, current_col))
-    # ... the other three loops, each printing what they add
-    return path
+    print("Computing from", position, "to", destination)   # first line
+    ...
+        print("  added:", (current_row, current_col))      # in each loop
 ```
 
 The trace shows exactly which loop ran and what it appended. Once you've found and fixed
 the bug, **remove the debug prints** so the output stays clean. (Try it: change one `+ 1`
-to `- 1` and watch a test catch the bug.)
+to `- 1`, run `test_planner()`, and watch a test catch the bug — then change it back.)
 
 <KnowledgeCheck
   question="After using print statements to fix a bug, what should you do with them?"

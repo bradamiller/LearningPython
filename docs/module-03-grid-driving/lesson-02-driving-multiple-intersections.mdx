@@ -16,8 +16,9 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Reaching the *first* intersection is easy. Reaching the *third* is the same two calls,
 three times — and that is what a `for` loop is for. This lesson turns "arrive at an
-intersection" into a building block you can repeat a chosen number of times, and
-looks closely at why the second call works at all.
+intersection" into a building block you can repeat a chosen number of times — the
+first real function in the GRID DRIVING section — and looks closely at why the second
+call works at all.
 
 <Objectives>
 
@@ -26,11 +27,43 @@ By the end of this lesson you will be able to:
 - Explain why `track_to_intersection()` called twice in a row would not move the robot without `drive_past_intersection()` between them
 - Drive past one intersection to reach the next
 - Use a `for` loop to drive a chosen number of intersections
-- Write a `drive_intersections(count)` helper and use it
+- Write `drive_intersections(count)` from its docstring, test it, and use it
 
 </Objectives>
 
 <QuizLink id="module-03-grid-driving/lesson-02-driving-multiple-intersections" />
+
+## This lesson's skeleton
+
+Paste this into `robot.py` above `RUN`, at the end of the GRID DRIVING section. One
+function outline and two tests.
+
+```python
+# --- Lesson 3-2: a run of intersections ---
+# drive_intersections(count) is the arrival pair in a loop.
+# It ends parked on the count-th intersection, so Lessons 3-3
+# and 3-4 build every path out of it and the two turns.
+
+def drive_intersections(count):
+    """Arrive at count intersections in a row, printing
+    which one it is each time. Ends parked on the last one
+    with the sensors past it, ready to turn or to go on."""
+    pass
+
+def test_two_by_hand():
+    # the arrival pair written out twice, no loop: the robot
+    # should end parked on the SECOND intersection
+    pass
+
+def test_drive_run():
+    # drive_intersections(3), then print that it is done
+    pass
+```
+
+The function has a **docstring** (Lesson 1-12) instead of step comments: the string
+under the `def` line says what the function does and what ends it, and that's all
+the help you get. The steps are yours to work out — this page tells you enough to.
+Keep the docstring when you write the body; it belongs to the function.
 
 ## Why the second call works
 
@@ -73,29 +106,15 @@ turn.
 
 ## Drive a set number with a `for` loop
 
-Writing the pair out by hand for each intersection is repetitive. A `for` loop repeats
-it a chosen number of times:
+Writing the pair out by hand for each intersection is repetitive, and it's wrong the
+moment you want a different number. A `for` loop over `range(count)` repeats the pair
+a chosen number of times — the same shape as `polygon()` in Module 1, a loop and a
+count, packaged into a function with the count as its parameter.
 
-```python
-# (both Module 2 toolkits go above)
-
-board = Board.get_default_board()
-
-board.wait_for_button()
-
-intersections = 3
-
-for i in range(intersections):
-    print("Driving to intersection", i + 1)
-    track_to_intersection()
-    drive_past_intersection()
-
-print("Done! Parked on intersection", intersections)
-```
-
-Nothing in the loop body changes from one pass to the next — the only thing `i` is
-used for is the print. And there is no special case for the last intersection: the
-drive-past parks the robot on it, which is exactly where you want to be.
+Nothing in the loop body changes from one pass to the next; the only thing the loop
+variable is good for is the print ("Intersection 1 of 3", and so on — remember it
+starts at 0). And there is no special case for the last intersection: the drive-past
+parks the robot on it, which is exactly where you want to be.
 
 <KnowledgeCheck
   question="A student worries that drive_past_intersection() on the last loop pass will carry the robot off the final intersection. Are they right?"
@@ -121,17 +140,35 @@ each pass.
 
 </TeacherNote>
 
-## Activity · Write the helper
+## Activity · Two by hand, then the helper
 
-You'll drive runs of intersections constantly from here on, so wrap the loop in a
-function. Write `drive_intersections(count)` yourself: one parameter, a `for` loop, the
-arrival pair inside it, and a print so you can follow along. Then replace the loop in
-your program with a single call, `drive_intersections(3)`, and run it.
+The skeleton is pasted in. For every step the robot starts on a line segment, facing
+the next intersection, with at least three intersections ahead of it.
 
-<Reveal title="Compare with one version" hint="write yours first">
+### Step 1 · test_two_by_hand()
+
+Before the loop, prove the thought experiment. Write the body: the arrival pair, then
+the arrival pair again — four calls, no loop — and a print at the end. Set the run
+line to `test_two_by_hand()` and run it. The robot should end parked on the *second*
+intersection. Then try it: take out the first `drive_past_intersection()` and run
+again. Where does the robot stop now, and what does the second track do? Put the call
+back. Don't go on until the four-call version reaches the second intersection.
+
+### Step 2 · drive_intersections(count)
+
+Now write the function from its docstring: one parameter, a `for` loop over it, the
+arrival pair inside, and a print so you can follow along. Write the body of
+`test_drive_run()` — one call, `drive_intersections(3)`, and a print — set the run
+line to it, and run. The robot should arrive three times, printing each one, and end
+parked on the third intersection.
+
+<Reveal title="Check your drive_intersections()" hint="write and test it first">
 
 ```python
 def drive_intersections(count):
+    """Arrive at count intersections in a row, printing
+    which one it is each time. Ends parked on the last one
+    with the sensors past it, ready to turn or to go on."""
     for i in range(count):
         print("  Intersection", i + 1, "of", count)
         track_to_intersection()
@@ -139,13 +176,55 @@ def drive_intersections(count):
 ```
 
 If yours has an `if` in it, ask what it is guarding against — and whether
-`drive_past_intersection()` actually drives the robot past anything.
+`drive_past_intersection()` actually drives the robot past anything. The two tests
+are the arrival pair twice over, and `drive_intersections(3)` followed by a print.
 
 </Reveal>
 
-Now `drive_intersections(4)` drives four segments in one clean line — a building block
-you'll lean on in the next two lessons, and the same shape as `polygon()` from
-Module 1: a loop and a count, packaged.
+Now `drive_intersections(4)` drives four segments in one clean line — the building
+block the next two lessons are made of.
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the GRID DRIVING section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 3-1 teacher copy left it. The file is
+`lesson-02-driving-multiple-intersections.py` in the Module 3 solutions. Class-track
+students write `tracker.track_to_intersection()` and
+`tracker.drive_past_intersection()` inside the helper; the helper itself stays a plain
+function in this section.
+
+```python
+# --- Lesson 3-2: a run of intersections ---
+# drive_intersections(count) is the arrival pair in a loop.
+# It ends parked on the count-th intersection, so Lessons 3-3
+# and 3-4 build every path out of it and the two turns.
+
+def drive_intersections(count):
+    """Arrive at count intersections in a row, printing
+    which one it is each time. Ends parked on the last one
+    with the sensors past it, ready to turn or to go on."""
+    for i in range(count):
+        print("  Intersection", i + 1, "of", count)
+        track_to_intersection()
+        drive_past_intersection()
+
+def test_two_by_hand():
+    track_to_intersection()
+    drive_past_intersection()
+    track_to_intersection()
+    drive_past_intersection()
+    print("Parked on the second intersection")
+
+def test_drive_run():
+    drive_intersections(3)
+    print("Done! Parked on intersection 3")
+
+# ===== RUN =====
+board.wait_for_button()
+test_drive_run()
+```
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="A student's drive_intersections(count) calls track_to_intersection() on every pass but drive_past_intersection() only on the first. What happens with count = 3?"
@@ -160,8 +239,9 @@ Module 1: a loop and a count, packaged.
 
 <TeacherNote title="Differentiation">
 
-**More support:** have students write two intersections by hand — the pair, twice —
-before introducing the loop. **More challenge:** add a parameter for speed by
+**More support:** step 1 already has students write two intersections by hand — the
+pair, twice — before the loop; some will need to trace it on the board with `i = 0, 1,
+2` before they write the function. **More challenge:** add a parameter for speed by
 changing `BASE_EFFORT` before the loop and restoring it after (which needs
 `global` — Lesson 2-7), or print a running count and confirm it matches the grid.
 

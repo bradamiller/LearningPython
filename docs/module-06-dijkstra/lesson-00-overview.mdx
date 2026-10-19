@@ -43,8 +43,9 @@ By the end of this module you will be able to:
 
 It is not a new kind of programming. There is no new Python syntax in it. The graph,
 `add_blocked()`, the `previous` dictionary, the walk-back and the harness are all
-the ones you built in Module 5, unchanged. The two changes are in the middle of
-one function:
+the ones you built in Module 5, in the same `robot.py` — the harness gains one case,
+and the file gains two sections above `RUN`: WEIGHTED GRAPH and DIJKSTRA PLANNER. The
+two changes are in the middle of one function:
 
 1. Take the **closest** intersection off the to-visit list instead of the oldest one.
 2. Add the segment's **weight** instead of counting one step, and keep the cheaper
@@ -57,9 +58,9 @@ That's it. The rest of the module is about seeing *why* those two changes matter
 | Lesson | What happens |
 |---|---|
 | **6-1 · When Fewest Steps Isn't Fastest** | Time a normal block and the slow segment with a stopwatch. Work out, on paper, which of two routes is really faster. |
-| **6-2 · Weights in the Graph** | Give the slow segment a weight. Add "total cost" to the harness as something it checks — and watch BFS fail it. |
-| **6-3 · From BFS to Dijkstra** | Copy your BFS, rename it, make the two changes. Print the cost grid. Run Manhattan, BFS and Dijkstra through the same tests. |
-| **6-4 · Drive It** | The robot on the slow-segment grid: a BFS run, then a Dijkstra run, side by side. |
+| **6-2 · Weights in the Graph** | Start the WEIGHTED GRAPH section: the slow list, `weight()`, `path_cost()` and a cost check. Run the check on BFS — and watch it fail. |
+| **6-3 · From BFS to Dijkstra** | Start the DIJKSTRA PLANNER section: copy your BFS, rename it, make the two changes. Print the cost grid. Run Manhattan, BFS and Dijkstra through the same harness. |
+| **6-4 · Drive It** | The robot on the slow-segment grid: a BFS run, then a Dijkstra run, one test and one changed name. |
 | **6-5 · Three Planners, One Harness** *(optional extension)* | The `Dijkstra` class, and all three planners as objects through the Module 5 class harness. |
 
 <TeacherNote title="Why this is a separate, optional module">

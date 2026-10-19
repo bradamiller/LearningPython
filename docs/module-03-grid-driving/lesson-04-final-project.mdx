@@ -16,14 +16,14 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Time to tie the module together. Your robot will drive a complete **square** on the
 grid — two intersections per side, turn right at each corner, four times — and end
-up right back where it started. Same two toolkits, no new Python: just your tools,
+up right back where it started. Same `robot.py`, no new Python: just your sections,
 put to work.
 
 <Objectives>
 
 By the end of this project you will be able to:
 
-- Design a program that drives a closed square path on the grid
+- Design a test function that drives a closed square path on the grid
 - Use a `for` loop to repeat a drive-and-turn sequence
 - Test and tune a real robot until the path closes
 - Verify the robot returns to its starting position
@@ -42,48 +42,80 @@ each of the 4 corners. Done right, it finishes where it began.
   caption="Four sides, four right turns, back to start. One loop iteration draws one side."
 />
 
-**Your program must:** use the Module 2 toolkits unchanged, drive the square with a
-`for` loop (not four copied blocks), print progress, and return to start.
+**Your program must:** use the LINE TRACKING section and `drive_intersections()`
+unchanged, drive the square with a `for` loop (not four copied blocks), print
+progress, and return to start.
+
+## This lesson's skeleton
+
+Paste this into `robot.py` above `RUN`, at the end of the GRID DRIVING section. One
+setting and two tests; the second test is the project.
+
+```python
+# --- Lesson 3-4: final project, the square ---
+# The module project: four sides of SIDE intersections with a
+# right turn at every corner, back to the start. Built from
+# drive_intersections() and one turn; nothing new is defined.
+SIDE = 2                 # intersections per side
+
+def test_one_side():
+    # one side of the square: drive SIDE intersections, then
+    # turn right
+    pass
+
+def test_square():
+    # the project. A for loop that runs one side per pass,
+    # printing which side it is on; then the finish message
+    pass
+```
+
+`SIDE` is a setting, in capitals like the others, so the size of the square is one
+number at the top of the sub-section and not a literal buried in a loop.
 
 ## One loop, four sides
 
 The whole square is a four-iteration loop: each pass drives one side, then turns the
-corner. Two pieces to write — the `drive_intersections(count)` helper (you built
-this in Lesson 3-2) and the loop that calls it and turns.
+corner. The piece that drives a side is `drive_intersections(count)` — you built and
+tested it in Lesson 3-2 — so the loop body is a call to it and a turn.
 
-Sketch the loop body in English first: what happens once per side?
+Sketch the loop body in English first: what happens once per side? Then write it. The
+loop body is two calls and a print or two; if yours is longer, ask what the extra
+lines are for. There is nothing between the drive and the turn: the helper leaves the
+robot parked on the corner, and the turn ends with a sensor on the next side's line.
 
-Sketch it in English, then write it. The loop body is two calls and a print or two;
-if yours is longer, ask what the extra lines are for.
+<TeacherNote title="Solution (teacher copy)">
 
-<TeacherNote title="Reference program (teacher copy)">
-
-The main program, under both Module 2 toolkits and Lesson 3-2's helper. Use it to
-unstick a team; the loop is the graded work. The file is
-`lesson-04-final-project.py` in the Module 3 solutions.
+This lesson's addition to the GRID DRIVING section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 3-3 teacher copy left it. Use it to unstick a
+team; the loop is the graded work, and there is no student reveal for it. The file is
+`lesson-04-final-project.py` in the Module 3 solutions. Class-track students write
+`tracker.turn_clockwise()`.
 
 ```python
-# (both Module 2 toolkits and drive_intersections from Lesson 3-2 go above)
+# --- Lesson 3-4: final project, the square ---
+# The module project: four sides of SIDE intersections with a
+# right turn at every corner, back to the start. Built from
+# drive_intersections() and one turn; nothing new is defined.
+SIDE = 2                 # intersections per side
 
-board = Board.get_default_board()
-
-board.wait_for_button()
-print("Module 3 Final Project -- Square Pattern!")
-
-sides = 2                     # intersections per side
-
-for leg in range(4):
-    print("Side", leg + 1, "of 4")
-    drive_intersections(sides)
-    print("  Turning right...")
+def test_one_side():
+    drive_intersections(SIDE)
     turn_clockwise()
+    print("One side done")
 
-print("Square complete! Back at start.")
+def test_square():
+    print("Module 3 Final Project -- Square Pattern!")
+    for side in range(4):
+        print("Side", side + 1, "of 4")
+        drive_intersections(SIDE)
+        print("  Turning right...")
+        turn_clockwise()
+    print("Square complete! Back at start.")
+
+# ===== RUN =====
+board.wait_for_button()
+test_square()
 ```
-
-There is nothing between `drive_intersections()` and `turn_clockwise()`: the helper
-leaves the robot parked on the corner, and the turn ends with a sensor on the next
-side's line.
 
 </TeacherNote>
 
@@ -103,11 +135,14 @@ its starting heading as well as its starting intersection.
 
 ## Activity · Test one side at a time
 
-Don't run all four sides first. Build up:
+Don't run all four sides first. Build up, one test at a time:
 
-1. **One side** — comment out the loop; run one `drive_intersections(2)` + `turn_clockwise()`.
-2. **Two sides** — `range(2)`. What shape should that give you? Predict, then run.
-3. **Full square** — `range(4)`; does it close back to the start?
+1. **One side** — write `test_one_side()` and set the run line to it. The robot
+   should drive `SIDE` intersections, pivot on the corner, and stop facing along the
+   next side. Don't go on until it does.
+2. **Two sides** — write `test_square()` with `range(2)` for now. What shape should
+   that give you? Predict, then run.
+3. **Full square** — change it to `range(4)`; does it close back to the start?
 
 <KnowledgeCheck
   question="A student wrote `for leg in range(3):` and added a second drive_past_intersection() right before turn_clockwise(). What are the two bugs?"
@@ -138,10 +173,10 @@ Once the square works, try a variation:
 
 <CardGrid>
   <InfoCard tag="Bigger" title="3-per-side square">
-    Set `sides = 3` for a larger square. Does it still close?
+    Set `SIDE = 3` for a larger square. Does it still close?
   </InfoCard>
   <InfoCard tag="Rectangle" title="Alternating legs">
-    Use a list `[2, 3, 2, 3]` and index it by `leg` so opposite sides differ.
+    Write `test_rectangle()`: a list `[2, 3, 2, 3]` indexed by the loop variable, so opposite sides differ.
   </InfoCard>
   <InfoCard tag="Mirror" title="Left-turn square">
     Swap in `turn_counterclockwise()` to drive the square the other way around.
@@ -159,18 +194,19 @@ Demo your square and think back:
 
 ## Nice work — Module 3 done 🎉
 
-You reused a toolkit you wrote weeks ago on a brand-new surface, learned to count
-intersections, and sequenced drives and turns into real paths.
-Every route here was one *you* planned and hard-coded. That's about to change.
+You reused functions you wrote weeks ago on a brand-new surface, learned to count
+intersections, and sequenced drives and turns into real paths — and `robot.py` grew a
+GRID DRIVING section with one function and a record of every test it passed. Every
+route here was one *you* planned and hard-coded. That's about to change.
 
 <TeacherNote title="Assessment & what's next">
 
-The square is the summative assessment (a 50-point rubric across using the toolkit
-unchanged, using a loop, completing four sides, returning to start, and progress prints works
-well). Reward the tuning process. **Coming in Module 4 · Manhattan Navigation:**
-instead of you hard-coding the path, the *computer* calculates it — "go to row 2,
-column 3" and the robot works out the drives and turns itself, using coordinates,
-tuples, and lists.
+The square is the summative assessment (a 50-point rubric across using the earlier
+sections unchanged, using a loop, completing four sides, returning to start, and
+progress prints works well). Reward the tuning process. **Coming in Module 4 ·
+Manhattan Navigation:** instead of you hard-coding the path, the *computer* calculates
+it — "go to row 2, column 3" and the robot works out the drives and turns itself,
+using coordinates, tuples, and lists — in new sections of the same file.
 
 </TeacherNote>
 

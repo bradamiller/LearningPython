@@ -53,9 +53,11 @@ the path from where we are, print it, drive it, and remember where we ended up.*
 don't need to understand `compute_manhattan_path` or `drive_path` yet — just see that
 the program is short **because the functions do all the work**.
 
-(Those seven lines are the *interesting* part. The real program also opens with the
-function definitions and the `board.wait_for_button()` that every robot program starts
-with — they're left out here so the shape stands out.)
+(Those seven lines are the *interesting* part. In your `robot.py` they are the body of
+the module's last test function, and the two functions they call live in two new
+sections above it — MANHATTAN PLANNER and NAVIGATOR — on top of the LINE TRACKING and
+GRID DRIVING sections you already have. The `RUN` block waits for the button as always.
+All of that is left out here so the shape stands out.)
 
 <Todo kind="convention">
 this lesson has no Activity and no Real-world connections section. It is an overview, so that may be deliberate — but it is the only non-capstone lesson without either. [REVIEW §4]
@@ -105,14 +107,14 @@ lesson, highlighting the piece they're building that day.
 Every lesson in this module builds one piece of that program:
 
 - **Lesson 4-1** — coordinates: the `(row, col)` system
-- **Lesson 4-2** — tuples: storing a position like `(2, 3)`
-- **Lesson 4-3** — lists: storing a path like `[(1,0), (2,0), (3,0)]`
-- **Lesson 4-4** — the Manhattan algorithm: computing paths (on paper, then in code)
+- **Lesson 4-2** — tuples: storing a position like `(2, 3)` (scratch work, nothing goes in the file yet)
+- **Lesson 4-3** — lists: storing a path like `[(1,0), (2,0), (3,0)]` (scratch work too)
+- **Lesson 4-4** — the Manhattan algorithm: computing paths on paper, then in code — the MANHATTAN PLANNER section of `robot.py` opens
 - **Lesson 4-5** — the planner function: its name, its promises, and why it is told where the robot is
-- **Lesson 4-6** — testing your code without a robot
-- **Lesson 4-7** — turning logic: headings as numbers
+- **Lesson 4-6** — testing your code without a robot: a test harness joins the planner section
+- **Lesson 4-7** — turning logic: headings as numbers — the NAVIGATOR section opens
 - **Lesson 4-8** — driving the path, built on your Module 2 line-tracking functions
-- **Lesson 4-9** — the final project: it all comes together
+- **Lesson 4-9** — the final project: it all comes together in one test function
 
 Notice `drive_path` reuses the Module 2 functions for the actual driving — you're not
 starting from scratch. That's the payoff of building a toolkit. (If you did the Module 2

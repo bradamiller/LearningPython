@@ -18,14 +18,14 @@ In Lesson 5-7 the robot detected one obstacle and re-planned once, then the loop
 stopped with a `break`. Two things are missing. First, the robot should *keep going*:
 follow the new path, and if it finds another wall, re-plan again, until it arrives.
 Second, it rediscovers every obstacle from scratch each run — like being surprised
-by the same construction zone every morning. This lesson fixes both: a loop that
+by the same construction zone every morning. This lesson fixes both: a function that
 re-plans until arrival, and a way to start Run 2 knowing what Run 1 found out.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Wrap Lesson 5-7's detect-and-reroute step in a `while` loop that runs until the robot arrives
+- Write `navigate_with_detection()`: Lesson 5-7's detect-and-reroute step inside a `while` loop that runs until the robot arrives
 - Explain why remembering obstacles improves navigation
 - Start a run with obstacles already known, so the planner avoids them from the first path
 - Compare Run 1 and Run 2 with metrics (steps, reroutes)
@@ -35,14 +35,162 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-pathfinding/lesson-08-building-experience" />
 
+## This lesson's skeleton
+
+Paste this into `robot.py` at the end of the OBSTACLES section, under
+`test_detect_once()`. One setting, and the one function the capstone is built from.
+
+```python
+# --- Lesson 5-8: re-plan until you arrive ---
+# navigate_with_detection() is the 5-7 loop inside a while:
+# plan, follow, and if something got in the way, plan again
+# from here, until a whole path is driven with no reroute. It
+# hands back position and heading, as drive_path() does, plus
+# the step and reroute counts. KNOWN_OBSTACLES is what the
+# last run found, typed in by you: memory between runs.
+KNOWN_OBSTACLES = []     # what the last run printed; empty on Run 1
+
+def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
+    """Drive from position (facing heading) to destination,
+    re-planning around every obstacle the rangefinder finds;
+    return (position, heading, step_count, reroute_count)."""
+    # step_count = 0 ; reroute_count = 0
+    # arrived = False
+    # while not arrived:
+    #     plan from position; print the path
+    #     if the path is empty: say "No path"; return the four
+    #     rerouted = False
+    #     for each next_pos in path:          -- Lesson 5-7
+    #         face it
+    #         look ahead with rangefinder.distance()
+    #         if closer than obstacle_cm:
+    #             add_blocked(next_pos); count the reroute
+    #             rerouted = True ; break
+    #         else:
+    #             arrive; position = next_pos; count the step
+    #     if not rerouted: arrived = True
+    # return position, heading, step_count, reroute_count
+    pass
+```
+
 ## From `break` to "until you arrive"
 
 Lesson 5-7's loop broke out as soon as it re-planned. Put that whole `for` loop inside a
 `while`, and have the `while` end only when the `for` loop ran all the way through
-without a reroute:
+without a reroute. That is the outline above.
+
+Read the shape, not the lines: **plan, follow, and if something got in the way, plan
+again from here.** The inner `for` is Lesson 5-7 unchanged, except that the re-plan
+happens at the top of the `while` instead of inside the `if` — the `break` only has
+to get out of the `for`. The `rerouted` flag is how the `while` finds out whether the
+`for` finished or broke out early: set it `False` before the `for`, set it `True` in
+the obstacle branch, and after the `for`, "not rerouted" means "drove the whole path"
+— which means arrived. And the function returns the robot's new `position` and
+`heading`, because the caller will need them to plan the *next* trip — Lesson 5-9
+strings several of these together.
+
+Two of the parameters look odd: `rangefinder` and `obstacle_cm` are already in the
+file as a global and a setting. Passing them in means the function *says* what it
+depends on — read the `def` line and you know it needs a sensor and a cutoff — and a
+test can hand in a different cutoff without editing the function. (The simulated
+sensor is a function of `next_pos`, not an object with a `distance()` method, so for
+the dry run you swap the one look-ahead line, as in Lesson 5-7.)
+
+The empty-path check matters now in a way it didn't on paper. If the robot gets
+boxed in, `compute_bfs_path()` returns `[]` (Lesson 5-5). Without the check, the
+`for` loop would run zero times, `rerouted` would stay `False`, and the robot would
+declare itself arrived at the wrong intersection.
+
+<KnowledgeCheck
+  question="In navigate_with_detection(), what makes the while loop finally stop?"
+  options={[
+    {text: 'A fixed number of iterations'},
+    {text: 'The for loop over the path finishes without a single reroute, so rerouted stays False and arrived becomes True', correct: true},
+    {text: 'The rangefinder returns 0'},
+    {text: 'compute_bfs_path returns the same path twice'},
+  ]}
+  explanation="Each pass plans a path and tries to follow it. If a wall turns up, the for loop breaks with rerouted = True and the while plans again from the new position. Only a complete, uninterrupted pass sets arrived."
+/>
+
+<KnowledgeCheck
+  question="Why does the function return position and heading, not just the step counts?"
+  options={[
+    {text: 'Python requires functions to return at least two values'},
+    {text: 'So the next trip can be planned from where the robot actually ended up, facing the way it actually faces', correct: true},
+    {text: 'To reset them to (0, 0) and 0'},
+    {text: 'For the print statement only'},
+  ]}
+  explanation="position and heading are local variables inside the function. The caller only learns their new values if the function hands them back — and Lesson 5-9 needs them to chain several destinations."
+/>
+
+If you built the `Navigator` class in Lesson 4-8, this function wants to be a method
+of it: `position` and `heading` become `self.position` and `self.heading` and drop
+out of the parameter list and the return, the four driving calls go through
+`self.line_track.` and `self.desired_heading()` / `self.turn_to()`, and the planner
+calls are `planner.add_blocked()` and `planner.compute_path()`. It returns only the
+two counts; the caller reads `navigator.position` afterwards, as in Lesson 4-9.
+
+## Why memory matters
+
+The BFS planner doesn't change between runs. The driving functions don't change. Only
+the **input** changes — the blocked list starts with more information:
+
+```
+Run 1: empty blocked list  -> discover obstacles the hard way -> many reroutes
+Run 2: pre-loaded list     -> plan around known obstacles      -> few or no reroutes
+```
+
+**Better data leads to better performance.** The robot isn't running a smarter algorithm on
+Run 2 — it's running the *same* algorithm on better information.
+
+<KnowledgeCheck
+  question="Why does the robot navigate better on Run 2?"
+  options={[
+    {text: 'It learns a smarter algorithm'},
+    {text: 'The algorithm is identical — but the blocked list starts with obstacles learned in Run 1, so paths are planned around them from the start', correct: true},
+    {text: 'Its motors get faster'},
+    {text: 'It skips destinations'},
+  ]}
+  explanation="Same BFS, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
+/>
+
+## Activity · Drive until you arrive
+
+### Step 1 · Dry run
+
+Write the body from the outline, with `simulate_rangefinder(next_pos)` in the
+look-ahead line for now. Then write the test — `test_navigate()` — that the rest of
+the lesson uses: hand every entry of `KNOWN_OBSTACLES` to `add_blocked()` (a `for`
+loop, two lines); set position `(0, 0)`, heading `0`, destination `(3, 3)`; plan the
+path and print it; wait for the button; call the function — and **assign all four
+return values** — then print where the robot arrived, the step and reroute counts,
+and, on its own line, `"All known obstacles:"` and `BLOCKED`.
+
+```python
+    position, heading, steps, reroutes = navigate_with_detection(
+        position, heading, destination, rangefinder, OBSTACLE_CM
+    )
+```
+
+Robot at `(0, 0)` facing North on an empty grid, run line set to it, both presses.
+With `SIMULATED_OBSTACLES` still `[(2, 0), (2, 2)]`, you should see the robot reach
+`(1, 0)`, "see" `(2, 0)`, print a new path, *take it*, and arrive at `(3, 3)` with one
+reroute. Compare with Lesson 5-7, which stopped at the reroute.
+
+### Step 2 · The real sensor
+
+Change the look-ahead line to `rangefinder.distance()`. Put two boxes on the grid, on
+intersections the printed path crosses, and run again. The robot should reroute
+around the first, and if the new path meets the second, reroute again, and arrive.
+Write down the last line it prints — the blocked list.
+
+<Reveal title="Check your navigate_with_detection()" hint="dry run first, then boxes">
 
 ```python
 def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
+    """Drive from position (facing heading) to destination,
+    re-planning around every obstacle the rangefinder finds;
+    return (position, heading, step_count, reroute_count)."""
     step_count = 0
     reroute_count = 0
 
@@ -79,62 +227,11 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
     return position, heading, step_count, reroute_count
 ```
 
-Read the shape, not the lines: **plan, follow, and if something got in the way, plan
-again from here.** The inner `for` is Lesson 5-7 unchanged. The `rerouted` flag is how
-the `while` finds out whether the `for` finished or broke out early. And the function
-returns the robot's new `position` and `heading`, because the caller will need them
-to plan the *next* trip — Lesson 5-9 strings several of these together.
+If yours re-plans at the bottom of the `for` instead of the top of the `while` and
+still arrives, keep yours — but check that a boxed-in robot prints "No path" rather
+than claiming to have arrived.
 
-The empty-path check matters now in a way it didn't on paper. If the robot gets
-boxed in, `compute_bfs_path()` returns `[]` (Lesson 5-5). Without the check, the
-`for` loop would run zero times, `rerouted` would stay `False`, and the robot would
-declare itself arrived at the wrong intersection.
-
-<KnowledgeCheck
-  question="In navigate_with_detection(), what makes the while loop finally stop?"
-  options={[
-    {text: 'A fixed number of iterations'},
-    {text: 'The for loop over the path finishes without a single reroute, so rerouted stays False and arrived becomes True', correct: true},
-    {text: 'The rangefinder returns 0'},
-    {text: 'compute_bfs_path returns the same path twice'},
-  ]}
-  explanation="Each pass plans a path and tries to follow it. If a wall turns up, the for loop breaks with rerouted = True and the while plans again from the new position. Only a complete, uninterrupted pass sets arrived."
-/>
-
-<KnowledgeCheck
-  question="Why does the function return position and heading, not just the step counts?"
-  options={[
-    {text: 'Python requires functions to return at least two values'},
-    {text: 'So the next trip can be planned from where the robot actually ended up, facing the way it actually faces', correct: true},
-    {text: 'To reset them to (0, 0) and 0'},
-    {text: 'For the print statement only'},
-  ]}
-  explanation="position and heading are local variables inside the function. The caller only learns their new values if the function hands them back — and Lesson 5-9 needs them to chain several destinations."
-/>
-
-## Why memory matters
-
-The BFS planner doesn't change between runs. The driving functions don't change. Only
-the **input** changes — the blocked list starts with more information:
-
-```
-Run 1: empty blocked list  -> discover obstacles the hard way -> many reroutes
-Run 2: pre-loaded list     -> plan around known obstacles      -> few or no reroutes
-```
-
-**Better data leads to better performance.** The robot isn't running a smarter algorithm on
-Run 2 — it's running the *same* algorithm on better information.
-
-<KnowledgeCheck
-  question="Why does the robot navigate better on Run 2?"
-  options={[
-    {text: 'It learns a smarter algorithm'},
-    {text: 'The algorithm is identical — but the blocked list starts with obstacles learned in Run 1, so paths are planned around them from the start', correct: true},
-    {text: 'Its motors get faster'},
-    {text: 'It skips destinations'},
-  ]}
-  explanation="Same BFS, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
-/>
+</Reveal>
 
 ## Activity · Carry what you learned into the next run
 
@@ -142,21 +239,18 @@ Within one program run, `BLOCKED` persists between function calls — that's why
 `while` loop above works. But close the program and it's gone; Python variables don't
 survive a restart. So how does Run 2 begin already knowing what Run 1 found out?
 
-You tell it. The program already prints the list at the end of the run:
+You tell it. Your test already prints the list at the end of the run:
 
-```python
-print("All known obstacles:", BLOCKED)
-# -> All known obstacles: [(1, 2), (2, 2), (3, 0)]
+```text
+All known obstacles: [(1, 2), (2, 2), (3, 0)]
 ```
 
-Type that list into the top of your program, and hand each intersection to the
-planner the same way everything else reaches it:
+Type that list into `KNOWN_OBSTACLES` at the top of the Lesson 5-8 part of the file,
+and the first two lines of your test hand each intersection to the planner the same
+way everything else reaches it:
 
 ```python
 KNOWN_OBSTACLES = [(1, 2), (2, 2), (3, 0)]      # what Run 1 discovered
-
-for intersection in KNOWN_OBSTACLES:
-    add_blocked(intersection)
 ```
 
 Run it again. The robot plans around all three from its very first path and never
@@ -166,7 +260,7 @@ entries, ready to carry across to Run 3.
 That's the whole lesson in two lines of typing: **you are the memory.** The robot
 found the obstacles, you carried them from one run to the next, and the algorithm
 never changed. Notice too that the planner has now been told about walls three
-different ways — by a test script in 5-6, by the rangefinder in 5-7, and by you here —
+different ways — by a test in 5-6, by the rangefinder in 5-7, and by you here —
 and every one of them was a call to `add_blocked()`. A real system would write the
 list somewhere and read it back itself rather than waiting for a person, but *what*
 gets carried across, and what it's worth, is exactly what you just did by hand.
@@ -185,7 +279,7 @@ gets carried across, and what it's worth, is exactly what you just did by hand.
 ## Activity · Measure the improvement
 
 "It seemed faster" isn't evidence — **measure**. The function already counts steps and
-reroutes; write them down for each run:
+reroutes and your test prints them; write them down for each run:
 
 ```
 Metric              Run 1    Run 2
@@ -207,6 +301,86 @@ differ with your grid and where the obstacles sit.
   ]}
   explanation="With obstacles pre-loaded, Run 2's initial paths already avoid them — no mid-run surprises, so zero reroutes and fewer steps."
 />
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the OBSTACLES section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 5-7 teacher copy left it. The file is
+`lesson-08-building-experience.py` in the Module 5 solutions. The look-ahead line is
+the real sensor here; step 1 uses `simulate_rangefinder(next_pos)` in its place.
+
+```python
+# --- Lesson 5-8: re-plan until you arrive ---
+# navigate_with_detection() is the 5-7 loop inside a while:
+# plan, follow, and if something got in the way, plan again
+# from here, until a whole path is driven with no reroute. It
+# hands back position and heading, as drive_path() does, plus
+# the step and reroute counts. KNOWN_OBSTACLES is what the
+# last run found, typed in by you: memory between runs.
+KNOWN_OBSTACLES = []     # what the last run printed; empty on Run 1
+
+def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
+    """Drive from position (facing heading) to destination,
+    re-planning around every obstacle the rangefinder finds;
+    return (position, heading, step_count, reroute_count)."""
+    step_count = 0
+    reroute_count = 0
+
+    arrived = False
+    while not arrived:
+        path = compute_bfs_path(position, destination)
+        print("  Path from", position, ":", path)
+
+        if len(path) == 0:
+            print("No path to", destination, "!")
+            return position, heading, step_count, reroute_count
+
+        rerouted = False
+        for next_pos in path:
+            needed = desired_heading(position, next_pos)
+            heading = turn_to(heading, needed)
+
+            distance = rangefinder.distance()          # look before driving
+            if distance < obstacle_cm:
+                add_blocked(next_pos)
+                print("  OBSTACLE at", next_pos, "! Rerouting...")
+                reroute_count = reroute_count + 1
+                rerouted = True
+                break
+            else:
+                track_to_intersection()
+                drive_past_intersection()
+                position = next_pos
+                step_count = step_count + 1
+
+        if not rerouted:
+            arrived = True
+
+    return position, heading, step_count, reroute_count
+
+def test_navigate():
+    for intersection in KNOWN_OBSTACLES:
+        add_blocked(intersection)
+    position = (0, 0)
+    heading = 0
+    destination = (3, 3)
+
+    print("Planned path:", compute_bfs_path(position, destination))
+    board.wait_for_button()
+
+    position, heading, steps, reroutes = navigate_with_detection(
+        position, heading, destination, rangefinder, OBSTACLE_CM
+    )
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+    print("Steps:", steps, " Reroutes:", reroutes)
+    print("All known obstacles:", BLOCKED)
+
+# ===== RUN =====
+board.wait_for_button()
+test_navigate()
+```
+
+</TeacherNote>
 
 ## Could Run 2 still find new obstacles?
 
@@ -252,17 +426,18 @@ Systems that accumulate and reuse experience are everywhere:
 
 <TeacherNote title="The Waze analogy lands; make Run 1 vs Run 2 dramatic">
 
-Spend the first fifteen minutes on the `while` loop — trace it on the board with a
-path that hits one wall, so students see the `for` break, `rerouted` go `True`, and
-the `while` plan again from the new position. The `rerouted` flag is the only new
-Python idea in the lesson.
+Spend the first fifteen minutes on the `while` loop — trace the outline on the board
+with a path that hits one wall, so students see the `for` break, `rerouted` go `True`,
+and the `while` plan again from the new position. The `rerouted` flag is the only new
+Python idea in the lesson, which is why the outline spells the loop out: the shape
+is the lesson, the typing is theirs.
 
 Then frame memory with Waze — students get it instantly ("what if Waze forgot every
 traffic report when you closed the app?"). Set up the grid so Run 1 has 2–3 reroutes;
-the contrast with a zero-reroute Run 2 is the "aha." Students can prove the loop in
-software first with Lesson 5-7's `simulate_rangefinder()` swapped in for the real
-sensor. Insist on recorded numbers — steps, reroutes — the quantitative comparison
-convinces far more than "it felt faster."
+the contrast with a zero-reroute Run 2 is the "aha." The dry run in step 1 proves the
+loop with Lesson 5-7's `simulate_rangefinder()` before any box goes on the grid.
+Insist on recorded numbers — steps, reroutes — the quantitative comparison convinces
+far more than "it felt faster."
 
 **Carrying the list by hand is the point, not a shortcut.** Typing Run 1's discoveries
 into `KNOWN_OBSTACLES` makes the "same algorithm, better data" claim something

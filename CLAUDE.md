@@ -1802,9 +1802,9 @@ Conventions that came out of the pass:
   reconstruction on a throwaway 1×3 strip, then sends students back to their own
   table. Reuse of the activity's own numbers is a spoiler even when it reads like
   teaching.
-- **Reference programs are teacher copies.** M4 L9's main program, M4 L6's expected
-  `run_test` values and M2 L10's complete program are `<TeacherNote title="… (teacher
-  copy)">`; the student page keeps a comment-only skeleton describing the shape.
+- **Reference programs are teacher copies.** Every lesson's complete code is a
+  `<TeacherNote title="Solution (teacher copy)">` (since 2026-10-19; before that only
+  M4 L9, M4 L6's expected values and M2 L10); the student page keeps an outline.
 - **Reveals get a hint.** The `hint` prop ("try it first", "fill the table in
   first") prints next to the closed title and is the thing that actually stops a
   student opening it reflexively.
@@ -1823,9 +1823,9 @@ Brad: the lesson text gave the code for the exercises — "at the bottom of 2-9,
 the code for the LineTrack class is given" — so students could copy instead of
 write. Asked for outlines ("list all the methods, but not the code that goes in
 the methods"), for the one-at-a-time functions to be *tested* one at a time before
-the big program, and for teachers to keep the complete code. **M2 L9 is the model
-(and 2-7/2-8 followed the same day); Brad is reviewing before the pattern is swept
-across the other ~13 lessons**
+the big program, and for teachers to keep the complete code. **M2 L9 was the model
+(2-7/2-8 followed the same day); the sweep across the rest of the course landed
+2026-10-19 — see §15c**
 (M4 L4–L8, M5 L2–L6, M6 L2/L3, M1 L11 — the ones with full `def`/`class` bodies in
 required text). The pattern as built in 2-9:
 
@@ -1944,9 +1944,45 @@ goes further):
   `BASE_EFFORT` in 2-5, `TURN_EFFORT` in 2-9). 2-5's `Kp` callout now ends: in the
   file it's `KP` because settings are capitals; in prose it stays `Kp`. 2-9 raises
   `BASE_EFFORT` to 0.4 as an edit to the LINE TRACKING settings.
-- **Still to carry through** once Brad approves: 2-10, Module 3, 4, 5 (and 6), each
-  with its own section/skeleton/tests at the right hint level; the solutions in the
-  source repo become the filled file per lesson.
+- **Carried through the whole course on 2026-10-19** (2-10, Modules 3–6), one agent per
+  module working from this section, then verified by assembling `robot.py` from every
+  lesson's teacher copy in course order (1,115 lines, 24 banners, 48 `test_` functions,
+  no duplicate `def`s) and running it against stub XRPLib modules: Manhattan 4/7,
+  BFS 6/7, Dijkstra 7/7 on the Module 5/6 harness. The file's sections, in order:
+  LINE SENSOR · LINE TRACKING (2-8, 2-9, 2-10 sub-banners) · GRID DRIVING (3-2, 3-3,
+  3-4) · MANHATTAN PLANNER (4-6) · NAVIGATOR (4-8, 4-9) · GRID GRAPH (5-4) · BFS
+  PLANNER (5-6) · OBSTACLES (5-8, 5-9) · WEIGHTED GRAPH · DIJKSTRA PLANNER (6-4).
+  Decisions made in that pass that later edits must respect:
+  - **Driving tests press the button twice.** `RUN` waits for the button and starts
+    the test; a test that plans first prints the plan and then calls
+    `board.wait_for_button()` itself before driving (the "plan, print, button, drive"
+    habit from 4-8). Paper tests need only the `RUN` press.
+  - **Two harnesses, two names.** M4's `run_test(test_name, position, destination,
+    expected)` is exact-match (right for Manhattan) and stays; M5 L6's property
+    harness is `run_path_test(test_name, planner, position, destination,
+    expected_steps)` + `run_no_path_test(...)`, wrapped by `run_all_tests(name,
+    planner)` — the polymorphism demo. Module 6 adds `clear_slow_edges()` and a
+    seventh "slow row" case inside `run_all_tests()` (Manhattan 4/7, BFS 6/7,
+    Dijkstra 7/7). Class track: `HARNESS_BLOCKED`, `block(planner, x)`,
+    `clear(planner)`, `slow(planner, a, b, cost)`; `Manhattan`/`BFS` got no-op
+    `add_slow_edge()`/`clear_slow_edges()` so one harness fits all three.
+  - **In-place rewrites are taught as such** (like `get_error()` in 2-6): 4-5 renames
+    `compute_path` → `compute_manhattan_path` and has students watch the old tests fail
+    with NameError; 5-4 rewrites `build_grid_graph` → `build_graph(rows, cols,
+    blocked)` and deletes `remove_blocked()`; 5-5 adds `add_blocked()`/`clear_blocked()`
+    to the 4-5 `Manhattan` class rather than defining a second class; on the class track
+    `planner = BFS()` replaces `planner = Manhattan()` in 5-5.
+  - **Names introduced by the pass** (not renames): `drive_intersections(count)` and
+    `SIDE` (M3); `HEADING_NAMES`, `DESTINATIONS` (4-9) vs `CAPSTONE_DESTINATIONS`
+    (5-9); `ROWS`/`COLS`, `BLOCKED`, `bfs_rings()`, `print_grid(rows, cols, blocked,
+    numbers)`; `OBSTACLE_CM`, `SIMULATED_OBSTACLES`, `KNOWN_OBSTACLES`;
+    `clear_slow_edges()`, `dijkstra_distances()`, `compare()`, `SLOW_SEGMENT`,
+    `PLANNER_NAME`. Rangefinder import/object join the start block in 5-7.
+  - Python-concept lessons (4-2 tuples, 4-3 lists, 5-2 dictionaries) keep their
+    snippets as scratch demos and say so; nothing from them is pasted into `robot.py`
+    except the functions that persist (5-2's graph builder).
+  - Source-repo solution files to (re)name when porting: `lesson-NN-<slug>.py` per
+    lesson as cited in each teacher copy; the M3 names are new.
 
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 

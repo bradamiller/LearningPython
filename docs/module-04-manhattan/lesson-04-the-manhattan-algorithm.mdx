@@ -17,7 +17,8 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Coordinates, tuples, lists — now they come together. In this lesson you write the
 function that **computes a whole path automatically**: give it a start and a
 destination, and it hands back the list of intersections to drive. You'll trace it on
-paper first, then build it in two stages.
+paper first, then build it in two stages — in a new section of `robot.py`, the first
+one in the file that never touches the robot.
 
 <Objectives>
 
@@ -25,9 +26,9 @@ By the end of this lesson you will be able to:
 
 - Explain what **Manhattan distance** is and why it's named after Manhattan, NYC
 - Describe the "rows first, then columns" strategy and hand-trace a path on paper
-- Write `compute_path(start, end)` with while loops that build a list of positions
+- Open the MANHATTAN PLANNER section of `robot.py` and write `compute_path(start, end)` in it, with while loops that build a list of positions
 - Extend it from 2 loops (south/east) to 4 loops (all directions) — no `if/else`
-- Handle the edge cases: same row, same column, and same position
+- Test it on screen against your paper traces, including the edge cases: same row, same column, and same position
 
 </Objectives>
 
@@ -116,51 +117,78 @@ short and targeted; the goal is intuition, not mastery. The bulk of the lesson i
 writing and testing `compute_path()`. If you can, show an actual map of Manhattan for
 the hook — the name sticks when it's tied to real streets.
 
+**The hint level drops again here.** The outline names the pieces (unpack, two loops,
+return) because the trace table just did the algorithm by hand, and for the first time
+no test function is given: the lesson says what the test should print and students
+name and write it. Expect two or three print lines per test; the habit is what matters,
+because every planner test from here to Module 6 is written this way. Students who
+want the Module 2 scaffolding back can be pointed at their own trace table — it *is*
+the outline.
+
 </TeacherNote>
+
+## This lesson's skeleton
+
+A new kind of work gets a new section. Paste this into `robot.py` above `RUN`, after
+the GRID DRIVING section. It is the first section in the file with no driving in it at
+all: a function that takes two tuples and returns a list.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (row, col) tuples to
+# drive to, rows first and then columns. Pure arithmetic --
+# nothing in here touches a sensor or a motor, so every test
+# in this section runs on screen with the robot sitting still.
+
+def compute_path(start, end):
+    """Return the (row, col) steps from start to end, rows
+    first, then columns. The start itself is not in the list."""
+    # 1. path = [] ; unpack start and end into row/col numbers
+    # 2. south loop: while the row is short of the end row,
+    #    step the row by one and append the new position
+    # 3. east loop: the same for the column
+    # 4. return path
+    pass
+```
+
+Two things are new about this skeleton. The outline is shorter than Module 2's — you
+just traced the algorithm by hand, so the comments name the pieces rather than spell
+them out. And there is no test function in it: from this module on, the lesson tells
+you what a test should show and you write it, name and all. Tests in this section are
+**paper tests** — they print a path, you compare it with your trace, and nothing moves.
+The robot can stay on the desk.
 
 ## Activity · Code the algorithm
 
 Build it in two stages: get the easy half working and *run it* before you
-generalise. A half-finished algorithm you have tested beats a whole one you
+generalize. A half-finished algorithm you have tested beats a whole one you
 haven't.
 
 ### Step 1 · South and east only
 
-Start with just the two "positive" directions (moving down and right). Notice
-**tuple unpacking** on the setup lines — `current_row, current_col = start` pulls both
-numbers out of the tuple in one line:
+Start with just the two "positive" directions (moving down and right) — steps 1 to 4
+of the outline. Step 1 uses **tuple unpacking**, which is new: one line pulls both
+numbers out of a tuple into two variables.
 
 ```python
-def compute_path(start, end):
-    path = []
-    current_row, current_col = start
-    dest_row, dest_col = end
-
-    # Move south (rows increase)
-    while current_row < dest_row:
-        current_row = current_row + 1
-        path.append((current_row, current_col))
-
-    # Move east (columns increase)
-    while current_col < dest_col:
-        current_col = current_col + 1
-        path.append((current_row, current_col))
-
-    return path
+current_row, current_col = start     # start is (0, 0): row 0, col 0
 ```
 
-Test it and compare to your paper traces:
+Do the same for `end`, and the loops compare plain numbers. Each loop is the
+build-in-a-loop pattern from Lesson 4-3, with a `while` instead of a `for`: as long
+as the row is still short of the destination row, step it by one and append the new
+`(row, col)` — the double parentheses in `append((...))` are the function call around
+the tuple.
 
-```python
-print(compute_path((0, 0), (2, 3)))   # [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-print(compute_path((1, 1), (3, 4)))   # [(2, 1), (3, 1), (3, 2), (3, 3), (3, 4)]
-```
+Then write a test — say `test_paper_paths()` — that prints `compute_path((0, 0),
+(2, 3))` and `compute_path((1, 1), (3, 4))`. Set the run line to it, run it, and compare
+with your paper traces: both should give exactly the hand-traced lists, 5 steps each.
+Don't go on until they match.
 
-Both give 5 steps — exactly the hand-traced answers.
-
-**Now find the limit:** what does `compute_path((3, 3), (1, 0))` return? An empty list!
-`3 < 1` is False and `3 < 0` is False, so *neither* loop runs. Going up or left, this
-version does nothing. We need north and west too.
+**Now find the limit:** add `compute_path((3, 3), (1, 0))` to the test and run it
+again. An empty list! `3 < 1` is False and `3 < 0` is False, so *neither* loop runs.
+Going up or left, this version does nothing. We need north and west too.
 
 <KnowledgeCheck
   question="Why does the stage-1 function return [] for (3,3) → (1,0)?"
@@ -176,41 +204,15 @@ version does nothing. We need north and west too.
 ### Step 2 · All four directions
 
 The fix is elegant: **add two more while loops**, one for north (rows decrease) and one
-for west (columns decrease). No `if/else` needed — for any single trip, at most one row
-loop and one column loop will run; the others are skipped because their condition is
-False from the start.
+for west (columns decrease). Each is the mirror of the loop it sits next to: the
+comparison flips and the step goes the other way. No `if/else` needed — for any single
+trip, at most one row loop and one column loop will run; the others are skipped because
+their condition is False from the start. Keep the two row loops together, before the
+two column loops, so the path is always rows first.
 
-```python
-def compute_path(start, end):
-    path = []
-    current_row, current_col = start
-    dest_row, dest_col = end
-
-    # Move south (rows increase)
-    while current_row < dest_row:
-        current_row = current_row + 1
-        path.append((current_row, current_col))
-
-    # Move north (rows decrease)
-    while current_row > dest_row:
-        current_row = current_row - 1
-        path.append((current_row, current_col))
-
-    # Move east (columns increase)
-    while current_col < dest_col:
-        current_col = current_col + 1
-        path.append((current_row, current_col))
-
-    # Move west (columns decrease)
-    while current_col > dest_col:
-        current_col = current_col - 1
-        path.append((current_row, current_col))
-
-    return path
-```
-
-Now trace **(3, 3) → (1, 0)** yourself, and say which of the four loops run before
-you look: the robot has to go *up* and *left*, so two of them stay idle.
+Before you run it, trace **(3, 3) → (1, 0)** on paper and say which of the four loops
+run: the robot has to go *up* and *left*, so two of them stay idle. Then run
+`test_paper_paths()` again and compare.
 
 <Reveal title="Check the (3, 3) → (1, 0) trace" hint="work it out first">
 
@@ -244,22 +246,120 @@ tuple unpacking (`current_row, current_col = start`) and on the double parenthes
 
 ## Activity · The edge cases
 
-<Todo kind="answers">
-all three edge-case answers are printed as inline comments in the code students are asked to trace. [REVIEW §3]
-</Todo>
+Good algorithms handle the awkward inputs without special code. Write a second test —
+`test_edge_cases()` — with three calls: **same row**, `(2, 0)` to `(2, 3)`; **same
+column**, `(0, 2)` to `(3, 2)`; and **same spot**, `(1, 1)` to `(1, 1)`. Trace all three
+on paper and write your prediction as a comment next to each call *before* you set the
+run line to it.
 
-Good algorithms handle the awkward inputs without special code. Trace these and run
-them:
+<Reveal title="Check the three edge cases" hint="predict all three first">
 
-```python
-print(compute_path((2, 0), (2, 3)))   # same row  -> [(2,1),(2,2),(2,3)]
-print(compute_path((0, 2), (3, 2)))   # same col  -> [(1,2),(2,2),(3,2)]
-print(compute_path((1, 1), (1, 1)))   # same spot -> []
+```
+[(2, 1), (2, 2), (2, 3)]
+[(1, 2), (2, 2), (3, 2)]
+[]
 ```
 
 Same row means the two row loops are skipped; same column skips the column loops; same
 position skips all four and returns `[]`. Nothing special written — the loops just
 don't run when there's no distance to cover.
+
+</Reveal>
+
+<Reveal title="Check your compute_path()" hint="write and test it first">
+
+```python
+def compute_path(start, end):
+    """Return the (row, col) steps from start to end, rows
+    first, then columns. The start itself is not in the list."""
+    path = []
+    current_row, current_col = start
+    dest_row, dest_col = end
+
+    # Move south (rows increase)
+    while current_row < dest_row:
+        current_row = current_row + 1
+        path.append((current_row, current_col))
+
+    # Move north (rows decrease)
+    while current_row > dest_row:
+        current_row = current_row - 1
+        path.append((current_row, current_col))
+
+    # Move east (columns increase)
+    while current_col < dest_col:
+        current_col = current_col + 1
+        path.append((current_row, current_col))
+
+    # Move west (columns decrease)
+    while current_col > dest_col:
+        current_col = current_col - 1
+        path.append((current_row, current_col))
+
+    return path
+```
+
+The first and third loops are stage 1; the other two are the mirrors you added in
+stage 2. If yours is laid out differently and passes both tests, keep yours.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The MANHATTAN PLANNER section of `robot.py` as this lesson leaves it, plus the run
+block; the rest of the file is as the Lesson 3-4 teacher copy left it. The file is
+`lesson-04-the-manhattan-algorithm.py` in the Module 4 solutions. Test names are the
+students' own from here on; these are the ones the lesson suggests.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (row, col) tuples to
+# drive to, rows first and then columns. Pure arithmetic --
+# nothing in here touches a sensor or a motor, so every test
+# in this section runs on screen with the robot sitting still.
+
+def compute_path(start, end):
+    """Return the (row, col) steps from start to end, rows
+    first, then columns. The start itself is not in the list."""
+    path = []
+    current_row, current_col = start
+    dest_row, dest_col = end
+
+    while current_row < dest_row:
+        current_row = current_row + 1
+        path.append((current_row, current_col))
+
+    while current_row > dest_row:
+        current_row = current_row - 1
+        path.append((current_row, current_col))
+
+    while current_col < dest_col:
+        current_col = current_col + 1
+        path.append((current_row, current_col))
+
+    while current_col > dest_col:
+        current_col = current_col - 1
+        path.append((current_row, current_col))
+
+    return path
+
+def test_paper_paths():
+    print(compute_path((0, 0), (2, 3)))   # south, then east
+    print(compute_path((1, 1), (3, 4)))
+    print(compute_path((3, 3), (1, 0)))   # north, then west
+
+def test_edge_cases():
+    print(compute_path((2, 0), (2, 3)))   # same row
+    print(compute_path((0, 2), (3, 2)))   # same column
+    print(compute_path((1, 1), (1, 1)))   # same spot: []
+
+# ===== RUN =====
+board.wait_for_button()
+test_edge_cases()
+```
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="What does compute_path((2, 2), (2, 2)) return, and why?"
@@ -299,8 +399,9 @@ don't run when there's no distance to cover.
 **Formative:** trace a path on paper, write the two stage-1 loops, explain why stage 1
 fails for up/left, add the north/west loops without `if/else`, and predict the three
 edge cases. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
-steps is that?" (`[(1,0),(2,0),(2,1),(2,2),(2,3)]`, 5). **Preview:** next lesson we wrap
-this exact function into a **`Manhattan` class** — the algorithm won't change at all.
+steps is that?" (`[(1,0),(2,0),(2,1),(2,2),(2,3)]`, 5). **Preview:** next lesson this
+exact function gets its real name, `compute_manhattan_path(position, destination)`, and
+a docstring that writes down what it promises — the algorithm won't change at all.
 
 </TeacherNote>
 

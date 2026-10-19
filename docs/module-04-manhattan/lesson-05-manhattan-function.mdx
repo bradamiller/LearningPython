@@ -25,11 +25,11 @@ to change.
 
 By the end of this lesson you will be able to:
 
-- Rename `compute_path()` to `compute_manhattan_path(position, destination)` and say why each part of the name matters
+- Rename `compute_path()` to `compute_manhattan_path(position, destination)` in `robot.py`, update every call to it, and say why each part of the name matters
 - State the function's three promises: the path never includes the start, it ends at the destination, and it is `[]` when you are already there
 - Write a docstring that records those promises
 - Explain why the planner takes the robot's position as a parameter instead of storing it
-- Call the planner from several different positions and check each result by hand
+- Write a paper test that calls the planner from several different positions, and check each result by hand
 
 </Objectives>
 
@@ -37,7 +37,8 @@ By the end of this lesson you will be able to:
 
 ## A rename with a reason
 
-Here is the whole change to the function's first line:
+Here is the whole change to the function's first line, in the MANHATTAN PLANNER
+section of `robot.py`:
 
 ```python
 # Lesson 4-4
@@ -47,7 +48,8 @@ def compute_path(start, end):
 def compute_manhattan_path(position, destination):
 ```
 
-Three words changed, each on purpose.
+Three words changed, each on purpose. (Nothing is pasted in this lesson — it's an
+edit to a function you already have, the same way Lesson 2-6 rewrote `get_error()`.)
 
 **`manhattan`** says *which* algorithm this is. Right now it's the only planner you have,
 so the name feels redundant. In Module 5 you'll write a second one, `compute_bfs_path()`,
@@ -167,9 +169,20 @@ exactly why you can test it on any computer with no robot attached, which is nex
 
 ## Activity · Call it from everywhere
 
-Rename the function in your Lesson 4-4 file, add the docstring, and run these four calls.
-Before each one, trace the answer by hand on the grid diagram and write down what you
-expect:
+### Step 1 · The rename
+
+In the MANHATTAN PLANNER section, change the `def` line and replace the one-line
+docstring with the full one above. Then set the run line to `test_paper_paths()` and
+run it — and read the error. Your Lesson 4-4 tests still call `compute_path()`, which
+no longer exists. A rename changes every *call* as well as the definition, which is
+exactly why names in this file are chosen carefully and changed almost never. Update
+both tests and run them again; same output as yesterday.
+
+### Step 2 · A test from everywhere
+
+Write a new test — `test_from_everywhere()` — with these four calls, each printed.
+Before you run it, trace each answer by hand on the grid diagram and write what you
+expect as a comment next to the call:
 
 ```python
 print(compute_manhattan_path((0, 0), (2, 3)))   # south, then east
@@ -178,7 +191,10 @@ print(compute_manhattan_path((3, 3), (1, 0)))   # north, then west
 print(compute_manhattan_path((2, 0), (2, 4)))   # same row: east only
 ```
 
-Expected:
+Set the run line to it. Then check all three promises against each result — no start,
+ends at the destination — and add a fifth call where position equals destination.
+
+<Reveal title="Check your four traces" hint="trace all four by hand first">
 
 ```
 [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
@@ -187,8 +203,79 @@ Expected:
 [(2, 1), (2, 2), (2, 3), (2, 4)]
 ```
 
-Then check all three promises against each result — no start, ends at the destination —
-and add a fifth call where position equals destination.
+And the fifth call prints `[]`, promise 3.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The MANHATTAN PLANNER section of `robot.py` as this lesson leaves it, plus the run
+block; the rest of the file is as the Lesson 4-4 teacher copy left it. The file is
+`lesson-05-manhattan-function.py` in the Module 4 solutions. The four `while` loops
+are byte-for-byte the Lesson 4-4 ones.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (row, col) tuples to
+# drive to, rows first and then columns. Pure arithmetic --
+# nothing in here touches a sensor or a motor, so every test
+# in this section runs on screen with the robot sitting still.
+
+def compute_manhattan_path(position, destination):
+    """Compute a Manhattan path from position to destination.
+
+    position:    a (row, col) tuple -- where the robot is now
+    destination: a (row, col) tuple -- where it needs to go
+
+    Returns a list of (row, col) tuples the robot should move to,
+    not including position itself.
+    """
+    path = []
+    current_row, current_col = position
+    dest_row, dest_col = destination
+
+    while current_row < dest_row:
+        current_row = current_row + 1
+        path.append((current_row, current_col))
+
+    while current_row > dest_row:
+        current_row = current_row - 1
+        path.append((current_row, current_col))
+
+    while current_col < dest_col:
+        current_col = current_col + 1
+        path.append((current_row, current_col))
+
+    while current_col > dest_col:
+        current_col = current_col - 1
+        path.append((current_row, current_col))
+
+    return path
+
+def test_paper_paths():
+    print(compute_manhattan_path((0, 0), (2, 3)))
+    print(compute_manhattan_path((1, 1), (3, 4)))
+    print(compute_manhattan_path((3, 3), (1, 0)))
+
+def test_edge_cases():
+    print(compute_manhattan_path((2, 0), (2, 3)))
+    print(compute_manhattan_path((0, 2), (3, 2)))
+    print(compute_manhattan_path((1, 1), (1, 1)))
+
+def test_from_everywhere():
+    print(compute_manhattan_path((0, 0), (2, 3)))   # south, then east
+    print(compute_manhattan_path((0, 0), (3, 1)))
+    print(compute_manhattan_path((3, 3), (1, 0)))   # north, then west
+    print(compute_manhattan_path((2, 0), (2, 4)))   # same row: east only
+    print(compute_manhattan_path((2, 2), (2, 2)))   # already there: []
+
+# ===== RUN =====
+board.wait_for_button()
+test_from_everywhere()
+```
+
+</TeacherNote>
 
 <KnowledgeCheck
   question={'A classmate runs compute_manhattan_path((3, 3), (1, 0)) and gets [(3, 3), (2, 3), (1, 2), (1, 1), (1, 0)]. What went wrong?'}
@@ -260,26 +347,71 @@ because the planner is pure arithmetic.
 If you did the class extensions in Module 2, here is the same planner as a class. Read
 the docstring first — it answers the obvious question, which is *why bother*.
 
+This is the class-track skeleton for the MANHATTAN PLANNER section. Paste it in place
+of the `compute_manhattan_path()` function (keep your tests), move the four loops into
+the method, and the object is created right under the class, as `sensor` and `tracker`
+were in Module 2.
+
 ```python
+# ===== MANHATTAN PLANNER (class version) =====
+# One Manhattan object plans routes across the grid, rows
+# first and then columns. It holds NO state: compute_path()
+# is told the robot's position every call. Pure arithmetic.
 class Manhattan:
     """The Lesson 4-5 planner as a class.
 
-    It holds NO state: compute_path() is told the robot's position every
-    time. Manhattan is a class only so that it has the same shape as the
-    Module 5 and 6 planners (BFS, Dijkstra) -- then one main program and
-    one test harness work with any of them by changing one name.
+    It holds NO state: compute_path() is told the robot's position
+    every time. Manhattan is a class only so that it has the same
+    shape as the Module 5 and 6 planners (BFS, Dijkstra) -- then one
+    main program and one test harness work with any of them by
+    changing one name.
     """
 
     def __init__(self):
         pass        # nothing to set up
 
     def compute_path(self, position, destination):
+        # your compute_manhattan_path(), unchanged: nothing in
+        # it needs self., because the planner holds nothing
+        pass
+
+planner = Manhattan()
+```
+
+Your tests stay where they are; each `compute_manhattan_path(` in them becomes
+`planner.compute_path(`. Run `test_from_everywhere()` again: same five lists.
+
+<Reveal title="Check your Manhattan" hint="move the loops in and rerun the tests first">
+
+```python
+    def compute_path(self, position, destination):
         path = []
         current_row, current_col = position
         dest_row, dest_col = destination
-        # ... the four while loops, unchanged ...
+
+        while current_row < dest_row:
+            current_row = current_row + 1
+            path.append((current_row, current_col))
+
+        while current_row > dest_row:
+            current_row = current_row - 1
+            path.append((current_row, current_col))
+
+        while current_col < dest_col:
+            current_col = current_col + 1
+            path.append((current_row, current_col))
+
+        while current_col > dest_col:
+            current_col = current_col - 1
+            path.append((current_row, current_col))
+
         return path
 ```
+
+The method body is the function body, indented one level further. That is the whole
+translation, and the lack of `self.` inside it is the point of the docstring.
+
+</Reveal>
 
 <SideBySide>
 <div>
@@ -305,6 +437,12 @@ is told where the robot is. The `__init__` is empty because Manhattan has nothin
 up; BFS in Module 5 will use its `__init__` to hold the list of blocked intersections,
 and that's the moment the class earns its keep. The file is
 `lesson-05-manhattan-class-addon.py` in the Module 4 solutions.
+
+**From here on, use your class.** The lessons ahead are written with the function
+name, because that is what every student has; yours is the same call with `planner.`
+in front and a shorter name. When Lesson 4-6 says `compute_manhattan_path(position,
+destination)`, you write `planner.compute_path(position, destination)` — inside the
+test harness, in the final project, everywhere. Nothing else changes.
 
 </OptionalExtension>
 

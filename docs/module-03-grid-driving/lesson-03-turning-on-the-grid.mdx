@@ -24,32 +24,39 @@ By the end of this lesson you will be able to:
 
 - Sequence drive and turn operations into a path
 - Turn at intersections with `turn_clockwise()` and `turn_counterclockwise()`, and say why the turn pivots on the intersection
-- Navigate an L-shaped path
+- Navigate an L-shaped path, as a test function written from a description
 - Plan a path on paper before you write the code
 
 </Objectives>
 
 <QuizLink id="module-03-grid-driving/lesson-03-turning-on-the-grid" />
 
+## This lesson's skeleton
+
+Paste this into `robot.py` above `RUN`, at the end of the GRID DRIVING section. No
+new function this time — a path is calls to what you have — so it's two tests.
+
+```python
+# --- Lesson 3-3: turning on the grid ---
+# No new function: a path is drive_intersections(), a turn,
+# drive_intersections() again. The turn works because the
+# helper leaves the wheels parked on the intersection.
+
+def test_l_shape():
+    # drive 2 intersections, turn right, drive 2 more, then
+    # print that the L is complete
+    pass
+
+def test_my_path():
+    # the path you planned on paper, one leg per line
+    pass
+```
+
 ## Drive, turn, drive
 
 Turning a corner on the grid is just like walking city streets: go to the
 intersection, then turn. In code that's `drive_intersections()`, then a turn, then
-`drive_intersections()` again:
-
-```python
-# (both Module 2 toolkits and drive_intersections from Lesson 3-2 go above)
-
-board = Board.get_default_board()
-
-board.wait_for_button()
-
-drive_intersections(2)      # drive forward 2 intersections
-turn_clockwise()            # turn right onto the crossing line
-drive_intersections(2)      # drive 2 more, now sideways
-
-print("L-shape complete!")
-```
+`drive_intersections()` again — three lines for an L, one per leg or corner.
 
 <Figure
   placeholderLabel="Diagram — grid with an L-shaped path: 2 segments across, a right turn, 2 segments down"
@@ -109,19 +116,74 @@ partly so they can't.
 
 </TeacherNote>
 
-## Activity · Plan on paper first
+## Activity · The L, then a path of your own
+
+### Step 1 · test_l_shape()
+
+Write the body from its comment — three calls and a print — set the run line to
+`test_l_shape()`, and run it. Start the robot on a line segment with at least two
+intersections ahead and room to the right. It should drive two segments, pivot on the
+second intersection, drive two more along the crossing line, and stop parked on the
+fourth intersection it met. Don't go on until it does.
+
+### Step 2 · Plan on paper, then test_my_path()
 
 Before coding a path, sketch it: mark the start, the direction the robot faces, how
-many segments each leg is, and where the turns go. Then translate the sketch,
-one leg per line:
+many segments each leg is, and where the turns go. A plan reads like directions —
+*leg 1: three segments; corner: left; leg 2: one segment* — and translates one leg
+or corner per line, with a comment saying which is which. Write that into
+`test_my_path()`, set the run line to it, and run. Did the robot end where your
+sketch says? If not, the sketch and the code disagree somewhere; find the line.
+
+<Reveal title="Check your L-shape" hint="run test_l_shape() first">
 
 ```python
-# (setup as above -- board, then board.wait_for_button())
-
-drive_intersections(3)         # leg 1
-turn_counterclockwise()        # corner
-drive_intersections(1)         # leg 2
+def test_l_shape():
+    drive_intersections(2)      # leg 1
+    turn_clockwise()            # corner: right
+    drive_intersections(2)      # leg 2
+    print("L-shape complete!")
 ```
+
+`test_my_path()` is yours, so there is nothing to check it against but your sketch.
+For the plan above it would be `drive_intersections(3)`, `turn_counterclockwise()`,
+`drive_intersections(1)`.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the GRID DRIVING section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 3-2 teacher copy left it. The file is
+`lesson-03-turning-on-the-grid.py` in the Module 3 solutions, with the example plan
+as `test_my_path()`; students' own paths will differ. Class-track students write
+`tracker.turn_clockwise()` and `tracker.turn_counterclockwise()`; the helper call is
+the same for everyone.
+
+```python
+# --- Lesson 3-3: turning on the grid ---
+# No new function: a path is drive_intersections(), a turn,
+# drive_intersections() again. The turn works because the
+# helper leaves the wheels parked on the intersection.
+
+def test_l_shape():
+    drive_intersections(2)      # leg 1
+    turn_clockwise()            # corner: right
+    drive_intersections(2)      # leg 2
+    print("L-shape complete!")
+
+def test_my_path():
+    drive_intersections(3)      # leg 1
+    turn_counterclockwise()     # corner: left
+    drive_intersections(1)      # leg 2
+    print("Path complete!")
+
+# ===== RUN =====
+board.wait_for_button()
+test_my_path()
+```
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="Starting at the top-left facing right, the robot runs: drive_intersections(3), turn_clockwise(), drive_intersections(2). Where does it end up?"
@@ -137,10 +199,10 @@ drive_intersections(1)         # leg 2
 <TeacherNote title="Differentiation">
 
 **More support:** give students a drawn path and have them write the matching
-sequence. **More challenge:** a U-turn path (drive, turn right, drive one, turn
-right, drive) — a good reminder that two right turns only reverse direction if you
-drive a segment between them. Encourage planning on paper first; it prevents most
-sequencing mistakes.
+sequence as their `test_my_path()`. **More challenge:** a `test_u_turn()` (drive,
+turn right, drive one, turn right, drive) — a good reminder that two right turns only
+reverse direction if you drive a segment between them. Encourage planning on paper
+first; it prevents most sequencing mistakes.
 
 </TeacherNote>
 

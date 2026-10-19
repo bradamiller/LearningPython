@@ -45,15 +45,17 @@ If not, here's another correct one:
 [(0, 1), (0, 2), (0, 3), (1, 3), (2, 3), (3, 3)]   # also six steps, also right
 ```
 
-Now here's the test from Module 4's Lesson 4-6:
+Now here's the test from Module 4's Lesson 4-6, still in your file as `run_test()`:
 
 ```python
-if actual_path == expected_path:
-    print("PASS")
+if actual == expected:
+    print(test_name, "- PASS")
 ```
 
 One of those two correct paths gets marked FAIL. Module 4's test was fine, because
-Manhattan has exactly one answer. BFS doesn't. We need a different kind of test.
+Manhattan has exactly one answer. BFS doesn't. We need a different kind of test —
+and because it *is* a different kind, it gets a different name. `run_test()` stays in
+the MANHATTAN PLANNER section, doing the job it was written for.
 
 ## Test what must be true
 
@@ -82,49 +84,113 @@ not what you happened to expect.
   explanation="An exact match passes only the path you wrote down, even if your expectation was wrong. The properties check validity directly, and any shortest path passes."
 />
 
-## Activity · Build the harness
+## This lesson's skeleton
 
-Open `lesson-06-testing.py`. The two planners and the test runner are given; the
-checks are yours to write.
+Paste this into `robot.py` at the end of the BFS PLANNER section. The two helpers
+and the checker are yours to write; `run_all_tests()` — the suite — and `navigate()`
+are given, because they are the "same program" in "same program, swap the planner."
+
+```python
+# --- Lesson 5-6: the property harness ---
+# Tests any planner by what must be true of its path, not by
+# one expected list, because BFS has many right answers.
+# run_all_tests() is handed a planner FUNCTION and runs the
+# six cases through it: one program tests Manhattan and BFS.
+# Module 4's run_test() stays; exact match is right there.
+
+def manhattan_distance(a, b):
+    """Steps between a and b with nothing in the way."""
+    pass
+
+def is_neighbor(a, b):
+    """True when a and b are one step apart."""
+    pass
+
+def check_path(path, position, destination):
+    """Return a list of everything wrong with path as a route
+    from position to destination; [] means it is good."""
+    # problems = []
+    # an empty path is fine only if already there; return
+    # 1. first step next to the start?
+    # 2. last step the destination?
+    # 3. every step next to the one before it?
+    # 4. no step in BLOCKED?
+    # return problems
+    pass
+
+def run_path_test(test_name, planner, position, destination, expected_steps):
+    """Ask planner for a path, check the five properties, print
+    PASS or FAIL with the path; return True on a pass."""
+    # path = planner(position, destination)
+    # problems from check_path(), plus 5. the step count
+    # no problems: print "  PASS ", test_name, "", path
+    # otherwise: print "  FAIL " the same way, then each
+    # problem on its own line, "          - " in front
+    pass
+
+def run_no_path_test(test_name, planner, position, destination):
+    """For a walled-off destination the only right answer is
+    []; print PASS or FAIL and return True on a pass."""
+    pass
+
+def run_all_tests(name, planner):
+    """The six cases, through whichever planner is handed in:
+    four on the open grid, the wall, and walled off."""
+    print("==========", name, "==========")
+    passed = 0
+    clear_blocked()
+    if run_path_test("open (0, 0) to (3, 3)", planner, (0, 0), (3, 3), 6):
+        passed = passed + 1
+    if run_path_test("open (0, 0) to (0, 3)", planner, (0, 0), (0, 3), 3):
+        passed = passed + 1
+    if run_path_test("open (2, 1) to (0, 3)", planner, (2, 1), (0, 3), 4):
+        passed = passed + 1
+    if run_path_test("open (1, 1) to (1, 1)", planner, (1, 1), (1, 1), 0):
+        passed = passed + 1
+    add_blocked((1, 0))
+    add_blocked((1, 1))
+    if run_path_test("wall at (1,0),(1,1): (0,0) to (3,0)", planner, (0, 0), (3, 0), 7):
+        passed = passed + 1
+    add_blocked((1, 2))
+    add_blocked((1, 3))
+    if run_no_path_test("walled off: (0,0) to (3,0)", planner, (0, 0), (3, 0)):
+        passed = passed + 1
+    clear_blocked()
+    print(name + ":", passed, "of 6 passed")
+
+def navigate(planner, position, destination):
+    """Plan with planner and print the path; return
+    destination, where the robot would be after driving it."""
+    path = planner(position, destination)
+    print("  Path from", position, "to", destination, ":", path, " Steps:", len(path))
+    return destination
+```
+
+## Activity · Build the harness
 
 ### Step 1 · Two helpers
 
-```python
-def manhattan_distance(a, b):
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
-
-def is_neighbor(a, b):
-    return manhattan_distance(a, b) == 1
-```
+`manhattan_distance()` is the Lesson 4-2 formula — the row difference plus the
+column difference, each made positive with `abs()`. `is_neighbor()` asks whether
+that distance is exactly 1. Write both.
 
 ### Step 2 · `check_path()` returns a list of problems
 
-One `if` per property. An empty list means the path is good:
+One `if` per property, each appending a sentence to `problems` when it fails. An
+empty list means the path is good. The outline's first line is the special case: an
+empty path is correct when `position == destination` and a problem otherwise, and
+either way there are no steps to check, so return at once.
 
-```python
-def check_path(path, position, destination):
-    problems = []
-    if len(path) == 0:
-        if position != destination:
-            problems.append("empty path, but the robot is not at the destination")
-        return problems
-    if not is_neighbor(position, path[0]):
-        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
-    if path[-1] != destination:
-        problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
-    for i in range(1, len(path)):
-        if not is_neighbor(path[i - 1], path[i]):
-            problems.append("step " + str(path[i]) + " is not next to " + str(path[i - 1]))
-    for step in path:
-        if step in BLOCKED:
-            problems.append("drives through blocked intersection " + str(step))
-    return problems
-```
+Make the sentences specific. Returning *problems* rather than True/False is
+deliberate. A test that says only FAIL is a test you'll ignore;
+`"drives through blocked intersection (1, 0)"` tells you what to fix. Build each
+sentence with `+` and `str()`: property 1's is `"first step " + str(path[0]) + " is not
+next to the start " + str(position)`, and the others follow the same pattern — name
+the step, say what's wrong with it. Property 3 is a loop from the second step to the
+last, comparing each with the one before; property 4 is a loop over every step.
 
-Returning *problems* rather than True/False is deliberate. A test that says only
-FAIL is a test you'll ignore; "drives through blocked intersection (1, 0)" tells you
-what to fix. The fifth property, the step count, is checked by `run_test()`, which
-is given the expected count by the caller.
+The fifth property, the step count, is checked by `run_path_test()`, which is given
+the expected count by the caller.
 
 One case this function can't judge: an empty path when the destination is walled
 off is *correct*, but `check_path` can't tell "walled off" from "forgot to look."
@@ -144,10 +210,11 @@ right answer is `[]`.
 
 ### Step 3 · Hand the harness its planner
 
-Here's the one new Python idea in the lesson:
+Here's the one new Python idea in the lesson. Look at `run_path_test()`'s first
+parameter and the test you're about to write:
 
 ```python
-def run_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, position, destination, expected_steps):
     path = planner(position, destination)
     ...
 
@@ -156,10 +223,10 @@ run_all_tests("BFS", compute_bfs_path)
 ```
 
 Look at the last two lines. `compute_bfs_path` — no parentheses — is the function
-*itself*, handed to `run_all_tests` the way you'd hand it a number or a list. Inside
-`run_test`, `planner` holds that function, and `planner(position, destination)`
-calls whichever one was handed in. Both planners have the same shape, so the harness
-never needs to know which one it has.
+*itself*, handed to `run_all_tests` the way you'd hand it a number or a list. It
+passes it straight on to `run_path_test`, where `planner` holds that function, and
+`planner(position, destination)` calls whichever one was handed in. Both planners
+have the same shape, so the harness never needs to know which one it has.
 
 Try it at the prompt before writing the harness: `f = compute_bfs_path`, then
 `f((0, 0), (3, 3))`.
@@ -171,8 +238,19 @@ an error. The parentheses are the difference between "here is the planner" and
 "here is what the planner said."
 </Callout>
 
+Now write `run_path_test()` and `run_no_path_test()` from their outlines. Each
+returns `True` on a pass so that `run_all_tests()` can count. The print format is in
+the outline; here is a PASS line and a FAIL line as they should look:
+
+```text
+  PASS  open (0, 0) to (0, 3)  [(0, 1), (0, 2), (0, 3)]
+  FAIL  wall at (1,0),(1,1): (0,0) to (3,0)  [(1, 0), (2, 0), (3, 0)]
+          - drives through blocked intersection (1, 0)
+          - expected 7 steps, got 3
+```
+
 <KnowledgeCheck
-  question={'Inside run_test, what does `path = planner(position, destination)` do when the harness was called with run_all_tests("BFS", compute_bfs_path)?'}
+  question={'Inside run_path_test, what does `path = planner(position, destination)` do when the harness was called with run_all_tests("BFS", compute_bfs_path)?'}
   options={[
     {text: 'Calls compute_bfs_path(position, destination) — whichever planner was handed in', correct: true},
     {text: 'Calls every planner in the file'},
@@ -184,7 +262,8 @@ an error. The parentheses are the difference between "here is the planner" and
 
 ## Activity · Run it against both
 
-Run the harness. BFS should pass 6 of 6. Then read Manhattan's lines carefully:
+Write a test — `test_harness()` — that is the two `run_all_tests()` lines above, and
+set the run line to it. BFS should pass 6 of 6. Then read Manhattan's lines carefully:
 
 ```text
 ========== Manhattan ==========
@@ -204,16 +283,14 @@ Manhattan isn't broken. It's doing exactly what it was built to do in Module 4 �
 rows, then columns — and it has no idea what a wall is. The harness just showed,
 on paper, with the path printed, why this module exists.
 
-Then the same swap in a main program. Block `(2, 0)` and run two trips with each
-planner. The only thing that changes between the two blocks of code is the
-planner's name:
+Then the same swap in a main program. `navigate()` is the skeleton's last function:
+it plans with whatever planner it's handed, prints the path, and returns the
+destination — where the robot *would* be after driving it, which is all a paper test
+needs. Write `test_swap()`: block `(2, 0)`, then run two trips — `(0, 0)` to `(3, 3)`
+and back — with each planner. The only thing that changes between the two halves of
+the test is the planner's name:
 
 ```python
-def navigate(planner, position, destination):
-    path = planner(position, destination)
-    print("  Path from", position, "to", destination, ":", path, " Steps:", len(path))
-    return destination       # where the robot would be after driving it
-
 position = navigate(compute_manhattan_path, (0, 0), (3, 3))   # through the wall
 position = navigate(compute_bfs_path, (0, 0), (3, 3))         # around it
 ```
@@ -221,6 +298,204 @@ position = navigate(compute_bfs_path, (0, 0), (3, 3))         # around it
 Finally, break a property on purpose and watch the harness catch it: make
 `compute_bfs_path` return `path[1:]` (drop the first step), then `path + [destination]`.
 Which property catches each?
+
+<Reveal title="Check your harness" hint="run both planners through it first">
+
+```python
+def manhattan_distance(a, b):
+    """Steps between a and b with nothing in the way."""
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def is_neighbor(a, b):
+    """True when a and b are one step apart."""
+    return manhattan_distance(a, b) == 1
+
+def check_path(path, position, destination):
+    """Return a list of everything wrong with path as a route
+    from position to destination; [] means it is good."""
+    problems = []
+    if len(path) == 0:
+        if position != destination:
+            problems.append("empty path, but the robot is not at the destination")
+        return problems
+    if not is_neighbor(position, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if path[-1] != destination:
+        problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
+    for i in range(1, len(path)):
+        if not is_neighbor(path[i - 1], path[i]):
+            problems.append("step " + str(path[i]) + " is not next to " + str(path[i - 1]))
+    for step in path:
+        if step in BLOCKED:
+            problems.append("drives through blocked intersection " + str(step))
+    return problems
+
+def run_path_test(test_name, planner, position, destination, expected_steps):
+    """Ask planner for a path, check the five properties, print
+    PASS or FAIL with the path; return True on a pass."""
+    path = planner(position, destination)
+    problems = check_path(path, position, destination)
+    if len(path) != expected_steps:
+        problems.append("expected " + str(expected_steps) + " steps, got " + str(len(path)))
+    if len(problems) == 0:
+        print("  PASS ", test_name, "", path)
+        return True
+    print("  FAIL ", test_name, "", path)
+    for problem in problems:
+        print("          -", problem)
+    return False
+
+def run_no_path_test(test_name, planner, position, destination):
+    """For a walled-off destination the only right answer is
+    []; print PASS or FAIL and return True on a pass."""
+    path = planner(position, destination)
+    if len(path) == 0:
+        print("  PASS ", test_name, "", path)
+        return True
+    print("  FAIL ", test_name, "", path)
+    print("          - there is no way through, so the path should be empty")
+    return False
+```
+
+`path[-1]` is the last element — a negative index counts from the end. If your
+sentences are worded differently, fine; what matters is that each one names the
+step that broke the property.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the BFS PLANNER section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 5-5 teacher copy left it. The file is
+`lesson-06-testing-and-swapping.py` in the Module 5 solutions.
+
+**Why the harness is `run_path_test()` and not `run_test()`:** Module 4's
+`run_test(test_name, position, destination, expected)` is still in the file, with
+`test_planner()` calling it six times, and it calls `compute_manhattan_path()` by
+name with an exact-match compare. Reusing the name with a different parameter list
+would silently replace it and break `test_planner()`; renaming Module 4's would
+reach back into a finished section. Two kinds of test, two names — and the lesson
+says so, because "exact match is right for Manhattan" is a point worth keeping
+alive. The swap demo lives in `run_all_tests()`, which is unchanged in shape:
+Module 6 hands it a third planner and adds one cost case to the list.
+
+```python
+# --- Lesson 5-6: the property harness ---
+# Tests any planner by what must be true of its path, not by
+# one expected list, because BFS has many right answers.
+# run_all_tests() is handed a planner FUNCTION and runs the
+# six cases through it: one program tests Manhattan and BFS.
+# Module 4's run_test() stays; exact match is right there.
+
+def manhattan_distance(a, b):
+    """Steps between a and b with nothing in the way."""
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def is_neighbor(a, b):
+    """True when a and b are one step apart."""
+    return manhattan_distance(a, b) == 1
+
+def check_path(path, position, destination):
+    """Return a list of everything wrong with path as a route
+    from position to destination; [] means it is good."""
+    problems = []
+    if len(path) == 0:
+        if position != destination:
+            problems.append("empty path, but the robot is not at the destination")
+        return problems
+    if not is_neighbor(position, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if path[-1] != destination:
+        problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
+    for i in range(1, len(path)):
+        if not is_neighbor(path[i - 1], path[i]):
+            problems.append("step " + str(path[i]) + " is not next to " + str(path[i - 1]))
+    for step in path:
+        if step in BLOCKED:
+            problems.append("drives through blocked intersection " + str(step))
+    return problems
+
+def run_path_test(test_name, planner, position, destination, expected_steps):
+    """Ask planner for a path, check the five properties, print
+    PASS or FAIL with the path; return True on a pass."""
+    path = planner(position, destination)
+    problems = check_path(path, position, destination)
+    if len(path) != expected_steps:
+        problems.append("expected " + str(expected_steps) + " steps, got " + str(len(path)))
+    if len(problems) == 0:
+        print("  PASS ", test_name, "", path)
+        return True
+    print("  FAIL ", test_name, "", path)
+    for problem in problems:
+        print("          -", problem)
+    return False
+
+def run_no_path_test(test_name, planner, position, destination):
+    """For a walled-off destination the only right answer is
+    []; print PASS or FAIL and return True on a pass."""
+    path = planner(position, destination)
+    if len(path) == 0:
+        print("  PASS ", test_name, "", path)
+        return True
+    print("  FAIL ", test_name, "", path)
+    print("          - there is no way through, so the path should be empty")
+    return False
+
+def run_all_tests(name, planner):
+    """The six cases, through whichever planner is handed in:
+    four on the open grid, the wall, and walled off."""
+    print("==========", name, "==========")
+    passed = 0
+    clear_blocked()
+    if run_path_test("open (0, 0) to (3, 3)", planner, (0, 0), (3, 3), 6):
+        passed = passed + 1
+    if run_path_test("open (0, 0) to (0, 3)", planner, (0, 0), (0, 3), 3):
+        passed = passed + 1
+    if run_path_test("open (2, 1) to (0, 3)", planner, (2, 1), (0, 3), 4):
+        passed = passed + 1
+    if run_path_test("open (1, 1) to (1, 1)", planner, (1, 1), (1, 1), 0):
+        passed = passed + 1
+    add_blocked((1, 0))
+    add_blocked((1, 1))
+    if run_path_test("wall at (1,0),(1,1): (0,0) to (3,0)", planner, (0, 0), (3, 0), 7):
+        passed = passed + 1
+    add_blocked((1, 2))
+    add_blocked((1, 3))
+    if run_no_path_test("walled off: (0,0) to (3,0)", planner, (0, 0), (3, 0)):
+        passed = passed + 1
+    clear_blocked()
+    print(name + ":", passed, "of 6 passed")
+
+def navigate(planner, position, destination):
+    """Plan with planner and print the path; return
+    destination, where the robot would be after driving it."""
+    path = planner(position, destination)
+    print("  Path from", position, "to", destination, ":", path, " Steps:", len(path))
+    return destination
+
+def test_harness():
+    run_all_tests("Manhattan", compute_manhattan_path)
+    run_all_tests("BFS", compute_bfs_path)
+
+def test_swap():
+    clear_blocked()
+    add_blocked((2, 0))
+    print("Manhattan:")
+    position = navigate(compute_manhattan_path, (0, 0), (3, 3))   # through the wall
+    position = navigate(compute_manhattan_path, position, (0, 0))
+    print("BFS:")
+    position = navigate(compute_bfs_path, (0, 0), (3, 3))         # around it
+    position = navigate(compute_bfs_path, position, (0, 0))
+
+# ===== RUN =====
+board.wait_for_button()
+test_harness()
+```
+
+**Class track:** see the extension below — the harness calls methods on an object,
+and keeps its own record of what it blocked.
+
+</TeacherNote>
 
 <TeacherNote title="Answers, and the two things to listen for">
 
@@ -262,8 +537,8 @@ run_all_tests("BFS", BFS())
 
 # inside the harness:
 path = planner.compute_path(position, destination)
-planner.add_blocked((1, 0))
-planner.clear_blocked()
+block(planner, (1, 0))
+clear(planner)
 ```
 
 </SideBySide>
@@ -274,11 +549,54 @@ nothing, so `Manhattan()` fails the same two tests for the same reason — which
 the correct result.
 
 One wrinkle: property 4 needs to know what's blocked, and with objects the blocked
-list lives *inside* the planner. The class harness in
-`lesson-06-testing-class-addon.py` keeps its own small record — `block(planner, x)`
-calls `planner.add_blocked(x)` and notes it — so the check stays honest. Why not just
-read `planner.blocked` directly? `Manhattan` has no such attribute, and the harness
-isn't supposed to know what's inside a planner.
+list lives *inside* the planner. So the class-track harness keeps its own small
+record. This is the skeleton; paste it at the top of the Lesson 5-6 part of the
+file, above `manhattan_distance()`:
+
+```python
+# class track: the harness's own record of what it blocked
+HARNESS_BLOCKED = []
+
+def block(planner, intersection):
+    """Tell planner about intersection AND note it in
+    HARNESS_BLOCKED, so check_path() can see it."""
+    pass
+
+def clear(planner):
+    """Tell planner to forget its blocks, and forget ours."""
+    pass
+```
+
+Then the four edits: `run_path_test()` and `run_no_path_test()` call
+`planner.compute_path(position, destination)`; `run_all_tests()` calls
+`block(planner, ...)` where it called `add_blocked(...)` and `clear(planner)` where it
+called `clear_blocked()`; and `check_path()`'s property 4 reads `HARNESS_BLOCKED`.
+`test_harness()` hands in `Manhattan()` and `BFS()`.
+
+Why not just read `planner.blocked` directly? `Manhattan` has no such attribute, and
+the harness isn't supposed to know what's inside a planner. `test_swap()` gets the
+same treatment: `navigate()` calls `planner.compute_path(...)`, and the test hands it
+`Manhattan()` and your `planner`. The file is `lesson-06-testing-class-addon.py` in the
+Module 5 solutions.
+
+<Reveal title="Check your two helpers" hint="run both objects through the harness first">
+
+```python
+def block(planner, intersection):
+    """Tell planner about intersection AND note it in
+    HARNESS_BLOCKED, so check_path() can see it."""
+    planner.add_blocked(intersection)
+    if intersection not in HARNESS_BLOCKED:
+        HARNESS_BLOCKED.append(intersection)
+
+def clear(planner):
+    """Tell planner to forget its blocks, and forget ours."""
+    planner.clear_blocked()
+    while len(HARNESS_BLOCKED) > 0:
+        HARNESS_BLOCKED.pop()
+```
+
+</Reveal>
 
 <KnowledgeCheck
   question="With planner objects, why does the harness keep its own record of what it blocked instead of reading planner.blocked?"
@@ -313,6 +631,7 @@ isn't supposed to know what's inside a planner.
 - What are the five properties? (Starts next to the start; ends at the destination; every step a neighbor; no blocked step; Manhattan-distance length on an open grid.)
 - Why does walled-off get its own test? (`check_path` can't tell it from a broken planner's `[]`.)
 - What's passed in `run_all_tests("BFS", compute_bfs_path)`? (The function itself.)
+- Why does Module 4's `run_test()` keep its name and its job? (Exact match is right for a planner with one answer.)
 
 <TeacherNote title="Assessment & next lesson">
 
@@ -322,7 +641,7 @@ question above. **Preview:** next lesson the planner goes on the robot. The
 rangefinder loop calls `add_blocked()` exactly as this harness did — the planner
 can't tell the difference, which is why passing these tests means the robot will
 re-plan correctly. (Module 6, if you do it, adds a third planner to this same
-harness, unchanged.)
+harness, with one case added.)
 
 </TeacherNote>
 

@@ -18,14 +18,15 @@ This lesson is for students who built the `Manhattan` and `BFS` classes in Lesso
 and 5-5. It adds the third one, `Dijkstra`, and runs all three as objects through the
 Module 5 class harness. The harness never finds out which one it is holding. That
 property has a name — **polymorphism** — and this is the cleanest place in the course
-to see it.
+to see it. If you did Lesson 6-3 as a function, this lesson replaces that function with
+the class; if you skipped ahead from 6-3, this is where you write it.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
 - Write the `Dijkstra` class by copying `BFS` and making the same two changes as Lesson 6-3
-- Give it `add_slow_edge()` and `weight()` as methods, with the slow list inside the object
+- Give it `add_slow_edge()`, `clear_slow_edges()` and `weight()` as methods, with the slow list inside the object
 - Run `Manhattan()`, `BFS()` and `Dijkstra()` through one harness and read the results
 - Explain why the harness can treat three different classes the same way
 
@@ -33,45 +34,70 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-06-dijkstra/lesson-05-three-planners-one-harness" />
 
-## The third class
+## This lesson's skeleton
 
-`BFS` from Lesson 5-5 holds its blocked list in `self.blocked` and exposes
-`add_blocked()`, `clear_blocked()` and `compute_path(position, destination)`. `Dijkstra`
-is a copy of it with two additions and the two changes:
+This is the class-track skeleton for the DIJKSTRA PLANNER section. Paste it **in place
+of** the section's banner and `compute_dijkstra_path()` — `closest()` sits under the
+new banner, and `dijkstra_distances()`, `compare()`, the Lesson 6-4 part and your
+tests stay where they are — and move your Lesson 6-3 body into `compute_path()`. The WEIGHTED GRAPH section stays as it is too: from today it is
+the *harness's* record of the slow edges, the way `HARNESS_BLOCKED` is its record of
+the blocks.
 
 ```python
+# ===== DIJKSTRA PLANNER (class version) =====
+# One Dijkstra object holds the grid size, ITS OWN blocked
+# list and ITS OWN slow list, and plans by cost around both:
+# the BFS class with the slow-list methods added and the two
+# Lesson 6-3 changes inside compute_path(). Same names as the
+# function version, with planner. in front; the 5-6 class
+# harness tests all three planners without naming one.
 class Dijkstra:
     def __init__(self, rows=4, cols=4):
         self.rows = rows
         self.cols = cols
         self.blocked = []
-        self.slow_edges = []                     # NEW: lives inside the planner
+        self.slow_edges = []       # NEW: lives inside the planner
 
     def add_blocked(self, intersection):
-        if intersection not in self.blocked:
-            self.blocked.append(intersection)
+        # as in BFS
+        pass
 
     def clear_blocked(self):
-        self.blocked = []
+        pass
 
-    def add_slow_edge(self, a, b, cost):         # NEW
-        self.slow_edges.append((a, b, cost))
+    def add_slow_edge(self, a, b, cost):
+        # your function, with self.slow_edges for SLOW_EDGES
+        pass
 
-    def weight(self, a, b):                      # NEW
-        for (x, y, cost) in self.slow_edges:
-            if (a == x and b == y) or (a == y and b == x):
-                return cost
-        return 1
+    def clear_slow_edges(self):
+        pass
+
+    def weight(self, a, b):
+        # your function, reading self.slow_edges
+        pass
 
     def compute_path(self, position, destination):
-        graph = build_graph(self.rows, self.cols, self.blocked)
-        # ... the Lesson 6-3 body, with self.weight(...) and self.closest(...) ...
+        # your compute_dijkstra_path(), with
+        # build_graph(self.rows, self.cols, self.blocked)
+        # and self.weight(); closest() stays a function
+        pass
+
+planner = Dijkstra()
 ```
 
-Same shape as the other two: `compute_path(position, destination)`, told the position
-every call, returning a path that excludes the start. The slow list is the planner's
-own data, as the blocked list already was, so there is no global for anyone else to
-touch.
+## The third class
+
+`BFS` from Lesson 5-5 holds its blocked list in `self.blocked` and exposes
+`add_blocked()`, `clear_blocked()` and `compute_path(position, destination)`. `Dijkstra`
+is a copy of it with one more list and the two changes. Same shape as the other two:
+`compute_path(position, destination)`, told the position every call, returning a path
+that excludes the start. The slow list is the planner's own data, as the blocked list
+already was, so nothing outside the object reaches in to change it.
+
+The name under the class is the Lesson 5-5 rule again: one object called `planner`,
+and it is your newest planner. Delete `planner = BFS()`, and everything in Module 5
+that said `planner.` now plans by cost — on a grid with no slow edges, it gives the
+same answers as before, which you can prove by running any Module 5 test.
 
 <KnowledgeCheck
   question="Where does the slow-edge list live in the class version, and why?"
@@ -94,19 +120,41 @@ run_all_tests("BFS",       BFS())
 run_all_tests("Dijkstra",  Dijkstra())
 ```
 
-Inside, every line is `planner.add_blocked(...)`, `planner.clear_blocked()`,
-`planner.compute_path(position, destination)`. Nothing in the harness names a class.
-For the cost check, the harness calls `planner.add_slow_edge(...)` and keeps its own
-record of the slow edges — as it already kept its own record of blocks in Lesson 5-6 —
-so the cost it adds up uses the true weights whichever planner it is testing. That
-call means `Manhattan` and `BFS` need an `add_slow_edge()` too, even though they ignore
-it, exactly as `Manhattan.add_blocked()` did nothing in Module 5:
+Inside, every line is `planner.compute_path(position, destination)`,
+`block(planner, ...)` or `clear(planner)`. Nothing in the harness names a class. The
+seventh case needs one more helper of the `block()` kind — `slow(planner, a, b, cost)`
+tells the planner about a slow edge *and* records it in `SLOW_EDGES`, so that
+`path_cost()` adds up the true weights whichever planner is being tested — and
+`clear()` has to forget the slow edges as well as the blocks, on both sides. Paste
+these under `clear()` in the 5-6 part of the file, and make the three edits:
+
+```python
+def slow(planner, a, b, cost):
+    """Tell planner about the slow edge AND note it in
+    SLOW_EDGES, so path_cost() can see it."""
+    pass
+```
+
+1. `clear(planner)` also calls `planner.clear_slow_edges()` and `clear_slow_edges()`.
+2. In `run_all_tests()`, the seventh case: `slow(planner, (0, 1), (0, 2), 5)` where it
+   said `add_slow_edge(...)`, `planner.compute_path(...)` for the plan, and
+   `clear(planner)` for both clears.
+3. `compare()` makes a fresh `BFS()` and a fresh `Dijkstra()`, and a fresh object knows
+   nothing — so before it plans, each one is told every entry in `SLOW_EDGES` with
+   `p.add_slow_edge(a, b, cost)`. Two lines, and `BFS` ignores them.
+
+That `slow()` call, and `clear()`'s, mean `Manhattan` and `BFS` need an
+`add_slow_edge()` and a `clear_slow_edges()` too, even though they ignore them,
+exactly as `Manhattan.add_blocked()` did nothing in Module 5:
 
 ```python
 class BFS:
     # ...
     def add_slow_edge(self, a, b, cost):
         pass        # BFS does not plan by cost; it accepts the call and ignores it
+
+    def clear_slow_edges(self):
+        pass
 ```
 
 <SideBySide left="Functions (6-3)" right="Objects (6-5)">
@@ -126,7 +174,7 @@ add_slow_edge((0, 1), (0, 2), 5)
 run_all_tests("Dijkstra", Dijkstra())
 
 path = planner.compute_path(position, destination)
-planner.add_slow_edge((0, 1), (0, 2), 5)
+slow(planner, (0, 1), (0, 2), 5)
 ```
 
 </div>
@@ -151,22 +199,331 @@ methods.
 
 ## Activity · Build it, test it, read the results
 
-1. Copy your `BFS` class, rename it `Dijkstra`, add `self.slow_edges`,
-   `add_slow_edge()` and `weight()`, and make the Lesson 6-3 two changes inside
-   `compute_path()` (`closest()` can be a method or a plain function).
-2. Give `Manhattan` and `BFS` an `add_slow_edge()` that does nothing.
-3. Add the cost check to the class harness and run all three.
+1. Fill in the `Dijkstra` methods: the two blocked methods as in `BFS`, the three slow
+   ones from your WEIGHTED GRAPH functions with `self.slow_edges` in place of
+   `SLOW_EDGES`, and `compute_path()` from your Lesson 6-3 body with the two `self.`
+   changes in its comment. Delete `planner = BFS()`.
+2. Give `Manhattan` and `BFS` the two methods that do nothing.
+3. Write `slow()` and make the three harness edits. Then the tests, the usual way:
+   `test_three_planners()` hands in `Manhattan()`, `BFS()` and `Dijkstra()`;
+   `test_cost_grid()` says `slow(planner, ...)` and draws `planner.blocked`;
+   `dijkstra_distances()` reads `planner.blocked` and `planner.weight()`. Set the run
+   line to `test_three_planners()`.
 
 Expected, on the slow grid:
 
-```
-=== Manhattan ===   blocked tests FAIL, cost FAIL
-=== BFS ===         blocked tests PASS, cost FAIL
-=== Dijkstra ===    everything PASS
+```text
+=== Manhattan ===   blocked cases FAIL, cost FAIL     4 of 7
+=== BFS ===         blocked cases PASS, cost FAIL     6 of 7
+=== Dijkstra ===    everything PASS                   7 of 7
 ```
 
 Each planner fails exactly the tests that describe what it cannot do, and the harness
-that showed you that is the one you wrote in Lesson 5-6, unchanged.
+that showed you that is the one you wrote in Lesson 5-6, with one case added.
+
+4. Last, the swap on the floor. In `test_drive_slow_grid()`, `PLANNER_NAME` now
+   chooses an *object* — `planner = Dijkstra()` or `planner = BFS()` — which is told
+   the slow segment with `slow(planner, ...)` and asked for the path with
+   `planner.compute_path()`. With the `Navigator` class, the drive is
+   `navigator.drive_path(path)`. Run both planners as in Lesson 6-4: same test
+   program, and the only line that changes is the class name.
+
+<Reveal title="Check your Dijkstra and the harness" hint="7 of 7 with objects first">
+
+```python
+    def add_blocked(self, intersection):
+        if intersection not in self.blocked:
+            self.blocked.append(intersection)
+
+    def clear_blocked(self):
+        self.blocked = []
+
+    def add_slow_edge(self, a, b, cost):
+        self.slow_edges.append((a, b, cost))
+
+    def clear_slow_edges(self):
+        self.slow_edges = []
+
+    def weight(self, a, b):
+        for (x, y, cost) in self.slow_edges:
+            if (a == x and b == y) or (a == y and b == x):
+                return cost
+        return 1
+
+    def compute_path(self, position, destination):
+        graph = build_graph(self.rows, self.cols, self.blocked)
+        if position not in graph or destination not in graph:
+            return []
+        previous = {position: None}
+        distance = {position: 0}
+        to_visit = [position]
+
+        while len(to_visit) > 0:
+            current = closest(to_visit, distance)
+            to_visit.remove(current)
+            if current == destination:
+                break
+            for neighbor in graph[current]:
+                new_distance = distance[current] + self.weight(current, neighbor)
+                if neighbor not in distance or new_distance < distance[neighbor]:
+                    distance[neighbor] = new_distance
+                    previous[neighbor] = current
+                    if neighbor not in to_visit:
+                        to_visit.append(neighbor)
+
+        if destination not in previous:
+            return []
+        path = []
+        current = destination
+        while current != position:
+            path.append(current)
+            current = previous[current]
+        path.reverse()
+        return path
+```
+
+And in the 5-6 part of BFS PLANNER:
+
+```python
+def slow(planner, a, b, cost):
+    """Tell planner about the slow edge AND note it in
+    SLOW_EDGES, so path_cost() can see it."""
+    planner.add_slow_edge(a, b, cost)
+    add_slow_edge(a, b, cost)
+
+def clear(planner):
+    """Tell planner to forget its blocks and slow edges,
+    and forget ours."""
+    planner.clear_blocked()
+    planner.clear_slow_edges()
+    while len(HARNESS_BLOCKED) > 0:
+        HARNESS_BLOCKED.pop()
+    clear_slow_edges()
+```
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The DIJKSTRA PLANNER section of `robot.py` as the class track leaves it, the harness
+helpers and the edited `run_all_tests()` and `compare()`, the two no-op methods, and
+the tests with their object prefixes; the rest of the file is as the Lesson 6-4
+teacher copy and the Lesson 5-6 class add-on left it. The file is
+`lesson-05-three-planners-class-addon.py` in the Module 6 solutions.
+
+```python
+# in the Manhattan class (Lesson 4-5) and the BFS class (5-5):
+    def add_slow_edge(self, a, b, cost):
+        pass        # does not plan by cost; accepts the call
+
+    def clear_slow_edges(self):
+        pass
+
+
+# in the 5-6 part of BFS PLANNER, under clear():
+def slow(planner, a, b, cost):
+    """Tell planner about the slow edge AND note it in
+    SLOW_EDGES, so path_cost() can see it."""
+    planner.add_slow_edge(a, b, cost)
+    add_slow_edge(a, b, cost)
+
+def clear(planner):
+    """Tell planner to forget its blocks and slow edges,
+    and forget ours."""
+    planner.clear_blocked()
+    planner.clear_slow_edges()
+    while len(HARNESS_BLOCKED) > 0:
+        HARNESS_BLOCKED.pop()
+    clear_slow_edges()
+
+def run_all_tests(name, planner):
+    """The seven cases, through whichever planner is handed
+    in: four open, the wall, walled off, and the slow row."""
+    print("==========", name, "==========")
+    passed = 0
+    clear(planner)
+    if run_path_test("open (0, 0) to (3, 3)", planner, (0, 0), (3, 3), 6):
+        passed = passed + 1
+    if run_path_test("open (0, 0) to (0, 3)", planner, (0, 0), (0, 3), 3):
+        passed = passed + 1
+    if run_path_test("open (2, 1) to (0, 3)", planner, (2, 1), (0, 3), 4):
+        passed = passed + 1
+    if run_path_test("open (1, 1) to (1, 1)", planner, (1, 1), (1, 1), 0):
+        passed = passed + 1
+    block(planner, (1, 0))
+    block(planner, (1, 1))
+    if run_path_test("wall at (1,0),(1,1): (0,0) to (3,0)", planner, (0, 0), (3, 0), 7):
+        passed = passed + 1
+    block(planner, (1, 2))
+    block(planner, (1, 3))
+    if run_no_path_test("walled off: (0,0) to (3,0)", planner, (0, 0), (3, 0)):
+        passed = passed + 1
+    clear(planner)
+    slow(planner, (0, 1), (0, 2), 5)
+    path = planner.compute_path((0, 0), (0, 3))
+    if check_cost("slow row: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
+        passed = passed + 1
+    clear(planner)
+    print(name + ":", passed, "of 7 passed")
+
+
+# ===== DIJKSTRA PLANNER (class version) =====
+# One Dijkstra object holds the grid size, ITS OWN blocked
+# list and ITS OWN slow list, and plans by cost around both:
+# the BFS class with the slow-list methods added and the two
+# Lesson 6-3 changes inside compute_path(). Same names as the
+# function version, with planner. in front; the 5-6 class
+# harness tests all three planners without naming one.
+
+def closest(intersections, distance):
+    """Return the entry of intersections with the smallest
+    value in distance: a plain find-the-minimum loop."""
+    best = intersections[0]
+    for node in intersections:
+        if distance[node] < distance[best]:
+            best = node
+    return best
+
+class Dijkstra:
+    def __init__(self, rows=4, cols=4):
+        self.rows = rows
+        self.cols = cols
+        self.blocked = []
+        self.slow_edges = []
+
+    def add_blocked(self, intersection):
+        if intersection not in self.blocked:
+            self.blocked.append(intersection)
+
+    def clear_blocked(self):
+        self.blocked = []
+
+    def add_slow_edge(self, a, b, cost):
+        self.slow_edges.append((a, b, cost))
+
+    def clear_slow_edges(self):
+        self.slow_edges = []
+
+    def weight(self, a, b):
+        for (x, y, cost) in self.slow_edges:
+            if (a == x and b == y) or (a == y and b == x):
+                return cost
+        return 1
+
+    def compute_path(self, position, destination):
+        graph = build_graph(self.rows, self.cols, self.blocked)
+        if position not in graph or destination not in graph:
+            return []
+        previous = {position: None}
+        distance = {position: 0}
+        to_visit = [position]
+
+        while len(to_visit) > 0:
+            current = closest(to_visit, distance)
+            to_visit.remove(current)
+            if current == destination:
+                break
+            for neighbor in graph[current]:
+                new_distance = distance[current] + self.weight(current, neighbor)
+                if neighbor not in distance or new_distance < distance[neighbor]:
+                    distance[neighbor] = new_distance
+                    previous[neighbor] = current
+                    if neighbor not in to_visit:
+                        to_visit.append(neighbor)
+
+        if destination not in previous:
+            return []
+        path = []
+        current = destination
+        while current != position:
+            path.append(current)
+            current = previous[current]
+        path.reverse()
+        return path
+
+planner = Dijkstra()
+
+def dijkstra_distances(position):
+    """Cheapest cost to every reachable intersection, as a
+    dictionary -- the search with no break, like bfs_rings()."""
+    graph = build_graph(ROWS, COLS, planner.blocked)
+    if position not in graph:
+        return {}
+    distance = {position: 0}
+    to_visit = [position]
+    while len(to_visit) > 0:
+        current = closest(to_visit, distance)
+        to_visit.remove(current)
+        for neighbor in graph[current]:
+            new_distance = distance[current] + planner.weight(current, neighbor)
+            if neighbor not in distance or new_distance < distance[neighbor]:
+                distance[neighbor] = new_distance
+                if neighbor not in to_visit:
+                    to_visit.append(neighbor)
+    return distance
+
+def compare(position, destination):
+    """Print BFS's and Dijkstra's answers for one trip:
+    steps, cost and path, one line each."""
+    for (name, p) in [("BFS", BFS()), ("Dijkstra", Dijkstra())]:
+        for (a, b, cost) in SLOW_EDGES:        # a fresh object knows nothing
+            p.add_slow_edge(a, b, cost)
+        path = p.compute_path(position, destination)
+        print(" ", "{:<9}".format(name), "steps:", len(path),
+              " cost:", path_cost(position, path), " ", path)
+
+def test_three_planners():
+    run_all_tests("Manhattan", Manhattan())
+    run_all_tests("BFS",       BFS())
+    run_all_tests("Dijkstra",  Dijkstra())
+
+def test_cost_grid():
+    clear(planner)
+    slow(planner, (0, 1), (0, 2), 5)
+    print("=== (0,0) to (0,3), slow edge (0,1)-(0,2) weight 5 ===")
+    compare((0, 0), (0, 3))
+    print("=== cost of every intersection from (0,0) ===")
+    print_grid(ROWS, COLS, planner.blocked, dijkstra_distances((0, 0)))
+
+# --- Lesson 6-4: drive it ---
+# The slow grid on the floor. One test, run twice:
+# PLANNER_NAME picks BFS or Dijkstra, both plans are printed
+# before the button, and the NAVIGATOR's drive_path() drives
+# whichever was picked while the program times it. Nothing
+# that drives changed: a path is a list, whoever planned it.
+SLOW_SEGMENT = ((0, 1), (0, 2), 5)   # what you measured in 6-1
+PLANNER_NAME = "BFS"                  # or "Dijkstra"
+
+def test_drive_slow_grid():
+    if PLANNER_NAME == "Dijkstra":
+        planner = Dijkstra()
+    else:
+        planner = BFS()
+    clear(planner)
+    slow(planner, SLOW_SEGMENT[0], SLOW_SEGMENT[1], SLOW_SEGMENT[2])
+    position = (0, 0)
+    heading = 0
+    destination = (0, 3)
+
+    compare(position, destination)
+    path = planner.compute_path(position, destination)
+    board.wait_for_button()
+
+    start_time = time.time()
+    position, heading = drive_path(path, position, heading)
+    elapsed = time.time() - start_time
+    print(PLANNER_NAME, "took", round(elapsed, 1), "seconds for", len(path), "steps")
+
+# ===== RUN =====
+board.wait_for_button()
+test_three_planners()
+```
+
+With the `Navigator` class, the three driving lines of `test_drive_slow_grid()` are
+`navigator = Navigator(position, heading)` before the button and
+`navigator.drive_path(path)` between the two times, as in the Lesson 4-8 add-on.
+
+</TeacherNote>
 
 <TeacherNote title="Polymorphism, named once, after students have used it twice">
 
@@ -177,16 +534,19 @@ made the class track work.
 
 The `add_slow_edge()` that does nothing is the teaching moment. Ask why it has to exist
 and let students find the `if planner is BFS` they'd otherwise need in the harness.
+`compare()`'s two new lines make the same point from the other side: a planner that
+cannot use the slow list is still *told* it, and nothing checks which one it is.
 
 Everything else is Lesson 6-3 with `self.` in front. Students who did 6-3 carefully
-finish this in half an hour. The file is
-`lesson-05-three-planners-class-addon.py` in the Module 6 solutions.
+finish this in half an hour. The one trap is `planner = BFS()` left in the file below
+the Dijkstra one, which silently puts the old planner back; the Lesson 5-5 rule — one
+object called `planner` — is worth repeating.
 
 </TeacherNote>
 
 ## Wrap-up
 
-- What does `Dijkstra` add to `BFS`? (A slow list with two methods, and the two changes.)
+- What does `Dijkstra` add to `BFS`? (A slow list with three methods, and the two changes.)
 - Why can one harness test three classes? (They answer to the same method names.)
 - What is that called? (Polymorphism.)
 
@@ -197,7 +557,7 @@ finish this in half an hour. The file is
 `add_slow_edge()`?" (An `if` per class — the thing polymorphism removes.) This is the
 last lesson in the course. Students have a robot that follows lines, drives a grid,
 plans around obstacles, and now plans by time — and three planners they can swap with
-one name.
+one name, in one `robot.py` that has grown with them since Lesson 2-1.
 
 </TeacherNote>
 

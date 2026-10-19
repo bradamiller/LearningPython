@@ -14,11 +14,11 @@ sidebar_position: 8
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Time to make the robot move. The turning logic from Lesson 4-7 becomes three real
-functions that drive any Manhattan path on the grid, and they do the actual driving by
-calling the **line-tracking functions you built in Module 2** — no motor code to rewrite.
-That's the payoff of building a toolkit. There is one wrinkle the paper design didn't
-have to care about: where the wheels actually stop.
+Time to make the robot move. The two functions you designed on paper in Lesson 4-7
+join `desired_heading()` in the NAVIGATOR section, and together they drive any
+Manhattan path on the grid — by calling the **line-tracking functions you built in
+Module 2**, no motor code to rewrite. That's the payoff of building a toolkit. There is
+one wrinkle the paper design didn't have to care about: where the wheels actually stop.
 
 <Objectives>
 
@@ -26,7 +26,7 @@ By the end of this lesson you will be able to:
 
 - Name the four Module 2 functions the driving code is built on, and what each does
 - Explain why the robot must `drive_past_intersection()` after every `track_to_intersection()`
-- Implement `desired_heading()`, `turn_to()` and `drive_path()` as working functions
+- Write `turn_to()` and `drive_path()` from their outlines, and test them one at a time — on screen first, then one leg, then a path
 - Keep `position` and `heading` up to date by assigning from what `drive_path()` returns
 - Plan, **print the path**, wait for the button, then drive — and use the printed path as the first diagnostic
 
@@ -36,8 +36,9 @@ By the end of this lesson you will be able to:
 
 ## The toolkit you already have
 
-Module 2 ended with four functions that drive the robot around a line-taped grid. Here
-they are again, because everything in this lesson is built from them:
+Module 2 ended with four functions in the LINE TRACKING section of `robot.py`, and
+Module 3 drove the whole grid with them. Here they are again, because everything in
+this lesson is built from them:
 
 | Function | What it does | Ends when |
 |---|---|---|
@@ -59,7 +60,7 @@ functions don't know what a path is. Today's three functions sit between them.
     {text: 'The heading number'},
     {text: 'The path list'},
   ]}
-  explanation="Module 2's functions are about tape, not grids. That is what makes them reusable: the same track_to_intersection() drove circles in Module 3 and drives paths here."
+  explanation="Module 2's functions are about tape, not grids. That is what makes them reusable: the same track_to_intersection() drove the Module 3 square and drives paths here."
 />
 
 ## The wrinkle: where the wheels stop
@@ -107,50 +108,47 @@ makes a sensor-ended turn land on the new line reliably.
 
 </TeacherNote>
 
-## The three functions
+## This lesson's skeleton
 
-`desired_heading()` and `turn_to()` are exactly what you designed in Lesson 4-7 — the
-only thing new is that `turn_to()` now calls real turn functions:
+Paste this into `robot.py` at the end of the NAVIGATOR section, under
+`desired_heading()`. The two outlines are the Lesson 4-7 designs; `drive_path()`'s step
+3 has grown the wrinkle.
 
 ```python
-HEADING_NAMES = ["N", "E", "S", "W"]
-
-def desired_heading(position, next_pos):
-    row_diff = next_pos[0] - position[0]
-    col_diff = next_pos[1] - position[1]
-    if col_diff == 0 and row_diff == -1: return 0   # North
-    if row_diff == 0 and col_diff ==  1: return 1   # East
-    if col_diff == 0 and row_diff ==  1: return 2   # South
-    if row_diff == 0 and col_diff == -1: return 3   # West
-    raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+# --- Lesson 4-8: turn to a heading, drive a path ---
+# turn_to() turns the robot with the LINE TRACKING turns, the
+# short way round. drive_path() is the loop: for each
+# intersection, face it, arrive with the track-then-drive-past
+# pair, and record the new position. Both hand back what they
+# changed, because the caller keeps the only record.
 
 def turn_to(heading, desired):
-    turns = (desired - heading) % 4
-    if turns == 3:
-        turn_counterclockwise()
-    else:
-        for i in range(turns):
-            turn_clockwise()
-    return desired
-```
+    """Turn from heading to desired the short way round and
+    return desired, the new heading."""
+    # 1. turns = (desired - heading) % 4
+    # 2. if turns is 3: one turn_counterclockwise()
+    #    otherwise: turn_clockwise(), turns times
+    # 3. return desired
+    pass
 
-And `drive_path()` is the paper version with the wrinkle added:
-
-```python
 def drive_path(path, position, heading):
-    for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
-        track_to_intersection()
-        drive_past_intersection()
-        position = next_pos
-    return position, heading
+    """Turn and drive through every intersection in path, from
+    position facing heading; return the final (position, heading)."""
+    # for each next_pos in path:
+    #     1. needed = desired_heading(position, next_pos)
+    #     2. heading = turn_to(heading, needed)
+    #     3. arrive: track_to_intersection(), then
+    #        drive_past_intersection()
+    #     4. position = next_pos -- the robot is there now
+    # return position, heading
+    pass
 ```
 
-Read the two assignments carefully. `heading = turn_to(heading, needed)` — the turn
-function hands back the new heading and the loop keeps it. `position = next_pos` — the
-robot has arrived, so its position is the intersection it just drove to. And the function
-returns both at the end, so whoever called it can keep its own record straight:
+Read the two assignments in `drive_path()` carefully. `heading = turn_to(heading,
+needed)` — the turn function hands back the new heading and the loop keeps it.
+`position = next_pos` — the robot has arrived, so its position is the intersection it
+just drove to. And the function returns both at the end, so whoever called it can keep
+its own record straight:
 
 ```python
 position, heading = drive_path(path, position, heading)
@@ -158,6 +156,10 @@ position, heading = drive_path(path, position, heading)
 
 Forget that left-hand side and the robot drives fine — once. The next path gets planned
 from where the robot *was*.
+
+If you built the `LineTrack` class in Lesson 2-9, the four driving calls in these
+outlines are `tracker.turn_clockwise()`, `tracker.track_to_intersection()` and so on —
+the same names with the object in front.
 
 <KnowledgeCheck
   question="A student writes drive_path(path, position, heading) on its own line, then plans the next path with compute_manhattan_path(position, dest). What goes wrong?"
@@ -172,30 +174,32 @@ from where the robot *was*.
 
 ## Plan, print, button, drive
 
-Here is the whole main program. Note the order:
+Here is the test that puts the planner and the navigator together — the shape of every
+driving program from here on. Note the order:
 
 ```python
-# (the Module 2 functions, compute_manhattan_path, and the three functions above go here)
+def test_drive_path():
+    position = (0, 0)
+    heading = 0                   # facing North
+    destination = (2, 3)
 
-board = Board.get_default_board()
+    path = compute_manhattan_path(position, destination)
+    print("Path:", path)
 
-position = (0, 0)
-heading = 0                   # facing North
-destination = (2, 3)
+    board.wait_for_button()       # read the path, THEN press
 
-path = compute_manhattan_path(position, destination)
-print("Path:", path)
-
-board.wait_for_button()
-
-position, heading = drive_path(path, position, heading)
-print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 ```
 
 The path is planned and **printed before the button**. Read it. Is it what you expect?
 Then press the button. This habit costs two lines and is the first thing to check when a
 run goes wrong: if the printed path is right and the robot still went wrong, the bug is
-in the driving, not the planner — and you know which half of the program to open.
+in the driving, not the planner — and you know which half of the file to open.
+
+That makes two button presses per run, and both are useful. The one in the `RUN` block
+starts the test: the path prints and the robot sits still while you read it. The one in
+the test is *go*. A test that drives is the only kind that waits twice.
 
 <KnowledgeCheck
   question="The printed path is correct, but the robot turns left at the second intersection when it should go straight. Where is the bug?"
@@ -228,15 +232,133 @@ the left. Three clockwise turns would get there too, three times as slowly.
 
 </Reveal>
 
-Then build it in stages:
+Then build it in stages, one function per step, and don't go on until each works:
 
-1. **Desktop mode.** Replace the four Module 2 calls with prints — `print("turn
-   clockwise")`, `print("track to intersection")` and so on — and run the whole program
-   on your laptop. You should see the exact sequence of turns and tracks for your path.
-2. **One leg.** Put the Module 2 functions back and drive `[(1, 0)]` on the grid. Does
-   the robot stop with its wheels on the intersection?
-3. **A real path.** Drive `(0, 0)` to `(2, 3)`. Watch each arrival: wheels on the cross,
-   turns pivoting on it.
+### Step 1 · The logic, on screen
+
+Write the body of `turn_to()`. Before it touches the robot, prove the arithmetic:
+write a paper test — `test_turns_paper()` — that walks `[(1, 0), (1, 1)]` from `(0, 0)`
+heading 0 the way `drive_path()` will, but prints instead of driving: for each step,
+the intersection, the heading needed, and `(needed - heading) % 4`, then updates
+`heading` and `position` exactly as the outline says. Set the run line to it and compare
+with your trace: `2` then `3`. Nothing moves.
+
+### Step 2 · One leg
+
+Write the body of `drive_path()`, then a test — `test_one_leg()` — that drives the
+one-element path `[(1, 0)]` from `(0, 0)` heading 0 and prints where it arrived. Robot at
+(0, 0) facing North, run line set to it, both presses. Two clockwise turns, one track,
+one drive-past. Does the robot stop with its *wheels* on the intersection?
+
+### Step 3 · A real path
+
+Add `test_drive_path()` from above and run it: `(0, 0)` to `(2, 3)`. Read the printed
+path before the second press. Watch each arrival: wheels on the cross, turns pivoting
+on it, and the one counterclockwise turn where the path bends.
+
+<Reveal title="Check your turn_to() and drive_path()" hint="write and test both first">
+
+```python
+def turn_to(heading, desired):
+    """Turn from heading to desired the short way round and
+    return desired, the new heading."""
+    turns = (desired - heading) % 4
+    if turns == 3:
+        turn_counterclockwise()
+    else:
+        for i in range(turns):
+            turn_clockwise()
+    return desired
+
+def drive_path(path, position, heading):
+    """Turn and drive through every intersection in path, from
+    position facing heading; return the final (position, heading)."""
+    for next_pos in path:
+        needed = desired_heading(position, next_pos)
+        heading = turn_to(heading, needed)
+        track_to_intersection()
+        drive_past_intersection()
+        position = next_pos
+    return position, heading
+```
+
+If yours differs and drives the path with the wheels on every cross, keep yours. If a
+leg goes wrong, the first two things to compare are the `return desired` and the
+`position = next_pos`.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the NAVIGATOR section of `robot.py`, plus the run block; the
+rest of the file is as the Lesson 4-7 teacher copy left it. The file is
+`lesson-08-driving-the-path.py` in the Module 4 solutions. Class-track students with
+`LineTrack` write `tracker.` in front of the four driving calls; with the `Navigator`
+extension below, the section is replaced wholesale.
+
+```python
+# --- Lesson 4-8: turn to a heading, drive a path ---
+# turn_to() turns the robot with the LINE TRACKING turns, the
+# short way round. drive_path() is the loop: for each
+# intersection, face it, arrive with the track-then-drive-past
+# pair, and record the new position. Both hand back what they
+# changed, because the caller keeps the only record.
+
+def turn_to(heading, desired):
+    """Turn from heading to desired the short way round and
+    return desired, the new heading."""
+    turns = (desired - heading) % 4
+    if turns == 3:
+        turn_counterclockwise()
+    else:
+        for i in range(turns):
+            turn_clockwise()
+    return desired
+
+def drive_path(path, position, heading):
+    """Turn and drive through every intersection in path, from
+    position facing heading; return the final (position, heading)."""
+    for next_pos in path:
+        needed = desired_heading(position, next_pos)
+        heading = turn_to(heading, needed)
+        track_to_intersection()
+        drive_past_intersection()
+        position = next_pos
+    return position, heading
+
+def test_turns_paper():
+    position = (0, 0)
+    heading = 0
+    for next_pos in [(1, 0), (1, 1)]:
+        needed = desired_heading(position, next_pos)
+        print("to", next_pos, ": need", HEADING_NAMES[needed],
+              "turns:", (needed - heading) % 4)
+        heading = needed
+        position = next_pos
+
+def test_one_leg():
+    position, heading = drive_path([(1, 0)], (0, 0), 0)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+def test_drive_path():
+    position = (0, 0)
+    heading = 0
+    destination = (2, 3)
+
+    path = compute_manhattan_path(position, destination)
+    print("Path:", path)
+
+    board.wait_for_button()
+
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+# ===== RUN =====
+board.wait_for_button()
+test_drive_path()
+```
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="The path is [(1,0),(2,0),(2,1)]. How many times does drive_path call track_to_intersection(), and how many times drive_past_intersection()?"
@@ -251,11 +373,14 @@ Then build it in stages:
 
 <TeacherNote title="Build incrementally, and test on the desktop first">
 
-Write and test one function at a time: `desired_heading()` (prints), `turn_to()` with
-print stand-ins, then `drive_path()` — never the whole file at once. Desktop mode (the
-Module 2 calls swapped for prints) lets students watch the logic execute without a
-robot, and it's where most logic bugs get caught. Hammer the reuse point: the Module 2
-functions drove circles in Module 3 and now drive grid paths unchanged.
+Write and test one function at a time — the three steps above — never the whole
+section at once. The paper test in step 1 is the old "desktop mode" without editing
+the Module 2 functions: it walks the path with `desired_heading()` and the `% 4`
+arithmetic and prints what the robot *would* do, which is where most logic bugs get
+caught. Hammer the reuse point: the Module 2 functions drove the Module 3 square and
+now drive grid paths unchanged. The two button presses per driving test (start, then
+go) will need saying once; after that students like it, because the first press is
+when they read the path.
 
 Usual bugs, in order of frequency: not assigning `position, heading` from `drive_path`'s
 return; the start sneaking into the path (Lesson 4-5's promise 1 — `desired_heading`
@@ -340,19 +465,68 @@ Two identical houses are still two houses. `Navigator((0, 0), 0)` and
 
 Now the Navigator. Its constructor takes the start position and heading — the first
 time a constructor in this course is handed real data — and stores them at its own
-address:
+address. This is the class-track skeleton for the whole NAVIGATOR section: paste it in
+place of the three functions (keep `HEADING_NAMES` and your tests), and move your three
+bodies into the three methods.
 
 ```python
+# ===== NAVIGATOR (class version) =====
+# One Navigator object owns the robot's position and heading.
+# It HAS a LineTrack (built in __init__) and gives it the
+# driving orders; it is told where to go and keeps its own
+# record of where it got to. Same three methods as the
+# function version, same names, with navigator. in front.
 class Navigator:
     def __init__(self, start, heading):
         self.position = start
         self.heading = heading
-        self.line_track = LineTrack()        # from the Module 2 extension
+        self.line_track = LineTrack()        # has-a LineTrack
 
+    def desired_heading(self, next_pos):
+        # your function; position is self.position now, so
+        # it is no longer a parameter
+        pass
+
+    def turn_to(self, desired):
+        # your function, with self.heading in place of the
+        # parameter and self.line_track. in front of each
+        # turn; it STORES the new heading, not returns it
+        pass
+
+    def drive_path(self, path):
+        # your function, with self. in front of position,
+        # heading and the two LINE TRACKING calls; it stores
+        # the final position instead of returning it
+        pass
+
+navigator = Navigator((0, 0), 0)
+```
+
+`__init__` is the new idea, so it's given, and it's worth reading twice: the two
+parameters land in `self.position` and `self.heading`, and from then on every method
+reads and updates *those* instead of being handed them. That is why the signatures
+shrank — `desired_heading(self, next_pos)` has lost its `position` parameter and
+`turn_to(self, desired)` its `heading`, because the object already knows both. And
+nothing is returned, because the record lives at the object's address: the caller
+reads `navigator.position` whenever it wants to know.
+
+Your tests change the same way. `drive_path([(1, 0)], (0, 0), 0)` becomes
+`navigator.drive_path([(1, 0)])`, and the print afterwards reads `navigator.position`
+and `navigator.heading`. The planner call in `test_drive_path()` is handed
+`navigator.position`. Run all three tests again; the robot should not be able to tell
+the difference.
+
+<Reveal title="Check your Navigator" hint="translate all three methods first">
+
+```python
     def desired_heading(self, next_pos):
         row_diff = next_pos[0] - self.position[0]
         col_diff = next_pos[1] - self.position[1]
-        # ... the four checks and the raise, unchanged ...
+        if col_diff == 0 and row_diff == -1: return 0   # North
+        if row_diff == 0 and col_diff ==  1: return 1   # East
+        if col_diff == 0 and row_diff ==  1: return 2   # South
+        if row_diff == 0 and col_diff == -1: return 3   # West
+        raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
 
     def turn_to(self, desired):
         turns = (desired - self.heading) % 4
@@ -371,6 +545,8 @@ class Navigator:
             self.line_track.drive_past_intersection()
             self.position = next_pos
 ```
+
+</Reveal>
 
 <SideBySide>
 <div>
@@ -411,6 +587,12 @@ pass back and forth, so there is nothing to forget.
 
 The full file is `lesson-08-navigator-class-addon.py` in the Module 4 solutions, with the
 Module 2 `LineSensor` and `LineTrack` classes at the top.
+
+**From here on, use your class.** Lesson 4-9 is written with the function names,
+because that is what every student has; where it says `drive_path(path, position,
+heading)` you write `navigator.drive_path(path)`, and where it reads `position` you
+read `navigator.position`. The `position, heading = ...` line the lesson warns about
+does not exist in your program — which is the point.
 
 </OptionalExtension>
 

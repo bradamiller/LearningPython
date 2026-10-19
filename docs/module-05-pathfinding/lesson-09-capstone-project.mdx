@@ -38,10 +38,10 @@ By the end of this project you will be able to:
 
 Your robot is an autonomous delivery vehicle. It must visit four or more grid destinations
 in sequence, and for each leg: plan a path, drive it while watching for obstacles, and
-reroute whenever the rangefinder finds one. Everything you need already exists — the
-planner (Lessons 5-4 and 5-5) and its paper tests (5-6), detection (5-7), the
-drive-until-you-arrive loop and carrying knowledge between runs (5-8). Today you
-connect them.
+reroute whenever the rangefinder finds one. Everything you need already exists in
+`robot.py` — the planner (Lessons 5-4 and 5-5) and its paper tests (5-6), detection
+(5-7), the drive-until-you-arrive function and carrying knowledge between runs (5-8).
+Today you connect them.
 
 You'll demonstrate with **two runs**: Run 1 starts with an empty blocked list, discovers
 obstacles the hard way, and prints what it found; Run 2 starts with that list typed in, so
@@ -59,20 +59,46 @@ learning.
   explanation="Every component already exists and was tested in earlier lessons. The capstone is about connecting them correctly — integration, not new algorithms."
 />
 
-## Program structure
+## This lesson's skeleton
 
-The whole program has a clear skeleton:
+Paste this at the end of the OBSTACLES section, above `RUN`. No new function is
+defined: one setting, a paper test, and the project itself — the outline is the
+whole program's shape, and like every program in this course it is a test function.
 
+```python
+# --- Lesson 5-9: capstone, the delivery run ---
+# The module project: visit CAPSTONE_DESTINATIONS in order,
+# each leg with navigate_with_detection(), starting from what
+# the last run found (KNOWN_OBSTACLES) and printing what this
+# run found for the next one. Nothing new is defined; the
+# sections above did the work, and this test connects them.
+CAPSTONE_DESTINATIONS = [(1, 3), (3, 3), (3, 0), (0, 0)]
+
+def test_capstone_paper():
+    # no robot: hand KNOWN_OBSTACLES to add_blocked(), then
+    # from (0, 0) plan each leg with the BFS planner, print it
+    # with its step count, and move position on to that
+    # destination for the next leg
+    pass
+
+def test_capstone():
+    # 1. hand KNOWN_OBSTACLES to add_blocked()
+    #    (empty on Run 1, last run's list on Run 2)
+    # 2. position (0, 0), heading 0; both totals at 0
+    # 3. print the plan for leg 1; wait for the button
+    # 4. for each destination, with its leg number:
+    #        navigate_with_detection() -- plan, follow,
+    #        re-plan until arrived (Lesson 5-8)
+    #        ... keeping position and heading up to date
+    #        add its steps and reroutes to the totals
+    # 5. print the blocked list -- what you type in next run
+    # 6. print the totals: steps, reroutes
+    pass
 ```
-1. Hand KNOWN_OBSTACLES to add_blocked() -- empty on Run 1, last run's list on Run 2
-2. Define destinations
-3. Print the plan for leg 1, wait for the button
-4. For each destination:
-     navigate_with_detection() -- plan, follow, re-plan until arrived (Lesson 5-8)
-     add its steps and reroutes to the totals
-5. Print the blocked list -- this is what you type in for the next run
-6. Print results (steps, reroutes)
-```
+
+The name is `CAPSTONE_DESTINATIONS` because `DESTINATIONS` is already in the file —
+Lesson 4-9's delivery run still reads it, and a finished section is not edited from
+another one.
 
 The **blocked list is the thread** tying it together: step 1 fills it, the planner
 reads it on every call, detection adds to it, and step 5 hands it to the next run. And
@@ -94,35 +120,13 @@ every one of those goes through `add_blocked()` — the planner never knows whic
 Lesson 5-8's `navigate_with_detection()` already handles one trip — plan, follow,
 re-plan until arrival — and returns where the robot ended up. The capstone's new code
 is the loop that calls it once per destination, feeding each trip's end position and
-heading into the next:
+heading into the next. The call inside the loop is the one from your Lesson 5-8 test,
+with the leg's destination in place of a fixed one:
 
 ```python
-position = (0, 0)
-heading = 0                      # 0 = N, 1 = E, 2 = S, 3 = W, as in Module 4
-destinations = [(1, 3), (3, 3), (3, 0), (0, 0)]
-
-print("Planned path for leg 1:", compute_bfs_path(position, destinations[0]))
-board.wait_for_button()
-
-total_steps = 0
-total_reroutes = 0
-
-for i in range(len(destinations)):
-    dest = destinations[i]
-    print("--- Leg", i + 1, ": Heading to", dest, "---")
-
-    position, heading, steps, reroutes = navigate_with_detection(
-        position, heading, dest, rangefinder, OBSTACLE_CM
-    )
-
-    total_steps = total_steps + steps
-    total_reroutes = total_reroutes + reroutes
-    print("  Arrived at", dest)
-
-print("=== FINAL REPORT ===")
-print("Total steps:", total_steps)
-print("Total reroutes:", total_reroutes)
-print("Obstacles discovered:", BLOCKED)
+        position, heading, steps, reroutes = navigate_with_detection(
+            position, heading, dest, rangefinder, OBSTACLE_CM
+        )
 ```
 
 Two details are easy to get wrong. `position` and `heading` must be **assigned from the
@@ -130,6 +134,12 @@ return value** — forget the `position, heading, ... =` part and the second leg
 (0, 0) while the robot sits somewhere else. And only the *first* leg is printed before
 the button, because later legs are planned from wherever the robot actually ends up,
 including around obstacles it hasn't found yet.
+
+If you built the `Navigator` class, there is no `position, heading, ... =` line to get
+wrong: `navigate_with_detection()` is a method that updates `navigator.position` and
+`navigator.heading` itself and returns the two counts. With the `BFS` class, the
+planner calls are `planner.compute_path()` and `planner.add_blocked()`, and the list
+you print at the end is `planner.blocked`.
 
 <KnowledgeCheck
   question="Why can the program print the plan for leg 1 before the button, but not for legs 2 to 4?"
@@ -153,24 +163,51 @@ including around obstacles it hasn't found yet.
   explanation="If position and heading are not updated from the return value, the planner thinks the robot is still at (0, 0) facing north. The path it produces is right for that spot and wrong for where the robot is."
 />
 
-## Activity · Simulate, then drive
+## Activity · Test in three levels
 
-Get the whole thing working with a **simulated** rangefinder before the robot — verify
-paths compute, obstacles register, the blocked list grows across all four legs, and the
-list printed at the end is the one you'd want to start the next run with. Then swap in
-the real sensor.
+Do **not** jump straight to the full run on the robot. If something breaks, you won't
+know which piece. Build up, one test on the run line at a time:
 
-```python
-ACTUAL_OBSTACLES = [(1, 0), (2, 2), (1, 3)]
-def simulate_rangefinder(next_pos):
-    return 8.0 if next_pos in ACTUAL_OBSTACLES else 50.0
-```
+1. **Planner alone (no robot).** Write `test_capstone_paper()` from its outline and
+   set the run line to it. It is Lesson 4-9's paper test on today's destinations with
+   the BFS planner: the four paths on screen, with their step counts, planned around
+   whatever is in `KNOWN_OBSTACLES`. On Run 1 that list is empty; type in a pretend
+   one and run it again to see the legs bend around it. Count the steps.
+2. **Dry run on the grid.** Write `test_capstone()` from its outline, with the
+   simulated sensor in `navigate_with_detection()`'s look-ahead line (Lesson 5-8,
+   step 1) and `SIMULATED_OBSTACLES` set to three intersections the paper test's
+   paths cross — `[(1, 0), (2, 2), (3, 1)]` works with the destinations above. No
+   boxes on the grid. Verify that paths compute, pretend obstacles register, the
+   blocked list grows across all four legs, and the list printed at the end is the one
+   you'd want to start the next run with.
+3. **The real thing.** Put the look-ahead line back to `rangefinder.distance()`, put
+   boxes on the grid, and run twice: Run 1 with `KNOWN_OBSTACLES = []`, then Run 2
+   with the printed list typed in.
 
 Watch for the classic integration bugs: the blocked list getting reset between
 destinations (one `BLOCKED` for the whole run — never call `clear_blocked()` between
 legs), `position` and `heading` not assigned from the return value, and a destination
 that is itself in `KNOWN_OBSTACLES` (the planner returns `[]` and the leg is skipped
 with "No path").
+
+<Reveal title="Check your paper test" hint="write and run it first">
+
+```python
+def test_capstone_paper():
+    for intersection in KNOWN_OBSTACLES:
+        add_blocked(intersection)
+    position = (0, 0)
+    for dest in CAPSTONE_DESTINATIONS:
+        path = compute_bfs_path(position, dest)
+        print("To", dest, ":", path, " steps:", len(path))
+        position = dest
+```
+
+`position = dest` is the paper stand-in for the position `navigate_with_detection()`
+hands back — on paper the robot always arrives. With nothing blocked the four legs
+are 4, 2, 3 and 3 steps.
+
+</Reveal>
 
 <KnowledgeCheck
   question="Which is a classic capstone integration bug to watch for?"
@@ -182,6 +219,76 @@ with "No path").
   ]}
   explanation="BLOCKED must persist across all destinations in a run. Clearing it for each leg throws away everything learned so far. (Also common: not assigning position and heading from navigate_with_detection's return value.)"
 />
+
+<TeacherNote title="Solution (teacher copy)">
+
+This lesson's addition to the OBSTACLES section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 5-8 teacher copy left it. The file is
+`lesson-09-capstone.py` in the Module 5 solutions. `test_capstone()` is the graded
+work, and there is no student reveal for it; the paper test has one.
+
+```python
+# --- Lesson 5-9: capstone, the delivery run ---
+# The module project: visit CAPSTONE_DESTINATIONS in order,
+# each leg with navigate_with_detection(), starting from what
+# the last run found (KNOWN_OBSTACLES) and printing what this
+# run found for the next one. Nothing new is defined; the
+# sections above did the work, and this test connects them.
+CAPSTONE_DESTINATIONS = [(1, 3), (3, 3), (3, 0), (0, 0)]
+
+def test_capstone_paper():
+    for intersection in KNOWN_OBSTACLES:
+        add_blocked(intersection)
+    position = (0, 0)
+    for dest in CAPSTONE_DESTINATIONS:
+        path = compute_bfs_path(position, dest)
+        print("To", dest, ":", path, " steps:", len(path))
+        position = dest
+
+def test_capstone():
+    for intersection in KNOWN_OBSTACLES:
+        add_blocked(intersection)
+    position = (0, 0)
+    heading = 0                      # 0 = N, 1 = E, 2 = S, 3 = W
+    total_steps = 0
+    total_reroutes = 0
+
+    print("Planned path for leg 1:",
+          compute_bfs_path(position, CAPSTONE_DESTINATIONS[0]))
+    board.wait_for_button()
+
+    for i in range(len(CAPSTONE_DESTINATIONS)):
+        dest = CAPSTONE_DESTINATIONS[i]
+        print("--- Leg", i + 1, ": Heading to", dest, "---")
+
+        position, heading, steps, reroutes = navigate_with_detection(
+            position, heading, dest, rangefinder, OBSTACLE_CM
+        )
+
+        total_steps = total_steps + steps
+        total_reroutes = total_reroutes + reroutes
+        print("  Arrived at", dest)
+
+    print("=== FINAL REPORT ===")
+    print("Total steps:", total_steps)
+    print("Total reroutes:", total_reroutes)
+    print("Obstacles discovered:", BLOCKED)
+
+# ===== RUN =====
+board.wait_for_button()
+test_capstone()
+```
+
+With the simulated sensor and `SIMULATED_OBSTACLES = [(1, 0), (2, 2), (3, 1)]`, Run 1
+prints 20 steps and 3 reroutes and discovers all three; Run 2 with that list typed
+into `KNOWN_OBSTACLES` prints 18 steps and 0 reroutes. Useful numbers to have in your
+pocket when a team's dry run looks off.
+
+**Class track:** the loop body is `steps, reroutes =
+navigator.navigate_with_detection(dest, rangefinder, OBSTACLE_CM)` and the final
+line prints `planner.blocked`; there is no `position, heading` to drop.
+
+</TeacherNote>
 
 ## The rubric and demo
 
@@ -200,7 +307,7 @@ You're graded on the integrated system, component by component:
 For the demo, run twice and have your numbers ready: "Run 1 took X steps with Y reroutes;
 Run 2 took A steps with B reroutes." **Finished early?** Try an extension — visiting the
 nearest destination next, obstacle expiration (re-check old obstacles after a few runs),
-a `print_grid()` map of the route after each leg, or — if you did the class extensions —
+a `print_grid()` map of the rings after each leg, or — if you did the class extensions —
 a `Navigator` object that owns `position` and `heading` so the destination loop has
 nothing to pass back and forth.
 
@@ -241,20 +348,19 @@ You've built, in miniature, what real autonomous systems do:
 
 Students underestimate how hard connecting working parts is. The recurring bugs: not
 assigning `position, heading` from the return value, clearing `BLOCKED` between legs, and
-a destination that sits on a known obstacle. Insist everyone gets the simulation version
-working before the robot — logic first, hardware second. Use the rubric as a
+a destination that sits on a known obstacle. Insist everyone gets the dry-run version
+working before a box touches the grid — logic first, hardware second. Use the rubric as a
 self-assessment checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is
 better and listen for "better data," not "the robot is smarter." For 50-minute periods
 this spans 2–3 days (assembly/simulation, robot testing, demos). Finally: take a moment
 to mark how far students have come — from "Hello, World" to an autonomous robot that
 navigates, senses, and learns. That's a real accomplishment.
 
-**The full program** is `lesson-09-capstone.py` in the module's solutions folder; the
-student starter has the destination loop and `KNOWN_OBSTACLES` as TODOs, with the
-toolkit functions already in place. Students who did the class extensions should run
-the capstone with their `Navigator` and `BFS` objects rather than the functions —
-that is the version of the course they have been building since Lesson 2-9. Nothing
-in the rubric changes.
+**The full program** is the teacher copy above; the student page has the outline of
+`test_capstone()` and nothing more, with the toolkit already in their `robot.py`.
+Students who did the class extensions should run the capstone with their `Navigator`
+and `BFS` objects rather than the functions — that is the version of the course they
+have been building since Lesson 2-9. Nothing in the rubric changes.
 
 </TeacherNote>
 
@@ -264,8 +370,9 @@ in the rubric changes.
 
 Trace the arc for students: Module 1 Python foundations, Module 2 sensors and functions,
 Module 3 the grid, Module 4 Manhattan pathfinding and turning at intersections, Module 5
-graphs, BFS, sensing, and learning. The plan-vs-drive split (a planner that is *told*
-where the robot is, driving functions that don't know what a path is) and the shared
+graphs, BFS, sensing, and learning — and one file, `robot.py`, that grew a section at a
+time from Lesson 2-1 to today. The plan-vs-drive split (a planner that is *told* where
+the robot is, driving functions that don't know what a path is) and the shared
 planner interface are ideas they'll meet again in any serious software work. If there is
 time, Module 6 adds Dijkstra's algorithm as a third planner behind the same interface.
 These skills open doors to CS (data structures, algorithms, AI), robotics (SLAM, motion

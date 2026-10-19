@@ -16,8 +16,9 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 You drew the grid graph on paper. Now you'll store it in Python using a **dictionary** —
 where each key is a `(row, col)` node and each value is a list of that node's neighbors.
-By the end you'll have a `build_grid_graph(rows, cols)` function that generates the whole
-graph automatically, ready for the search in Lesson 5-3.
+By the end you'll have opened a new section of `robot.py`, GRID GRAPH, with a
+`build_grid_graph(rows, cols)` function that generates the whole graph automatically,
+ready for the search in Lesson 5-3.
 
 <Objectives>
 
@@ -27,7 +28,7 @@ By the end of this lesson you will be able to:
 - Create a dictionary, add pairs, and look up a value by key
 - Check whether a key exists with the `in` keyword
 - Represent a grid graph as `{node: [neighbors]}`
-- Write `build_grid_graph(rows, cols)` and remove blocked nodes
+- Open the GRID GRAPH section of `robot.py` and write `build_grid_graph(rows, cols)` and `remove_blocked(graph, blocked_nodes)` in it, each with a paper test
 
 </Objectives>
 
@@ -48,6 +49,10 @@ graph[(0, 0)] = [(0, 1), (1, 0)]   # node (0,0) -> its neighbor list
 For our graph, the **keys are node tuples** and the **values are lists of neighbor
 tuples.** Why not just a list? Because we look things up by *content* — "what are the
 neighbors of (1,1)?" — not by position. A dictionary jumps straight to the answer.
+
+The snippets in this part of the lesson are for trying out, not for keeping: type them in
+a scratch file or at the Python prompt, as you did with tuples in Lesson 4-2. Only the two
+functions in the skeleton below go into `robot.py`.
 
 <KnowledgeCheck
   question="In our graph dictionary, what are the keys and what are the values?"
@@ -78,6 +83,9 @@ print((2, 2) in graph)     # False -- not added
 `(1, 1) in graph` tells you whether that intersection is reachable. Accessing a *missing*
 key with `graph[(9, 9)]` raises a `KeyError` — so check with `in` first.
 
+One more thing you'll need: deleting a key. `del graph[(1, 1)]` removes the pair whose
+key is `(1, 1)`; afterwards `(1, 1) in graph` is `False`.
+
 <KnowledgeCheck
   question="Given graph = {(0,0): [(0,1)]}, what does (0,0) in graph return?"
   options={[
@@ -89,33 +97,84 @@ key with `graph[(9, 9)]` raises a `KeyError` — so check with `in` first.
   explanation="in checks whether a key exists. (0,0) is a key, so it returns True. (Accessing a missing key with [] would raise KeyError — which is why we use in.)"
 />
 
-## Activity · Build the graph automatically
+## This lesson's skeleton
 
-Typing all 9 nodes of a 3×3 grid by hand is tedious; a 10×10 grid has 100. So write a
-function that generates the graph for any size, using nested loops and bounds checks so
-each node only lists neighbors that are actually on the grid:
+A new kind of data gets a new section. Paste this into `robot.py` above `RUN`, after
+the NAVIGATOR section. Like the MANHATTAN PLANNER, nothing in it drives: two functions
+that take numbers and lists and return a dictionary.
 
 ```python
-def build_grid_graph(rows, cols):
-    graph = {}
-    for row in range(rows):
-        for col in range(cols):
-            neighbors = []
-            if row > 0:            neighbors.append((row - 1, col))  # up
-            if row < rows - 1:     neighbors.append((row + 1, col))  # down
-            if col > 0:            neighbors.append((row, col - 1))  # left
-            if col < cols - 1:     neighbors.append((row, col + 1))  # right
-            graph[(row, col)] = neighbors
-    return graph
+# ===== GRID GRAPH =====
+# The grid as a graph, in a dictionary: every intersection is
+# a key, and its value is the list of neighbors it is joined
+# to. The BFS PLANNER searches this graph. Starts with the
+# open grid; Lesson 5-4 adds the blocked list, so a blocked
+# intersection is neither a key nor anyone's neighbor.
+ROWS = 4                 # the grid is ROWS x COLS intersections
+COLS = 4
 
-graph = build_grid_graph(4, 4)
-print(len(graph))          # 16
-print(graph[(1, 1)])       # 4 neighbors
-print(graph[(0, 0)])       # 2 neighbors (corner)
+def build_grid_graph(rows, cols):
+    """Return the open grid as a dictionary: every (row, col)
+    maps to the list of its on-grid neighbors."""
+    # 1. graph = {}
+    # 2. for every row, for every column:
+    #       neighbors = []
+    #       up, down, left, right: append each one that is
+    #       still on the grid (a bounds check for each)
+    #       graph[(row, col)] = neighbors
+    # 3. return graph
+    pass
+
+def remove_blocked(graph, blocked_nodes):
+    """Take every node in blocked_nodes out of graph: delete
+    its key AND drop it from every other node's neighbors."""
+    # 1. for each blocked node that is in graph: del its key
+    # 2. for each node still in graph: replace its neighbor
+    #    list with one that leaves the blocked nodes out
+    # 3. return graph
+    pass
 ```
 
-Each `if` is a bounds check: only add "up" if you're not already in the top row, and so
-on. That's what gives corners 2 neighbors and interior nodes 4.
+`ROWS` and `COLS` are the size of your taped grid. The functions take the size as
+parameters rather than reading the settings, so a test can build a 3×3 while the
+settings say 4×4.
+
+The outline for `build_grid_graph()` is longer than Module 4's, because this is the
+first time you've built a dictionary inside a function. It's the build-in-a-loop
+pattern from Lesson 4-3 — start empty, add one entry per pass — with two loops, one
+inside the other, and an entry whose value is itself a list you build. In Lesson 5-4
+this function gets rewritten with the blocked list folded in; the tests you write
+today will tell you whether that rewrite broke anything.
+
+## Activity · Build the graph automatically
+
+Typing all 9 nodes of a 3×3 grid by hand is tedious; a 10×10 grid has 100. So
+`build_grid_graph()` generates the graph for any size. Each node's neighbor list is
+built the same way: check up, down, left and right, and add only the ones that are
+actually on the grid. That means a **bounds check** before each `append` — only add
+"up" if you're not already in the top row (`row > 0`), only add "down" if you're not
+in the bottom row (`row < rows - 1`), and the same two checks for columns. The four
+checks are what give corners 2 neighbors and interior nodes 4.
+
+Write the body, then write a test — say `test_grid_graph()` — that builds the 4×4
+graph and prints three things: how many intersections it has (`len(graph)`), the
+neighbors of `(1, 1)`, and the neighbors of `(0, 0)`. Before you run it, write down
+what each should be from your Lesson 5-1 drawing. Set the run line to it; the robot
+stays on the desk.
+
+<Reveal title="Check your graph" hint="run test_grid_graph() first">
+
+```text
+16
+[(0, 1), (2, 1), (1, 0), (1, 2)]
+[(1, 0), (0, 1)]
+```
+
+Sixteen intersections, four neighbors for an interior node, two for a corner. The
+order inside a neighbor list depends on the order you checked the four directions;
+up, down, left, right is the order the search in Lesson 5-5 will use.
+
+</Reveal>
 
 <KnowledgeCheck
   question="In build_grid_graph, why is each neighbor guarded by an if (like `if row > 0`)?"
@@ -128,26 +187,56 @@ on. That's what gives corners 2 neighbors and interior nodes 4.
   explanation="The bounds checks prevent adding neighbors that fall off the edge of the grid, so corners get 2 neighbors and interior nodes get 4."
 />
 
-## Removing blocked nodes
+## Activity · Removing blocked nodes
 
 Blocking a node is a **two-step** job: delete its key, *and* remove it from every other
 node's neighbor list. Forget the second step and other nodes still think they can reach a
-blocked intersection:
+blocked intersection — that's what the outline's two numbered steps are.
+
+Step 2 is the one to think about. For each node still in the graph you need a *new*
+neighbor list with the blocked ones left out. One way: start a new empty list, loop
+over the old neighbors, and append each one that is `not in blocked_nodes`; then
+assign the new list back to `graph[node]`.
+
+Write the body, then a test — `test_remove_blocked()` — that builds a **3×3** graph,
+removes `(1, 1)`, and prints how many intersections are left, `(1, 1) in graph`, and the
+neighbors of `(0, 1)`. Predict all three first. Don't go on until both tests print what
+you predicted.
+
+<Reveal title="Check your two functions" hint="write and test both first">
 
 ```python
+def build_grid_graph(rows, cols):
+    """Return the open grid as a dictionary: every (row, col)
+    maps to the list of its on-grid neighbors."""
+    graph = {}
+    for row in range(rows):
+        for col in range(cols):
+            neighbors = []
+            if row > 0:            neighbors.append((row - 1, col))  # up
+            if row < rows - 1:     neighbors.append((row + 1, col))  # down
+            if col > 0:            neighbors.append((row, col - 1))  # left
+            if col < cols - 1:     neighbors.append((row, col + 1))  # right
+            graph[(row, col)] = neighbors
+    return graph
+
 def remove_blocked(graph, blocked_nodes):
+    """Take every node in blocked_nodes out of graph: delete
+    its key AND drop it from every other node's neighbors."""
     for node in blocked_nodes:          # step 1: delete the keys
         if node in graph:
             del graph[node]
     for node in graph:                   # step 2: clean neighbor lists
         graph[node] = [n for n in graph[node] if n not in blocked_nodes]
     return graph
-
-graph = build_grid_graph(3, 3)
-graph = remove_blocked(graph, [(1, 1)])
-print((1, 1) in graph)      # False
-print(graph[(0, 1)])        # (1,1) no longer listed
 ```
+
+The one-line list in step 2 is a **list comprehension** — "the list of every `n` in the
+old neighbors for which `n` is not blocked." It's a shortcut for the loop-and-append
+version; if you wrote the loop, keep it. And the 3×3 test should print `8`, `False`,
+and `[(0, 0), (0, 2)]`.
+
+</Reveal>
 
 <KnowledgeCheck
   question="To block node (1,1), what two things must happen to the graph dictionary?"
@@ -159,6 +248,67 @@ print(graph[(0, 1)])        # (1,1) no longer listed
   ]}
   explanation="Deleting only the key leaves dangling references — neighbors still list (1,1). You must also clean it out of every neighbor list."
 />
+
+<TeacherNote title="Solution (teacher copy)">
+
+The GRID GRAPH section of `robot.py` as this lesson leaves it, plus the run block; the
+rest of the file is as the Lesson 4-9 teacher copy left it. The file is
+`lesson-02-dictionaries.py` in the Module 5 solutions. Students see the outlines and
+the two bodies behind the reveal above.
+
+```python
+# ===== GRID GRAPH =====
+# The grid as a graph, in a dictionary: every intersection is
+# a key, and its value is the list of neighbors it is joined
+# to. The BFS PLANNER searches this graph. Starts with the
+# open grid; Lesson 5-4 adds the blocked list, so a blocked
+# intersection is neither a key nor anyone's neighbor.
+ROWS = 4                 # the grid is ROWS x COLS intersections
+COLS = 4
+
+def build_grid_graph(rows, cols):
+    """Return the open grid as a dictionary: every (row, col)
+    maps to the list of its on-grid neighbors."""
+    graph = {}
+    for row in range(rows):
+        for col in range(cols):
+            neighbors = []
+            if row > 0:            neighbors.append((row - 1, col))  # up
+            if row < rows - 1:     neighbors.append((row + 1, col))  # down
+            if col > 0:            neighbors.append((row, col - 1))  # left
+            if col < cols - 1:     neighbors.append((row, col + 1))  # right
+            graph[(row, col)] = neighbors
+    return graph
+
+def remove_blocked(graph, blocked_nodes):
+    """Take every node in blocked_nodes out of graph: delete
+    its key AND drop it from every other node's neighbors."""
+    for node in blocked_nodes:          # step 1: delete the keys
+        if node in graph:
+            del graph[node]
+    for node in graph:                   # step 2: clean neighbor lists
+        graph[node] = [n for n in graph[node] if n not in blocked_nodes]
+    return graph
+
+def test_grid_graph():
+    graph = build_grid_graph(ROWS, COLS)
+    print("Intersections:", len(graph))          # 16
+    print("Neighbors of (1, 1):", graph[(1, 1)])  # 4 of them
+    print("Neighbors of (0, 0):", graph[(0, 0)])  # 2: a corner
+
+def test_remove_blocked():
+    graph = build_grid_graph(3, 3)
+    graph = remove_blocked(graph, [(1, 1)])
+    print("Intersections:", len(graph))          # 8
+    print("(1, 1) in graph?", (1, 1) in graph)    # False
+    print("Neighbors of (0, 1):", graph[(0, 1)])  # (1, 1) is gone
+
+# ===== RUN =====
+board.wait_for_button()
+test_remove_blocked()
+```
+
+</TeacherNote>
 
 ## Real-world connections
 
@@ -187,11 +337,13 @@ Key-value lookup is one of the most-used tools in all of programming:
 Show a plain dictionary (`{"name": "Alice"}`) before the tuple-keyed graph. Have students
 open their Lesson 5-1 drawings and translate each node into a key-value pair — makes the
 paper-to-code jump concrete. `build_grid_graph` is the core deliverable: every student
-needs a working copy, since Lesson 5-4's `build_graph()` is this function with the blocked
-check folded in. Spend
-extra time on the two-step removal — forgetting to clean neighbor lists is the #1 bug in
-later lessons. Remind them: tuples can be dict keys, lists cannot (keys must be
-immutable).
+needs a working copy in the GRID GRAPH section, since Lesson 5-4's `build_graph()` is
+this function rewritten with the blocked check folded in (and `remove_blocked()` is
+deleted that day, the way `SETPOINT` went in Lesson 2-6). Spend extra time on the two-step
+removal — forgetting to clean neighbor lists is the #1 bug in later lessons. Remind
+them: tuples can be dict keys, lists cannot (keys must be immutable). The list
+comprehension in the reveal is new; a plain loop-and-append is the version to expect
+from most students, and it is fine.
 
 </TeacherNote>
 

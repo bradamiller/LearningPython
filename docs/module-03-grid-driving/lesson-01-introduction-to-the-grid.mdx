@@ -16,8 +16,9 @@ to preview the student view.
 </TeacherBanner>
 
 You spent Module 2 teaching the robot to follow a line and detect a cross. Now
-you'll put a whole **grid** of lines on the floor — and here's the good part: your
-driving toolkit already knows how to drive it. No new code needed.
+you'll put a whole **grid** of lines on the floor — and here's the good part: the
+LINE TRACKING section of `robot.py` already knows how to drive it. No new driving
+code needed; this lesson opens a new section of the file and fills it with tests.
 
 <Objectives>
 
@@ -26,6 +27,7 @@ By the end of this lesson you will be able to:
 - Describe how a grid is built from lines and intersections
 - Explain how a grid intersection is just the "cross" from Module 2
 - Use `track_to_intersection()` and `drive_past_intersection()` to arrive at the next intersection
+- Start the GRID DRIVING section of `robot.py`, and write its first two tests from a description
 - Place the robot on the grid and reach the first intersection
 
 </Objectives>
@@ -44,8 +46,8 @@ at once.
   caption="Rows and columns of tape. Every place they cross is an intersection — a spot the robot can stop and turn."
 />
 
-That's the whole insight: you already built everything needed to drive a grid. Your
-Lesson 2-9 driving toolkit has the four functions that do it all:
+That's the whole insight: you already built everything needed to drive a grid. The
+LINE TRACKING section you finished in Lesson 2-9 has the four functions that do it all:
 
 - `track_to_intersection()` — follow the line to the next intersection and stop.
 - `drive_past_intersection()` — put the wheels on the intersection, sensors past it.
@@ -54,20 +56,22 @@ Lesson 2-9 driving toolkit has the four functions that do it all:
 
 <Callout kind="note" title="If you built the LineTrack class">
 
-Use it — that's what it's for. Every call in this module is written with the function
-name; yours is the same name on your object:
+Use it — that's what it's for. Your LINE TRACKING section is the class, with
+`tracker = LineTrack()` right under it, and every skeleton in this module is written
+with the function names; yours is the same name on your object:
 
 ```python
-tracker = LineTrack()
-
 tracker.track_to_intersection()
 tracker.drive_past_intersection()
 ```
 
-Notice what you *don't* have to carry along: no threshold constant at the top of the
-file, no sensor to hand in, nothing shared through `global`. The tracker brought its
-sensor and its settings with it. That is what the class bought you, and it shows up on
-every line from here to the end of the course.
+So where a test outline in this module says "arrive at the intersection," your body
+says `tracker.track_to_intersection()` and `tracker.drive_past_intersection()`, and
+the helper you write in Lesson 3-2 calls the tracker the same way. Notice what you
+*don't* have to carry along: no threshold constant at the top of the file, no sensor
+to hand in, nothing shared through `global`. The tracker brought its sensor and its
+settings with it. That is what the class bought you, and it shows up on every line
+from here to the end of the course.
 
 </Callout>
 
@@ -89,30 +93,54 @@ The big idea of Module 3 isn't a new Python concept — it's *reuse*. Make it ex
 work — a well-designed toolkit outlives the problem it was written for.
 
 The grid is the same color surface with the same tape the circle was made from, so
-there is nothing to re-measure and nothing to re-tune: both toolkits come across
-untouched. Worth saying out loud, because students expect a new problem
+there is nothing to re-measure and nothing to re-tune: both sections of `robot.py`
+come across untouched. Worth saying out loud, because students expect a new problem
 to need new code.
+
+**The hint level drops this module.** Module 2 gave the test functions in full; from
+here the skeleton gives `def test_x():` and a comment, and the body is the student's
+— test-driven development, lightly. The bodies in this lesson are two to five calls
+they have made before, so it is the right place to start that habit.
 
 </TeacherNote>
 
-## Drive to the first intersection
+## This lesson's skeleton
 
-The program is the same two toolkits from Module 2, with a two-line main program:
+A new kind of driving gets a new section. Paste this into `robot.py` above `RUN` — it
+goes after the whole LINE TRACKING section, and it starts with no functions of its
+own, only tests, because there is nothing new to write yet.
 
 ```python
-board = Board.get_default_board()
+# ===== GRID DRIVING =====
+# Drives the taped grid one intersection at a time, using only
+# the LINE TRACKING functions: a grid intersection is the
+# cross from Module 2. To ARRIVE at an intersection is
+# track_to_intersection() then drive_past_intersection(); a
+# turn happens parked on one. Nothing here touches a sensor.
 
-board.wait_for_button()
-print("Driving to the first intersection...")
-track_to_intersection()
-drive_past_intersection()
-print("Intersection reached!")
+def test_first_intersection():
+    # from a line, arrive at the next intersection and say so
+    pass
+
+def test_arrive_and_turn():
+    # arrive at the intersection, then turn right onto the
+    # crossing line
+    pass
 ```
 
-Place the robot centered on a line, facing toward the next intersection, and it
-follows the line right up to the cross, then rolls forward so its wheels are over the
-intersection — exactly as it did in Lesson 2-9. Those two calls together are what
-"arrive at an intersection" means for the rest of the course.
+Two things are different from Module 2's skeletons. The tests have no bodies — the
+comment says what the test should do and you write it, which from here on is how
+every test arrives. And `pass` holds the place, as it did in Lesson 2-1, so the file
+runs before you've written anything.
+
+## Drive to the first intersection
+
+Place the robot centered on a line, facing toward the next intersection, and the
+first test is two calls: `track_to_intersection()` follows the line right up to the
+cross, and `drive_past_intersection()` rolls forward so the wheels are over the
+intersection — exactly as `test_park()` did in Lesson 2-9. Those two calls together
+are the **arrival pair**, and they are what "arrive at an intersection" means for the
+rest of the course.
 
 <KnowledgeCheck
   question="Which function drives the robot from where it is to the next intersection?"
@@ -127,24 +155,78 @@ intersection — exactly as it did in Lesson 2-9. Those two calls together are w
 
 ## Activity · Reach it, then turn
 
-Once you're at an intersection you can turn onto the crossing line:
+### Step 1 · test_first_intersection()
+
+Write the body: a print saying what it's about to do, the arrival pair, and a print
+saying it got there. Set the run line to `test_first_intersection()`, put the robot on
+a line segment facing the next intersection, and run. It should stop with its wheels
+on the intersection. Try it from a few starting spots. Don't go on until it does.
+
+### Step 2 · test_arrive_and_turn()
+
+Once you're parked on an intersection you can turn onto the crossing line. Write the
+body: the arrival pair, then `turn_clockwise()`, with a print before the turn and one
+after. Set the run line to it and run. The robot should arrive, pivot on the
+intersection, and stop facing along the crossing line with a sensor on the tape.
+
+One thing to watch in both tests: if the robot detects an intersection *immediately*,
+it started sitting right on one — nudge it back onto the line first.
+
+<Reveal title="Check your two tests" hint="write and run both first">
 
 ```python
-# (both Module 2 toolkits go above)
+def test_first_intersection():
+    print("Driving to the first intersection...")
+    track_to_intersection()
+    drive_past_intersection()
+    print("Intersection reached!")
 
-board = Board.get_default_board()
-
-board.wait_for_button()
-track_to_intersection()
-drive_past_intersection()
-print("Turning right...")
-turn_clockwise()
-print("Now facing a new direction!")
+def test_arrive_and_turn():
+    track_to_intersection()
+    drive_past_intersection()
+    print("Turning right...")
+    turn_clockwise()
+    print("Now facing a new direction!")
 ```
 
-Try it from a few starting spots. One thing to watch: if the robot detects an
-intersection *immediately*, it started sitting right on one — nudge it back onto the
-line first.
+Your prints can say anything; the calls, and their order, are what matter.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The GRID DRIVING section of `robot.py` as this lesson leaves it, plus the run block;
+the rest of the file is as the Lesson 2-10 teacher copy left it. The file is
+`lesson-01-introduction-to-the-grid.py` in the Module 3 solutions. Class-track
+students have the same two tests with `tracker.` in front of each driving call.
+
+```python
+# ===== GRID DRIVING =====
+# Drives the taped grid one intersection at a time, using only
+# the LINE TRACKING functions: a grid intersection is the
+# cross from Module 2. To ARRIVE at an intersection is
+# track_to_intersection() then drive_past_intersection(); a
+# turn happens parked on one. Nothing here touches a sensor.
+
+def test_first_intersection():
+    print("Driving to the first intersection...")
+    track_to_intersection()
+    drive_past_intersection()
+    print("Intersection reached!")
+
+def test_arrive_and_turn():
+    track_to_intersection()
+    drive_past_intersection()
+    print("Turning right...")
+    turn_clockwise()
+    print("Now facing a new direction!")
+
+# ===== RUN =====
+board.wait_for_button()
+test_arrive_and_turn()
+```
+
+</TeacherNote>
 
 <KnowledgeCheck
   question="You run the program and the robot reports 'Intersection reached!' instantly without moving. Why?"
@@ -161,9 +243,9 @@ line first.
 
 The usual issues: starting on an intersection (detects instantly), a threshold that
 needs re-calibrating for the grid's surface, or the robot not centered before a
-turn. **More support:** have students just drive-to-first-intersection reliably
-before adding a turn. **More challenge:** drive to an intersection, turn, and drive
-to another — a two-segment path, previewing Lesson 3-2.
+turn. **More support:** have students get `test_first_intersection()` reliable
+before writing the turn test. **More challenge:** a `test_two_segments()` — arrive,
+turn, arrive again — previewing Lesson 3-2.
 
 </TeacherNote>
 
@@ -187,15 +269,15 @@ Navigating a grid of intersections is how a lot of real automation gets around:
 
 - What is a grid intersection, to the robot? (The same both-sensors-high "cross" from Module 2.)
 - Which function drives one segment to the next intersection? (`track_to_intersection()`, then `drive_past_intersection()` to park on it.)
-- Why didn't you have to write any new code? (The toolkit already handles lines and crosses — reuse.)
+- Why didn't you have to write any new driving code? (LINE TRACKING already handles lines and crosses — reuse. Only the tests are new.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** explain why the toolkit works unchanged, and drive to the first
-intersection reliably. **Exit ticket:** "Which function turns the robot onto the
+**Formative:** explain why the LINE TRACKING section works unchanged, and drive to the
+first intersection reliably. **Exit ticket:** "Which function turns the robot onto the
 crossing line?" (`turn_clockwise()` / `turn_counterclockwise()`). **Preview:** next
 lesson we drive *through* intersections to reach ones further down the grid — with a
-loop, and counting.
+loop, and counting — and the GRID DRIVING section gets its first function.
 
 </TeacherNote>
 

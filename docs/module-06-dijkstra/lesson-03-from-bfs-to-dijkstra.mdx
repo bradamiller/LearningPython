@@ -25,6 +25,7 @@ running through one harness.
 
 By the end of this lesson you will be able to:
 
+- Add the cost check to `run_all_tests()` as its seventh case
 - Duplicate `compute_bfs_path()` as `compute_dijkstra_path()` and keep the parts that don't change
 - Make change 1: take the **closest** intersection off `to_visit`, not the oldest
 - Make change 2: add the segment's **weight**, and keep the cheaper total when an intersection is reached again
@@ -35,12 +36,102 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-06-dijkstra/lesson-03-from-bfs-to-dijkstra" />
 
+## This lesson's skeleton
+
+Paste this into `robot.py` above `RUN`. It starts the DIJKSTRA PLANNER section: a
+helper, the planner, the function that draws its costs, and one given printer.
+
+```python
+# ===== DIJKSTRA PLANNER =====
+# The third planner, made by copying the BFS PLANNER's
+# function and changing two things in the middle: take the
+# CLOSEST waiting intersection, not the oldest, and add the
+# WEIGHTED GRAPH's weight() instead of counting a step,
+# keeping the cheaper total when a place is reached twice.
+# Same shape, same promises; the 5-6 harness tests all three.
+
+def closest(intersections, distance):
+    """Return the entry of intersections with the smallest
+    value in distance: a plain find-the-minimum loop."""
+    pass
+
+def compute_dijkstra_path(position, destination):
+    """Cheapest path from position to destination around
+    BLOCKED, by weight(), as the intersections to drive to."""
+    # SETUP: as compute_bfs_path(), plus
+    #    distance = {position: 0}   cheapest cost so far
+    # SEARCH
+    #    while to_visit is not empty:
+    #       CHANGE 1: current = the closest() one; remove it
+    #       if current is the destination: stop looking
+    #       for each neighbor of current in the graph:
+    #          CHANGE 2: new cost = distance to current
+    #                    + weight(current, neighbor)
+    #          if neighbor has no cost yet, or this is less:
+    #              record the new cost and where it came from
+    #              add it to to_visit if it is not already on
+    # WALK-BACK: unchanged from compute_bfs_path()
+    pass
+
+def dijkstra_distances(position):
+    """Cheapest cost to every reachable intersection, as a
+    dictionary -- the search with no break, like bfs_rings()."""
+    pass
+
+def compare(position, destination):
+    """Print BFS's and Dijkstra's answers for one trip:
+    steps, cost and path, one line each."""
+    for (name, planner) in [("BFS", compute_bfs_path),
+                            ("Dijkstra", compute_dijkstra_path)]:
+        path = planner(position, destination)
+        print(" ", "{:<9}".format(name), "steps:", len(path),
+              " cost:", path_cost(position, path), " ", path)
+```
+
+`compare()` is given — it's a print, not a planner. The `"{:<9}".format(name)` is
+"this name, left-aligned in nine spaces," the same trick as `print_grid()`'s
+`"{:>3}"`.
+
+## First, the harness learns to count cost
+
+Before you copy anything, give the Lesson 5-6 harness its seventh case, so that it can
+tell the three planners apart. Three edits to `run_all_tests()` in the BFS PLANNER
+section — none of them touches the six cases it already runs:
+
+```python
+    clear_blocked()
+    clear_slow_edges()                      # 1. open grid, no slow edges
+    ...                                     #    the six cases, as they are
+    clear_blocked()
+    add_slow_edge((0, 1), (0, 2), 5)        # 2. the seventh case: slow row
+    path = planner((0, 0), (0, 3))
+    if check_cost("slow row: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
+        passed = passed + 1
+    clear_slow_edges()
+    print(name + ":", passed, "of 7 passed")   # 3. seven now
+```
+
+The slow edge is cleared at the start as well as the end for the same reason the
+blocked list is: a harness has to set up its own grid, not trust whatever ran before.
+Set the run line to Module 5's `test_harness()` and run it. Manhattan drops to 4 of 7
+and BFS to 6 of 7, each failing the new case with the same FAIL line you saw in Lesson
+6-2.
+
 ## Start by copying
 
-Copy `compute_bfs_path()` in full and rename the copy `compute_dijkstra_path()`. Don't
-change anything else yet. Run the harness: the copy passes everything BFS passes and
-fails the same cost check, which is what you'd expect from identical code. Now you
-have a safe place to make two changes.
+Copy the body of your `compute_bfs_path()` into `compute_dijkstra_path()`, in place of
+`pass` and under the comments — the comments are your checklist for what to change.
+Don't change anything else yet. Write a test — `test_three_planners()` — that is
+Lesson 5-6's `test_harness()` with a third line, and set the run line to it:
+
+```python
+run_all_tests("Manhattan", compute_manhattan_path)
+run_all_tests("BFS",       compute_bfs_path)
+run_all_tests("Dijkstra",  compute_dijkstra_path)
+```
+
+The copy passes everything BFS passes and fails the same cost check, which is what
+you'd expect from identical code. Now you have a safe place to make two changes.
 
 ## Change 1 · Closest first, not oldest first
 
@@ -50,30 +141,13 @@ the closest. With weights that's no longer true. An intersection reached by a ch
 detour may be closer, in cost, than one that went on the list earlier by a slow road.
 
 So Dijkstra keeps a second dictionary, `distance`, holding the cheapest cost found so
-far to each intersection, and takes the one with the smallest value:
-
-```python
-def closest(intersections, distance):
-    best = intersections[0]
-    for node in intersections:
-        if distance[node] < distance[best]:
-            best = node
-    return best
-```
-
-and in the planner:
-
-```python
-    distance = {position: 0}                 # NEW
-    to_visit = [position]
-
-    while len(to_visit) > 0:
-        current = closest(to_visit, distance)    # CHANGED: was to_visit.pop(0)
-        to_visit.remove(current)
-```
-
-That's a plain loop looking for a minimum — the same pattern as finding the biggest
-number in a list in Module 1.
+far to each intersection — it starts as `{position: 0}`, because the start costs
+nothing to reach — and each time round the loop it takes the waiting intersection with
+the smallest value. That lookup is `closest(to_visit, distance)`: start by assuming the
+first entry is best, loop over the rest, and keep any entry whose `distance` is smaller
+— the same pattern as finding the biggest number in a list in Module 1, with the
+comparison turned round. `pop(0)` did two jobs, choosing *and* removing; `closest()`
+only chooses, so the line after it has to `remove()` the chosen one from `to_visit`.
 
 <KnowledgeCheck
   question="Why can BFS get away with taking the oldest intersection off to_visit, and Dijkstra cannot?"
@@ -91,45 +165,40 @@ number in a list in Module 1.
 BFS marks a neighbor the first time it sees it and never reconsiders; the first way to
 reach it is always a shortest way, in steps. Dijkstra adds the edge's weight to get the
 cost of reaching the neighbor *this* way, and if that beats what it already had, it
-updates:
-
-```python
-        for neighbor in graph[current]:
-            new_distance = distance[current] + weight(current, neighbor)   # CHANGED: was "+1 step"
-            if neighbor not in distance or new_distance < distance[neighbor]:  # CHANGED: keep the cheaper way
-                distance[neighbor] = new_distance
-                previous[neighbor] = current
-                if neighbor not in to_visit:
-                    to_visit.append(neighbor)
-```
-
-Compare it with the BFS lines it replaces:
+updates. Compare the pencil versions of the two neighbor loops:
 
 <SideBySide left="BFS (Module 5)" right="Dijkstra">
 <div>
 
 ```python
-for neighbor in graph[current]:
-    if neighbor not in previous:
-        previous[neighbor] = current
-        to_visit.append(neighbor)
+# for each neighbor of current:
+#     only if it has no entry yet:
+#         write where it came from
+#         put it on the END of the list
 ```
 
 </div>
 <div>
 
 ```python
-for neighbor in graph[current]:
-    new_distance = distance[current] + weight(current, neighbor)
-    if neighbor not in distance or new_distance < distance[neighbor]:
-        distance[neighbor] = new_distance
-        previous[neighbor] = current
-        if neighbor not in to_visit:
-            to_visit.append(neighbor)
+# for each neighbor of current:
+#     this way costs: current's cost
+#         + weight(current, neighbor)
+#     if no cost yet, OR this is cheaper:
+#         write the cost
+#         write where it came from
+#         put it on the list, if not on it
 ```
 
 </div>
 </SideBySide>
+
+Three things to notice. "Has no entry yet" was `not in previous` in BFS; now it's
+`not in distance`, because `distance` is the dictionary that says whether a cost has
+been found. The *or* is the whole of change 2: a neighbor that already has a cost gets
+reconsidered, and loses its old cost and its old came-from if this way is cheaper.
+And "if not on it" matters now, where it didn't in BFS: a neighbor can be reached a
+second time while it is still waiting on `to_visit`, and it must not be listed twice.
 
 `previous[neighbor] = current` is still how the path gets remembered, and the walk-back
 at the end of the function is untouched. The only new idea is that `previous` can be
@@ -148,31 +217,30 @@ at the end of the function is untouched. The only new idea is that `previous` ca
 
 ## Activity · Make the two changes
 
-Work on your copy, in this order, running the harness after each:
+Work on your copy, in this order, running `test_three_planners()` after each step.
+Don't go on until the step's result matches.
 
-1. Add `distance = {position: 0}` and swap `to_visit.pop(0)` for
-   `closest()` + `remove()`. Harness: still passes the Module 5 properties.
-2. Replace the neighbor loop with the weighted version. Harness: the cost check now
-   **passes**.
-3. In your Lesson 5-6 harness file, add the cost check from Lesson 6-2 and run all
-   three planners through `run_all_tests()`, handing each in by name:
+1. Write `closest()`. Add `distance = {position: 0}` to the setup and swap
+   `to_visit.pop(0)` for `closest()` + `remove()`. Harness: still 6 of 7 — the
+   Module 5 properties all hold, and the cost case still fails, because nothing adds
+   a weight yet.
+2. Replace the neighbor loop with the weighted version. Harness: **7 of 7**. The
+   cost check now passes, with a five-step path where BFS printed three.
+3. Read all three planners' results, top to bottom. Expected: Manhattan fails the
+   two blocked cases (it can't avoid walls) and the cost case; BFS passes everything
+   except cost on the slow grid; Dijkstra passes everything. On the *open* grid with
+   no slow edges, all three agree on every path length.
 
-```python
-run_all_tests("Manhattan", compute_manhattan_path)
-run_all_tests("BFS",       compute_bfs_path)
-run_all_tests("Dijkstra",  compute_dijkstra_path)
-```
+Then write a last test — `test_cost_grid()` — that adds the slow segment and calls
+`compare((0, 0), (0, 3))`:
 
-Expected: Manhattan fails the blocked tests (it can't avoid walls) and the cost check;
-BFS passes everything except cost on the slow grid; Dijkstra passes everything. On the
-*open* grid with no slow edges, all three agree on every path length. (The solution
-file's `compare()` prints the BFS and Dijkstra answers side by side for the same cases.)
-
-```
---- (0,0) to (0,3), slow edge (0,1)-(0,2) weight 5 ---
+```text
   BFS       steps: 3  cost: 7   [(0, 1), (0, 2), (0, 3)]
   Dijkstra  steps: 5  cost: 5   [(1, 0), (1, 1), (1, 2), (0, 2), (0, 3)]
 ```
+
+Your Dijkstra path may go round the other way — through row 1 and back up at
+`(0, 2)`, or on to `(1, 3)` first — and still be right; cost 5 is what matters.
 
 <KnowledgeCheck
   question="On a grid with no blocked intersections and no slow edges, how do the three planners' paths compare?"
@@ -188,13 +256,16 @@ file's `compare()` prints the BFS and Dijkstra answers side by side for the same
 ## The cost grid
 
 Dijkstra's `distance` dictionary is a map of how far everything is, in cost, from the
-start. `print_grid()` from Module 5 draws it:
+start. `dijkstra_distances()` is to `compute_dijkstra_path()` what `bfs_rings()` was
+to `compute_bfs_path()` in Lesson 5-5: the setup and the search with no `break` and no
+walk-back, returning `distance` itself. Write it, then add one line to
+`test_cost_grid()`:
 
 ```python
 print_grid(ROWS, COLS, BLOCKED, dijkstra_distances((0, 0)))
 ```
 
-```
+```text
        0  1  2  3
     -------------
  0 |   0  1  4  5
@@ -219,12 +290,237 @@ else, the numbers are Module 5's BFS rings.
   explanation="Every other cell matches the BFS ring numbers. (0, 2) is the one place the slow segment is on the direct route, and the printed 4 is the cheaper way round it."
 />
 
+If you built the `BFS` class in Lesson 5-5, the copy you make is of the *class*: Lesson
+6-5 is this lesson's class-track version, with the same two changes inside
+`compute_path()`, and you can do it now in place of the function version. Your harness
+lines are the object ones from Lesson 5-6's extension, and `dijkstra_distances()`
+stays a function that reads `planner.blocked` and `planner.weight()`, as `bfs_rings()`
+reads `planner.blocked`.
+
+<Reveal title="Check your Dijkstra" hint="7 of 7 and the cost grid first">
+
+```python
+def closest(intersections, distance):
+    """Return the entry of intersections with the smallest
+    value in distance: a plain find-the-minimum loop."""
+    best = intersections[0]
+    for node in intersections:
+        if distance[node] < distance[best]:
+            best = node
+    return best
+
+def compute_dijkstra_path(position, destination):
+    """Cheapest path from position to destination around
+    BLOCKED, by weight(), as the intersections to drive to."""
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if position not in graph or destination not in graph:
+        return []
+    previous = {position: None}
+    distance = {position: 0}                   # NEW
+    to_visit = [position]
+
+    while len(to_visit) > 0:
+        current = closest(to_visit, distance)  # CHANGE 1: was pop(0)
+        to_visit.remove(current)
+        if current == destination:
+            break
+        for neighbor in graph[current]:
+            new_distance = distance[current] + weight(current, neighbor)   # CHANGE 2
+            if neighbor not in distance or new_distance < distance[neighbor]:
+                distance[neighbor] = new_distance
+                previous[neighbor] = current
+                if neighbor not in to_visit:
+                    to_visit.append(neighbor)
+
+    if destination not in previous:
+        return []
+    path = []
+    current = destination
+    while current != position:
+        path.append(current)
+        current = previous[current]
+    path.reverse()
+    return path
+
+def dijkstra_distances(position):
+    """Cheapest cost to every reachable intersection, as a
+    dictionary -- the search with no break, like bfs_rings()."""
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if position not in graph:
+        return {}
+    distance = {position: 0}
+    to_visit = [position]
+    while len(to_visit) > 0:
+        current = closest(to_visit, distance)
+        to_visit.remove(current)
+        for neighbor in graph[current]:
+            new_distance = distance[current] + weight(current, neighbor)
+            if neighbor not in distance or new_distance < distance[neighbor]:
+                distance[neighbor] = new_distance
+                if neighbor not in to_visit:
+                    to_visit.append(neighbor)
+    return distance
+```
+
+Everything outside the two `CHANGE` regions is your BFS, line for line. If yours
+passes 7 of 7 and draws the grid above, keep yours.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The DIJKSTRA PLANNER section of `robot.py` as this lesson leaves it, the edited
+`run_all_tests()` in the 5-6 part of BFS PLANNER, and the run block; the rest of the
+file is as the Lesson 6-2 teacher copy left it. The file is
+`lesson-03-from-bfs-to-dijkstra.py` in the Module 6 solutions.
+
+```python
+# in the 5-6 part of BFS PLANNER: the harness, now 7 cases
+def run_all_tests(name, planner):
+    """The seven cases, through whichever planner is handed
+    in: four open, the wall, walled off, and the slow row."""
+    print("==========", name, "==========")
+    passed = 0
+    clear_blocked()
+    clear_slow_edges()
+    if run_path_test("open (0, 0) to (3, 3)", planner, (0, 0), (3, 3), 6):
+        passed = passed + 1
+    if run_path_test("open (0, 0) to (0, 3)", planner, (0, 0), (0, 3), 3):
+        passed = passed + 1
+    if run_path_test("open (2, 1) to (0, 3)", planner, (2, 1), (0, 3), 4):
+        passed = passed + 1
+    if run_path_test("open (1, 1) to (1, 1)", planner, (1, 1), (1, 1), 0):
+        passed = passed + 1
+    add_blocked((1, 0))
+    add_blocked((1, 1))
+    if run_path_test("wall at (1,0),(1,1): (0,0) to (3,0)", planner, (0, 0), (3, 0), 7):
+        passed = passed + 1
+    add_blocked((1, 2))
+    add_blocked((1, 3))
+    if run_no_path_test("walled off: (0,0) to (3,0)", planner, (0, 0), (3, 0)):
+        passed = passed + 1
+    clear_blocked()
+    add_slow_edge((0, 1), (0, 2), 5)
+    path = planner((0, 0), (0, 3))
+    if check_cost("slow row: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
+        passed = passed + 1
+    clear_slow_edges()
+    print(name + ":", passed, "of 7 passed")
+
+
+# ===== DIJKSTRA PLANNER =====
+# The third planner, made by copying the BFS PLANNER's
+# function and changing two things in the middle: take the
+# CLOSEST waiting intersection, not the oldest, and add the
+# WEIGHTED GRAPH's weight() instead of counting a step,
+# keeping the cheaper total when a place is reached twice.
+# Same shape, same promises; the 5-6 harness tests all three.
+
+def closest(intersections, distance):
+    """Return the entry of intersections with the smallest
+    value in distance: a plain find-the-minimum loop."""
+    best = intersections[0]
+    for node in intersections:
+        if distance[node] < distance[best]:
+            best = node
+    return best
+
+def compute_dijkstra_path(position, destination):
+    """Cheapest path from position to destination around
+    BLOCKED, by weight(), as the intersections to drive to."""
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if position not in graph or destination not in graph:
+        return []
+    previous = {position: None}
+    distance = {position: 0}
+    to_visit = [position]
+
+    while len(to_visit) > 0:
+        current = closest(to_visit, distance)
+        to_visit.remove(current)
+        if current == destination:
+            break
+        for neighbor in graph[current]:
+            new_distance = distance[current] + weight(current, neighbor)
+            if neighbor not in distance or new_distance < distance[neighbor]:
+                distance[neighbor] = new_distance
+                previous[neighbor] = current
+                if neighbor not in to_visit:
+                    to_visit.append(neighbor)
+
+    if destination not in previous:
+        return []
+    path = []
+    current = destination
+    while current != position:
+        path.append(current)
+        current = previous[current]
+    path.reverse()
+    return path
+
+def dijkstra_distances(position):
+    """Cheapest cost to every reachable intersection, as a
+    dictionary -- the search with no break, like bfs_rings()."""
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if position not in graph:
+        return {}
+    distance = {position: 0}
+    to_visit = [position]
+    while len(to_visit) > 0:
+        current = closest(to_visit, distance)
+        to_visit.remove(current)
+        for neighbor in graph[current]:
+            new_distance = distance[current] + weight(current, neighbor)
+            if neighbor not in distance or new_distance < distance[neighbor]:
+                distance[neighbor] = new_distance
+                if neighbor not in to_visit:
+                    to_visit.append(neighbor)
+    return distance
+
+def compare(position, destination):
+    """Print BFS's and Dijkstra's answers for one trip:
+    steps, cost and path, one line each."""
+    for (name, planner) in [("BFS", compute_bfs_path),
+                            ("Dijkstra", compute_dijkstra_path)]:
+        path = planner(position, destination)
+        print(" ", "{:<9}".format(name), "steps:", len(path),
+              " cost:", path_cost(position, path), " ", path)
+
+def test_three_planners():
+    run_all_tests("Manhattan", compute_manhattan_path)
+    run_all_tests("BFS",       compute_bfs_path)
+    run_all_tests("Dijkstra",  compute_dijkstra_path)
+
+def test_cost_grid():
+    clear_blocked()
+    clear_slow_edges()
+    add_slow_edge((0, 1), (0, 2), 5)
+    print("=== (0,0) to (0,3), slow edge (0,1)-(0,2) weight 5 ===")
+    compare((0, 0), (0, 3))
+    print("=== cost of every intersection from (0,0) ===")
+    print_grid(ROWS, COLS, BLOCKED, dijkstra_distances((0, 0)))
+
+# ===== RUN =====
+board.wait_for_button()
+test_three_planners()
+```
+
+</TeacherNote>
+
 <TeacherNote title="Copy first, change second — and stop at two changes">
 
 The lesson's shape is the point: a working thing, copied, changed in two marked places,
 tested after each. Students who try to write Dijkstra fresh get lost in `to_visit`
 bookkeeping; students who copy BFS and change two lines have it working in twenty
-minutes and can explain both changes.
+minutes and can explain both changes. That is why the outline in the skeleton is only
+the two changes and the walk-back is "unchanged": the BFS body goes in first, and the
+comments are a checklist, not a second algorithm.
+
+The harness edit comes *first*, deliberately: a copy that fails 6 of 7 exactly as BFS
+does is the proof that the copy is faithful, and watching the seventh case flip to PASS
+at step 2 is the lesson's payoff. The "if not on it" check is the line students skip —
+without it the open-grid cases still pass but `to_visit` fills with duplicates, so ask
+them why BFS never needed it.
 
 `closest()` is a linear scan. Real implementations use a priority queue, and the old
 version of this material taught one; don't. For a 4×4 grid the scan is instant, and

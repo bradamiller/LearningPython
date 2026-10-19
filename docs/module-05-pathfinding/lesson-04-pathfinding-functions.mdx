@@ -17,19 +17,20 @@ to preview the student view.
 
 Time to turn the concept into code — but in stages. Across Module 2 you built the
 sensor code into a toolkit of functions that share a couple of variables at the top
-of the file. Today the pathfinding code gets the same treatment: the grid settings
-and a shared list of blocked intersections, a function that adds to that list, a
-function that builds the graph around it, and a `compute_bfs_path()` that is only a
-placeholder. Lesson 5-5 fills it in with the ripples from Lesson 5-3.
+of the file. Today the GRID GRAPH section gets the same treatment: a shared list of
+blocked intersections, a function that adds to that list, and a rewrite of
+`build_grid_graph()` that builds the graph *around* the list. Then a new section opens,
+the BFS PLANNER, with a `compute_bfs_path()` that is only a placeholder. Lesson 5-5
+fills it in with the ripples from Lesson 5-3.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
 - Write `add_blocked(intersection)` so an intersection is recorded once, even if told twice
-- Write `build_graph(rows, cols, blocked)` so blocked intersections are neither keys nor anyone's neighbor
+- Rewrite `build_grid_graph()` as `build_graph(rows, cols, blocked)` so blocked intersections are neither keys nor anyone's neighbor
 - State the two rules every planner follows: the position is passed in; the path leaves the start out
-- Explain why the blocked list is shared at the top of the file, and why the graph is rebuilt from it on every call
+- Explain why the blocked list is shared at the top of the section, and why the graph is rebuilt from it on every call
 
 </Objectives>
 
@@ -44,18 +45,17 @@ that the box is there?
 "Pass the blocked list to the function" is the first answer most people give, and
 it's half right. The problem is *when* the robot learns about obstacles: one at a
 time, in the middle of driving. Something has to keep the list between one path and
-the next. That something is a variable at the top of the file that every function
+the next. That something is a variable at the top of the section that every function
 can see — exactly the way `reflectance` and `THRESHOLD` sit at the top of the
-LINE SENSOR section of `robot.py`:
+LINE SENSOR section of `robot.py`, and the way `ROWS` and `COLS` already sit at the
+top of GRID GRAPH:
 
 ```python
-ROWS = 4
-COLS = 4
 BLOCKED = []     # intersections the robot must not drive through
 ```
 
-Capital letters, like `THRESHOLD`, because these are settings rather than things
-that change in the middle of a calculation. `BLOCKED` does grow — but only through
+Capital letters, like `THRESHOLD`, because it is a setting rather than something
+that changes in the middle of a calculation. `BLOCKED` does grow — but only through
 one function.
 
 ## Two rules we will never break
@@ -87,20 +87,59 @@ no start.
   explanation="The driving code owns the position. Two copies of the same fact is how a planner ends up planning from an intersection the robot left three steps ago."
 />
 
-## Activity · Build the toolkit
+## This lesson's skeleton
 
-Open `lesson-04-pathfinding-functions.py` from the starter code and work through it
-in three steps.
+Two pastes today, and one rewrite. The first paste goes at the end of the GRID GRAPH
+section, under your Lesson 5-2 tests:
+
+```python
+# --- Lesson 5-4: the blocked list ---
+# BLOCKED is the one record of where the robot must not go.
+# add_blocked() is the one way in: tests, the rangefinder and
+# you all use it. build_graph() builds AROUND the list, so a
+# blocked intersection is never a key and never a neighbor.
+BLOCKED = []             # intersections the robot must not drive through
+
+def add_blocked(intersection):
+    """Record intersection in BLOCKED, once, even if told twice."""
+    pass
+
+def clear_blocked():
+    """Empty BLOCKED in place, so a test can start fresh."""
+    pass
+```
+
+The second opens a new section — a planner is a different kind of work from a graph.
+Paste it after GRID GRAPH, above `RUN`. The placeholder body is given, because it
+isn't the function yet; Lesson 5-5 replaces it.
+
+```python
+# ===== BFS PLANNER =====
+# The second planner. compute_bfs_path(position, destination)
+# has the same shape as the MANHATTAN PLANNER's function and
+# keeps the same two promises (told the position; the path
+# leaves the start out), but it searches the GRID GRAPH ring
+# by ring, so it routes AROUND whatever is in BLOCKED. Pure
+# dictionary work: every test here runs with the robot still.
+
+def compute_bfs_path(position, destination):
+    """Shortest path from position to destination around
+    BLOCKED, as the list of intersections to drive to."""
+    graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
+    print("compute_bfs_path is not written yet!")
+    return []
+```
+
+The rewrite is `build_grid_graph()` — it becomes `build_graph(rows, cols, blocked)`.
+That's step 2 of the activity, and like the rename in Lesson 4-5, it changes every
+call as well as the definition.
+
+## Activity · Build the toolkit
 
 ### Step 1 · `add_blocked()`
 
-The one way anyone tells the planner about an obstacle:
-
-```python
-def add_blocked(intersection):
-    if intersection not in BLOCKED:
-        BLOCKED.append(intersection)
-```
+The one way anyone tells the planner about an obstacle. Its body is an `if` and an
+`append`: add the intersection to `BLOCKED` *only if it isn't already there*.
 
 Why the `if`? The robot may see the same wall twice. A list with `(2, 0)` in it
 twice is harmless but untidy, and it would make the printed grid confusing.
@@ -110,19 +149,17 @@ Now the question that catches people: does this need `global BLOCKED`? In Lesson
 function does to the name:
 
 ```python
-def set_threshold(new_value):     # Lesson 2-7
-    global THRESHOLD              # needed: this line REASSIGNS the name
-    THRESHOLD = new_value
-
-def add_blocked(intersection):    # today
-    if intersection not in BLOCKED:
-        BLOCKED.append(intersection)   # not needed: this CHANGES the list
+    THRESHOLD = new_value              # Lesson 2-7: REASSIGNS the name -- needs global
+    BLOCKED.append(intersection)       # today: CHANGES the list -- no global needed
 ```
 
 `global` is for *reassigning* a module-level name. `append` doesn't reassign
 anything — `BLOCKED` still names the same list; the list just has one more thing in
-it. The toolkit also has a `clear_blocked()` that empties the list in place (`pop()`
-until it's empty) so tests can start fresh.
+it. `clear_blocked()` is the same idea the other way: it empties the list *in place*
+— `pop()` until `len(BLOCKED)` is zero — so that tests can start fresh. Writing
+`BLOCKED = []` inside it would reassign the name and need `global`; popping doesn't.
+
+Write both bodies. There's nothing to run yet — step 2 gives you the test.
 
 <KnowledgeCheck
   question="Why does add_blocked() not need `global BLOCKED`, when set_threshold() in Lesson 2-7 needed `global THRESHOLD`?"
@@ -139,32 +176,31 @@ until it's empty) so tests can start fresh.
 
 In Lesson 5-2 you built the graph with `build_grid_graph()` and then took blocked
 intersections out with `remove_blocked()`. Today one function does both: while
-building, skip anything blocked.
+building, skip anything blocked. In the GRID GRAPH section, change the `def` line to
 
 ```python
 def build_graph(rows, cols, blocked):
-    graph = {}
-    for r in range(rows):
-        for c in range(cols):
-            if (r, c) in blocked:
-                continue
-            neighbors = []
-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                nr, nc = r + dr, c + dc
-                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in blocked:
-                    neighbors.append((nr, nc))
-            graph[(r, c)] = neighbors
-    return graph
+    """Return the grid as a dictionary, leaving out every
+    intersection in blocked: not a key, not anyone's neighbor."""
 ```
 
-There are two `in blocked` checks, and both are needed. The first keeps a blocked
-intersection from becoming a key. The second keeps it out of every *other*
-intersection's neighbor list. Miss the second and the graph still has edges leading
-into the wall.
+and make two changes to the body you already have. First, if `(row, col)` itself is
+in `blocked`, skip it entirely — it never becomes a key. Second, each of the four
+neighbor checks gets one more condition: the neighbor must not be in `blocked` either.
+Both `in blocked` checks are needed. The first keeps a blocked intersection from
+becoming a key. The second keeps it out of every *other* intersection's neighbor list.
+Miss the second and the graph still has edges leading into the wall.
 
-The four `(dr, dc)` pairs are up, down, left, right, in that order. That's the order
+Keep the four directions in the order up, down, left, right. That's the order
 Lesson 5-3's trace checked neighbors, which is why its printed path matched the
 table.
+
+Then delete `remove_blocked()` and its test — the new function has absorbed them, the
+way `SETPOINT` disappeared in Lesson 2-6 — and fix `test_grid_graph()`, which still
+calls a function that no longer exists: it should build with
+`build_graph(ROWS, COLS, BLOCKED)` now. Set the run line to it. With nothing blocked,
+the output is exactly what it was in Lesson 5-2: 16, four neighbors, two neighbors.
+Don't go on until it is.
 
 <KnowledgeCheck
   question="(1,1) is blocked. Someone wrote build_graph with the first `in blocked` check but forgot the second. What is wrong with the result?"
@@ -177,47 +213,176 @@ table.
   explanation="The first check removes (1,1) as a key. Only the second check removes it from the lists of (0,1), (1,0), (1,2) and (2,1). Without it, a search could step into the wall."
 />
 
-### Step 3 · The placeholder
+### Step 3 · The placeholder, and a test with a wall in it
 
-```python
-def compute_bfs_path(position, destination):
-    graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
-    print("compute_bfs_path is not written yet!")
-    return []
-```
+Look at the placeholder `compute_bfs_path()` again. It builds the graph *itself*, from
+`BLOCKED`, every time it's called. Why not build the graph once at the top of the
+file? Because a wall the robot finds at step 3 has to be gone from the graph it plans
+step 4 on. Rebuilding on every call makes that automatic; there is no "forgot to
+rebuild" bug to have. On a 4×4 grid the rebuild visits sixteen intersections and takes
+no time worth measuring.
 
-Notice that it builds the graph *itself*, from `BLOCKED`, every time it's called.
-Why not build the graph once at the top of the file? Because a wall the robot finds
-at step 3 has to be gone from the graph it plans step 4 on. Rebuilding on every
-call makes that automatic; there is no "forgot to rebuild" bug to have. On a 4×4
-grid the rebuild visits sixteen intersections and takes no time worth measuring.
-
-## Try it
-
-Run the program. It builds the open graph, prints it, then blocks `(1, 1)` and
-rebuilds:
+Now write a test — say `test_blocked_graph()` — that exercises all three functions:
+block `(1, 1)` with `add_blocked()`, build the graph, and print the blocked list, the
+number of intersections, whether `(1, 1)` is in the graph, and the neighbors of
+`(0, 1)`. Then call `add_blocked((1, 1))` a second time and print the list again.
+Finally print what `compute_bfs_path((0, 0), (3, 3))` returns. Set the run line to it.
+Here is what it should show:
 
 ```text
-===== Graph with (1,1) blocked =====
 Blocked: [(1, 1)]
 Number of intersections: 15
 (1,1) in graph? False
-Neighbors of (0,1): [(0, 0), (0, 2)]  <- (1,1) is gone from the list
+Neighbors of (0,1): [(0, 0), (0, 2)]
 Blocked after adding (1,1) again: [(1, 1)]
 compute_bfs_path is not written yet!
-
 Path: []
 ```
 
 Three things to check against the list of what `build_graph` promises: fifteen
 keys, `(1, 1)` is not one of them, and `(1, 1)` is gone from `(0, 1)`'s neighbors.
-Then the placeholder's empty path — which is, for now, the right answer to nothing.
+The list is still one entry long after the second `add_blocked()`. Then the
+placeholder's empty path — which is, for now, the right answer to nothing.
 
 Before you leave, write down (don't run) what these should return once Lesson 5-5
 is finished, with nothing blocked:
 
 - `compute_bfs_path((0, 0), (0, 2))`
 - `compute_bfs_path((2, 2), (2, 2))`
+
+<Reveal title="Check your three functions" hint="run test_blocked_graph() first">
+
+```python
+def build_graph(rows, cols, blocked):
+    """Return the grid as a dictionary, leaving out every
+    intersection in blocked: not a key, not anyone's neighbor."""
+    graph = {}
+    for r in range(rows):
+        for c in range(cols):
+            if (r, c) in blocked:
+                continue
+            neighbors = []
+            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in blocked:
+                    neighbors.append((nr, nc))
+            graph[(r, c)] = neighbors
+    return graph
+
+def add_blocked(intersection):
+    """Record intersection in BLOCKED, once, even if told twice."""
+    if intersection not in BLOCKED:
+        BLOCKED.append(intersection)
+
+def clear_blocked():
+    """Empty BLOCKED in place, so a test can start fresh."""
+    while len(BLOCKED) > 0:
+        BLOCKED.pop()
+```
+
+This `build_graph()` is written a little differently from the Lesson 5-2 version: the
+four directions are a list of `(dr, dc)` changes and one loop does the four checks,
+and `continue` skips to the next column when the intersection is blocked. If you kept
+your four `if` lines and added `and (row - 1, col) not in blocked` to each, that is
+the same function and it is fine. The thing to compare is the output.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The GRID GRAPH section as this lesson leaves it (rewritten in place: `build_graph()`
+where `build_grid_graph()` was, `remove_blocked()` and its test gone), the new BFS
+PLANNER section, and the run block. The rest of the file is as the Lesson 5-2 teacher
+copy left it. The file is `lesson-04-pathfinding-functions.py` in the Module 5
+solutions.
+
+```python
+# ===== GRID GRAPH =====
+# The grid as a graph, in a dictionary: every intersection is
+# a key, and its value is the list of neighbors it is joined
+# to. The BFS PLANNER searches this graph. Starts with the
+# open grid; Lesson 5-4 adds the blocked list, so a blocked
+# intersection is neither a key nor anyone's neighbor.
+ROWS = 4                 # the grid is ROWS x COLS intersections
+COLS = 4
+
+def build_graph(rows, cols, blocked):
+    """Return the grid as a dictionary, leaving out every
+    intersection in blocked: not a key, not anyone's neighbor."""
+    graph = {}
+    for r in range(rows):
+        for c in range(cols):
+            if (r, c) in blocked:
+                continue
+            neighbors = []
+            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in blocked:
+                    neighbors.append((nr, nc))
+            graph[(r, c)] = neighbors
+    return graph
+
+def test_grid_graph():
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    print("Intersections:", len(graph))          # 16
+    print("Neighbors of (1, 1):", graph[(1, 1)])  # 4 of them
+    print("Neighbors of (0, 0):", graph[(0, 0)])  # 2: a corner
+
+# --- Lesson 5-4: the blocked list ---
+# BLOCKED is the one record of where the robot must not go.
+# add_blocked() is the one way in: tests, the rangefinder and
+# you all use it. build_graph() builds AROUND the list, so a
+# blocked intersection is never a key and never a neighbor.
+BLOCKED = []             # intersections the robot must not drive through
+
+def add_blocked(intersection):
+    """Record intersection in BLOCKED, once, even if told twice."""
+    if intersection not in BLOCKED:
+        BLOCKED.append(intersection)
+
+def clear_blocked():
+    """Empty BLOCKED in place, so a test can start fresh."""
+    while len(BLOCKED) > 0:
+        BLOCKED.pop()
+
+def test_blocked_graph():
+    add_blocked((1, 1))
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    print("Blocked:", BLOCKED)
+    print("Number of intersections:", len(graph))     # 15
+    print("(1,1) in graph?", (1, 1) in graph)          # False
+    print("Neighbors of (0,1):", graph[(0, 1)])        # (1,1) gone
+    add_blocked((1, 1))
+    print("Blocked after adding (1,1) again:", BLOCKED)
+    print("Path:", compute_bfs_path((0, 0), (3, 3)))
+
+
+# ===== BFS PLANNER =====
+# The second planner. compute_bfs_path(position, destination)
+# has the same shape as the MANHATTAN PLANNER's function and
+# keeps the same two promises (told the position; the path
+# leaves the start out), but it searches the GRID GRAPH ring
+# by ring, so it routes AROUND whatever is in BLOCKED. Pure
+# dictionary work: every test here runs with the robot still.
+
+def compute_bfs_path(position, destination):
+    """Shortest path from position to destination around
+    BLOCKED, as the list of intersections to drive to."""
+    graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
+    print("compute_bfs_path is not written yet!")
+    return []
+
+# ===== RUN =====
+board.wait_for_button()
+test_blocked_graph()
+```
+
+Note that `BLOCKED` is defined *below* `build_graph()` and above the test that uses
+it; that is fine, because `build_graph()` takes the list as a parameter and never
+reads the global. Python only needs a name to exist by the time a line *runs*, and
+the run block is last.
+
+</TeacherNote>
 
 <TeacherNote title="Answers, and what to listen for">
 
@@ -226,7 +391,8 @@ question above; students who can explain reassign-vs-change-in-place have the wh
 idea. The other thing to listen for during the activity is the second `in blocked`
 check: a `build_graph` that drops blocked keys but still lists them as neighbors is
 the single most common bug, and it only shows up as a search that walks into a wall
-in Lesson 5-5. Catch it here.
+in Lesson 5-5. Catch it here — `test_blocked_graph()`'s neighbors-of-(0,1) line is
+the one that shows it.
 
 **Challenge for students who finish early:** `add_blocked((1, 0))`,
 `add_blocked((1, 1))`, rebuild, and print the whole graph. Which row-0 intersections
@@ -253,7 +419,7 @@ early, which is fine.
 ## Wrap-up
 
 - What are the two planner rules? (Told the position; path excludes the start.)
-- Who calls `add_blocked()`? (A paper test in 5-6, the rangefinder in 5-7, a saved file in 5-8.)
+- Who calls `add_blocked()`? (A paper test in 5-6, the rangefinder in 5-7, and you in 5-8, typing in what the last run found.)
 - Why is the graph rebuilt on every call? (So a just-found obstacle is already missing from it.)
 - Why no `global` in `add_blocked()`? (Appending changes the list; it doesn't reassign the name.)
 

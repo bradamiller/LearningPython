@@ -7,24 +7,25 @@ sidebar_position: 10
 <LessonHeader
   eyebrow="Module 2 · Line Tracking"
   title="Lesson 2-10 · Final Project"
-  meta={['Multi-day', 'Capstone', 'Two cooperating toolkits']}
+  meta={['Multi-day', 'Capstone', 'Two cooperating sections']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Time to put it all together. Using your sensor toolkit and driving toolkit, you'll
-build a program that follows the taped circle, detects the cross, reverses direction,
-and repeats — four times — then stops. It's the capstone of everything in Module 2:
-sensors, control loops, decisions, and functions built on functions.
+Time to put it all together. `robot.py` has two finished sections — LINE SENSOR, which
+reads the tape, and LINE TRACKING, which drives on it — and this project is the first
+program built entirely out of them: follow the taped circle, detect the cross, reverse
+direction, and repeat four times, then stop. It's the capstone of everything in Module
+2: sensors, control loops, decisions, and functions built on functions.
 
 <Objectives>
 
 By the end of this project you will be able to:
 
-- Combine both toolkits into one complete, working program
-- Write a short, readable main program that is mostly calls to your own functions
+- Combine both sections of `robot.py` into one complete, working program
+- Write a short, readable project function that is mostly calls to your own functions
 - Test and debug a real robot behavior systematically
 - Explain and demonstrate your design
 
@@ -48,27 +49,56 @@ The functions version is for everyone else.
 
 <CardGrid>
   <InfoCard tag="Option A" title="Standard">
-    The mission above, using your existing toolkits unchanged. Focus on a clean main program and solid debugging.
+    The mission above, using your two sections unchanged. Focus on a clean project function and solid debugging.
   </InfoCard>
   <InfoCard tag="Option B" title="Enhanced">
-    Add a turn_around() function, count each leg, and flash the LED or beep at every reversal.
+    Use a turn_around() function (the Lesson 2-9 challenge, if you did it; write it now if not), count each leg, and flash the LED or beep at every reversal.
   </InfoCard>
   <InfoCard tag="Option C" title="Advanced">
     Add line-loss recovery, or speed up on later laps. Invent your own twist (teacher-approved).
   </InfoCard>
 </CardGrid>
 
+## This lesson's skeleton
+
+Paste this into `robot.py` above `RUN`, at the end of the LINE TRACKING section. There
+are no new driving functions — the project is two test functions, and the second one
+*is* the project.
+
+```python
+# --- Lesson 2-10: final project ---
+# The module project: lap the circle, reversing at the cross,
+# four times, then stop. Nothing new is defined for it. It is
+# a list of calls to the four driving functions above, which
+# is the point: the sections did the work, the project
+# assembles them.
+
+def test_reversal():
+    # park on the cross, turn around (two clockwise turns),
+    # then follow back to the cross
+    pass
+
+def test_final_project():
+    # the mission: follow to the cross, park on it, reverse,
+    # four times in all; then stop and print "Done!"
+    # write your plan here as comments first, then the code
+    pass
+```
+
+Both bodies are yours. The outline is deliberately short, because the plan is the
+first part of the project — that's the next activity.
+
 ## Activity · Plan before you build
 
-Pseudocode the main program first, in plain English, before you type any Python.
-It will be shorter than you expect, because the toolkits do the heavy lifting —
-each line of your plan is close to one line of code.
+Pseudocode `test_final_project()` first, in plain English, before you type any
+Python. Write your plan as `#` comments inside the function, one step per line. It
+will be shorter than you expect, because the two sections do the heavy lifting — each
+line of your plan is close to one line of code, and when you're done, each comment
+will have its line of code under it.
 
 <Reveal title="Compare with one possible plan" hint="write yours first">
 
 ```text
-wait for the button
-
 repeat 4 times:
     follow the line to the cross
     drive past it so the wheels are on the cross
@@ -78,112 +108,83 @@ repeat 4 times:
 stop and print "Done!"
 ```
 
-If yours has more steps than this, look for work you're doing by hand that a toolkit
-function already does for you.
+If yours has more steps than this, look for work you're doing by hand that a function
+in LINE TRACKING already does for you. (The button wait isn't in the plan: the `RUN`
+block does that before every test.)
 
 </Reveal>
 
 <KnowledgeCheck
   question="For the final project, do you need to rewrite the sensor and driving logic from scratch?"
   options={[
-    {text: 'Yes — copy it all into the main program'},
-    {text: 'No — reuse your tested sensor and driving toolkits', correct: true},
+    {text: 'Yes — copy it all into the project function'},
+    {text: 'No — reuse the tested LINE SENSOR and LINE TRACKING sections of robot.py', correct: true},
     {text: 'Yes — functions cannot be reused in a new program'},
     {text: 'Only the sensor part'},
   ]}
-  explanation="That's the whole point of building the toolkits: the main program is a handful of calls to functions you already tested."
+  explanation="That's the whole point of building the file one tested function at a time: the project is a handful of calls to functions you already trust."
 />
 
 ## Build it in pieces
 
-You have every part already: the sensor toolkit from Lesson 2-7, the driving toolkit
-from Lesson 2-9, and the reversal trick you worked out above. What's left is assembling them and
-tuning — which is most of what real robot work is.
+You have every part already: the LINE SENSOR section finished in Lesson 2-7, the LINE
+TRACKING section finished in Lesson 2-9, and the reversal trick you worked out above.
+What's left is assembling them and tuning — which is most of what real robot work is.
 
-Build in this order, testing each before adding the next:
+Build in this order, and don't go on until each step works:
 
-1. `track_to_intersection()` then `drive_past_intersection()` — does it stop with the wheels on the cross?
-2. One `turn_clockwise()` — does it find the line again?
-3. One full reversal — two clockwise turns, then following back the other way.
-4. The loop that does it four times.
+1. **Park on the cross.** Set the run line to `test_park()` from Lesson 2-9 and run it
+   once more. Does the robot stop with its *wheels* on the cross?
+2. **One turn.** Set the run line to `test_turn()`. Does the turn find the line again?
+3. **One full reversal.** Write the body of `test_reversal()` and run it: park, two
+   clockwise turns, follow back the other way to the same cross. (If you did the Lesson
+   2-9 challenge, `test_turn_around()` is this test already.)
+4. **The loop.** Write `test_final_project()` under your plan comments and set the run
+   line to it.
 
-<TeacherNote title="Reference program (teacher copy)">
+<TeacherNote title="Solution (teacher copy)">
 
-The whole thing: both toolkits plus a main program that reverses four times (two
-clockwise sensor-ended turns make a 180° reversal on the line). Use it to unstick a
-team, not as a handout — the assembly and tuning is the graded work. The file is
-`lesson-10-final-project.py` in the Module 2 solutions; the class version is
-`lesson-10-final-project-class-addon.py`.
+This lesson's addition to the LINE TRACKING section of `robot.py`, plus the run block;
+the rest of the file is as the Lesson 2-9 teacher copy left it. Two clockwise
+sensor-ended turns make a 180° reversal on the line. Use it to unstick a team, not as
+a handout — the assembly and tuning is the graded work, and there is no student
+reveal for it. The file is `lesson-10-final-project.py` in the Module 2 solutions; the
+class version is `lesson-10-final-project-class-addon.py` (same two tests with
+`tracker.` in front of every driving call).
 
 ```python
-from XRPLib.reflectance import Reflectance
-from XRPLib.differential_drive import DifferentialDrive
-from XRPLib.board import Board
+# --- Lesson 2-10: final project ---
+# The module project: lap the circle, reversing at the cross,
+# four times, then stop. Nothing new is defined for it. It is
+# a list of calls to the four driving functions above, which
+# is the point: the sections did the work, the project
+# assembles them.
 
-# ===== Sensor toolkit (Lesson 2-7) =====
-reflectance = Reflectance.get_default_reflectance()
-THRESHOLD = 0.5
-
-def get_left():
-    return reflectance.get_left()
-
-def get_right():
-    return reflectance.get_right()
-
-def get_error():
-    return get_left() - get_right()
-
-def is_at_cross():
-    return get_left() > THRESHOLD and get_right() > THRESHOLD
-
-def is_either_on_line():
-    return get_left() > THRESHOLD or get_right() > THRESHOLD
-
-# ===== Driving toolkit (Lesson 2-9) =====
-drivetrain = DifferentialDrive.get_default_differential_drive()
-BASE_EFFORT = 0.4
-KP = 0.5
-TURN_EFFORT = 0.25
-
-def drive_past_intersection():
-    drivetrain.straight(8.75, 0.5)
-
-def track_to_intersection():
-    while not is_at_cross():
-        error = get_error()
-        correction = error * KP
-        drivetrain.arcade(BASE_EFFORT, -correction)
-    drivetrain.stop()
-
-def turn_clockwise():
-    drivetrain.turn(-60, TURN_EFFORT)
-    drivetrain.arcade(0, -TURN_EFFORT)
-    while not is_either_on_line():
-        pass
-    drivetrain.stop()
-
-def turn_counterclockwise():
-    drivetrain.turn(60, TURN_EFFORT)
-    drivetrain.arcade(0, TURN_EFFORT)
-    while not is_either_on_line():
-        pass
-    drivetrain.stop()
-
-# ===== MAIN PROGRAM =====
-board = Board.get_default_board()
-
-board.wait_for_button()
-print("Module 2 Final Project -- starting!")
-
-for i in range(4):
-    print("Leg", i + 1, "-- following line to the cross...")
+def test_reversal():
     track_to_intersection()
     drive_past_intersection()
-    print("Cross detected! Reversing...")
     turn_clockwise()
-    turn_clockwise()      # two sensor-ended turns = 180 deg reversal
+    turn_clockwise()      # two sensor-ended turns = 180 deg
+    track_to_intersection()
+    print("Done!")
 
-print("Complete! 4 reversals done.")
+def test_final_project():
+    print("Module 2 Final Project -- starting!")
+    for leg in range(4):
+        # follow the line to the cross
+        print("Leg", leg + 1, "-- following to the cross...")
+        track_to_intersection()
+        # park the wheels on the cross
+        drive_past_intersection()
+        # turn around: two sensor-ended turns
+        print("Cross detected! Reversing...")
+        turn_clockwise()
+        turn_clockwise()
+    print("Done! 4 reversals complete.")
+
+# ===== RUN =====
+board.wait_for_button()
+test_final_project()
 ```
 
 </TeacherNote>
@@ -191,12 +192,12 @@ print("Complete! 4 reversals done.")
 <TeacherNote title="Run it as a build, and test in pieces">
 
 Treat this as a multi-day arc: plan → build → test → present. Insist on **incremental
-testing** — `track_to_intersection()` alone, then one turn, then one full reversal,
-then the four-rep loop. The common fixes are all *tuning*: `THRESHOLD` (cross not
-detected), the blind part of the turn or `TURN_EFFORT` (the loop ends on the old line,
-or spins past the new one), and `BASE_EFFORT` (overshoots the cross) — frame that
-tuning as the real engineering, not failure. Two successful
-reversals already demonstrate mastery; four is the goal.
+testing** — `test_park()`, then `test_turn()`, then `test_reversal()`, then the
+four-rep loop. The common fixes are all *tuning*: `THRESHOLD` (cross not detected),
+the blind part of the turn or `TURN_EFFORT` (the loop ends on the old line, or spins
+past the new one), and `BASE_EFFORT` (overshoots the cross) — frame that tuning as the
+real engineering, not failure. Two successful reversals already demonstrate mastery;
+four is the goal.
 
 </TeacherNote>
 
@@ -204,13 +205,13 @@ reversals already demonstrate mastery; four is the goal.
 
 Work up in stages, and keep a note of what you tuned:
 
-1. Does `track_to_intersection()` follow and stop at the cross, with `drive_past_intersection()` leaving the wheels on it?
-2. Does one turn-around find the line again?
-3. Does one full reversal work end to end?
-4. Do all four reversals run and stop?
+1. Does `test_park()` follow and stop at the cross, with the wheels left on it?
+2. Does one turn in `test_turn()` find the line again?
+3. Does `test_reversal()` work end to end?
+4. Do all four reversals in `test_final_project()` run and stop?
 
-Then demo it and reflect: what was hardest, how did the toolkits make the project
-easier, and what would you add with more time?
+Then demo it and reflect: what was hardest, how did building the file one tested
+function at a time make the project easier, and what would you add with more time?
 
 <KnowledgeCheck
   question="Your robot follows the line but blows past the cross without stopping. What's the best first thing to try?"
@@ -226,19 +227,20 @@ easier, and what would you add with more time?
 ## You built a robot that thinks 🎉
 
 Look back at the journey: you started Module 2 reading a single sensor value, and
-you're finishing it with two cooperating toolkits that follow a line, detect
-intersections, and navigate a course. That design — sensing and driving cleanly
-separated, each built on the layer below — is exactly how professional robot code is
-structured, and you'll build directly on it next. (If you did the class extensions,
-you have the same thing as `LineSensor` and `LineTrack` objects — and that is the
-version you should have used for this project.)
+you're finishing it with two cooperating sections of one file that follow a line,
+detect intersections, and navigate a course. That design — sensing and driving cleanly
+separated, each built on the layer below, each function tested the lesson it was
+written — is exactly how professional robot code is structured, and the next module
+adds a section on top of it. (If you did the class extensions, you have the same
+thing as `LineSensor` and `LineTrack` objects — and that is the version you should
+have used for this project.)
 
 <TeacherNote title="Assessment & what's next">
 
 The final project is the summative assessment (a 50-point rubric across code
 organization, functionality, testing/debugging, and presentation works well). Reward
 process and tuning, not just a flawless demo. **Coming in Module 3 · Grid Driving:**
-the driving toolkit goes onto a taped grid — `track_to_intersection()` and
+`robot.py` gets a GRID DRIVING section — `track_to_intersection()` and
 `drive_past_intersection()` become the way the robot drives from one intersection to
 the next, the foundation for the navigation and pathfinding in Modules 4 and 5.
 
