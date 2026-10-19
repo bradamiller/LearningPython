@@ -11,6 +11,7 @@
 const sidebars = {
   curriculumSidebar: [
     'how-this-course-works',
+    'templates',
     {
       type: 'category',
       label: 'Module 1 · Learning to Drive',

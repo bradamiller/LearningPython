@@ -230,11 +230,12 @@ drivetrain = DifferentialDrive.get_default_differential_drive()
 board = Board.get_default_board()
 
 # ===== LINE SENSOR =====
-# Reads the two reflectance sensors and answers questions about them.
-# Starts here with the two raw readings; over this module it grows to
-# answer "how far off the line am I?" and "am I on a line? on a cross?"
-# Nothing in here drives. Everything that drives asks these functions
-# instead of the hardware.
+# Reads the two reflectance sensors and answers questions
+# about them. Starts here with the two raw readings; over this
+# module it grows to answer "how far off the line am I?" and
+# "am I on a line? on a cross?" Nothing in here drives.
+# Everything that drives asks these functions instead of the
+# hardware.
 THRESHOLD = 0.5
 
 def get_left():

@@ -152,7 +152,7 @@ steer. Hundreds of times a second. Two of those steps become part of your file.
 
 **In the LINE SENSOR section**, the error becomes a function. It's a sensor question —
 *how far off the edge am I?* — so it lives with the sensor functions, and the setpoint
-is its setting. Add both under `THRESHOLD`:
+is its setting. `SETPOINT` goes under `THRESHOLD`; `get_error()` goes under `get_right()`:
 
 ```python
 SETPOINT = 0.5           # the reading at the edge of the line
@@ -167,10 +167,11 @@ def get_error():
 
 ```python
 # ===== LINE TRACKING =====
-# Drives the robot along the line using the LINE SENSOR functions above.
-# Starts with the proportional follower: read the error, scale it by KP,
-# steer with arcade(). Grows over the module into following to a cross,
-# parking on it, and turning to the next line.
+# Drives the robot along the line using the LINE SENSOR
+# functions above. Starts with the proportional follower: read
+# the error, scale it by KP, steer with arcade(). Grows over
+# the module into following to a cross, parking on it, and
+# turning to the next line.
 BASE_EFFORT = 0.3        # forward speed while following
 KP = 0.5                 # proportional gain -- tune this!
 
@@ -179,7 +180,8 @@ def test_follow():
     #     error = get_error()
     #     correction = error times KP
     #     steer: arcade() with BASE_EFFORT and the correction
-    #     time.sleep(0.01), so the loop doesn't flood the processor
+    #     time.sleep(0.01), so the loop doesn't flood the
+    # processor
     pass
 ```
 
@@ -283,8 +285,9 @@ in fifty:
 
 ```python
 def test_sweep():
-    # no motors: sweep the robot across the line BY HAND while this
-    # runs, and watch error and correction change sign at the edge
+    # no motors: sweep the robot across the line BY HAND while
+    # this runs, and watch error and correction change sign at
+    # the edge
     for i in range(500):
         error = get_error()
         correction = error * KP
@@ -384,10 +387,11 @@ def get_error():
 
 # above RUN:
 # ===== LINE TRACKING =====
-# Drives the robot along the line using the LINE SENSOR functions above.
-# Starts with the proportional follower: read the error, scale it by KP,
-# steer with arcade(). Grows over the module into following to a cross,
-# parking on it, and turning to the next line.
+# Drives the robot along the line using the LINE SENSOR
+# functions above. Starts with the proportional follower: read
+# the error, scale it by KP, steer with arcade(). Grows over
+# the module into following to a cross, parking on it, and
+# turning to the next line.
 BASE_EFFORT = 0.3
 KP = 0.5
 

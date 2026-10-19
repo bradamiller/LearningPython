@@ -166,7 +166,9 @@ thing, and everything it calls has to be defined above it. Each lesson gives you
 saying what the section does, the settings it needs, the outlines of the functions
 you're going to write, and a **test function** that exercises them. Then the one
 line under `RUN` calls whichever test you're working on. **One test at a time** —
-change the call, don't stack them.
+change the call, don't stack them. If you ever lose the file or join partway
+through, the [robot.py templates](/templates) page has it as it stands after
+every lesson, skeletons pasted and nothing written.
 
 ### Your first two functions
 
@@ -174,11 +176,12 @@ Here is this lesson's skeleton. Paste it above `RUN`.
 
 ```python
 # ===== LINE SENSOR =====
-# Reads the two reflectance sensors and answers questions about them.
-# Starts here with the two raw readings; over this module it grows to
-# answer "how far off the line am I?" and "am I on a line? on a cross?"
-# Nothing in here drives. Everything that drives asks these functions
-# instead of the hardware.
+# Reads the two reflectance sensors and answers questions
+# about them. Starts here with the two raw readings; over this
+# module it grows to answer "how far off the line am I?" and
+# "am I on a line? on a cross?" Nothing in here drives.
+# Everything that drives asks these functions instead of the
+# hardware.
 
 def get_left():
     # return the left reflectance reading

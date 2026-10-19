@@ -1981,6 +1981,21 @@ goes further):
   - Python-concept lessons (4-2 tuples, 4-3 lists, 5-2 dictionaries) keep their
     snippets as scratch demos and say so; nothing from them is pasted into `robot.py`
     except the functions that persist (5-2's graph builder).
+  - **Templates and samples are generated** (2026-10-19, Brad: "at the end of each
+    module supply the template file … don't add the actual answers", and the same for
+    the object-oriented track). `scripts/build_templates.py` reads the lessons and
+    writes `static/templates/{function,class}/robot-after-<L>.py` for every lesson that
+    changes the file plus `robot-end-of-module-<N>.py`, and `docs/templates.mdx` (sidebar
+    entry after how-this-course-works). The recipe in the script is the STRUCTURE
+    (what each lesson adds/edits); outlines and bodies come from the lesson fences, so
+    **after changing any skeleton, Reveal, teacher copy or extension, re-run
+    `python3 scripts/build_templates.py --samples <dir> --verify --xrplib
+    <stubs> --scratch <dir>` and commit the regenerated templates** (stub XRPLib
+    modules live in the session scratchpad; recreate them from the script's docstring if
+    needed). `--samples` writes the COMPLETE files (answers) for both tracks per module
+    end; those go to the source repo (`IntoToPython/teacher-guide/robot-py-samples/`),
+    never to the site. The generator fails loudly when a recipe name is missing from the
+    lessons — that is the signal that a rename needs a recipe edit.
   - Source-repo solution files to (re)name when porting: `lesson-NN-<slug>.py` per
     lesson as cited in each teacher copy; the M3 names are new.
 
