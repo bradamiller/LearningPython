@@ -57,13 +57,10 @@ where the robot should be.
 | Both on white | 0.1 | 0.1 | `0.0` | straight (lost line) |
 | Both on black | 0.9 | 0.9 | `0.0` | straight (an intersection!) |
 
-<Todo kind="media">
-still a placeholder. This diagram matters more than most — the drift direction was taught backwards here until 2026-09-22, and a picture is what stops it being re-introduced. Show the line off to one side and the robot on the other.
-</Todo>
-
 <Figure
-  placeholderLabel="Diagram — two sensors straddling a line, centered vs. drifted left vs. drifted right"
-  caption="Two sensors straddle the line. The difference between them says which way the robot has drifted."
+  src="/img/lesson-m2-06/two-sensor-error.svg"
+  alt="Three top-down views of a robot, drawn as a rectangle with two small sensor circles at its front, over a vertical strip of black tape. Centered: each sensor sits on an edge of the tape, left 0.5, right 0.5, error 0.0, drive straight. Drifted right: the robot has moved to the right of the tape, so the left sensor is over the tape and the right sensor is on white; left 0.8, right 0.2, error +0.6, steer left. Drifted left: the right sensor is over the tape; left 0.2, right 0.8, error -0.6, steer right."
+  caption="Two sensors straddle the line. The sensor that finds the tape is on the side the line is on — so the robot has drifted the other way, and steers back toward the high reading."
 />
 
 <KnowledgeCheck
