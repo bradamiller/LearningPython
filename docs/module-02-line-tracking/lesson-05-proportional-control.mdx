@@ -195,7 +195,9 @@ setpoint is the *edge* (~0.5), **not** white (0.0) — the robot rides the bound
 and proportional control needs **no if/else**, because the sign of the error already
 encodes direction. The `time.sleep(0.01)` just keeps the loop from flooding the
 processor. Encourage students to use their Lesson 2-1 edge value rather than assuming
-exactly 0.5.
+exactly 0.5. `test_sweep()` (in the tuning section) is the moment to make the sign
+flip physical: motors off, robot in hand, the printed error crossing zero as the
+sensor crosses the edge.
 
 </TeacherNote>
 
@@ -275,47 +277,51 @@ out of every fifty.
   explanation="50 goes into 120 twice (100) with 20 left over, so 120 % 50 is 20. Only passes whose remainder is 0 — multiples of 50 — print."
 />
 
-Here's the technique on its own, with no robot involved — type it into XRP Code and
-run it:
+Here's the technique with the real sensor and **no motors** — one more test to paste
+above `RUN`. It reads the error 500 times over about ten seconds and prints one line
+in fifty:
 
 ```python
-SETPOINT = 0.5        # the edge your robot steers for
-KP = 0.5
-
-for i in range(300):
-    # Stand-in for the sensor: a reading that slides from white to black
-    # across the whole run, so it passes over the edge on the way.
-    sensor_value = i / 300
-
-    error = SETPOINT - sensor_value
-    correction = error * KP
-
-    if i % 50 == 0:
-        print(f"i={i}  sensor={sensor_value:.2f}  error={error:.2f}  correction={correction:.2f}")
+def test_sweep():
+    # no motors: sweep the robot across the line BY HAND while this
+    # runs, and watch error and correction change sign at the edge
+    for i in range(500):
+        error = get_error()
+        correction = error * KP
+        if i % 50 == 0:
+            print(f"i={i}  error={error:.2f}  correction={correction:.2f}")
+        time.sleep(0.02)
 ```
 
-Three hundred passes, six lines of output:
+Set the run line to `test_sweep()`, press the button, and slide the robot slowly
+sideways so the left sensor starts on white, crosses the edge, and ends on black.
+Five hundred passes, ten lines of output, something like:
 
 ```text
-i=0  sensor=0.00  error=0.50  correction=0.25
-i=50  sensor=0.17  error=0.33  correction=0.17
-i=100  sensor=0.33  error=0.17  correction=0.08
-i=150  sensor=0.50  error=0.00  correction=0.00
-i=200  sensor=0.67  error=-0.17  correction=-0.08
-i=250  sensor=0.83  error=-0.33  correction=-0.17
+i=0  error=0.30  correction=0.15
+i=50  error=0.28  correction=0.14
+i=100  error=0.21  correction=0.11
+i=150  error=0.09  correction=0.04
+i=200  error=0.01  correction=0.00
+i=250  error=-0.12  correction=-0.06
+i=300  error=-0.24  correction=-0.12
+i=350  error=-0.31  correction=-0.16
+i=400  error=-0.33  correction=-0.17
+i=450  error=-0.33  correction=-0.17
 ```
 
-The output is worth reading as more than a formatting demo. The fake reading passes
-the setpoint at `i=150`, and look what happens: the error hits `0.00` and then goes
+Your numbers will differ; the *shape* won't. The output is worth reading as more than
+a formatting demo. As the sensor reaches the edge the error falls to zero and then goes
 **negative**, and the correction follows it. That sign flip is the steering changing
 direction, with no `if/else` anywhere — exactly the claim made earlier in the lesson,
-now in numbers.
+now in numbers, from your sensor. (If the error never changes sign, the sensor didn't
+cross the edge — sweep farther — or `SETPOINT` isn't your edge value from Lesson 2-1.)
 
 ### Step 3 · Put it in your own loop
 
-Your tracking loop is a `while True:`, which has no `i` to count with, so make your
-own counter — the same `count = count + 1` pattern from Lesson 1-9. Three additions
-to `test_follow()`: a counter set to zero *before* the loop; a line at the end of the
+`test_sweep()` had a `for` loop, so `i` was there to count with. Your tracking loop is
+a `while True:`, which has no `i`, so make your own counter — the same
+`count = count + 1` pattern from Lesson 1-9. Three additions to `test_follow()`: a counter set to zero *before* the loop; a line at the end of the
 loop body that adds one to it; and an `if` that prints the error and correction only
 when the counter is a multiple of 50. Run it and tune `KP` again, this time reading
 the numbers: a too-high gain shows up as a correction that flips sign on nearly every
@@ -397,6 +403,14 @@ def test_follow():
             print(f"error={error:.2f} correction={correction:.2f}")
 
         time.sleep(0.01)
+
+def test_sweep():
+    for i in range(500):
+        error = get_error()
+        correction = error * KP
+        if i % 50 == 0:
+            print(f"i={i}  error={error:.2f}  correction={correction:.2f}")
+        time.sleep(0.02)
 
 # ===== RUN =====
 board.wait_for_button()
