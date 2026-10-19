@@ -249,12 +249,15 @@ The arithmetic operators are the ones you'd expect:
 7 - 2      # 5
 7 * 2      # 14
 7 / 2      # 3.5
+7 % 2      # 1   (the remainder after dividing)
 ```
 
 Two of them are spelled differently from the way you'd write them by hand. Multiply
 is an asterisk `*`, not a × sign, and divide is a forward slash `/`, not a ÷ sign —
 neither of those symbols is on a keyboard, which is why every programming language
-picked something else.
+picked something else. The last one, `%`, is **remainder**, not percent: `7 % 2` is
+what's left over when 2 goes into 7. You won't need it until Module 2, where it's the
+trick for doing something "every 50th time around a loop."
 
 Variables can appear anywhere a number can, because by the time Python does the
 arithmetic, the variable has already been replaced by its value:
