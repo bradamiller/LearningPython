@@ -82,8 +82,9 @@ The sign tells us which way we've drifted; the size tells us how far:
 | Far onto white | 0.1 | `+0.4` | steer hard toward the line |
 
 <Figure
-  placeholderLabel="Diagram — sensor drifting onto white (positive error) vs onto black (negative error), with steering arrows"
-  caption="Positive error means steer one way, negative the other. The controller figures out direction automatically from the sign."
+  src="/img/lesson-m2-05/error-sign.svg"
+  alt="Three close-ups of the XRP's front following the left edge of a black line with its left sensor. Drifted onto white: the left sensor reads 0.2, error = 0.5 − 0.2 = +0.3, steer right, toward the line. On the edge: it reads 0.5, error 0.0, drive straight. Drifted onto black: it reads 0.8, error = 0.5 − 0.8 = −0.3, steer left, back off the line."
+  caption="Positive error steers toward the line, negative steers back off it. The sign picks the direction, so the loop needs no if/else."
 />
 
 <KnowledgeCheck
