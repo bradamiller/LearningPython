@@ -67,20 +67,25 @@ Keep the docstring when you write the body; it belongs to the function.
 
 ## Why the second call works
 
-Try a thought experiment. Suppose you called `track_to_intersection()` twice in a row
-with nothing in between. The first call stops with both sensors on the cross. The second
-call's loop condition — `not is_at_cross()` — is already `False`, so the loop body never
-runs: the robot "arrives" instantly, without moving.
+Try a thought experiment: call `track_to_intersection()` twice in a row with nothing in
+between. Where does the robot end up?
 
-That is the second job of `drive_past_intersection()`, the one Lesson 2-9 mentioned.
-Driving 8.75 cm forward parks the wheels on the intersection, *and* carries the sensors
-past the tape onto plain line. Now the next `track_to_intersection()` has a line to follow
-and a new cross to find.
+<Figure
+  src="/img/lesson-m3-02/second-track.svg"
+  alt="Two animated top-down drawings of the XRP driving up a taped line that crosses two other lines, each beside the code it runs. Left: track_to_intersection() then track_to_intersection() again. The first call follows the line until the sensors reach the first cross; the second returns at once, because the sensors are still on the cross and is_at_cross() is already True, so the robot never gets past the first intersection. Right: track_to_intersection(), drive_past_intersection(), track_to_intersection(). The drive-past moves the robot 8.75 cm so its center of rotation is on the cross and its sensors are past the tape, and the second track follows the line to the next intersection."
+  caption="Without the drive-past, the second track starts with its sensors on the cross and is finished before it begins. With it, the sensors are on plain line and there is a new cross ahead."
+/>
+
+The first call stops with both sensors on the cross, so the second call's loop
+condition — `not is_at_cross()` — is already `False` and the robot "arrives" without
+moving. That is the second job of `drive_past_intersection()`, the one Lesson 2-9
+mentioned: as well as parking the center of rotation on the intersection, it carries the
+sensors past the tape, so the next `track_to_intersection()` has a line to follow and a
+new cross to find.
 
 So the pattern for driving across the grid is just the arrival pair, repeated:
 **track, drive past, track, drive past, …** — and because the drive-past parks the
-wheels on the intersection, the robot always ends up sitting on the last one, ready to
-turn.
+robot on the intersection, it always ends up sitting on the last one, ready to turn.
 
 <KnowledgeCheck
   question="Why would a second track_to_intersection() call right after the first do nothing, without drive_past_intersection() between them?"
@@ -103,6 +108,7 @@ turn.
   ]}
   explanation="Each drive-past ends with the wheels over the cross the sensors just found. Two pairs, two intersections, and the robot is sitting on the second one — which is why there is no special case for the last intersection."
 />
+
 
 ## Drive a set number with a `for` loop
 
