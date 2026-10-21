@@ -108,16 +108,21 @@ next three each end on something the robot can *sense*.
 
 ### The wrinkle: the sensors get there first
 
-When `track_to_intersection()` stops, both sensors are over the cross. But the sensors
-are mounted in *front* of the wheels, and the robot pivots about its wheels. Turn now
-and it swings around a point short of the intersection, and the sensors come down off
-the new line.
+When `track_to_intersection()` stops, both sensors are over the cross. But the
+sensors are under the rangefinder at the very front, and the robot turns about its
+**center of rotation** — the hole between the two drive wheels where a pen goes, 8.75 cm
+further back.
 
-So after every track, the robot drives forward a fixed distance to put the wheels over
-the cross — that's `drive_past_intersection()`, one line long. On an XRP that distance is **8.75 cm**: the wheels end up exactly where the sensors
-were. That one call does two jobs. It parks the robot so a turn pivots on the
-intersection, and it carries the sensors past the cross so the next
-`track_to_intersection()` doesn't see the same tape and stop instantly.
+<Figure
+  src="/img/lesson-m2-09/park-on-cross.svg"
+  alt="Two top-down drawings of the XRP at a taped cross, front up, with the line sensors under the rangefinder at the front and the center of rotation between the drive wheels. Left: track_to_intersection() has stopped with both sensors on the cross and the center of rotation 8.75 cm behind it; a dashed outline of a right turn from there shows the sensors landing beside the cross street, off the tape. Right: after drive_past_intersection() moves the robot forward 8.75 cm the center of rotation sits on the cross, and the dashed outline of the same turn shows the sensors landing on the cross street."
+  caption="Turn where the track stops and the robot swings around a point short of the intersection. Drive the 8.75 cm first and the center of rotation is on the cross."
+/>
+
+So after every track, `drive_past_intersection()` drives forward that 8.75 cm: the
+center of rotation ends up where the sensors were. It does a second job too — it carries the
+sensors past the cross, so the next `track_to_intersection()` doesn't see the same tape
+and stop instantly.
 
 It's a distance, not a `time.sleep()`, on purpose. Eight and three-quarter centimeters
 is the same with a full battery or a flat one; half a second is not. You know the
