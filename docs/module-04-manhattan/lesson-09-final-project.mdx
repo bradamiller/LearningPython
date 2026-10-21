@@ -177,7 +177,7 @@ Module 5, where obstacles can appear mid-run, this becomes the only way it *coul
 `heading` is not reset between legs. If the robot finished leg 1 facing East, it starts
 leg 2 facing East — that's what `drive_path` returned, and that's the truth on the
 floor. It's exactly why `turn_to()` has to work from the real current heading rather than
-assuming North: the Lesson 4-7 `% 4` arithmetic handles any starting direction.
+assuming North: the turning loop starts from whatever heading the robot really has.
 
 <KnowledgeCheck
   question="At the start of leg 2, what is the robot's heading?"

@@ -115,19 +115,20 @@ Paste this into `robot.py` at the end of the NAVIGATOR section, under
 
 ```python
 # --- Lesson 4-8: turn to a heading, drive a path ---
-# turn_to() turns the robot with the LINE TRACKING turns, the
-# short way round. drive_path() is the loop: for each
+# turn_to() turns a quarter turn at a time, with the LINE
+# TRACKING turns, until the robot faces the heading it
+# needs. drive_path() is the loop: for each
 # intersection, face it, arrive with the track-then-drive-past
 # pair, and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
 def turn_to(heading, desired):
-    """Turn from heading to desired the short way round and
-    return desired, the new heading."""
-    # 1. turns = (desired - heading) % 4
-    # 2. if turns is 3: one turn_counterclockwise()
-    #    otherwise: turn_clockwise(), turns times
-    # 3. return desired
+    """Turn clockwise a quarter turn at a time until heading
+    is desired; return the new heading."""
+    # while heading is not desired:
+    #     one turn_clockwise()
+    #     heading goes up by 1, wrapping 3 back to 0
+    # return heading
     pass
 
 def drive_path(path, position, heading):
@@ -214,26 +215,27 @@ the test is *go*. A test that drives is the only kind that waits twice.
 ## Activity · Trace it, then integrate
 
 Before running anything, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N) on paper. For
-each step write down: the next intersection, the heading needed, `(needed - heading) % 4`,
-and what the robot does.
+each step write down: the next intersection, the heading needed, the headings the turning
+loop steps through, and what the robot does.
 
 <Reveal title="Check your trace" hint="paper first">
 
 ```
-Step 1: next (1,0). needed = 2 (S). (2 - 0) % 4 = 2: two clockwise turns.
+Step 1: next (1,0). needed = 2 (S). heading 0, 1, 2: two clockwise turns.
         track_to_intersection, drive_past_intersection -> at (1,0) facing S.
-Step 2: next (1,1). needed = 1 (E). (1 - 2) % 4 = 3: one COUNTERclockwise turn.
+Step 2: next (1,1). needed = 1 (E). heading 2, 3, 0, 1: three clockwise turns.
         track_to_intersection, drive_past_intersection -> at (1,1) facing E.
 ```
 
 <Figure
-  src="/img/lesson-m4-08/drive-path-trace.svg"
-  alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 2, south; (2 - 0) % 4 = 2, so two clockwise turns, then it arrives at (1, 0) facing south. Step 2, to (1, 1): the heading needed is 1, east; (1 - 2) % 4 = 3, so one counterclockwise turn instead of three clockwise, then it arrives at (1, 1) facing east."
+  src="/img/lesson-m4-08/drive-path-loop.svg"
+  alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 2, south; the loop turns clockwise north to east to south, two turns, then it arrives at (1, 0) facing south. Step 2, to (1, 1): the heading needed is 1, east; the loop turns clockwise south to west to north to east, three turns, 270 degrees, then it arrives at (1, 1) facing east."
   caption="The same trace, on the grid. The faded robot is where each turn happens."
 />
 
 Step 2 is the one worth noticing: facing South and needing East is a quarter turn to
-the left. Three clockwise turns would get there too, three times as slowly.
+the left, and the loop goes three quarters of the way around to the right. It works.
+It works; the challenge at the end of this lesson is for anyone who wants it to be quicker.
 
 </Reveal>
 
@@ -241,12 +243,13 @@ Then build it in stages, one function per step, and don't go on until each works
 
 ### Step 1 · The logic, on screen
 
-Write the body of `turn_to()`. Before it touches the robot, prove the arithmetic:
-write a paper test — `test_turns_paper()` — that walks `[(1, 0), (1, 1)]` from `(0, 0)`
-heading 0 the way `drive_path()` will, but prints instead of driving: for each step,
-the intersection, the heading needed, and `(needed - heading) % 4`, then updates
-`heading` and `position` exactly as the outline says. Set the run line to it and compare
-with your trace: `2` then `3`. Nothing moves.
+Write the body of `turn_to()` from its outline. Before it touches the robot, prove the
+loop on screen: write a paper test — `test_turns_paper()` — that walks `[(1, 0), (1, 1)]`
+from `(0, 0)` heading 0 the way `drive_path()` will, but prints instead of turning. For
+each step, print the intersection and the heading needed, then run the same `while` loop
+as `turn_to()` with a `print` of the new heading where the `turn_clockwise()` would be,
+and update `position`. Set the run line to it and compare with your trace: E, S for the
+first step, then W, N, E. Nothing moves.
 
 ### Step 2 · One leg
 
@@ -258,22 +261,21 @@ one drive-past. Does the robot stop with its *center of rotation* on the interse
 ### Step 3 · A real path
 
 Add `test_drive_path()` from above and run it: `(0, 0)` to `(2, 3)`. Read the printed
-path before the second press. Watch each arrival: center of rotation on the cross, turns pivoting
-on it, and the one counterclockwise turn where the path bends.
+path before the second press. Watch each arrival: center of rotation on the cross, turns
+pivoting on it. And watch the corner where the path bends from South to East: count the
+turns.
+
 
 <Reveal title="Check your turn_to() and drive_path()" hint="write and test both first">
 
 ```python
 def turn_to(heading, desired):
-    """Turn from heading to desired the short way round and
-    return desired, the new heading."""
-    turns = (desired - heading) % 4
-    if turns == 3:
-        turn_counterclockwise()
-    else:
-        for i in range(turns):
-            turn_clockwise()
-    return desired
+    """Turn clockwise a quarter turn at a time until heading
+    is desired; return the new heading."""
+    while heading != desired:
+        turn_clockwise()
+        heading = (heading + 1) % 4
+    return heading
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
@@ -287,9 +289,8 @@ def drive_path(path, position, heading):
     return position, heading
 ```
 
-If yours differs and drives the path parked on every cross, keep yours. If a
-leg goes wrong, the first two things to compare are the `return desired` and the
-`position = next_pos`.
+If yours differs and drives the path parked on every cross, keep yours. If a leg goes wrong, the first
+two things to compare are the `return heading` and the `position = next_pos`.
 
 </Reveal>
 
@@ -303,22 +304,20 @@ extension below, the section is replaced wholesale.
 
 ```python
 # --- Lesson 4-8: turn to a heading, drive a path ---
-# turn_to() turns the robot with the LINE TRACKING turns, the
-# short way round. drive_path() is the loop: for each
+# turn_to() turns a quarter turn at a time, with the LINE
+# TRACKING turns, until the robot faces the heading it
+# needs. drive_path() is the loop: for each
 # intersection, face it, arrive with the track-then-drive-past
 # pair, and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
 def turn_to(heading, desired):
-    """Turn from heading to desired the short way round and
-    return desired, the new heading."""
-    turns = (desired - heading) % 4
-    if turns == 3:
-        turn_counterclockwise()
-    else:
-        for i in range(turns):
-            turn_clockwise()
-    return desired
+    """Turn clockwise a quarter turn at a time until heading
+    is desired; return the new heading."""
+    while heading != desired:
+        turn_clockwise()
+        heading = (heading + 1) % 4
+    return heading
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
@@ -336,9 +335,10 @@ def test_turns_paper():
     heading = 0
     for next_pos in [(1, 0), (1, 1)]:
         needed = desired_heading(position, next_pos)
-        print("to", next_pos, ": need", HEADING_NAMES[needed],
-              "turns:", (needed - heading) % 4)
-        heading = needed
+        print("to", next_pos, ": need", HEADING_NAMES[needed])
+        while heading != needed:
+            heading = (heading + 1) % 4
+            print("  clockwise ->", HEADING_NAMES[heading])
         position = next_pos
 
 def test_one_leg():
@@ -365,6 +365,53 @@ test_drive_path()
 
 </TeacherNote>
 
+## Challenge · The short way round (optional)
+
+At the corner of the `(0, 0)` to `(2, 3)` path the robot turned right three times to face
+what was a quarter turn to its left. It got there, slowly, with three sensor-ended turns
+where one would do. Make `turn_to()` turn whichever way takes **fewer** turns.
+
+<Figure
+  src="/img/lesson-m4-08/turn-shortcut.svg"
+  alt="Two drawings of the robot at an intersection facing south, needing to face east. Left, the loop alone, always clockwise: three clockwise quarter turns, 270 degrees. Right, turning the short way: one counterclockwise quarter turn, 90 degrees. Same place, a third of the turning."
+  caption="Three clockwise steps around the compass land where one counterclockwise turn does."
+/>
+
+Work out first, on paper, when counterclockwise is actually shorter: try every pair of
+headings, or just the four starting from North. Then change `turn_to()` so it turns
+counterclockwise in exactly those cases and clockwise in the rest, keeps `heading` up to
+date either way, and still returns it. Run `test_drive_path()` again and count the turns
+at the corner. Nothing else in the file has to change, because nothing else knows how
+`turn_to()` does its job.
+
+<TeacherNote title="Challenge answer (teacher copy)">
+
+With four headings, counterclockwise wins in exactly one case: when `desired` is one
+step to the left, which is three clockwise steps around, `(heading + 3) % 4`. Turning
+around (two either way) is a tie, so clockwise is fine. The neat version checks that
+case first and lets the existing loop finish the job, because after the left turn the
+loop's condition is already false:
+
+```python
+def turn_to(heading, desired):
+    """Turn until heading is desired, the short way round;
+    return the new heading."""
+    if desired == (heading + 3) % 4:     # one turn to the left
+        turn_counterclockwise()
+        heading = desired
+    while heading != desired:
+        turn_clockwise()
+        heading = (heading + 1) % 4
+    return heading
+```
+
+Students who count both directions with two loops, or compute `(desired - heading) % 4`
+and compare it with 2, are also right; the latter needs `%` on a negative number
+(`-1 % 4` is 3), which is worth showing in the REPL if it comes up. Watch for a version
+that turns left and then *also* loops because it forgot to update `heading`.
+
+</TeacherNote>
+
 <KnowledgeCheck
   question="The path is [(1,0),(2,0),(2,1)]. How many times does drive_path call track_to_intersection(), and how many times drive_past_intersection()?"
   options={[
@@ -378,11 +425,12 @@ test_drive_path()
 
 <TeacherNote title="Build incrementally, and test on the desktop first">
 
-Write and test one function at a time — the three steps above — never the whole
+Write and test one function at a time — the steps above — never the whole
 section at once. The paper test in step 1 is the old "desktop mode" without editing
-the Module 2 functions: it walks the path with `desired_heading()` and the `% 4`
-arithmetic and prints what the robot *would* do, which is where most logic bugs get
-caught. Hammer the reuse point: the Module 2 functions drove the Module 3 square and
+the Module 2 functions: it walks the path with `desired_heading()` and the turning
+loop and prints what the robot *would* do, which is where most logic bugs get
+caught. The clockwise-only loop spins 270° at the corner of the step 3 path; that's
+correct behavior, and the optional challenge is there for students who want to fix it. Hammer the reuse point: the Module 2 functions drove the Module 3 square and
 now drive grid paths unchanged. The two button presses per driving test (start, then
 go) will need saying once; after that students like it, because the first press is
 when they read the path.
@@ -390,7 +438,7 @@ when they read the path.
 Usual bugs, in order of frequency: not assigning `position, heading` from `drive_path`'s
 return; the start sneaking into the path (Lesson 4-5's promise 1 — `desired_heading`
 raises, which is the lesson working as intended); and a `turn_to` that forgets to
-`return desired`.
+`return heading`.
 
 **Hardware:** turns end when the sensors find the next line, not on a timer, so they
 tolerate battery level and floor friction. If a turn overshoots, the blind first part of
@@ -417,7 +465,7 @@ Building on a well-tested lower layer is how real systems scale:
 ## Wrap-up
 
 - What four Module 2 functions does the driving code use? (`track_to_intersection`, `turn_clockwise`, `turn_counterclockwise`, `drive_past_intersection`.)
-- Why `drive_past_intersection()` after every track? (Wheels onto the cross, so turns pivot there and the next track starts clean.)
+- Why `drive_past_intersection()` after every track? (Center of rotation onto the cross, so turns pivot there and the next track starts clean.)
 - What two values does `drive_path` return, and why? (`position` and `heading` — so the caller can plan the next path from the right place.)
 - What do you do before pressing the button? (Read the printed path.)
 
@@ -425,9 +473,9 @@ Building on a well-tested lower layer is how real systems scale:
 
 **Formative:** name the four Module 2 functions and their end conditions; trace
 `drive_path` predicting each turn and the two assignments; explain the drive-past.
-**Exit ticket:** "At (1,2) heading 1 (E), next is (1,1) — what heading is needed, what
-is `(needed - heading) % 4`, and what does the robot do?" (needed 3 (W); `(3 - 1) % 4 =
-2`; two clockwise turns, i.e. turn around.) **Preview:** the final project — chain the
+**Exit ticket:** "At (1,2) heading 1 (E), next is (1,1) — what heading is needed, which
+headings does `turn_to()` step through, and what does the robot do?" (needed 3 (W); E,
+S, W: two clockwise turns, i.e. turn around.) **Preview:** the final project — chain the
 planner and `drive_path` to visit several destinations in a row.
 
 </TeacherNote>
@@ -534,13 +582,9 @@ the difference.
         raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
 
     def turn_to(self, desired):
-        turns = (desired - self.heading) % 4
-        if turns == 3:
-            self.line_track.turn_counterclockwise()
-        else:
-            for i in range(turns):
-                self.line_track.turn_clockwise()
-        self.heading = desired
+        while self.heading != desired:
+            self.line_track.turn_clockwise()
+            self.heading = (self.heading + 1) % 4
 
     def drive_path(self, path):
         for next_pos in path:

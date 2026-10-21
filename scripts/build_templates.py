@@ -853,9 +853,10 @@ def test_headings():
 def test_turns_paper():
     for next_pos in [(1, 0), (1, 1)]:
         needed = navigator.desired_heading(next_pos)
-        print("to", next_pos, ": need", HEADING_NAMES[needed],
-              "turns:", (needed - navigator.heading) % 4)
-        navigator.heading = needed
+        print("to", next_pos, ": need", HEADING_NAMES[needed])
+        while navigator.heading != needed:
+            navigator.heading = (navigator.heading + 1) % 4
+            print("  clockwise ->", HEADING_NAMES[navigator.heading])
         navigator.position = next_pos
 '''),
     # 4-9 teacher copy: "test_delivery() is handed navigator.position

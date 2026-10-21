@@ -324,19 +324,20 @@ def desired_heading(position, next_pos):
     pass
 
 # --- Lesson 4-8: turn to a heading, drive a path ---
-# turn_to() turns the robot with the LINE TRACKING turns, the
-# short way round. drive_path() is the loop: for each
+# turn_to() turns a quarter turn at a time, with the LINE
+# TRACKING turns, until the robot faces the heading it
+# needs. drive_path() is the loop: for each
 # intersection, face it, arrive with the track-then-drive-past
 # pair, and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
 def turn_to(heading, desired):
-    """Turn from heading to desired the short way round and
-    return desired, the new heading."""
-    # 1. turns = (desired - heading) % 4
-    # 2. if turns is 3: one turn_counterclockwise()
-    #    otherwise: turn_clockwise(), turns times
-    # 3. return desired
+    """Turn clockwise a quarter turn at a time until heading
+    is desired; return the new heading."""
+    # while heading is not desired:
+    #     one turn_clockwise()
+    #     heading goes up by 1, wrapping 3 back to 0
+    # return heading
     pass
 
 def drive_path(path, position, heading):

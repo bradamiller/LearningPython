@@ -821,6 +821,18 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   and uses `Straight`/`Turn` everywhere after. **Module 2 is deliberately unchanged:**
   there it's Python (`drivetrain.arcade(base_effort, correction)`) and the argument names
   are the author's own, so "speed" is fine there.
+- **`turn_to()` IS A LOOP, NOT `(desired - heading) % 4` (Brad, 2026-10-21).** The
+  required version turns clockwise a quarter at a time until the heading matches:
+  `while heading != desired: turn_clockwise(); heading = (heading + 1) % 4`, then
+  `return heading`. It reuses Module 2's loop-until-a-condition shape and needs only the
+  odometer wrap, not `%` on a negative number. It always turns clockwise, so South to East
+  is three right turns; that is accepted on purpose. Turning whichever way is fewer turns
+  is an **optional** challenge at the end of L4-8 (answer in a teacher note: check
+  `desired == (heading + 3) % 4` first, turn counterclockwise once and set `heading`, and
+  the loop then has nothing to do). Do not make the shortcut required again without Brad.
+  Knock-on: with the loop, `turn_to(heading, None)` spins forever instead of raising a
+  TypeError, so L4-7's "Say so when you can't answer" now tells that story
+  (`raise-spin.svg`). The 4-8 paper test runs the same loop with prints.
 - **FAIL WHERE THE PROBLEM IS — `raise` on impossible input (Brad, 2026-09-24).** A
   function that cannot answer the question it was asked ends with a `raise`, not an
   implicit fall-off-the-end. Three places do this and they are the whole set:

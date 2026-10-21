@@ -30,7 +30,7 @@ By the end of this lesson you will be able to:
 - Open the NAVIGATOR section of `robot.py` and write `desired_heading(position, next_pos)` in it, returning 0–3 from the coordinate change, with a paper test
 - Raise an error when a function is asked something it cannot answer, and say why that
   makes a bug easier to find than letting a wrong value travel
-- Count quarter turns with `(desired - heading) % 4`, and explain why 3 clockwise turns become 1 counterclockwise
+- Design a turn as a loop: one clockwise quarter turn at a time, adding 1 to the heading and using `% 4` to wrap from 3 back to 0, until it matches
 - Describe how `drive_path` uses both to move through a whole path and hand back where the robot ended up
 
 </Objectives>
@@ -142,23 +142,23 @@ can add to a string — so the person reading it knows exactly which pair caused
 
 Leave the `raise` out and Python does not complain. **A function that runs off the end without
 returning anything hands back `None`**, silently. So `desired_heading` returns `None`,
-and the next line, `turn_to(heading, None)`, tries to subtract `None` from a number.
-*That* is where Python finally stops: an error about `NoneType` and `int`, pointing at
-a line inside `turn_to`.
+and the next line, `turn_to(heading, None)`, starts the turning loop you'll design below:
+keep turning until the heading equals `None`. It never will. The robot spins in place,
+turn after turn, and nothing is printed at all.
 
-Now go and find that bug. The error is in `turn_to`, so that's where you'd look, and
-`turn_to` is perfectly correct. The real problem is somewhere else entirely: whatever
-handed `desired_heading` two positions that aren't next to each other. You could read
-`turn_to` twenty times and never see anything wrong with it, because there is nothing
-wrong with it. And the message tells you nothing about which positions caused it.
+Now go and find that bug. The robot is spinning inside `turn_to`, so that's where you'd
+look, and `turn_to` is perfectly correct. The real problem is somewhere else entirely:
+whatever handed `desired_heading` two positions that aren't next to each other. You could
+read `turn_to` twenty times and never see anything wrong with it, because there is nothing
+wrong with it. And there is no message at all to tell you which positions caused it.
 
 With the `raise`, the program stops on the line that *noticed* the problem and tells
 you the two positions that caused it. Same bug, ten seconds instead of an afternoon.
 
 <Figure
-  src="/img/lesson-m4-07/raise.svg"
-  alt="Two rows. Without the raise: desired_heading is asked for the heading from (1, 1) to (2, 2), matches none of its cases and silently returns None; turn_to receives None and fails with a TypeError, so the error points at turn_to, which is correct code, while the mistake was back at desired_heading. With the raise: desired_heading stops immediately with a ValueError naming both positions, and turn_to never runs."
-  caption="Same bad input both times. The raise moves the error from where it shows up to where it happened."
+  src="/img/lesson-m4-07/raise-spin.svg"
+  alt="Two rows. Without the raise: desired_heading is asked for the heading from (1, 1) to (2, 2), matches none of its cases and silently returns None; turn_to receives None and its loop waits for a heading of None that never comes, so the robot spins forever with no error, while the mistake was back at desired_heading. With the raise: desired_heading stops immediately with a ValueError naming both positions, and turn_to never runs."
+  caption="Same bad input both times. Without the raise the program never even stops; with it, it stops where the mistake is."
 />
 
 That's the real reason to write checks like this, and it's worth doing everywhere, not
@@ -180,7 +180,7 @@ mistake. Stopping it at the door is cheaper than chasing it.
     {text: 'Because every Python function has to end with raise'},
     {text: 'To make the robot turn faster'},
   ]}
-  explanation="Without it the bad value travels: desired_heading hands back None, turn_to falls over doing arithmetic on it, and the error appears in code that is perfectly correct, with no mention of the positions. Raising reports the problem where it was discovered, with the values that caused it."
+  explanation="Without it the bad value travels: desired_heading hands back None, turn_to waits forever for a heading of None, and the robot spins in code that is perfectly correct, with nothing printed. Raising reports the problem where it was discovered, with the values that caused it."
 />
 
 <TeacherNote title="This is the debugging lesson, not a Python lesson">
@@ -285,88 +285,87 @@ test_headings()
 
 </TeacherNote>
 
-## Turning the short way round
+## Turning until you face it
 
-Here's the elegant part. How many clockwise quarter turns get you from `heading` to
-`desired`? Subtract — and let the wrap-around handle the rest:
+Turning works like every sensor loop in Module 2: keep doing something until a condition
+is true. Here the something is one clockwise quarter turn, and the condition is "facing
+the heading I want":
 
 ```python
-turns = (desired - heading) % 4
+# while heading is not desired:
+#     one turn_clockwise()
+#     heading goes up by 1, wrapping 3 back to 0
 ```
 
-`%` is the remainder operator, and `% 4` is the odometer wrap written as arithmetic.
-Try it on every combination you can think of:
+The wrap is the odometer from the top of the lesson, and `%` (the remainder operator
+from Lesson 2-5) does it in one expression:
 
-| heading | desired | `desired - heading` | `% 4` | meaning |
+```python
+heading = (heading + 1) % 4
+```
+
+For 1, 2 and 3 the remainder is the number itself, and `4 % 4` is 0, so after West comes
+North, never a heading 4. Trace the loop from South (2) to East (1):
+
+| pass | heading before | turn | heading after, `(h + 1) % 4` | facing East? |
 |---|---|---|---|---|
-| 0 (N) | 1 (E) | 1 | 1 | one clockwise turn |
-| 2 (S) | 1 (E) | −1 | 3 | three clockwise turns |
-| 1 (E) | 1 (E) | 0 | 0 | already facing it |
-| 3 (W) | 0 (N) | −3 | 1 | one clockwise turn |
-| 0 (N) | 2 (S) | 2 | 2 | turn around |
+| 1 | 2 (S) | clockwise | 3 (W) | no |
+| 2 | 3 (W) | clockwise | 0 (N) | no |
+| 3 | 0 (N) | clockwise | 1 (E) | yes, the loop ends |
 
-The negative cases are the interesting ones: Python's `%` always gives a result from 0
-to 3 here, so −1 becomes 3 and −3 becomes 1, which is exactly what walking round the
-compass clockwise gives you. One line replaces a loop, a counter and a wrap-around `if`.
+Three passes. The loop never asks which way is shorter: it always goes right, so from
+South it spins three quarters of the way around to face what is a quarter turn to its
+left. It works, and it's simple. Next lesson you'll watch the robot do it, and there's an
+optional challenge there for making it quicker.
 
-Three clockwise turns is the long way round, though — the robot would spin 270° when 90°
-the other way does the same job. So the one special case: **3 clockwise is 1
-counterclockwise.**
-
-
-<Figure
-  src="/img/lesson-m4-07/short-way.svg"
-  alt="Two drawings of the robot at an intersection facing south, needing to face east. Left, the long way round: three clockwise quarter turns, 270 degrees. Right, the short way round: one counterclockwise quarter turn, 90 degrees. Below: turns = (desired − heading) % 4 = (1 − 2) % 4 = 3."
-  caption="Facing South, wanting East: the arithmetic says 3 clockwise turns. One counterclockwise turn ends in the same place."
-/>
-
-That is the whole design of `turn_to(heading, desired)`, the function you write next
-lesson: work out `turns`; if it is 3, one `turn_counterclockwise()`; otherwise
-`turn_clockwise()` that many times — a `for` loop over `range(turns)`, which for 0 does
-nothing at all. `turn_clockwise()` and `turn_counterclockwise()` are the Module 2
-functions that turn the robot until the sensors find the next line. The function
-returns the new heading, which is simply `desired`, so the caller can write
+That is the design of `turn_to(heading, desired)`, the function you write next lesson.
+If the robot already faces the right way, the condition is false on the first check and
+the loop does nothing, with no special case. `turn_clockwise()` is the Module 2 function
+that turns the robot until the sensors find the next line. The function returns
+`heading` at the end, which by then equals `desired`, so the caller can write
 `heading = turn_to(heading, needed)` and keep its own record up to date — the same
 "told, not remembered" rule as the planner.
 
 <KnowledgeCheck
-  question="Starting at heading 0 (N) and wanting heading 3 (W), what does turn_to do?"
+  question="The robot faces West (3) and makes one clockwise turn. What does (heading + 1) % 4 give?"
   options={[
-    {text: 'Three clockwise turns'},
-    {text: 'One counterclockwise turn, because (3 - 0) % 4 is 3 and 3 clockwise is the long way round', correct: true},
-    {text: 'Nothing — 0 and 3 are next to each other'},
-    {text: 'Two clockwise turns'},
+    {text: '4'},
+    {text: '0, North: 4 % 4 is 0, so the heading wraps around', correct: true},
+    {text: '3, because West is the last heading'},
+    {text: 'An error, because there is no heading 4'},
   ]}
-  explanation="(3 - 0) % 4 = 3. Three quarter turns clockwise would work, but one counterclockwise turn ends facing the same way in a third of the time. That is the single special case in turn_to."
+  explanation="3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from West faces North, and the heading never becomes 4."
 />
 
 <KnowledgeCheck
-  question="Heading 2 (S), desired 1 (E). What is (desired - heading) % 4, and what happens?"
+  question="Starting at heading 0 (N) and wanting heading 3 (W), how many times does the turning loop turn the robot?"
   options={[
-    {text: '-1, so an error'},
-    {text: '3, so one counterclockwise turn', correct: true},
-    {text: '1, so one clockwise turn'},
-    {text: '0, so nothing'},
+    {text: 'Once'},
+    {text: 'Three times: N to E, E to S, S to W', correct: true},
+    {text: 'Twice'},
+    {text: 'Not at all, because 0 and 3 are next to each other'},
   ]}
-  explanation="Desired minus heading is 1 - 2 = -1, and -1 % 4 is 3 in Python (the result takes the sign of the 4). Three clockwise becomes one counterclockwise: from South, turning left faces East."
+  explanation="The loop only ever adds 1: 0, 1, 2, 3. Three clockwise turns, where one turn to the left would have done. Lesson 4-8 has an optional challenge for that."
 />
 
-<TeacherNote title="Paper-heavy on purpose — fill in the table, don't count ahead">
+<TeacherNote title="The long way round is on purpose">
 
 Resist jumping to the driving code — `desired_heading()` is the only function written
-today, and it runs on the desk. Students need to work the `% 4` table by hand, especially
-the negative rows, before Lesson 4-8 hands them the `turn_to()` outline. Get them physically standing and turning clockwise one
-step at a time, calling out 0, 1, 2, 3, 0 — the kinesthetic bit cements it — then ask
-"from South to East, which way is shorter?" and let them feel the 270° vs 90° answer.
-The grid orientation (row 0 on top, "down is South") is the #1 confusion; draw it,
-point at it, quiz it. Odometer analogy for the wrap: "…3, and one more is 0, not 4."
-`%` on negative numbers surprises anyone who has used other languages; in Python the
-result takes the sign of the divisor, so `-1 % 4` is 3. Show it in the REPL.
+today, and it runs on the desk. Get students standing and turning clockwise a quarter at
+a time, calling out 0, 1, 2, 3, 0 — the kinesthetic bit cements the wrap. The grid
+orientation (row 0 on top, "down is South") is the #1 confusion; draw it, point at it,
+quiz it. Odometer analogy for the wrap: "…3, and one more is 0, not 4."
 
-Why not always turn clockwise, as an earlier version of this lesson did? Three sensor-
-ended turns take three times as long as one and give the line sensors three chances to
-miss. Brad's rule from the robotics side: time-based turns are never reliable, sensor
-based ones are — but fewer is still better.
+The loop always turns clockwise, and that is deliberate: it is the simplest turn that
+always works. In Lesson 4-8 students write it, run a path that bends left, and watch the
+robot spin 270°; an optional challenge there has them turn whichever way is fewer turns.
+If someone spots the problem today, agree, and point them at that challenge. Why it's
+worth doing for those who want it: three sensor-ended turns take three times as long as
+one and give the line sensors three chances to miss.
+
+An earlier version of this lesson taught `turns = (desired - heading) % 4` with a special
+case for 3. It works, but it leans on `%` with a negative number (`-1 % 4` is 3 in
+Python), which surprises nearly everyone; the loop only ever needs `(heading + 1) % 4`.
 
 </TeacherNote>
 
@@ -396,16 +395,16 @@ end, because the caller will want to plan the *next* path from wherever the robo
 up. This is the paper version; Lesson 4-8 adds one real-world wrinkle to step 3.
 
 Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N), one
-line per step — next intersection, heading needed, the `% 4` arithmetic, what the robot
-does:
+line per step — next intersection, heading needed, the headings the turning loop steps
+through, what the robot does:
 
 <Reveal title="Check your trace" hint="all four lines first">
 
 ```
-At (0,0) N, next (1,0): row+1 -> want S(2). (2-0)%4 = 2: two clockwise. drive to (1,0).
-At (1,0) S, next (2,0): row+1 -> want S(2). (2-2)%4 = 0: no turn.      drive to (2,0).
-At (2,0) S, next (2,1): col+1 -> want E(1). (1-2)%4 = 3: one ccw.      drive to (2,1).
-At (2,1) E, next (2,2): col+1 -> want E(1). (1-1)%4 = 0: no turn.      drive to (2,2).
+At (0,0) N, next (1,0): row+1 -> want S(2). N, E, S: two clockwise.      drive to (1,0).
+At (1,0) S, next (2,0): row+1 -> want S(2). already S: no turn.          drive to (2,0).
+At (2,0) S, next (2,1): col+1 -> want E(1). S, W, N, E: three clockwise. drive to (2,1).
+At (2,1) E, next (2,2): col+1 -> want E(1). already E: no turn.          drive to (2,2).
 ```
 
 </Reveal>
@@ -444,16 +443,16 @@ Tracking heading and turning to a target direction is core to real navigation:
 ## Wrap-up
 
 - Between adjacent intersections, what can change, and how many cases result? (Row *or* column, four cases.)
-- Why store heading as a number? (Each clockwise turn adds 1; `% 4` is the wrap.)
-- What does `turn_to` do when you're already facing the right way? (`(d - h) % 4` is 0 — zero turns.)
-- When does it turn counterclockwise? (When the answer is 3 — the long way round.)
+- Why store heading as a number? (Each clockwise turn adds 1; `% 4` wraps 4 back to 0.)
+- How does `turn_to` know when to stop? (Its loop runs until the heading equals the one it wants; already facing it means zero turns.)
+- What's the catch with always turning clockwise? (South to East takes three right turns for what is a quarter turn left. It still gets there; an optional challenge in Lesson 4-8 makes it quicker.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** map a coordinate change to a heading, fill in a `% 4` row including a
-negative one, and trace a multi-step path. **Exit ticket:** "Heading 3 (W), desired 1 (E)
-— what is `(desired - heading) % 4`, and what does the robot do?" (`(1 - 3) % 4 = 2`:
-two clockwise turns, i.e. turn around.) **Preview:** next lesson this paper design
+**Formative:** map a coordinate change to a heading, step the turning loop through a
+wrap from 3 to 0, and trace a multi-step path. **Exit ticket:** "Heading 3 (W), desired
+1 (E) — which headings does the turning loop step through, and how many turns?" (W, N,
+E: two clockwise turns, i.e. turn around.) **Preview:** next lesson this paper design
 becomes real driving functions, built on your Module 2 line-tracking functions — plus
 one wrinkle about where the robot turns.
 
