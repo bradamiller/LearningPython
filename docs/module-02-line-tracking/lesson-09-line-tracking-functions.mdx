@@ -114,9 +114,9 @@ sensors are under the rangefinder at the very front, and the robot turns about i
 further back.
 
 <Figure
-  src="/img/lesson-m2-09/park-on-cross.svg"
-  alt="Two top-down drawings of the XRP at a taped cross, front up, with the line sensors under the rangefinder at the front and the center of rotation between the drive wheels. Left: track_to_intersection() has stopped with both sensors on the cross and the center of rotation 8.75 cm behind it; a dashed outline of a right turn from there shows the sensors landing beside the cross street, off the tape. Right: after drive_past_intersection() moves the robot forward 8.75 cm the center of rotation sits on the cross, and the dashed outline of the same turn shows the sensors landing on the cross street."
-  caption="Turn where the track stops and the robot swings around a point short of the intersection. Drive the 8.75 cm first and the center of rotation is on the cross."
+  src="/img/lesson-m2-09/park-on-cross-turns.svg"
+  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street, off the tape. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
+  caption="Both robots stopped where track_to_intersection() left them. The left one turns right away and swings about a point short of the cross; the right one drives 8.75 cm first, so it spins on the cross and its sensors find the new line."
 />
 
 So after every track, `drive_past_intersection()` drives forward that 8.75 cm: the
