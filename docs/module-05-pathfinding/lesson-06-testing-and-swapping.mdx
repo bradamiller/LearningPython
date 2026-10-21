@@ -73,6 +73,12 @@ match can't tell you a path is valid, only that it's the one you expected — an
 allow every correct answer. That's a **property test**: check what must be true,
 not what you happened to expect.
 
+<Figure
+  src="/img/lesson-m5-06/path-properties.svg"
+  alt="Test 4: from S at (0, 0) to D at (3, 0) with (1, 0) and (1, 1) blocked. Left, the BFS path around the wall, 7 steps, with badges showing properties 1 to 4 holding. Middle, the five properties; the fifth, steps equal the Manhattan distance, is only checked on an open grid. Right, Manhattan's path goes straight down through blocked (1, 0) and fails property 4."
+  caption="The checks never ask which shortest path you found, only whether it is a legal one of the right length."
+/>
+
 <KnowledgeCheck
   question="Why are the five property checks stronger than comparing with one expected path?"
   options={[
@@ -230,6 +236,12 @@ have the same shape, so the harness never needs to know which one it has.
 
 Try it at the prompt before writing the harness: `f = compute_bfs_path`, then
 `f((0, 0), (3, 3))`.
+
+<Figure
+  src="/img/lesson-m5-06/planner-slot.svg"
+  alt="The test harness run_all_tests(name, planner) runs the same six cases and checks, calling planner(position, destination) through a slot. Either compute_manhattan_path or compute_bfs_path can be handed in. Manhattan passes 4 of 6; BFS passes 6 of 6."
+  caption="The harness has a slot shaped like a planner call. Any function that fits can be handed in."
+/>
 
 <Callout kind="tip" title="No parentheses when you hand it over">
 `run_all_tests("BFS", compute_bfs_path)` passes the function. `run_all_tests("BFS",

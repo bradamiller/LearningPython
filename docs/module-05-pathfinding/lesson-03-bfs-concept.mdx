@@ -46,14 +46,11 @@ shortest path, every time, on any grid.
 
 Give it two minutes. Then test your rule on this one:
 
-```text
-      0  1  2  3
-    -------------
- 0 |  S  .  .  .
- 1 |  X  X  .  .
- 2 |  .  .  .  .
- 3 |  D  .  .  .
-```
+<Figure
+  src="/img/lesson-m5-03/wall-problem.svg"
+  alt="A 4 by 4 grid graph. S is the top-left intersection, (0, 0); D is (3, 0), straight down column 0. Intersections (1, 0) and (1, 1) are blocked and crossed out, with their edges removed."
+  caption="Your rule can only look at one intersection and its open neighbors at a time."
+/>
 
 Start at `S` (0,0), destination `D` (3,0). The destination is straight down column 0,
 and there's a wall in the way at (1,0) and (1,1).
@@ -134,6 +131,12 @@ left, right):
 
 Notice step 7: (1,2) looks around, finds (0,2) and (2,2), and both already have
 numbers. It writes nothing. That's the rule from the knowledge check in action.
+
+<Figure
+  src="/img/lesson-m5-03/bfs-ripple.svg"
+  alt="An animation of breadth-first search on the 3 by 3 grid with the center blocked, from S at (0, 0) to D at (2, 2). Each step takes the oldest intersection from the front of the to-visit list; every open neighbor without a number gets the next number, an arrow showing where it came from, and a place at the back of the list. (1, 0) and (0, 1) get 1, (2, 0) and (0, 2) get 2, (2, 1) and (1, 2) get 3, and (2, 2) gets 4. Walking back along the arrows gives the path [(1, 0), (2, 0), (2, 1), (2, 2)]."
+  caption="The same trace, moving: take from the front, add to the back, and the rings fill in one at a time."
+/>
 
 <KnowledgeCheck
   question="Why does the to-visit list have to be used oldest-first?"

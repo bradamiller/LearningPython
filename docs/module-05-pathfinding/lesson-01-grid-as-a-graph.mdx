@@ -65,13 +65,11 @@ Our grid is a graph. Every intersection is a **node**, named by its coordinate l
 `(1, 2)`. Every line between two adjacent intersections is an **edge**. The nodes an edge
 connects you to are that node's **neighbors**.
 
-```
-(0,0) --- (0,1) --- (0,2)
-  |         |         |
-(1,0) --- (1,1) --- (1,2)
-  |         |         |
-(2,0) --- (2,1) --- (2,2)
-```
+<Figure
+  src="/img/lesson-m5-01/graph-3x3.svg"
+  alt="The 3 by 3 grid drawn as a graph: nine nodes labeled by row and column, joined by edges to their neighbors above, below, left and right. The four corner nodes have 2 neighbors, the four edge nodes 3, and the center node 4."
+  caption="Every intersection is a node; every line between neighbors is an edge. The shading counts neighbors."
+/>
 
 How many neighbors a node has depends on where it sits: a **corner** has 2, an **edge**
 node has 3, an **interior** node has 4.
@@ -92,13 +90,11 @@ node has 3, an **interior** node has 4.
 When an intersection is blocked, we **remove it from the graph entirely** — the node
 *and* all its edges. Block (1,1) on the 3×3 grid:
 
-```
-(0,0) --- (0,1) --- (0,2)
-  |                   |
-(1,0)               (1,2)
-  |                   |
-(2,0) --- (2,1) --- (2,2)
-```
+<Figure
+  src="/img/lesson-m5-01/graph-blocked.svg"
+  alt="The 3 by 3 graph with (1, 1) blocked: the node is crossed out and its four edges are removed, so the four nodes that touched it, (0, 1), (1, 0), (1, 2) and (2, 1), have each lost a neighbor."
+  caption="Blocking (1, 1) removes the node and its four edges."
+/>
 
 (1,1) is gone, and every node that used to touch it — (0,1), (1,0), (1,2), (2,1) — has
 lost a neighbor. Blocking one node changes its neighbors too.
@@ -118,13 +114,11 @@ lost a neighbor. Blocking one node changes its neighbors too.
 
 Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
 
-```
-(0,0) --- (0,1) --- (0,2)
-            |         |
-          (1,1) --- (1,2)
-            |         |
-(2,0) --- (2,1) --- (2,2)
-```
+<Figure
+  src="/img/lesson-m5-01/detour.svg"
+  alt="The 3 by 3 graph with (1, 0) blocked and its edges removed. S is (0, 0) and D is (2, 0). A red dashed arrow shows Manhattan trying to go straight down through (1, 0), which is blocked."
+  caption="Straight down is closed. Find the way around before you open the answer."
+/>
 
 Manhattan would try (0,0) → (1,0) → (2,0) — but (1,0) is blocked, so it fails.
 Trace a way around with your finger and count the steps before reading on.

@@ -104,6 +104,12 @@ The **blocked list is the thread** tying it together: step 1 fills it, the plann
 reads it on every call, detection adds to it, and step 5 hands it to the next run. And
 every one of those goes through `add_blocked()` — the planner never knows which.
 
+<Figure
+  src="/img/lesson-m5-09/capstone-thread.svg"
+  alt="Left: the 4 by 4 grid with the robot at home, the four capstone destinations numbered in order, (1, 3), (3, 3), (3, 0) and (0, 0), and three pretend boxes at (1, 0), (2, 2) and (3, 1). Right: Run 1 starts with an empty blocked list; leg 1 adds (1, 0), leg 3 adds (3, 1) and (2, 2). Run 1 totals 20 steps and 3 reroutes and prints the list, which you type into KNOWN_OBSTACLES; Run 2 starts with all three and takes 18 steps with 0 reroutes."
+  caption="The dry run with SIMULATED_OBSTACLES = [(1, 0), (2, 2), (3, 1)], leg by leg. One list grows across the run and starts the next."
+/>
+
 <KnowledgeCheck
   question="What single data structure connects the start of the run, pathfinding, detection, and what you carry into the next run?"
   options={[

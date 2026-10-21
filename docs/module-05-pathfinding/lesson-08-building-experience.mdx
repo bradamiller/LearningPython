@@ -89,6 +89,12 @@ the obstacle branch, and after the `for`, "not rerouted" means "drove the whole 
 `heading`, because the caller will need them to plan the *next* trip — Lesson 5-9
 strings several of these together.
 
+<Figure
+  src="/img/lesson-m5-08/until-arrive.svg"
+  alt="A loop. Plan from here with compute_bfs_path(position, dest). Follow it, looking ahead before each step. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns position, heading and the counts."
+  caption="Plan, follow, and if something got in the way, plan again from here."
+/>
+
 Two of the parameters look odd: `rangefinder` and `obstacle_cm` are already in the
 file as a global and a setting. Passing them in means the function *says* what it
 depends on — read the `def` line and you know it needs a sensor and a cutoff — and a
@@ -142,6 +148,12 @@ Run 2: pre-loaded list     -> plan around known obstacles      -> few or no rero
 
 **Better data leads to better performance.** The robot isn't running a smarter algorithm on
 Run 2 — it's running the *same* algorithm on better information.
+
+<Figure
+  src="/img/lesson-m5-08/run1-run2.svg"
+  alt="Two runs from S at (0, 0) to D at (3, 3) with boxes at (2, 0), (2, 2) and (3, 1). Run 1 starts with an empty list and finds each box only when it faces it: 8 steps and 3 reroutes, backing up once. Run 2 starts with the three boxes typed in and plans around them from the start: 6 steps and 0 reroutes."
+  caption="One example with three boxes. Your numbers will depend on your grid; the shape of the difference won't."
+/>
 
 <KnowledgeCheck
   question="Why does the robot navigate better on Run 2?"

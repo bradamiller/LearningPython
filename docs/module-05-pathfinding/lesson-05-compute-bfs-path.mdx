@@ -109,6 +109,12 @@ out loud: *take the oldest one I haven't looked around yet; every neighbor with 
 number gets the next number* — except that instead of writing a number, you write
 where it came from.
 
+<Figure
+  src="/img/lesson-m5-05/code-pencil.svg"
+  alt="Seven lines of compute_bfs_path matched to the pencil method from Lesson 5-3. previous = {position: None} is the came-from table. to_visit = [position] is the to-visit list. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in previous means it has no number yet. previous[neighbor] = current writes where it came from. to_visit.append(neighbor) adds it to the end. while current != position walks back along came-from and stops at the start."
+  caption="Nothing in the function is new: each line is a step you already did with a pencil."
+/>
+
 Two things worth noticing before you type anything. `previous` does double duty:
 it records where each intersection came from, *and* — because an intersection
 only gets an entry when it's reached — "is a key in `previous`" means "has a number."
@@ -264,27 +270,39 @@ step counts, keep yours.
 Once all five pass, break the function two ways and watch what happens. Put each
 back before the next.
 
-1. **Change `pop(0)` to `pop()`.** Run Test 1 and count the steps. It's longer. With
+1. **Change `pop(0)` to `pop()`.** Run Test 4 and count the steps. It's longer. With
    `pop()` the search takes the *newest* intersection, so it dives down one path
    before finishing the ring; the first route it finds isn't necessarily shortest.
    That has a name — depth-first search — and it's a fine algorithm for other jobs,
    but not this one.
 2. **Delete `if neighbor not in previous:`** (keep the two lines under it, one indent
-   level out). Run Test 1. Intersections get their "came from" overwritten by later,
+   level out). Run Test 1 again. Intersections get their "came from" overwritten by later,
    longer routes, and the walk-back can chase its own tail forever. If it hangs,
    stop it with Ctrl-C. That one line is the numbered-once rule, and without it
    nothing works.
 
 <KnowledgeCheck
-  question="You change pop(0) to pop() and the open-grid test prints Steps: 10 instead of 6. What changed?"
+  question="You change pop(0) to pop() and Test 4, the wall test, prints Steps: 9 instead of 7. What changed?"
   options={[
     {text: 'The search now takes the newest intersection first and dives down one route before finishing the ring', correct: true},
     {text: 'The graph lost some neighbors'},
     {text: 'The walk-back went the wrong way'},
-    {text: 'Nothing — 10 is also a shortest path'},
+    {text: 'Nothing — 9 is also a shortest path'},
   ]}
   explanation="Oldest-first (a queue) finishes each ring before the next. Newest-first (a stack) is depth-first search: it finds a path, but not necessarily a shortest one."
 />
+
+<Reveal title="What pop() did to Test 4" hint="try it first">
+
+<Figure
+  src="/img/lesson-m5-05/bfs-vs-dfs.svg"
+  alt="Test 4 on the 4 by 4 grid, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), breadth-first search finds a 7-step path around the wall. Right, with pop(), the search dives down one route and returns a 9-step path: all the way across row 0, down column 3, back along row 2, then down to (3, 0)."
+  caption="Oldest first finishes each ring and finds the shortest route. Newest first follows the latest branch as far as it goes."
+/>
+
+On the open grid in Test 1, `pop()` happens to land on a 6-step path too, which is why the wall test is the one to run. A test that passes by luck is the reason to keep more than one case.
+
+</Reveal>
 
 ## The picture
 

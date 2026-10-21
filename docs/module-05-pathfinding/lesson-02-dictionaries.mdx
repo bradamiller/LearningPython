@@ -50,6 +50,12 @@ For our graph, the **keys are node tuples** and the **values are lists of neighb
 tuples.** Why not just a list? Because we look things up by *content* — "what are the
 neighbors of (1,1)?" — not by position. A dictionary jumps straight to the answer.
 
+<Figure
+  src="/img/lesson-m5-02/graph-dict.svg"
+  alt="Left: the 3 by 3 graph with (1, 1) highlighted and its four neighbors shaded. Right: the dictionary as key and value rows. Key (0, 0) maps to [(1, 0), (0, 1)]; key (0, 1) maps to [(1, 1), (0, 0), (0, 2)]; key (1, 1) maps to [(0, 1), (2, 1), (1, 0), (1, 2)]. graph[(1, 1)] jumps straight to that list."
+  caption="One entry per node: the node is the key, its neighbor list is the value."
+/>
+
 The snippets in this part of the lesson are for trying out, not for keeping: type them in
 a scratch file or at the Python prompt, as you did with tuples in Lesson 4-2. Only the two
 functions in the skeleton below go into `robot.py`.
@@ -155,6 +161,12 @@ actually on the grid. That means a **bounds check** before each `append` — onl
 "up" if you're not already in the top row (`row > 0`), only add "down" if you're not
 in the bottom row (`row < rows - 1`), and the same two checks for columns. The four
 checks are what give corners 2 neighbors and interior nodes 4.
+
+<Figure
+  src="/img/lesson-m5-02/bounds-checks.svg"
+  alt="Two nodes with an arrow for each direction. The corner (0, 0): up, row > 0, fails; left, col > 0, fails; down, row < rows - 1, passes; right, col < cols - 1, passes; so it gets 2 neighbors. The interior node (1, 1): all four checks pass, so it gets 4 neighbors."
+  caption="A failed check is a neighbor that would be off the grid, so it is never appended."
+/>
 
 Write the body, then write a test — say `test_grid_graph()` — that builds the 4×4
 graph and prints three things: how many intersections it has (`len(graph)`), the

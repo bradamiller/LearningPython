@@ -136,6 +136,12 @@ After `turn_to()`, the robot is facing `next_pos` — that's what turning to the
 heading *means*. So if the rangefinder sees something right then, the blocked
 intersection is `next_pos`. The path already told you.
 
+<Figure
+  src="/img/lesson-m5-07/rangefinder-ahead.svg"
+  alt="Left: the XRP parked on intersection (1, 0), turned to face south toward (2, 0), next_pos, where a box sits; sound waves go from the rangefinder toward the box. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15; a box on the next intersection reads about 12 cm, nothing there about 50 cm."
+  caption="The robot is parked and facing next_pos, so a short reading can only mean next_pos."
+/>
+
 <KnowledgeCheck
   question="The robot is at (2,1), has just turned to face the next step on its path, (1,1), and the rangefinder reads 8 cm. Which intersection is blocked?"
   options={[

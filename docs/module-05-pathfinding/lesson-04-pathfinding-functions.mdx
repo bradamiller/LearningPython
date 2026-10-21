@@ -58,6 +58,12 @@ Capital letters, like `THRESHOLD`, because it is a setting rather than something
 that changes in the middle of a calculation. `BLOCKED` does grow — but only through
 one function.
 
+<Figure
+  src="/img/lesson-m5-04/blocked-list.svg"
+  alt="Three sources, a paper test in Lesson 5-6, the rangefinder in Lesson 5-7 and you typing in a list in Lesson 5-8, all call add_blocked(x), which appends to one list, BLOCKED, at the top of the GRID GRAPH section. compute_bfs_path() builds the graph from BLOCKED on every call."
+  caption="One list, three ways in, one way out: every plan builds its graph from BLOCKED as it stands right now."
+/>
+
 ## Two rules we will never break
 
 Before any code, two rules that every planner in this course follows, and that
@@ -158,6 +164,12 @@ anything — `BLOCKED` still names the same list; the list just has one more thi
 it. `clear_blocked()` is the same idea the other way: it empties the list *in place*
 — `pop()` until `len(BLOCKED)` is zero — so that tests can start fresh. Writing
 `BLOCKED = []` inside it would reassign the name and need `global`; popping doesn't.
+
+<Figure
+  src="/img/lesson-m5-04/append-vs-assign.svg"
+  alt="Left, BLOCKED.append((1, 1)): the name BLOCKED still points at the same list, which now has one more item, so no global is needed. Right, BLOCKED = [] inside a function: this makes a new local name pointing at a new empty list, gone when the function returns, while the real BLOCKED list is untouched; that is the case that needs global."
+  caption="append changes the list the name points at. = points a name at something else, and inside a function that name is a new local."
+/>
 
 Write both bodies. There's nothing to run yet — step 2 gives you the test.
 
