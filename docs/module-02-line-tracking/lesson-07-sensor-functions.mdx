@@ -89,23 +89,28 @@ def is_at_cross():
     pass
 ```
 
-What is it asking? During normal following, one sensor is darker than the other.
-Where a second taped line **crosses** the one you're following, *both* sensors sit on
-black at once — that's what `is_at_cross()` detects, and `and` is the right word
-because both must be true (`or`, the word in `is_either_on_line()`, would fire during
-normal following). The two `is_` functions are a pair: *at least one* dark, and *both*
-dark. The first ends a turn in Lesson 2-9; the second ends a follow in Lesson 2-8.
-
-Two things to notice about the toolkit now that it's whole. First, nothing but
-`get_left()` and `get_right()` touches `reflectance` — `get_error()` and both `is_`
-functions call those two. One place knows how to read the hardware; everything else
-goes through it. Second, the toolkit is the *vocabulary* of the rest of the course:
-these five names are used, unchanged, through Module 5.
+What is it asking? Where a second taped line **crosses** the one you're following,
+*both* sensors sit on black at once. The two `is_` functions are a pair — *at least one*
+dark (`or`), and *both* dark (`and`):
 
 <Figure
-  placeholderLabel="Diagram — robot following the circle, then reaching the taped cross with both sensors on black"
-  caption="Following the line, the sensors read differently. At the cross, both read high at once."
+  src="/img/lesson-m2-07/four-positions.svg"
+  alt="Four close-ups of the front of the XRP, where the two line sensors sit under the rangefinder, with what each function returns. Both sensors on white: is_either_on_line() False, is_at_cross() False. Left sensor on the tape: True, False. Right sensor on the tape: True, False. On the cross, where a second taped line runs under both sensors: True, True."
+  caption="Only the cross makes both True. That's why is_at_cross() needs and: with or, it would fire every time one sensor touched the line during normal following."
 />
+
+The first ends a turn in Lesson 2-9; the second ends a follow in Lesson 2-8.
+
+Here is the toolkit now that it's whole:
+
+<Figure
+  src="/img/lesson-m2-07/sensor-toolkit-layers.svg"
+  alt="A layered diagram. At the bottom is reflectance, the sensor object created once at the top of robot.py. Only get_left() and get_right() read it. Above them, get_error(), is_either_on_line() and is_at_cross() call get_left() and get_right() instead of the hardware. THRESHOLD, a setting also created at the top of the file, feeds the two is_ functions. At the top, faded, the driving functions of Lessons 2-8 and 2-9 ask the toolkit and never touch the sensor."
+  caption="One place knows how to read the hardware; everything else goes through it."
+/>
+
+These five names are the *vocabulary* of the rest of the course — used, unchanged,
+through Module 5.
 
 <KnowledgeCheck
   question="Which condition detects an intersection (both sensors on the line)?"
