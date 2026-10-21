@@ -146,21 +146,26 @@ dropped. Instead, turn until the sensors *find the next line*. That's the four m
 skeleton's outline of `turn_clockwise()`, and `turn_counterclockwise()` is its mirror
 image.
 
-The **blind turn** of about 60° gets both sensors off the line the robot was
-following — without it, `is_either_on_line()` is already `True` before the turn has
-started and the loop ends instantly. Then the robot keeps spinning with `arcade()`
-given no forward speed and only a turn value, and a **while loop waits** until a sensor
-sees the cross street.
+<Figure
+  src="/img/lesson-m2-09/sensor-ended-turn.svg"
+  alt="Four top-down drawings of the XRP parked on an intersection, turning right onto the cross street. 1, blind turn of about 60 degrees: both line sensors are now off the line it was following. 2, keep spinning in place: the motors stay on while the program goes on. 3, wait until a sensor sees the line: the leading sensor reaches the cross street and is_either_on_line() becomes True. 4, stop, facing the new line, ready to follow it. Below, two mistakes: a blind turn that is too small (10 degrees) leaves a sensor on the old line, so the wait ends at once; one that is too big (120 degrees) swings the sensors past the cross street, so the robot keeps spinning."
+  caption="The four moves of turn_clockwise(). The blind turn clears the old line; a sensor, not a clock, ends the turn."
+/>
+
+The blind turn is there because the robot starts the turn with its sensors *on* the
+line it was following: without it, `is_either_on_line()` is already `True` and the wait
+ends before the robot has moved. Step 2 is `arcade()` with no forward speed, only a turn
+value.
 
 That waiting loop has nothing to *do* on each pass — the motors are already running
 from the line above; the loop's only job is to keep checking the sensor. Python needs
 *something* in a loop body, so you write `pass`: the same word as in the outlines, with
 the same meaning, nothing to do here.
 
-Why 60° and not 90°? Because the sensor is what finishes the turn. The blind part only
-has to be big enough to clear the old line; the sensor does the rest, and does it the
-same way whether the battery is full or flat. The two functions are mirror images:
-swap the sign on both the blind turn and the spin, and the direction swaps.
+Why 60° and not 90°? Because the sensor finishes the turn, the blind part only has to
+clear the old line — not so little that a sensor is still on it, not so much that the
+sensors swing past the new one (the bottom row of the figure). The two functions are
+mirror images: swap the sign on both the blind turn and the spin, and the direction swaps.
 
 <KnowledgeCheck
   question="Why does turn_clockwise() start with a blind 60-degree turn before the while loop?"
