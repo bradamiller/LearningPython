@@ -142,6 +142,12 @@ path2 = compute_manhattan_path((2, 3), (0, 3))     # robot drove there; plan fro
 path3 = compute_manhattan_path((0, 3), (0, 0))     # and again
 ```
 
+<Figure
+  src="/img/lesson-m4-05/told-not-remembered.svg"
+  alt="A 4 by 4 grid with three legs: (0, 0) to (2, 3), then (2, 3) to (0, 3), then (0, 3) back to (0, 0). Beside it the three planner calls with the first argument of each, the robot's current position, highlighted in its leg's color."
+  caption="The first argument changes every time, because the robot has moved. The planner never has to know that; it is told."
+/>
+
 Every call is handed the robot's position. The planner never stores it. That might look
 like extra typing, but it buys something important: **only one piece of code is in charge
 of knowing where the robot is** — the driving code, which you'll write in Lesson 4-8.

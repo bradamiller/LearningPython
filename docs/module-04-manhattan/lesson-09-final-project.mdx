@@ -42,6 +42,12 @@ returns the list of intersections, and `drive_path(path, position, heading)` tur
 drives it. Your job is the **main program** that connects them — about ten lines, and
 like every program in this course it is a test function at the bottom of `robot.py`.
 
+<Figure
+  src="/img/lesson-m4-09/delivery-run.svg"
+  alt="A 4 by 4 grid. The robot starts at home, (0, 0), facing north. Leg 1 goes down 2 steps to (2, 0), ending facing south. Leg 2 goes right 3 steps to (2, 3), ending facing east. Leg 3 goes up 2 steps to (0, 3), ending facing north. Leg 4 goes left 3 steps back home, ending facing west."
+  caption="DESTINATIONS on the floor: 2, 3, 2 and 3 steps. Each small arrow is the heading a leg ends with, and the next leg starts from it."
+/>
+
 ## This lesson's skeleton
 
 Paste this above `RUN`, at the end of the NAVIGATOR section. No new function is
@@ -254,7 +260,7 @@ You're graded on the whole system working together:
 | Category | Points | What it takes |
 |---|---|---|
 | Planner | 10 | `compute_manhattan_path` correct for any position and destination; Lesson 4-6 tests pass |
-| Driving functions | 15 | Correct `desired_heading`, `turn_to`, `drive_path`; wheels on the cross at every arrival; position and heading returned |
+| Driving functions | 15 | Correct `desired_heading`, `turn_to`, `drive_path`; parked on the cross at every arrival; position and heading returned |
 | Main program | 10 | `test_delivery()`: 4+ destinations, prints leg 1 before the button, drives each leg, assigns `position, heading` from `drive_path` |
 | Robot demo | 10 | Physically visits all destinations with correct turns |
 | Planning & docs | 5 | Planning worksheet, a hand-trace of one leg, testing checklist followed |

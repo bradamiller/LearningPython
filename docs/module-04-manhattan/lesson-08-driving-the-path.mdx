@@ -18,7 +18,7 @@ Time to make the robot move. The two functions you designed on paper in Lesson 4
 join `desired_heading()` in the NAVIGATOR section, and together they drive any
 Manhattan path on the grid — by calling the **line-tracking functions you built in
 Module 2**, no motor code to rewrite. That's the payoff of building a toolkit. There is
-one wrinkle the paper design didn't have to care about: where the wheels actually stop.
+one wrinkle the paper design didn't have to care about: where the robot actually turns.
 
 <Objectives>
 
@@ -63,43 +63,42 @@ functions don't know what a path is. Today's three functions sit between them.
   explanation="Module 2's functions are about tape, not grids. That is what makes them reusable: the same track_to_intersection() drove the Module 3 square and drives paths here."
 />
 
-## The wrinkle: where the wheels stop
+## The wrinkle: where the robot turns
 
-`track_to_intersection()` stops the moment both sensors see the cross. The sensors are
-mounted in *front* of the wheels, so at that moment the wheels are still short of the
-intersection — and the robot pivots about its wheels. Turn now and the robot swings
-around a point in front of the intersection, and the sensors come down somewhere off the
-new line.
+`track_to_intersection()` stops the moment both sensors see the cross. But the sensors are
+at the front of the robot, and it turns about its **center of rotation**, 8.75 cm further
+back. It's the wrinkle Lesson 2-9 solved, and the fix is the same:
 
-So after **every** `track_to_intersection()`, the robot drives forward a fixed distance
-to put the wheels over the cross: `drive_past_intersection()`. That one call does two
-jobs at once. It parks the robot so a turn pivots on the intersection, and it carries
-the sensors past the cross so the *next* `track_to_intersection()` doesn't see the same
-tape and stop instantly.
+<Figure
+  src="/img/lesson-m2-09/park-on-cross-turns.svg"
+  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
+  caption="Turn where the track stops and the sensors miss the new line. Drive past first and the robot spins on the cross."
+/>
+
+So `drive_path()` arrives at **every** intersection with the pair from Module 3, whichever
+way it turns next. The drive-past parks the robot so a turn spins on the intersection,
+and it carries the sensors past the cross so the *next* track starts clean.
 
 ```python
-track_to_intersection()        # sensors reach the cross; wheels are short of it
-drive_past_intersection()      # wheels now over the cross; sensors past it
+track_to_intersection()        # sensors reach the cross
+drive_past_intersection()      # center of rotation on the cross; sensors past it
 ```
-
-That pair is the robot's "arrive at an intersection". Every arrival ends with the wheels
-on the cross, whichever way the robot turns next.
 
 <KnowledgeCheck
   question="Why does the robot call drive_past_intersection() after every track_to_intersection(), even when it is going straight on?"
   options={[
     {text: 'To speed up the run'},
-    {text: 'The sensors stop short of the cross, so the wheels have to be moved onto it — otherwise a turn pivots in the wrong place, and the next track would see the same cross immediately', correct: true},
+    {text: 'The sensors stop short of the cross, so the center of rotation has to be moved onto it — otherwise a turn pivots in the wrong place, and the next track would see the same cross immediately', correct: true},
     {text: 'Only turns need it; going straight it is skipped'},
     {text: 'To recharge the battery'},
   ]}
-  explanation="The sensors lead the wheels. Parking the wheels on the cross makes every turn pivot on the intersection, and it moves the sensors off the tape so the next line-follow starts clean. Doing it every time means no special cases."
+  explanation="The sensors lead the center of rotation. Parking it on the cross makes every turn pivot on the intersection, and it moves the sensors off the tape so the next line-follow starts clean. Doing it every time means no special cases."
 />
 
-<TeacherNote title="The 8.75 cm is sensor-to-axle distance; do not let it become folklore">
+<TeacherNote title="The 8.75 cm is sensor-to-center-of-rotation; do not let it become folklore">
 
 The distance in `drive_past_intersection()` is the gap between the reflectance sensors
-and the wheel axle on an XRP, so the wheels end up where the sensors were. If a class
+and the center of rotation (the pen hole between the drive wheels) on an XRP, so that point ends up where the sensors were. If a class
 has a robot with a different mounting, measure it. The old version of this lesson only
 cleared the intersection in the straight-ahead case and relied on the turn to clear it
 otherwise; that depended on turn behavior nobody had checked. Doing it after every
@@ -227,6 +226,12 @@ Step 2: next (1,1). needed = 1 (E). (1 - 2) % 4 = 3: one COUNTERclockwise turn.
         track_to_intersection, drive_past_intersection -> at (1,1) facing E.
 ```
 
+<Figure
+  src="/img/lesson-m4-08/drive-path-trace.svg"
+  alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 2, south; (2 - 0) % 4 = 2, so two clockwise turns, then it arrives at (1, 0) facing south. Step 2, to (1, 1): the heading needed is 1, east; (1 - 2) % 4 = 3, so one counterclockwise turn instead of three clockwise, then it arrives at (1, 1) facing east."
+  caption="The same trace, on the grid. The faded robot is where each turn happens."
+/>
+
 Step 2 is the one worth noticing: facing South and needing East is a quarter turn to
 the left. Three clockwise turns would get there too, three times as slowly.
 
@@ -248,12 +253,12 @@ with your trace: `2` then `3`. Nothing moves.
 Write the body of `drive_path()`, then a test — `test_one_leg()` — that drives the
 one-element path `[(1, 0)]` from `(0, 0)` heading 0 and prints where it arrived. Robot at
 (0, 0) facing North, run line set to it, both presses. Two clockwise turns, one track,
-one drive-past. Does the robot stop with its *wheels* on the intersection?
+one drive-past. Does the robot stop with its *center of rotation* on the intersection?
 
 ### Step 3 · A real path
 
 Add `test_drive_path()` from above and run it: `(0, 0)` to `(2, 3)`. Read the printed
-path before the second press. Watch each arrival: wheels on the cross, turns pivoting
+path before the second press. Watch each arrival: center of rotation on the cross, turns pivoting
 on it, and the one counterclockwise turn where the path bends.
 
 <Reveal title="Check your turn_to() and drive_path()" hint="write and test both first">
@@ -282,7 +287,7 @@ def drive_path(path, position, heading):
     return position, heading
 ```
 
-If yours differs and drives the path with the wheels on every cross, keep yours. If a
+If yours differs and drives the path parked on every cross, keep yours. If a
 leg goes wrong, the first two things to compare are the `return desired` and the
 `position = next_pos`.
 

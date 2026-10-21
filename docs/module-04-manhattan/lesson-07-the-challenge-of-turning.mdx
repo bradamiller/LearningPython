@@ -155,6 +155,12 @@ wrong with it. And the message tells you nothing about which positions caused it
 With the `raise`, the program stops on the line that *noticed* the problem and tells
 you the two positions that caused it. Same bug, ten seconds instead of an afternoon.
 
+<Figure
+  src="/img/lesson-m4-07/raise.svg"
+  alt="Two rows. Without the raise: desired_heading is asked for the heading from (1, 1) to (2, 2), matches none of its cases and silently returns None; turn_to receives None and fails with a TypeError, so the error points at turn_to, which is correct code, while the mistake was back at desired_heading. With the raise: desired_heading stops immediately with a ValueError naming both positions, and turn_to never runs."
+  caption="Same bad input both times. The raise moves the error from where it shows up to where it happened."
+/>
+
 That's the real reason to write checks like this, and it's worth doing everywhere, not
 just here:
 
@@ -449,7 +455,7 @@ negative one, and trace a multi-step path. **Exit ticket:** "Heading 3 (W), desi
 — what is `(desired - heading) % 4`, and what does the robot do?" (`(1 - 3) % 4 = 2`:
 two clockwise turns, i.e. turn around.) **Preview:** next lesson this paper design
 becomes real driving functions, built on your Module 2 line-tracking functions — plus
-one wrinkle about where the wheels stop.
+one wrinkle about where the robot turns.
 
 </TeacherNote>
 

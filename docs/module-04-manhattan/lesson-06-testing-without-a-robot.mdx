@@ -83,6 +83,12 @@ else:
     print("  Actual:  ", actual)
 ```
 
+<Figure
+  src="/img/lesson-m4-06/test-harness.svg"
+  alt="Two inputs meet at a comparison. Expected comes from you, on paper: tracing (0, 0) to (2, 3) by hand gives [(1,0), (2,0), (2,1), (2,2), (2,3)]. Actual comes from the code: compute_manhattan_path((0, 0), (2, 3)). If actual equals expected the test prints PASS; if not, FAIL, printing both lists."
+  caption="Two sources, one comparison. The test is only worth something because the two sides were worked out independently."
+/>
+
 The expected list has to come from *your own* tracing. If you just copy whatever the code
 prints and call it "expected," you haven't tested anything — you've assumed the code is
 right.
