@@ -24,6 +24,13 @@ starting square isn't in it. A path lists the places the robot **drives to**; it
 already standing on the start, so putting it in the list would mean "drive to where
 you already are." Every path in this module and the next works that way.
 
+
+<Figure
+  src="/img/lesson-m4-03/path-list.svg"
+  alt="The 4 by 4 grid with the route from (0, 0) to (2, 3): down two rows, then right three columns. The robot sits on (0, 0), marked start. The five intersections it drives to are tagged path[0] (1, 0), path[1] (2, 0), path[2] (2, 1), path[3] (2, 2) and path[4] (2, 3). Beside it the list is drawn as five boxes with indexes 0 to 4: len(path) is 5, the number of steps, and the start is not in the list."
+  caption="One tuple per intersection the robot drives to, in order. The start is where it already is, so it is not in the list, and len(path) is the number of steps."
+/>
+
 Like Lesson 4-2, this is scratch work — a scratch file or the Python prompt, not
 `robot.py`. The build-in-a-loop pattern you practice here is the one next lesson's
 planner function is made of; that function is what goes in the file.

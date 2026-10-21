@@ -53,6 +53,13 @@ which the robot can't do). That's exactly four cases, one per compass direction:
 The trickiest part to accept: on our grid, **row 0 is at the top** (like a spreadsheet),
 so moving *down* means the row number *increases*. Down is South.
 
+
+<Figure
+  src="/img/lesson-m4-07/headings.svg"
+  alt="The robot at an intersection facing north, with a card at each neighbor. North is heading 0, the row goes down by 1. East is 1, the column goes up by 1. South is 2, the row goes up by 1. West is 3, the column goes down by 1. Curved arrows between them, each marked +1, show that every clockwise turn adds 1, wrapping from 3 back to 0."
+  caption="The four neighbors of an intersection, the coordinate change that reaches each one, and its heading number. Clockwise adds 1."
+/>
+
 <KnowledgeCheck
   question="The robot moves from (2,3) to (3,3). Which direction is that, and what heading number?"
   options={[
@@ -299,6 +306,13 @@ compass clockwise gives you. One line replaces a loop, a counter and a wrap-arou
 Three clockwise turns is the long way round, though — the robot would spin 270° when 90°
 the other way does the same job. So the one special case: **3 clockwise is 1
 counterclockwise.**
+
+
+<Figure
+  src="/img/lesson-m4-07/short-way.svg"
+  alt="Two drawings of the robot at an intersection facing south, needing to face east. Left, the long way round: three clockwise quarter turns, 270 degrees. Right, the short way round: one counterclockwise quarter turn, 90 degrees. Below: turns = (desired − heading) % 4 = (1 − 2) % 4 = 3."
+  caption="Facing South, wanting East: the arithmetic says 3 clockwise turns. One counterclockwise turn ends in the same place."
+/>
 
 That is the whole design of `turn_to(heading, desired)`, the function you write next
 lesson: work out `turns`; if it is 3, one `turn_counterclockwise()`; otherwise

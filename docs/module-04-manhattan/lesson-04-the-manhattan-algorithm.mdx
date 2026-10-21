@@ -210,6 +210,13 @@ trip, at most one row loop and one column loop will run; the others are skipped 
 their condition is False from the start. Keep the two row loops together, before the
 two column loops, so the path is always rows first.
 
+
+<Figure
+  src="/img/lesson-m4-04/four-loops.svg"
+  alt="Left: one intersection with four arrows. North: row minus 1, while row > dest. South: row plus 1, while row < dest. East: col plus 1, while col < dest. West: col minus 1, while col > dest. Right: the trip from (1, 3) to (3, 0) on a 4 by 4 grid: down two rows, then left three columns. South runs twice, north and east are skipped, west runs three times. The path is [(2,3), (3,3), (3,2), (3,1), (3,0)]."
+  caption="Every trip runs at most one row loop and one column loop. The other two find their condition False on the first check and never run."
+/>
+
 Before you run it, trace **(3, 3) → (1, 0)** on paper and say which of the four loops
 run: the robot has to go *up* and *left*, so two of them stay idle. Then run
 `test_paper_paths()` again and compare.
