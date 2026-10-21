@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" width="680" height="330" role="img" aria-labelledby="fT fD">
+  <title id="fT">Adding up a route</title>
+  <desc id="fD">path_cost from position (0, 0) along the path (0, 1), (0, 2), (0, 3). The position is not part of the path, but the first segment starts there. Segment weights are 1, 5 and 1; the running total goes 1, 6, 7 as here moves along the path. A warning: starting the loop at path[0] instead of position misses the first segment and gives 6 instead of 7.</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <rect width="680" height="330" fill="#FFFFFF"/>
+  <text class="h" x="20" y="26">path_cost((0, 0), [(0, 1), (0, 2), (0, 3)])</text>
+  <rect x="184" y="50" width="432" height="86" rx="10" fill="#F1F6FB" stroke="#22527B" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <text class="sm" x="612" y="66" text-anchor="end" style="fill:#22527B;font-weight:700">path: what the planner returns</text>
+  <text class="sm" x="80" y="66" text-anchor="middle" style="fill:#142D50;font-weight:700">position</text>
+  <rect x="36" y="92" width="88" height="36" rx="8" fill="#142D50" stroke="#142D50" stroke-width="2"/><text class="m" x="80" y="115" text-anchor="middle" style="fill:#FFFFFF">(0, 0)</text>
+  <rect x="196" y="92" width="88" height="36" rx="8" fill="#FFFFFF" stroke="#142D50" stroke-width="2"/><text class="m" x="240" y="115" text-anchor="middle" style="fill:#142D50">(0, 1)</text>
+  <rect x="356" y="92" width="88" height="36" rx="8" fill="#FFFFFF" stroke="#142D50" stroke-width="2"/><text class="m" x="400" y="115" text-anchor="middle" style="fill:#142D50">(0, 2)</text>
+  <rect x="516" y="92" width="88" height="36" rx="8" fill="#FFFFFF" stroke="#142D50" stroke-width="2"/><text class="m" x="560" y="115" text-anchor="middle" style="fill:#142D50">(0, 3)</text>
+  <line x1="126" y1="110" x2="190" y2="110" stroke="#22527B" stroke-width="3" marker-end="url(#aB)"/>
+  <rect x="126.0" y="145" width="68" height="20" rx="5" fill="#FFFFFF" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="160.0" y="159.5" text-anchor="middle">weight 1</text>
+  <text class="n" x="160.0" y="200" text-anchor="middle">total = <tspan class="m">1</tspan></text>
+  <text class="sm" x="160.0" y="220" text-anchor="middle">here moves to (0, 1)</text>
+  <line x1="286" y1="110" x2="350" y2="110" stroke="#D1182C" stroke-width="3" marker-end="url(#aR)"/>
+  <rect x="286.0" y="145" width="68" height="20" rx="5" fill="#FFFFFF" stroke="#D1182C" stroke-width="1.4"/><text class="ms" x="320.0" y="159.5" text-anchor="middle">weight 5</text>
+  <text class="n" x="320.0" y="200" text-anchor="middle">total = <tspan class="m">6</tspan></text>
+  <text class="sm" x="320.0" y="220" text-anchor="middle">here moves to (0, 2)</text>
+  <line x1="446" y1="110" x2="510" y2="110" stroke="#22527B" stroke-width="3" marker-end="url(#aB)"/>
+  <rect x="446.0" y="145" width="68" height="20" rx="5" fill="#FFFFFF" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="480.0" y="159.5" text-anchor="middle">weight 1</text>
+  <text class="n" x="480.0" y="200" text-anchor="middle">total = <tspan class="m">7</tspan></text>
+  <text class="sm" x="480.0" y="220" text-anchor="middle">here moves to (0, 3)</text>
+  <text class="sm" x="20" y="200">total</text><text class="sm" x="20" y="216">starts 0</text>
+  <rect x="20" y="260" width="640" height="56" rx="10" fill="#FDECEE" stroke="#D1182C" stroke-width="1.6"/>
+  <text class="nb" x="36" y="283" style="fill:#D1182C">Start the loop at path[0] instead of position</text>
+  <text class="n" x="36" y="303">and the first segment, (0, 0) to (0, 1), is never added: 6 instead of 7.</text>
+</svg>

@@ -89,6 +89,10 @@ Then the usual two presses: the one in `RUN` starts the test and prints the plan
 one in the test is *go*. The timing is `time.time()` just before `drive_path()` and
 just after, the difference being the seconds the drive took — a check on the stopwatch.
 
+<Figure src="/img/lesson-m6-04/cost-to-seconds.svg"
+  alt="Each route drawn as boxes as wide as their weights. BFS: 1, 5, 1, cost 7, about 29 seconds at 4.1 seconds a block. Dijkstra: five boxes of 1, cost 5, about 21 seconds."
+  caption="Cost is time in blocks, so multiplying by one block's time predicts the stopwatch. Write your prediction down before either run." />
+
 <KnowledgeCheck
   question="How much of the driving code changes between the BFS run and the Dijkstra run?"
   options={[

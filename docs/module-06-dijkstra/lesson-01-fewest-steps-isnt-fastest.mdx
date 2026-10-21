@@ -47,6 +47,10 @@ To the Module 5 graph, that segment is still one edge: `(0, 1)` is a neighbor of
 `compute_bfs_path()` counts edges. So from (0, 0) to (0, 3) it will pick the straight
 row — three steps — and send the robot down the slow road, every time.
 
+<Figure src="/img/lesson-m6-01/floor-vs-graph.svg"
+  alt="Row 0 of the floor: two straight blocks of about 4 seconds and a winding one of about 20. The Module 5 graph calls every edge 1 step; with weights the edges are 1, 5 and 1."
+  caption="The floor and the graph disagree. The graph needs a number on each edge that says how long it takes, and the stopwatch is where that number comes from." />
+
 <KnowledgeCheck
   question="Why does compute_bfs_path() choose the slow road without hesitation?"
   options={[
@@ -127,6 +131,10 @@ open grid always takes exactly three normal blocks, so a weight of three is the
 break-even point. For the two planners in this module to *disagree*, the slow segment
 has to be clearly worse than the detour around it: a weight of 4 or more. If your
 stopwatch gave you 3, ask your teacher to make the detour longer.
+
+<Figure src="/img/lesson-m6-01/break-even.svg"
+  alt="The slow edge between (0, 1) and (0, 2), weight w, and the three-block way around it through (1, 1) and (1, 2). Weight 2: the slow edge is cheaper; weight 3: a tie; weight 4 or more: going around is cheaper."
+  caption="Going around one segment always costs 3. The slow segment has to cost more than that before going around wins." />
 
 <KnowledgeCheck
   question="The slow segment measures weight 3. From (0,0) to (0,3), what happens?"

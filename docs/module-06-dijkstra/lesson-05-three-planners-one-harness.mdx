@@ -186,6 +186,10 @@ than against one particular class. You have been using it since Lesson 5-6, wher
 harness was handed a function. Objects make the shape explicit: it is the list of
 methods.
 
+<Figure src="/img/lesson-m6-05/three-planners.svg"
+  alt="The harness at the top calls planner.compute_path and never names a class. Manhattan, BFS and Dijkstra objects each have the same five methods; the ones a planner cannot use are pass. Results: 4, 6 and 7 of 7."
+  caption="One shape, three classes. The methods a planner cannot use are still there, doing nothing, so the harness can call them on any of the three." />
+
 <KnowledgeCheck
   question="Why must BFS have an add_slow_edge() method that does nothing?"
   options={[

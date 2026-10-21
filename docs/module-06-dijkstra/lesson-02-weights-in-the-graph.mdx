@@ -115,6 +115,10 @@ position and moves forward one step each pass — the same shape as `drive_path(
 `position = next_pos`. For `[(0, 1), (0, 2), (0, 3)]` from (0, 0), with the slow edge
 at 5, that's 1 + 5 + 1 = 7.
 
+<Figure src="/img/lesson-m6-02/path-cost.svg"
+  alt="path_cost from (0, 0) along (0, 1), (0, 2), (0, 3): segment weights 1, 5, 1 and a running total of 1, 6, 7. Starting at path[0] instead of position misses the first segment and gives 6."
+  caption="The path leaves out the start, but the first segment begins there. That is why path_cost() is handed position." />
+
 <KnowledgeCheck
   question="Why does path_cost() need the position parameter, when the path is right there?"
   options={[

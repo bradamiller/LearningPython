@@ -27,6 +27,10 @@ will happily send the robot down it, because BFS only counts steps.
 This module fixes that. **Dijkstra's algorithm** is your BFS with two changes,
 and it finds the path that takes the least *time*, not the fewest steps.
 
+<Figure src="/img/lesson-m6-00/slow-road.svg"
+  alt="A 4 by 4 grid with one slow, winding segment between (0, 1) and (0, 2). BFS goes straight through it: 3 steps, cost 7. Dijkstra goes around through row 1: 5 steps, cost 5."
+  caption="The same trip, two planners. BFS counts steps and takes the slow road; Dijkstra adds up time and goes around it." />
+
 <Objectives>
 
 By the end of this module you will be able to:

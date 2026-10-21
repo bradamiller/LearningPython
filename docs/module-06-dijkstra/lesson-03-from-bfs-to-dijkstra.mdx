@@ -149,6 +149,10 @@ first entry is best, loop over the rest, and keep any entry whose `distance` is 
 comparison turned round. `pop(0)` did two jobs, choosing *and* removing; `closest()`
 only chooses, so the line after it has to `remove()` the chosen one from `to_visit`.
 
+<Figure src="/img/lesson-m6-03/closest-vs-oldest.svg"
+  alt="Dijkstra partway through on the slow grid. to_visit holds (0, 2) at cost 6, the oldest, then three intersections at cost 3. pop(0) would take (0, 2); closest() takes (3, 0). Before (0, 2) comes up, (1, 2) reaches it for 4."
+  caption="The moment the two choices differ. Taking the oldest would settle (0, 2) at 6; taking the closest leaves it waiting long enough for a cheaper way to turn up." />
+
 <KnowledgeCheck
   question="Why can BFS get away with taking the oldest intersection off to_visit, and Dijkstra cannot?"
   options={[
@@ -275,9 +279,13 @@ print_grid(ROWS, COLS, BLOCKED, dijkstra_distances((0, 0)))
 ```
 
 Read across row 0: (0, 1) costs 1, then (0, 2) costs **4**, not 2. The slow segment
-would make it 1 + 5 = 6; going down to (1, 1), across to (1, 2) and up costs 1 + 1 + 1
-+ 1 = 4, so 4 is what gets kept. That one cell is change 2 doing its job. Everywhere
+would make it 1 + 5 = 6; going down to (1, 1), across to (1, 2) and up costs 1 + 1 + 1 + 1
+= 4, so 4 is what gets kept. That one cell is change 2 doing its job. Everywhere
 else, the numbers are Module 5's BFS rings.
+
+<Figure src="/img/lesson-m6-03/cost-grid.svg"
+  alt="The cost grid from (0, 0) with the slow edge marked. (0, 2) is 4: the slow road would be 1 + 5 = 6, and down, across and back up is 1 + 1 + 1 + 1 = 4."
+  caption="The one cell that is not a BFS ring, and the two ways of reaching it." />
 
 <KnowledgeCheck
   question="In the cost grid above, why is (0, 2) a 4 rather than a 2?"
