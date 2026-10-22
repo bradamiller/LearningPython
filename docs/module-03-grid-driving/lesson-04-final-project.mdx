@@ -38,9 +38,9 @@ Make the robot drive a square: each side is 2 intersections, with a right turn a
 each of the 4 corners. Done right, it finishes where it began.
 
 <Figure
-  src="/img/lesson-m3-04/square-path-xy.svg"
-  alt="The 3×3 grid with a square route around its outside. The robot starts parked on the bottom-left corner, nearest you, facing away from you. Each side arrives at two intersections, with a right turn at each corner; the intersections are numbered 1 to 8, and 8 is the corner it started on, so start and end are the same. Beside it, the loop in plain words: 4 times, drive SIDE intersections, turn right."
-  caption="Four sides, four right turns, back to start. One loop iteration draws one side."
+  src="/img/lesson-m3-04/square-run.svg"
+  alt="An animated top-down view of the 3×3 grid. The robot starts parked on the bottom-left corner, nearest you, facing away. It follows the line to the next intersection, stops with its sensors on the cross, drives forward to park its wheels on it, and does that once more to reach the corner. There it turns right in place until a sensor finds the cross street. It repeats that for all four sides and ends back on the start corner facing the way it began. A panel beside the grid shows which step the program is on: Ready, Side N of 4, Turning right, Square complete."
+  caption="What your finished project should do. Each side is two arrivals at an intersection; each corner is one right turn."
 />
 
 **Your program must:** use the LINE TRACKING section and `drive_intersections()`
