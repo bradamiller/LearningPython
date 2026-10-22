@@ -276,24 +276,24 @@ def test_square():
 
 # ===== MANHATTAN PLANNER =====
 # Plans a route across the grid: given where the robot is and
-# where it should go, returns the list of (row, col) tuples to
-# drive to, rows first and then columns. Pure arithmetic --
+# where it should go, returns the list of (x, y) tuples to
+# drive to, across first and then up or down. Pure arithmetic --
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
 def compute_manhattan_path(position, destination):
     """Compute a Manhattan path from position to destination.
 
-    position:    a (row, col) tuple -- where the robot is now
-    destination: a (row, col) tuple -- where it needs to go
+    position:    an (x, y) tuple -- where the robot is now
+    destination: an (x, y) tuple -- where it needs to go
 
-    Returns a list of (row, col) tuples the robot should move to,
+    Returns a list of (x, y) tuples the robot should move to,
     not including position itself.
     """
-    # 1. path = [] ; unpack start and end into row/col numbers
-    # 2. south loop: while the row is short of the end row,
-    #    step the row by one and append the new position
-    # 3. east loop: the same for the column
+    # 1. path = [] ; unpack start and end into x and y numbers
+    # 2. east loop: while x is short of the end x,
+    #    step x by one and append the new position
+    # 3. north loop: the same for y
     # 4. return path
     pass
 
@@ -319,7 +319,7 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away; raise if it is not."""
-    # 1. row_diff and col_diff: next_pos minus position
+    # 1. x_diff and y_diff: next_pos minus position
     # 2. one if per direction, from the table above; each
     #    checks BOTH differences, because the other one is 0
     # 3. none matched: raise ValueError, naming both positions
@@ -405,11 +405,11 @@ def build_graph(rows, cols, blocked):
     """Return the grid as a dictionary, leaving out every
     intersection in blocked: not a key, not anyone's neighbor."""
     # 1. graph = {}
-    # 2. for every row, for every column:
+    # 2. for every x, for every y:
     #       neighbors = []
-    #       up, down, left, right: append each one that is
+    #       left, right, down, up: append each one that is
     #       still on the grid (a bounds check for each)
-    #       graph[(row, col)] = neighbors
+    #       graph[(x, y)] = neighbors
     # 3. return graph
     pass
 
@@ -471,24 +471,27 @@ def bfs_rings(position):
     pass
 
 def print_grid(rows, cols, blocked, numbers):
-    """Draw the grid: each intersection's entry in numbers,
-    X if it is blocked, . if it has no entry."""
-    header = "     "
-    for c in range(cols):
-        header = header + "{:>3}".format(c)
-    print(header)
-    print("    " + "-" * (3 * cols + 1))
-    for r in range(rows):
-        line = " " + str(r) + " | "
-        for c in range(cols):
-            if (r, c) in blocked:
+    """Draw the grid the way it lies in front of you: the top
+    line is the far row, y = 0 is the bottom line. Each
+    intersection shows its entry in numbers, X if it is
+    blocked, . if it has no entry."""
+    for i in range(rows):
+        y = rows - 1 - i
+        line = " " + str(y) + " | "
+        for x in range(cols):
+            if (x, y) in blocked:
                 cell = "X"
-            elif (r, c) in numbers:
-                cell = numbers[(r, c)]
+            elif (x, y) in numbers:
+                cell = numbers[(x, y)]
             else:
                 cell = "."
             line = line + "{:>3}".format(cell)
         print(line)
+    print("    " + "-" * (3 * cols + 1))
+    footer = "     "
+    for x in range(cols):
+        footer = footer + "{:>3}".format(x)
+    print(footer)
 
 # --- Lesson 5-6: the property harness ---
 # Tests any planner by what must be true of its path, not by
@@ -534,7 +537,7 @@ def run_no_path_test(test_name, planner, position, destination):
 
 def run_all_tests(name, planner):
     """The seven cases, through whichever planner is handed
-    in: four open, the wall, walled off, and the slow row."""
+    in: four open, the wall, walled off, and the slow grid."""
     print("==========", name, "==========")
     passed = 0
     clear_blocked()
@@ -558,7 +561,7 @@ def run_all_tests(name, planner):
     clear_blocked()
     add_slow_edge((0, 1), (0, 2), 5)
     path = planner((0, 0), (0, 3))
-    if check_cost("slow row: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
+    if check_cost("slow grid: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
         passed = passed + 1
     clear_slow_edges()
     print(name + ":", passed, "of 7 passed")

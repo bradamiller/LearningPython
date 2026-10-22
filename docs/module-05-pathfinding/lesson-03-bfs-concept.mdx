@@ -47,20 +47,20 @@ shortest path, every time, on any grid.
 Give it two minutes. Then test your rule on this one:
 
 <Figure
-  src="/img/lesson-m5-03/wall-problem.svg"
-  alt="A 4 by 4 grid graph. S is the top-left intersection, (0, 0); D is (3, 0), straight down column 0. Intersections (1, 0) and (1, 1) are blocked and crossed out, with their edges removed."
+  src="/img/lesson-m5-03/wall-problem-xy.svg"
+  alt="A 4 by 4 grid graph. S is the bottom-left intersection, (0, 0); D is (3, 0), straight across the bottom row, y = 0. Intersections (1, 0) and (1, 1) are blocked and crossed out, with their edges removed."
   caption="Your rule can only look at one intersection and its open neighbors at a time."
 />
 
-Start at `S` (0,0), destination `D` (3,0). The destination is straight down column 0,
-and there's a wall in the way at (1,0) and (1,1).
+Start at `S` (0,0), destination `D` (3,0). The destination is straight across the bottom row,
+y = 0, and there's a wall in the way at (1,0) and (1,1).
 
 <TeacherNote title="What you're fishing for">
 
 Nearly every rule students write is Manhattan with a patch: "head toward the goal;
 if it's blocked, go around." Let them apply it to the grid above. "Go around" means
-stepping to (0,1), which is still blocked below, so they go to (0,2), and now the
-rule says "head toward the goal" — down to (1,2) — and *away* from column 0. Some
+stepping up to (0,1), which is still blocked on its right, so they go up to (0,2), and now
+the rule says "head toward the goal" — right to (1,2) — still *away* from the bottom row. Some
 rules loop here; most can't say how far "around" to go. The point isn't to make
 them fail, it's for them to feel that a rule which *looks at the goal* can't handle
 a wall that forces you away from it. The method below never looks at the goal until
@@ -79,8 +79,8 @@ Write **0** on the start. Every intersection you can reach in one step gets a
 destination gets a number.
 
 <Figure
-  src="/img/lesson-m5-03/bfs-rings.svg"
-  alt="Left: a 3 by 3 grid with the start numbered 0 at the top-left, its neighbors 1, the next corners 2, the next two 3, and the bottom-right destination 4; the center intersection is crossed out with no number. Right: the same grid with a small arrow on each intersection pointing back to the one it was reached from, and the walk-back from 4 down the left side and along the bottom highlighted in red."
+  src="/img/lesson-m5-03/bfs-rings-xy.svg"
+  alt="Left: a 3 by 3 grid with the start numbered 0 at the bottom-left, its neighbors 1, the next corners 2, the next two 3, and the top-right destination 4; the center intersection is crossed out with no number. Right: the same grid with a small arrow on each intersection pointing back to the one it was reached from, and the walk-back from 4 down the right side and along the bottom highlighted in red."
   caption="Ripples spreading out from the start, around a blocked intersection. Each ring is exactly one step further out. The arrows on the right record where each intersection was reached from — which is how the numbers turn into a path."
 />
 
@@ -114,8 +114,8 @@ it to the *end* of the list. To decide where to look next, take the one at the
 *front*. Say the rule out loud as you go: *"Take the oldest one I haven't looked
 around yet. Every neighbor with no number gets the next number."*
 
-Here's the trace, with neighbors checked in the order the code will use (up, down,
-left, right):
+Here's the trace, with neighbors checked in the order the code will use (left, right,
+down, up):
 
 | Step | Looking around | New numbers written | To-visit afterward |
 |---|---|---|---|
@@ -133,7 +133,7 @@ Notice step 7: (1,2) looks around, finds (0,2) and (2,2), and both already have
 numbers. It writes nothing. That's the rule from the knowledge check in action.
 
 <Figure
-  src="/img/lesson-m5-03/bfs-ripple.svg"
+  src="/img/lesson-m5-03/bfs-ripple-xy.svg"
   alt="An animation of breadth-first search on the 3 by 3 grid with the center blocked, from S at (0, 0) to D at (2, 2). Each step takes the oldest intersection from the front of the to-visit list; every open neighbor without a number gets the next number, an arrow showing where it came from, and a place at the back of the list. (1, 0) and (0, 1) get 1, (2, 0) and (0, 2) get 2, (2, 1) and (1, 2) get 3, and (2, 2) gets 4. Walking back along the arrows gives the path [(1, 0), (2, 0), (2, 1), (2, 2)]."
   caption="The same trace, moving: take from the front, add to the back, and the rings fill in one at a time."
 />
@@ -215,19 +215,19 @@ every intersection, starting from (0,0). Numbering the whole grid is fine; it ma
 the picture clearer.
 
 ```text
-      0  1  2  3
+ 3 |   .  .  .  .
+ 2 |   .  .  .  .
+ 1 |   .  X  .  .
+ 0 |   0  X  .  .
     -------------
- 0 |  0  .  .  .
- 1 |  X  X  .  .
- 2 |  .  .  .  .
- 3 |  .  .  .  .
+       0  1  2  3
 ```
 
 Then write down the ring number on (3,0), and one shortest path to it. Your first
 step goes *away* from the destination. Explain, in one sentence, why this method
 gets that right when "head toward the goal" didn't.
 
-Then block all of row 1 — (1,0), (1,1), (1,2), (1,3) — and start again. What
+Then block the whole column at x = 1 — (1,0), (1,1), (1,2), (1,3) — and start again. What
 happens to the rings? What number does (3,0) get?
 
 <TeacherNote title="Answers">
@@ -235,12 +235,12 @@ happens to the rings? What number does (3,0) get?
 **Wall at (1,0), (1,1):**
 
 ```text
-      0  1  2  3
+ 3 |   3  4  5  6
+ 2 |   2  3  4  5
+ 1 |   1  X  5  6
+ 0 |   0  X  6  7
     -------------
- 0 |  0  1  2  3
- 1 |  X  X  3  4
- 2 |  6  5  4  5
- 3 |  7  6  5  6
+       0  1  2  3
 ```
 
 (3,0) is ring **7**. One path: `[(0,1), (0,2), (1,2), (2,2), (3,2), (3,1), (3,0)]`;
@@ -248,8 +248,8 @@ another, equally good: `[(0,1), (0,2), (1,2), (2,2), (2,1), (2,0), (3,0)]`. The
 reason BFS gets it right: it never looks at the destination, so a step "away" from
 it is just another step in the next ring.
 
-**Row 1 all blocked:** the rings fill row 0 (0, 1, 2, 3) and stop. Nothing in rows 2
-and 3 is ever reached; (3,0) never gets a number. Ask what the program should
+**Column x = 1 all blocked:** the rings fill the left column, x = 0 (0, 1, 2, 3), and
+stop. Nothing in columns x = 2 and x = 3 is ever reached; (3,0) never gets a number. Ask what the program should
 return in that case — an empty path — and note that Lesson 5-5 makes it do exactly
 that, and Lesson 5-6 has a test for it.
 
@@ -264,11 +264,11 @@ program, `lesson-03-bfs-concept.py` in the Module 5 solutions, that does the
 and the to-visit list after every step, then draws the grid of ring numbers:
 
 ```text
-      0  1  2
+ 2 |   2  3  4
+ 1 |   1  X  3
+ 0 |   0  1  2
     ----------
- 0 |  0  1  2
- 1 |  1  X  3
- 2 |  2  3  4
+       0  1  2
 ```
 
 Compare it with your trace. If your ring numbers match, you ran the algorithm. If

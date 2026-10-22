@@ -14,7 +14,7 @@ sidebar_position: 1
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Your Manhattan robot always goes rows-first, then columns. But what happens when an
+Your Manhattan robot always goes across first, then up or down. But what happens when an
 intersection on that route is **blocked**? It has no way around. This module fixes that —
 and it starts by seeing the grid a new way: as a **graph** of nodes and edges. No code
 today, just paper and the physical grid.
@@ -38,7 +38,7 @@ By the end of this lesson you will be able to:
 Your usual route to school is closed for construction. You don't give up — you find a
 detour, and your GPS reroutes you automatically. The robot needs to do the same.
 
-The Manhattan algorithm from Module 4 only knows one strategy: rows first, then columns.
+The Manhattan algorithm from Module 4 only knows one strategy: across first, then up or down.
 It has no concept of an obstacle. If the intersection it wants to drive through is
 blocked, it drives right into it. To route *around* things, we need a smarter way to
 think about the grid.
@@ -47,7 +47,7 @@ think about the grid.
   question="Why can't the Manhattan algorithm route around a blocked intersection?"
   options={[
     {text: 'It runs too slowly'},
-    {text: 'It only knows one fixed strategy (rows then columns) and has no concept of obstacles', correct: true},
+    {text: 'It only knows one fixed strategy (across, then up or down) and has no concept of obstacles', correct: true},
     {text: 'It can, if you turn it off and on again'},
     {text: 'The robot has no wheels'},
   ]}
@@ -66,8 +66,8 @@ Our grid is a graph. Every intersection is a **node**, named by its coordinate l
 connects you to are that node's **neighbors**.
 
 <Figure
-  src="/img/lesson-m5-01/graph-3x3.svg"
-  alt="The 3 by 3 grid drawn as a graph: nine nodes labeled by row and column, joined by edges to their neighbors above, below, left and right. The four corner nodes have 2 neighbors, the four edge nodes 3, and the center node 4."
+  src="/img/lesson-m5-01/graph-3x3-xy.svg"
+  alt="The 3 by 3 grid drawn as a graph: nine nodes labeled (x, y) with (0, 0) at the bottom-left, joined by edges to their neighbors left, right, below and above. The four corner nodes have 2 neighbors, the four edge nodes 3, and the center node 4."
   caption="Every intersection is a node; every line between neighbors is an edge. The shading counts neighbors."
 />
 
@@ -82,7 +82,7 @@ node has 3, an **interior** node has 4.
     {text: '4', correct: true},
     {text: '8'},
   ]}
-  explanation="(1,1) connects up, down, left, and right — (0,1), (2,1), (1,0), (1,2). No diagonals, so four neighbors."
+  explanation="(1,1) connects left, right, down, and up — (0,1), (2,1), (1,0), (1,2). No diagonals, so four neighbors."
 />
 
 ## Blocking a node
@@ -91,7 +91,7 @@ When an intersection is blocked, we **remove it from the graph entirely** — th
 *and* all its edges. Block (1,1) on the 3×3 grid:
 
 <Figure
-  src="/img/lesson-m5-01/graph-blocked.svg"
+  src="/img/lesson-m5-01/graph-blocked-xy.svg"
   alt="The 3 by 3 graph with (1, 1) blocked: the node is crossed out and its four edges are removed, so the four nodes that touched it, (0, 1), (1, 0), (1, 2) and (2, 1), have each lost a neighbor."
   caption="Blocking (1, 1) removes the node and its four edges."
 />
@@ -103,7 +103,7 @@ lost a neighbor. Blocking one node changes its neighbors too.
   question="After (1,1) is blocked, how many neighbors does (0,1) have?"
   options={[
     {text: '3 — nothing changed'},
-    {text: '2 — it lost its downward connection to (1,1)', correct: true},
+    {text: '2 — it lost its connection to the right, to (1,1)', correct: true},
     {text: '4'},
     {text: '0'},
   ]}
@@ -115,9 +115,9 @@ lost a neighbor. Blocking one node changes its neighbors too.
 Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
 
 <Figure
-  src="/img/lesson-m5-01/detour.svg"
-  alt="The 3 by 3 graph with (1, 0) blocked and its edges removed. S is (0, 0) and D is (2, 0). A red dashed arrow shows Manhattan trying to go straight down through (1, 0), which is blocked."
-  caption="Straight down is closed. Find the way around before you open the answer."
+  src="/img/lesson-m5-01/detour-xy.svg"
+  alt="The 3 by 3 graph with (1, 0) blocked and its edges removed. S is (0, 0) and D is (2, 0). A red dashed arrow shows Manhattan trying to go straight across to the right through (1, 0), which is blocked."
+  caption="Straight across is closed. Find the way around before you open the answer."
 />
 
 Manhattan would try (0,0) → (1,0) → (2,0) — but (1,0) is blocked, so it fails.

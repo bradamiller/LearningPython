@@ -67,7 +67,7 @@ grid, no batteries, no chasing a robot across the room.
 ## Expected vs. actual
 
 The heart of testing: decide what the answer *should* be **by hand**, then check whether
-the code agrees. Hand-trace (0,0) → (2,3) — down 2 rows, right 3 columns — to get the
+the code agrees. Hand-trace (0,0) → (2,3) — right 2, then up 3 — to get the
 expected path, then compare:
 
 ```python
@@ -135,8 +135,8 @@ and the five your suite still needs:
 ```python
 run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])
 run_test("Backward left", (2, 3), (0, 0), [ ... ])   # trace it, then fill it in
-run_test("Same row",      (1, 0), (1, 3), [ ... ])
-run_test("Same column",   (0, 2), (3, 2), [ ... ])
+run_test("Same column",   (1, 0), (1, 3), [ ... ])
+run_test("Same row",      (0, 2), (3, 2), [ ... ])
 run_test("Same spot",     (1, 1), (1, 1), [ ... ])
 run_test("One step",      (0, 0), (0, 1), [ ... ])
 ```
@@ -202,8 +202,8 @@ def run_test(test_name, position, destination, expected):
 def test_planner():
     run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])
     run_test("Backward left", (2, 3), (0, 0), [(1,3), (0,3), (0,2), (0,1), (0,0)])
-    run_test("Same row",      (1, 0), (1, 3), [(1,1), (1,2), (1,3)])
-    run_test("Same column",   (0, 2), (3, 2), [(1,2), (2,2), (3,2)])
+    run_test("Same column",   (1, 0), (1, 3), [(1,1), (1,2), (1,3)])
+    run_test("Same row",      (0, 2), (3, 2), [(1,2), (2,2), (3,2)])
     run_test("Same spot",     (1, 1), (1, 1), [])
     run_test("One step",      (0, 0), (0, 1), [(0,1)])
 
@@ -221,11 +221,11 @@ the suite is identical.
   question="Your test shows actual = [(1,0),(2,0),(2,1)] but expected = [(1,0),(2,0),(2,1),(2,2),(2,3)]. What's the likely problem?"
   options={[
     {text: 'The robot battery is low'},
-    {text: 'The east (column) loop is stopping early or not running fully — the column moves are missing', correct: true},
+    {text: 'The north (y) loop is stopping early or not running fully — the moves up are missing', correct: true},
     {text: 'The test is wrong'},
     {text: 'Nothing — that output is fine'},
   ]}
-  explanation="The row moves are all there but the column moves are cut short. That points straight at the east while loop — exactly the kind of pinpointing screen-testing gives you."
+  explanation="The moves across are all there but the moves up are cut short. That points straight at the north while loop — exactly the kind of pinpointing screen-testing gives you."
 />
 
 <TeacherNote title="Celebrate the FAILs — and calculate expected paths first">
@@ -248,7 +248,7 @@ to watch the logic run. One at the top, and one inside each loop right after the
 ```python
     print("Computing from", position, "to", destination)   # first line
     ...
-        print("  added:", (current_row, current_col))      # in each loop
+        print("  added:", (x, y))                          # in each loop
 ```
 
 The trace shows exactly which loop ran and what it appended. Once you've found and fixed

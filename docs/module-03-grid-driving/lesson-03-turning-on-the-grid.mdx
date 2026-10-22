@@ -14,7 +14,7 @@ sidebar_position: 3
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-You can drive straight down the grid. Now you'll turn corners — sequencing drives and
+You can drive straight along the grid. Now you'll turn corners — sequencing drives and
 turns to trace an **L-shaped path**. Any route across a grid is really just a
 sequence of "drive some segments, turn, drive some more."
 
@@ -59,8 +59,8 @@ intersection, then turn. In code that's `drive_intersections()`, then a turn, th
 `drive_intersections()` again — three lines for an L, one per leg or corner.
 
 <Figure
-  src="/img/lesson-m3-03/l-path.svg"
-  alt="The 3×3 grid with an L-shaped route. The robot starts parked on the top-left intersection facing right. Leg 1 arrives at two intersections, numbered 1 and 2, along the top row; at 2 it turns right; leg 2 arrives at intersections 3 and 4 down the right-hand column, and it ends parked on 4 facing down. Beside it, the plan as written on paper: leg 1: 2 intersections; corner: turn right; leg 2: 2 intersections."
+  src="/img/lesson-m3-03/l-path-xy.svg"
+  alt="The 3×3 grid with an L-shaped route. The robot starts parked on the bottom-left intersection, the corner nearest you, facing away from you. Leg 1 arrives at two intersections, numbered 1 and 2, up the left-hand column; at 2 it turns right; leg 2 arrives at intersections 3 and 4 along the top row, and it ends parked on 4 facing right. Beside it, the plan as written on paper: leg 1: 2 intersections; corner: turn right; leg 2: 2 intersections."
   caption="An L-shape: two intersections, a right turn, two more. The plan beside it is the paper sketch from Step 2."
 />
 
@@ -187,14 +187,14 @@ test_my_path()
 </TeacherNote>
 
 <KnowledgeCheck
-  question="Starting at the top-left facing right, the robot runs: drive_intersections(3), turn_clockwise(), drive_intersections(2). Where does it end up?"
+  question="Starting at the bottom-left corner facing away from you, the robot runs: drive_intersections(3), turn_clockwise(), drive_intersections(2). Where does it end up?"
   options={[
     {text: 'Back at the start'},
-    {text: '3 intersections right of start, then 2 intersections down from there', correct: true},
-    {text: '2 right, then 3 down'},
+    {text: '3 intersections up from the start, then 2 intersections to the right from there', correct: true},
+    {text: '2 up, then 3 to the right'},
     {text: 'It never turns'},
   ]}
-  explanation="It drives 3 to the right, turns right (now facing down), and drives 2 down — an L ending 3 across and 2 down."
+  explanation="It drives 3 up, away from you, turns right (now facing right), and drives 2 to the right — an L ending 3 up and 2 across."
 />
 
 <TeacherNote title="Differentiation">

@@ -252,8 +252,8 @@ def test_square():
 
 
 # ===== MANHATTAN PLANNER (class version) =====
-# One Manhattan object plans routes across the grid, rows
-# first and then columns. It holds NO state: compute_path()
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
 # is told the robot's position every call. Pure arithmetic.
 
 class Manhattan:

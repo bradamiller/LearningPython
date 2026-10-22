@@ -74,8 +74,8 @@ allow every correct answer. That's a **property test**: check what must be true,
 not what you happened to expect.
 
 <Figure
-  src="/img/lesson-m5-06/path-properties.svg"
-  alt="Test 4: from S at (0, 0) to D at (3, 0) with (1, 0) and (1, 1) blocked. Left, the BFS path around the wall, 7 steps, with badges showing properties 1 to 4 holding. Middle, the five properties; the fifth, steps equal the Manhattan distance, is only checked on an open grid. Right, Manhattan's path goes straight down through blocked (1, 0) and fails property 4."
+  src="/img/lesson-m5-06/path-properties-xy.svg"
+  alt="Test 4: from S at (0, 0) to D at (3, 0) with (1, 0) and (1, 1) blocked. Left, the BFS path around the wall, 7 steps, with badges showing properties 1 to 4 holding. Middle, the five properties; the fifth, steps equal the Manhattan distance, is only checked on an open grid. Right, Manhattan's path goes straight across to the right through blocked (1, 0) and fails property 4."
   caption="The checks never ask which shortest path you found, only whether it is a legal one of the right length."
 />
 
@@ -176,8 +176,8 @@ def navigate(planner, position, destination):
 
 ### Step 1 · Two helpers
 
-`manhattan_distance()` is the Lesson 4-2 formula — the row difference plus the
-column difference, each made positive with `abs()`. `is_neighbor()` asks whether
+`manhattan_distance()` is the Lesson 4-2 formula — the x difference plus the
+y difference, each made positive with `abs()`. `is_neighbor()` asks whether
 that distance is exactly 1. Write both.
 
 ### Step 2 · `check_path()` returns a list of problems
@@ -292,7 +292,7 @@ Manhattan: 4 of 6 passed
 ```
 
 Manhattan isn't broken. It's doing exactly what it was built to do in Module 4 —
-rows, then columns — and it has no idea what a wall is. The harness just showed,
+across, then up or down — and it has no idea what a wall is. The harness just showed,
 on paper, with the path printed, why this module exists.
 
 Then the same swap in a main program. `navigate()` is the skeleton's last function:

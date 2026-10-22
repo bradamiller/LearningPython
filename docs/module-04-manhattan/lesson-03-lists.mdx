@@ -26,8 +26,8 @@ you already are." Every path in this module and the next works that way.
 
 
 <Figure
-  src="/img/lesson-m4-03/path-list.svg"
-  alt="The 4 by 4 grid with the route from (0, 0) to (2, 3): down two rows, then right three columns. The robot sits on (0, 0), marked start. The five intersections it drives to are tagged path[0] (1, 0), path[1] (2, 0), path[2] (2, 1), path[3] (2, 2) and path[4] (2, 3). Beside it the list is drawn as five boxes with indexes 0 to 4: len(path) is 5, the number of steps, and the start is not in the list."
+  src="/img/lesson-m4-03/path-list-xy.svg"
+  alt="The 4 by 4 grid with the route from (0, 0) to (2, 3): right two, then up three. The robot sits on (0, 0), marked start. The five intersections it drives to are tagged path[0] (1, 0), path[1] (2, 0), path[2] (2, 1), path[3] (2, 2) and path[4] (2, 3). Beside it the list is drawn as five boxes with indexes 0 to 4: len(path) is 5, the number of steps, and the start is not in the list."
   caption="One tuple per intersection the robot drives to, in order. The start is where it already is, so it is not in the list, and len(path) is the number of steps."
 />
 
@@ -93,14 +93,14 @@ print(path)        # [(1, 0), (2, 0), (3, 0)]
 print(len(path))   # 3
 ```
 
-That's a robot at `(0,0)` driving three squares down: three places to drive to, so
+That's a robot at `(0,0)` driving three squares to the right: three places to drive to, so
 `len(path)` is 3 — the number of steps.
 
 Loop through it with a `for` loop:
 
 ```python
 for step in path:
-    print("Visit:", step, " row:", step[0], " col:", step[1])
+    print("Visit:", step, " x:", step[0], " y:", step[1])
 ```
 
 <KnowledgeCheck
@@ -122,7 +122,7 @@ for step in path:
     {text: '(3, 0)'},
     {text: 'An error'},
   ]}
-  explanation="path[2] is (3, 0); then [1] takes its column — 0. Two indexes: which step, then which part of that step."
+  explanation="path[2] is (3, 0); then [1] takes its y — 0. Two indexes: which step, then which part of that step."
 />
 
 ## Activity · Build a path in a loop
@@ -131,8 +131,8 @@ The pattern the whole module depends on: **start empty, append inside a loop.**
 
 ```python
 path = []
-for row in range(1, 5):          # start at 1, not 0 -- the robot is already on row 0
-    path.append((row, 0))
+for x in range(1, 5):            # start at 1, not 0 -- the robot is already at x = 0
+    path.append((x, 0))
 print(path)        # [(1, 0), (2, 0), (3, 0), (4, 0)]
 ```
 
@@ -140,9 +140,9 @@ print(path)        # [(1, 0), (2, 0), (3, 0), (4, 0)]
 That's the whole trick to leaving the start out: the first square you append is the
 first one the robot actually drives to.
 
-Trace it and you'll see the list grow by one each pass. Change the loop to vary the
-*column* instead, and you build a horizontal path. Combine a "go down" loop and a "go
-right" loop and you've basically written the Manhattan algorithm.
+Trace it and you'll see the list grow by one each pass. Change the loop to vary
+*y* instead, and you build a vertical path. Combine a "go right" loop and a "go
+up" loop and you've basically written the Manhattan algorithm.
 
 <TeacherNote title="The build-in-a-loop pattern is make-or-break">
 
@@ -259,14 +259,14 @@ added:
 ```python
 # WRONG -- append is outside the loop
 path = []
-for row in range(1, 4):
-    position = (row, 0)
+for x in range(1, 4):
+    position = (x, 0)
 path.append(position)     # only runs once -> [(3, 0)]
 
 # CORRECT -- append is inside the loop
 path = []
-for row in range(1, 4):
-    position = (row, 0)
+for x in range(1, 4):
+    position = (x, 0)
     path.append(position)  # runs each pass -> [(1, 0), (2, 0), (3, 0)]
 ```
 

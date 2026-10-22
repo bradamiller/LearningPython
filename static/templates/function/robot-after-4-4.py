@@ -274,18 +274,18 @@ def test_square():
 
 # ===== MANHATTAN PLANNER =====
 # Plans a route across the grid: given where the robot is and
-# where it should go, returns the list of (row, col) tuples to
-# drive to, rows first and then columns. Pure arithmetic --
+# where it should go, returns the list of (x, y) tuples to
+# drive to, across first and then up or down. Pure arithmetic --
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
 def compute_path(start, end):
-    """Return the (row, col) steps from start to end, rows
-    first, then columns. The start itself is not in the list."""
-    # 1. path = [] ; unpack start and end into row/col numbers
-    # 2. south loop: while the row is short of the end row,
-    #    step the row by one and append the new position
-    # 3. east loop: the same for the column
+    """Return the (x, y) steps from start to end, across
+    first, then up or down. The start itself is not in the list."""
+    # 1. path = [] ; unpack start and end into x and y numbers
+    # 2. east loop: while x is short of the end x,
+    #    step x by one and append the new position
+    # 3. north loop: the same for y
     # 4. return path
     pass
 

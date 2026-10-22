@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 332" width="720" height="332" role="img" aria-labelledby="fT fD">
+  <title id="fT">Breadth-first search as ripples</title>
+  <desc id="fD">Left: a 3 by 3 grid of intersections with (0, 0) at the bottom-left. The start at the bottom-left is numbered 0. Its two neighbors are numbered 1, the two corners beyond them 2, the next two 3, and the top-right destination 4. The center intersection is crossed out and has no number. Right: the same grid with a small arrow on each numbered intersection pointing back to the one it was reached from, and the walk-back from the destination to the start highlighted: 4 to 3 to 2 to 1 to 0, down the right side and along the bottom.</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <rect width="720" height="332" fill="#FFFFFF"/>
+  <text class="h" x="60" y="30">Ripples: how far from the start</text>
+  <line x1="110" y1="234" x2="190" y2="234" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="110" y1="234" x2="110" y2="154" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="110" y1="154" x2="110" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="110" y1="74" x2="190" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="190" y1="234" x2="270" y2="234" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="190" y1="74" x2="270" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="270" y1="234" x2="270" y2="154" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="270" y1="154" x2="270" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <text class="ax" x="110" y="278" text-anchor="middle">x = 0</text>
+  <text class="ax" x="76" y="238" text-anchor="end">y = 0</text>
+  <text class="ax" x="190" y="278" text-anchor="middle">x = 1</text>
+  <text class="ax" x="76" y="158" text-anchor="end">y = 1</text>
+  <text class="ax" x="270" y="278" text-anchor="middle">x = 2</text>
+  <text class="ax" x="76" y="78" text-anchor="end">y = 2</text>
+  <circle cx="190" cy="154" r="16" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M 181 145 L 199 163 M 199 145 L 181 163" stroke="#D1182C" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="110" cy="234" r="16" fill="#142D50"/><text class="nb" x="110" y="239" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">0</text>
+  <circle cx="190" cy="234" r="16" fill="#4C8BF5"/><text class="nb" x="190" y="239" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">1</text>
+  <circle cx="110" cy="154" r="16" fill="#4C8BF5"/><text class="nb" x="110" y="159" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">1</text>
+  <circle cx="270" cy="234" r="16" fill="#4C8BF5"/><text class="nb" x="270" y="239" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">2</text>
+  <circle cx="110" cy="74" r="16" fill="#4C8BF5"/><text class="nb" x="110" y="79" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">2</text>
+  <circle cx="270" cy="154" r="16" fill="#4C8BF5"/><text class="nb" x="270" y="159" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">3</text>
+  <circle cx="190" cy="74" r="16" fill="#4C8BF5"/><text class="nb" x="190" y="79" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">3</text>
+  <circle cx="270" cy="74" r="16" fill="#2E7D32"/><text class="nb" x="270" y="79" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">4</text>
+  <text class="h" x="420" y="30">Came from: walking back</text>
+  <line x1="470" y1="234" x2="550" y2="234" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="470" y1="234" x2="470" y2="154" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="470" y1="154" x2="470" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="470" y1="74" x2="550" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="550" y1="234" x2="630" y2="234" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="550" y1="74" x2="630" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="630" y1="234" x2="630" y2="154" stroke="#ADB5BD" stroke-width="2"/>
+  <line x1="630" y1="154" x2="630" y2="74" stroke="#ADB5BD" stroke-width="2"/>
+  <text class="ax" x="470" y="278" text-anchor="middle">x = 0</text>
+  <text class="ax" x="436" y="238" text-anchor="end">y = 0</text>
+  <text class="ax" x="550" y="278" text-anchor="middle">x = 1</text>
+  <text class="ax" x="436" y="158" text-anchor="end">y = 1</text>
+  <text class="ax" x="630" y="278" text-anchor="middle">x = 2</text>
+  <text class="ax" x="436" y="78" text-anchor="end">y = 2</text>
+  <path d="M 470 234 L 550 234 L 630 234 L 630 154 L 630 74" fill="none" stroke="#D1182C" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+  <line x1="530.0" y1="234.0" x2="506.0" y2="234.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <line x1="470.0" y1="174.0" x2="470.0" y2="198.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <line x1="610.0" y1="234.0" x2="586.0" y2="234.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <line x1="470.0" y1="94.0" x2="470.0" y2="118.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <line x1="630.0" y1="174.0" x2="630.0" y2="198.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <line x1="530.0" y1="74.0" x2="506.0" y2="74.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <line x1="630.0" y1="94.0" x2="630.0" y2="118.0" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>
+  <circle cx="550" cy="154" r="16" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M 541 145 L 559 163 M 559 145 L 541 163" stroke="#D1182C" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="470" cy="234" r="16" fill="#142D50"/><text class="nb" x="470" y="239" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">0</text>
+  <circle cx="550" cy="234" r="16" fill="#4C8BF5"/><text class="nb" x="550" y="239" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">1</text>
+  <circle cx="470" cy="154" r="16" fill="#4C8BF5"/><text class="nb" x="470" y="159" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">1</text>
+  <circle cx="630" cy="234" r="16" fill="#4C8BF5"/><text class="nb" x="630" y="239" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">2</text>
+  <circle cx="470" cy="74" r="16" fill="#4C8BF5"/><text class="nb" x="470" y="79" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">2</text>
+  <circle cx="630" cy="154" r="16" fill="#4C8BF5"/><text class="nb" x="630" y="159" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">3</text>
+  <circle cx="550" cy="74" r="16" fill="#4C8BF5"/><text class="nb" x="550" y="79" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">3</text>
+  <circle cx="630" cy="74" r="16" fill="#2E7D32"/><text class="nb" x="630" y="79" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">4</text>
+  <text class="sm" x="60" y="300">Every ring is one step further out. The X never gets a number.</text>
+  <text class="sm" x="420" y="300">4 came from 3, which came from 2, 1, 0.</text>
+  <text class="ms" x="420" y="318">Read forward: (1,0), (2,0), (2,1), (2,2).</text>
+</svg>

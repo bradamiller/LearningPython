@@ -15,7 +15,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
 You drew the grid graph on paper. Now you'll store it in Python using a **dictionary** —
-where each key is a `(row, col)` node and each value is a list of that node's neighbors.
+where each key is an `(x, y)` node and each value is a list of that node's neighbors.
 By the end you'll have opened a new section of `robot.py`, GRID GRAPH, with a
 `build_grid_graph(rows, cols)` function that generates the whole graph automatically,
 ready for the search in Lesson 5-3.
@@ -51,7 +51,7 @@ tuples.** Why not just a list? Because we look things up by *content* — "what 
 neighbors of (1,1)?" — not by position. A dictionary jumps straight to the answer.
 
 <Figure
-  src="/img/lesson-m5-02/graph-dict.svg"
+  src="/img/lesson-m5-02/graph-dict-xy.svg"
   alt="Left: the 3 by 3 graph with (1, 1) highlighted and its four neighbors shaded. Right: the dictionary as key and value rows. Key (0, 0) maps to [(1, 0), (0, 1)]; key (0, 1) maps to [(1, 1), (0, 0), (0, 2)]; key (1, 1) maps to [(0, 1), (2, 1), (1, 0), (1, 2)]. graph[(1, 1)] jumps straight to that list."
   caption="One entry per node: the node is the key, its neighbor list is the value."
 />
@@ -64,7 +64,7 @@ functions in the skeleton below go into `robot.py`.
   question="In our graph dictionary, what are the keys and what are the values?"
   options={[
     {text: 'Keys are numbers; values are strings'},
-    {text: 'Keys are (row, col) node tuples; values are lists of neighbor tuples', correct: true},
+    {text: 'Keys are (x, y) node tuples; values are lists of neighbor tuples', correct: true},
     {text: 'Keys are lists; values are tuples'},
     {text: 'Both are single integers'},
   ]}
@@ -120,14 +120,14 @@ ROWS = 4                 # the grid is ROWS x COLS intersections
 COLS = 4
 
 def build_grid_graph(rows, cols):
-    """Return the open grid as a dictionary: every (row, col)
+    """Return the open grid as a dictionary: every (x, y)
     maps to the list of its on-grid neighbors."""
     # 1. graph = {}
-    # 2. for every row, for every column:
+    # 2. for every x, for every y:
     #       neighbors = []
-    #       up, down, left, right: append each one that is
+    #       left, right, down, up: append each one that is
     #       still on the grid (a bounds check for each)
-    #       graph[(row, col)] = neighbors
+    #       graph[(x, y)] = neighbors
     # 3. return graph
     pass
 
@@ -156,15 +156,15 @@ today will tell you whether that rewrite broke anything.
 
 Typing all 9 nodes of a 3×3 grid by hand is tedious; a 10×10 grid has 100. So
 `build_grid_graph()` generates the graph for any size. Each node's neighbor list is
-built the same way: check up, down, left and right, and add only the ones that are
+built the same way: check left, right, down and up, and add only the ones that are
 actually on the grid. That means a **bounds check** before each `append` — only add
-"up" if you're not already in the top row (`row > 0`), only add "down" if you're not
-in the bottom row (`row < rows - 1`), and the same two checks for columns. The four
-checks are what give corners 2 neighbors and interior nodes 4.
+"left" if you're not already on the left edge (`x > 0`), only add "right" if you're not
+on the right edge (`x < cols - 1`), and the same two checks for `y` against the bottom
+and top rows. The four checks are what give corners 2 neighbors and interior nodes 4.
 
 <Figure
-  src="/img/lesson-m5-02/bounds-checks.svg"
-  alt="Two nodes with an arrow for each direction. The corner (0, 0): up, row > 0, fails; left, col > 0, fails; down, row < rows - 1, passes; right, col < cols - 1, passes; so it gets 2 neighbors. The interior node (1, 1): all four checks pass, so it gets 4 neighbors."
+  src="/img/lesson-m5-02/bounds-checks-xy.svg"
+  alt="Two nodes with an arrow for each direction. The bottom-left corner (0, 0): left, x > 0, fails; down, y > 0, fails; right, x < cols - 1, passes; up, y < rows - 1, passes; so it gets 2 neighbors. The interior node (1, 1): all four checks pass, so it gets 4 neighbors."
   caption="A failed check is a neighbor that would be off the grid, so it is never appended."
 />
 
@@ -184,12 +184,12 @@ stays on the desk.
 
 Sixteen intersections, four neighbors for an interior node, two for a corner. The
 order inside a neighbor list depends on the order you checked the four directions;
-up, down, left, right is the order the search in Lesson 5-5 will use.
+left, right, down, up is the order the search in Lesson 5-5 will use.
 
 </Reveal>
 
 <KnowledgeCheck
-  question="In build_grid_graph, why is each neighbor guarded by an if (like `if row > 0`)?"
+  question="In build_grid_graph, why is each neighbor guarded by an if (like `if x > 0`)?"
   options={[
     {text: 'To make the code shorter'},
     {text: 'To keep neighbors inside the grid — a corner or edge node has no neighbor off the grid', correct: true},
@@ -219,17 +219,17 @@ you predicted.
 
 ```python
 def build_grid_graph(rows, cols):
-    """Return the open grid as a dictionary: every (row, col)
+    """Return the open grid as a dictionary: every (x, y)
     maps to the list of its on-grid neighbors."""
     graph = {}
-    for row in range(rows):
-        for col in range(cols):
+    for x in range(cols):
+        for y in range(rows):
             neighbors = []
-            if row > 0:            neighbors.append((row - 1, col))  # up
-            if row < rows - 1:     neighbors.append((row + 1, col))  # down
-            if col > 0:            neighbors.append((row, col - 1))  # left
-            if col < cols - 1:     neighbors.append((row, col + 1))  # right
-            graph[(row, col)] = neighbors
+            if x > 0:              neighbors.append((x - 1, y))  # left
+            if x < cols - 1:       neighbors.append((x + 1, y))  # right
+            if y > 0:              neighbors.append((x, y - 1))  # down
+            if y < rows - 1:       neighbors.append((x, y + 1))  # up
+            graph[(x, y)] = neighbors
     return graph
 
 def remove_blocked(graph, blocked_nodes):
@@ -279,17 +279,17 @@ ROWS = 4                 # the grid is ROWS x COLS intersections
 COLS = 4
 
 def build_grid_graph(rows, cols):
-    """Return the open grid as a dictionary: every (row, col)
+    """Return the open grid as a dictionary: every (x, y)
     maps to the list of its on-grid neighbors."""
     graph = {}
-    for row in range(rows):
-        for col in range(cols):
+    for x in range(cols):
+        for y in range(rows):
             neighbors = []
-            if row > 0:            neighbors.append((row - 1, col))  # up
-            if row < rows - 1:     neighbors.append((row + 1, col))  # down
-            if col > 0:            neighbors.append((row, col - 1))  # left
-            if col < cols - 1:     neighbors.append((row, col + 1))  # right
-            graph[(row, col)] = neighbors
+            if x > 0:              neighbors.append((x - 1, y))  # left
+            if x < cols - 1:       neighbors.append((x + 1, y))  # right
+            if y > 0:              neighbors.append((x, y - 1))  # down
+            if y < rows - 1:       neighbors.append((x, y + 1))  # up
+            graph[(x, y)] = neighbors
     return graph
 
 def remove_blocked(graph, blocked_nodes):

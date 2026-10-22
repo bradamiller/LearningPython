@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 346" width="680" height="346" role="img" aria-labelledby="fT fD">
+  <title id="fT">pop(0) versus pop()</title>
+  <desc id="fD">Test 4 on the 4 by 4 grid with (0, 0) at the bottom-left, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), oldest first, breadth-first search finds a 7-step path: up to (0, 2), right along y = 2 to (3, 2), then down the right edge to (3, 0). Right, with pop(), newest first, the search dives down one route and returns a 9-step path: all the way up to (0, 3), right to (2, 3), back down the column at x = 2 to (2, 0), then right to (3, 0).</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <rect width="680" height="346" fill="#FFFFFF"/>
+  <text class="h" x="12" y="26">pop(0): oldest first (BFS)</text>
+  <line x1="52" y1="266" x2="52" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="52" y1="202" x2="52" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="52" y1="138" x2="52" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="52" y1="138" x2="116" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="52" y1="74" x2="116" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="116" y1="138" x2="116" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="116" y1="138" x2="180" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="116" y1="74" x2="180" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="266" x2="180" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="266" x2="244" y2="266" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="202" x2="180" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="202" x2="244" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="138" x2="180" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="138" x2="244" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="180" y1="74" x2="244" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="244" y1="266" x2="244" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="244" y1="202" x2="244" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="244" y1="138" x2="244" y2="74" stroke="#495057" stroke-width="3"/>
+  <circle cx="52" cy="266" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="52" cy="202" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="52" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="52" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="116" cy="266" r="10" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M 106 256 L 126 276 M 126 256 L 106 276" stroke="#D1182C" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="116" cy="202" r="10" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M 106 192 L 126 212 M 126 192 L 106 212" stroke="#D1182C" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="116" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="116" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="180" cy="266" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="180" cy="202" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="180" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="180" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="244" cy="266" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="244" cy="202" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="244" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="244" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <path d="M 52 266 L 52 202 L 52 138 L 116 138 L 180 138 L 244 138 L 244 202 L 244 266" fill="none" stroke="#2E7D32" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" opacity="0.75"/>
+  <circle cx="52" cy="202" r="9" fill="#2E7D32"/><text class="sm" x="52" y="206" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">1</text>
+  <circle cx="52" cy="138" r="9" fill="#2E7D32"/><text class="sm" x="52" y="142" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">2</text>
+  <circle cx="116" cy="138" r="9" fill="#2E7D32"/><text class="sm" x="116" y="142" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">3</text>
+  <circle cx="180" cy="138" r="9" fill="#2E7D32"/><text class="sm" x="180" y="142" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">4</text>
+  <circle cx="244" cy="138" r="9" fill="#2E7D32"/><text class="sm" x="244" y="142" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">5</text>
+  <circle cx="244" cy="202" r="9" fill="#2E7D32"/><text class="sm" x="244" y="206" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">6</text>
+  <circle cx="244" cy="266" r="9" fill="#2E7D32"/><text class="sm" x="244" y="270" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">7</text>
+  <circle cx="52" cy="266" r="11" fill="#142D50"/><text class="sm" x="52" y="270" text-anchor="middle" style="fill:#FFFFFF;font-weight:700">S</text>
+  <text class="nb" x="12" y="310" style="fill:#2E7D32">7 steps, the shortest</text>
+  <text class="h" x="352" y="26">pop(): newest first (depth-first)</text>
+  <line x1="392" y1="266" x2="392" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="392" y1="202" x2="392" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="392" y1="138" x2="392" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="392" y1="138" x2="456" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="392" y1="74" x2="456" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="456" y1="138" x2="456" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="456" y1="138" x2="520" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="456" y1="74" x2="520" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="266" x2="520" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="266" x2="584" y2="266" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="202" x2="520" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="202" x2="584" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="138" x2="520" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="138" x2="584" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="520" y1="74" x2="584" y2="74" stroke="#495057" stroke-width="3"/>
+  <line x1="584" y1="266" x2="584" y2="202" stroke="#495057" stroke-width="3"/>
+  <line x1="584" y1="202" x2="584" y2="138" stroke="#495057" stroke-width="3"/>
+  <line x1="584" y1="138" x2="584" y2="74" stroke="#495057" stroke-width="3"/>
+  <circle cx="392" cy="266" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="392" cy="202" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="392" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="392" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="456" cy="266" r="10" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M 446 256 L 466 276 M 466 256 L 446 276" stroke="#D1182C" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="456" cy="202" r="10" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M 446 192 L 466 212 M 466 192 L 446 212" stroke="#D1182C" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="456" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="456" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="520" cy="266" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="520" cy="202" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="520" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="520" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="584" cy="266" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="584" cy="202" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="584" cy="138" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <circle cx="584" cy="74" r="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <path d="M 392 266 L 392 202 L 392 138 L 392 74 L 456 74 L 520 74 L 520 138 L 520 202 L 520 266 L 584 266" fill="none" stroke="#D1182C" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" opacity="0.75"/>
+  <circle cx="392" cy="202" r="9" fill="#D1182C"/><text class="sm" x="392" y="206" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">1</text>
+  <circle cx="392" cy="138" r="9" fill="#D1182C"/><text class="sm" x="392" y="142" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">2</text>
+  <circle cx="392" cy="74" r="9" fill="#D1182C"/><text class="sm" x="392" y="78" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">3</text>
+  <circle cx="456" cy="74" r="9" fill="#D1182C"/><text class="sm" x="456" y="78" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">4</text>
+  <circle cx="520" cy="74" r="9" fill="#D1182C"/><text class="sm" x="520" y="78" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">5</text>
+  <circle cx="520" cy="138" r="9" fill="#D1182C"/><text class="sm" x="520" y="142" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">6</text>
+  <circle cx="520" cy="202" r="9" fill="#D1182C"/><text class="sm" x="520" y="206" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">7</text>
+  <circle cx="520" cy="266" r="9" fill="#D1182C"/><text class="sm" x="520" y="270" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">8</text>
+  <circle cx="584" cy="266" r="9" fill="#D1182C"/><text class="sm" x="584" y="270" text-anchor="middle" style="fill:#FFFFFF;font-weight:700;font-size:10px">9</text>
+  <circle cx="392" cy="266" r="11" fill="#142D50"/><text class="sm" x="392" y="270" text-anchor="middle" style="fill:#FFFFFF;font-weight:700">S</text>
+  <text class="nb" x="352" y="310" style="fill:#D1182C">9 steps: it dove down one route</text>
+</svg>

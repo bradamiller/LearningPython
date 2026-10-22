@@ -254,8 +254,8 @@ def test_square():
 
 
 # ===== MANHATTAN PLANNER (class version) =====
-# One Manhattan object plans routes across the grid, rows
-# first and then columns. It holds NO state: compute_path()
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
 # is told the robot's position every call. Pure arithmetic.
 
 class Manhattan:
@@ -377,11 +377,11 @@ def build_graph(rows, cols, blocked):
     """Return the grid as a dictionary, leaving out every
     intersection in blocked: not a key, not anyone's neighbor."""
     # 1. graph = {}
-    # 2. for every row, for every column:
+    # 2. for every x, for every y:
     #       neighbors = []
-    #       up, down, left, right: append each one that is
+    #       left, right, down, up: append each one that is
     #       still on the grid (a bounds check for each)
-    #       graph[(row, col)] = neighbors
+    #       graph[(x, y)] = neighbors
     # 3. return graph
     pass
 
@@ -423,24 +423,27 @@ def bfs_rings(position):
     pass
 
 def print_grid(rows, cols, blocked, numbers):
-    """Draw the grid: each intersection's entry in numbers,
-    X if it is blocked, . if it has no entry."""
-    header = "     "
-    for c in range(cols):
-        header = header + "{:>3}".format(c)
-    print(header)
-    print("    " + "-" * (3 * cols + 1))
-    for r in range(rows):
-        line = " " + str(r) + " | "
-        for c in range(cols):
-            if (r, c) in blocked:
+    """Draw the grid the way it lies in front of you: the top
+    line is the far row, y = 0 is the bottom line. Each
+    intersection shows its entry in numbers, X if it is
+    blocked, . if it has no entry."""
+    for i in range(rows):
+        y = rows - 1 - i
+        line = " " + str(y) + " | "
+        for x in range(cols):
+            if (x, y) in blocked:
                 cell = "X"
-            elif (r, c) in numbers:
-                cell = numbers[(r, c)]
+            elif (x, y) in numbers:
+                cell = numbers[(x, y)]
             else:
                 cell = "."
             line = line + "{:>3}".format(cell)
         print(line)
+    print("    " + "-" * (3 * cols + 1))
+    footer = "     "
+    for x in range(cols):
+        footer = footer + "{:>3}".format(x)
+    print(footer)
 
 # --- Lesson 5-6: the property harness ---
 # Tests any planner by what must be true of its path, not by

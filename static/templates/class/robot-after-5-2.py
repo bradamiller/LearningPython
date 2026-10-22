@@ -252,8 +252,8 @@ def test_square():
 
 
 # ===== MANHATTAN PLANNER (class version) =====
-# One Manhattan object plans routes across the grid, rows
-# first and then columns. It holds NO state: compute_path()
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
 # is told the robot's position every call. Pure arithmetic.
 
 class Manhattan:
@@ -365,14 +365,14 @@ ROWS = 4                 # the grid is ROWS x COLS intersections
 COLS = 4
 
 def build_grid_graph(rows, cols):
-    """Return the open grid as a dictionary: every (row, col)
+    """Return the open grid as a dictionary: every (x, y)
     maps to the list of its on-grid neighbors."""
     # 1. graph = {}
-    # 2. for every row, for every column:
+    # 2. for every x, for every y:
     #       neighbors = []
-    #       up, down, left, right: append each one that is
+    #       left, right, down, up: append each one that is
     #       still on the grid (a bounds check for each)
-    #       graph[(row, col)] = neighbors
+    #       graph[(x, y)] = neighbors
     # 3. return graph
     pass
 

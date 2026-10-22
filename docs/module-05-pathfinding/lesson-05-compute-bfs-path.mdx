@@ -77,28 +77,33 @@ def bfs_rings(position):
     pass
 
 def print_grid(rows, cols, blocked, numbers):
-    """Draw the grid: each intersection's entry in numbers,
-    X if it is blocked, . if it has no entry."""
-    header = "     "
-    for c in range(cols):
-        header = header + "{:>3}".format(c)
-    print(header)
-    print("    " + "-" * (3 * cols + 1))
-    for r in range(rows):
-        line = " " + str(r) + " | "
-        for c in range(cols):
-            if (r, c) in blocked:
+    """Draw the grid the way it lies in front of you: the top
+    line is the far row, y = 0 is the bottom line. Each
+    intersection shows its entry in numbers, X if it is
+    blocked, . if it has no entry."""
+    for i in range(rows):
+        y = rows - 1 - i
+        line = " " + str(y) + " | "
+        for x in range(cols):
+            if (x, y) in blocked:
                 cell = "X"
-            elif (r, c) in numbers:
-                cell = numbers[(r, c)]
+            elif (x, y) in numbers:
+                cell = numbers[(x, y)]
             else:
                 cell = "."
             line = line + "{:>3}".format(cell)
         print(line)
+    print("    " + "-" * (3 * cols + 1))
+    footer = "     "
+    for x in range(cols):
+        footer = footer + "{:>3}".format(x)
+    print(footer)
 ```
 
 `print_grid()` is given — it's formatting, not pathfinding, and Module 6 uses it
-unchanged. `"{:>3}".format(cell)` is "this value, right-aligned in three spaces."
+unchanged. It prints the far row first, so `y` counts down the page and the picture
+lies the way the grid does in front of you. `"{:>3}".format(cell)` is "this value,
+right-aligned in three spaces."
 
 ## Every line is a pencil step
 
@@ -195,8 +200,8 @@ Run `test_bfs_open()` again. Now the step counts should match.
 
 Five cases, all grids you traced by hand. Three are in `test_bfs_open()`; write a
 second test — `test_bfs_walls()` — for the two with walls: `add_blocked()` the two
-wall intersections and plan `(0, 0)` to `(3, 0)`; then block the rest of row 1 and
-plan it again. Print the blocked list before each. The step counts have to match;
+wall intersections and plan `(0, 0)` to `(3, 0)`; then block the rest of the column
+at x = 1 and plan it again. Print the blocked list before each. The step counts have to match;
 the exact path may differ from yours and still be right.
 
 ```text
@@ -295,8 +300,8 @@ back before the next.
 <Reveal title="What pop() did to Test 4" hint="try it first">
 
 <Figure
-  src="/img/lesson-m5-05/bfs-vs-dfs.svg"
-  alt="Test 4 on the 4 by 4 grid, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), breadth-first search finds a 7-step path around the wall. Right, with pop(), the search dives down one route and returns a 9-step path: all the way across row 0, down column 3, back along row 2, then down to (3, 0)."
+  src="/img/lesson-m5-05/bfs-vs-dfs-xy.svg"
+  alt="Test 4 on the 4 by 4 grid, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), breadth-first search finds a 7-step path around the wall. Right, with pop(), the search dives down one route and returns a 9-step path: all the way up the left column, right along the top row, down the column at x = 2, then right to (3, 0)."
   caption="Oldest first finishes each ring and finds the shortest route. Newest first follows the latest branch as far as it goes."
 />
 
@@ -316,12 +321,12 @@ Write the body, then a test — `test_rings()` — that blocks `(1, 0)` and `(1,
 calls `print_grid(ROWS, COLS, BLOCKED, bfs_rings((0, 0)))`:
 
 ```text
-       0  1  2  3
+ 3 |   3  4  5  6
+ 2 |   2  3  4  5
+ 1 |   1  X  5  6
+ 0 |   0  X  6  7
     -------------
- 0 |   0  1  2  3
- 1 |   X  X  3  4
- 2 |   6  5  4  5
- 3 |   7  6  5  6
+       0  1  2  3
 ```
 
 That's your Lesson 5-3 wall grid, drawn by the program. The path Test 4 printed is
@@ -409,24 +414,27 @@ def bfs_rings(position):
     return rings
 
 def print_grid(rows, cols, blocked, numbers):
-    """Draw the grid: each intersection's entry in numbers,
-    X if it is blocked, . if it has no entry."""
-    header = "     "
-    for c in range(cols):
-        header = header + "{:>3}".format(c)
-    print(header)
-    print("    " + "-" * (3 * cols + 1))
-    for r in range(rows):
-        line = " " + str(r) + " | "
-        for c in range(cols):
-            if (r, c) in blocked:
+    """Draw the grid the way it lies in front of you: the top
+    line is the far row, y = 0 is the bottom line. Each
+    intersection shows its entry in numbers, X if it is
+    blocked, . if it has no entry."""
+    for i in range(rows):
+        y = rows - 1 - i
+        line = " " + str(y) + " | "
+        for x in range(cols):
+            if (x, y) in blocked:
                 cell = "X"
-            elif (r, c) in numbers:
-                cell = numbers[(r, c)]
+            elif (x, y) in numbers:
+                cell = numbers[(x, y)]
             else:
                 cell = "."
             line = line + "{:>3}".format(cell)
         print(line)
+    print("    " + "-" * (3 * cols + 1))
+    footer = "     "
+    for x in range(cols):
+        footer = footer + "{:>3}".format(x)
+    print(footer)
 
 def test_bfs_open():
     clear_blocked()

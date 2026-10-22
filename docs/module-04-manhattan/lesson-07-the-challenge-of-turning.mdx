@@ -25,7 +25,7 @@ move the robot are designed on paper here and written next lesson.
 
 By the end of this lesson you will be able to:
 
-- Explain why only the row **or** the column changes between adjacent intersections
+- Explain why only x **or** y changes between adjacent intersections
 - Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W
 - Open the NAVIGATOR section of `robot.py` and write `desired_heading(position, next_pos)` in it, returning 0–3 from the coordinate change, with a paper test
 - Raise an error when a function is asked something it cannot answer, and say why that
@@ -39,24 +39,25 @@ By the end of this lesson you will be able to:
 
 ## One change at a time → four directions
 
-Look at any two *adjacent* intersections on the grid. Between them, either the row
-changes by one **or** the column changes by one — never both (that would be a diagonal,
+Look at any two *adjacent* intersections on the grid. Between them, either x
+changes by one **or** y changes by one — never both (that would be a diagonal,
 which the robot can't do). That's exactly four cases, one per compass direction:
 
 | Coordinate change | Direction | Heading number |
 |---|---|---|
-| row −1 (up) | North | 0 |
-| col +1 (right) | East | 1 |
-| row +1 (down) | South | 2 |
-| col −1 (left) | West | 3 |
+| y +1 (up, away from you) | North | 0 |
+| x +1 (right) | East | 1 |
+| y −1 (down, toward you) | South | 2 |
+| x −1 (left) | West | 3 |
 
-The trickiest part to accept: on our grid, **row 0 is at the top** (like a spreadsheet),
-so moving *down* means the row number *increases*. Down is South.
+The part to keep straight: x comes first in the tuple, but North and South change the
+*second* number. **North is away from you**, so moving North makes y *bigger*, and
+moving South makes it smaller.
 
 
 <Figure
-  src="/img/lesson-m4-07/headings.svg"
-  alt="The robot at an intersection facing north, with a card at each neighbor. North is heading 0, the row goes down by 1. East is 1, the column goes up by 1. South is 2, the row goes up by 1. West is 3, the column goes down by 1. Curved arrows between them, each marked +1, show that every clockwise turn adds 1, wrapping from 3 back to 0."
+  src="/img/lesson-m4-07/headings-xy.svg"
+  alt="The robot at an intersection facing north, with a card at each neighbor. North is heading 0, y goes up by 1. East is 1, x goes up by 1. South is 2, y goes down by 1. West is 3, x goes down by 1. Curved arrows between them, each marked +1, show that every clockwise turn adds 1, wrapping from 3 back to 0."
   caption="The four neighbors of an intersection, the coordinate change that reaches each one, and its heading number. Clockwise adds 1."
 />
 
@@ -64,11 +65,11 @@ so moving *down* means the row number *increases*. Down is South.
   question="The robot moves from (2,3) to (3,3). Which direction is that, and what heading number?"
   options={[
     {text: 'North, heading 0'},
-    {text: 'South, heading 2', correct: true},
-    {text: 'East, heading 1'},
+    {text: 'South, heading 2'},
+    {text: 'East, heading 1', correct: true},
     {text: 'West, heading 3'},
   ]}
-  explanation="The row went 2 → 3 (row +1). Increasing row means moving down the grid, which is South — heading 2."
+  explanation="x went 2 → 3 (x +1) and y stayed 3. Increasing x means moving right across the grid, which is East — heading 1."
 />
 
 ## Heading as a number
@@ -99,7 +100,7 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away; raise if it is not."""
-    # 1. row_diff and col_diff: next_pos minus position
+    # 1. x_diff and y_diff: next_pos minus position
     # 2. one if per direction, from the table above; each
     #    checks BOTH differences, because the other one is 0
     # 3. none matched: raise ValueError, naming both positions
@@ -110,18 +111,18 @@ def desired_heading(position, next_pos):
 returns the matching number from the table. Like the planner, it is *told* the position
 rather than remembering it. Step 2 is the table as four `if` lines, and each condition
 checks *both* differences, which is the "one change at a time" rule from the top of the
-lesson written down: North means the row went down by one **and** the column didn't
-move at all.
+lesson written down: North means y went up by one **and** x didn't move at
+all.
 
 <KnowledgeCheck
   question="Going from (1,5) to (1,4), what does desired_heading return?"
   options={[
     {text: '0 (North)'},
     {text: '1 (East)'},
-    {text: '2 (South)'},
-    {text: '3 (West)', correct: true},
+    {text: '2 (South)', correct: true},
+    {text: '3 (West)'},
   ]}
-  explanation="The row is unchanged; the column went 5 → 4 (col −1). Decreasing column is West — heading 3."
+  explanation="x is unchanged; y went 5 → 4 (y −1). Decreasing y is moving toward you, which is South — heading 2."
 />
 
 ## Say so when you can't answer
@@ -203,8 +204,8 @@ does exactly that, on purpose — or wire it into their own project in Lesson 4-
 is exactly when a good error message is worth the most.
 
 **Why each condition tests both differences.** Earlier drafts of this function checked
-only one — `if row_diff == -1: return 0` — which looks equivalent and isn't. Going from
-(2,1) to (3,3) has `row_diff` of 1, so that version returns South and never reaches the
+only one — `if y_diff == 1: return 0` — which looks equivalent and isn't. Going from
+(2,1) to (3,3) has `x_diff` of 1, so that version returns East and never reaches the
 `raise`, for a pair of positions that is plainly not a step apart. A check with a hole
 in it is worse than no check, because it buys confidence it hasn't earned. Good thing to
 show a fast finisher.
@@ -231,17 +232,17 @@ its job, and the reason the call goes last: nothing after it runs.
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away; raise if it is not."""
-    row_diff = next_pos[0] - position[0]
-    col_diff = next_pos[1] - position[1]
-    if col_diff == 0 and row_diff == -1: return 0   # North
-    if row_diff == 0 and col_diff ==  1: return 1   # East
-    if col_diff == 0 and row_diff ==  1: return 2   # South
-    if row_diff == 0 and col_diff == -1: return 3   # West
+    x_diff = next_pos[0] - position[0]
+    y_diff = next_pos[1] - position[1]
+    if x_diff == 0 and y_diff ==  1: return 0   # North
+    if y_diff == 0 and x_diff ==  1: return 1   # East
+    if x_diff == 0 and y_diff == -1: return 2   # South
+    if y_diff == 0 and x_diff == -1: return 3   # West
     raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
 ```
 
-The four neighbors of `(1, 1)` come out 0, 1, 2, 3 — N, E, S, W — in the order the
-test lists them.
+The four neighbors of `(1, 1)`, in the order the test lists them, come out 3, 0, 1, 2:
+W, N, E, S. `(0, 1)` is one step left, so it is West.
 
 </Reveal>
 
@@ -264,12 +265,12 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away; raise if it is not."""
-    row_diff = next_pos[0] - position[0]
-    col_diff = next_pos[1] - position[1]
-    if col_diff == 0 and row_diff == -1: return 0   # North
-    if row_diff == 0 and col_diff ==  1: return 1   # East
-    if col_diff == 0 and row_diff ==  1: return 2   # South
-    if row_diff == 0 and col_diff == -1: return 3   # West
+    x_diff = next_pos[0] - position[0]
+    y_diff = next_pos[1] - position[1]
+    if x_diff == 0 and y_diff ==  1: return 0   # North
+    if y_diff == 0 and x_diff ==  1: return 1   # East
+    if x_diff == 0 and y_diff == -1: return 2   # South
+    if y_diff == 0 and x_diff == -1: return 3   # West
     raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
 
 def test_headings():
@@ -353,7 +354,7 @@ that turns the robot until the sensors find the next line. The function returns
 Resist jumping to the driving code — `desired_heading()` is the only function written
 today, and it runs on the desk. Get students standing and turning clockwise a quarter at
 a time, calling out 0, 1, 2, 3, 0 — the kinesthetic bit cements the wrap. The grid
-orientation (row 0 on top, "down is South") is the #1 confusion; draw it, point at it,
+orientation (x first in the tuple, but North is +y, away from you) is the #1 confusion; draw it, point at it,
 quiz it. Odometer analogy for the wrap: "…3, and one more is 0, not 4."
 
 The loop always turns clockwise, and that is deliberate: it is the simplest turn that
@@ -401,10 +402,10 @@ through, what the robot does:
 <Reveal title="Check your trace" hint="all four lines first">
 
 ```
-At (0,0) N, next (1,0): row+1 -> want S(2). N, E, S: two clockwise.      drive to (1,0).
-At (1,0) S, next (2,0): row+1 -> want S(2). already S: no turn.          drive to (2,0).
-At (2,0) S, next (2,1): col+1 -> want E(1). S, W, N, E: three clockwise. drive to (2,1).
-At (2,1) E, next (2,2): col+1 -> want E(1). already E: no turn.          drive to (2,2).
+At (0,0) N, next (1,0): x+1 -> want E(1). N, E: one clockwise.          drive to (1,0).
+At (1,0) E, next (2,0): x+1 -> want E(1). already E: no turn.           drive to (2,0).
+At (2,0) E, next (2,1): y+1 -> want N(0). E, S, W, N: three clockwise.  drive to (2,1).
+At (2,1) N, next (2,2): y+1 -> want N(0). already N: no turn.           drive to (2,2).
 ```
 
 </Reveal>
@@ -442,7 +443,7 @@ Tracking heading and turning to a target direction is core to real navigation:
 
 ## Wrap-up
 
-- Between adjacent intersections, what can change, and how many cases result? (Row *or* column, four cases.)
+- Between adjacent intersections, what can change, and how many cases result? (x *or* y, four cases.)
 - Why store heading as a number? (Each clockwise turn adds 1; `% 4` wraps 4 back to 0.)
 - How does `turn_to` know when to stop? (Its loop runs until the heading equals the one it wants; already facing it means zero turns.)
 - What's the catch with always turning clockwise? (South to East takes three right turns for what is a quarter turn left. It still gets there; an optional challenge in Lesson 4-8 makes it quicker.)

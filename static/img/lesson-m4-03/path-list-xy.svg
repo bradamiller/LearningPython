@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" width="680" height="360" role="img" aria-labelledby="fT fD">
+  <title id="fT">A path is a list of the places the robot drives to</title>
+  <desc id="fD">The 4 by 4 grid with the route from (0, 0), the bottom-left corner, to (2, 3): two steps right, then three steps up. The robot sits on (0, 0), marked start. The five intersections it drives to are tagged path[0] (1, 0), path[1] (2, 0), path[2] (2, 1), path[3] (2, 2) and path[4] (2, 3). Beside it the list is drawn as five boxes with indexes 0 to 4: len(path) is 5, the number of steps, and the start is not in the list.</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <rect width="680" height="360" fill="#FFFFFF"/>
+  <rect x="63" y="63" width="274" height="274" rx="8" fill="#F3F4F6" stroke="#DEE2E6"/>
+  <rect x="90.5" y="63" width="9" height="274" fill="#2B2B2B"/>
+  <rect x="63" y="90.5" width="274" height="9" fill="#2B2B2B"/>
+  <rect x="160.5" y="63" width="9" height="274" fill="#2B2B2B"/>
+  <rect x="63" y="160.5" width="274" height="9" fill="#2B2B2B"/>
+  <rect x="230.5" y="63" width="9" height="274" fill="#2B2B2B"/>
+  <rect x="63" y="230.5" width="274" height="9" fill="#2B2B2B"/>
+  <rect x="300.5" y="63" width="9" height="274" fill="#2B2B2B"/>
+  <rect x="63" y="300.5" width="274" height="9" fill="#2B2B2B"/>
+  <text class="ax" x="95" y="353" text-anchor="middle">0</text>
+  <text class="ax" x="53" y="309" text-anchor="end">0</text>
+  <text class="ax" x="165" y="353" text-anchor="middle">1</text>
+  <text class="ax" x="53" y="239" text-anchor="end">1</text>
+  <text class="ax" x="235" y="353" text-anchor="middle">2</text>
+  <text class="ax" x="53" y="169" text-anchor="end">2</text>
+  <text class="ax" x="305" y="353" text-anchor="middle">3</text>
+  <text class="ax" x="53" y="99" text-anchor="end">3</text>
+  <text class="ax" x="200.0" y="369" text-anchor="middle" style="fill:#22527B">x →</text>
+  <text class="ax" x="39" y="200.0" text-anchor="middle" transform="rotate(-90 39 200.0)" style="fill:#22527B">y →</text>
+  <line x1="359" y1="97" x2="359" y2="71" stroke="#495057" stroke-width="2" marker-end="url(#aG)"/>
+  <text class="ax" x="359" y="111" text-anchor="middle">N</text>
+  <path d="M 95 305 L 235 305 L 235 95" fill="none" stroke="#4C8BF5" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
+  <use href="#pcXRP" transform="translate(95 305) rotate(0) scale(0.42)"/>
+  <rect x="72.0" y="250" width="50" height="20" rx="5" fill="#F1F3F5" stroke="#868E96" stroke-width="1.4"/><text class="nb" x="97" y="264.5" text-anchor="middle">start</text>
+  <circle cx="165" cy="305" r="7" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <rect x="134.5" y="322" width="61" height="20" rx="5" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="165" y="336.5" text-anchor="middle">path[0]</text>
+  <circle cx="235" cy="305" r="7" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <rect x="204.5" y="322" width="61" height="20" rx="5" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="235" y="336.5" text-anchor="middle">path[1]</text>
+  <circle cx="235" cy="235" r="7" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <rect x="254.5" y="226" width="61" height="20" rx="5" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="285" y="240.5" text-anchor="middle">path[2]</text>
+  <circle cx="235" cy="165" r="7" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <rect x="254.5" y="156" width="61" height="20" rx="5" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="285" y="170.5" text-anchor="middle">path[3]</text>
+  <circle cx="235" cy="95" r="7" fill="#FFFFFF" stroke="#22527B" stroke-width="2.4"/>
+  <rect x="254.5" y="86" width="61" height="20" rx="5" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="285" y="100.5" text-anchor="middle">path[4]</text>
+  <text class="h" x="405" y="70">The list holds where it drives TO</text>
+  <text class="m" x="405" y="126">path =</text>
+  <rect x="405" y="136" width="50" height="30" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/>
+  <text class="ms" x="430.0" y="155" text-anchor="middle">(1,0)</text>
+  <text class="sm" x="430.0" y="184" text-anchor="middle">[0]</text>
+  <rect x="455" y="136" width="50" height="30" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/>
+  <text class="ms" x="480.0" y="155" text-anchor="middle">(2,0)</text>
+  <text class="sm" x="480.0" y="184" text-anchor="middle">[1]</text>
+  <rect x="505" y="136" width="50" height="30" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/>
+  <text class="ms" x="530.0" y="155" text-anchor="middle">(2,1)</text>
+  <text class="sm" x="530.0" y="184" text-anchor="middle">[2]</text>
+  <rect x="555" y="136" width="50" height="30" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/>
+  <text class="ms" x="580.0" y="155" text-anchor="middle">(2,2)</text>
+  <text class="sm" x="580.0" y="184" text-anchor="middle">[3]</text>
+  <rect x="605" y="136" width="50" height="30" fill="#DCE8F3" stroke="#22527B" stroke-width="1.4"/>
+  <text class="ms" x="630.0" y="155" text-anchor="middle">(2,3)</text>
+  <text class="sm" x="630.0" y="184" text-anchor="middle">[4]</text>
+  <text class="n" x="405" y="226">5 places to drive to, so</text>
+  <text class="m" x="405" y="246">len(path)</text><text class="n" x="483" y="246">is 5: the number of steps.</text>
+  <text class="n" x="405" y="282">The robot already stands on (0, 0),</text>
+  <text class="n" x="405" y="300">so the start is <tspan font-weight="700">not</tspan> in the list.</text>
+</svg>

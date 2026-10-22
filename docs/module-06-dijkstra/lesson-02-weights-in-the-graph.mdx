@@ -144,8 +144,8 @@ planner, so you can point it at any planner's answer. A PASS line and a FAIL lin
 they should look:
 
 ```text
-  PASS  open row  [(0, 1), (0, 2), (0, 3)]  cost: 3
-  FAIL  slow row  [(0, 1), (0, 2), (0, 3)]  cost: 7
+  PASS  open grid  [(0, 1), (0, 2), (0, 3)]  cost: 3
+  FAIL  slow grid  [(0, 1), (0, 2), (0, 3)]  cost: 7
           - the cheapest route costs 5
 ```
 
@@ -176,8 +176,8 @@ Then add the slow segment at weight 5, plan the same trip, and check it against 
 the cost of the detour you added up in Lesson 6-1. Set the run line to it:
 
 ```text
-  PASS  open row  [(0, 1), (0, 2), (0, 3)]  cost: 3
-  FAIL  slow row  [(0, 1), (0, 2), (0, 3)]  cost: 7
+  PASS  open grid  [(0, 1), (0, 2), (0, 3)]  cost: 3
+  FAIL  slow grid  [(0, 1), (0, 2), (0, 3)]  cost: 7
           - the cheapest route costs 5
 ```
 
@@ -215,8 +215,8 @@ def clear_slow_edges():
 def weight(a, b):
     """Cost of driving from a to b: the slow cost if that
     segment is in SLOW_EDGES, in either order; otherwise 1."""
-    for (x, y, cost) in SLOW_EDGES:
-        if (a == x and b == y) or (a == y and b == x):
+    for (end1, end2, cost) in SLOW_EDGES:
+        if (a == end1 and b == end2) or (a == end2 and b == end1):
             return cost
     return 1
 
@@ -242,8 +242,10 @@ def check_cost(test_name, position, destination, path, expected_cost):
     return False
 ```
 
-`for (x, y, cost) in SLOW_EDGES` unpacks each three-part entry as the loop goes, the
-way `for (start, dest, expect) in ...` did in Lesson 5-5's test. If yours differs and
+The `for` line unpacks each three-part entry into the segment's two ends, `end1` and
+`end2`, and its `cost` as the loop goes, the way `for (start, dest, expect) in ...` did
+in Lesson 5-5's test. (They are not called `x` and `y`: those are the two numbers
+*inside* one intersection, and each end here is a whole intersection.) If yours differs and
 both tests give the numbers above, keep yours.
 
 </Reveal>
@@ -276,8 +278,8 @@ def clear_slow_edges():
 def weight(a, b):
     """Cost of driving from a to b: the slow cost if that
     segment is in SLOW_EDGES, in either order; otherwise 1."""
-    for (x, y, cost) in SLOW_EDGES:
-        if (a == x and b == y) or (a == y and b == x):
+    for (end1, end2, cost) in SLOW_EDGES:
+        if (a == end1 and b == end2) or (a == end2 and b == end1):
             return cost
     return 1
 
@@ -317,10 +319,10 @@ def test_cost_check():
     clear_blocked()
     clear_slow_edges()
     path = compute_bfs_path((0, 0), (0, 3))
-    check_cost("open row", (0, 0), (0, 3), path, 3)
+    check_cost("open grid", (0, 0), (0, 3), path, 3)
     add_slow_edge((0, 1), (0, 2), 5)
     path = compute_bfs_path((0, 0), (0, 3))
-    check_cost("slow row", (0, 0), (0, 3), path, 5)
+    check_cost("slow grid", (0, 0), (0, 3), path, 5)
 
 # ===== RUN =====
 board.wait_for_button()

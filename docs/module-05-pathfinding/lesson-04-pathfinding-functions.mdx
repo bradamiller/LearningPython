@@ -196,14 +196,14 @@ def build_graph(rows, cols, blocked):
     intersection in blocked: not a key, not anyone's neighbor."""
 ```
 
-and make two changes to the body you already have. First, if `(row, col)` itself is
+and make two changes to the body you already have. First, if `(x, y)` itself is
 in `blocked`, skip it entirely — it never becomes a key. Second, each of the four
 neighbor checks gets one more condition: the neighbor must not be in `blocked` either.
 Both `in blocked` checks are needed. The first keeps a blocked intersection from
 becoming a key. The second keeps it out of every *other* intersection's neighbor list.
 Miss the second and the graph still has edges leading into the wall.
 
-Keep the four directions in the order up, down, left, right. That's the order
+Keep the four directions in the order left, right, down, up. That's the order
 Lesson 5-3's trace checked neighbors, which is why its printed path matched the
 table.
 
@@ -269,16 +269,16 @@ def build_graph(rows, cols, blocked):
     """Return the grid as a dictionary, leaving out every
     intersection in blocked: not a key, not anyone's neighbor."""
     graph = {}
-    for r in range(rows):
-        for c in range(cols):
-            if (r, c) in blocked:
+    for x in range(cols):
+        for y in range(rows):
+            if (x, y) in blocked:
                 continue
             neighbors = []
-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                nr, nc = r + dr, c + dc
-                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in blocked:
-                    neighbors.append((nr, nc))
-            graph[(r, c)] = neighbors
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < cols and 0 <= ny < rows and (nx, ny) not in blocked:
+                    neighbors.append((nx, ny))
+            graph[(x, y)] = neighbors
     return graph
 
 def add_blocked(intersection):
@@ -293,9 +293,9 @@ def clear_blocked():
 ```
 
 This `build_graph()` is written a little differently from the Lesson 5-2 version: the
-four directions are a list of `(dr, dc)` changes and one loop does the four checks,
-and `continue` skips to the next column when the intersection is blocked. If you kept
-your four `if` lines and added `and (row - 1, col) not in blocked` to each, that is
+four directions are a list of `(dx, dy)` changes and one loop does the four checks,
+and `continue` skips to the next intersection when this one is blocked. If you kept
+your four `if` lines and added `and (x - 1, y) not in blocked` to each, that is
 the same function and it is fine. The thing to compare is the output.
 
 </Reveal>
@@ -322,16 +322,16 @@ def build_graph(rows, cols, blocked):
     """Return the grid as a dictionary, leaving out every
     intersection in blocked: not a key, not anyone's neighbor."""
     graph = {}
-    for r in range(rows):
-        for c in range(cols):
-            if (r, c) in blocked:
+    for x in range(cols):
+        for y in range(rows):
+            if (x, y) in blocked:
                 continue
             neighbors = []
-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                nr, nc = r + dr, c + dc
-                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in blocked:
-                    neighbors.append((nr, nc))
-            graph[(r, c)] = neighbors
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < cols and 0 <= ny < rows and (nx, ny) not in blocked:
+                    neighbors.append((nx, ny))
+            graph[(x, y)] = neighbors
     return graph
 
 def test_grid_graph():
@@ -407,8 +407,8 @@ in Lesson 5-5. Catch it here — `test_blocked_graph()`'s neighbors-of-(0,1) lin
 the one that shows it.
 
 **Challenge for students who finish early:** `add_blocked((1, 0))`,
-`add_blocked((1, 1))`, rebuild, and print the whole graph. Which row-0 intersections
-can still reach row 2, and through what? Then: "Using only `build_graph` and the
+`add_blocked((1, 1))`, rebuild, and print the whole graph. Which intersections in the
+left column (x = 0) can still reach the column at x = 2, and through what? Then: "Using only `build_graph` and the
 ripples idea, write `is_reachable(a, b)`." They'll write most of Lesson 5-5 a day
 early, which is fine.
 

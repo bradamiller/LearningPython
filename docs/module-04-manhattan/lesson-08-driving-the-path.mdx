@@ -47,7 +47,7 @@ this lesson is built from them:
 | `turn_counterclockwise()` | Pivots left | the sensors find the next line |
 | `drive_past_intersection()` | Drives straight 8.75 cm | the distance is done |
 
-Notice what's *not* in that table: any mention of rows, columns, headings or paths. The
+Notice what's *not* in that table: any mention of coordinates, headings or paths. The
 Module 2 functions know how to follow tape. They have no idea where the robot is. That's
 the split from Lesson 4-5 again — the planner doesn't know how to drive, and the driving
 functions don't know what a path is. Today's three functions sit between them.
@@ -55,7 +55,7 @@ functions don't know what a path is. Today's three functions sit between them.
 <KnowledgeCheck
   question="Which of these does track_to_intersection() know about?"
   options={[
-    {text: 'The robot\'s row and column'},
+    {text: 'The robot\'s x and y coordinates'},
     {text: 'Only the reflectance sensors and the motors — it follows tape until both sensors see a cross', correct: true},
     {text: 'The heading number'},
     {text: 'The path list'},
@@ -221,21 +221,21 @@ loop steps through, and what the robot does.
 <Reveal title="Check your trace" hint="paper first">
 
 ```
-Step 1: next (1,0). needed = 2 (S). heading 0, 1, 2: two clockwise turns.
-        track_to_intersection, drive_past_intersection -> at (1,0) facing S.
-Step 2: next (1,1). needed = 1 (E). heading 2, 3, 0, 1: three clockwise turns.
-        track_to_intersection, drive_past_intersection -> at (1,1) facing E.
+Step 1: next (1,0). needed = 1 (E). heading 0, 1: one clockwise turn.
+        track_to_intersection, drive_past_intersection -> at (1,0) facing E.
+Step 2: next (1,1). needed = 0 (N). heading 1, 2, 3, 0: three clockwise turns.
+        track_to_intersection, drive_past_intersection -> at (1,1) facing N.
 ```
 
 <Figure
-  src="/img/lesson-m4-08/drive-path-loop.svg"
-  alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 2, south; the loop turns clockwise north to east to south, two turns, then it arrives at (1, 0) facing south. Step 2, to (1, 1): the heading needed is 1, east; the loop turns clockwise south to west to north to east, three turns, 270 degrees, then it arrives at (1, 1) facing east."
+  src="/img/lesson-m4-08/drive-path-loop-xy.svg"
+  alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 1, east; the loop turns clockwise north to east, one turn, then it arrives at (1, 0) facing east. Step 2, to (1, 1): the heading needed is 0, north; the loop turns clockwise east to south to west to north, three turns, 270 degrees, then it arrives at (1, 1) facing north."
   caption="The same trace, on the grid. The faded robot is where each turn happens."
 />
 
-Step 2 is the one worth noticing: facing South and needing East is a quarter turn to
-the left, and the loop goes three quarters of the way around to the right. It works.
-It works; the challenge at the end of this lesson is for anyone who wants it to be quicker.
+Step 2 is the one worth noticing: facing East and needing North is a quarter turn to
+the left, and the loop goes three quarters of the way around to the right. It works;
+the challenge at the end of this lesson is for anyone who wants it to be quicker.
 
 </Reveal>
 
@@ -248,21 +248,21 @@ loop on screen: write a paper test — `test_turns_paper()` — that walks `[(1,
 from `(0, 0)` heading 0 the way `drive_path()` will, but prints instead of turning. For
 each step, print the intersection and the heading needed, then run the same `while` loop
 as `turn_to()` with a `print` of the new heading where the `turn_clockwise()` would be,
-and update `position`. Set the run line to it and compare with your trace: E, S for the
-first step, then W, N, E. Nothing moves.
+and update `position`. Set the run line to it and compare with your trace: E for the
+first step, then S, W, N. Nothing moves.
 
 ### Step 2 · One leg
 
 Write the body of `drive_path()`, then a test — `test_one_leg()` — that drives the
 one-element path `[(1, 0)]` from `(0, 0)` heading 0 and prints where it arrived. Robot at
-(0, 0) facing North, run line set to it, both presses. Two clockwise turns, one track,
+(0, 0) facing North, run line set to it, both presses. One clockwise turn, one track,
 one drive-past. Does the robot stop with its *center of rotation* on the intersection?
 
 ### Step 3 · A real path
 
 Add `test_drive_path()` from above and run it: `(0, 0)` to `(2, 3)`. Read the printed
 path before the second press. Watch each arrival: center of rotation on the cross, turns
-pivoting on it. And watch the corner where the path bends from South to East: count the
+pivoting on it. And watch the corner where the path bends from East to North: count the
 turns.
 
 
@@ -372,8 +372,8 @@ what was a quarter turn to its left. It got there, slowly, with three sensor-end
 where one would do. Make `turn_to()` turn whichever way takes **fewer** turns.
 
 <Figure
-  src="/img/lesson-m4-08/turn-shortcut.svg"
-  alt="Two drawings of the robot at an intersection facing south, needing to face east. Left, the loop alone, always clockwise: three clockwise quarter turns, 270 degrees. Right, turning the short way: one counterclockwise quarter turn, 90 degrees. Same place, a third of the turning."
+  src="/img/lesson-m4-08/turn-shortcut-xy.svg"
+  alt="Two drawings of the robot at an intersection facing east, needing to face north. Left, the loop alone, always clockwise: three clockwise quarter turns, 270 degrees. Right, turning the short way: one counterclockwise quarter turn, 90 degrees. Same place, a third of the turning."
   caption="Three clockwise steps around the compass land where one counterclockwise turn does."
 />
 
@@ -474,8 +474,8 @@ Building on a well-tested lower layer is how real systems scale:
 **Formative:** name the four Module 2 functions and their end conditions; trace
 `drive_path` predicting each turn and the two assignments; explain the drive-past.
 **Exit ticket:** "At (1,2) heading 1 (E), next is (1,1) — what heading is needed, which
-headings does `turn_to()` step through, and what does the robot do?" (needed 3 (W); E,
-S, W: two clockwise turns, i.e. turn around.) **Preview:** the final project — chain the
+headings does `turn_to()` step through, and what does the robot do?" (needed 2 (S), since
+y goes down by 1; E, S: one clockwise turn, then track and drive past.) **Preview:** the final project — chain the
 planner and `drive_path` to visit several destinations in a row.
 
 </TeacherNote>
@@ -573,12 +573,12 @@ the difference.
 
 ```python
     def desired_heading(self, next_pos):
-        row_diff = next_pos[0] - self.position[0]
-        col_diff = next_pos[1] - self.position[1]
-        if col_diff == 0 and row_diff == -1: return 0   # North
-        if row_diff == 0 and col_diff ==  1: return 1   # East
-        if col_diff == 0 and row_diff ==  1: return 2   # South
-        if row_diff == 0 and col_diff == -1: return 3   # West
+        x_diff = next_pos[0] - self.position[0]
+        y_diff = next_pos[1] - self.position[1]
+        if x_diff == 0 and y_diff ==  1: return 0   # North
+        if y_diff == 0 and x_diff ==  1: return 1   # East
+        if x_diff == 0 and y_diff == -1: return 2   # South
+        if y_diff == 0 and x_diff == -1: return 3   # West
         raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
 
     def turn_to(self, desired):

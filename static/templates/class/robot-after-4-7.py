@@ -252,8 +252,8 @@ def test_square():
 
 
 # ===== MANHATTAN PLANNER (class version) =====
-# One Manhattan object plans routes across the grid, rows
-# first and then columns. It holds NO state: compute_path()
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
 # is told the robot's position every call. Pure arithmetic.
 
 class Manhattan:
@@ -298,7 +298,7 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away; raise if it is not."""
-    # 1. row_diff and col_diff: next_pos minus position
+    # 1. x_diff and y_diff: next_pos minus position
     # 2. one if per direction, from the table above; each
     #    checks BOTH differences, because the other one is 0
     # 3. none matched: raise ValueError, naming both positions

@@ -103,9 +103,9 @@ section — none of them touches the six cases it already runs:
     clear_slow_edges()                      # 1. open grid, no slow edges
     ...                                     #    the six cases, as they are
     clear_blocked()
-    add_slow_edge((0, 1), (0, 2), 5)        # 2. the seventh case: slow row
+    add_slow_edge((0, 1), (0, 2), 5)        # 2. the seventh case: slow grid
     path = planner((0, 0), (0, 3))
-    if check_cost("slow row: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
+    if check_cost("slow grid: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
         passed = passed + 1
     clear_slow_edges()
     print(name + ":", passed, "of 7 passed")   # 3. seven now
@@ -149,7 +149,7 @@ first entry is best, loop over the rest, and keep any entry whose `distance` is 
 comparison turned round. `pop(0)` did two jobs, choosing *and* removing; `closest()`
 only chooses, so the line after it has to `remove()` the chosen one from `to_visit`.
 
-<Figure src="/img/lesson-m6-03/closest-vs-oldest.svg"
+<Figure src="/img/lesson-m6-03/closest-vs-oldest-xy.svg"
   alt="Dijkstra partway through on the slow grid. to_visit holds (0, 2) at cost 6, the oldest, then three intersections at cost 3. pop(0) would take (0, 2); closest() takes (3, 0). Before (0, 2) comes up, (1, 2) reaches it for 4."
   caption="The moment the two choices differ. Taking the oldest would settle (0, 2) at 6; taking the closest leaves it waiting long enough for a cheaper way to turn up." />
 
@@ -243,8 +243,8 @@ Then write a last test — `test_cost_grid()` — that adds the slow segment and
   Dijkstra  steps: 5  cost: 5   [(1, 0), (1, 1), (1, 2), (0, 2), (0, 3)]
 ```
 
-Your Dijkstra path may go round the other way — through row 1 and back up at
-`(0, 2)`, or on to `(1, 3)` first — and still be right; cost 5 is what matters.
+Your Dijkstra path may go round a different way — up through x = 1 and back left
+at `(0, 2)`, or on to `(1, 3)` first — and still be right; cost 5 is what matters.
 
 <KnowledgeCheck
   question="On a grid with no blocked intersections and no slow edges, how do the three planners' paths compare?"
@@ -270,28 +270,28 @@ print_grid(ROWS, COLS, BLOCKED, dijkstra_distances((0, 0)))
 ```
 
 ```text
-       0  1  2  3
-    -------------
- 0 |   0  1  4  5
+ 3 |   5  4  5  6
+ 2 |   4  3  4  5
  1 |   1  2  3  4
- 2 |   2  3  4  5
- 3 |   3  4  5  6
+ 0 |   0  1  2  3
+    -------------
+       0  1  2  3
 ```
 
-Read across row 0: (0, 1) costs 1, then (0, 2) costs **4**, not 2. The slow segment
-would make it 1 + 5 = 6; going down to (1, 1), across to (1, 2) and up costs 1 + 1 + 1 + 1
-= 4, so 4 is what gets kept. That one cell is change 2 doing its job. Everywhere
+Read up the left edge, x = 0: (0, 1) costs 1, then (0, 2) costs **4**, not 2. The slow
+segment would make it 1 + 5 = 6; going over to (1, 1), up to (1, 2) and back left costs
+1 + 1 + 1 + 1 = 4, so 4 is what gets kept. That one cell is change 2 doing its job. Everywhere
 else, the numbers are Module 5's BFS rings.
 
-<Figure src="/img/lesson-m6-03/cost-grid.svg"
-  alt="The cost grid from (0, 0) with the slow edge marked. (0, 2) is 4: the slow road would be 1 + 5 = 6, and down, across and back up is 1 + 1 + 1 + 1 = 4."
+<Figure src="/img/lesson-m6-03/cost-grid-xy.svg"
+  alt="The cost grid from (0, 0) with the slow edge marked. (0, 2) is 4: the slow road would be 1 + 5 = 6, and right, up and back left is 1 + 1 + 1 + 1 = 4."
   caption="The one cell that is not a BFS ring, and the two ways of reaching it." />
 
 <KnowledgeCheck
   question="In the cost grid above, why is (0, 2) a 4 rather than a 2?"
   options={[
     {text: 'A typo in the grid'},
-    {text: 'Reaching it along row 0 costs 1 + 5 = 6 because of the slow segment; the detour through row 1 costs 4, and Dijkstra keeps the cheaper total', correct: true},
+    {text: 'Reaching it straight up the left edge costs 1 + 5 = 6 because of the slow segment; the detour through x = 1 costs 4, and Dijkstra keeps the cheaper total', correct: true},
     {text: 'Because (0, 2) is blocked'},
     {text: 'Because the grid is 4 wide'},
   ]}
@@ -386,7 +386,7 @@ file is as the Lesson 6-2 teacher copy left it. The file is
 # in the 5-6 part of BFS PLANNER: the harness, now 7 cases
 def run_all_tests(name, planner):
     """The seven cases, through whichever planner is handed
-    in: four open, the wall, walled off, and the slow row."""
+    in: four open, the wall, walled off, and the slow grid."""
     print("==========", name, "==========")
     passed = 0
     clear_blocked()
@@ -410,7 +410,7 @@ def run_all_tests(name, planner):
     clear_blocked()
     add_slow_edge((0, 1), (0, 2), 5)
     path = planner((0, 0), (0, 3))
-    if check_cost("slow row: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
+    if check_cost("slow grid: (0,0) to (0,3)", (0, 0), (0, 3), path, 5):
         passed = passed + 1
     clear_slow_edges()
     print(name + ":", passed, "of 7 passed")

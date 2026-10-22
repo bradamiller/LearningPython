@@ -833,6 +833,33 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   Knock-on: with the loop, `turn_to(heading, None)` spins forever instead of raising a
   TypeError, so L4-7's "Say so when you can't answer" now tells that story
   (`raise-spin.svg`). The 4-8 paper test runs the same loop with prints.
+- **GRID COORDINATES ARE (x, y) WITH (0, 0) AT THE BOTTOM-LEFT (Brad, 2026-10-22).**
+  From Module 3 on, (0, 0) is the corner **nearest the student** as the grid lies in front
+  of them; **x** counts across to the right (East), **y** counts away from the student
+  (North, up the page). (1, 0) is one to the right of the origin, (0, 1) one away. Headings
+  are unchanged as numbers (0 N = y + 1, 1 E = x + 1, 2 S = y - 1, 3 W = x - 1), and the
+  usual start, (0, 0) facing North, now points *into* the grid. This replaced
+  **(row, column) with (0, 0) at the top-left, rows counting down** — don't restore it.
+  **How it was converted, and why nothing broke:** every tuple kept its numbers. Only the
+  meaning changed (first number row -> x, second column -> y), which is a rotation of the
+  grid, so adjacency, every path, step count, BFS ring and Dijkstra cost are identical as
+  tuples (checked: all three planners, all 256 start/destination pairs, five obstacle
+  layouts). What changed: direction words ("down" -> right/east, "right" -> up/north, "same
+  row" <-> "same column"), `desired_heading` (`x_diff`/`y_diff`, y + 1 is North),
+  `compute_manhattan_path` (`x, y`; x first, then y — same tuples as "rows first"),
+  `build_graph` (`for x in range(cols): for y in range(rows)`; neighbor order **left,
+  right, down, up**, same tuples as the old up/down/left/right), `print_grid` (prints the far
+  row first, y labels down the left, x labels along the bottom; `for i in range(rows): y =
+  rows - 1 - i` rather than a negative-step range), every heading-dependent output (4-7
+  `test_headings`, 4-8 traces, 4-9 leg headings, 5-7 "facing E"), every printed grid, M3's
+  start corner (bottom-left facing away; the L and square figures turned with it), and M6's
+  running example — the slow segment (0, 1)-(0, 2) is now on the **left edge, x = 0**, and its
+  test names are "open grid"/"slow grid". `weight()` unpacks `(end1, end2, cost)`, not
+  `(x, y, cost)`, because x and y now mean the two numbers inside one intersection.
+  `ROWS`/`COLS`/`rows`/`cols` keep their names: x runs 0..COLS-1, y runs 0..ROWS-1.
+  **Figures:** the 29 grid figures in M3-M6 were redrawn and renamed `*-xy.svg` (the §12
+  cache rule). The figure generators map a tuple `(a, b)` to screen
+  `(x0 + a*sp, y0 + (n-1-b)*sp)`; any new grid figure must do the same.
 - **FAIL WHERE THE PROBLEM IS — `raise` on impossible input (Brad, 2026-09-24).** A
   function that cannot answer the question it was asked ends with a `raise`, not an
   implicit fall-off-the-end. Three places do this and they are the whole set:

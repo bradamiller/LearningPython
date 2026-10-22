@@ -38,8 +38,8 @@ Make the robot drive a square: each side is 2 intersections, with a right turn a
 each of the 4 corners. Done right, it finishes where it began.
 
 <Figure
-  src="/img/lesson-m3-04/square-path.svg"
-  alt="The 3×3 grid with a square route around its outside. The robot starts parked on the top-left corner facing right. Each side arrives at two intersections, with a right turn at each corner; the intersections are numbered 1 to 8, and 8 is the corner it started on, so start and end are the same. Beside it, the loop in plain words: 4 times, drive SIDE intersections, turn right."
+  src="/img/lesson-m3-04/square-path-xy.svg"
+  alt="The 3×3 grid with a square route around its outside. The robot starts parked on the bottom-left corner, nearest you, facing away from you. Each side arrives at two intersections, with a right turn at each corner; the intersections are numbered 1 to 8, and 8 is the corner it started on, so start and end are the same. Beside it, the loop in plain words: 4 times, drive SIDE intersections, turn right."
   caption="Four sides, four right turns, back to start. One loop iteration draws one side."
 />
 
@@ -206,7 +206,7 @@ The square is the summative assessment (a 50-point rubric across using the earli
 sections unchanged, using a loop, completing four sides, returning to start, and
 progress prints works well). Reward the tuning process. **Coming in Module 4 ·
 Manhattan Navigation:** instead of you hard-coding the path, the *computer* calculates
-it — "go to row 2, column 3" and the robot works out the drives and turns itself,
+it — "go to (2, 3)", two across and three up from the corner nearest you, and the robot works out the drives and turns itself,
 using coordinates, tuples, and lists — in new sections of the same file.
 
 </TeacherNote>

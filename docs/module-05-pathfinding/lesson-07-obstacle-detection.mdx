@@ -137,8 +137,8 @@ heading *means*. So if the rangefinder sees something right then, the blocked
 intersection is `next_pos`. The path already told you.
 
 <Figure
-  src="/img/lesson-m5-07/rangefinder-ahead.svg"
-  alt="Left: the XRP parked on intersection (1, 0), turned to face south toward (2, 0), next_pos, where a box sits; sound waves go from the rangefinder toward the box. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15; a box on the next intersection reads about 12 cm, nothing there about 50 cm."
+  src="/img/lesson-m5-07/rangefinder-ahead-xy.svg"
+  alt="Left: the XRP parked on intersection (1, 0), turned to face east toward (2, 0), next_pos, where a box sits; sound waves go from the rangefinder toward the box. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15; a box on the next intersection reads about 12 cm, nothing there about 50 cm."
   caption="The robot is parked and facing next_pos, so a short reading can only mean next_pos."
 />
 
@@ -272,8 +272,8 @@ Write `simulate_rangefinder()` — one line: `8.0` if `next_pos` is in
 `SIMULATED_OBSTACLES`, otherwise `50.0`. Then write `test_detect_once()` from the
 outline with the simulated sensor in the look-ahead line. Put the robot at `(0, 0)`
 facing North on an *empty* grid, set the run line to it, and read the planned path
-before the second press: `(2, 0)` is on it. The robot should drive to `(1, 0)`, turn
-to face `(2, 0)`, "see" the pretend box, print the new path, and stop. Confirm two
+before the second press: `(2, 0)` is on it. The robot should turn to face East, drive
+to `(1, 0)`, face `(2, 0)`, "see" the pretend box, print the new path, and stop. Confirm two
 things on screen: the blocked list has grown, and the new path goes around.
 
 What's being simulated is only the sensor. The planner needs no simulation, because

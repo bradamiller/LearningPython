@@ -45,10 +45,10 @@ drive the whole length of the wiggle.
 To the Module 5 graph, that segment is still one edge: `(0, 1)` is a neighbor of
 `(0, 2)`, full stop. `build_graph()` has no way to say "this neighbor is far." And
 `compute_bfs_path()` counts edges. So from (0, 0) to (0, 3) it will pick the straight
-row — three steps — and send the robot down the slow road, every time.
+run up the left edge — three steps — and send the robot along the slow road, every time.
 
-<Figure src="/img/lesson-m6-01/floor-vs-graph.svg"
-  alt="Row 0 of the floor: two straight blocks of about 4 seconds and a winding one of about 20. The Module 5 graph calls every edge 1 step; with weights the edges are 1, 5 and 1."
+<Figure src="/img/lesson-m6-01/floor-vs-graph-xy.svg"
+  alt="The left edge of the floor, x = 0: two straight blocks of about 4 seconds and a winding one of about 20. The Module 5 graph calls every edge 1 step; with weights the edges are 1, 5 and 1."
   caption="The floor and the graph disagree. The graph needs a number on each edge that says how long it takes, and the stopwatch is where that number comes from." />
 
 <KnowledgeCheck
@@ -101,11 +101,11 @@ between (0, 1) and (0, 2) at weight 5. A route's **cost** is the sum of its edge
 weights — 1 for a normal block, 5 for the slow one.
 
 ```
-Route A, straight along row 0:
+Route A, straight up the left edge (x = 0):
   (0,0) -> (0,1) -> (0,2) -> (0,3)
   cost =    1   +    5   +    1    = 7       (3 steps)
 
-Route B, down and around through row 1:
+Route B, right, up through x = 1, and back:
   (0,0) -> (1,0) -> (1,1) -> (1,2) -> (1,3) -> (0,3)
   cost =    1   +    1   +    1   +    1   +    1    = 5       (5 steps)
 ```
@@ -132,7 +132,7 @@ break-even point. For the two planners in this module to *disagree*, the slow se
 has to be clearly worse than the detour around it: a weight of 4 or more. If your
 stopwatch gave you 3, ask your teacher to make the detour longer.
 
-<Figure src="/img/lesson-m6-01/break-even.svg"
+<Figure src="/img/lesson-m6-01/break-even-xy.svg"
   alt="The slow edge between (0, 1) and (0, 2), weight w, and the three-block way around it through (1, 1) and (1, 2). Weight 2: the slow edge is cheaper; weight 3: a tie; weight 4 or more: going around is cheaper."
   caption="Going around one segment always costs 3. The slow segment has to cost more than that before going around wins." />
 
@@ -155,7 +155,7 @@ winding detour long enough that the drive takes at least four normal blocks' tim
 width and the curves gentle enough for line following; test it with
 `track_to_intersection()` before students arrive. The two intersections it joins
 must still read as crosses, and the segment should be on an obvious shortest-steps
-route — between (0,1) and (0,2) on a 4×4 grid, with trips along row 0, works well.
+route — between (0,1) and (0,2) on a 4×4 grid, with trips up the left edge (x = 0), works well.
 
 The stopwatch activity is the heart of the lesson. The weight has to come from a
 measurement students made, or the module is just arithmetic. Three timings each and

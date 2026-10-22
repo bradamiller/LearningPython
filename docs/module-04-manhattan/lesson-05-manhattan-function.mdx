@@ -84,10 +84,10 @@ quotes that Python keeps attached to the function:
 def compute_manhattan_path(position, destination):
     """Compute a Manhattan path from position to destination.
 
-    position:    a (row, col) tuple -- where the robot is now
-    destination: a (row, col) tuple -- where it needs to go
+    position:    an (x, y) tuple -- where the robot is now
+    destination: an (x, y) tuple -- where it needs to go
 
-    Returns a list of (row, col) tuples the robot should move to,
+    Returns a list of (x, y) tuples the robot should move to,
     not including position itself.
     """
     path = []
@@ -118,7 +118,7 @@ three promises.
     {text: 'An error, because position equals destination'},
     {text: '[(2, 1), (2, 1)]'},
   ]}
-  explanation="Promise 3. With current_row == dest_row and current_col == dest_col, none of the four loops run, and path stays empty. That is the right answer: there is nowhere to go."
+  explanation="Promise 3. With x == dest_x and y == dest_y, none of the four loops run, and path stays empty. That is the right answer: there is nowhere to go."
 />
 
 <KnowledgeCheck
@@ -143,7 +143,7 @@ path3 = compute_manhattan_path((0, 3), (0, 0))     # and again
 ```
 
 <Figure
-  src="/img/lesson-m4-05/told-not-remembered.svg"
+  src="/img/lesson-m4-05/told-not-remembered-xy.svg"
   alt="A 4 by 4 grid with three legs: (0, 0) to (2, 3), then (2, 3) to (0, 3), then (0, 3) back to (0, 0). Beside it the three planner calls with the first argument of each, the robot's current position, highlighted in its leg's color."
   caption="The first argument changes every time, because the robot has moved. The planner never has to know that; it is told."
 />
@@ -191,10 +191,10 @@ Before you run it, trace each answer by hand on the grid diagram and write what 
 expect as a comment next to the call:
 
 ```python
-print(compute_manhattan_path((0, 0), (2, 3)))   # south, then east
+print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north
 print(compute_manhattan_path((0, 0), (3, 1)))
-print(compute_manhattan_path((3, 3), (1, 0)))   # north, then west
-print(compute_manhattan_path((2, 0), (2, 4)))   # same row: east only
+print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south
+print(compute_manhattan_path((2, 0), (2, 4)))   # same column: north only
 ```
 
 Set the run line to it. Then check all three promises against each result — no start,
@@ -223,39 +223,39 @@ are byte-for-byte the Lesson 4-4 ones.
 ```python
 # ===== MANHATTAN PLANNER =====
 # Plans a route across the grid: given where the robot is and
-# where it should go, returns the list of (row, col) tuples to
-# drive to, rows first and then columns. Pure arithmetic --
+# where it should go, returns the list of (x, y) tuples to
+# drive to, across first and then up or down. Pure arithmetic --
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
 def compute_manhattan_path(position, destination):
     """Compute a Manhattan path from position to destination.
 
-    position:    a (row, col) tuple -- where the robot is now
-    destination: a (row, col) tuple -- where it needs to go
+    position:    an (x, y) tuple -- where the robot is now
+    destination: an (x, y) tuple -- where it needs to go
 
-    Returns a list of (row, col) tuples the robot should move to,
+    Returns a list of (x, y) tuples the robot should move to,
     not including position itself.
     """
     path = []
-    current_row, current_col = position
-    dest_row, dest_col = destination
+    x, y = position
+    dest_x, dest_y = destination
 
-    while current_row < dest_row:
-        current_row = current_row + 1
-        path.append((current_row, current_col))
+    while x < dest_x:
+        x = x + 1
+        path.append((x, y))
 
-    while current_row > dest_row:
-        current_row = current_row - 1
-        path.append((current_row, current_col))
+    while x > dest_x:
+        x = x - 1
+        path.append((x, y))
 
-    while current_col < dest_col:
-        current_col = current_col + 1
-        path.append((current_row, current_col))
+    while y < dest_y:
+        y = y + 1
+        path.append((x, y))
 
-    while current_col > dest_col:
-        current_col = current_col - 1
-        path.append((current_row, current_col))
+    while y > dest_y:
+        y = y - 1
+        path.append((x, y))
 
     return path
 
@@ -270,10 +270,10 @@ def test_edge_cases():
     print(compute_manhattan_path((1, 1), (1, 1)))
 
 def test_from_everywhere():
-    print(compute_manhattan_path((0, 0), (2, 3)))   # south, then east
+    print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north
     print(compute_manhattan_path((0, 0), (3, 1)))
-    print(compute_manhattan_path((3, 3), (1, 0)))   # north, then west
-    print(compute_manhattan_path((2, 0), (2, 4)))   # same row: east only
+    print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south
+    print(compute_manhattan_path((2, 0), (2, 4)))   # same column: north only
     print(compute_manhattan_path((2, 2), (2, 2)))   # already there: []
 
 # ===== RUN =====
@@ -287,11 +287,11 @@ test_from_everywhere()
   question={'A classmate runs compute_manhattan_path((3, 3), (1, 0)) and gets [(3, 3), (2, 3), (1, 2), (1, 1), (1, 0)]. What went wrong?'}
   options={[
     {text: 'Nothing — that is a valid Manhattan path'},
-    {text: 'The north loop appends before it subtracts 1 from current_row, so the start is included and (1, 3) is skipped — promise 1 is broken', correct: true},
+    {text: 'The west loop appends before it subtracts 1 from x, so the start is included and (1, 3) is skipped — promise 1 is broken', correct: true},
     {text: 'The destination tuple is backwards'},
-    {text: 'The west loop ran before the north loop'},
+    {text: 'The south loop ran before the west loop'},
   ]}
-  explanation="Swapping the two lines inside a loop (append first, then change the row) shifts every entry of that leg by one: the start appears and the corner is missed. Promise 1 is the quickest way to spot it: the first element should never equal position."
+  explanation="Swapping the two lines inside a loop (append first, then change x) shifts every entry of that leg by one: the start appears and the corner is missed. Promise 1 is the quickest way to spot it: the first element should never equal position."
 />
 
 <TeacherNote title="A small lesson on purpose — spend the time on the three promises">
@@ -360,8 +360,8 @@ were in Module 2.
 
 ```python
 # ===== MANHATTAN PLANNER (class version) =====
-# One Manhattan object plans routes across the grid, rows
-# first and then columns. It holds NO state: compute_path()
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
 # is told the robot's position every call. Pure arithmetic.
 class Manhattan:
     """The Lesson 4-5 planner as a class.
@@ -392,24 +392,24 @@ Your tests stay where they are; each `compute_manhattan_path(` in them becomes
 ```python
     def compute_path(self, position, destination):
         path = []
-        current_row, current_col = position
-        dest_row, dest_col = destination
+        x, y = position
+        dest_x, dest_y = destination
 
-        while current_row < dest_row:
-            current_row = current_row + 1
-            path.append((current_row, current_col))
+        while x < dest_x:
+            x = x + 1
+            path.append((x, y))
 
-        while current_row > dest_row:
-            current_row = current_row - 1
-            path.append((current_row, current_col))
+        while x > dest_x:
+            x = x - 1
+            path.append((x, y))
 
-        while current_col < dest_col:
-            current_col = current_col + 1
-            path.append((current_row, current_col))
+        while y < dest_y:
+            y = y + 1
+            path.append((x, y))
 
-        while current_col > dest_col:
-            current_col = current_col - 1
-            path.append((current_row, current_col))
+        while y > dest_y:
+            y = y - 1
+            path.append((x, y))
 
         return path
 ```
