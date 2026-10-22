@@ -153,14 +153,15 @@ def test_park():
     tracker.drive_past_intersection()
 
 def test_turn():
-    # park on the cross, then turn to the cross street
+    # park on the cross, then turn until a sensor finds a
+    # line: on the circle, that is all the way around
     tracker.track_to_intersection()
     tracker.drive_past_intersection()
     tracker.turn_clockwise()
 
 def test_course():
-    # follow, park, turn, follow: the whole lesson in four
-    # calls
+    # follow, park, turn around, follow the circle back to
+    # the cross: the whole lesson in four calls
     tracker.track_to_intersection()
     tracker.drive_past_intersection()
     tracker.turn_clockwise()
@@ -175,8 +176,8 @@ def test_course():
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (two clockwise turns),
-    # then follow back to the cross
+    # park on the cross, turn around (one clockwise turn
+    # does it here), then follow back to the cross
     pass
 
 def test_final_project():

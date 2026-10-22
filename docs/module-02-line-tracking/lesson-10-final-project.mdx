@@ -44,9 +44,9 @@ Your robot must:
 5. Stop and print a completion message.
 
 <Figure
-  src="/img/lesson-m2-10/final-project-laps.svg"
-  alt="An animation seen from above. A taped circle has one short strip of tape across its line on the right-hand side: the cross, a little shorter than the robot is wide. The robot starts at the bottom of the circle and follows it to the cross. Its sensors reach the cross first; it parks its wheels on the cross and makes two clockwise turns, onto the strip and then onto the circle going the other way. It follows the circle all the way round and meets the cross again from the other side, and reverses there the same way: four reversals, and it stops. A panel beside it names each stage."
-  caption="What the finished project looks like. The cross is one short strip, so the robot meets it once a lap: all the way round, reverse, all the way round the other way."
+  src="/img/lesson-m2-10/final-project-reverse.svg"
+  alt="An animation seen from above. A taped circle has one short strip of tape across its line on the right-hand side: the cross, about half as long as the robot is wide. The robot starts at the bottom of the circle and follows it to the cross. Its sensors reach the cross first; it parks its wheels on the cross and turns clockwise in place; the cross is too short for the sensors to touch, so the turn carries on until they find the circle behind, facing the other way. It follows the circle all the way round and meets the cross again from the other side, and reverses there the same way: four reversals, and it stops. A panel beside it names each stage."
+  caption="What the finished project looks like. The cross is one short strip, too short to stop a turn, so one clockwise turn reverses the robot and it meets the cross once a lap."
 />
 
 If you built the `LineSensor` and `LineTrack` classes, build this project on them:
@@ -80,8 +80,8 @@ are no new driving functions — the project is two test functions, and the seco
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (two clockwise turns),
-    # then follow back to the cross
+    # park on the cross, turn around (one clockwise turn
+    # does it here), then follow back to the cross
     pass
 
 def test_final_project():
@@ -142,8 +142,8 @@ Build in this order, and don't go on until each step works:
 1. **Park on the cross.** Set the run line to `test_park()` from Lesson 2-9 and run it
    once more. Does the robot stop with its *wheels* on the cross?
 2. **One turn.** Set the run line to `test_turn()`. Does the turn find the line again?
-3. **One full reversal.** Write the body of `test_reversal()` and run it: park, two
-   clockwise turns, follow back the other way to the same cross. (If you did the Lesson
+3. **One full reversal.** Write the body of `test_reversal()` and run it: park, one
+   clockwise turn, follow back the other way to the same cross. (If you did the Lesson
    2-9 challenge, `test_turn_around()` is this test already.)
 4. **The loop.** Write `test_final_project()` under your plan comments and set the run
    line to it.
@@ -151,8 +151,9 @@ Build in this order, and don't go on until each step works:
 <TeacherNote title="Solution (teacher copy)">
 
 This lesson's addition to the LINE TRACKING section of `robot.py`, plus the run block;
-the rest of the file is as the Lesson 2-9 teacher copy left it. Two clockwise
-sensor-ended turns make a 180° reversal on the line. Use it to unstick a team, not as
+the rest of the file is as the Lesson 2-9 teacher copy left it. One clockwise
+sensor-ended turn makes the 180° reversal: the cross is too short to stop the spin,
+so it carries on to the circle behind. Use it to unstick a team, not as
 a handout — the assembly and tuning is the graded work, and there is no student
 reveal for it. The file is `lesson-10-final-project.py` in the Module 2 solutions; the
 class version is `lesson-10-final-project-class-addon.py` (same two tests with
@@ -169,8 +170,7 @@ class version is `lesson-10-final-project-class-addon.py` (same two tests with
 def test_reversal():
     track_to_intersection()
     drive_past_intersection()
-    turn_clockwise()
-    turn_clockwise()      # two sensor-ended turns = 180 deg
+    turn_clockwise()      # one sensor-ended turn = 180 deg here
     track_to_intersection()
     print("Done!")
 
@@ -182,9 +182,8 @@ def test_final_project():
         track_to_intersection()
         # park the wheels on the cross
         drive_past_intersection()
-        # turn around: two sensor-ended turns
+        # turn around: one sensor-ended turn finds the circle behind
         print("Cross detected! Reversing...")
-        turn_clockwise()
         turn_clockwise()
     print("Done! 4 reversals complete.")
 

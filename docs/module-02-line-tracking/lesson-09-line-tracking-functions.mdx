@@ -59,7 +59,7 @@ def drive_past_intersection():
 def turn_clockwise():
     # 1. blind turn, about 60 deg: get BOTH sensors off this line
     # 2. keep spinning in place (no forward speed, only turn)
-    # 3. wait until a sensor sees the cross street
+    # 3. wait until a sensor sees a line
     # 4. stop
     pass
 
@@ -73,14 +73,15 @@ def test_park():
     drive_past_intersection()
 
 def test_turn():
-    # park on the cross, then turn to the cross street
+    # park on the cross, then turn until a sensor finds a
+    # line: on the circle, that is all the way around
     track_to_intersection()
     drive_past_intersection()
     turn_clockwise()
 
 def test_course():
-    # follow, park, turn, follow: the whole lesson in four
-    # calls
+    # follow, park, turn around, follow the circle back to
+    # the cross: the whole lesson in four calls
     track_to_intersection()
     drive_past_intersection()
     turn_clockwise()
@@ -141,15 +142,19 @@ drivetrain call that drives a distance — you've used it since Lesson 1-8.
 
 ### Turning until a sensor says stop
 
-How far is a 90° turn? You could time it — and it would be right until the battery
-dropped. Instead, turn until the sensors *find the next line*. That's the four moves in the
+How far should a turn go? On the grid in Module 3 it will be a quarter turn, onto the
+cross street. On your circle the cross is too short for the sensors to touch while the
+robot spins, so the next line they meet is the circle behind: the same turn goes all
+the way around and stops facing back the way it came. You could time either one, and
+it would be right until the battery dropped. Instead, turn until the sensors *find the
+next line*, wherever it is. That's the four moves in the
 skeleton's outline of `turn_clockwise()`, and `turn_counterclockwise()` is its mirror
 image.
 
 <Figure
   src="/img/lesson-m2-09/sensor-ended-turn.svg"
   alt="Four top-down drawings of the XRP parked on an intersection, turning right onto the cross street. 1, blind turn of about 60 degrees: both line sensors are now off the line it was following. 2, keep spinning in place: the motors stay on while the program goes on. 3, wait until a sensor sees the line: the leading sensor reaches the cross street and is_either_on_line() becomes True. 4, stop, facing the new line, ready to follow it. Below, two mistakes: a blind turn that is too small (10 degrees) leaves a sensor on the old line, so the wait ends at once; one that is too big (120 degrees) swings the sensors past the cross street, so the robot keeps spinning."
-  caption="The four moves of turn_clockwise(). The blind turn clears the old line; a sensor, not a clock, ends the turn."
+  caption="The four moves of turn_clockwise(), drawn on a grid intersection where the next line is a cross street. On your circle's short cross the same four moves carry on round to the circle behind. The blind turn clears the old line; a sensor, not a clock, ends the turn."
 />
 
 The blind turn is there because the robot starts the turn with its sensors *on* the
@@ -203,7 +208,10 @@ a neighbor's step 2. The 8.75 cm is sensor-to-axle on an XRP; measure it if the
 robot's mounting differs.
 
 The cross line must be clearly perpendicular to the circle, or `is_at_cross()` fires
-unreliably and the turn finds the new line at an angle.
+unreliably. Keep it short, about 10 cm: long enough that both sensors sit on it at
+once, short enough that they swing clear of it when the robot spins on the cross. Then
+one `turn_clockwise()` turns the robot around on the circle, and the function is
+exactly the one that makes quarter turns on the grid in Module 3.
 
 </TeacherNote>
 
@@ -230,19 +238,19 @@ should sit over the line, and the sensors should be past it.
 
 Write the four moves, with `TURN_EFFORT` at 0.25 to start, and run `test_turn()`.
 Watch the two halves — the blind part should carry both sensors clear of the circle,
-and then the spin should stop the moment a sensor meets the cross street. Two things
-to tune if it doesn't:
+and then the spin should carry on until a sensor meets the circle again, with the
+robot facing back the way it came. Two things to fix if it doesn't:
 
 - **The turn stops at once, barely moving.** The blind part was too small — a sensor
   was still on the old line when the loop started. Increase the 60°.
-- **The robot spins past the cross street and keeps going.** The blind part was too
-  big — it carried the sensors past the new line. Decrease it.
+- **The turn stops a quarter of the way round, facing along the cross.** The cross is
+  too long: the sensors found it during the spin. Trim it to about 10 cm.
 
 ### Step 4 · turn_counterclockwise()
 
 Mirror step 3: same four moves, both signs flipped. Change `test_turn()` to call it
-instead, run it from the cross, and confirm it finds the cross street on the *other*
-side.
+instead, run it from the cross, and confirm it also turns all the way around, this
+time the other way.
 
 ### Step 5 · Four lines to drive a course
 
@@ -251,9 +259,11 @@ actually *drives* is four calls. All the sensor reading and motor control lives 
 sections above it, so the test reads as a list of intentions. Compare it to the wall of
 code this was back in Lesson 2-6.
 
-**Challenge:** add `turn_around()` to the section — it calls `turn_clockwise()` twice
-— and a `test_turn_around()` for it. Does the second call need a blind turn? (Yes —
-after the first, a sensor is on the new line.)
+**Challenge:** add `turn_around()` to the section, and a `test_turn_around()` for it.
+On your circle its body is one call: `turn_clockwise()` already ends facing back the
+way it came. Why write a function for one call? Because the name says what you mean,
+and because on a grid, where the cross street stops a turn a quarter of the way round,
+turning around takes two calls: `turn_around()` is the one place that would change.
 
 <Reveal title="Check your three new functions" hint="write and test all three first">
 
@@ -338,7 +348,8 @@ def turn_counterclockwise():
     drivetrain.stop()
 
 def turn_around():
-    turn_clockwise()
+    # on the circle the cross is too short to stop the spin,
+    # so one turn ends facing back the way it came
     turn_clockwise()
 
 def test_park():

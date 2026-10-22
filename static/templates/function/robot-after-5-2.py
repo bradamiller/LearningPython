@@ -158,7 +158,7 @@ def drive_past_intersection():
 def turn_clockwise():
     # 1. blind turn, about 60 deg: get BOTH sensors off this line
     # 2. keep spinning in place (no forward speed, only turn)
-    # 3. wait until a sensor sees the cross street
+    # 3. wait until a sensor sees a line
     # 4. stop
     pass
 
@@ -172,14 +172,15 @@ def test_park():
     drive_past_intersection()
 
 def test_turn():
-    # park on the cross, then turn to the cross street
+    # park on the cross, then turn until a sensor finds a
+    # line: on the circle, that is all the way around
     track_to_intersection()
     drive_past_intersection()
     turn_clockwise()
 
 def test_course():
-    # follow, park, turn, follow: the whole lesson in four
-    # calls
+    # follow, park, turn around, follow the circle back to
+    # the cross: the whole lesson in four calls
     track_to_intersection()
     drive_past_intersection()
     turn_clockwise()
@@ -194,8 +195,8 @@ def test_course():
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (two clockwise turns),
-    # then follow back to the cross
+    # park on the cross, turn around (one clockwise turn
+    # does it here), then follow back to the cross
     pass
 
 def test_final_project():
