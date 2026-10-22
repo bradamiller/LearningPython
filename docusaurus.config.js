@@ -32,6 +32,13 @@ const config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
+  // Mermaid diagrams: write a ```mermaid fence in any lesson. Class diagrams
+  // and flowcharts use the course palette via themeConfig.mermaid below.
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -69,6 +76,23 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      mermaid: {
+        theme: {light: 'base', dark: 'dark'},
+        options: {
+          fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
+          themeVariables: {
+            primaryColor: '#F1F6FB',
+            primaryBorderColor: '#22527B',
+            primaryTextColor: '#142D50',
+            lineColor: '#495057',
+            secondaryColor: '#FDECEE',
+            tertiaryColor: '#E8F5E9',
+            fontSize: '15px',
+          },
+          flowchart: {curve: 'basis', htmlLabels: true, wrappingWidth: 320},
+          class: {hideEmptyMembersBox: true},
+        },
+      },
       colorMode: {
         defaultMode: 'light',
         respectPrefersColorScheme: true,

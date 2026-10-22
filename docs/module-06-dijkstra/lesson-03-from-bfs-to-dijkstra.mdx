@@ -208,6 +208,23 @@ second time while it is still waiting on `to_visit`, and it must not be listed t
 at the end of the function is untouched. The only new idea is that `previous` can be
 *overwritten* when a cheaper way turns up.
 
+Here is Lesson 5-5's BFS flowchart with the two changes in red. Every other box is the same box, which is why copying your BFS was the right first move.
+
+```mermaid
+flowchart TD
+  S["previous: the start came from nowhere<br/>distance: the start costs 0<br/>to_visit = [start]"] --> L{"anything left<br/>on to_visit?"}
+  L -->|no| X["the destination was never reached:<br/>return []"]
+  L -->|yes| T["CHANGE 1: take the CLOSEST:<br/>closest(), then remove()"]
+  T --> D{"is it the<br/>destination?"}
+  D -->|yes| W["walk back along previous to the start,<br/>reverse it: the path"]
+  D -->|no| N["CHANGE 2, each neighbor: this way costs<br/>distance to current + weight();<br/>if no cost yet OR cheaper, record the cost<br/>and where it came from; add it to<br/>to_visit if it is not already on"]
+  N --> L
+  classDef change fill:#FDECEE,stroke:#D1182C,stroke-width:2px,color:#142D50
+  classDef done fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#142D50
+  class T,N change
+  class W done
+```
+
 <KnowledgeCheck
   question="In Dijkstra, what happens when the planner reaches an intersection it has already recorded, by a cheaper route?"
   options={[

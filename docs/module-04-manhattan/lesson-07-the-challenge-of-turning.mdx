@@ -326,6 +326,19 @@ that turns the robot until the sensors find the next line. The function returns
 `heading = turn_to(heading, needed)` and keep its own record up to date — the same
 "told, not remembered" rule as the planner.
 
+The whole of `turn_to()`, as a picture. Already facing the right way? The first check says yes and the robot never moves.
+
+```mermaid
+flowchart TD
+  A{"heading == desired?"} -->|no| B["turn_clockwise()"]
+  B --> C["heading = (heading + 1) % 4"]
+  C --> A
+  A -->|yes| D["return heading"]
+  classDef change fill:#FDECEE,stroke:#D1182C,stroke-width:2px,color:#142D50
+  classDef done fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#142D50
+  class D done
+```
+
 <KnowledgeCheck
   question="The robot faces West (3) and makes one clockwise turn. What does (heading + 1) % 4 give?"
   options={[

@@ -444,6 +444,16 @@ up; BFS in Module 5 will use its `__init__` to hold the list of blocked intersec
 and that's the moment the class earns its keep. The file is
 `lesson-05-manhattan-class-addon.py` in the Module 4 solutions.
 
+The class diagram has no middle row at all, which is the point of the paragraph above:
+
+```mermaid
+classDiagram
+  class Manhattan {
+    compute_path(position, destination)
+  }
+  note for Manhattan "no data: told the position every call"
+```
+
 **From here on, use your class.** The lessons ahead are written with the function
 name, because that is what every student has; yours is the same call with `planner.`
 in front and a shorter name. When Lesson 4-6 says `compute_manhattan_path(position,

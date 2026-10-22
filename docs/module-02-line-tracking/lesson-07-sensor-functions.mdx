@@ -453,6 +453,25 @@ into a new program and nothing is forgotten. And because each object has its own
 global `THRESHOLD` can't do — and no `global` keyword anywhere, because a method
 assigns to `self.threshold` like any attribute.
 
+This drawing is a **class diagram**: the class name on top, its data (what `__init__` sets up) in the middle, its methods at the bottom. Each class you build from here on gets one.
+
+```mermaid
+classDiagram
+  class LineSensor {
+    reflectance
+    threshold
+    get_left()
+    get_right()
+    get_error()
+    is_at_cross()
+    is_either_on_line()
+  }
+  class Reflectance {
+    <<XRPLib>>
+  }
+  LineSensor --> Reflectance : self.reflectance
+```
+
 **Build it.** This is the class-track skeleton for the section. Paste it in place of
 the LINE SENSOR functions (keep `THRESHOLD` out — it's `self.threshold` now), and
 translate your five bodies into the five methods. Your tests (`test_sensors()`,

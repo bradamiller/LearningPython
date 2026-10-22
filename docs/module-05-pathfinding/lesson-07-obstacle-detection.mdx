@@ -190,6 +190,22 @@ And the new branch, the one piece that isn't Lesson 4-8:
             break      # Lesson 5-8 keeps going instead
 ```
 
+Drawn as a flowchart, the new part is the red diamond and the box it leads to; everything else is Lesson 4-8's `drive_path()` loop.
+
+```mermaid
+flowchart TD
+  P["plan from here; print the path;<br/>wait for the button"] --> F{"next stop<br/>on the path?"}
+  F -->|"none left"| Z["print the blocked list"]
+  F -->|yes| H["face it:<br/>desired_heading(), turn_to()"]
+  H --> K{"NEW: something closer<br/>than OBSTACLE_CM?"}
+  K -->|no| G["track_to_intersection(),<br/>drive_past_intersection(),<br/>position = next_pos"]
+  G --> F
+  K -->|yes| B["add_blocked(next_pos);<br/>new path from HERE;<br/>print it; break"]
+  classDef change fill:#FDECEE,stroke:#D1182C,stroke-width:2px,color:#142D50
+  classDef done fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#142D50
+  class K,B change
+```
+
 Three things to notice.
 
 **`add_blocked(next_pos)` is the same call your Lesson 5-6 harness made.** The planner
