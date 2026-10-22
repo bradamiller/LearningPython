@@ -1358,14 +1358,3 @@ html[data-todos='on'] .navbar__item--todos { display: inline-block; }
   margin-bottom: 0.35rem;
 }
 [data-theme='dark'] .sbs__head { color: var(--ifm-color-primary-lightest); }
-
-/* Mermaid edge labels ("yes", "no", "self.sensor"): one background per theme.
-   themeConfig.mermaid.options applies to both themes, so this lives here. */
-.docusaurus-mermaid-container .edgeLabel,
-.docusaurus-mermaid-container .edgeLabel p,
-.docusaurus-mermaid-container .labelBkg {
-  background-color: var(--ifm-background-color) !important;
-}
-.docusaurus-mermaid-container .edgeLabel rect {
-  fill: var(--ifm-background-color) !important;
-}

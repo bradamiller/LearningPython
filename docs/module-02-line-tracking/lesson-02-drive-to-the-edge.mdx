@@ -46,19 +46,6 @@ while left < THRESHOLD:
     # the moment left >= THRESHOLD, the loop stops
 ```
 
-The loop asks its question *before* every pass, including the first. The body never decides when to stop; the condition does.
-
-```mermaid
-flowchart TD
-  A["reach the while line"] --> B{"is the condition True?<br/>left less than THRESHOLD"}
-  B -->|"True: still on white"| C["run the loop body"]
-  C --> B
-  B -->|"False: the sensor sees the line"| D["carry on with the line<br/>after the loop"]
-  classDef change fill:#FDECEE,stroke:#D1182C,stroke-width:2px,color:#142D50
-  classDef done fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#142D50
-  class D done
-```
-
 A `while` loop needs a **condition** — a test that's either `True` or `False`. We
 build those with comparison operators:
 

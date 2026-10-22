@@ -519,35 +519,6 @@ about your file now: the LINE SENSOR section has a class and no `sensor = LineSe
 line is needed any more — `LineTrack` makes the one it uses. Keep yours for
 `test_sensors()`, or delete it; either is fine.
 
-The filled diamond is how a class diagram draws **has a**: the diamond sits on the side of the owner. `LineTrack` builds its `LineSensor` and keeps it; the drivetrain comes from XRPLib, so it is drawn as a plain arrow.
-
-```mermaid
-classDiagram
-  direction LR
-  class LineTrack {
-    sensor
-    drivetrain
-    base_effort
-    kp
-    turn_effort
-    track_to_intersection()
-    drive_past_intersection()
-    turn_clockwise()
-    turn_counterclockwise()
-  }
-  class LineSensor {
-    reflectance
-    threshold
-    get_error()
-    is_at_cross()
-  }
-  class DifferentialDrive {
-    <<XRPLib>>
-  }
-  LineTrack *-- LineSensor : self.sensor
-  LineTrack --> DifferentialDrive : self.drivetrain
-```
-
 **From here on, use your class.** You now have the whole Module 2 toolkit as objects,
 and the point of building it that way is lost if it sits in a drawer. The lessons ahead
 are written with the function names, because that is what every student has — and

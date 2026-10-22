@@ -113,18 +113,6 @@ the loop checks for the cross — that's the condition's job. Nothing in the con
 steers — that's the body's job. When both sensors reach the cross, `is_at_cross()`
 returns `True`, the loop ends, and the robot stops.
 
-The looking is in the diamond; the following is in the box:
-
-```mermaid
-flowchart TD
-  A{"is_at_cross()?"} -->|"no: keep following"| B["the body from test_follow():<br/>read the error, steer"]
-  B --> A
-  A -->|"yes: both sensors on the cross"| C["the loop ends;<br/>the robot stops"]
-  classDef change fill:#FDECEE,stroke:#D1182C,stroke-width:2px,color:#142D50
-  classDef done fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#142D50
-  class C done
-```
-
 <KnowledgeCheck
   question="What makes track_to_intersection() stop?"
   options={[

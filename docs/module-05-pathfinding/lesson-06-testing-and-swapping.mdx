@@ -560,26 +560,6 @@ the harness never needs to know which one it holds. `Manhattan.add_blocked()` do
 nothing, so `Manhattan()` fails the same two tests for the same reason — which is
 the correct result.
 
-The dotted arrows with hollow heads mean **has the shape of**: the same method names, so the harness can call them on either. `Planner` is not a class in your file. It is a name for that list of methods, and Python never needs to be told it exists.
-
-```mermaid
-classDiagram
-  class Planner {
-    <<shape>>
-    compute_path(position, destination)
-    add_blocked(intersection)
-    clear_blocked()
-  }
-  class Manhattan
-  class BFS {
-    rows
-    cols
-    blocked
-  }
-  Manhattan ..|> Planner
-  BFS ..|> Planner
-```
-
 One wrinkle: property 4 needs to know what's blocked, and with objects the blocked
 list lives *inside* the planner. So the class-track harness keeps its own small
 record. This is the skeleton; paste it at the top of the Lesson 5-6 part of the

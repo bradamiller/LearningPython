@@ -123,22 +123,6 @@ list is used as a **queue**: things go on the end with `append()` and come off t
 front with `pop(0)` — the `0` is the index of the front — so a ring is always
 finished before the next one starts.
 
-The same search as a flowchart. The loop goes round once for every intersection it looks around:
-
-```mermaid
-flowchart TD
-  S["previous: the start came from nowhere<br/>to_visit = [start]"] --> L{"anything left<br/>on to_visit?"}
-  L -->|no| X["the destination was never reached:<br/>return []"]
-  L -->|yes| T["take the OLDEST, from the front:<br/>pop(0)"]
-  T --> D{"is it the<br/>destination?"}
-  D -->|yes| W["walk back along previous to the start,<br/>reverse it: the path"]
-  D -->|no| N["each neighbor with no entry yet:<br/>record where it came from,<br/>add it to the END of to_visit"]
-  N --> L
-  classDef change fill:#FDECEE,stroke:#D1182C,stroke-width:2px,color:#142D50
-  classDef done fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#142D50
-  class W done
-```
-
 <KnowledgeCheck
   question="In the search loop, what does `if neighbor not in previous:` mean in pencil terms?"
   options={[
@@ -616,27 +600,6 @@ BFS. Delete the Manhattan line — one object called `planner` — and in Lesson
 so that Module 4's exact-match suite keeps testing the planner it was written for.
 (Exact match is the right test for Manhattan and the wrong one for BFS; that is where
 next lesson starts.)
-
-Side by side, the two planners now have the same three methods. Only one of them has any data:
-
-```mermaid
-classDiagram
-  direction LR
-  class Manhattan {
-    compute_path(position, destination)
-    add_blocked(intersection)
-    clear_blocked()
-  }
-  class BFS {
-    rows
-    cols
-    blocked
-    compute_path(position, destination)
-    add_blocked(intersection)
-    clear_blocked()
-  }
-  note for Manhattan "add_blocked and clear_blocked do nothing"
-```
 
 Your tests change the usual way: `add_blocked(` becomes `planner.add_blocked(`,
 `clear_blocked()` becomes `planner.clear_blocked()`, `compute_bfs_path(` becomes

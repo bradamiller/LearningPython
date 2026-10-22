@@ -12,7 +12,6 @@ const sidebars = {
   curriculumSidebar: [
     'how-this-course-works',
     'templates',
-    'robot-py-map',
     {
       type: 'category',
       label: 'Module 1 · Learning to Drive',

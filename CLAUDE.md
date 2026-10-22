@@ -249,22 +249,6 @@ Gray box, hidden unless teacher mode is on. Teacher-only guidance.
 </OptionalExtension>
 ```
 
-**Mermaid diagrams (added 2026-10-21).** `@docusaurus/theme-mermaid` is installed
-and `markdown.mermaid` is on, so a ```mermaid fence in any lesson renders a diagram.
-Two kinds are in use: **flowcharts** for the loops every student writes (2-2, 2-5,
-2-8, 4-7, 5-5, 5-7, 6-3) and **class diagrams** inside the optional extensions (2-7,
-2-9, 4-5, 4-8, 5-5, 5-6, 6-5); `docs/robot-py-map.mdx` ("How robot.py fits
-together", sidebar after the templates) shows the whole file both ways and lists
-every diagram. Conventions: red `change` class for what is new (Dijkstra's two
-changes, 5-7's look-ahead), green `done` for where a loop ends; `classDef`s carry
-`color:#142D50` so filled nodes stay readable in dark mode; edge-label backgrounds
-are set per theme in `custom.css`, not in `themeConfig.mermaid` (those options apply
-to both themes). The planners' common interface is drawn as a `<<shape>>` class
-named `Planner` that is explicitly *not* in the file. A flowchart is an answer too
-(§15): the BFS one sits in 5-5, not 5-3, because its "list empty -> no path" box
-would answer 5-3's dead-end activity. Keep mermaid fences ASCII like any fence;
-`build_templates.py` reads only python fences, so diagrams never reach the templates.
-
 **⚠️ Docusaurus `:::` admonitions DO NOT RENDER on this site** — they come out as
 literal `:::tip` text. That bit us twice: the home page shipped a literal
 `:::tip Proof of concept` for weeks, and a Lesson 1 callout written that way did

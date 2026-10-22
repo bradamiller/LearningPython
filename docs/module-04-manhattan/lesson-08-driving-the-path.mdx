@@ -634,37 +634,6 @@ navigator owns them: they live at its address, `drive_path()` updates them there
 caller just reads `navigator.position` whenever it wants to know. There is nothing to
 pass back and forth, so there is nothing to forget.
 
-Three objects, each holding the next. Creating a `Navigator` builds a `LineTrack`, which builds a `LineSensor`: one line of your program makes all three.
-
-```mermaid
-classDiagram
-  direction LR
-  class Navigator {
-    position
-    heading
-    line_track
-    desired_heading(next_pos)
-    turn_to(desired)
-    drive_path(path)
-  }
-  class LineTrack {
-    sensor
-    drivetrain
-    track_to_intersection()
-    drive_past_intersection()
-    turn_clockwise()
-    turn_counterclockwise()
-  }
-  class LineSensor {
-    reflectance
-    threshold
-    get_error()
-    is_at_cross()
-  }
-  Navigator *-- LineTrack : self.line_track
-  LineTrack *-- LineSensor : self.sensor
-```
-
 The full file is `lesson-08-navigator-class-addon.py` in the Module 4 solutions, with the
 Module 2 `LineSensor` and `LineTrack` classes at the top.
 

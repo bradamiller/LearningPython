@@ -135,16 +135,6 @@ Bigger error → bigger correction → sharper steer. When the robot is right on
 (error 0), the correction is 0 and it drives straight. Notice there's **no
 `if/else`** — the math handles left vs. right on its own, through the sign.
 
-Every pass of the follow loop does the same four things, round and round:
-
-```mermaid
-flowchart TD
-  R["read the sensor"] --> E["error =<br/>setpoint - reading"]
-  E --> C["correction =<br/>error x Kp"]
-  C --> S["arcade(BASE_EFFORT,<br/>correction)"]
-  S -->|"and again, many<br/>times a second"| R
-```
-
 <KnowledgeCheck
   question="If Kp = 0.6 and error = 0.3, what is the correction?"
   options={[

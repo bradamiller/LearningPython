@@ -94,36 +94,6 @@ is a copy of it with one more list and the two changes. Same shape as the other 
 that excludes the start. The slow list is the planner's own data, as the blocked list
 already was, so nothing outside the object reaches in to change it.
 
-As a class diagram, the shape gains two methods and a third class joins it. `Dijkstra` is the only one with a slow list, and the only one that needs `weight()`.
-
-```mermaid
-classDiagram
-  class Planner {
-    <<shape>>
-    compute_path(position, destination)
-    add_blocked(intersection)
-    clear_blocked()
-    add_slow_edge(a, b, cost)
-    clear_slow_edges()
-  }
-  class Manhattan
-  class BFS {
-    rows
-    cols
-    blocked
-  }
-  class Dijkstra {
-    rows
-    cols
-    blocked
-    slow_edges
-    weight(a, b)
-  }
-  Manhattan ..|> Planner
-  BFS ..|> Planner
-  Dijkstra ..|> Planner
-```
-
 The name under the class is the Lesson 5-5 rule again: one object called `planner`,
 and it is your newest planner. Delete `planner = BFS()`, and everything in Module 5
 that said `planner.` now plans by cost — on a grid with no slow edges, it gives the
