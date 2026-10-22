@@ -1643,6 +1643,15 @@ referenced from *markdown links* rather than a component `src` are different —
 copies those to `/assets/files/<name>-<hash>.<ext>` and they bust their own cache. That is
 why the printable cutout sheet never had this problem.)
 
+**L2-9's turn animation plays LEFT robot first, then RIGHT — do not change it (Brad,
+2026-10-21, asked twice).** The file is `static/img/lesson-m2-09/park-turn-left-then-right.svg`
+(used in L2-9 and L4-8): one 12 s SMIL cycle, the left robot (turning in place on the
+cross, the wrong way) moving first, then the right one (drive past, then turn). It was
+renamed from `park-on-cross-turns.svg` because Brad kept seeing the old
+both-at-once version: the file had been fixed in place, and the browser kept serving
+its cached copy of the unhashed URL (see the cache warning above). If you ever redraw
+it, keep the order and rename it again.
+
 **Hand-drawn SVG diagrams.** Where a photo doesn't exist and a stock image would
 only be decorative, draw it: `static/img/lesson-08/library-shelf.svg` (XRPLib as a
 shelf of books, with DifferentialDrive taken down) is the worked example. Inline
