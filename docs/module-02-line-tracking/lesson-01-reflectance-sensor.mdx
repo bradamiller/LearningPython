@@ -210,6 +210,36 @@ thing here is that these use `reflectance` without being handed it — it was cr
 the top of the file, outside any function, so every function below can see it, the
 same way `polygon()` used `drivetrain` in Module 1.
 
+**Where the returned value goes.** Think of a function call as a question and `return`
+as its answer. When `test_sensors()` reaches its `print` line, Python stops at
+`get_left()`, runs your function, and the value after its `return` takes the place of
+the call. By the time `print` runs, it is as if you had typed the number itself,
+say `0.23`, where `get_left()` was. Every program from here on
+works that way: you ask `get_left()`, and you get a number back to print, compare or
+do arithmetic with.
+
+**Two things with the same name.** Your `get_left()` reads the sensor with
+`reflectance.get_left()`, and that second one is *not* your function calling itself.
+The `reflectance.` in front makes it the sensor's own method, the one you met above.
+Yours is a plain function in your file that asks the sensor and passes its answer on.
+
+**If it prints `None`, the `return` is missing.** A body that reads the sensor but
+doesn't `return` the reading takes the reading and throws it away. A function that
+ends without a `return` hands back `None`, which is Python's word for "nothing", so
+`test_sensors()` prints `Left: None  Right: None` however you move the robot. The
+sensor is fine; the number just never left the function.
+
+<KnowledgeCheck
+  question="test_sensors() prints Left: None  Right: None every time, even while you slide the robot across the tape. What is the most likely cause?"
+  options={[
+    {text: 'The reflectance sensor is unplugged'},
+    {text: 'get_left() and get_right() read the sensor but never return the reading', correct: true, feedback: 'None is what a function hands back when it ends without a return.'},
+    {text: 'The robot is not over the tape'},
+    {text: 'print() cannot show sensor readings'},
+  ]}
+  explanation="A function that ends without a return statement gives back None. The sensor was read inside the function, but the value never came out of it. Put return in front of the read."
+/>
+
 Why wrap one line in a function? Because from now on **every** program you write
 asks for a sensor reading by *this* name, and only this one place knows how the
 hardware is read. In six lessons these two will be the bottom of a toolkit of
