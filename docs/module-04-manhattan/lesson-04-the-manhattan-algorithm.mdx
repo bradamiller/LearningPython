@@ -239,6 +239,16 @@ East is skipped (3 isn't < 1). **West runs** (3 > 1), moving x only: (2,3),
   explanation="At most one x loop (east OR west) and one y loop (north OR south) run for any trip. Up-and-right means north + east; the other two are skipped."
 />
 
+<Reveal title="Watch the four loops run" hint="after your tests match">
+
+<Figure
+  src="/img/lesson-m4-04/four-loops-run.svg"
+  alt="An animation of compute_path() on a 4 by 4 grid, with the four loops listed beside it. Trip one, (0, 0) to (2, 3): east runs twice, appending (1, 0) and (2, 0); west is skipped; north runs three times, appending (2, 1), (2, 2) and (2, 3); south is skipped; five steps. Trip two, (3, 3) to (1, 0): east is skipped; west runs twice, (2, 3) and (1, 3); north is skipped; south runs three times, (1, 2), (1, 1), (1, 0); five steps. Trip three, (1, 1) to (1, 1): all four loops are skipped and the path is empty. A red dot steps along each move and each appended spot is numbered by its index."
+  caption="Three trips through the same four loops. Each loop checks its condition once before it runs; a False on that first check means it never runs at all."
+/>
+
+</Reveal>
+
 <TeacherNote title="Redirect anyone reaching for if/else">
 
 The four-loop design is the lesson's big idea: *a while loop whose condition starts

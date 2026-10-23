@@ -144,6 +144,12 @@ Trace it and you'll see the list grow by one each pass. Change the loop to vary
 *y* instead, and you build a vertical path. Combine a "go right" loop and a "go
 up" loop and you've basically written the Manhattan algorithm.
 
+<Figure
+  src="/img/lesson-m4-03/build-path.svg"
+  alt="An animation of a 4 by 4 grid with Python beside it. First, path = [] and a for loop over range(1, 4): on each pass x is 1, 2, then 3, a red dot steps one intersection to the right, the tuple (x, 0) is appended, and a new box joins the list, numbered 0, 1, 2. The start (0, 0) is ringed and never added. len(path) is 3. Then two loops one after the other: a go-right loop appends (1, 0) and (2, 0), and a go-up loop appends (2, 1), (2, 2) and (2, 3): the path from (0, 0) to (2, 3), five steps."
+  caption="The pattern traced: one append per pass, so the list grows by one each time. Drawn on a 4 by 4 grid, so the first loop stops at x = 3. Then a go-right loop and a go-up loop together."
+/>
+
 <TeacherNote title="The build-in-a-loop pattern is make-or-break">
 
 Spend real time on the build-in-a-loop activity and a trace table — Lesson 4-4's algorithm relies

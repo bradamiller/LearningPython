@@ -55,6 +55,12 @@ print(position[0])   # 2  -> x, across
 print(position[1])   # 3  -> y, away from you
 ```
 
+<Figure
+  src="/img/lesson-m4-02/tuple-on-grid.svg"
+  alt="An animation of a 4 by 4 grid, x numbered 0 to 3 along the bottom and y 0 to 3 up the left, with Python beside it. position = (2, 3) makes a tuple of two boxes, 2 at index 0 and 3 at index 1, and labels that intersection. position[0] is 2, drawn as 2 across; position[1] is 3, drawn as 3 away. position[0] = 5 is crossed out with a TypeError: a tuple cannot be changed. Moving one step east makes a new tuple, (3, 3), beside the old (2, 3). (1, 2) == (1, 2) is True, the same spot; (1, 2) == (2, 1) is False, a different spot. Finally the distance from (0, 0) to (2, 3): 2 across plus 3 away, 5 steps, each step numbered on the grid."
+  caption="The whole lesson on one grid: make a tuple, index it, fail to change it, make a new one, compare two, and count the steps between them."
+/>
+
 <KnowledgeCheck
   question="Given position = (3, 5), what does position[0] return?"
   options={[
