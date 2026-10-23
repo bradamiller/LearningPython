@@ -151,6 +151,12 @@ each pass.
 The skeleton is pasted in. For every step the robot starts on a line segment, facing
 the next intersection, with at least three intersections ahead of it.
 
+<Figure
+  src="/img/lesson-m3-02/drive-run.svg"
+  alt="An animation, seen from above, of both tests on a 4 by 4 taped grid. In step 1 the robot starts on a segment facing the next intersection. It tracks to that intersection and drives past it so its wheels sit on it, then does the same again and stops on the second intersection. In step 2 it starts from the same spot and drive_intersections(3) repeats the pair three times, arriving at three intersections in a row and stopping on the third. Beside it, the steps of each test, with the one running highlighted."
+  caption="What both steps should look like. Four calls reach the second intersection; one call to drive_intersections(3) reaches the third."
+/>
+
 ### Step 1 · test_two_by_hand()
 
 Before the loop, prove the thought experiment. Write the body: the arrival pair, then

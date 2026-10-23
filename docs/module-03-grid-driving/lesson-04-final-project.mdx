@@ -145,6 +145,16 @@ Don't run all four sides first. Build up, one test at a time:
    that give you? Predict, then run.
 3. **Full square** — change it to `range(4)`; does it close back to the start?
 
+<Reveal title="What each test should look like" hint="predict, then run yours first">
+
+<Figure
+  src="/img/lesson-m3-04/square-buildup.svg"
+  alt="An animation, seen from above, of the build-up on a 3 by 3 taped grid, the robot starting parked on the bottom-left corner facing away from you. First test_one_side(): it arrives at two intersections up the left side and turns right on the top-left corner. Then test_square() with range(2): two sides, an L, ending on the top-right corner facing down the right side. Then range(4): all four sides, ending back on the start corner facing the way it began. Beside it, the loop for each run, with the line running highlighted."
+  caption="One side, then range(2), then range(4). Each pass of the loop draws one side and turns one corner."
+/>
+
+</Reveal>
+
 <KnowledgeCheck
   question="A student wrote `for leg in range(3):` and added a second drive_past_intersection() right before turn_clockwise(). What are the two bugs?"
   options={[
@@ -183,6 +193,12 @@ Once the square works, try a variation:
     Swap in `turn_counterclockwise()` to drive the square the other way around.
   </InfoCard>
 </CardGrid>
+
+<Figure
+  src="/img/lesson-m3-04/extensions.svg"
+  alt="An animation, seen from above, of the three extensions on a 4 by 4 taped grid. First a bigger square with SIDE = 3 from the bottom-left corner. Then a rectangle with sides of 2, 3, 2 and 3 intersections. Then a square driven with left turns, starting from the bottom-right corner and going round counterclockwise. Each ends back on its start corner facing the way it began. Beside it, the loop for each run, with the line running highlighted."
+  caption="The three extensions, one after another. Each changes one thing and still closes on its start corner."
+/>
 
 ## Activity · Reflect
 
