@@ -48,6 +48,12 @@ like every program in this course it is a test function at the bottom of `robot.
   caption="DESTINATIONS on the floor: 2, 3, 2 and 3 steps. Each small arrow is the heading a leg ends with, and the next leg starts from it."
 />
 
+<Figure
+  src="/img/lesson-m4-09/delivery-drive.svg"
+  alt="An animation, seen from above, of the delivery run on a 4 by 4 grid. The robot starts at home, (0, 0), facing North. The four destinations are numbered 1 to 4: (2, 0), (2, 3), (0, 3) and back to (0, 0). For each leg the planned Manhattan path appears as a dotted line from where the robot is, then the robot drives it: before each step it turns clockwise, one sensor-ended right turn at a time, until it faces the next intersection, then tracks to it and drives past. Leg 1 is one right turn and two steps east. Leg 2 needs three right turns to face North, then three steps up. Leg 3, three right turns to face West, two steps left. Leg 4, three right turns to face South, three steps down to home. Beside it, the main loop in plain words with the running line highlighted, and a box naming the leg, the step and the heading."
+  caption="The whole run, driven. Each leg is planned from where the last one ended, and because turn_to() only turns clockwise, most legs start with three right turns."
+/>
+
 ## This lesson's skeleton
 
 Paste this above `RUN`, at the end of the NAVIGATOR section. No new function is
