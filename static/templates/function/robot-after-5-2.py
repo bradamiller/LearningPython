@@ -71,9 +71,9 @@ def test_bounce():
 def test_random_bounce():
     # a copy of test_bounce(), with the if branch becoming:
     #     stop
-    #     pick a random whole number of degrees between 90 and
-    # 270     print it, so you can see each choice     turn by
-    # that many degrees
+    #     pick a random whole number of degrees, 90 to 270
+    #     print it, so you can see each choice
+    #     turn by that many degrees
     pass
 
 

@@ -190,6 +190,12 @@ both sensors sit on it at once, and short enough that they swing clear of it whe
 robot spins in place there (Lesson 2-9). That's the cross. The robot meets it once per lap,
 and it stays on the floor for the rest of the module.
 
+<Figure
+  src="/img/lesson-m2-07/toolkit-by-hand.svg"
+  alt="An animation, close up and seen from above. A stretch of the circle line runs up the picture with the short cross strip near the top. With the motors off, the robot is slid by hand to four positions while a panel shows what test_sensors() prints. On the line, each sensor sits on an edge of the tape and reads about 0.5: on line True, cross False. Off to one side, only the left sensor is on the tape: left 0.80, right 0.20, error +0.60, on line True, cross False. Completely off the line, both read 0.20 and both answers are False. Slid along the line to the cross, cross stays False until both sensors are on the strip, where both read 0.80 and both answers are True."
+  caption="Steps 1 and 2, sliding the robot by hand. Only the cross puts both sensors on tape at once."
+/>
+
 ### Step 1 · is_at_cross()
 
 Write the body. Add `" Cross:", is_at_cross()` to the print in `test_sensors()`, set

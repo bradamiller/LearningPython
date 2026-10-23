@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 410" width="680" height="410" role="img" aria-labelledby="fT fD">
+  <title id="fT">Drive until the line, from above</title>
+  <desc id="fD">An animation, seen from above, of the Lesson 2-2 activity. The robot starts in the middle of a taped circle, pointing at the edge. Beside it, the test outline: read the left sensor; while it says white, drive forward and read it again; stop the motors; print the reading. A highlight steps through the outline as the program runs, and a box shows each reading: about 0.2 on white, so left is less than THRESHOLD and the loop goes round again while the robot creeps forward. When the sensor reaches the tape the reading jumps to 0.84, the comparison is False, the loop ends, the robot stops with its sensor on the line, and it prints the reading. The robot is put back in the middle pointing at a different part of the edge, and the same program stops it at the line there too.</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <style>.still{display:none} @media (prefers-reduced-motion: reduce){.anim{display:none}.still{display:inline}}</style>
+  <rect width="680" height="410" fill="#FFFFFF"/>
+  <text class="h" x="20" y="26">Drive until the line, from above</text>
+  <rect x="20" y="40" width="390" height="340" rx="10" fill="#F3F4F6" stroke="#DEE2E6"/>
+  <circle cx="215" cy="210" r="138" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="10"/>
+  <text class="sm" x="215" y="272" text-anchor="middle" style="font-weight:700">white inside the taped circle</text>
+  <text class="h" x="436" y="60">What your test does</text>
+  <g class="anim"><rect x="430" y="71" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0" keyTimes="0.0000;0.0000;0.0373;0.5265;0.5639" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/></rect><rect x="430" y="92" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0;1;0;1;0;1;0;1;0;1;0;1;0;1;0;1;0" keyTimes="0.0000;0.0373;0.0538;0.0866;0.1031;0.1359;0.1524;0.1852;0.2016;0.2345;0.2756;0.5639;0.5803;0.6131;0.6296;0.6624;0.6789;0.7117;0.7282;0.7610;0.8021" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/></rect><rect x="430" y="113" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0;1;0;1;0;1;0;1;0;1;0;1;0" keyTimes="0.0000;0.0538;0.0702;0.1031;0.1195;0.1524;0.1688;0.2016;0.2181;0.5803;0.5967;0.6296;0.6460;0.6789;0.6953;0.7282;0.7446" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/></rect><rect x="430" y="134" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0;1;0;1;0;1;0;1;0;1;0;1;0" keyTimes="0.0000;0.0702;0.0866;0.1195;0.1359;0.1688;0.1852;0.2181;0.2345;0.5967;0.6131;0.6460;0.6624;0.6953;0.7117;0.7446;0.7610" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/></rect><rect x="430" y="155" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0" keyTimes="0.0000;0.2756;0.3092;0.8021;0.8357" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/></rect><rect x="430" y="176" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0" keyTimes="0.0000;0.3092;0.4735;0.8357;0.9999" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/></rect></g>
+  <text class="ms" x="440" y="86">read the left sensor</text>
+  <text class="ms" x="440" y="107">while it says "white":</text>
+  <text class="ms" x="458" y="128">drive forward</text>
+  <text class="ms" x="458" y="149">read it again</text>
+  <text class="ms" x="440" y="170">stop the motors</text>
+  <text class="ms" x="440" y="191">print the reading</text>
+  <rect x="430" y="226" width="236" height="50" rx="8" fill="#F8F9FA" stroke="#ADB5BD"/>
+  <text class="sm" x="430" y="366">The loop checks before every pass. The</text>
+  <text class="sm" x="430" y="381">first False reading ends it, wherever</text>
+  <text class="sm" x="430" y="396">the edge happens to be.</text>
+  <g class="anim"><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2181;0.4735" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><circle cx="215.0" cy="75.0" r="15" fill="none" stroke="#D1182C" stroke-width="3.2"/></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.7446;0.9999" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><circle cx="321.4" cy="293.1" r="15" fill="none" stroke="#D1182C" stroke-width="3.2"/></g><g><animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0.0000;0.4735;0.4996;0.5004;0.5265;1.0000" dur="13.39s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="215.0 210.0;215.0 210.0;215.0 210.0;215.0 204.5;215.0 199.0;215.0 193.5;215.0 188.0;215.0 182.6;215.0 177.1;215.0 171.6;215.0 166.1;215.0 160.6;215.0 155.1;215.0 149.6;215.0 144.1;215.0 138.6;215.0 133.1;215.0 127.7;215.0 122.2;215.0 116.7;215.0 111.2;215.0 105.7;215.0 100.2;215.0 100.2;215.0 100.2;215.0 210.0;215.0 210.0;215.0 210.0;215.0 210.0;219.3 213.4;223.7 216.8;228.0 220.1;232.3 223.5;236.6 226.9;241.0 230.3;245.3 233.7;249.6 237.0;253.9 240.4;258.3 243.8;262.6 247.2;266.9 250.6;271.2 253.9;275.6 257.3;279.9 260.7;284.2 264.1;288.5 267.5;292.9 270.8;297.2 274.2;301.5 277.6;301.5 277.6" keyTimes="0.0000;0.0373;0.0538;0.0620;0.0702;0.0784;0.0866;0.0948;0.1031;0.1113;0.1195;0.1277;0.1359;0.1441;0.1524;0.1606;0.1688;0.1770;0.1852;0.1934;0.2016;0.2099;0.2181;0.4735;0.4996;0.5004;0.5265;0.5639;0.5803;0.5885;0.5967;0.6049;0.6131;0.6214;0.6296;0.6378;0.6460;0.6542;0.6624;0.6706;0.6789;0.6871;0.6953;0.7035;0.7117;0.7199;0.7282;0.7364;0.7446;1.0000" dur="13.39s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="rotate" values="0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0;128.0" keyTimes="0.0000;0.0373;0.0538;0.0620;0.0702;0.0784;0.0866;0.0948;0.1031;0.1113;0.1195;0.1277;0.1359;0.1441;0.1524;0.1606;0.1688;0.1770;0.1852;0.1934;0.2016;0.2099;0.2181;0.4735;0.4996;0.5004;0.5265;0.5639;0.5803;0.5885;0.5967;0.6049;0.6131;0.6214;0.6296;0.6378;0.6460;0.6542;0.6624;0.6706;0.6789;0.6871;0.6953;0.7035;0.7117;0.7199;0.7282;0.7364;0.7446;1.0000" dur="13.39s" repeatCount="indefinite"/><use href="#pcXRP" transform="scale(0.42)"/></g></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0001;0.0702" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.19</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0702;0.1195" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.19</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1195;0.1688" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.20</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1688;0.2181" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.19</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2181;0.4735" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.84</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#D1182C;font-weight:700">False</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5265;0.5967" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.18</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5967;0.6460" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.20</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.6460;0.6953" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.23</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.6953;0.7446" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.22</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#2E7D32;font-weight:700">True</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.7446;0.9999" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><text class="m" x="442" y="246">left = 0.84</text><text class="ms" x="442" y="266">left &lt; THRESHOLD (0.5): <tspan style="fill:#D1182C;font-weight:700">False</tspan></text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0001;0.2181" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><rect x="430" y="292" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2"/><text class="nb" x="444" y="315" style="fill:#22527B">Run 1: on white</text><text class="sm" x="444" y="334">the loop keeps driving</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2181;0.4735" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><rect x="430" y="292" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/><text class="nb" x="444" y="315" style="fill:#2E7D32">Line detected!</text><text class="sm" x="444" y="334">Sensor value: 0.84</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.4735;0.5265" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><rect x="430" y="292" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#6C757D" stroke-width="2"/><text class="nb" x="444" y="315" style="fill:#6C757D">Back to the middle</text><text class="sm" x="444" y="334">pointing at a new edge</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5265;0.7446" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><rect x="430" y="292" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2"/><text class="nb" x="444" y="315" style="fill:#22527B">Run 2: on white</text><text class="sm" x="444" y="334">the loop keeps driving</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.7446;0.9999" calcMode="discrete" dur="13.39s" repeatCount="indefinite"/><rect x="430" y="292" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/><text class="nb" x="444" y="315" style="fill:#2E7D32">Line detected!</text><text class="sm" x="444" y="334">Sensor value: 0.84</text></g></g>
+  <g class="still"><use href="#pcXRP" transform="translate(215 210) scale(0.42)"/><line x1="215" y1="170" x2="215" y2="88" stroke="#22527B" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#aB)"/><rect x="430" y="292" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2"/><text class="nb" x="444" y="315">Drive while on white</text><text class="sm" x="444" y="334">stop at the first line reading</text></g>
+</svg>

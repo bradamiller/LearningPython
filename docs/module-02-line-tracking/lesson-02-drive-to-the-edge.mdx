@@ -122,6 +122,12 @@ write a `while` loop, and now how to drive inside one.
 
 ## Activity · Drive until the line
 
+<Figure
+  src="/img/lesson-m2-02/drive-to-line.svg"
+  alt="An animation, seen from above. The robot starts in the middle of a taped circle pointing at the edge. Beside it, the outline of test_drive_to_line() highlights the line that is running, and a box shows each reading: about 0.2 on white, so left is less than THRESHOLD and the loop goes round again while the robot creeps forward. When the sensor reaches the tape the reading jumps to 0.84, the comparison is False, the loop ends, the robot stops on the line and prints the reading. Put back in the middle pointing at a different part of the edge, it stops at the line there too."
+  caption="What step 1 should look like. The loop checks the reading before every pass, and the first reading on the tape ends it."
+/>
+
 ### Step 1 · Write it and run it
 
 Turn the comments into code and set the run line to `test_drive_to_line()`. Start the

@@ -89,9 +89,9 @@ import random          # at the top of robot.py, with the other imports
 def test_random_bounce():
     # a copy of test_bounce(), with the if branch becoming:
     #     stop
-    #     pick a random whole number of degrees between 90 and
-    # 270     print it, so you can see each choice     turn by
-    # that many degrees
+    #     pick a random whole number of degrees, 90 to 270
+    #     print it, so you can see each choice
+    #     turn by that many degrees
     pass
 ```
 
@@ -128,6 +128,12 @@ mid-range band explores best. Good moment to note computer randomness is really
 </TeacherNote>
 
 ## Activity · Make it random, then experiment
+
+<Figure
+  src="/img/lesson-m2-04/random-bounce-run.svg"
+  alt="An animation, seen from above. The robot drives forward from the middle of a taped circle until its sensor reads the tape. Each time it stops, picks a random angle between 90 and 270 degrees, prints it and turns by that much before driving on. A blue line traces its path, and the lines fan out across the whole circle instead of retracing one line. Beside it, the outline of test_random_bounce() highlights the line that is running and shows the angle each bounce picked."
+  caption="What step 1 should look like with randint(90, 270). Your angles will be different every run, which is the point."
+/>
 
 ### Step 1 · The random turn
 

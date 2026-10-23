@@ -224,6 +224,12 @@ Then decide: which of the three is too high, which too low, and what does each o
 
 <Reveal title="What too high and too low look like" hint="try all three values first">
 
+<Figure
+  src="/img/lesson-m2-05/kp-tuning.svg"
+  alt="An animation, seen from above, of the same line-following loop run three times on a taped circle, the left sensor holding the outside edge of the tape. A blue line traces the path. With KP = 0.2 the correction is too small for the curve and the robot drifts outward off the line. With KP = 0.5 it holds the edge with small corrections. With KP = 1.0 it over-corrects and weaves back and forth across the edge. A box beside it shows the left reading, the error and the correction as it drives."
+  caption="One loop, three values of KP. Too low drifts off, too high weaves."
+/>
+
 - **Too high** → the robot over-corrects and **oscillates**, weaving rapidly.
 - **Too low** → it reacts sluggishly and **drifts off** the line.
 - **Just right** → smooth tracking with small corrections.

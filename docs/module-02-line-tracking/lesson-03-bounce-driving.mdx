@@ -155,6 +155,12 @@ def test_bounce():
 
 ## Activity · Build the bounce
 
+<Figure
+  src="/img/lesson-m2-03/bounce-run.svg"
+  alt="An animation, seen from above. The robot drives forward from the middle of a taped circle. While its sensor reads white the else branch runs and it keeps driving; when the sensor reaches the tape the if branch runs: it stops and turns 180 degrees, then drives back across the circle and bounces off the far side. A blue line traces its path, and every bounce lands on the same line, so it paces back and forth across one diameter. Beside it, the outline of test_bounce() highlights the line that is running."
+  caption="What step 1 should look like. Every bounce is exactly 180 degrees, so the robot paces one line. Lesson 2-4 fixes that."
+/>
+
 ### Step 1 · One sensor
 
 Turn the comments in `test_bounce()` into code, with `get_left() > THRESHOLD` as the
