@@ -480,6 +480,8 @@ html[data-teacher='on'] .teacherToggle--teacher .teacherToggle__thumb { transfor
   background: var(--ifm-background-surface-color);
 }
 .infoCard h4 { margin: 0.2rem 0 0.5rem; }
+.infoCard__link { color: inherit; text-decoration: underline; text-decoration-color: var(--ifm-color-primary); text-underline-offset: 3px; }
+.infoCard__link:hover { color: var(--ifm-color-primary); }
 .infoCard__tag {
   font-size: 0.72rem;
   font-weight: 700;

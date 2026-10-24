@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Link from '@docusaurus/Link';
 
 /**
  * Lesson header band — the colored title block at the top of a lesson,
@@ -46,11 +47,11 @@ export function CardGrid({children}) {
   return <div className="cardGrid">{children}</div>;
 }
 
-export function InfoCard({tag, title, children}) {
+export function InfoCard({tag, title, href, children}) {
   return (
     <div className="infoCard">
       {tag && <div className="infoCard__tag">{tag}</div>}
-      {title && <h4>{title}</h4>}
+      {title && <h4>{href ? <Link className="infoCard__link" to={href}>{title}</Link> : title}</h4>}
       <div>{children}</div>
     </div>
   );
