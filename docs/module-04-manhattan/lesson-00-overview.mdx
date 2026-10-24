@@ -20,39 +20,6 @@ this module, your robot will start at one corner of the grid and **visit several
 destinations in order, all by itself** — no remote control, no manual steering. It
 figures out each route and drives it, intersection by intersection.
 
-The way it plans those routes is called the **Manhattan algorithm**, and the name
-comes from a real place. Most of Manhattan, the island in the middle of New York City,
-is laid out as a rectangular grid. Long **avenues** run north and south up the island,
-shorter numbered **streets** cross them east and west, and every rectangle in between
-is a city block packed solid with buildings.
-
-<Figure
-  src="/img/lesson-m4-00/manhattan-grid.svg"
-  alt="A cartoon map of midtown Manhattan from above, not to scale. Between the Hudson River on the left and the East River on the right, long avenues run north and south (9th Ave to Madison) and shorter cross streets run east and west (53rd to 59th Street), with Central Park along the top. Every block is filled with buildings. A yellow taxi waits at A, the corner of 8th Avenue and 54th Street. A red dashed straight line from A to B, at 6th Avenue and 57th Street, is crossed out: no cutting through buildings. The taxi route in blue goes 2 blocks east along 54th Street, then 3 blocks north up 6th Avenue, numbered 1 to 5."
-  caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
-/>
-
-That grid decides how anyone gets around. A taxi can't drive diagonally from one
-corner to another, because there are buildings in the way. It goes along a street, then
-up an avenue, and the trip is simply *blocks across + blocks up or down*. New Yorkers
-even give directions that way: "two blocks east, then three up."
-
-Your robot is in exactly the same situation: it can only drive along the tape. So the
-plan it follows (go across until x is right, then up or down until y is right) is named
-after the city, and so is the distance it counts. You'll meet both properly in
-Lesson 4-4.
-
-<TeacherNote title="Manhattan, for the curious">
-
-The grid dates from the Commissioners' Plan of 1811, which laid streets and avenues
-over most of the island before much of it was built on. Two details students enjoy:
-the grid isn't aligned with true north (it is turned roughly 29 degrees, so
-"Manhattan north" is a local convention), and the same distance is called **taxicab
-distance** in mathematics. Neither matters for the robot; the map is a hook, not a
-lesson. Lesson 4-4 opens with "Why Manhattan?" and assumes students have seen this.
-
-</TeacherNote>
-
 <Objectives>
 
 By the end of this overview you will be able to:
@@ -65,6 +32,59 @@ By the end of this overview you will be able to:
 </Objectives>
 
 <QuizLink id="module-04-manhattan/lesson-00-overview" />
+
+## How we compute the route
+
+The robot plans every route the same simple way:
+
+> **Go across until x is right. Then go up or down until y is right.**
+
+That's the whole algorithm. It always gives an L-shaped route (or a straight line, if
+the robot is already in the right column or row), and it never takes a step it
+doesn't need.
+
+It's called the **Manhattan algorithm**, after a real place. Most of Manhattan, the
+island in the middle of New York City, is laid out as a rectangular grid. Long
+**avenues** run north and south up the island, shorter numbered **streets** cross them
+east and west, and every rectangle in between is a city block packed solid with
+buildings.
+
+<Figure
+  src="/img/lesson-m4-00/manhattan-grid.svg"
+  alt="A cartoon map of midtown Manhattan from above, not to scale. Between the Hudson River on the left and the East River on the right, long avenues run north and south (9th Ave to Madison) and shorter cross streets run east and west (53rd to 59th Street), with Central Park along the top. Every block is filled with buildings. A yellow taxi waits at A, the corner of 8th Avenue and 54th Street. A red dashed straight line from A to B, at 6th Avenue and 57th Street, is crossed out: no cutting through buildings. The taxi route in blue goes 2 blocks east along 54th Street, then 3 blocks north up 6th Avenue, numbered 1 to 5."
+  caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
+/>
+
+
+A taxi can't drive diagonally from one corner to another, because there are buildings
+in the way. It goes along a street, then up an avenue, and the trip is simply *blocks
+across + blocks up or down*. New Yorkers even give directions that way: "two blocks
+east, then three up." Your robot is in exactly the same situation, because it can only
+drive along the tape. Lesson 4-4 builds the algorithm properly.
+
+<Callout kind="note" title="The big assumption: every street is clear">
+
+The Manhattan algorithm assumes nothing is in the way: every line of tape and every
+intersection on the grid can be driven. That's why it can be so simple. It never has
+to look for a detour, because it assumes there's never a reason to take one.
+
+Real streets aren't always clear. **Module 5** puts obstacles on the grid and teaches
+the robot to plan around them, and even to notice a new one while it's driving.
+**Module 6** (optional) handles streets that are open but slow, where the shortest
+route in steps isn't the fastest.
+
+</Callout>
+
+<TeacherNote title="Manhattan, for the curious">
+
+The grid dates from the Commissioners' Plan of 1811, which laid streets and avenues
+over most of the island before much of it was built on. Two details students enjoy:
+the grid isn't aligned with true north (it is turned roughly 29 degrees, so
+"Manhattan north" is a local convention), and the same distance is called **taxicab
+distance** in mathematics. Neither matters for the robot; the map is a hook, not a
+lesson. Lesson 4-4 opens with "Why Manhattan?" and assumes students have seen this.
+
+</TeacherNote>
 
 ## The whole program — really
 
