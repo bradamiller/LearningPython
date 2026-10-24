@@ -43,6 +43,24 @@ It has no concept of an obstacle. If the intersection it wants to drive through 
 blocked, it drives right into it. To route *around* things, we need a smarter way to
 think about the grid.
 
+This isn't only a robot problem. When your phone or your family's car finds the
+fastest way across town, it's solving the same puzzle. A city's streets form a graph,
+a closed road is blocked, and heavy traffic makes some streets slower than others. The
+algorithms you'll build in this module and the next are the ideas those apps are built
+on:
+
+- **This module, breadth-first search**, finds a route around blocked intersections.
+- **Module 6, Dijkstra's algorithm**, finds the *fastest* route when some streets are
+  slow. It's the classic route-finding algorithm. Real navigation apps use faster
+  descendants of it (A\* is the best known) so they can search millions of streets in
+  a fraction of a second, but the core idea is the one you'll write.
+
+<Figure
+  src="/img/lesson-m5-01/phone-route.svg"
+  alt="A drawing of a smartphone running a generic maps app. The map shows a grid of city streets, a park, a river and a highway. A blue route runs from the blue dot of your location to a red pin at school. One street has a road-closed barrier, labeled as an obstacle, Module 5; another is colored red for heavy traffic, labeled as a slow street, Module 6. The blue route turns along the streets to go around both. A card at the bottom reads 14 min, fastest route, avoids a closed road, with a Start button."
+  caption="A maps app solving this module's problem and the next one's: go around the closed road, and avoid the slow street."
+/>
+
 <KnowledgeCheck
   question="Why can't the Manhattan algorithm route around a blocked intersection?"
   options={[
