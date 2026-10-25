@@ -243,8 +243,9 @@ def check_cost(test_name, position, destination, path, expected_cost):
 ```
 
 The `for` line unpacks each three-part entry into the segment's two ends, `end1` and
-`end2`, and its `cost` as the loop goes, the way `for (start, dest, expect) in ...` did
-in Lesson 5-5's test. (They are not called `x` and `y`: those are the two numbers
+`end2`, and its `cost` as the loop goes: the unpacking from Lesson 4-2, done once per
+pass. The parentheses around the three names are optional; Python reads the line the
+same way without them. (They are not called `x` and `y`: those are the two numbers
 *inside* one intersection, and each end here is a whole intersection.) If yours differs and
 both tests give the numbers above, keep yours.
 

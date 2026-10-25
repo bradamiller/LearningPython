@@ -167,7 +167,7 @@ haven't.
 ### Step 1 · East and north only
 
 Start with just the two "positive" directions (moving right and up) — steps 1 to 4
-of the outline. Step 1 uses **tuple unpacking**, which is new: one line pulls both
+of the outline. Step 1 uses **tuple unpacking** from Lesson 4-2: one line pulls both
 numbers out of a tuple into two variables.
 
 ```python
@@ -254,8 +254,8 @@ East is skipped (3 isn't < 1). **West runs** (3 > 1), moving x only: (2,3),
 The four-loop design is the lesson's big idea: *a while loop whose condition starts
 False simply does nothing.* Students who've seen conditionals will try to wrap this in
 `if x < dest_x ... elif x > dest_x`. Steer them back — the four loops are simpler and
-handle every case, including same-position (all four skipped → `[]`). Take real time on
-tuple unpacking (`x, y = start`) and on the double parentheses in
+handle every case, including same-position (all four skipped → `[]`). Check that
+tuple unpacking from Lesson 4-2 (`x, y = start`) stuck, and take real time on the double parentheses in
 `append((x, y))`: the outer pair is the function call, the inner pair is the tuple.
 
 </TeacherNote>

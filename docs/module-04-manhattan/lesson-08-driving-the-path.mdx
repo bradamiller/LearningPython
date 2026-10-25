@@ -154,6 +154,12 @@ its own record straight:
 position, heading = drive_path(path, position, heading)
 ```
 
+The `return position, heading` at the end of `drive_path()` looks like a function
+returning two things, but it is really one: two values with a comma between them make a
+tuple, so the function hands back a single tuple, say `((1, 1), 0)`. The left-hand side
+above unpacks it, exactly like `x, y = position` in Lesson 4-2: the first name gets the
+position, the second gets the heading.
+
 Forget that left-hand side and the robot drives fine — once. The next path gets planned
 from where the robot *was*.
 

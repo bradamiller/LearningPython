@@ -294,7 +294,10 @@ def clear_blocked():
 
 This `build_graph()` is written a little differently from the Lesson 5-2 version: the
 four directions are a list of `(dx, dy)` changes and one loop does the four checks,
-and `continue` skips to the next intersection when this one is blocked. If you kept
+and `continue` skips to the next intersection when this one is blocked. The `for dx, dy
+in` line unpacks as it loops (Lesson 4-2): each item in the list is a two-number tuple,
+and every pass splits it into `dx` and `dy`. The line under it assigns two at once the
+same way: the right side makes a tuple, and `nx, ny` unpacks it. If you kept
 your four `if` lines and added `and (x - 1, y) not in blocked` to each, that is
 the same function and it is fine. The thing to compare is the output.
 
