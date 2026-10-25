@@ -1771,7 +1771,9 @@ The loop:
    `git -c user.name=bradamiller -c user.email=brad@bradhouse.com commit …`
 5. `git push origin HEAD:main`. Tell Brad what was pushed.
 
-**Brad's Mac then needs a `git pull`** (`/Users/bradmiller/GitHub/LearningPython`).
+**Brad's desktop Mac is always on and is the only local copy he uses (Brad,
+2026-10-25)** — he has stopped editing the repo on his MacBook. So after every push,
+pull on that Mac through the device bridge so it never falls behind. **Brad's Mac then needs a `git pull`** (`/Users/bradmiller/GitHub/LearningPython`).
 If the Mac is linked to the session, do it there through the device bridge
 (`git pull --ff-only origin main`); otherwise remind him. Uncommitted edits on the
 Mac are the one way this goes wrong, so pull before he edits locally.
