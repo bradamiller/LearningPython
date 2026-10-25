@@ -46,6 +46,16 @@ key to any value.
   caption="The word you look up is the key; what's printed beside it is the value. Python's dictionary works the same way."
 />
 
+A printed dictionary is quick to use because it's organized. The words are in
+alphabetical order, so you flip straight to the right page instead of reading every
+word from the start until you hit the one you want. A Python dictionary is organized for
+speed too, though not alphabetically. When you store a value, Python turns the key into
+a number that says where to keep it; when you look the key up later, it does the same
+arithmetic and goes straight there. That trick is called **hashing**, and it's why a
+lookup comes back just as fast from a dictionary of four thousand entries as from one of
+four. It's also why a key has to be something that can't change, like a number or a
+tuple: if the key changed, Python would be looking in the wrong place.
+
 In code:
 
 ```python
