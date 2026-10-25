@@ -98,6 +98,7 @@ LearningPython/                            # repo root — the site itself
 │   │   └── MDXComponents.js # registers all components globally (no imports needed in .mdx)
 │   └── css/custom.css     # ALL styling + brand color tokens (top of file)
 ├── scripts/
+│   ├── figures/                # Python generators for the hand-drawn and animated SVGs (§12)
 │   ├── slice_c_blocks.py       # slices container block art into bar/spine/foot (§6)
 │   ├── extract_checks.js       # lessons → src/data/checks.json (§14)
 │   └── generate_quiz_pages.js  # checks.json → src/pages/checks/*.mdx (§14)
@@ -112,7 +113,7 @@ LearningPython/                            # repo root — the site itself
 │   │   ├── lesson-08/     # library-shelf.svg — hand-drawn diagram (§12)
 │   │   ├── lesson-m2-01/  # reflectance-sensor.svg — hand-drawn diagram (§12)
 │   │   └── lesson-06/     # motor-motion stills + the two effort diagrams (§12)
-│   ├── videos/            # gort.mp4, ballshooter.mp4, motors-*.mp4, l4-square-parameter.mp4 (§12)
+│   ├── videos/            # gort.mp4, ballshooter.mp4, l4-square-parameter.mp4 (§12)
 │   ├── CNAME              # the custom domain, re-asserted on every deploy (§8)
 │   └── .nojekyll          # already there for GitHub Pages (§8)
 ├── .github/workflows/
@@ -1579,8 +1580,8 @@ options, and the trap in each). Brad asked for both on 2026-09-23 but wants them
 after the course is closer to finished. `BACKLOG.md` also indexes the parked
 decisions so none of them are only in a chat log.
 
-- **Push.** Commits are made here but **`git push` cannot run from the sandbox**
-  (no GitHub credentials) — Brad pushes with `git push origin main`. Always tell him how many commits are waiting.
+- **Push.** Claude pushes to `main` itself from the cloud clone (§13); Brad's Mac
+  then needs a `git pull`. Say what was pushed.
 - **Continue the evaluation pass** with M1 L7–L11, then Modules 2–5 — applying §9's
   rules (experiential first, no trailing stop, sensor-based stopping, naming)
   rather than waiting for Brad to catch each one.
@@ -1647,6 +1648,13 @@ the photos — `pdfimages` returns the bare photo), and embedded clips are HEVC
 - Photo-only crops: `pdftoppm -r 150` the question slide, then crop the photo box.
 - Videos: `ffmpeg -i in.mov -an -vf scale=960:-2 -c:v libx264 -crf 27 -movflags
   +faststart out.mp4` (HEVC→H.264; ~0.2–0.8 MB for 4–10 s).
+**The SVG generators live in `scripts/figures/` (committed 2026-10-25).** Nearly every
+diagram and SMIL animation added since 2026-10-19 was drawn by a Python script there,
+not by hand — read `scripts/figures/README.md` for which script makes which file. To
+change a figure, edit its script, run it (output goes to `scripts/figures/out/`, which
+is gitignored), preview frames with `frames.py`, then copy the file into
+`static/img/...` — renaming it if it is already deployed (cache rule below).
+
 **Hand-drawn SVG diagrams.** Two exist so far: `lesson-08/library-shelf.svg`
 (XRPLib as a shelf of books) and `lesson-m2-01/reflectance-sensor.svg` (LED +
 phototransistor over white vs. black, with the ≈0.2 / ≈0.8 readings that match the
@@ -1741,37 +1749,41 @@ Batteries, Drive Motor, Controller, Rangefinder, Reflectance and Castor wheel;
 lesson prose must match those, and the old image's *Line Follower* wording has
 been removed. Note the image spells it "Castor"; the prose uses "caster".
 
-## 13. Getting changes from this sandbox into Brad's repo
+## 13. Getting changes onto GitHub (and Brad's Mac)
 
-The cloud workspace is NOT his machine. The repo lives at
-`/Users/bradmiller/GitHub/LearningPython`; it must be a **connected folder** for
-this session before any of this works (ask with `device_request_folder_access` if
-the `device_*` tools can't see it). The loop that works:
+**Since 2026-10-24 Claude pushes directly.** The Claude GitHub App has push access
+to `bradamiller/LearningPython`, so a cloud session clones the repo, edits, builds,
+commits and pushes to `main` itself; the Pages workflow (§8) then deploys. Brad's
+Mac does not need to be linked, which is what lets him work from a phone or tablet.
+The loop:
 
-1. Edit and `npm run build` in the cloud copy (`/home/claude/xrp-curriculum`).
-2. Eyeball it: serve `build/` (`npx serve -l 3055 build`) and screenshot with the
+1. Clone (or reuse) the repo in the cloud workspace, e.g. `/home/claude/learningpython`
+   (`git remote set-url origin https://github.com/bradamiller/LearningPython.git`;
+   a "repository moved" notice on push is harmless). `npm ci` once.
+2. Edit, then `npm run build` — it must be clean.
+3. Eyeball it: serve `build/` (`npx serve -l <port> build`) and screenshot with the
    bundled Playwright — `require('<site>/node_modules/playwright-core')`,
    `executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'`. Serve
-   and shoot in ONE bash call. (That Chromium can't decode H.264, so local MP4s
-   show `readyState 0` in a screenshot — expected, not a bug.)
-3. `tar -czf /mnt/user-data/outputs/<name>.tgz <changed files>` → `SendUserFile` →
-   `device_commit_files` into `…/GitHub/LearningPython/` → on the device,
-   `tar --overwrite -xzf <name>.tgz && rm -f <name>.tgz` (plain `tar` refuses to
-   overwrite; the FUSE mount needs `--overwrite`). Paths in the tarball are now
-   repo-root-relative — before the split they were relative to `curriculum-site/`.
-4. `git add -A && git commit` on the device.
+   and shoot in ONE bash call, and use a fresh port rather than `pkill -f` on the
+   old server (that pattern matches the shell's own command line and kills it).
+   That Chromium can't decode H.264, so local MP4s show `readyState 0` — expected.
+4. Commit as Brad's identity with the session's attribution lines:
+   `git -c user.name=bradamiller -c user.email=brad@bradhouse.com commit …`
+5. `git push origin HEAD:main`. Tell Brad what was pushed.
 
-**`git push` does not work from here** — no GitHub credentials in the sandbox.
-Brad pushes. Say how many commits are waiting when you finish.
+**Brad's Mac then needs a `git pull`** (`/Users/bradmiller/GitHub/LearningPython`).
+If the Mac is linked to the session, do it there through the device bridge
+(`git pull --ff-only origin main`); otherwise remind him. Uncommitted edits on the
+Mac are the one way this goes wrong, so pull before he edits locally.
 
-**If git complains about `index.lock`:** the mount sometimes leaves stale locks
-and `rm` is blocked until file deletion is granted for the session — call
-`device_request_delete_permission` on `/Users/bradmiller/GitHub/LearningPython`,
-then `rm -f .git/index.lock .git/HEAD.lock` and re-commit. The grant lapses
-between sessions, so expect to ask again. Anything that writes git's own
-temporary state (rebase, cherry-pick) needs that grant too, and git needs an
-identity in the repo — the mount has none, so `git config user.name/user.email`
-locally or every commit fails with "unable to auto-detect email address".
+**If git on the Mac complains about `index.lock`:** the mount sometimes leaves
+stale locks and `rm` is blocked until file deletion is granted for the session —
+call `device_request_delete_permission` on `/Users/bradmiller/GitHub/LearningPython`,
+then `rm -f .git/index.lock .git/HEAD.lock`. The grant lapses between sessions.
+
+*History:* before 2026-10-24 the sandbox had no credentials, so changes went to the
+Mac as a tarball (`device_commit_files`, then `tar --overwrite -xzf`) and Brad
+pushed. Don't go back to that unless a push is refused.
 
 ## 14. Printable knowledge checks
 

@@ -27,3 +27,5 @@ static/videos/*.mov
 /src/data/pacing.json
 /src/data/todos.json
 /src/pages/checks/
+scripts/figures/out/
+scripts/figures/__pycache__/
