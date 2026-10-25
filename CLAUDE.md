@@ -1655,6 +1655,13 @@ change a figure, edit its script, run it (output goes to `scripts/figures/out/`,
 is gitignored), preview frames with `frames.py`, then copy the file into
 `static/img/...` — renaming it if it is already deployed (cache rule below).
 
+**SUGGEST FIGURES PROACTIVELY (Brad, 2026-10-25).** Brad likes the drawn and animated
+style used across the course and wants more of it over time. Whenever you are in a
+lesson and see a place a drawing, animation or other visual would help a student,
+suggest it to him (briefly, with what it would show) rather than waiting to be asked.
+Placeholders (`placeholderLabel`) and lessons with no figure at all are the obvious
+first candidates.
+
 **Hand-drawn SVG diagrams.** Two exist so far: `lesson-08/library-shelf.svg`
 (XRPLib as a shelf of books) and `lesson-m2-01/reflectance-sensor.svg` (LED +
 phototransistor over white vs. black, with the ≈0.2 / ≈0.8 readings that match the
