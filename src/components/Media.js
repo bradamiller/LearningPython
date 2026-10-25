@@ -81,14 +81,21 @@ export function Figure({src, alt = '', caption, placeholderLabel = 'Graphic goes
 
 /**
  * PlayFigure — an animated SVG that waits on its first frame until the reader
- * clicks "Drive it". Used where the first frame is a question (L1-6's motor
+ * presses a button. Used where the first frame is a question (L1-6's motor
  * cases: arrows on the wheels, "which way will it drive?") and the motion is
  * the answer, so one picture does both jobs.
  *
  * The SVG is embedded with <object>, not <img>: an <img> SVG cannot be paused
- * or scripted. On load it is paused at time 0. Pressing the button (or the
- * picture) restarts it from 0; if the SVG root carries data-hold="<seconds>"
- * it pauses there, on the final pose, instead of looping back to the start.
+ * or scripted. On load it is paused at time 0.
+ *
+ * One button (default): pressing it, or the picture, plays from 0. If the SVG
+ * root carries data-hold="<seconds>" it pauses there, on the final pose,
+ * instead of looping back to the start.
+ *
+ * Several buttons: if the SVG root carries
+ *   data-modes='[{"label":"Effort control","start":0.4,"stop":12.1}, ...]'
+ * one button is shown per mode, and each plays its own stretch of the timeline
+ * and pauses at its stop. (L1-6's effort-vs-speed hill.)
  *
  * Usage:
  *   <PlayFigure src="/img/lesson-06/motors-curve-drive.svg" alt="..." caption="..." />
@@ -98,6 +105,8 @@ export function PlayFigure({src, alt = '', caption, playLabel = 'Drive it', agai
   const ref = React.useRef(null);
   const timer = React.useRef(null);
   const [state, setState] = React.useState('ready'); // ready | playing | done
+  const [modes, setModes] = React.useState(null);
+  const [active, setActive] = React.useState(-1);
 
   const svgRoot = () => {
     const o = ref.current;
@@ -105,19 +114,26 @@ export function PlayFigure({src, alt = '', caption, playLabel = 'Drive it', agai
   };
   const park = () => {
     const svg = svgRoot();
-    if (svg && svg.pauseAnimations) { svg.pauseAnimations(); svg.setCurrentTime(0); }
+    if (!svg || !svg.pauseAnimations) return;
+    svg.pauseAnimations(); svg.setCurrentTime(0);
+    const m = svg.getAttribute('data-modes');
+    if (m) { try { setModes(JSON.parse(m)); } catch (e) { /* ignore */ } }
   };
-  const play = () => {
+  const run = (from, to, which) => {
     const svg = svgRoot();
     if (!svg || !svg.pauseAnimations) return;
     clearTimeout(timer.current);
-    svg.setCurrentTime(0);
+    svg.setCurrentTime(from);
     svg.unpauseAnimations();
-    setState('playing');
-    const hold = parseFloat(svg.getAttribute('data-hold'));
-    if (hold > 0) {
-      timer.current = setTimeout(() => { svg.pauseAnimations(); setState('done'); }, hold * 1000);
+    setState('playing'); setActive(which);
+    if (to > from) {
+      timer.current = setTimeout(() => { svg.pauseAnimations(); setState('done'); }, (to - from) * 1000);
     }
+  };
+  const play = () => {
+    const svg = svgRoot();
+    if (!svg) return;
+    run(0, parseFloat(svg.getAttribute('data-hold')) || 0, 0);
   };
   React.useEffect(() => {
     const o = ref.current;
@@ -127,18 +143,32 @@ export function PlayFigure({src, alt = '', caption, playLabel = 'Drive it', agai
     return () => { o.removeEventListener('load', park); clearTimeout(timer.current); };
   }, [url]);
 
+  const single = !modes;
   return (
     <figure className="videoBlock playFigure">
-      <div className="playFigure__frame" onClick={state === 'playing' ? undefined : play}>
+      <div className="playFigure__frame" onClick={single && state !== 'playing' ? play : undefined}
+           style={single ? undefined : {cursor: 'default'}}>
         <object ref={ref} data={url} type="image/svg+xml" aria-label={alt} role="img" tabIndex={-1}>
           {alt}
         </object>
-        {state !== 'playing' && (
+        {single && state !== 'playing' && (
           <button type="button" className="playFigure__button" onClick={(e) => { e.stopPropagation(); play(); }}>
             {state === 'ready' ? `▶ ${playLabel}` : `↺ ${againLabel}`}
           </button>
         )}
       </div>
+      {!single && (
+        <div className="playFigure__modes">
+          {modes.map((m, i) => (
+            <button key={i} type="button"
+                    className={'playFigure__button playFigure__button--inline' + (active === i ? ' is-active' : '')}
+                    disabled={state === 'playing'}
+                    onClick={() => run(m.start, m.stop, i)}>
+              ▶ {m.label}
+            </button>
+          ))}
+        </div>
+      )}
       {caption && <figcaption className="mediaCaption">{caption}</figcaption>}
     </figure>
   );

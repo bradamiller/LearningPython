@@ -1706,7 +1706,9 @@ the reader presses "Drive it", then plays once and holds the final pose
 (`data-hold` on the SVG root). The turning center and the paths stay hidden until
 it moves. `<PlayFigure>` embeds with `<object>` because an `<img>` SVG can't be
 paused.
-`effort-vs-speed.jpg` and `motor-effort-analogy.jpg` are not robot photos and stay.
+`motor-effort-analogy.jpg` stays (not a robot photo). The effort-vs-speed hill picture became
+`effort-vs-speed-hill.svg`, a `<PlayFigure>` with TWO buttons (Effort control, Speed control):
+the SVG root's `data-modes` lists each button's label and its start/stop on the timeline.
 
 **HEIF/HEIC from Brad's Mac won't render in a browser** — convert to JPG first.
 On his machine ImageMagick handles it (`magick in.heif -background white -flatten

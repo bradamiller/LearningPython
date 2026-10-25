@@ -1372,4 +1372,9 @@ html[data-todos='on'] .navbar__item--todos { display: inline-block; }
 }
 .playFigure__button:hover { filter: brightness(1.08); }
 .playFigure__button:focus-visible { outline: 3px solid #22527B; outline-offset: 2px; }
-@media print { .playFigure__button { display: none; } }
+.playFigure__modes { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 0.6rem; }
+.playFigure__button--inline { position: static; box-shadow: none; }
+.playFigure__button--inline:nth-child(2) { background: #1F6FEB; }
+.playFigure__button--inline:disabled { opacity: 0.5; cursor: default; }
+.playFigure__button--inline.is-active:not(:disabled) { outline: 3px solid rgba(0,0,0,0.15); }
+@media print { .playFigure__button, .playFigure__modes { display: none; } }

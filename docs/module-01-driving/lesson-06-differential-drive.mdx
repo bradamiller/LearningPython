@@ -178,10 +178,10 @@ the hill, the carpet, the battery, and how much the robot is carrying.
 *adjusts its own effort* to hold it — pushing harder up the hill, easing off on
 the way down:
 
-<Figure
-  src="/img/lesson-06/effort-vs-speed.jpg"
-  alt="Diagram of a robot climbing and descending a hill, using big effort uphill, less effort at the top, and little effort downhill"
-  caption="Ask for a speed and the effort changes to maintain it: big effort uphill, little effort coming down."
+<PlayFigure
+  src="/img/lesson-06/effort-vs-speed-hill.svg"
+  alt="An animation of an XRP, seen from the side, driving over a hill: flat ground, an uphill slope, a flat top and a downhill slope, with an effort gauge and a speed gauge beside it. Effort control: the effort gauge stays at the same level the whole way, and the robot crawls up the slope, speeds up on the flat top and goes fastest down the other side; red dots dropped at equal time steps bunch together uphill and spread out downhill. Speed control: the speed gauge stays the same the whole way while the effort gauge climbs high going uphill, drops to medium on the top and falls low going downhill; blue dots are evenly spaced."
+  caption="Press each button and watch the two gauges. Effort control holds the effort and lets the hill change the speed; speed control holds the speed and changes the effort to keep it."
 />
 
 This is why the same `Set effort` numbers don't always produce the same motion.
