@@ -42,58 +42,74 @@ and that turns out to be enough to produce every motion it can make.
 
 ### Predict first: which way will the robot drive?
 
-In each photo below, the robot is seen from above and the arrows show what each
+In each picture below, the robot is seen from above and the arrows show what each
 side's motor is doing: **which way it turns**, and **how fast** (longer arrow =
-faster). For each one, decide *before* you play the video: does the robot drive
+faster). For each one, decide *before* you open the animation: does the robot drive
 straight, curve, swing around, or spin? Then watch and check.
 
 <Figure
-  src="/img/lesson-06/motors-case-straight.jpg"
-  alt="Top view of a two-motor robot; both side arrows point forward and are the same length"
+  src="/img/lesson-06/motors-straight-arrows.svg"
+  alt="An XRP seen from above, front at the top; both side arrows point forward and are the same length"
   caption="Case 1 — both sides forward, same speed. Which way will it drive?"
 />
 
-<Video
-  src="/videos/motors-straight.mp4"
-  mp4
-  caption="Case 1 — press play once you've committed to a prediction."
-/>
+<Reveal title="Watch it drive" hint="predict first">
 
 <Figure
-  src="/img/lesson-06/motors-case-curve.jpg"
-  alt="Top view; both side arrows point forward, but one is much longer than the other"
+  src="/img/lesson-06/motors-straight-run.svg"
+  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Both sides forward at the same speed: the robot drives straight ahead and its path is a straight line. It never turns, so it has no turning center."
+  caption="Case 1 — what it does."
+/>
+
+</Reveal>
+
+<Figure
+  src="/img/lesson-06/motors-curve-arrows.svg"
+  alt="An XRP seen from above, front at the top; both side arrows point forward, but the left one is much longer than the right"
   caption="Case 2 — both sides forward, but one side faster than the other."
 />
 
-<Video
-  src="/videos/motors-curve.mp4"
-  mp4
-  caption="Case 2 — press play once you've committed to a prediction."
-/>
+<Reveal title="Watch it drive" hint="predict first">
 
 <Figure
-  src="/img/lesson-06/motors-case-pivot.jpg"
-  alt="Top view; one side has a forward arrow and the other side has no arrow at all"
+  src="/img/lesson-06/motors-curve-run.svg"
+  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Left side fast, right side slow: the robot curves to the right, circling a turning center that is off the robot, beyond its slower right side. A dotted circle shows the path around that point."
+  caption="Case 2 — what it does. The purple target is the point it turns around."
+/>
+
+</Reveal>
+
+<Figure
+  src="/img/lesson-06/motors-pivot-arrows.svg"
+  alt="An XRP seen from above, front at the top; the right side has a forward arrow and the left side is marked stopped"
   caption="Case 3 — one side driving, the other side stopped."
 />
 
-<Video
-  src="/videos/motors-pivot.mp4"
-  mp4
-  caption="Case 3 — press play once you've committed to a prediction."
-/>
+<Reveal title="Watch it drive" hint="predict first">
 
 <Figure
-  src="/img/lesson-06/motors-case-spin.jpg"
-  alt="Top view; one side arrow points forward and the other points backward"
+  src="/img/lesson-06/motors-pivot-run.svg"
+  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Left side stopped, right side forward: the robot swings around its stopped left wheel, which is the turning center."
+  caption="Case 3 — what it does. The purple target is the point it turns around."
+/>
+
+</Reveal>
+
+<Figure
+  src="/img/lesson-06/motors-spin-arrows.svg"
+  alt="An XRP seen from above, front at the top; the left side arrow points backward and the right side arrow points forward"
   caption="Case 4 — the two sides driving in opposite directions."
 />
 
-<Video
-  src="/videos/motors-spin.mp4"
-  mp4
-  caption="Case 4 — press play once you've committed to a prediction."
+<Reveal title="Watch it drive" hint="predict first">
+
+<Figure
+  src="/img/lesson-06/motors-spin-run.svg"
+  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Left side backward, right side forward: the robot spins on the spot, turning around the pen hole in the chassis, midway between the wheels."
+  caption="Case 4 — what it does. The purple target is the point it turns around."
 />
+
+</Reveal>
 
 ### The whole rule, in three lines
 
@@ -595,10 +611,6 @@ the spacecraft back toward Earth, so that if the engines fail, the crew comes ho
 anyway. It's what saved Apollo 13. Worth ninety seconds, not a lesson.
 
 </TeacherNote>
-
-<Todo kind="media">
-the motor photos in this lesson show a VEX-style robot, not an XRP. Re-shoot with an XRP when convenient.
-</Todo>
 
 ## Real-world connections
 

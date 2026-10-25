@@ -1592,9 +1592,7 @@ decisions so none of them are only in a chat log.
   stop-motors and Bluetooth guidance. Ask Brad whether to bring the source
   markdown/slides/solutions in line.
 - **Media still wanted:** real block screenshots for the lessons still on composed
-  art — **L1, L3, L6, L7, L8, L9** (§6; L2 is half-done); an XRP-built
-  re-shoot of the Lesson 6 motor photos, which currently show a VEX-style robot
-  (§12); an official `logo.svg` if there is one; and a social/OG card image — the
+  art — **L1, L3, L6, L7, L8, L9** (§6; L2 is half-done); an official `logo.svg` if there is one; and a social/OG card image — the
   config used to point at an `img/social-card.png` that never existed, so that
   reference has been removed rather than left broken.
 - Deploy: GitHub Pages, automatic on push to `main` (§8). Live at
@@ -1700,9 +1698,11 @@ a one-off ffmpeg + Pillow pass.
 First use: the motion deck → Module 1 Lesson 6 Part 1 (`static/img/lesson-06/`,
 `static/videos/motors-*.mp4`).
 
-**Heads-up:** the robot in those Lesson 6 photos/clips is a **VEX-style build,
-not an XRP** — captions say "the robot" / "a two-motor robot" rather than naming
-the XRP. Reshoot with an XRP if you want it on-brand.
+**Replaced 2026-10-25:** the Lesson 6 motor photos and clips showed a VEX-style
+build, not an XRP, and are gone. The four cases are now drawn SVGs:
+`motors-<case>-arrows.svg` (the prediction prompt) and `motors-<case>-run.svg`
+(an animation in a "Watch it drive" Reveal, with the turning center marked).
+`effort-vs-speed.jpg` and `motor-effort-analogy.jpg` are not robot photos and stay.
 
 **HEIF/HEIC from Brad's Mac won't render in a browser** — convert to JPG first.
 On his machine ImageMagick handles it (`magick in.heif -background white -flatten
