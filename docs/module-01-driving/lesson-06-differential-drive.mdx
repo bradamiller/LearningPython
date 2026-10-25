@@ -44,72 +44,32 @@ and that turns out to be enough to produce every motion it can make.
 
 In each picture below, the robot is seen from above and the arrows show what each
 side's motor is doing: **which way it turns**, and **how fast** (longer arrow =
-faster). For each one, decide *before* you open the animation: does the robot drive
+faster). For each one, decide *before* you press **Drive it**: does the robot drive
 straight, curve, swing around, or spin? Then watch and check.
 
-<Figure
-  src="/img/lesson-06/motors-straight-arrows.svg"
-  alt="An XRP seen from above, front at the top; both side arrows point forward and are the same length"
-  caption="Case 1 — both sides forward, same speed. Which way will it drive?"
+<PlayFigure
+  src="/img/lesson-06/motors-straight-drive.svg"
+  alt="An XRP seen from above, front at the top; both side arrows point forward and are the same length. Pressing Drive it plays an animation: Both sides forward at the same speed: the robot drives straight ahead and its path is a straight line. It never turns, so it has no turning center."
+  caption="Case 1 — both sides forward, same speed. Which way will it drive? Decide, then press Drive it."
 />
 
-<Reveal title="Watch it drive" hint="predict first">
-
-<Figure
-  src="/img/lesson-06/motors-straight-run.svg"
-  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Both sides forward at the same speed: the robot drives straight ahead and its path is a straight line. It never turns, so it has no turning center."
-  caption="Case 1 — what it does."
+<PlayFigure
+  src="/img/lesson-06/motors-curve-drive.svg"
+  alt="An XRP seen from above, front at the top; both side arrows point forward, but the left one is much longer than the right. Pressing Drive it plays an animation: Left side fast, right side slow: the robot curves to the right, circling a turning center that is off the robot, beyond its slower right side. A dotted circle shows the path around that point."
+  caption="Case 2 — both sides forward, but one side faster than the other. Which way will it drive? Decide, then press Drive it."
 />
 
-</Reveal>
-
-<Figure
-  src="/img/lesson-06/motors-curve-arrows.svg"
-  alt="An XRP seen from above, front at the top; both side arrows point forward, but the left one is much longer than the right"
-  caption="Case 2 — both sides forward, but one side faster than the other."
+<PlayFigure
+  src="/img/lesson-06/motors-pivot-drive.svg"
+  alt="An XRP seen from above, front at the top; the right side has a forward arrow and the left side is marked stopped. Pressing Drive it plays an animation: Left side stopped, right side forward: the robot swings around its stopped left wheel, which is the turning center."
+  caption="Case 3 — one side driving, the other side stopped. Which way will it drive? Decide, then press Drive it."
 />
 
-<Reveal title="Watch it drive" hint="predict first">
-
-<Figure
-  src="/img/lesson-06/motors-curve-run.svg"
-  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Left side fast, right side slow: the robot curves to the right, circling a turning center that is off the robot, beyond its slower right side. A dotted circle shows the path around that point."
-  caption="Case 2 — what it does. The purple target is the point it turns around."
+<PlayFigure
+  src="/img/lesson-06/motors-spin-drive.svg"
+  alt="An XRP seen from above, front at the top; the left side arrow points backward and the right side arrow points forward. Pressing Drive it plays an animation: Left side backward, right side forward: the robot spins on the spot, turning around the pen hole in the chassis, midway between the wheels."
+  caption="Case 4 — the two sides driving in opposite directions. Which way will it drive? Decide, then press Drive it."
 />
-
-</Reveal>
-
-<Figure
-  src="/img/lesson-06/motors-pivot-arrows.svg"
-  alt="An XRP seen from above, front at the top; the right side has a forward arrow and the left side is marked stopped"
-  caption="Case 3 — one side driving, the other side stopped."
-/>
-
-<Reveal title="Watch it drive" hint="predict first">
-
-<Figure
-  src="/img/lesson-06/motors-pivot-run.svg"
-  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Left side stopped, right side forward: the robot swings around its stopped left wheel, which is the turning center."
-  caption="Case 3 — what it does. The purple target is the point it turns around."
-/>
-
-</Reveal>
-
-<Figure
-  src="/img/lesson-06/motors-spin-arrows.svg"
-  alt="An XRP seen from above, front at the top; the left side arrow points backward and the right side arrow points forward"
-  caption="Case 4 — the two sides driving in opposite directions."
-/>
-
-<Reveal title="Watch it drive" hint="predict first">
-
-<Figure
-  src="/img/lesson-06/motors-spin-run.svg"
-  alt="An animation, seen from above, of an XRP with arrows beside its wheels. Left side backward, right side forward: the robot spins on the spot, turning around the pen hole in the chassis, midway between the wheels."
-  caption="Case 4 — what it does. The purple target is the point it turns around."
-/>
-
-</Reveal>
 
 ### The whole rule, in three lines
 

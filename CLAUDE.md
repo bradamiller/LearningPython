@@ -1699,9 +1699,13 @@ First use: the motion deck → Module 1 Lesson 6 Part 1 (`static/img/lesson-06/`
 `static/videos/motors-*.mp4`).
 
 **Replaced 2026-10-25:** the Lesson 6 motor photos and clips showed a VEX-style
-build, not an XRP, and are gone. The four cases are now drawn SVGs:
-`motors-<case>-arrows.svg` (the prediction prompt) and `motors-<case>-run.svg`
-(an animation in a "Watch it drive" Reveal, with the turning center marked).
+build, not an XRP, and are gone. Each case is now ONE animated SVG,
+`motors-<case>-drive.svg`, shown with `<PlayFigure>` (Media.js): it sits paused on
+its first frame (the robot with arrows on its wheels, the prediction prompt) until
+the reader presses "Drive it", then plays once and holds the final pose
+(`data-hold` on the SVG root). The turning center and the paths stay hidden until
+it moves. `<PlayFigure>` embeds with `<object>` because an `<img>` SVG can't be
+paused.
 `effort-vs-speed.jpg` and `motor-effort-analogy.jpg` are not robot photos and stay.
 
 **HEIF/HEIC from Brad's Mac won't render in a browser** — convert to JPG first.

@@ -1360,3 +1360,16 @@ html[data-todos='on'] .navbar__item--todos { display: inline-block; }
   margin-bottom: 0.35rem;
 }
 [data-theme='dark'] .sbs__head { color: var(--ifm-color-primary-lightest); }
+
+/* PlayFigure (Media.js): an animated SVG parked on its first frame until clicked. */
+.playFigure__frame { position: relative; cursor: pointer; max-width: 680px; margin: 0 auto; }
+.playFigure__frame object { display: block; width: 100%; aspect-ratio: 680 / 350; border-radius: 12px; pointer-events: none; }
+.playFigure__button {
+  position: absolute; right: 14px; bottom: 34px;
+  font-family: inherit; font-weight: 700; font-size: 0.95rem;
+  color: #fff; background: var(--xrp-red, #D1182C); border: 0; border-radius: 999px;
+  padding: 0.45rem 1.05rem; box-shadow: 0 2px 6px rgba(0,0,0,0.25); cursor: pointer;
+}
+.playFigure__button:hover { filter: brightness(1.08); }
+.playFigure__button:focus-visible { outline: 3px solid #22527B; outline-offset: 2px; }
+@media print { .playFigure__button { display: none; } }
