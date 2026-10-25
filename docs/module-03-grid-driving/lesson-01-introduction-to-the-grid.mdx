@@ -143,6 +143,26 @@ intersection — exactly as `test_park()` did in Lesson 2-9. Those two calls tog
 are the **arrival pair**, and they are what "arrive at an intersection" means for the
 rest of the course.
 
+### Where the robot turns
+
+On the grid, the second call matters more than it did on your circle. When
+`track_to_intersection()` stops, the sensors are on the cross, but they sit at the very
+front of the robot, and the robot turns about its **center of rotation**: the pen hole
+between the drive wheels, 8.75 cm further back. Turn from where the track stopped and
+the robot swings around a point short of the intersection.
+
+<Figure
+  src="/img/lesson-m2-09/park-turn-left-then-right.svg"
+  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street, off the tape. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
+  caption="Both robots stopped where track_to_intersection() left them. The left one turns right away and its sensors miss the cross street; the right one drives past first, spins on the intersection, and lands on the new line."
+/>
+
+`drive_past_intersection()` drives forward exactly that 8.75 cm, so the center of
+rotation ends up where the sensors were: right on the intersection. Any turn from there
+spins the robot in place on the cross, and the sensors come down on the crossing line.
+That is why every arrival on the grid is the pair, never the track alone, even when the
+robot is about to go straight on.
+
 <KnowledgeCheck
   question="Which function drives the robot from where it is to the next intersection?"
   options={[
@@ -152,6 +172,17 @@ rest of the course.
     {text: 'get_error()'},
   ]}
   explanation="track_to_intersection() follows the line and stops when both sensors hit the intersection — one grid segment per call. drive_past_intersection() then parks the wheels on it."
+/>
+
+<KnowledgeCheck
+  question="Why drive past the intersection before turning, instead of turning where track_to_intersection() stops?"
+  options={[
+    {text: 'To save battery'},
+    {text: 'The robot turns about its center of rotation, 8.75 cm behind the sensors, so turning early pivots short of the intersection and the sensors miss the new line', correct: true},
+    {text: 'Because turn_clockwise() only works while the robot is moving'},
+    {text: 'It does not matter; both land on the new line'},
+  ]}
+  explanation="The sensors arrive first. Driving the 8.75 cm puts the center of rotation on the cross, so the turn spins on the intersection and the sensors come down on the crossing line."
 />
 
 ## Activity · Reach it, then turn

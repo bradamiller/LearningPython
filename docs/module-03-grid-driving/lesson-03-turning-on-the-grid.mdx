@@ -79,8 +79,8 @@ intersection, then turn. In code that's `drive_intersections()`, then a turn, th
 
 Look at what `drive_intersections()` leaves behind: the robot parked with its wheels
 over the last intersection, sensors just past it. That is exactly the position a turn
-needs. The robot pivots about its wheels, so with the wheels on the cross it spins
-*on* the intersection, and the blind 60° plus the sensor-ended finish from Lesson 2-9
+needs. The robot pivots about its center of rotation (Lesson 3-1), so with that
+point on the cross it spins *on* the intersection, and the blind 60° plus the sensor-ended finish from Lesson 2-9
 bring the sensors down on the crossing line. After the turn, the next
 `drive_intersections()` starts with a line to follow — no extra step in between.
 

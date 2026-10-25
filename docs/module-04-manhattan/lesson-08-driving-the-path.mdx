@@ -63,17 +63,12 @@ functions don't know what a path is. Today's three functions sit between them.
   explanation="Module 2's functions are about tape, not grids. That is what makes them reusable: the same track_to_intersection() drove the Module 3 square and drives paths here."
 />
 
-## The wrinkle: where the robot turns
+## Arriving: the same pair as Module 3
 
-`track_to_intersection()` stops the moment both sensors see the cross. But the sensors are
-at the front of the robot, and it turns about its **center of rotation**, 8.75 cm further
-back. It's the wrinkle Lesson 2-9 solved, and the fix is the same:
-
-<Figure
-  src="/img/lesson-m2-09/park-turn-left-then-right.svg"
-  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
-  caption="Turn where the track stops and the sensors miss the new line. Drive past first and the robot spins on the cross."
-/>
+`track_to_intersection()` stops the moment both sensors see the cross, but the robot
+turns about its **center of rotation**, 8.75 cm behind them. You met this in Lesson 3-1
+(the two-robot animation there shows what goes wrong if you turn early), and the fix is
+the same here.
 
 So `drive_path()` arrives at **every** intersection with the pair from Module 3, whichever
 way it turns next. The drive-past parks the robot so a turn spins on the intersection,
