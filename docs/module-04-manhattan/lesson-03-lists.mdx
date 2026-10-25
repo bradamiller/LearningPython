@@ -20,7 +20,7 @@ like `[(1,0), (2,0), (2,1), (2,2), (2,3)]`, and build one up step by step — ex
 what the Manhattan algorithm does next lesson.
 
 That example is the route from `(0,0)` to `(2,3)`, and notice the robot's own
-starting square isn't in it. A path lists the places the robot **drives to**; it's
+starting intersection isn't in it. A path lists the places the robot **drives to**; it's
 already standing on the start, so putting it in the list would mean "drive to where
 you already are." Every path in this module and the next works that way.
 
@@ -93,7 +93,7 @@ print(path)        # [(1, 0), (2, 0), (3, 0)]
 print(len(path))   # 3
 ```
 
-That's a robot at `(0,0)` driving three squares to the right: three places to drive to, so
+That's a robot at `(0,0)` driving three intersections to the right: three places to drive to, so
 `len(path)` is 3 — the number of steps.
 
 Loop through it with a `for` loop:
@@ -137,7 +137,7 @@ print(path)        # [(1, 0), (2, 0), (3, 0), (4, 0)]
 ```
 
 `range(1, 5)` counts 1, 2, 3, 4 — it starts where you tell it to instead of at 0.
-That's the whole trick to leaving the start out: the first square you append is the
+That's the whole trick to leaving the start out: the first intersection you append is the
 first one the robot actually drives to.
 
 Trace it and you'll see the list grow by one each pass. Change the loop to vary
