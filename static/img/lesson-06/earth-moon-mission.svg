@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -10 680 310" role="img"
+     aria-labelledby="em2-title em2-desc"
+     font-family="Montserrat, Helvetica, Arial, sans-serif">
+  <title id="em2-title">The Earth–Moon–Earth mission, flown</title>
+  <desc id="em2-desc">An Earth disc and a Moon disc of equal size, side by side. A dashed path makes
+  an infinity symbol around them: three-quarters of a circle around one body, a straight diagonal
+  crossing to the other, three-quarters of a circle the other way around that one, and a straight
+  diagonal back. The two straight crossings meet at forty-five degrees in the middle, where the
+  robot starts and finishes. In this animated version a small XRP flies the mission: straight out to the Moon, three-quarters of the way around it bending right, straight back across to the Earth, three-quarters of the way around it bending left, and straight home to the crossing, while a line at the top names each move and the block that drives it.</desc>
+
+  <!--
+    Real geometry, not a freehand curve. Two equal circles of radius r with their
+    centers 2d apart; the straight crossings are the internal common tangents, which
+    meet at the midpoint. A tangent leaves at angle t where sin(t) = r/d, so t = 45°
+    exactly when d = r/sin(45°) = 1.4142 r. Here r = 116 and d = 164.
+    Each tangent touches its circle 135° round from center, which leaves a 270° arc
+    on the outside — the three-quarter turn the lesson asks students to start with.
+  -->
+
+  <style>
+    .name { font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+    .tag  { font-size: 11.5px; font-weight: 700; fill: #D1182C; letter-spacing: .4px; }
+    .seg { font-size: 13px; font-weight: 800; fill: #142D50; }
+    .segs { font-size: 11.5px; fill: #495057; }
+    .part { font-size: 12px; font-weight: 700; fill: #B0142A; letter-spacing: .3px; }
+  </style>
+
+  <defs>
+    <clipPath id="e2"><circle cx="176" cy="150" r="40"/></clipPath>
+    <marker id="way" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5.5" markerHeight="5.5"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D1182C"/>
+    </marker>
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+  </defs>
+
+  <!--
+    Drawn as four separate pieces rather than one path, because the two KINDS of
+    move should not look alike: the arcs are Arcade + Sleep (timed, approximate, so
+    dashed) and the crossings are Straight blocks (measured, repeatable, so solid).
+    Joined as one dashed path they read as a single smooth curve and the straight
+    sections vanish, which is exactly the confusion this figure exists to prevent.
+  -->
+
+  <!-- the two swings: 270° each, Arcade + Sleep -->
+  <path d="M 422 68 A 116 116 0 1 1 422 232" fill="none" stroke="#D1182C"
+        stroke-width="2.6" stroke-dasharray="8 6" stroke-linecap="round"/>
+  <path d="M 258 68 A 116 116 0 1 0 258 232" fill="none" stroke="#D1182C"
+        stroke-width="2.6" stroke-dasharray="8 6" stroke-linecap="round"/>
+
+  <!-- the two crossings: straight, at 45°, Straight blocks -->
+  <line x1="258" y1="232" x2="340" y2="150" stroke="#D1182C" stroke-width="3.4"/>
+  <line x1="340" y1="150" x2="422" y2="68" stroke="#D1182C" stroke-width="3.4"/>
+  <line x1="258" y1="68" x2="422" y2="232" stroke="#D1182C" stroke-width="3.4"/>
+
+  <!-- where a curve becomes a line, and back again -->
+  <g fill="#fff" stroke="#D1182C" stroke-width="2">
+    <circle cx="422" cy="68" r="4"/>
+    <circle cx="422" cy="232" r="4"/>
+    <circle cx="258" cy="68" r="4"/>
+    <circle cx="258" cy="232" r="4"/>
+  </g>
+
+  <!-- EARTH -->
+  <g>
+    <circle cx="176" cy="150" r="40" fill="#1B6CA8"/>
+    <g clip-path="url(#e2)">
+      <path d="M145 136 q9 -12 21 -9 q12 4 8 13 q-3 9 -13 8 q-11 -1 -16 -12z" fill="#3E8E5A"/>
+      <path d="M164 159 q11 -6 21 1 q9 7 2 16 q-7 8 -17 4 q-10 -4 -6 -21z" fill="#3E8E5A"/>
+      <path d="M190 123 q13 -4 19 5 q5 7 -4 11 q-10 5 -18 -4 q-5 -6 3 -12z" fill="#3E8E5A"/>
+      <ellipse cx="160" cy="118" rx="16" ry="6" fill="#EAF2F8" opacity=".5"/>
+    </g>
+    <circle cx="176" cy="150" r="40" fill="none" stroke="#12496F" stroke-width="2.5"/>
+    <line x1="169" y1="150" x2="183" y2="150" stroke="#fff" stroke-width="2"/>
+    <line x1="176" y1="143" x2="176" y2="157" stroke="#fff" stroke-width="2"/>
+    <text class="name" x="176" y="136" text-anchor="middle" fill="#fff">EARTH</text>
+  </g>
+
+  <!-- MOON, the same size -->
+  <g>
+    <circle cx="504" cy="150" r="40" fill="#B9BEC4"/>
+    <circle cx="490" cy="138" r="10" fill="#9BA1A8"/>
+    <circle cx="517" cy="130" r="5.5" fill="#9BA1A8"/>
+    <circle cx="522" cy="159" r="8" fill="#9BA1A8"/>
+    <circle cx="496" cy="170" r="4.5" fill="#9BA1A8"/>
+    <circle cx="504" cy="150" r="40" fill="none" stroke="#8B9197" stroke-width="2.5"/>
+    <line x1="497" y1="150" x2="511" y2="150" stroke="#5B6166" stroke-width="2"/>
+    <line x1="504" y1="143" x2="504" y2="157" stroke="#5B6166" stroke-width="2"/>
+    <text class="name" x="504" y="136" text-anchor="middle" fill="#495057">MOON</text>
+  </g>
+
+  <text class="part" x="176" y="88" text-anchor="middle">¾ turn one way</text>
+  <text class="part" x="504" y="88" text-anchor="middle">¾ turn the other</text>
+  <text class="part" x="340" y="280" text-anchor="middle">solid = straight, driven a measured distance · dashed = curved, driven for a time</text>
+  <text class="tag" x="354" y="178">start / finish</text>
+  <g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0001;0.0516" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle">Ready at the crossing</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0516;0.1145" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle">1 · Straight out to the Moon</text><text class="segs" x="340" y="38" text-anchor="middle">measured: a Straight block</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1145;0.4113" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle">2 · Swing around the Moon</text><text class="segs" x="340" y="38" text-anchor="middle">timed: Arcade + Sleep, bending right</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.4113;0.5372" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle">3 · Straight across to the Earth</text><text class="segs" x="340" y="38" text-anchor="middle">measured: a Straight block</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5372;0.8339" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle">4 · Swing around the Earth</text><text class="segs" x="340" y="38" text-anchor="middle">timed: Arcade + Sleep, bending left</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.8339;0.8969" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle">5 · Straight home to the start</text><text class="segs" x="340" y="38" text-anchor="middle">measured: a Straight block</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.8969;0.9999" calcMode="discrete" dur="19.39s" repeatCount="indefinite"/><text class="seg" x="340" y="22" text-anchor="middle" style="fill:#2E7D32">Mission complete</text><text class="segs" x="340" y="38" text-anchor="middle">back at the crossing, pointing the way it started</text></g>
+  <g><animateMotion path="M 340 150 L 422 68 A 116 116 0 1 1 422 232 L 258 68 A 116 116 0 1 0 258 232 L 340 150" rotate="auto" keyPoints="0;0;1;1" keyTimes="0;0.0516;0.8969;1" calcMode="linear" dur="19.39s" repeatCount="indefinite"/><g transform="rotate(90) scale(0.36)"><use href="#pcXRP"/></g></g>
+</svg>
