@@ -69,6 +69,12 @@ it so the robot waits for you.
 Upload it, set the robot on the floor, press the button. Did it go 20 cm? Roughly
 where did it end up, and which way is it facing?
 
+<Figure
+  src="/img/lesson-02/l2-step1.svg"
+  alt="An animation, seen from above, of the step 1 program: Wait for button press, then Straight 20 cm. The robot waits, then drives forward 20 cm, drawing a short blue line from its start mark, and stops facing the same way it started. Beside it, the two blocks, with the one running highlighted."
+  caption="Step 1: wait for the button, drive 20 cm, stop."
+/>
+
 <TeacherNote title="Facilitating: Drive straight">
 
 Let students find the **Straight** block themselves — say "find a block that
@@ -101,6 +107,16 @@ will it be facing? Then check.
   explanation="Blocks run in order: first the drive, then the turn. So the robot is 20 cm away AND rotated 90°. That combination — a side and a corner — is the building block of every shape."
 />
 
+<Reveal title="See step 2 run" hint="predict first">
+
+<Figure
+  src="/img/lesson-02/l2-step2.svg"
+  alt="An animation, seen from above, of the step 2 program: Wait for button press, Straight 20 cm, Turn 90 degrees. The robot drives forward 20 cm, drawing a blue line, then turns a quarter turn in place without moving, ending 20 cm from its start mark and facing a quarter turn away from where it started. Beside it, the three blocks, with the one running highlighted."
+  caption="Drive, then turn in place: one side and one corner."
+/>
+
+</Reveal>
+
 <TeacherNote title="Facilitating: Add a turn">
 
 Ask "what shape has the robot drawn so far?" — a single side and a corner, an L.
@@ -121,6 +137,12 @@ triangle or an open box — that's information.
 
 **You've succeeded when** the robot drives four roughly-equal sides, turns four
 corners, and finishes near its starting spot.
+
+<Figure
+  src="/img/lesson-02/l2-step3.svg"
+  alt="An animation, seen from above, of two attempts at step 3. In the first, the robot drives a side and turns a corner three times, drawing an open box that stops one side short of its start mark. In the second, it does it four times, drawing a closed square, and ends on its start mark facing the way it began. Beside it, a box names each side and corner as it happens and says whether the shape closed."
+  caption="A first try that comes up one side short, then the fix. A wrong shape tells you what to change."
+/>
 
 <TeacherNote title="Facilitating: Make a square — let them build the long version">
 
@@ -263,6 +285,16 @@ angle of a triangle's corner is 120°.
 </Reveal>
 
 Now set your turn to the angle you worked out and run it again.
+
+<Reveal title="Watch three tries at a triangle" hint="after yours closes">
+
+<Figure
+  src="/img/lesson-02/l2-triangle.svg"
+  alt="An animation, seen from above, of three tries at a triangle, each three sides of 20 cm with a different turn. With Turn 90 the robot draws three sides of a square and stops, having turned 270 degrees in total. With Turn 60, the inside angle of a triangle, it draws a wide open zig-zag, having turned only 180 degrees. With Turn 120 it draws a closed triangle and ends on its start mark facing the way it began, having turned 360 degrees. A box beside it names each side and corner and keeps a running total of the degrees turned."
+  caption="Turn 90, Turn 60, then Turn 120. Only the last adds up to a full turn, so only the last closes."
+/>
+
+</Reveal>
 
 <KnowledgeCheck
   question="A classmate's triangle isn't closing up — the robot ends facing the wrong way. They used Turn 60°. What should it be?"
