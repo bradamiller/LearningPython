@@ -179,7 +179,7 @@ the hill, the carpet, the battery, and how much the robot is carrying.
 the way down:
 
 <PlayFigure
-  src="/img/lesson-06/effort-vs-speed-hill.svg"
+  src="/img/lesson-06/effort-vs-speed-on-a-hill.svg"
   alt="An animation of an XRP, seen from the side, driving over a hill: flat ground, an uphill slope, a flat top and a downhill slope, with an effort gauge and a speed gauge beside it. Effort control: the effort gauge stays at the same level the whole way, and the robot crawls up the slope, speeds up on the flat top and goes fastest down the other side; red dots dropped at equal time steps bunch together uphill and spread out downhill. Speed control: the speed gauge stays the same the whole way while the effort gauge climbs high going uphill, drops to medium on the top and falls low going downhill; blue dots are evenly spaced."
   caption="Press each button and watch the two gauges. Effort control holds the effort and lets the hill change the speed; speed control holds the speed and changes the effort to keep it."
 />
@@ -317,7 +317,7 @@ for you:
 <BlockProgram
   blocks={[
     {name: 'wait_for_button_press'},
-    {name: 'arcade', note: 'Straight: 0.5, Turn: 0.3  → forward, curving right'},
+    {name: 'arcade', note: 'Straight: 0.5, Turn: 0.3  → forward, curving left'},
     {name: 'sleep', note: '3 seconds — again, a stand-in until we have sensors'},
   ]}
   caption="Arcade combines forward motion and steering into one intuitive block."
@@ -380,6 +380,16 @@ number goes up. Write it down before you move on.
   ]}
   explanation="Turn is how hard the robot is bending. More bend for the same forward speed means a tighter circle. Turn 0 is no bend at all — a straight line."
 />
+
+<Reveal title="Compare with a simulated robot" hint="after your own runs">
+
+<PlayFigure
+  src="/img/lesson-06/arcade-circles.svg"
+  alt="An animation of an XRP seen from above on a whiteboard panel, drawn to scale, with a marker in the hole between its wheels. Four buttons run Arcade with Straight 0.5 and Turn 0.15, 0.3, 0.5 or 0.8. Each drives one full circle from the same starting mark and draws it in blue, with a purple target at the point it circles, and a panel shows the two wheel efforts Arcade works out. Positive Turn bends left. Turn 0.15: both wheels forward, the left one slower, a circle about 50 cm across. Turn 0.3: about 25 cm across. Turn 0.5: the left wheel stops and the robot swings around it, about 15 cm across. Turn 0.8: the left wheel runs backward and the circle is about 10 cm across, smaller than the robot."
+  caption="Press each Turn value. Watch the two wheel efforts as well as the circle: the bigger the difference between the wheels, the tighter the circle. Your robot's circles won't match these numbers exactly, and that's expected."
+/>
+
+</Reveal>
 
 ### Step 2 · Find a circle that fits
 

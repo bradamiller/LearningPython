@@ -1707,8 +1707,13 @@ the reader presses "Drive it", then plays once and holds the final pose
 it moves. `<PlayFigure>` embeds with `<object>` because an `<img>` SVG can't be
 paused.
 `motor-effort-analogy.jpg` stays (not a robot photo). The effort-vs-speed hill picture became
-`effort-vs-speed-hill.svg`, a `<PlayFigure>` with TWO buttons (Effort control, Speed control):
+`effort-vs-speed-on-a-hill.svg`, a `<PlayFigure>` with TWO buttons (Effort control, Speed control):
 the SVG root's `data-modes` lists each button's label and its start/stop on the timeline.
+The Get-a-feel-for-circles Reveal has a four-button one, `arcade-circles.svg` (Turn 0.15/0.3/0.5/0.8).
+**Arcade's sign, checked against XRPLib source 2026-10-25:** `left = (straight - turn) * scale`,
+`right = (straight + turn) * scale`, so **positive Turn bends LEFT**. L6's block note had said "curving
+right"; fixed. A PlayFigure's parked frame is t = 0, so anything meant to show before a button is
+pressed must be visible AT t = 0 (an opacity animate whose first keyTime is 0 with value 1).
 
 **HEIF/HEIC from Brad's Mac won't render in a browser** — convert to JPG first.
 On his machine ImageMagick handles it (`magick in.heif -background white -flatten
