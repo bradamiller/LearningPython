@@ -53,6 +53,19 @@ So `arcade(0.3, 0.15)` speeds up the left wheel and slows the right — the robo
 curves. A positive `turn` steers one way, negative the other, and zero drives
 straight.
 
+<Todo kind="blocked">
+Check on a real robot before teaching this. Current XRPLib (every version since 2023)
+computes arcade as left = (straight - turn) times a scale and right = (straight + turn)
+times the same scale, and documents a positive turn as skewing the robot LEFT. This
+lesson says the opposite: that arcade adds turn to the left motor and subtracts it from
+the right, so the code block above, the sentence under it and the 0.45 / 0.15 knowledge
+check are all reversed, and they also leave out the scaling (arcade 0.3, 0.15 really sets
+about 0.10 left and 0.30 right). If a positive turn bends left on the robot, this
+lesson's one-sensor follower steers away from the line edge too. Test: run arcade 0.3,
+0.15 for two seconds and see which way it curves. Fix in Lessons 2-5 and 2-6 together,
+then regenerate the templates. Raised 2026-10-25.
+</Todo>
+
 <KnowledgeCheck
   question="With base speed 0.3, what does `arcade(0.3, 0.15)` set the two motors to?"
   options={[

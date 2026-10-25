@@ -300,6 +300,16 @@ else, the numbers are Module 5's BFS rings.
   explanation="Every other cell matches the BFS ring numbers. (0, 2) is the one place the slow segment is on the direct route, and the printed 4 is the cheaper way round it."
 />
 
+On the 4×4 floor grid one slow segment changes one number. A bigger grid shows what
+change 1 does to the *shape* of the search. Here are both searches, each following its
+own rule, on the 8 by 6 grid from Lesson 5-3, with a slow road through one of the two
+ways past the wall.
+
+<PlayFigure
+  src="/img/lesson-m6-03/fanout-bfs-vs-dijkstra.svg"
+  alt="An animation on a grid of 8 by 6 intersections. A wall of four blocked intersections at x = 3 leaves two ways past it: the top row, where the two blocks either side of the wall are a slow road costing 5 each, and the bottom row. S is (0, 4) and D is (7, 4). Two buttons. BFS numbers each intersection with its step count; the ripple spreads evenly, crosses the slow road as if it were normal, and the path goes over the top: 9 steps, cost 17. Dijkstra numbers each intersection with its cheapest cost as it finishes it; the wave races along the bottom but crawls through the slow road, and reaches D from below: 15 steps, cost 15."
+  caption="Press BFS, then Dijkstra. BFS spreads by steps, so the slow road looks like any other street. Dijkstra spreads by cost, so its wave slows down where the road is slow and gets to D the cheaper way first." />
+
 If you built the `BFS` class in Lesson 5-5, the copy you make is of the *class*: Lesson
 6-5 is this lesson's class-track version, with the same two changes inside
 `compute_path()`, and you can do it now in place of the function version. Your harness

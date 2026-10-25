@@ -302,6 +302,21 @@ while len(to_visit) > 0:
 
 </TeacherNote>
 
+## The ripple on a bigger grid
+
+A 3×3 grid is small enough to trace by hand, which is why you traced it. It is also too
+small to see the *shape* of what breadth-first search does. Here is the same rule,
+unchanged, on a grid of 8 by 6 with a wall across the middle.
+
+<PlayFigure
+  src="/img/lesson-m5-03/fanout-bfs.svg"
+  alt="An animation of breadth-first search on a grid of 8 by 6 intersections with a wall of four blocked intersections at x = 3, from y = 1 to y = 4. S is (0, 4) and D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S when the search first reaches it, so the numbers spread out from S in even rings. The ripple flows around both ends of the wall. When D is taken off the list the search stops, and the walk-back from D is drawn in red: up, along the top past the wall, and down to D, 9 steps."
+  caption="Same rule as your trace: every intersection one step out is numbered before any two steps out. On a bigger grid that rule spreads like a ripple in a pond, and bends around whatever is in the way." />
+
+Two things to notice. The search spreads out evenly in every direction, including the
+directions that lead *away* from D: it has no idea where D is until it gets there.
+And it stops as soon as D comes off the list, so a few far corners never get a number.
+
 ## Real-world connections
 
 Breadth-first search and its relatives are everywhere shortest paths matter:

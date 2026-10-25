@@ -306,6 +306,10 @@ sixteen sides in total.
 Because a square finishes where it started, each new square sets off from the same
 corner as the one before it, so the four nest inside each other.
 
+<Figure src="/img/lesson-10/nest-two-squares.svg"
+  alt="An animation, seen from above, of the first two passes of the nested-loop program. Beside the robot, the five program lines with the running one highlighted, and the counters square, side and size. On the first pass square is 0 and size is 20, and the inner loop draws a 20 cm square in blue, side counting 0 to 3. On the second pass square is 1 and size is 25, and the robot draws a 25 cm square in purple from the same corner, around the first. The animation stops after two squares."
+  caption="The first two passes of the outer loop. Watch which counter changes when: size once per square, side four times inside every square." />
+
 <KnowledgeCheck
   question="In the nested program above, how many times does drivetrain.straight() run in total?"
   options={[

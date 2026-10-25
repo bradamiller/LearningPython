@@ -525,6 +525,14 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
 - **Videos/graphics:** Brad produces them and hands them off; lessons use labeled placeholders until then.
 
 **Open / unresolved (flag for Brad's evaluation pass):**
+- **🚨 MODULE 2 STEERING SIGN — NEEDS A ROBOT (raised 2026-10-25; remind Brad whenever he
+  says he has a robot to hand).** Current XRPLib `arcade()` is `left = (straight - turn) *
+  scale`, `right = (straight + turn) * scale`, documented as positive turn = LEFT, and its
+  own `line_track()` example is effectively `arcade(base, +KP * (left - right))`. L2-5 says
+  arcade adds turn to the LEFT motor (and drops the scaling), and L2-6 onward uses
+  `arcade(BASE_EFFORT, -correction)`. If positive really bends left on the robot, every
+  Module 2+ follower steers away from the line. `<Todo kind="blocked">` notes in L2-5 and
+  L2-6 carry the details and the two-minute test. Don't change the sign until Brad has run it.
 - **MODULE 1 FUNCTION NAMING — current, settled 2026-09-17.** One set of names in
   **both** languages: **`square(side_length)`**, **`triangle(side_length)`**,
   **`polygon(sides, side_length)`** — bare names (no `draw_` prefix), `sides`

@@ -76,6 +76,21 @@ where the robot should be.
 
 ## The control loop (and that negative sign)
 
+<Todo kind="blocked">
+Check on a real robot before teaching this. The minus sign in the follower below may be
+backwards for the current XRPLib. Its arcade documents a positive turn as skewing the
+robot LEFT (left wheel gets straight minus turn, right wheel straight plus turn), and its
+own line_track example, with error = left minus right, sets the left wheel to base minus
+error times KP and the right to base plus error times KP. That is arcade with a plus
+correction, not a minus. With a positive error meaning the robot drifted right, a minus
+sign would steer it further right, away from the line, unless the reflectance board's
+left and right are swapped relative to the robot. Test: put the robot just right of a
+line so the left sensor reads high and watch which way the follower turns. If it turns
+away, drop the minus here and in every follower after it (2-7 through the capstones),
+rewrite this section's explanation and knowledge check, fix 2-5's arcade example, and
+regenerate the templates. Raised 2026-10-25.
+</Todo>
+
 Here is the payoff for putting the error behind a function last lesson. The follower
 in `test_follow()` reads `get_error()`, scales it, steers. Switching to two sensors
 means **rewriting `get_error()`** — and the loop that calls it barely notices. Two

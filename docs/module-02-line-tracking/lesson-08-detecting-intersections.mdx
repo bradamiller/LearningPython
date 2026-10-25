@@ -113,6 +113,10 @@ the loop checks for the cross — that's the condition's job. Nothing in the con
 steers — that's the body's job. When both sensors reach the cross, `is_at_cross()`
 returns `True`, the loop ends, and the robot stops.
 
+<Figure src="/img/lesson-m2-08/track-to-cross.svg"
+  alt="An animation, seen from above, of test_track(). A taped circle has a short cross strip near the top right. The robot starts on the circle, pointed along it, waits for the button, then follows the line counterclockwise, weaving slightly. Beside it, the outline of track_to_intersection(): while not at a cross, follow; then stop. A box shows the live left and right readings: while following, at most one is high and is_at_cross() stays False. When both sensors reach the cross strip both read high, is_at_cross() becomes True, the loop ends, and the robot stops with its sensors on the cross."
+  caption="test_track() from above. Watch the is_at_cross() line: it stays False the whole way round, because following the line only ever puts one sensor on the tape at a time." />
+
 <KnowledgeCheck
   question="What makes track_to_intersection() stop?"
   options={[

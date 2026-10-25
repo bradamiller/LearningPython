@@ -10,7 +10,7 @@ writes its SVG(s) into `scripts/figures/out/` (gitignored); nothing here writes 
 cd scripts/figures
 python3 m12tri.py              # one figure
 for f in [a-z]*.py; do python3 "$f"; done   # everything (frames.py needs an argument)
-python3 frames.py out/m12tri-triangle.svg 0 2 4 6   # contact sheet of frames at those seconds -> out/frames.png
+python3 frames.py out/l2-triangle-tries.svg 0 2 4 6   # contact sheet of frames at those seconds -> out/frames.png (size read from the SVG)
 ```
 
 Then copy the result to its place under `static/img/`. **If the file is already
@@ -128,3 +128,10 @@ they match the generator byte for byte. **Known stale:** the deployed
 | square.py | square-run.svg | — |
 | toolkit.py | toolkit-by-hand.svg | /img/lesson-m2-07/toolkit-by-hand.svg |
 | tuples.py | tuple-on-grid.svg | /img/lesson-m4-02/tuple-on-grid.svg |
+| m28track.py | track-to-cross.svg | /img/lesson-m2-08/track-to-cross.svg |
+| m21slide.py | slide-across-tape.svg | /img/lesson-m2-01/slide-across-tape.svg |
+| m110nest.py | nest-two-squares.svg | /img/lesson-10/nest-two-squares.svg |
+| m15poly.py | polygon-calls.svg | /img/lesson-05/polygon-calls.svg |
+| m13copy.py | copy-paste-vs-function.svg | /img/lesson-03/copy-paste-vs-function.svg |
+| fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs.svg |
+| fanout.py | fanout-bfs-vs-dijkstra.svg | /img/lesson-m6-03/fanout-bfs-vs-dijkstra.svg |
