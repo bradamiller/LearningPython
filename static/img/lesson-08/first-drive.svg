@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 380" width="680" height="380" role="img" aria-labelledby="fT fD">
+  <title id="fT">Your first program, running</title>
+  <desc id="fD">An animation of the Lesson 1-8 program running. On the left an XRP sits on the floor on its start mark. On the right, the program, with the line that is running highlighted, and the shell below it. First the program waits at board.wait_for_button() until the button is pressed. Then the shell prints Driving forward..., the robot drives 30 cm forward, the shell prints Driving backward..., the robot drives 30 cm back to its start mark, and the shell prints Done!</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <rect width="680" height="380" fill="#FFFFFF"/>
+  <text class="h" x="20" y="24">Your first program, running</text>
+  <rect x="20" y="36" width="280" height="330" rx="10" fill="#F3F4F6" stroke="#DEE2E6"/>
+  <path d="M 151 300 h 28 M 165 286 v 28" stroke="#ADB5BD" stroke-width="2"/><text class="sm" x="117" y="304" text-anchor="end" style="font-weight:700">start</text>
+  <line x1="225" y1="300" x2="225" y2="182.0" stroke="#6C757D" stroke-width="1.4" marker-start="url(#aG)" marker-end="url(#aG)"/><text class="sm" x="231" y="245.0">30 cm</text>
+  <text class="h" x="318" y="58">lesson_1_8_first_drive.py</text>
+  <g><rect x="312" y="69" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.00000;0.06780" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect><rect x="312" y="90" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.06780;0.23729" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect><rect x="312" y="111" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.23729;0.29661" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect><rect x="312" y="132" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.29661;0.48305" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect><rect x="312" y="153" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.48305;0.54237" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect><rect x="312" y="174" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.54237;0.72881" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect><rect x="312" y="195" width="352" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.72881;0.78814" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/></rect></g>
+  <text class="ms" x="318" y="84" style="fill:#6C757D;white-space:pre"># setup: two imports, drivetrain, board</text>
+  <text class="ms" x="318" y="105" style="white-space:pre">board.wait_for_button()</text>
+  <text class="ms" x="318" y="126" style="white-space:pre">print("Driving forward...")</text>
+  <text class="ms" x="318" y="147" style="white-space:pre">drivetrain.straight(30)</text>
+  <text class="ms" x="318" y="168" style="white-space:pre">print("Driving backward...")</text>
+  <text class="ms" x="318" y="189" style="white-space:pre">drivetrain.straight(-30)</text>
+  <text class="ms" x="318" y="210" style="white-space:pre">print("Done!")</text>
+  <text class="nb" x="318" y="243">Shell</text>
+  <rect x="312" y="251" width="352" height="84" rx="8" fill="#1E2328"/>
+  <g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0678;0.2373" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/><text class="nb" x="165" y="352" text-anchor="middle" style="fill:#D1182C">waiting for you to press the button</text></g><g><animateTransform attributeName="transform" type="translate" values="165.0 300.0;165.0 300.0;165.0 300.0;165.0 300.0;165.0 294.1;165.0 288.2;165.0 282.3;165.0 276.4;165.0 270.5;165.0 264.6;165.0 258.7;165.0 252.8;165.0 246.9;165.0 241.0;165.0 235.1;165.0 229.2;165.0 223.3;165.0 217.4;165.0 211.5;165.0 205.6;165.0 199.7;165.0 193.8;165.0 187.9;165.0 182.0;165.0 182.0;165.0 187.9;165.0 193.8;165.0 199.7;165.0 205.6;165.0 211.5;165.0 217.4;165.0 223.3;165.0 229.2;165.0 235.1;165.0 241.0;165.0 246.9;165.0 252.8;165.0 258.7;165.0 264.6;165.0 270.5;165.0 276.4;165.0 282.3;165.0 288.2;165.0 294.1;165.0 300.0;165.0 300.0;165.0 300.0" keyTimes="0.00000;0.06780;0.23729;0.29661;0.30593;0.31525;0.32458;0.33390;0.34322;0.35254;0.36186;0.37119;0.38051;0.38983;0.39915;0.40847;0.41780;0.42712;0.43644;0.44576;0.45508;0.46441;0.47373;0.48305;0.54237;0.55169;0.56102;0.57034;0.57966;0.58898;0.59831;0.60763;0.61695;0.62627;0.63559;0.64492;0.65424;0.66356;0.67288;0.68220;0.69153;0.70085;0.71017;0.71949;0.72881;0.78814;1.00000" dur="11.80s" repeatCount="indefinite"/><use href="#pcXRP" transform="scale(0.6)"/></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2669;0.9992" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/><text class="ms" x="324" y="273" style="fill:#E9ECEF">Driving forward...</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5127;0.9992" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/><text class="ms" x="324" y="295" style="fill:#E9ECEF">Driving backward...</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.7585;0.9992" calcMode="discrete" dur="11.80s" repeatCount="indefinite"/><text class="ms" x="324" y="317" style="fill:#E9ECEF">Done!</text></g></g>
+</svg>

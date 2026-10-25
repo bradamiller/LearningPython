@@ -418,6 +418,12 @@ press the button on the robot.
 Watch the shell at the bottom: your `print()` messages appear there as the robot
 runs, so you can see exactly where it is in the program.
 
+<Figure
+  src="/img/lesson-08/first-drive.svg"
+  alt="An animation of the Lesson 1-8 program running. On the left an XRP sits on the floor on its start mark. On the right, the program, with the line that is running highlighted, and the shell below it. First the program waits at board.wait_for_button() until the button is pressed. Then the shell prints Driving forward..., the robot drives 30 cm forward, the shell prints Driving backward..., the robot drives 30 cm back to its start mark, and the shell prints Done!"
+  caption="What a correct run looks like: nothing happens until the button, then each print appears in the shell just before the move it announces."
+/>
+
 <KnowledgeCheck
   question="Why does drivetrain.straight(-30) drive the robot backward?"
   options={[
