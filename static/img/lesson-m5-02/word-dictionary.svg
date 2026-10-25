@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" width="680" height="360" role="img" aria-labelledby="t d"><title id="t">A dictionary, in print and in Python</title><desc id="d">A cartoon of an open printed dictionary with four entries, each a bold word with its definition: graph, nodes joined by edges; motor, turns a wheel; robot, senses, thinks, acts; sensor, measures the world. Letter tabs run down the edge, and a magnifying glass hovers over the highlighted entry for sensor, where the word is labeled key and the definition is labeled value. Beside it, the same entries as a Python dictionary called glossary, with words as keys and definitions as values, and glossary["sensor"] giving "measures the world".</desc><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker></defs><style>
+ .h{font-family:Montserrat,Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;fill:#22527B}
+ .ph{font-family:Georgia,'Times New Roman',serif;font-size:11px;font-style:italic;fill:#8A7A55}
+ .hw{font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:700;fill:#2B2B2B}
+ .pos{font-family:Georgia,'Times New Roman',serif;font-size:12px;font-style:italic;fill:#8A7A55}
+ .df{font-family:Georgia,'Times New Roman',serif;font-size:13.5px;fill:#343A40}
+ .tab{font-family:Georgia,serif;font-size:11px;font-weight:700;fill:#5F4B3B}
+ .kv{font-family:Montserrat,Helvetica,Arial,sans-serif;font-size:13px;font-weight:800}
+ .ch{font-family:Montserrat,Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:700;fill:#142D50}
+ .cd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;font-weight:600;fill:#142D50}
+ .lg{font-family:Montserrat,Helvetica,Arial,sans-serif;font-size:11.5px;fill:#343A40}
+</style><rect width="680" height="360" fill="#FFFFFF"/>
+<text class="h" x="20" y="24">A dictionary looks things up by word</text>
+<rect x="16" y="50" width="396" height="284" rx="14" fill="#8C2A2A"/>
+<path d="M 24 54 Q 119.0 40 214.0 56 L 214.0 324 Q 119.0 312 24 324 Z" fill="#FFFBF0" stroke="#C9B98F" stroke-width="1.5"/>
+<path d="M 404 54 Q 309.0 40 214.0 56 L 214.0 324 Q 309.0 312 404 324 Z" fill="#FFF7E6" stroke="#C9B98F" stroke-width="1.5"/>
+<line x1="214.0" y1="56" x2="214.0" y2="324" stroke="#B9A776" stroke-width="2"/>
+<text class="ph" x="54" y="80">graph – motor</text>
+<text class="ph" x="374" y="80" text-anchor="end">robot – sensor</text>
+<rect x="406" y="74" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="88" text-anchor="middle">A</text>
+<rect x="406" y="98" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="112" text-anchor="middle">C</text>
+<rect x="406" y="122" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="136" text-anchor="middle">E</text>
+<rect x="406" y="146" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="160" text-anchor="middle">G</text>
+<rect x="406" y="170" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="184" text-anchor="middle">I</text>
+<rect x="406" y="194" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="208" text-anchor="middle">K</text>
+<rect x="406" y="218" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="232" text-anchor="middle">M</text>
+<rect x="406" y="242" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="256" text-anchor="middle">O</text>
+<rect x="406" y="266" width="18" height="20" rx="4" fill="#EFE6CF" stroke="#B9A776"/><text class="tab" x="415" y="280" text-anchor="middle">Q</text>
+<rect x="406" y="290" width="18" height="20" rx="4" fill="#FDECEE" stroke="#B9A776"/><text class="tab" x="415" y="304" text-anchor="middle">S</text>
+<text class="hw" x="52" y="114">graph</text>
+<text class="pos" x="110" y="114">noun</text>
+<text class="df" x="52" y="136">nodes and edges</text>
+<line x1="52" y1="152" x2="192" y2="152" stroke="#E2D6B5" stroke-width="1"/>
+<text class="hw" x="52" y="214">motor</text>
+<text class="pos" x="110" y="214">noun</text>
+<text class="df" x="52" y="236">turns a wheel</text>
+<line x1="52" y1="252" x2="192" y2="252" stroke="#E2D6B5" stroke-width="1"/>
+<text class="hw" x="236.0" y="114">robot</text>
+<text class="pos" x="294.0" y="114">noun</text>
+<text class="df" x="236.0" y="136">senses and acts</text>
+<line x1="236.0" y1="152" x2="376.0" y2="152" stroke="#E2D6B5" stroke-width="1"/>
+<rect x="228.0" y="194" width="166" height="70" rx="8" fill="#FFF3B0" opacity="0.9"/>
+<text class="hw" x="236.0" y="214">sensor</text>
+<text class="pos" x="304.0" y="214">noun</text>
+<text class="df" x="236.0" y="236">measures the world</text>
+<line x1="236.0" y1="252" x2="376.0" y2="252" stroke="#E2D6B5" stroke-width="1"/>
+<path d="M 266.0 186 C 276.0 164 306.0 158 332.0 158" fill="none" stroke="#D1182C" stroke-width="2" marker-end="url(#ar)"/>
+<text class="kv" x="336.0" y="162" style="fill:#D1182C">key</text>
+<path d="M 276.0 244 C 272.0 270 256.0 278 242.0 284" fill="none" stroke="#22527B" stroke-width="2" marker-end="url(#ab)"/>
+<text class="kv" x="250.0" y="298" style="fill:#22527B">value</text>
+<g transform="translate(374.0 206) rotate(-20)"><circle r="18" fill="#D6ECFA" fill-opacity="0.35" stroke="#5F666D" stroke-width="4"/><rect x="-4" y="17" width="8" height="26" rx="3" fill="#5F666D"/></g>
+<rect x="424" y="44" width="248" height="290" rx="12" fill="#F8F9FA" stroke="#ADB5BD"/>
+<text class="ch" x="438" y="70">The same idea in Python</text>
+<text class="cd" x="438" y="98" style="white-space:pre">glossary = {</text>
+<text class="cd" x="438" y="117" style="white-space:pre">  "graph": "nodes and edges",</text>
+<text class="cd" x="438" y="136" style="white-space:pre">  "motor": "turns a wheel",</text>
+<text class="cd" x="438" y="155" style="white-space:pre">  "robot": "senses and acts",</text>
+<text class="cd" x="438" y="174" style="white-space:pre">  "sensor": "measures the world",</text>
+<text class="cd" x="438" y="193" style="white-space:pre">}</text>
+<text class="cd" x="438" y="230">glossary["sensor"]</text>
+<text class="cd" x="438" y="250" style="fill:#22527B">  "measures the world"</text>
+<text class="lg" x="438" y="275"><tspan style="fill:#D1182C;font-weight:700">key</tspan>: the word you look up</text>
+<text class="lg" x="438" y="292"><tspan style="fill:#22527B;font-weight:700">value</tspan>: what you find there</text>
+<text class="lg" x="438" y="313">No page-flipping: give the key,</text>
+<text class="lg" x="438" y="328">get the value straight back.</text></svg>
