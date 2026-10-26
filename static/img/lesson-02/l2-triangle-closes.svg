@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" width="680" height="400" role="img" aria-labelledby="fT fD">
+  <title id="fT">The triangle that closes</title>
+  <desc id="fD">An animation, seen from above, of an XRP robot carrying a marker drawing a triangle. The program beside it is Wait for button press, then Repeat 3 times: Straight 20 cm, Turn 120 degrees, with the block that is running highlighted. The robot waits for the button, then drives a 20 cm side and turns 120 degrees in place, three times, drawing a blue triangle. A box names each side and corner and keeps a running total of the degrees turned: 120, 240, then 360. The triangle closes and the robot ends on its start mark facing the way it began.</desc>
+  <style>
+    .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
+    .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
+    .nb  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .sm  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 11.5px; fill: #6C757D; }
+    .ax  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; fill: #6C757D; }
+    .m   { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; font-weight: 700; fill: #142D50; }
+    .ms  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 600; fill: #343A40; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aW" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+    <marker id="aG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="aGr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+    <marker id="pcArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/>
+    </marker>
+    <marker id="pcDim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L5,5 L0,9" fill="none" stroke="#142D50" stroke-width="1.6"/>
+    </marker>
+
+    <!-- The XRP from above, traced from SparkFun's top-view photo. Front is UP.
+         Origin = center of rotation (the pen hole between the drive wheels).
+         Units: 1 unit = 4 photo px; the sensors are 60 units (8.75 cm) ahead of the origin. -->
+    <g id="pcXRP" stroke-linejoin="round">
+      <!-- rails out to the front casters -->
+      <rect x="-59" y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <rect x="51"  y="-80" width="8" height="40" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <!-- main chassis plate -->
+      <rect x="-59" y="-46" width="118" height="75" rx="8" fill="#D3D7DB" fill-opacity="0.92" stroke="#5F666D" stroke-width="1.5"/>
+      <rect x="-50" y="-38" width="100" height="58" rx="4" fill="#E9ECEF" fill-opacity="0.85" stroke="#9AA1A8" stroke-width="0.8"/>
+      <!-- caster bosses at the front corners -->
+      <circle cx="-49" cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="49"  cy="-79" r="10" fill="#C3C8CD" stroke="#5F666D" stroke-width="1.3"/>
+      <circle cx="-49" cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <circle cx="49"  cy="-79" r="4.5" fill="#F1EBDD" stroke="#8A7E62" stroke-width="0.8"/>
+      <!-- drive wheels -->
+      <rect x="-56" y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <rect x="45"  y="-21" width="11" height="42" rx="3.5" fill="#2B2B2B"/>
+      <line x1="-50.5" y1="-17" x2="-50.5" y2="17" stroke="#6C757D" stroke-width="1"/>
+      <line x1="50.5"  y1="-17" x2="50.5"  y2="17" stroke="#6C757D" stroke-width="1"/>
+      <!-- battery latches -->
+      <rect x="-40" y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <rect x="34"  y="-30" width="6" height="12" rx="2" fill="#F05A28"/>
+      <!-- controller board -->
+      <rect x="-24" y="-42" width="48" height="37" rx="2" fill="#D1182C"/>
+      <rect x="-6" y="-41" width="12" height="35" rx="1" fill="#2B2B2B"/>
+      <!-- servo + arm at the back -->
+      <rect x="-26" y="22" width="15" height="13" rx="1.5" fill="#2B2B2B"/>
+      <rect x="-34" y="24" width="8" height="26" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <!-- rangefinder bracket, board and the two cylinders -->
+      <rect x="-16" y="-58" width="32" height="13" rx="2" fill="#AEB4BA" stroke="#5F666D" stroke-width="1"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5" fill="#B5172A"/>
+      <circle cx="-8" cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <circle cx="8"  cy="-68" r="5.5" fill="#E4E7EA" stroke="#868E96" stroke-width="1"/>
+      <!-- the two line sensors, under the rangefinder (drawn as if seen through it) -->
+      <circle cx="-6.5" cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <circle cx="6.5"  cy="-60" r="4" fill="#FFD43B" stroke="#142D50" stroke-width="1.4"/>
+      <!-- center of rotation: the pen hole -->
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/>
+      <circle cx="0" cy="0" r="1.8" fill="#142D50"/>
+    </g>
+
+    <!-- the same robot after a right turn, as a dashed ghost -->
+    <g id="pcGhost" fill="none" stroke="#343A40" stroke-width="1.4" stroke-dasharray="4 3">
+      <path d="M -51 -46 V -72 M 51 -46 V -72 M -59 -36 V -79 M 59 -36 V -79 M -59 -46 H 59"/>
+      <circle cx="-49" cy="-79" r="10"/>
+      <circle cx="49"  cy="-79" r="10"/>
+      <rect x="-18" y="-65" width="36" height="8" rx="1.5"/>
+      <circle cx="-6.5" cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+      <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
+    </g>
+  </defs>
+  <style>.still{display:none} @media (prefers-reduced-motion: reduce){.anim{display:none}.still{display:inline}}</style>
+  <rect width="680" height="400" fill="#FFFFFF"/>
+  <text class="h" x="20" y="26">The triangle that closes</text>
+  <rect x="20" y="40" width="390" height="350" rx="10" fill="#F3F4F6" stroke="#DEE2E6"/>
+  <path d="M 276 312 h 28 M 290 298 v 28" stroke="#ADB5BD" stroke-width="2"/><text class="sm" x="320" y="362" style="font-weight:700">start</text>
+  <text class="h" x="436" y="60">Your program</text>
+  <text class="sm" x="430" y="278">Three corners of 120 add up to 360,</text>
+  <text class="sm" x="430" y="293">one full turn, so the robot ends on</text>
+  <text class="sm" x="430" y="308">its start mark facing the way it began.</text>
+  <text class="sm" x="430" y="323">360 / 3 sides = 120 per corner.</text>
+  <g class="anim"><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0001;0.9999" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><polyline points="290.0,312.0 290.0,162.0 160.1,237.0 290.0,312.0" fill="none" stroke="#1F6FEB" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="450 470"><animate attributeName="stroke-dashoffset" values="450.0;450.0;442.5;435.0;427.5;420.0;412.5;405.0;397.5;390.0;382.5;375.0;367.5;360.0;352.5;345.0;337.5;330.0;322.5;315.0;307.5;300.0;300.0;300.0;292.5;285.0;277.5;270.0;262.5;255.0;247.5;240.0;232.5;225.0;217.5;210.0;202.5;195.0;187.5;180.0;172.5;165.0;157.5;150.0;150.0;150.0;142.5;135.0;127.5;120.0;112.5;105.0;97.5;90.0;82.5;75.0;67.5;60.0;52.5;45.0;37.5;30.0;22.5;15.0;7.5;0.0;0.0;0.0;0.0;0.0" keyTimes="0;0.00000;0.07432;0.08108;0.08784;0.09459;0.10135;0.10811;0.11486;0.12162;0.12838;0.13514;0.14189;0.14865;0.15541;0.16216;0.16892;0.17568;0.18243;0.18919;0.19595;0.20270;0.21622;0.31982;0.32658;0.33333;0.34009;0.34685;0.35360;0.36036;0.36712;0.37387;0.38063;0.38739;0.39414;0.40090;0.40766;0.41441;0.42117;0.42793;0.43468;0.44144;0.44820;0.45495;0.46847;0.57207;0.57883;0.58559;0.59234;0.59910;0.60586;0.61261;0.61937;0.62613;0.63288;0.63964;0.64640;0.65315;0.65991;0.66667;0.67342;0.68018;0.68694;0.69369;0.70045;0.70721;0.72072;0.82432;1.00000;1" dur="14.80s" repeatCount="indefinite"/></polyline></g><g><animate attributeName="opacity" values="1;1" keyTimes="0.00000;1.00000" dur="14.80s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="290.0 312.0;290.0 312.0;290.0 304.5;290.0 297.0;290.0 289.5;290.0 282.0;290.0 274.5;290.0 267.0;290.0 259.5;290.0 252.0;290.0 244.5;290.0 237.0;290.0 229.5;290.0 222.0;290.0 214.5;290.0 207.0;290.0 199.5;290.0 192.0;290.0 184.5;290.0 177.0;290.0 169.5;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;290.0 162.0;283.5 165.8;277.0 169.5;270.5 173.2;264.0 177.0;257.5 180.8;251.0 184.5;244.5 188.2;238.0 192.0;231.5 195.8;225.0 199.5;218.6 203.2;212.1 207.0;205.6 210.8;199.1 214.5;192.6 218.2;186.1 222.0;179.6 225.8;173.1 229.5;166.6 233.2;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;160.1 237.0;166.6 240.8;173.1 244.5;179.6 248.2;186.1 252.0;192.6 255.8;199.1 259.5;205.6 263.2;212.1 267.0;218.6 270.8;225.0 274.5;231.5 278.2;238.0 282.0;244.5 285.8;251.0 289.5;257.5 293.2;264.0 297.0;270.5 300.8;277.0 304.5;283.5 308.2;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0;290.0 312.0" keyTimes="0.00000;0.06757;0.07432;0.08108;0.08784;0.09459;0.10135;0.10811;0.11486;0.12162;0.12838;0.13514;0.14189;0.14865;0.15541;0.16216;0.16892;0.17568;0.18243;0.18919;0.19595;0.20270;0.21622;0.22523;0.23423;0.24324;0.25225;0.26126;0.27027;0.27928;0.28829;0.29730;0.30631;0.31982;0.32658;0.33333;0.34009;0.34685;0.35360;0.36036;0.36712;0.37387;0.38063;0.38739;0.39414;0.40090;0.40766;0.41441;0.42117;0.42793;0.43468;0.44144;0.44820;0.45495;0.46847;0.47748;0.48649;0.49550;0.50450;0.51351;0.52252;0.53153;0.54054;0.54955;0.55856;0.57207;0.57883;0.58559;0.59234;0.59910;0.60586;0.61261;0.61937;0.62613;0.63288;0.63964;0.64640;0.65315;0.65991;0.66667;0.67342;0.68018;0.68694;0.69369;0.70045;0.70721;0.72072;0.72973;0.73874;0.74775;0.75676;0.76577;0.77477;0.78378;0.79279;0.80180;0.81081;0.82432;1.00000" dur="14.80s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="rotate" values="0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;0.0;-12.0;-24.0;-36.0;-48.0;-60.0;-72.0;-84.0;-96.0;-108.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-120.0;-132.0;-144.0;-156.0;-168.0;-180.0;-192.0;-204.0;-216.0;-228.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-240.0;-252.0;-264.0;-276.0;-288.0;-300.0;-312.0;-324.0;-336.0;-348.0;-360.0;-360.0;-360.0" keyTimes="0.00000;0.06757;0.07432;0.08108;0.08784;0.09459;0.10135;0.10811;0.11486;0.12162;0.12838;0.13514;0.14189;0.14865;0.15541;0.16216;0.16892;0.17568;0.18243;0.18919;0.19595;0.20270;0.21622;0.22523;0.23423;0.24324;0.25225;0.26126;0.27027;0.27928;0.28829;0.29730;0.30631;0.31982;0.32658;0.33333;0.34009;0.34685;0.35360;0.36036;0.36712;0.37387;0.38063;0.38739;0.39414;0.40090;0.40766;0.41441;0.42117;0.42793;0.43468;0.44144;0.44820;0.45495;0.46847;0.47748;0.48649;0.49550;0.50450;0.51351;0.52252;0.53153;0.54054;0.54955;0.55856;0.57207;0.57883;0.58559;0.59234;0.59910;0.60586;0.61261;0.61937;0.62613;0.63288;0.63964;0.64640;0.65315;0.65991;0.66667;0.67342;0.68018;0.68694;0.69369;0.70045;0.70721;0.72072;0.72973;0.73874;0.74775;0.75676;0.76577;0.77477;0.78378;0.79279;0.80180;0.81081;0.82432;1.00000" dur="14.80s" repeatCount="indefinite"/><use href="#pcXRP" transform="scale(0.6)"/></g></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0001;0.9999" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="93" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0.00000;0.00000;0.06757" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/></rect><rect x="430" y="137" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0;1;0" keyTimes="0.00000;0.06757;0.20270;0.31982;0.45495;0.57207;0.70721" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/></rect><rect x="430" y="159" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="0;1;0;1;0;1;0" keyTimes="0.00000;0.20270;0.31982;0.45495;0.57207;0.70721;0.82432" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/></rect><text class="ms" x="430" y="82" style="fill:#D1182C">Repeat 3, Turn 120</text><text class="ms" x="440" y="108">Wait for button press</text><text class="ms" x="440" y="130">Repeat  3 times</text><text class="ms" x="440" y="152">    Straight  cm: 20</text><text class="ms" x="440" y="174">    Turn  Deg: 120</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0001;0.0676" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#6C757D" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#6C757D">Waiting for the button</text><text class="sm" x="444" y="244">press it to start</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.0676;0.2027" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#22527B">Side 1</text><text class="sm" x="444" y="244">Straight 20 cm</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2027;0.3198" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#D1182C" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#D1182C">Corner 1: Turn 120</text><text class="sm" x="444" y="244">turned 120 degrees so far</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.3198;0.4550" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#22527B">Side 2</text><text class="sm" x="444" y="244">Straight 20 cm</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.4550;0.5721" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#D1182C" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#D1182C">Corner 2: Turn 120</text><text class="sm" x="444" y="244">turned 240 degrees so far</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5721;0.7072" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#22527B" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#22527B">Side 3</text><text class="sm" x="444" y="244">Straight 20 cm</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.7072;0.8243" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#D1182C" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#D1182C">Corner 3: Turn 120</text><text class="sm" x="444" y="244">turned 360 degrees so far</text></g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.8243;0.9999" calcMode="discrete" dur="14.80s" repeatCount="indefinite"/><rect x="430" y="202" width="236" height="54" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="2"/><text class="nb" x="444" y="225" style="fill:#2E7D32">Closed!</text><text class="sm" x="444" y="244">turned 360 in total: back at the start</text></g></g>
+  <g class="still"><use href="#pcXRP" transform="translate(290 312) scale(0.6)"/></g>
+</svg>

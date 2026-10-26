@@ -108,6 +108,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m12steps.py | l2-step2.svg | /img/lesson-02/l2-step2.svg |
 | m12steps.py | l2-step3.svg | /img/lesson-02/l2-step3.svg |
 | m12tri.py | l2-triangle-tries.svg | /img/lesson-02/l2-triangle-tries.svg |
+| m12tri.py | l2-triangle-closes.svg | /img/lesson-02/l2-triangle-closes.svg |
 | m2_error_sign.py | error-sign.svg | — |
 | m2_four_positions.py | four-positions.svg | — |
 | m2_sensor_ended_turn.py | sensor-ended-turn.svg | — |
