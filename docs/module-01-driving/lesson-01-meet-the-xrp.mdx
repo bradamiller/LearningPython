@@ -109,7 +109,8 @@ A robot only does what you tell it. The workflow is always the same:
 4. The robot **runs** the program — each command in order.
 
 Step 3 matters: writing a program isn't enough. It has to be uploaded before the
-robot can run it.
+robot can run it. In XRP Code you don't do steps 3 and 4 separately — clicking
+the green **RUN** button uploads the program to the robot *and* starts it.
 
 ### Two ways to connect
 
@@ -190,13 +191,13 @@ open in a tab; this lesson covers just enough to get your first program running.
 
 <Video
   placeholderLabel="Screen recording — creating a project & the three key blocks"
-  caption="A quick tour of XRP Code: the block palette, the work area, and the upload button."
+  caption="A quick tour of XRP Code: the block palette, the work area, and the RUN button."
 />
 
 A few blocks do everything you need today. Drag them out of the block palette:
 
 - The **Wait for button press** block <Block name="wait_for_button_press" /> goes
-  at the very top. A program starts running the moment it's uploaded — this block
+  at the very top. A program starts running the moment you click **RUN** — this block
   makes the robot sit still until you press its button, so it doesn't drive off
   the table while you're still holding it.
 - The **Straight** block <Block name="straight" /> drives in a straight line.
@@ -260,7 +261,7 @@ So get in the habit of this order, every run:
 
 That last step is why the Wait for button press block is so useful: it gives you
 the gap between "powered on and calibrated" and "driving," instead of the program
-taking off the instant it uploads.
+taking off the instant you click RUN.
 
 <KnowledgeCheck
   question="Your program tells the robot to turn 90°, but every run it turns a different, unpredictable amount. What is the most likely cause?"
@@ -278,8 +279,9 @@ taking off the instant it uploads.
 <TeacherNote title="Guided practice — first upload (10–15 min)">
 
 Have students create a new project named `Lesson_1_First_Drive` and rebuild the
-worked example. Then: plug in USB → **Upload** → pick the robot → wait for
-"Upload Successful" → press the button on the robot to run. Expect it to drive
+worked example. Then: plug in USB → **CONNECT** → pick the robot → robot on
+the table → **RUN** (this uploads *and* starts the program, which then sits at
+Wait for button press) → press the button on the robot. Expect it to drive
 ~20 cm out and back to roughly where it started. Keep everyone on the cable for
 this first upload — it's also the USB pass that makes Bluetooth possible later.
 
@@ -298,34 +300,36 @@ Follow these steps:
 2. Build the forward/backward program from above.
 3. Connect the robot: plug in the USB cable (use the cable today — your robot
    needs one USB connection before it can go wireless).
-4. Click **Upload** and choose your robot from the list.
-5. Wait for **"Upload Successful,"** then set the robot on the floor. If you
-   picked it up at any point, press **reset** and give it a few seconds to
-   recalibrate while it sits still.
-6. Press the User button on the robot — your **Wait for button press** block
-   releases the program and it runs.
+4. Click **CONNECT**, choose **USB**, and pick your robot from the list.
+5. Set the robot down where it will drive. If you picked it up while it was
+   starting up, press **reset** and give it a few seconds to recalibrate while
+   it sits still.
+6. Click the green **RUN** button. XRP Code uploads your program to the robot
+   and starts it straight away — your **Wait for button press** block holds the
+   robot still.
+7. Press the User button on the robot — the program is released and it drives.
 
 **You've succeeded when:**
 
-- [ ] The program uploads without errors
+- [ ] The program runs without errors
 - [ ] The robot drives forward about 20 cm
 - [ ] The robot drives back about 20 cm
 - [ ] It stops near where it started
 
 ### If something goes wrong
 
-- **Robot won't move** — check the battery is charged and the USB is seated, then re-upload.
+- **Robot won't move** — check the battery is charged and the USB is seated, then click **RUN** again.
 - **Turns are wildly off, or different every run** — the robot was almost certainly moving while it powered on. Set it down, press reset, wait a few seconds without touching it, then try again.
 - **Drives the wrong way** — motor directions can be reversed; that's normal and fixable later.
 - **Not exactly the distance you set** — floor friction and battery level affect distance. Close is fine for now.
-- **Robot not in the upload list** — try another USB port or cable (some cables are charge-only), then reload the page.
+- **Robot not in the CONNECT list** — try another USB port or cable (some cables are charge-only), then reload the page.
 - **Robot doesn't appear over Bluetooth** — charge the battery first (a low battery stops Bluetooth before anything else), press the robot's reset button so it isn't busy running a program, and make sure you're in Chrome or Edge. Still stuck? Plug in the cable and keep going.
 
 <TeacherNote title="Common setup snags">
 
 The USB-not-detected issue is almost always a **charge-only cable** or a flaky
-port. Keep a couple of known-good data cables at the demo station. If an upload
-"fails," have students wait ten seconds and try once more before troubleshooting
+port. Keep a couple of known-good data cables at the demo station. If RUN
+fails, have students wait ten seconds and try once more before troubleshooting
 further.
 
 </TeacherNote>
@@ -380,9 +384,9 @@ Quick recap — answer these in your head or with a partner:
   question="True or false: you can run a program on the robot without uploading it."
   options={[
     {text: 'True'},
-    {text: 'False — the program must be uploaded over USB before the robot can run it', correct: true},
+    {text: 'False — the program has to be sent to the robot first (clicking RUN does that, over USB or Bluetooth)', correct: true},
   ]}
-  explanation="Blockly is just the editor. Uploading is what puts runnable code on the robot."
+  explanation="Blockly is just the editor. Clicking RUN is what uploads the program to the robot and starts it."
 />
 
 <KnowledgeCheck
