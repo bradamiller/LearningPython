@@ -1075,6 +1075,12 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     now fails the build on any heading inside an extension** (`npm run lint` runs it with the
     ASCII check from prestart/prebuild; verified by planting one). Rule recorded in the
     component's doc comment too.
+  - **Name parity across the two tracks (D8), added 2026-10-28.** `scripts/check_name_parity.js`
+    fails the build when a method in an extension has no function of the same name and
+    parameters (minus `self`) anywhere in the course. It allows exactly the two differences
+    D2/D3 make on purpose: a parameter the class keeps as `self.<name>` (the Navigator's
+    `position` and `heading`), and planner `compute_path` against `compute_<planner>_path`.
+    Also in `npm run lint`; verified by planting a renamed method and a renamed parameter.
   - "behaviour" in M4 L8, and two British spellings in CSS comments.
   - This file's status line and tree still said Module 6 was overview-only.
   **How to re-run the verification** — the invariant greps in §9, plus:
@@ -1529,7 +1535,8 @@ Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
 **media** (placeholder or stand-in art). As of 2026-09-24: 2 bug, 3 blocked,
-7 answers, 6 convention, 2 media — 20 total. `npm run todos` lists them from the
+7 answers, 6 convention, 2 media — 20 total. As of 2026-10-28: 2 blocked (the
+Module 2 steering sign in L2-5 and L2-6, which need a robot), nothing else. `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
 ### The /todos index (added 2026-09-24)
@@ -1901,9 +1908,15 @@ Conventions that came out of the pass:
 M4 L1, L4, L6, L8, L9; M5 L1, L3, L8. If you write a new lesson, apply the table
 above as you go — it's much cheaper than another audit.
 
-**Known remaining softness:** M4 L1's "Map it" activity and the knowledge check
-below it are close enough that a student can read one off the other; the coordinates
-were changed so they no longer coincide, but the two are still adjacent.
+**M4 L1's "Map it" (fixed 2026-10-28):** its three questions now have a `<Reveal>`
+with the answers, and the knowledge check under it asks a different kind of question
+(which way to go between two spots in the same column), so neither can be read off
+the other.
+
+**Overview pages are exempt from the section conventions (2026-10-28).** A module's
+`lesson-00-overview` (M4, M6) has no Activity and no Real-world connections section,
+on purpose: it's a map of the module, not a lesson. Every other non-capstone lesson
+keeps both.
 
 ### 15b. Skeletons, not answers, for the functions students write (2026-10-15)
 
