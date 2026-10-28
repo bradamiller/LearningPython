@@ -473,7 +473,7 @@ that nothing else changed.
         while not self.sensor.is_at_cross():
             error = self.sensor.get_error()
             correction = error * self.kp
-            self.drivetrain.arcade(self.base_effort, -correction)
+            self.drivetrain.arcade(self.base_effort, correction)
         self.drivetrain.stop()
 
     def drive_past_intersection(self):

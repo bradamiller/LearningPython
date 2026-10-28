@@ -525,14 +525,15 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
 - **Videos/graphics:** Brad produces them and hands them off; lessons use labeled placeholders until then.
 
 **Open / unresolved (flag for Brad's evaluation pass):**
-- **🚨 MODULE 2 STEERING SIGN — NEEDS A ROBOT (raised 2026-10-25; remind Brad whenever he
-  says he has a robot to hand).** Current XRPLib `arcade()` is `left = (straight - turn) *
-  scale`, `right = (straight + turn) * scale`, documented as positive turn = LEFT, and its
-  own `line_track()` example is effectively `arcade(base, +KP * (left - right))`. L2-5 says
-  arcade adds turn to the LEFT motor (and drops the scaling), and L2-6 onward uses
-  `arcade(BASE_EFFORT, -correction)`. If positive really bends left on the robot, every
-  Module 2+ follower steers away from the line. `<Todo kind="blocked">` notes in L2-5 and
-  L2-6 carry the details and the two-minute test. Don't change the sign until Brad has run it.
+- **MODULE 2 STEERING SIGN — RESOLVED 2026-10-28.** Brad ran it on a robot: a positive
+  `arcade()` turn bends LEFT (counterclockwise), matching XRPLib (`left = (straight - turn) *
+  scale`, `right = (straight + turn) * scale`). L2-5 now explains arcade that way (with the
+  scaling) and steers with `arcade(BASE_EFFORT, -correction)` (error = setpoint - reading,
+  positive means drifted onto white, so steer right). L2-6 onward (error = left - right,
+  positive means steer left) uses `arcade(BASE_EFFORT, correction)` with no minus, and L2-6
+  teaches why the minus comes out. `build_templates.py` 2-6 uses `EditOutline` to drop
+  "minus" from test_follow()'s steer comment. kp-tuning figure redrawn as kp-tuning-v2.svg.
+  Not yet watched on a robot: the L2-6 two-sensor follower with the new sign.
 - **MODULE 1 FUNCTION NAMING — current, settled 2026-09-17.** One set of names in
   **both** languages: **`square(side_length)`**, **`triangle(side_length)`**,
   **`polygon(sides, side_length)`** — bare names (no `draw_` prefix), `sides`
@@ -1535,8 +1536,8 @@ Categories, most urgent first: **bug** (wrong, and a student can hit it),
 **blocked** (needs Brad's decision or a robot), **answers** (an answer is visible
 where it shouldn't be), **convention** (drifts from a rule kept elsewhere),
 **media** (placeholder or stand-in art). As of 2026-09-24: 2 bug, 3 blocked,
-7 answers, 6 convention, 2 media — 20 total. As of 2026-10-28: 2 blocked (the
-Module 2 steering sign in L2-5 and L2-6, which need a robot), nothing else. `npm run todos` lists them from the
+7 answers, 6 convention, 2 media — 20 total. As of 2026-10-28: none (the last two,
+the Module 2 steering sign, were fixed after Brad's robot test). `npm run todos` lists them from the
 terminal; `REVIEW-2026-09-21.md` carries the reasoning each cites.
 
 ### The /todos index (added 2026-09-24)

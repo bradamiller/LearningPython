@@ -111,7 +111,7 @@ def test_sweep():
 def track_to_intersection():
     # until sensor.is_at_cross():
     #     correction = sensor.get_error() * KP
-    #     steer with arcade(BASE_EFFORT, -correction)
+    #     steer with arcade(BASE_EFFORT, correction)
     # then stop the motors
     pass
 

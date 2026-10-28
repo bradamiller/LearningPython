@@ -102,7 +102,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | g6.py | three-planners.svg | /img/lesson-m6-05/three-planners.svg |
 | grings.py | bfs-rings.svg | /img/lesson-m5-03/bfs-rings-xy.svg |
 | hill.py | effort-vs-speed-hill.svg | /img/lesson-06/effort-vs-speed-on-a-hill.svg |
-| kpanim.py | kp-tuning.svg | /img/lesson-m2-05/kp-tuning.svg |
+| kpanim.py | kp-tuning-v2.svg | /img/lesson-m2-05/kp-tuning-v2.svg |
 | m12.py | square-goal.svg | /img/lesson-02/square-goal.svg |
 | m12steps.py | l2-step1.svg | /img/lesson-02/l2-step1.svg |
 | m12steps.py | l2-step2.svg | /img/lesson-02/l2-step2.svg |

@@ -49,7 +49,7 @@ the test that has been doing the job so far.
 def track_to_intersection():
     # until is_at_cross():
     #     correction = get_error() * KP
-    #     steer with arcade(BASE_EFFORT, -correction)
+    #     steer with arcade(BASE_EFFORT, correction)
     # then stop the motors
     pass
 
@@ -197,7 +197,7 @@ Module 2 final project.
 def track_to_intersection():
     while not is_at_cross():
         correction = get_error() * KP
-        drivetrain.arcade(BASE_EFFORT, -correction)
+        drivetrain.arcade(BASE_EFFORT, correction)
     drivetrain.stop()
 ```
 
@@ -222,7 +222,7 @@ reveal above.
 def track_to_intersection():
     while not is_at_cross():
         correction = get_error() * KP
-        drivetrain.arcade(BASE_EFFORT, -correction)
+        drivetrain.arcade(BASE_EFFORT, correction)
     drivetrain.stop()
 
 def test_cross_moving():

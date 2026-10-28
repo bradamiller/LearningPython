@@ -86,7 +86,7 @@
   <text class="ms" x="434" y="86">loop forever:</text>
   <text class="ms" x="450" y="107">error = get_error()</text>
   <text class="ms" x="450" y="128">correction = error x KP</text>
-  <text class="ms" x="450" y="149">arcade(BASE_EFFORT, correction)</text>
+  <text class="ms" x="450" y="149">arcade(BASE_EFFORT, -correction)</text>
   <rect x="424" y="240" width="246" height="72" rx="8" fill="#F8F9FA" stroke="#ADB5BD"/>
   <text class="sm" x="424" y="332">Nothing changes between the three runs</text>
   <text class="sm" x="424" y="347">but one number. Too low and the robot</text>

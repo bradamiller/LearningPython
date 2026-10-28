@@ -54,6 +54,10 @@ and class ops read the lesson's <OptionalExtension> fences
       an in-place edit the lesson states in prose (2-9 raises
       BASE_EFFORT). `evidence` is a regex that must match the
       lesson text, so a changed lesson fails loudly.
+  EditOutline(name, lesson, old, new, evidence)
+      an in-place edit to one line of a function's outline that
+      the lesson states in prose (2-6 takes the minus sign out of
+      test_follow()'s steer). Same `evidence` rule as SetValue.
   Func(name, lesson, full=False, pick=0, replace=False, ext=None,
        after=/before=)
       a function. OUTLINE = the student-visible skeleton fence in
@@ -634,6 +638,24 @@ class SetValue(Op):
         m = re.match(r"^(%s = )(\S+)(.*)$" % self.name, line)
         it.lines = [m.group(1) + self.value + m.group(3)]
         it.lesson = self.lesson
+
+
+class EditOutline(Op):
+    def setup(self, name, lesson, old, new, evidence):
+        self.name, self.lesson, self.old, self.new, self.evidence = name, lesson, old, new, evidence
+
+    def apply(self, model, track):
+        text = open(lesson_path(self.lesson), encoding="utf-8").read()
+        if not re.search(self.evidence, text):
+            fail("lesson %s no longer says %r" % (self.lesson, self.evidence))
+        it = model.find(self.name)
+        if it is None:
+            fail("lesson %s edits %s(), which is not in the file" % (self.lesson, self.name))
+        hits = [i for i, l in enumerate(it.outline) if self.old in l]
+        if len(hits) != 1:
+            fail("lesson %s: %r is in %s()'s outline %d times, not once" % (self.lesson, self.old, self.name, len(hits)))
+        it.outline = list(it.outline)
+        it.outline[hits[0]] = it.outline[hits[0]].replace(self.old, self.new)
 
 
 class Func(Op):
@@ -1279,6 +1301,9 @@ RECIPE = [
     ("2-6", [
         Func("get_error", "2-6", replace=True),
         Delete("SETPOINT"),
+        # "the minus sign in front of the correction comes out"
+        EditOutline("test_follow", "2-6", "and minus the correction", "and the correction",
+                    r"minus sign\*\* in front of the correction comes out"),
     ]),
     ("2-7", [
         Func("is_at_cross", "2-7", after="is_either_on_line"),

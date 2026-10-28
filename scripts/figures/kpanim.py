@@ -62,7 +62,7 @@ anim.append(f'<g>{opa}<animateTransform attributeName="transform" type="translat
             f'<use href="#pcXRP" transform="scale({S})"/></g></g>')
 X=430
 b.append(f'<text class="h" x="{X}" y="60">The same loop, three KP values</text>')
-LINES=[(0,"loop forever:"),(1,"error = get_error()"),(1,"correction = error x KP"),(1,"arcade(BASE_EFFORT, correction)")]
+LINES=[(0,"loop forever:"),(1,"error = get_error()"),(1,"correction = error x KP"),(1,"arcade(BASE_EFFORT, -correction)")]
 for i,(ind,txt) in enumerate(LINES):
     b.append(f'<text class="ms" x="{X+4+ind*16}" y="{86+i*21}">{txt}</text>')
 BY=86+4*21+2
@@ -88,5 +88,5 @@ H=max(400,NY+5*15+5)
 out=svg('Tuning KP, from above',
  'An animation, seen from above, of the same line-following program run three times on a taped circle, with a different KP each time. The robot follows the outside edge of the tape with its left sensor, driving clockwise, and a blue line traces its path. With KP = 0.2 the correction is too small for the curve: the robot drifts outward and leaves the line. With KP = 0.5 it holds the edge with small corrections. With KP = 1.0 it over-corrects, swerving back and forth across the edge. Beside it, the three lines of the loop, and a box showing the left reading, the error and the correction as the robot drives.',b,H=H)
 out=out.replace('<rect width="680"',style_extra+'\n  <rect width="680"',1)
-open(OUTDIR+'kp-tuning.svg','w').write(out)
+open(OUTDIR+'kp-tuning-v2.svg','w').write(out)
 print(round(T,2),H)

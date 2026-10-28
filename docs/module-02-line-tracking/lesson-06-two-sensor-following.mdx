@@ -26,7 +26,7 @@ By the end of this lesson you will be able to:
 - Compute error with two sensors: `error = left − right`
 - Predict the sign of the error from the robot's position
 - Rewrite `get_error()` for two sensors and see that the follower's loop barely changes
-- Explain the negative sign in `arcade(BASE_EFFORT, -correction)`
+- Explain why this follower needs no minus sign in `arcade(BASE_EFFORT, correction)`, when Lesson 2-5's did
 
 </Objectives>
 
@@ -74,22 +74,7 @@ where the robot should be.
   explanation="error = 0.8 − 0.2 = +0.6. The high reading is on the LEFT, so the line is off to the robot's left — meaning the robot itself has drifted right of the line. It needs to steer left to get back."
 />
 
-## The control loop (and that negative sign)
-
-<Todo kind="blocked">
-Check on a real robot before teaching this. The minus sign in the follower below may be
-backwards for the current XRPLib. Its arcade documents a positive turn as skewing the
-robot LEFT (left wheel gets straight minus turn, right wheel straight plus turn), and its
-own line_track example, with error = left minus right, sets the left wheel to base minus
-error times KP and the right to base plus error times KP. That is arcade with a plus
-correction, not a minus. With a positive error meaning the robot drifted right, a minus
-sign would steer it further right, away from the line, unless the reflectance board's
-left and right are swapped relative to the robot. Test: put the robot just right of a
-line so the left sensor reads high and watch which way the follower turns. If it turns
-away, drop the minus here and in every follower after it (2-7 through the capstones),
-rewrite this section's explanation and knowledge check, fix 2-5's arcade example, and
-regenerate the templates. Raised 2026-10-25.
-</Todo>
+## The control loop (and the missing minus sign)
 
 Here is the payoff for putting the error behind a function last lesson. The follower
 in `test_follow()` reads `get_error()`, scales it, steers. Switching to two sensors
@@ -106,22 +91,22 @@ def get_error():
     pass
 ```
 
-**In `test_follow()`**, the correction goes into `arcade()` with a **minus sign** in
-front of it. That's the only change to the loop.
+**In `test_follow()`**, the **minus sign** in front of the correction comes out:
+`arcade(BASE_EFFORT, correction)`. That's the only change to the loop.
 
-Why the minus? A **positive** error means the robot drifted **right** of the line,
-so it must steer **left** to get back — and in `arcade()` a *negative* turn steers
-left. Negating the correction lines the math up with reality.
+Why no minus now? A **positive** error means the robot drifted **right** of the line,
+so it must steer **left** to get back, and in `arcade()` a *positive* turn steers
+left. The math already lines up with the robot, so there's nothing to flip.
 
 <KnowledgeCheck
-  question="Why is the correction negated in arcade(BASE_EFFORT, -correction) here, when Lesson 2-5 didn't negate it?"
+  question="Why does the minus sign from Lesson 2-5 come out of arcade() here?"
   options={[
     {text: 'The meaning of a positive error flipped, so the steer direction has to flip too', correct: true},
-    {text: 'Two sensors always need a negative sign no matter what'},
+    {text: 'Two sensors never need a sign change'},
     {text: 'It makes the robot go faster'},
     {text: 'It fixes a bug in arcade()'},
   ]}
-  explanation="With two sensors, a positive error means 'drifted right → steer left', which is a negative turn in arcade — so we negate the correction."
+  explanation="In Lesson 2-5 a positive error meant 'drifted onto white, steer right', a negative turn, so the correction was negated. With two sensors a positive error means 'drifted right, steer left', which is already a positive turn in arcade(), so the minus comes out."
 />
 
 <TeacherNote title="Teach the sign with the explorer program first">
@@ -129,7 +114,7 @@ left. Negating the correction lines the math up with reality.
 Step 1 of the activity has students test the rewritten `get_error()` in
 `test_sensors()` and **manually slide the robot across the line**, watching the error
 go positive, negative, and zero in real time. Don't skip it: that physical intuition
-is what makes the negative sign click. And make the step 2 observation out loud:
+is what makes the sign change click. And make the step 2 observation out loud:
 the loop didn't change, only the function did — this is the first time the course
 *shows* why a one-line function is worth having. Spend real time on *why* the sign flipped from Lesson 2-5 (the meaning of a
 positive error changed) — it's the subtle point of the lesson. Expect to re-tune
@@ -149,7 +134,7 @@ drifted each time. Check yourself against the table above.
 
 ### Step 2 · Run the follower
 
-Put the minus sign into `test_follow()` and set the run line back to it. Put the
+Take the minus sign out of `test_follow()` and set the run line back to it. Put the
 robot with the line running *between* the sensors, press the button, and watch it
 track the circle. If it steers *away* from the line as soon as it drifts, you have the
 sign backwards — go back to step 1 and work out which way a positive error should
@@ -158,7 +143,7 @@ it was with one sensor. The function changed; its caller didn't.
 
 ### Step 3 · Compare with one sensor
 
-Temporarily put the one-sensor `get_error()` back (and the `SETPOINT`), without the
+Temporarily put the one-sensor `get_error()` back (and the `SETPOINT`), with its
 minus sign, and run `test_follow()` again right after. Which is smoother? Which
 handles the curves and higher speeds better? Then restore the two-sensor version —
 that's the one the rest of the course uses.
@@ -181,7 +166,7 @@ def test_follow():
     while True:
         error = get_error()
         correction = error * KP
-        drivetrain.arcade(BASE_EFFORT, -correction)   # note the minus sign
+        drivetrain.arcade(BASE_EFFORT, correction)   # no minus sign now
         time.sleep(0.01)
 ```
 
@@ -204,7 +189,7 @@ def test_follow():
     while True:
         error = get_error()
         correction = error * KP
-        drivetrain.arcade(BASE_EFFORT, -correction)
+        drivetrain.arcade(BASE_EFFORT, correction)
         time.sleep(0.01)
 
 # ===== RUN =====
@@ -234,12 +219,12 @@ Comparing two sensors to find a position is a workhorse technique:
 
 - What's the two-sensor error formula, and why no setpoint? (`left − right`; equal readings already mean zero.)
 - Positive error means the robot drifted which way? (Right — the left sensor found the line, so the line is left of the robot.)
-- Why the negative sign on the correction? (A positive error needs a left steer, which is a negative turn in `arcade()`.)
+- Why did the minus sign come out? (A positive error now needs a left steer, which is already a positive turn in `arcade()`.)
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** compute `left − right`, predict drift direction and steer, and explain
-the negated correction. **Exit ticket:** "Both sensors read 0.9 — what's the error,
+why the minus sign came out. **Exit ticket:** "Both sensors read 0.9 — what's the error,
 and what might it physically mean?" (≈0; an intersection). **Preview:** next lesson adds
 the last sensor function, `is_at_cross()`, which detects that intersection with
 `get_left() > THRESHOLD and get_right() > THRESHOLD`, and finishes the toolkit.

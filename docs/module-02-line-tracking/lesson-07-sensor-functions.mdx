@@ -44,7 +44,7 @@ crossing line*, and with the sensor logic in functions, that loop reads as a sen
 ```python
 while not is_at_cross():
     correction = get_error() * KP
-    drivetrain.arcade(BASE_EFFORT, -correction)
+    drivetrain.arcade(BASE_EFFORT, correction)
 ```
 
 `is_at_cross()` is far clearer than `left > 0.5 and right > 0.5` would be in the

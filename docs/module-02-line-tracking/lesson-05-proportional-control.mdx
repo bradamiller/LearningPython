@@ -45,36 +45,25 @@ For that you need to steer without stopping. `arcade(speed, turn)` does exactly 
 
 ```python
 drivetrain.arcade(speed, turn)
-# is the same as:
-drivetrain.set_effort(speed + turn, speed - turn)
+# works like:
+drivetrain.set_effort(speed - turn, speed + turn)
+# then XRPLib scales both so the faster wheel gets the larger of speed and turn
 ```
 
-So `arcade(0.3, 0.15)` speeds up the left wheel and slows the right — the robot
-curves. A positive `turn` steers one way, negative the other, and zero drives
-straight.
-
-<Todo kind="blocked">
-Check on a real robot before teaching this. Current XRPLib (every version since 2023)
-computes arcade as left = (straight - turn) times a scale and right = (straight + turn)
-times the same scale, and documents a positive turn as skewing the robot LEFT. This
-lesson says the opposite: that arcade adds turn to the left motor and subtracts it from
-the right, so the code block above, the sentence under it and the 0.45 / 0.15 knowledge
-check are all reversed, and they also leave out the scaling (arcade 0.3, 0.15 really sets
-about 0.10 left and 0.30 right). If a positive turn bends left on the robot, this
-lesson's one-sensor follower steers away from the line edge too. Test: run arcade 0.3,
-0.15 for two seconds and see which way it curves. Fix in Lessons 2-5 and 2-6 together,
-then regenerate the templates. Raised 2026-10-25.
-</Todo>
+So `arcade(0.3, 0.15)` slows the left wheel and speeds up the right, and the robot
+curves **left**, counterclockwise. A **positive** `turn` steers left, a **negative**
+one steers right, and zero drives straight. (It's the same rule as Lesson 1-6's
+Arcade block, where a positive Turn curved left.)
 
 <KnowledgeCheck
-  question="With base speed 0.3, what does `arcade(0.3, 0.15)` set the two motors to?"
+  question="What does `arcade(0.3, -0.15)` do?"
   options={[
-    {text: 'Left 0.15, right 0.45'},
-    {text: 'Left 0.45, right 0.15', correct: true},
-    {text: 'Both 0.3'},
-    {text: 'Left 0.3, right 0.15'},
+    {text: 'Drives forward, curving right', correct: true},
+    {text: 'Drives forward, curving left'},
+    {text: 'Drives backward'},
+    {text: 'Spins in place'},
   ]}
-  explanation="arcade adds turn to the left motor and subtracts it from the right: 0.3 + 0.15 = 0.45 left, 0.3 − 0.15 = 0.15 right."
+  explanation="The speed is positive, so it drives forward. The turn is negative, so the left wheel speeds up and the right slows down, and the robot curves right."
 />
 
 ## Setpoint and error
@@ -138,11 +127,15 @@ spelling.** `Kp` is the only name in this course that gets the exception. In
 </Callout>
 
 With `Kp = 0.5`, an error of `+0.3` gives a correction of `+0.15`. Then we steer with
-that correction:
+that correction, with a **minus sign** in front of it:
 
 ```python
-drivetrain.arcade(BASE_EFFORT, correction)
+drivetrain.arcade(BASE_EFFORT, -correction)
 ```
+
+Why the minus? A positive error means the robot drifted onto white, so it has to steer
+**right**, back toward the line. In `arcade()` a positive turn steers *left*. Negating
+the correction lines the math up with the robot.
 
 Bigger error → bigger correction → sharper steer. When the robot is right on the edge
 (error 0), the correction is 0 and it drives straight. Notice there's **no
@@ -193,7 +186,7 @@ def test_follow():
     # loop forever:
     #     error = get_error()
     #     correction = error times KP
-    #     steer: arcade() with BASE_EFFORT and the correction
+    #     steer: arcade() with BASE_EFFORT and minus the correction
     #     time.sleep(0.01), so the loop doesn't flood the
     # processor
     pass
@@ -225,7 +218,7 @@ Write `get_error()` and turn the comments in `test_follow()` into code; set the 
 line to `test_follow()`. Put the robot so the left sensor sits on the edge of the
 line, press the button, and watch. It should hold the edge, nudging left and
 right as the line curves. If it drives straight off, check the sign of your error
-calculation against the table above; if it spins in place, check the order of the
+calculation against the table above, and the minus sign in front of the correction; if it spins in place, check the order of the
 two arguments to `arcade()`.
 
 ### Step 2 · Tune Kp
@@ -238,7 +231,7 @@ Then decide: which of the three is too high, which too low, and what does each o
 <Reveal title="What too high and too low look like" hint="try all three values first">
 
 <Figure
-  src="/img/lesson-m2-05/kp-tuning.svg"
+  src="/img/lesson-m2-05/kp-tuning-v2.svg"
   alt="An animation, seen from above, of the same line-following loop run three times on a taped circle, the left sensor holding the outside edge of the tape. A blue line traces the path. With KP = 0.2 the correction is too small for the curve and the robot drifts outward off the line. With KP = 0.5 it holds the edge with small corrections. With KP = 1.0 it over-corrects and weaves back and forth across the edge. A box beside it shows the left reading, the error and the correction as it drives."
   caption="One loop, three values of KP. Too low drifts off, too high weaves."
 />
@@ -364,7 +357,7 @@ def test_follow():
     while True:
         error = get_error()
         correction = error * KP
-        drivetrain.arcade(BASE_EFFORT, correction)
+        drivetrain.arcade(BASE_EFFORT, -correction)
         time.sleep(0.01)
 ```
 
@@ -376,7 +369,7 @@ def test_follow():
     while True:
         error = get_error()
         correction = error * KP
-        drivetrain.arcade(BASE_EFFORT, correction)
+        drivetrain.arcade(BASE_EFFORT, -correction)
 
         loop_count = loop_count + 1
         if loop_count % 50 == 0:
@@ -420,7 +413,7 @@ def test_follow():
     while True:
         error = get_error()
         correction = error * KP
-        drivetrain.arcade(BASE_EFFORT, correction)
+        drivetrain.arcade(BASE_EFFORT, -correction)
 
         loop_count = loop_count + 1
         if loop_count % 50 == 0:

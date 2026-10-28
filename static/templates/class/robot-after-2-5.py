@@ -83,7 +83,7 @@ def test_follow():
     # loop forever:
     #     error = get_error()
     #     correction = error times KP
-    #     steer: arcade() with BASE_EFFORT and the correction
+    #     steer: arcade() with BASE_EFFORT and minus the correction
     #     time.sleep(0.01), so the loop doesn't flood the
     # processor
     pass
