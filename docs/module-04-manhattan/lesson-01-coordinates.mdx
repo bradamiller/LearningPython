@@ -119,10 +119,6 @@ do we code?", answer "next lesson — today you're building the map the code wil
 
 ## Activity · Map it
 
-<Todo kind="answers">
-three problems here have no answers anywhere in the lesson, the line above hands one of them over in prose, and the knowledge check directly below is the same question as the second bullet with the rule spelled out in its explanation. Give the activity a Reveal and move the check, or reword it. [REVIEW §3]
-</Todo>
-
 Grab a blank grid and label every intersection with its `(x, y)`. Check yourself:
 the top-right of a 4×4 grid, the far corner, should be `(3, 3)`. Then answer a few:
 
@@ -130,15 +126,23 @@ the top-right of a 4×4 grid, the far corner, should be `(3, 3)`. Then answer a 
 - If the robot is at `(2, 1)`, what's directly to its left? Directly below it, toward you?
 - From `(1, 1)` to `(3, 0)`: how many steps across, how many up or down, how many total steps?
 
+<Reveal title="Check your answers" hint="answer all three first">
+
+- The bottom-right corner is `(3, 0)`: all the way across, no steps away from you.
+- Left of `(2, 1)` is `(1, 1)`: x goes down by one, y stays. Below it, toward you, is `(2, 0)`: y goes down by one, x stays.
+- From `(1, 1)` to `(3, 0)`: 2 across and 1 down, so 3 steps in all.
+
+</Reveal>
+
 <KnowledgeCheck
-  question="The robot is at (1, 2). What position is directly to its right (one step east)?"
+  question="The robot is at (3, 1) and needs to get to (3, 3). Which way does it go?"
   options={[
-    {text: '(1, 3)'},
-    {text: '(2, 2)', correct: true},
-    {text: '(0, 2)'},
-    {text: '(2, 3)'},
+    {text: 'Two steps east, to the right'},
+    {text: 'Two steps north, away from you', correct: true},
+    {text: 'Two steps south, toward you'},
+    {text: 'It is already there'},
   ]}
-  explanation="Moving right increases x by 1 and leaves y alone: (1, 2) → (2, 2)."
+  explanation="x is the same, so it doesn't move across at all. y goes from 1 to 3, so it moves 2 steps away from you, which is north."
 />
 
 <TeacherNote title="Differentiation">
