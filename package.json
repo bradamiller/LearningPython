@@ -19,7 +19,7 @@
     "todos": "node scripts/list_todos.js",
     "todos:data": "node scripts/extract_todos.js",
     "ascii": "node scripts/check_code_ascii.js",
-    "lint": "node scripts/check_code_ascii.js && node scripts/check_extensions.js"
+    "lint": "node scripts/check_code_ascii.js && node scripts/check_extensions.js && node scripts/check_name_parity.js"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
