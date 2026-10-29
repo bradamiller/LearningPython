@@ -259,9 +259,13 @@ it's styled to match the course, prints as a bordered box, and takes MDX
 children (leave blank lines inside the tags so markdown is parsed).
 
 **Teacher mode** (Root.js): a floating switch (bottom-right) sets
-`html[data-teacher='on']` and saves to `localStorage['xrp-teacher-mode']`.
+`html[data-teacher='on']` and saves to `localStorage['xrp-teacher-mode-v2']`.
 `.teacherNote` and `.teacherBanner` are `display:none` by default and revealed
-by that attribute (pure CSS). Default = student view.
+by that attribute (pure CSS). Default = student view. Since 2026-10-29 turning it
+on asks for a teacher password (Brad's ask); turning it off locks it again. Root.js
+keeps only a salted SHA-256 (`TEACHER_SALT`, `TEACHER_HASH`), never the password.
+It's a speed bump Brad accepted: teacher content is still in the static pages.
+To change the password, regenerate the hash with node's crypto (salt + password).
 
 ## 6. Blockly blocks (real block images)
 

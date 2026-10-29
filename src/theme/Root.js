@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useLocation} from '@docusaurus/router';
 
 /**
@@ -7,7 +7,11 @@ import {useLocation} from '@docusaurus/router';
  *
  * Teacher mode: teacher content is hidden by default (CSS), and turning the
  * switch on sets html[data-teacher='on'], which reveals every <TeacherNote>
- * and teacher banner across the site.
+ * and teacher banner across the site. Turning it on asks for the teacher
+ * password; turning it off locks it again, so a shared classroom computer
+ * doesn't stay unlocked. Only a salted SHA-256 of the password is kept here.
+ * This is a speed bump, not security: the site is static, so the teacher
+ * content is still in every page for anyone who reads the source.
  *
  * Show TODOs: authoring notes about things that still need fixing. The switch
  * appears on any page that has at least one, with a count of how many. It
@@ -15,7 +19,74 @@ import {useLocation} from '@docusaurus/router';
  * site (a reader is not), and remembers whichever way you last set it.
  */
 
-const TEACHER_KEY = 'xrp-teacher-mode';
+// v2: the password arrived 2026-10-29. A new key means a switch a student
+// turned on before then comes back off.
+const TEACHER_KEY = 'xrp-teacher-mode-v2';
+const TEACHER_SALT = 'xrp-teacher:';
+const TEACHER_HASH = '6f90b4ff6d54c5c8918d2d90f8d3f31c648e1254fd51338b79921d721d79828b';
+
+async function checkTeacherPassword(text) {
+  const bytes = new TextEncoder().encode(TEACHER_SALT + text);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  const hex = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+  return hex === TEACHER_HASH;
+}
+
+function PasswordDialog({onUnlock, onCancel}) {
+  const [text, setText] = useState('');
+  const [wrong, setWrong] = useState(false);
+  const input = useRef(null);
+
+  useEffect(() => {
+    input.current?.focus();
+    const onKey = (e) => e.key === 'Escape' && onCancel();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    let ok = false;
+    try {
+      ok = await checkTeacherPassword(text);
+    } catch (err) {
+      /* no Web Crypto (an http page): stay locked */
+    }
+    if (ok) onUnlock();
+    else {
+      setWrong(true);
+      setText('');
+      input.current?.focus();
+    }
+  };
+
+  return (
+    <div className="teacherLock" onMouseDown={(e) => e.target === e.currentTarget && onCancel()}>
+      <form className="teacherLock__box" role="dialog" aria-modal="true" aria-labelledby="teacherLockTitle" onSubmit={submit}>
+        <h2 id="teacherLockTitle" className="teacherLock__title">Teacher mode</h2>
+        <p className="teacherLock__text">Teacher mode shows answers and teaching notes. Enter the teacher password to turn it on.</p>
+        <input
+          ref={input}
+          className="teacherLock__input"
+          type="password"
+          autoComplete="off"
+          aria-label="Teacher password"
+          aria-invalid={wrong}
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            setWrong(false);
+          }}
+        />
+        {wrong && <p className="teacherLock__wrong" role="alert">That's not the teacher password.</p>}
+        <div className="teacherLock__buttons">
+          <button type="button" className="button button--secondary" onClick={onCancel}>Cancel</button>
+          <button type="submit" className="button button--primary" disabled={!text}>Unlock</button>
+        </div>
+      </form>
+    </div>
+  );
+}
 const TODO_KEY = 'xrp-show-todos';
 
 function Toggle({className, label, count, on, onClick, title}) {
@@ -49,25 +120,38 @@ function TeacherToggle() {
     }
   }, []);
 
-  const toggle = () => {
-    setOn((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(TEACHER_KEY, next ? 'on' : 'off');
-      } catch (e) {}
-      document.documentElement.setAttribute('data-teacher', next ? 'on' : 'off');
-      return next;
-    });
+  const [asking, setAsking] = useState(false);
+
+  const set = (next) => {
+    setOn(next);
+    try {
+      localStorage.setItem(TEACHER_KEY, next ? 'on' : 'off');
+    } catch (e) {}
+    document.documentElement.setAttribute('data-teacher', next ? 'on' : 'off');
   };
 
+  // Off needs nothing; on needs the password every time.
+  const toggle = () => (on ? set(false) : setAsking(true));
+
   return (
-    <Toggle
-      className="teacherToggle--teacher"
-      label="Teacher mode"
-      on={on}
-      onClick={toggle}
-      title="Show or hide teacher-only notes"
-    />
+    <>
+      <Toggle
+        className="teacherToggle--teacher"
+        label="Teacher mode"
+        on={on}
+        onClick={toggle}
+        title="Show or hide teacher-only notes (needs the teacher password)"
+      />
+      {asking && (
+        <PasswordDialog
+          onUnlock={() => {
+            setAsking(false);
+            set(true);
+          }}
+          onCancel={() => setAsking(false)}
+        />
+      )}
+    </>
   );
 }
 
