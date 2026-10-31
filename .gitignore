@@ -29,3 +29,8 @@ static/videos/*.mov
 /src/pages/checks/
 scripts/figures/out/
 scripts/figures/__pycache__/
+
+# slide build cache
+scripts/slides/.figcache/
+scripts/slides/**/__pycache__/
+scripts/slides/__pycache__/

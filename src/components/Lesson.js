@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import {useDoc} from '@docusaurus/plugin-content-docs/client';
+import slides from '@site/src/data/slides.json';
 
 /**
  * Lesson header band — the colored title block at the top of a lesson,
@@ -7,15 +10,22 @@ import Link from '@docusaurus/Link';
  * module, etc.) shown as a dotted row.
  */
 export function LessonHeader({eyebrow, title, meta = []}) {
+  const deck = slides[useDoc().metadata.id];
+  const deckUrl = useBaseUrl(deck || '/');
   return (
     <header className="lessonHeader">
       {eyebrow && <div className="eyebrow">{eyebrow}</div>}
       <h1>{title}</h1>
-      {meta.length > 0 && (
+      {(meta.length > 0 || deck) && (
         <div className="lessonMeta">
           {meta.map((m, i) => (
             <span key={i}>{m}</span>
           ))}
+          {deck && (
+            <a className="slidesLink" href={deckUrl} download>
+              Slides (PowerPoint)
+            </a>
+          )}
         </div>
       )}
     </header>

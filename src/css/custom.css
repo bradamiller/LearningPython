@@ -110,6 +110,19 @@
   font-size: 0.9rem;
   opacity: 0.95;
 }
+.lessonHeader .lessonMeta .slidesLink {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.lessonHeader .lessonMeta .slidesLink::before {
+  content: '▣';
+  margin-right: 0.4rem;
+}
+@media print {
+  .lessonHeader .lessonMeta .slidesLink { display: none; }
+}
 .lessonHeader .lessonMeta span::before {
   content: '';
   display: inline-block;
