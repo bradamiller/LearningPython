@@ -258,6 +258,10 @@ nobody has to. If you ever fix the directive parsing, the component can stay —
 it's styled to match the course, prints as a bordered box, and takes MDX
 children (leave blank lines inside the tags so markdown is parsed).
 
+**License** (Brad's pick, 2026-10-31): the course is GPL-3.0, matching the
+Open-STEM XRP repos. `LICENSE` is the standard GPL v3 text; the footer's copyright
+line names it and links the GNU page.
+
 **Teacher mode** (Root.js): a floating switch (bottom-right) sets
 `html[data-teacher='on']` and saves to `localStorage['xrp-teacher-mode-v2']`.
 `.teacherNote` and `.teacherBanner` are `display:none` by default and revealed

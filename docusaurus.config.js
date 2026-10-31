@@ -145,7 +145,7 @@ const config = {
             ],
           },
         ],
-        copyright: `XRP Python Curriculum · Built for high school classrooms.`,
+        copyright: `XRP Python Curriculum · Built for high school classrooms · Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL v3.0</a>`,
       },
       prism: {
         theme: prismThemes.github,
