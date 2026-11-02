@@ -11,6 +11,11 @@ a deck follows its lesson section by section, uses the lesson's own figures
 
 Text in any field may use `code` for Fira Mono and **bold**.
 
+A slide's 'figure' is a site image path ('/img/...'), a slide-only copy under
+scripts/slides ('./...'), or a block program: a list in the same format as the
+site's <BlockProgram blocks={...}>, e.g. [{'name': 'repeat', 'note': '4 times',
+'children': [{'name': 'straight', 'note': 'cm: 20'}, 'turn']}].
+
 Fonts: Caveat (titles), Patrick Hand (body), Fira Mono (code), all Google
 Fonts, so Google Slides has them built in; PowerPoint needs them installed
 (the README in static/slides says where to get them).
@@ -266,6 +271,14 @@ def _num(v):
     return [float(x) for x in re.split(r'[\s,]+', v.strip()) if x]
 
 
+def keep_spaces(svg_bytes):
+    """cairosvg ignores CSS white-space:pre, so leading spaces in code panels
+    vanish. Mark those text elements xml:space="preserve", which it honors."""
+    import re
+    return re.sub(rb'<(text|tspan)\b(?![^>]*xml:space)([^>]*white-space:\s*pre)',
+                  rb'<\1 xml:space="preserve"\2', svg_bytes)
+
+
 def freeze_svg(svg_bytes, at):
     """Replace each SMIL animation by its value at fraction `at` of the longest
     animation, so a static render shows that moment instead of the first frame."""
@@ -301,14 +314,135 @@ def freeze_svg(svg_bytes, at):
     return etree.tostring(root)
 
 
+# ---------------------------------------------------------------- block programs
+
+BLOCKS = os.path.join(STATIC, 'img', 'blocks')
+_C_GEO = os.path.join(REPO, 'src', 'components', 'cblocks.json')
+_BLOCK_COLORS = {'repeat': '#549054', 'repeat_while': '#549054', 'count': '#549054',
+                 'for_each': '#549054', 'function_def': '#845490',
+                 'funct_def_with_return': '#845490', 'if_do': '#546c90'}
+
+
+def _note_font(px):
+    from PIL import ImageFont
+    for path in (os.path.expanduser('~/.fonts/PatrickHand-Regular.ttf'),
+                 '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'):
+        if os.path.exists(path):
+            return ImageFont.truetype(path, px)
+    return ImageFont.load_default()
+
+
+def _stack(parts, overlap):
+    """Stack images top to bottom, left-aligned, each overlapping the last."""
+    from PIL import Image
+    w = max(p.width for p in parts)
+    h = sum(p.height for p in parts) - overlap * (len(parts) - 1)
+    out = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    y = 0
+    for p in parts:
+        out.alpha_composite(p, (0, y))
+        y += p.height - overlap
+    return out
+
+
+def _with_note(img, note):
+    from PIL import Image, ImageDraw
+    if not note:
+        return img
+    from PIL import ImageFont
+    font = _note_font(17)
+    arrow_font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 14) \
+        if os.path.exists('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf') else font
+    probe = ImageDraw.Draw(img)
+    aw = int(probe.textlength('\u2190', font=arrow_font)) + 5
+    tw = int(probe.textlength(note, font=font))
+    out = Image.new('RGBA', (img.width + 12 + aw + tw, img.height), (0, 0, 0, 0))
+    out.alpha_composite(img, (0, 0))
+    d = ImageDraw.Draw(out)
+    color = (73, 80, 87, 255)
+    d.text((img.width + 12, img.height / 2), '\u2190', font=arrow_font, fill=color, anchor='lm')
+    d.text((img.width + 12 + aw, img.height / 2), note, font=font, fill=color, anchor='lm')
+    return out
+
+
+def _block_node(item, geo):
+    """One block, or a C-shaped container around its children, drawn the way the
+    site's <BlockProgram> draws it (src/components/Blocks.js)."""
+    from PIL import Image, ImageDraw
+    node = {'name': item} if isinstance(item, str) else item
+    kids = node.get('children') or []
+    if not kids:
+        img = Image.open(os.path.join(BLOCKS, node['name'] + '.png')).convert('RGBA')
+        return _with_note(img, node.get('note'))
+    body = _stack([_block_node(k, geo) for k in kids], 3)
+    g = geo.get(node['name'])
+    if not g:
+        head = _with_note(Image.open(os.path.join(BLOCKS, node['name'] + '.png'))
+                          .convert('RGBA'), node.get('note'))
+        ind = Image.new('RGBA', (body.width + 16, body.height + 6), (0, 0, 0, 0))
+        ImageDraw.Draw(ind).rectangle((0, 0, 3, body.height + 6),
+                                      fill=_BLOCK_COLORS.get(node['name'], '#549054'))
+        ind.alpha_composite(body, (14, 3))
+        return _stack([head, ind], 0)
+    c = os.path.join(BLOCKS, 'c', node['name'])
+    bar = _with_note(Image.open(c + '-bar.png').convert('RGBA'), node.get('note'))
+    do = Image.open(c + '-do.png').convert('RGBA')
+    fill = Image.open(c + '-fill.png').convert('RGBA')
+    foot = Image.open(c + '-foot.png').convert('RGBA')
+    mid_h = max(body.height, do.height)
+    mid = Image.new('RGBA', (g['spineW'] + body.width, mid_h), (0, 0, 0, 0))
+    for y in range(do.height, mid_h):
+        mid.alpha_composite(fill, (0, y))
+    mid.alpha_composite(do, (0, 0))
+    mid.alpha_composite(body, (g['spineW'], 0))
+    w = max(bar.width, mid.width, foot.width)
+    h = bar.height - 4 + mid_h - 5 + foot.height
+    out = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    out.alpha_composite(bar, (0, 0))
+    out.alpha_composite(mid, (0, bar.height - 4))
+    out.alpha_composite(foot, (0, bar.height - 4 + mid_h - 5))
+    return out
+
+
+def block_program(blocks):
+    """Render a block program (same list format as the site's <BlockProgram>) to a
+    PNG in the cache, on the light dotted canvas the site uses; returns its path."""
+    import hashlib
+    import json
+    from PIL import Image, ImageDraw
+    key = hashlib.sha1(json.dumps(blocks, sort_keys=True).encode()).hexdigest()[:12]
+    os.makedirs(CACHE, exist_ok=True)
+    out = os.path.join(CACHE, f'blocks_{key}.png')
+    if os.path.exists(out):
+        return out
+    with open(_C_GEO) as f:
+        geo = json.load(f)
+    prog = _stack([_block_node(b, geo) for b in blocks], 3)
+    pad = 18
+    canvas = Image.new('RGBA', (prog.width + 2 * pad, prog.height + 2 * pad), (246, 247, 249, 255))
+    d = ImageDraw.Draw(canvas)
+    for x in range(6, canvas.width, 14):
+        for y in range(6, canvas.height, 14):
+            d.point((x, y), fill=(214, 218, 223, 255))
+    canvas.alpha_composite(prog, (pad, pad))
+    canvas = canvas.resize((canvas.width * 3, canvas.height * 3), Image.LANCZOS)
+    canvas.convert('RGB').save(out)
+    return out
+
+
 def figure(slide, src, left, top, max_w, max_h, frame=None, crop=None):
     """Place a site figure (path under static/, .svg or raster), fit and centered.
     frame: for an animated SVG, the moment to show, 0..1 of one run (default 0.5).
     crop: (x0, y0, x1, y1) as fractions of the figure, to show only part of it."""
     # '/img/...' is a site figure under static/; './...' is a slide-only copy
-    # under scripts/slides/ (for a figure the slide renderer draws badly)
-    path = os.path.join(HERE, src[2:]) if src.startswith('./') else \
-        os.path.join(STATIC, src.lstrip('/'))
+    # under scripts/slides/ (for a figure the slide renderer draws badly); a list
+    # is a block program, in the site's <BlockProgram blocks={...}> format
+    if isinstance(src, (list, tuple)):
+        path = block_program(list(src))
+    elif src.startswith('./'):
+        path = os.path.join(HERE, src[2:])
+    else:
+        path = os.path.join(STATIC, src.lstrip('/'))
     if path.endswith('.svg'):
         os.makedirs(CACHE, exist_ok=True)
         at = 0.5 if frame is None else frame
@@ -316,7 +450,7 @@ def figure(slide, src, left, top, max_w, max_h, frame=None, crop=None):
         png = os.path.join(CACHE, src.strip('./').replace('/', '__') + tag + '.png')
         if not os.path.exists(png) or os.path.getmtime(png) < os.path.getmtime(path):
             with open(path, 'rb') as fh:
-                data = freeze_svg(fh.read(), at)
+                data = keep_spaces(freeze_svg(fh.read(), at))
             cairosvg.svg2png(bytestring=data, write_to=png, output_width=2000)
             if crop:
                 from PIL import Image
@@ -429,6 +563,35 @@ def s_frames(prs, d, deck):
     notes(sl, d.get('notes'))
 
 
+def s_video(prs, d, deck):
+    """A lesson video (path under static/, e.g. '/videos/gort.mp4') embedded so it
+    plays in the deck; the poster is the frame at poster_at seconds (default 1)."""
+    import subprocess
+    sl = prs.slides.add_slide(prs.slide_layouts[6])
+    paper(sl)
+    title_bar(sl, d['title'], d.get('tag'))
+    src = os.path.join(STATIC, d['video'].lstrip('/'))
+    os.makedirs(CACHE, exist_ok=True)
+    at = d.get('poster_at', 1)
+    poster = os.path.join(CACHE, d['video'].strip('/').replace('/', '__') + f'@{at}.png')
+    if not os.path.exists(poster):
+        subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-ss', str(at), '-i', src,
+                        '-frames:v', '1', poster], check=True)
+    from PIL import Image
+    with Image.open(poster) as im:
+        vw, vh = im.size
+    bottom = H - Inches(0.35) - (Inches(0.85) if d.get('caption') else 0)
+    box_w, box_h = W - 2 * MARGIN, bottom - TOP
+    ratio = min(box_w / vw, box_h / vh)
+    w, h = int(vw * ratio), int(vh * ratio)
+    sl.shapes.add_movie(src, int((W - w) / 2), TOP, w, h, poster_frame_image=poster,
+                        mime_type='video/mp4')
+    if d.get('caption'):
+        text(sl, d['caption'], MARGIN, H - Inches(1.1), W - 2 * MARGIN, Inches(0.8),
+             size=20, color=MUTED, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    notes(sl, d.get('notes'))
+
+
 def s_code(prs, d, deck):
     """Title, an optional lead line, a code block, an optional callout."""
     sl = prs.slides.add_slide(prs.slide_layouts[6])
@@ -492,7 +655,9 @@ def _check_slide(prs, d, deck, reveal):
     paper(sl)
     title_bar(sl, 'Check your understanding' if not reveal else 'Answer',
               d.get('tag'))
-    text(sl, d['question'], MARGIN, TOP, W - 2 * MARGIN, Inches(1.2), size=28)
+    n = len(re.sub(r'[`*]', '', d['question']))   # a long question gets smaller text
+    qsize = 28 if n <= 150 else 24 if n <= 200 else 20
+    text(sl, d['question'], MARGIN, TOP, W - 2 * MARGIN, Inches(1.2), size=qsize)
     y = TOP + Inches(1.35)
     letters = 'ABCDEF'
     oh = Inches(0.78)
@@ -531,18 +696,20 @@ def s_steps(prs, d, deck):
     title_bar(sl, d['title'], d.get('tag') or 'Activity')
     y = TOP
     if d.get('lead'):
-        text(sl, d['lead'], MARGIN, y, W - 2 * MARGIN, Inches(0.8), size=22)
-        y += Inches(0.75)
+        lead_h = Inches(d.get('lead_h', 0.75))
+        text(sl, d['lead'], MARGIN, y, W - 2 * MARGIN, lead_h, size=22)
+        y += lead_h
     steps = d['steps']
     gap = Inches(0.18)
     bottom = H - Inches(0.35) - (Inches(1.15) if d.get('callout') else 0)
     sh = int((bottom - y - gap * (len(steps) - 1)) / len(steps))
+    first = d.get('start', 1)          # number of the first step shown
     for i, st in enumerate(steps, 1):
         _shape(sl, MSO_SHAPE.ROUNDED_RECTANGLE, MARGIN, y, W - 2 * MARGIN, sh,
                fill=PAPER, line=TEAL, tilt=(-0.3 if i % 2 else 0.3))
         _shape(sl, MSO_SHAPE.OVAL, MARGIN + Inches(0.2), y + int(sh / 2) - Inches(0.3),
                Inches(0.6), Inches(0.6), fill=ORANGE)
-        text(sl, str(i), MARGIN + Inches(0.2), y + int(sh / 2) - Inches(0.3), Inches(0.6),
+        text(sl, str(i + first - 1), MARGIN + Inches(0.2), y + int(sh / 2) - Inches(0.3), Inches(0.6),
              Inches(0.6), size=24, font=TITLE_FONT, bold=True, align=PP_ALIGN.CENTER,
              anchor=MSO_ANCHOR.MIDDLE, color=RGBColor(0xFF, 0xFF, 0xFF))
         text(sl, st, MARGIN + Inches(1.05), y + Inches(0.05), W - 2 * MARGIN - Inches(1.3),
@@ -602,7 +769,7 @@ def s_wrapup(prs, d, deck):
 KINDS = {
     'title': s_title, 'bullets': s_bullets, 'figure': s_figure, 'code': s_code,
     'table': s_table, 'check': s_check, 'steps': s_steps, 'cards': s_cards,
-    'wrapup': s_wrapup, 'frames': s_frames,
+    'wrapup': s_wrapup, 'frames': s_frames, 'video': s_video,
 }
 
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 372" width="680" height="372" role="img" aria-labelledby="fT fD">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 712 372" width="712" height="372" role="img" aria-labelledby="fT fD">
   <title id="fT">Closest first, not oldest first</title>
   <desc id="fD">Dijkstra from (0, 0), the bottom-left, on the 4 by 4 grid with the slow edge between (0, 1) and (0, 2) at weight 5, partway through. Five intersections are done, with costs 0, 1, 1, 2 and 2. Four are waiting on to_visit, oldest first: (0, 2) at cost 6, reached by the slow road, then (3, 0), (2, 1) and (1, 2) at cost 3. pop(0) would take (0, 2), the oldest; closest() takes (3, 0), the first of the cheapest. (0, 2) waits, and before its turn (1, 2) reaches it for 4, which replaces the 6.</desc>
   <style>
