@@ -122,7 +122,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'Your first program in XRP Code',
          'bullets': [
              'XRP Code runs in a web browser: nothing to install, nothing to log into',
-             'Open `xrpcode.wpi.edu/staging` and build programs by dragging blocks',
+             'Open `xrpcode.wpi.edu` and build programs by dragging blocks',
              '**Use Google Chrome or Microsoft Edge.** Talking to the robot needs serial and '
              'Bluetooth features only those browsers have',
              'Safari and Firefox let you build a program, then your robot never appears in the '

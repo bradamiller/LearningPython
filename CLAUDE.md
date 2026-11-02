@@ -1360,7 +1360,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   an answer (`360 / sides`) — don't frame return as wrong, only as not applicable
   to functions that drive the robot.
 - **XRP CODE URL AND BROWSER (Brad, 2026-09-18).** The IDE students use is
-  **https://xrpcode.wpi.edu/staging**, and it works **only in Google Chrome or
+  **https://xrpcode.wpi.edu** (moved off `/staging`, Brad 2026-11-02), and it works **only in Google Chrome or
   Microsoft Edge** — the serial and Bluetooth APIs it needs to reach a robot exist
   only in Chromium browsers, so Safari and Firefox load the page, build programs
   fine, and then fail at CONNECT with the robot simply absent from the list. L1
@@ -1368,11 +1368,11 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   on the symptom. Deeper how-to lives in the **XRPCode chapter of the XRP User
   Guide** (`https://xrpusersguide.readthedocs.io/en/latest/course/XRPCode.html` —
   panels, USB connection, troubleshooting); link there rather than re-documenting
-  the IDE. **Propagated site-wide (Brad, 2026-09-20):** every link to the IDE now
-  carries `/staging` — the navbar and footer entries in `docusaurus.config.js` and
-  all eight remaining lesson Resources lists. There is no bare
-  `https://xrpcode.wpi.edu/` link left in the site; new links must include
-  `/staging` too.
+  the IDE. **Production URL (Brad, 2026-11-02):** the IDE has been updated from the
+  `/staging` version, so every IDE link — the navbar and footer entries in
+  `docusaurus.config.js`, the lesson Resources lists, Lesson 1-1's body text and
+  its slide deck — now points at `https://xrpcode.wpi.edu`. Don't add `/staging`
+  to new links.
 - **IMU CALIBRATION: PUT THE ROBOT DOWN BEFORE POWER-ON (Brad, 2026-09-19).** For
   the first few seconds after power-on or reset, the XRP calibrates its IMU, and
   the calibration assumes the robot is completely still. Held in a hand — or

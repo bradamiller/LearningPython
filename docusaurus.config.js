@@ -111,7 +111,7 @@ const config = {
             className: 'navbar__item--todos',
           },
           {
-            href: 'https://xrpcode.wpi.edu/staging',
+            href: 'https://xrpcode.wpi.edu',
             label: 'XRP Code IDE',
             position: 'right',
           },
@@ -139,7 +139,7 @@ const config = {
           {
             title: 'Resources',
             items: [
-              {label: 'XRP Code IDE', href: 'https://xrpcode.wpi.edu/staging'},
+              {label: 'XRP Code IDE', href: 'https://xrpcode.wpi.edu'},
               {label: 'XRP User Guide', href: 'https://xrpusersguide.readthedocs.io/'},
               {label: 'Support Forum', href: 'https://xrp.discourse.group/'},
             ],
