@@ -102,6 +102,12 @@ const config = {
             position: 'left',
           },
           {
+            type: 'docSidebar',
+            sidebarId: 'teacherGuideSidebar',
+            position: 'left',
+            label: 'Teacher Guide',
+          },
+          {
             // Authoring page. Hidden unless "Show TODOs" is on — a tab
             // advertising the course's unfinished bits is not for students.
             // The CSS gate is html[data-todos='on'] in custom.css.

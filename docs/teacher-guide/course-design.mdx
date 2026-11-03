@@ -1,0 +1,346 @@
+---
+title: Course design decisions
+sidebar_label: Course design
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Teacher guide"
+  title="Why the course is built this way"
+  meta={['Design decisions', 'Functions first', 'For teachers and authors']}
+/>
+
+This page records the decisions that shape the course, and the reason for each.
+It is for teachers who want to know why a lesson does what it does, and for anyone
+changing the lessons, who should read it first. Each decision has a reason;
+reverse one only with a better reason, and note the change here so nobody restores
+the old shape by accident.
+
+Decisions D1 to D10 come from a review of the whole course in October 2026. They
+keep their numbers because the site's own build scripts refer to them. The
+decisions after them came out of the lesson-by-lesson review that followed.
+
+## The shape of the course in one paragraph
+
+Every module's required work is written with **plain functions and settings**, the
+skills from Module 1. From Module 2 on, students keep **one growing file**,
+`robot.py`, and every module's code is reused by the next: line tracking drives
+the grid, grid driving drives the navigator, and the navigator drives whichever
+route planner it is handed. Some lessons end with an **optional extension** that
+repackages the student's working functions as a class. Route planners are
+**tested on screen before they drive**. And students meet each new idea as a
+problem first, with the construct that solves it named afterward.
+
+## D1. Functions are the spine; classes are a per-student extension
+
+Every module's required content uses plain functions and module-level settings.
+Selected lessons end with an **Optional Extension** that repackages the working
+functions as a class.
+
+**The extension is per student, per lesson, and the gate is working code, not
+ability.** Finish the functions version, test it on the robot, and if there is time
+left, do the extension. A student might reach it in 2-7, miss it in 2-9 because
+line following fought them all period, and reach it again in 4-8. Nobody is "the
+functions kid."
+
+**Why a mixed room works:** every class method has the same name and, apart from
+`self`, the same parameters as the function it replaces. `track_to_intersection()`
+and `tracker.track_to_intersection()` are the same function with a prefix. So one
+assignment serves both versions, mixed teams can share code, and a teacher
+debugging either student is debugging the same loop.
+
+**Once a student builds a class, they use it from then on.** A student who wrote
+`LineTrack` and goes back to the functions never sees what the class bought them.
+The lessons show function names, because that is what everyone has; class-track
+students put their object's name in front. Lesson 3-1 says this to students in
+plain words, at the first place the payoff is visible.
+
+**Classroom rules:**
+
+- **Board code is always the functions version.** The class version is on the page,
+  not live-coded. Translating between the two in your head is where a struggling
+  student loses the thread.
+- **The class "lecture" is 5 to 10 minutes, twice:** once at the first class
+  (`LineSensor`, 2-7: what a class is, and why you might want one) and once at the
+  `Navigator` (4-8: where owning state visibly pays off). It is not re-taught every
+  lesson.
+- **The extension earns no points, or a small challenge credit.** If a rubric
+  quietly rewards the class version, the extension becomes a requirement with
+  extra steps, and the students it protects are the ones penalized.
+- **Every extension opens with a side-by-side:** functions on the left, class on
+  the right, the same names lined up, then the four mechanical changes: the
+  functions move inside `class X:` and gain `self`; shared settings move into
+  `__init__` as `self.x`; inside methods, shared values and calls to sibling
+  methods gain `self.`; code outside the class calls through the object.
+
+**What students get who never do an extension:** they have been calling
+`drivetrain.straight()` and `reflectance.get_left()` since Lesson 1-8. Seeing a
+class once, even without writing it, turns those from magic into "that's just
+`def`s inside a `class`." That is the right amount of object-oriented programming
+for this course. Inheritance, polymorphism as a principle, and encapsulation as
+theory belong to a later course and are **not taught here**, even in extensions.
+
+## D2. Which class extensions exist
+
+| Lesson | Extension | Why it earns its place |
+|---|---|---|
+| 2-7 | `LineSensor` | The simplest possible first class: a couple of settings and a handful of one-line methods. Introduces `class`, `__init__` and `self`. |
+| 2-9 | `LineTrack` | One object holding another (`self.sensor = LineSensor()`), shown by example. "Composition" is not taught as a vocabulary word. From here on, class-track students use their objects. |
+| 4-5 | `Manhattan` | A class only so it has the same shape as the planners after it; the lesson says so plainly. |
+| 4-8 | `Navigator` | The one class with a *felt* reason: it owns `position` and `heading`, so the functions version's passing of both in and out of `drive_path()` disappears. The first constructor with parameters, taught with the picture of a house's address as `self`. |
+| 5-5 | `BFS` | Has setup to hold (its blocked list). |
+| 5-6 | The class harness | The planner swap with objects: the same tests run against `Manhattan()` and `BFS()` by changing one name. |
+| 6-5 | `Dijkstra` | Three planners through one harness (optional module). |
+
+Module 3 has no extension: it only *uses* the Module 2 toolkit. Projects (2-10,
+4-9, 5-9) add no new class; class-track students build them on their objects and
+are graded the same way.
+
+## D3. The planner interface
+
+Every route planner, function or class, has the same shape:
+
+```python
+# function track
+path = compute_manhattan_path(position, destination)
+path = compute_bfs_path(position, destination)
+path = compute_dijkstra_path(position, destination)   # Module 6
+add_blocked(intersection)
+clear_blocked()
+
+# class track
+planner = BFS()          # or Manhattan(), or Dijkstra()
+path = planner.compute_path(position, destination)
+planner.add_blocked(intersection)
+```
+
+1. **The planner is told the position; it doesn't remember it.** The navigator is
+   the one owner of position and heading (D4). An earlier version kept the start in
+   the planner, which forced a step to copy the navigator's position into it, and
+   made a bug that paper tests could never catch: position only drifts when the
+   robot actually drives.
+2. **The returned path leaves out the start.** From (0, 0) to (0, 2) the path is
+   `[(0, 1), (0, 2)]`. The navigator is already at the start, so every item in the
+   path is a place to drive to, and `len(path)` is the number of steps.
+3. **`add_blocked(intersection)` is the basic operation**, one intersection at a
+   time, because that is what the robot does: see an obstacle, record it, re-plan,
+   drive on. Blocked intersections live in one list (`BLOCKED` in the function
+   track, `self.blocked` in a class), and **the graph is rebuilt from that list
+   every time a path is computed**, so the planner can never route through an
+   intersection it was just told about. On a 4 × 4 grid the rebuild costs nothing.
+   It also means `add_blocked()` needs no `global`: adding to a list changes it, it
+   doesn't reassign the name.
+4. **Manhattan accepts obstacles and ignores them**, with a comment saying why: so
+   every planner can be tested the same way. Running the blocked-intersection test
+   against Manhattan is how students see, on screen, why Module 5 exists: its path
+   goes straight through the obstacle.
+5. **Planners import nothing from XRPLib.** A planner runs on any Python, on any
+   computer, with no robot. The moment one imports XRPLib, testing at home is gone.
+
+## D4. The navigator owns position and heading
+
+In the function track, `turn_to(heading, desired)` returns the new heading, and
+`drive_path(path, position, heading)` returns the new position and heading; the
+main program keeps them. In the extension, the `Navigator` holds both. Nothing else
+in the program tracks where the robot is. The planner is told the position when
+asked for a path (D3.1).
+
+## D5. Testing without a robot is part of the structure, not one lesson
+
+Lessons 4-6 and 5-6 teach testing on screen, and the rest of the course is built
+so that the habit sticks:
+
+- **Every driving program from Module 4 on prints its plan, waits for the button,
+  then drives.** The student reads the path before the robot moves, every run, so a
+  paper test is built into every program.
+- **The diagnosis students learn:** if the printed path is right and the robot still
+  goes wrong, the bug is in the driving, not the planner. That inference only holds
+  because the planner has no hidden state (D3.1).
+- **The rangefinder and the paper test call the same `add_blocked()`.** In a test
+  the obstacle comes from the test; on the robot it comes from the rangefinder.
+  Nothing downstream knows which, so the test exercises exactly the code the robot
+  will run. Rerouting is debugged on screen in 5-6, and 5-7 is only about detection:
+  two hard things, one at a time.
+- **Check what must be true, once there's more than one right answer.** Manhattan's
+  answer is unique, so Lesson 4-6 compares against an exact expected list. BFS and
+  Dijkstra have many equally short paths on an open grid, so an exact match would
+  fail correct answers. The Module 5 harness checks properties instead: the path
+  starts next to the position, ends at the destination, every step is a neighbor of
+  the one before, no step is blocked, and with nothing blocked its length is the
+  Manhattan distance. Module 6 adds a cost check. The shift is taught as a lesson in
+  its own right: when more than one answer is right, test what must be true.
+
+## D6. BFS is required; Dijkstra is its own optional module
+
+**Module 5's planner is breadth-first search.** Manhattan (Module 4) and BFS have
+the same shape, so the planner swap happens between them, and BFS routes around
+obstacles, which is the capstone's payoff.
+
+**Dijkstra's algorithm is Module 6, and optional.** Students copy their BFS
+function, rename it, and change two things: take the unvisited intersection with
+the smallest distance instead of the next one in the queue, and add the segment's
+weight instead of 1. Everything else is untouched. The harness then shows BFS and
+Dijkstra agreeing on every test until the weighted segment, where they split.
+
+**Why a module and not an extension:** a module is the unit teachers plan by, so it
+can be dropped cleanly; Dijkstra needs the physical grid to change (a slow segment
+the whole class shares), which never fit a per-student extension; and it gives
+Dijkstra the course's usual arc, the limitation first and the construct second.
+
+**Why BFS first:** students should never write code whose purpose they can't see.
+An earlier Module 5 had every student write Dijkstra's distance table and
+smallest-distance search on a grid where every segment costs 1, so those lines did
+nothing visible. BFS has no such lines, and a weighted grid gives Dijkstra's a
+reason.
+
+**Still open: the physical slow segment.** Module 6 is only honest if the slow
+segment is physically real, something students can time. The leading option is
+one segment re-taped as a winding detour between two neighboring intersections, so
+the map says one block but the drive takes four or five. It needs nothing under
+the tape and doesn't disturb line following. Alternatives considered: a rough
+surface under the tape (may upset the sensors), and "turns cost time" (true, but it
+makes cost depend on heading, which is out of scope). It is still being tried on
+real grids; see [Setting up](/teacher-guide/setting-up#the-grid-modules-3-to-6).
+
+## D7. `global` is taught once, in 2-7
+
+The function track's `set_threshold(new_value)` reassigns a module-level setting,
+so Lesson 2-7 teaches `global`: it is needed only when a function *reassigns* a
+module-level name, never when it only reads one or changes a list in place. Its
+awkwardness is the honest reason for `self.threshold` in the `LineSensor`
+extension, where no keyword is needed. Nothing else in the course needs `global`,
+and D3.3 was shaped so that `add_blocked()` doesn't either. Lesson 5-4 comes back to
+the distinction with a knowledge check.
+
+## D8. Names match across the two tracks, and the build checks it
+
+Every method in an extension has a function of the same name in the course's
+required code, with the same parameters apart from `self`. The only differences
+allowed are the ones D2 and D3 make on purpose: state the class owns (the
+`Navigator`'s position and heading) and the planners' shared `compute_path()`. The
+site's build fails if an extension drifts from its functions
+(`scripts/check_name_parity.js`), because drift between the two copies is the real
+ongoing cost of the extensions, and a build check is cheaper than finding it in
+class.
+
+## D9. The planner swap happens in both tracks
+
+The swap can't live only in the extension, or most students never see it. In the
+function track it is done by **passing the planner function as an argument**:
+`run_all_tests("Manhattan", compute_manhattan_path)`, then
+`run_all_tests("BFS", compute_bfs_path)`. Passing a function to a function is the
+one new Python idea in Lesson 5-6. On the class track the same harness takes a
+planner object. An earlier version used a dispatch function that picked an
+algorithm by name; it worked, but it hid the point.
+
+## D10. One driving vocabulary, and turns that end on a sensor
+
+The driving names, everywhere and on both tracks, follow the course author's own
+reference robot code:
+
+| Function | What it does |
+|---|---|
+| `track_to_intersection()` | Follow the line until both sensors see a cross |
+| `drive_past_intersection()` | Drive the 8.75 cm from the sensors to the axle, so the wheels sit on the cross |
+| `turn_clockwise()` / `turn_counterclockwise()` | Turn onto the crossing line; clear whichever way the robot faces, unlike "left" and "right" |
+| `is_either_on_line()` | The test a turn needs; every true-or-false function starts with `is_` |
+| `is_at_cross()`, `get_left()`, `get_right()`, `get_error()` | The sensor toolkit |
+
+**Turns end on a sensor, never on a timer.** A turn makes a short blind turn to get
+both sensors off the line it was following, then rotates until a sensor finds the
+crossing line. A timed turn depends on battery, floor and tape, and is never right
+twice.
+
+**`drive_past_intersection()` runs after every `track_to_intersection()`, not inside
+the turn.** The sensors stop on the cross 8.75 cm ahead of the axle; driving that
+far puts the wheels on it, so a turn pivots on the intersection and the next track
+doesn't see the same cross again. Doing it right after the track is what makes
+rerouting safe: when Module 5 finds an obstacle and re-plans, the robot is already
+parked on the intersection.
+
+**`turn_to(heading, desired)` turns clockwise, a quarter at a time, until the heading
+matches.** It reuses Module 2's loop-until-a-condition shape. It sometimes takes
+three turns where one counterclockwise turn would do, and that is accepted on
+purpose; turning the short way round is an optional challenge in Lesson 4-8.
+Headings are the numbers 0 to 3: North, East, South, West.
+
+**Module 5 drives with Module 4's functions, unchanged.** It adds one thing: a
+rangefinder reading between turning toward the next intersection and driving to
+it.
+
+**`print_grid(rows, cols, blocked, numbers)`** draws the grid with `X` on blocked
+intersections and a number on every other one: BFS rings in Module 5, costs in
+Module 6. It is the on-screen picture students compare with the numbers they wrote
+by hand.
+
+## Later decisions
+
+### Students meet the problem before the construct
+
+When a lesson introduces something new, students build up to needing it: try,
+run, hit the limitation, then find the construct. They place eight blocks to draw a
+square before anyone mentions a loop, and watch a triangle come out wrong at 90°
+before working out 120°. Objectives and headings don't give the construct away, and
+paper reasoning comes after the attempt that motivates it. A lesson taught
+explanation-first loses the point; when you add to a lesson, keep the order.
+
+### Stop on a sensor, not a clock
+
+Some blocks and functions *finish* (`Straight`, `Turn`); others only *start* the
+motors (`Set effort`, `Arcade`). Lesson 1-6 measures the same timed program on two
+surfaces to show why timed driving is unreliable, and from Module 2 on the robot
+stops on something it senses. The course doesn't teach `sleep` as a way to drive.
+
+### One growing file
+
+From Lesson 2-1, every student keeps one program file, `robot.py`. Each lesson hands
+out a **skeleton** to paste in: a banner naming the section, a few lines saying
+what the section does and how it builds on the ones before, the section's settings
+in capitals, outlines of the functions to write, and that lesson's test functions.
+Two rules, taught once in Module 2: new code goes above the `RUN` block, and the
+run block calls one test at a time. Tests stay in the file, so by the end of a
+module it is a record of everything the robot has learned to do. The
+[robot.py templates](/templates) are generated from the lessons and hold the file
+after every lesson, with outlines and no answers, on both tracks.
+
+### Help fades as the course goes on
+
+Function signatures are always given; they are the shared vocabulary of D8. How
+much else is given fades: in Module 2 every step is a numbered comment and the
+tests are written out; by late Module 2 and Module 3 a function gets a docstring
+saying what it does, and tests become outlines for students to finish; in Modules 4
+and 5 a function gets a signature and one line, because the algorithm was done on
+paper first, and students name and write their own tests. That is a default, not a
+rule: the hardest functions (turning toward and driving to an intersection, BFS's
+queue loop) keep a fuller outline even late in the course.
+
+### Where answers go
+
+Answers are placed by one rule: **does the student hand it in?**
+
+| What | Where | Can a student open it? |
+|---|---|---|
+| A worked result to compare against after trying | A closed **Check your work** box | Yes, by choosing to |
+| Anything they hand in: filled-in tables, challenge solutions, project code, expected test values | A teacher note | No |
+
+Along with it: the paragraph after a "predict" question never gives the answer;
+tables with a worked example fill in one row and leave the rest blank; a video that
+shows the outcome of a prediction says to commit to a prediction first; and every
+lesson's complete code is a teacher note titled **Solution (teacher copy)**, with
+the student page keeping an outline. Teaching code (settings, the shape of the
+file, a short demonstration) is not an answer and stays on the page.
+
+### Grid coordinates
+
+Coordinates are (x, y) with (0, 0) at the corner nearest the student, x across to
+the right (East) and y away from them (North), like a graph in math class. Headings
+are 0 North, 1 East, 2 South, 3 West.
+
+### Obstacles are carried by hand between runs
+
+Module 5's "experience" lesson doesn't save obstacles to a file. Run 1 prints what
+it discovered, and the student types that list into the top of the program for Run
+2. The lesson's claim is "same algorithm, better data," and copying the list makes
+the student the one supplying the better data. It also keeps file handling, which
+appears nowhere else, out of a module about graph search. The lesson says plainly
+that a real system would do this for itself.

@@ -1,0 +1,179 @@
+---
+title: Differentiation
+sidebar_label: Differentiation
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Teacher guide"
+  title="Supporting every student"
+  meta={['New, behind or ahead', 'Built into the course', 'Accommodations']}
+/>
+
+A room running this course will have students who have never typed a line of code
+next to students who have written games. The course is built to stretch across
+that range without separate lessons for each group, and most of the tools for it
+are already on the lesson pages. This page is how to use them, plus general
+strategies that work in any programming class. Many lessons also have a teacher
+note on differentiation with ideas specific to that lesson.
+
+## Find out where students start
+
+Before Module 1, a short survey or a first-day conversation tells you most of what
+you need:
+
+1. Have they programmed before? In what?
+2. How comfortable are they with coordinates, angles and distance?
+3. Do they jump in or plan first?
+4. Do they prefer to work alone, in pairs or in groups?
+
+Lesson 1-0's discussion is also a good first read of a class: who reasons out loud,
+who waits, who argues with a neighbor.
+
+## What the course already gives you
+
+**Activities come in steps, each tested before the next.** From Module 2 on, a
+lesson builds one function at a time and tests it on the robot before moving on.
+For a student who is struggling, getting one step solid is a real result; don't
+let them skip ahead to the full program.
+
+**Skeletons, not blank files.** Each lesson hands students an outline of the code to
+write: the function names, and a comment per step in the early modules. The amount
+of help fades as the course goes on, and fades more for simple functions than for
+hard ones. For a student who needs more, write a few more of the comment steps
+with them; for one who needs less, have them write their own outline before
+looking at the lesson's.
+
+**Check your work boxes.** Closed boxes on the page hold worked results for
+students to compare against *after* trying. They help a stuck student check their
+thinking without handing them the answer to work they turn in. Encourage "try,
+then check," and watch for students who open them first.
+
+**Optional extensions for students who finish early.** From Lesson 2-7 on, some
+lessons end with a class version of the code the student has just written as
+functions. They are gated on working code, not on ability, so a student can reach
+one in one lesson and miss the next. They earn no points, which keeps them a
+stretch rather than a requirement.
+
+**Templates to catch up.** The [robot.py templates](/templates) page has every
+student's file, with outlines and no answers, as it stands after each lesson. A
+student who was absent, or whose file is beyond repair, takes the file for the
+lesson before and carries on with the class.
+
+**Testing without the robot.** From Module 4 on, planners are tested on screen
+before they drive. A student who is waiting for a robot, or who learns better by
+tracing than by watching, can do real work at a computer.
+
+**Cut points.** If a whole class is behind, the course can be shortened without
+leaving it unfinished. See
+[Planning the semester](/teacher-guide/planning#if-the-class-is-behind).
+
+## Students new to programming
+
+- **Don't rush Blockly.** Module 1's Blockly lessons are where sequencing, loops and
+  functions make sense before syntax can get in the way. An extra week there pays
+  back in Python.
+- **Bridge to Python side by side.** When Python starts in 1-8, put a Blockly
+  program next to its Python version and read them line by line together.
+- **Read code aloud.** In guided practice, read each line and say what it does.
+- **Pair program.** One student types, one reads and checks, and they swap often.
+- **Check in constantly and briefly.** "What is your code doing right now? What did
+  you expect?" is usually enough to get a student moving again.
+- **In Module 2,** get one-sensor following solid before two-sensor following, and
+  keep the calibration numbers handy; many "my code is broken" moments are a
+  threshold from the wrong surface.
+
+## Students who are behind
+
+**Make the task smaller.** Break "write the polygon function" into "write the
+loop," then "add the turn," then "make the number of sides a parameter." A checklist
+of three steps is easier to start than one big instruction.
+
+**Show it more than one way.**
+
+- Plain-English steps before Python
+- A flowchart of the loop on the whiteboard
+- The algorithm walked on the floor: a student walks the grid, calling out
+  intersections, before the robot does
+- Worked examples: "a triangle has 3 sides and turns 120°; a square…?"
+
+**Debug as a method, not a mood.** Teach three questions and keep asking them: what
+did you expect to happen, what actually happened, and where do they first differ? A
+`print()` is the tool that answers the last one; the course leans on it from
+Module 2 on.
+
+**Keep the scope, change the size.** A Module 4 project with two destinations
+instead of four, or a capstone with one obstacle, still shows every idea.
+
+**Look after the student, too.** Debugging is frustrating for everyone. Say so,
+share your own bugs, celebrate the run that finally works, and use "you haven't got
+it yet" rather than "you can't." Start with tasks a student can finish, and raise
+the difficulty as they succeed.
+
+## Students who are ahead
+
+- **Move faster through Blockly**, but keep them in it long enough to get a feel for
+  the robot: how it drives, how it turns, what a parameter changes.
+- **Open-ended challenges** in Module 1: a star, a spiral, a nest of polygons, a
+  drawing of their own.
+- **The optional extensions**, from Lesson 2-7 on, and Module 6.
+- **The challenges at the end of the projects:** the short way round in 4-8, a
+  return-home leg, visiting the nearest destination next, re-checking old obstacles
+  after a few runs.
+- **Bigger questions:** how is A* different from Dijkstra? Could two robots share
+  the grid without colliding? What would you need to make the robot faster rather
+  than shorter?
+- **Leadership:** reviewing classmates' code, helping debug, writing up a tricky bug
+  for the class.
+
+## Grouping
+
+- **Pairs that complement each other**, like a strong coder with a strong builder,
+  work well. Rotate partners so nobody settles into one role.
+- **Group by need for short workshops:** sensor tuning, the turn, the planner's
+  loop.
+- **Mix levels for projects**, where a range of strengths makes a better robot.
+- **One robot per pair works; one each is better from Module 2 on,** where line
+  tracking is fiddly and students need their own runs.
+
+## Accommodations
+
+Students' plans come first; these are ideas that fit this course.
+
+**Vision.** Enlarge the editor and the projector text, and use a high-contrast
+theme. Describe figures and animations aloud. The lesson figures carry alt text for
+screen readers.
+
+**Hearing.** Give instructions in writing as well as aloud; the lesson pages already
+are the written version, so point to them.
+
+**Motor and dexterity.** Pair the student with a partner for handling the robot, and
+let them lead the code. Testing on screen, from Module 4 on, needs no robot at all.
+
+**Attention.** Shorter work blocks with a clear goal each, visual checklists of the
+steps, and frequent check-ins. The test-each-function-before-the-next structure
+already gives natural break points.
+
+**Autism.** Explicit instructions, predictable routines (the lesson structure is the
+same every day), a quieter place to test when the room is loud, and advance notice
+of changes.
+
+**More time.** Allow extra time for debugging and polishing projects, and allow
+resubmission with feedback.
+
+## Different ways to show mastery
+
+- Code that runs and meets the requirements
+- A walk-through: "tell me what this does"
+- A demonstration of the robot, with the design explained
+- A portfolio of tests and fixes across a module
+- A written or spoken reflection on what they learned
+
+## A classroom culture that helps
+
+- **Normalize bugs.** Every programmer spends much of their time debugging. Show
+  yours.
+- **Ask three before me.** Classmates first, then the teacher.
+- **Praise strategy and persistence,** not talent.
+- **Different solutions are fine.** The "Check your work" boxes say so: a version
+  that works differently from the one shown is still right.

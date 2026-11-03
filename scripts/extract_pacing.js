@@ -88,7 +88,7 @@ function main() {
 
   const dirs = fs
     .readdirSync(DOCS, {withFileTypes: true})
-    .filter((d) => d.isDirectory() && !d.name.startsWith('_')) // docs/_partials/ is shared MDX, not lessons
+    .filter((d) => d.isDirectory() && d.name.startsWith('module-')) // lessons only: not docs/_partials/ or docs/teacher-guide/
     .map((d) => d.name)
     .sort((a, b) => {
       const ia = MODULE_ORDER.indexOf(a);

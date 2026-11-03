@@ -2249,3 +2249,35 @@ drift. Docusaurus ignores `docs/_partials/`, and an `@site/docs/_partials/…`
 import works from `src/pages` as well as from a docs page (verified). Both
 extractors now skip `_`-prefixed files and folders; before that, `extract_pacing`
 counted the partial as a 46th lesson and failed the build.
+
+## 19. The teacher guide (/teacher-guide)
+
+Added 2026-11-03 at Brad's ask: the old `IntoToPython/teacher-guide/` (six markdown
+files) rebuilt as site pages, updated to the lessons as they stand, so nothing is
+lost when the source repo is archived. Pages live in `docs/teacher-guide/`, with
+their own sidebar (`teacherGuideSidebar` in `sidebars.js`) and a **Teacher Guide**
+navbar item, so they stay out of the students' lesson list.
+
+| Page | Built from | Notes |
+|---|---|---|
+| `index.mdx` (`/teacher-guide`) | new | Teacher mode, the parts of a lesson, where else to look |
+| `setting-up.mdx` | `xrp-setup-guide.md` | Rewritten: the old file described VS Code, `pip install xrp` and 0–1000 sensor values, none of which this course uses. Imports the shared materials partial. One `<Todo kind="blocked">`: grid spacing and panel recommendations from Brad |
+| `planning.mdx` | `pacing-guide.md` | Module weeks and milestones; the numbers defer to `/pacing` (generated), at its defaults (50 min, 3 a week, multi-day = 2 periods) |
+| `assessment.mdx` | `assessment-strategy.md` | Rubrics match each project lesson's own teacher note or student-facing rubric table (M4 L9, M5 L9). If you change a lesson's rubric, change it here too |
+| `differentiation.mdx` | `differentiation.md` | Trimmed to what fits this course (no IDE or simulator advice) and tied to its features: skeletons, Reveals, extensions, templates |
+| `course-design.mdx` | `course-design-decisions.md` + `classes-optional.md` | D1–D10 keep their numbers (code comments cite them), updated to the site: extensions at 2-7/2-9/4-5/4-8/5-5/5-6/6-5, `global` in 2-7, `turn_to()` as the clockwise loop. Later decisions (experiential order, no timed driving, one file, fading hints, where answers go, (x, y), hand-carried obstacles) follow, unnumbered. The source's work plan/status table is dropped: it's done |
+| `sample-programs.mdx` | new | Placeholder: one complete program per module, all inside `<TeacherNote>`, to be filled by the solutions follow-up |
+
+**Public vs. teacher-only:** the pages are public, like `/pacing` and How this
+course works; anything that is an answer or complete code goes in a `<TeacherNote>`
+(§15). `course-design.mdx` describes algorithms in prose and gives signatures only,
+never function bodies.
+
+`scripts/extract_pacing.js` now reads only `module-*` folders (it used to read every
+folder under `docs/` that didn't start with `_`, so the teacher guide would have
+counted as a module with no duration chips and failed the build).
+
+**Still to do once `rename-introtopython` merges:** two code comments cite the old
+decisions doc by path, `src/components/OptionalExtension.js` (D1) and
+`scripts/check_name_parity.js` (D8). Point them at `docs/teacher-guide/course-design.mdx`.
+They were left alone here because that branch edits the same lines.

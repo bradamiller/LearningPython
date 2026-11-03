@@ -107,6 +107,19 @@ const sidebars = {
       ],
     },
   ],
+
+  // The teacher guide (docs/teacher-guide/): planning, setup, assessment and
+  // design notes that belong to no one lesson. Its own sidebar, reached from the
+  // "Teacher Guide" navbar item, so it doesn't sit in the students' lesson list.
+  teacherGuideSidebar: [
+    'teacher-guide/index',
+    'teacher-guide/setting-up',
+    'teacher-guide/planning',
+    'teacher-guide/assessment',
+    'teacher-guide/differentiation',
+    'teacher-guide/course-design',
+    'teacher-guide/sample-programs',
+  ],
 };
 
 export default sidebars;

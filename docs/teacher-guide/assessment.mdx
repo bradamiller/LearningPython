@@ -1,0 +1,237 @@
+---
+title: Assessment
+sidebar_label: Assessment
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Teacher guide"
+  title="Assessment"
+  meta={['Working code', 'Module projects', 'Rubrics']}
+/>
+
+Students show what they've learned by **making a robot do something and explaining
+how**, not by taking tests. Assessment in this course rests on four kinds of
+evidence:
+
+1. Code that runs on the robot and does what the activity asked
+2. The tests they wrote and ran along the way
+3. How they debugged: what went wrong, and how they found it
+4. Their own explanation of the code and the choices in it
+
+The last one matters most. Teacher mode keeps solutions off students' screens, but
+the site is static and a determined student can find them. A student who can walk
+you through their own code, line by line, wrote it or understands it, and both are
+worth credit.
+
+## Formative: every lesson
+
+**Activities.** Each lesson's hand-in work is headed `Activity · …` on the page, so
+there's no guessing what gets submitted. Grade them for completion, or with a
+three-level mark: done, in progress, not started. The point is to see who is stuck
+before the module project, not to rank.
+
+**Knowledge checks.** The interactive checks give students instant feedback while
+they read. For evidence you can collect, print the lesson's sheet from
+[Printable Checks](/checks): students circle an answer and write a line on why,
+and the answer key is linked from each lesson in teacher mode. The "why" line is
+where misconceptions show.
+
+**Exit tickets.** Most lessons' last teacher note suggests one: a single question
+that tells you whether the main idea landed.
+
+**The tests in `robot.py`.** From Module 2 on, every function is tested in the
+lesson that writes it, and the test functions stay in the file. By the end of a
+module a student's file is a record of everything their robot has learned to do,
+and of how they checked it. Skim it, and ask them to run a test or two in front of
+you.
+
+**Debugging logs.** A running list, kept by the student, of errors they hit and how
+they fixed them. Review it weekly. It rewards the habit the course is built on, and
+it shows you which bugs a whole class keeps meeting.
+
+**Code reviews.** After a big activity, pairs swap code with a short checklist:
+does it run, can I read it, what would I change? Reviewing someone else's code
+is a skill in itself, and it spreads good habits faster than you can.
+
+**Observation.** Who asks questions, who helps a neighbor, who keeps going after
+the third failed run. Persistence is most of programming a robot.
+
+## Summative: the module projects
+
+Each module ends with a project that pulls the module together. The rubrics below
+are starting points; adjust the weights to your class. Where a lesson page already
+shows students a rubric (Modules 4 and 5), the table here matches it.
+
+### Module 1 · Final project (Lesson 1-12)
+
+Students choose a project: a polygon art piece, a precision delivery route, a
+sensor behavior as a stretch, or their own idea cleared with you. It runs as a
+multi-day arc: plan, build, test, document, present. Have teams turn in a short
+written plan before they code. 50 points, weighted about equally:
+
+| Category | Points | What it takes |
+|---|---|---|
+| Design and planning | 10 | A written plan before coding: the problem, a function list, pseudocode |
+| Implementation | 10 | Loops, functions and parameters used where they belong; runs without errors |
+| Testing | 10 | Evidence each piece was tested on its own before the whole program |
+| Documentation | 10 | Comments and docstrings a classmate could follow |
+| Reflection and presentation | 10 | A short demo, and answers to: what did you build, what concepts did you use and why, what was the hardest bug, what would you add |
+
+Reward process and debugging, not just a flawless demo. Lesson 1-7's Blockly
+challenges make a good earlier checkpoint: a precision course finished within
+±30 cm, and a creative challenge with a short written reflection.
+
+### Module 2 · Final project (Lesson 2-10)
+
+The robot follows the taped circle, detects the cross, reverses, repeats for four
+reversals, then stops and prints a message, using the LINE SENSOR and LINE TRACKING
+sections of `robot.py`. 50 points:
+
+| Category | Points | What it takes |
+|---|---|---|
+| Code organization | 15 | A short project function made mostly of calls to their own functions; earlier sections reused, not rewritten |
+| Functionality | 15 | Tracks the circle smoothly, detects the cross, and completes four reversals |
+| Testing and debugging | 10 | Each function's test kept and passing; tuning recorded |
+| Presentation | 10 | Demonstrates the run and explains the design |
+
+Students who built the `LineSensor` and `LineTrack` classes should build this
+project on them. That earns no extra points: see the note on extensions below.
+
+### Module 3 · Final project (Lesson 3-4)
+
+The robot drives a square on the grid, `SIDE` intersections per side, turning at
+each corner, and ends where it started. 50 points:
+
+| Category | Points | What it takes |
+|---|---|---|
+| Reuse | 10 | Uses the earlier sections of `robot.py` unchanged |
+| A loop | 10 | One drive-and-turn sequence repeated, not four copies |
+| Four sides | 10 | Each side drives the right number of intersections and turns onto the next line |
+| Back to the start | 10 | The square closes: the robot ends on the intersection it started from |
+| Progress prints | 10 | Prints that show where the robot thinks it is at each corner |
+
+Reward the tuning process; a square that closes on the third try, with the reason
+written down, is a good result.
+
+### Module 4 · Final project (Lesson 4-9)
+
+The robot visits four or more destinations: for each leg it computes the path,
+prints it, waits for the button, and drives it. Tested in three levels: on screen,
+then one leg on the robot, then the full run. 50 points, as shown to students on
+the lesson page:
+
+| Category | Points | What it takes |
+|---|---|---|
+| Planner | 10 | `compute_manhattan_path()` correct for any position and destination; the Lesson 4-6 tests pass |
+| Driving functions | 15 | Correct `desired_heading()`, `turn_to()` and `drive_path()`; parked on the cross at every arrival; position and heading returned |
+| Main program | 10 | Four or more destinations; prints the first leg before the button; drives each leg; keeps `position` and `heading` up to date from `drive_path()` |
+| Robot demo | 10 | Physically visits every destination with correct turns |
+| Planning and documentation | 5 | Planning worksheet, a hand-trace of one leg, the testing checklist followed |
+
+### Module 5 · Capstone (Lesson 5-9)
+
+The course's capstone. The robot visits a list of destinations on a grid with
+obstacles, detects blocked intersections with the rangefinder, re-plans around
+them, prints what it discovered, and on a second run starts from that list. 60
+points, as shown to students on the lesson page:
+
+| Category | Points | What it takes |
+|---|---|---|
+| BFS pathfinding | 10 | Correct shortest paths; the Lesson 5-6 tests pass |
+| Driving integration | 10 | Drives the computed paths, leg after leg |
+| Obstacle detection | 10 | The rangefinder detects a blocked intersection and `add_blocked()` records it |
+| Re-planning | 10 | Reroutes correctly around what it discovered |
+| Experience | 10 | Run 1 prints what it found; Run 2 starts from that list |
+| Demonstration | 5 | Run 1 discovers and reroutes; Run 2 avoids the known obstacles |
+| Code quality | 5 | Readable, built from functions, meaningful comments |
+
+Insist on the dry-run version, with the rangefinder simulated, before a box touches
+the grid. A wrong reroute in simulation is a logic bug and nothing else.
+
+### Module 6 (optional)
+
+Module 6 has no graded project. Assess it formatively: the two-run table from 6-4,
+with costs and times that agree, and an explanation of why the route with more
+steps won.
+
+## The capstone demo
+
+Run the Module 5 demo live, one team at a time. You place the obstacles; the team
+runs twice and reports its numbers: "Run 1 took X steps with Y reroutes; Run 2
+took A steps with B reroutes." Then ask *why* Run 2 was better, and listen for
+"better data," not "the robot got smarter."
+
+- **Excellent:** both runs work; the second is measurably better; the student
+  explains the planner, the detection and the reason for the improvement clearly
+- **Good:** both runs work with minor hiccups; solid explanation
+- **Satisfactory:** most of it works with some live debugging; a basic explanation
+- **Needs work:** major parts don't work, or the student can't explain how their
+  code behaves
+
+Follow it with a short written reflection: what went well, what was hard, what
+they learned. For 50-minute periods the capstone usually spans two or three days:
+assembly and simulation, robot testing, then demos.
+
+## Optional extensions earn no points
+
+The class versions of student code, from Lesson 2-7 on, are optional and gated on
+working functions. Give them no points, or at most a small challenge credit. If
+"code organization" on a rubric quietly rewards the class version, the extension
+becomes a requirement with extra steps, and the students it was meant to protect
+are the ones who lose marks. A student who built a class should use it from then
+on, and is graded on exactly the same rubric. The reasoning is on the
+[course design](/teacher-guide/course-design#d1-functions-are-the-spine-classes-are-a-per-student-extension)
+page.
+
+## Rubrics for any module
+
+### Code quality
+
+| | Excellent | Good | Satisfactory | Needs work |
+|---|---|---|---|---|
+| **Works** | Runs and meets every requirement | Runs; a minor bug or a missing feature | Mostly works; several bugs | Doesn't run, or incomplete |
+| **Readable** | Clear structure and names; settings in capitals | Mostly clear | Hard to follow in places | Hard to follow throughout |
+| **Comments** | Explain the why, not just the what | Explain the key logic | Some, not always helpful | Few or none |
+| **Tested** | Each function tested on its own; tests kept in the file | Tested in the main cases | Minimal testing | Not tested |
+| **Debugging** | Found and fixed their own bugs, and can say how | Fixed bugs with a little help | Needed help to debug | Couldn't debug |
+
+### Algorithms (Modules 4 to 6)
+
+| | Excellent | Good | Satisfactory | Needs work |
+|---|---|---|---|---|
+| **Logic** | Correct, including edge cases (already there, blocked, no path) | Correct; misses an edge case | Basic version; some errors | Significant misunderstanding |
+| **Tested on screen** | Planner tested with many cases before the robot drove | Tested on the standard cases | Minimal testing | Went straight to the robot |
+| **Explanation** | Explains the algorithm and why it's correct | Explains the algorithm | Explains the basic idea | Can't explain it |
+| **Separation** | The planner only plans: it reads no sensors and drives nothing | Mostly separate | Partly tangled with driving | Planning and driving mixed together |
+
+## Grading philosophy
+
+**Grade what students can do by the end, not the average of their attempts.**
+Early work is formative, feedback-first and low-stakes. Projects are graded
+against the rubric. Allow resubmission when a student has used the feedback.
+
+A starting point for weights, to adjust to your setting:
+
+| Component | Weight |
+|---|---|
+| Formative: activities, checks, reviews, logs | 40% |
+| Module projects (Modules 1 to 4) | 40% |
+| Capstone demo and reflection | 20% |
+
+To pass, a student should complete every module project, at least in part,
+present at the capstone demo, and show growth across the semester.
+
+## Feedback
+
+- **Activities:** fast and short. Does it run, does it do what was asked? Same day
+  or next where you can.
+- **Projects:** a score and a comment on each rubric row, plus a short conversation
+  about one strength and one next step. Return it before the next module's project
+  starts.
+- **Capstone:** celebrate during the demo; written feedback and the grade within a
+  week.
+
+When you grade, keep asking: can the student explain what their code does? Did they
+debug, or give up? Do they understand the idea, or only the syntax? Has their
+problem-solving improved since Module 1?

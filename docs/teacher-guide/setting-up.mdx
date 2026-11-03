@@ -1,0 +1,201 @@
+---
+title: Setting up the classroom
+sidebar_label: Setting up
+sidebar_position: 1
+---
+
+import Materials from '../_partials/materials.mdx';
+
+<LessonHeader
+  eyebrow="Teacher guide"
+  title="Setting up the classroom"
+  meta={['Before day one', 'Robots, courses, the grid', 'Checklists']}
+/>
+
+Most lost class time in a robotics course is setup, not teaching: a charge-only
+cable, a flat battery, a line course with glossy tape. Nearly all of it can be
+settled before the first lesson. This page is that list, in the order you'll need
+it.
+
+## The software: nothing to install
+
+Students write every program in **XRP Code** at
+[xrpcode.wpi.edu](https://xrpcode.wpi.edu), in the browser: Blockly through Lesson
+1-7, Python files in the same editor from Lesson 1-8 on. There is nothing to
+install on the computers and no Python setup to manage. The robot's own library,
+XRPLib, is already on the robot and XRP Code keeps it up to date.
+
+Use **Chrome or Edge**. XRP Code reaches the robot through browser features only
+Chromium browsers have, so Safari and Firefox load the editor, let students build
+a program, and then fail at the moment they try to connect: the robot simply never
+appears. If a student "can't find the robot," check the browser first.
+
+The [XRP Code chapter of the XRP User Guide](https://xrpusersguide.readthedocs.io/en/latest/course/XRPCode.html)
+covers the editor's panels, connecting, and its own troubleshooting in depth.
+
+## What you need
+
+<Materials />
+
+## The robots: the first USB pass
+
+Do this once, before Lesson 1-1, for every robot:
+
+1. **Assemble and test-drive** each XRP following the
+   [XRP User Guide](https://xrpusersguide.readthedocs.io/). Check that the wheels
+   turn freely, the line sensor board is mounted, and the rangefinder is attached
+   (Module 5 needs it).
+2. **Connect it by USB** with a known **data** cable and open XRP Code. The first
+   connection installs or updates the software on the robot; let it finish.
+3. **Label the robot with its ID**, which XRP Code shows under the RUN button. In a
+   room full of XRPs, the Bluetooth list is unusable without labels. Number the
+   storage bins to match.
+4. **Try Bluetooth.** Once a robot has had its USB connection, XRP Code can reach
+   it wirelessly. Students will want this from Lesson 1-2 on, when the robot drives
+   squares on the floor and a cable only reaches so far.
+
+Keep a few known-good data cables at a demo station all year. USB is the fallback
+whenever wireless acts up.
+
+## Two habits to teach in the first week
+
+**Put the robot down before you switch it on.** For its first few seconds after
+power-on or reset, the XRP calibrates its gyro, and the calibration assumes the
+robot is perfectly still. A robot held in a hand calibrates against a moving
+reference, and every turn it makes afterward is off by an unpredictable amount,
+with no error to tell you. The routine is: robot down, power on, hands off for a
+few seconds, then press the user button to start the program. Lesson 1-1 teaches
+it; it is also the first thing to check whenever turns misbehave, in any module.
+
+**Every program starts by waiting for the button.** That is why the routine above
+works, and it also keeps a robot from driving off a table the moment a program
+uploads. From Module 2 on, the run block at the bottom of `robot.py` waits for the
+button and then calls one test; driving tests from Module 4 on print their plan
+first and wait for a second press before they drive.
+
+## Batteries
+
+The battery system in the materials list above is worth setting up properly. A low
+battery doesn't announce itself: it shows up as Bluetooth that won't connect,
+turns that come up short, and a line follower that wanders, which look like a
+dozen different bugs. A robot that connects over USB but not over Bluetooth needs
+fresh batteries before any other troubleshooting.
+
+## The line course (Module 2)
+
+Module 2 runs on a **taped circle**: the robot learns to stop at it (2-2), bounce
+around inside it (2-3, 2-4), and follow it (2-5 on). From Lesson 2-8 the circle has
+a **cross**: one short strip of tape laid across the line, about half as long as
+the robot is wide, so the sensors see it as an intersection but a turn sweeps past
+it.
+
+- **Matte black tape on a light surface.** Electrical or gaffer tape. Glossy tape
+  reflects light and reads as white.
+- **Press it flat.** Bubbles and lifted edges change the readings.
+- **More than one circle.** Line tracking is fiddly, and students need their own
+  runs. One circle per two or three groups keeps the queue short; whiteboard
+  panels make this easy, because each panel can hold its own course.
+- **Watch the light.** Direct sun or a bright spot under a ceiling light shifts the
+  readings. Calibration handles it, but a course half in sun and half in shade will
+  confuse everyone.
+
+Students calibrate their own sensors in Lesson 2-1: the readings run from about
+`0.2` on white to about `0.8` on black tape, and the threshold is halfway between.
+Have them keep their numbers; they reuse them all module, and they recalibrate when
+they move to the grid.
+
+## The grid (Modules 3 to 6)
+
+From Module 3 on, the robot drives a **4 × 4 grid of taped lines**, sixteen
+intersections, made from the same tape on the same kind of surface as the circle.
+Lay it once and leave it: three modules use it, and Module 6 changes one segment.
+
+- **Coordinates are (x, y), with (0, 0) at the corner nearest the students.** x
+  counts across to the right (East); y counts away from the students (North). The
+  usual start is (0, 0) facing North, into the grid. Label 0 to 3 along the near
+  edge and up the left edge with tape or a marker; it saves a lot of pointing.
+- **Square and straight.** Lines should cross at right angles, and every
+  intersection should be a clean cross that both sensors reach at once.
+- **Leave a margin.** The robot turns on an intersection by pivoting about the
+  middle of its axle, so give the outer lines enough room that a robot turning on
+  an edge intersection stays on the board.
+- **The code counts intersections, not centimeters.** Nothing in the lessons
+  depends on the exact spacing, so fit the grid to your space.
+
+<Todo kind="blocked">
+Recommended grid spacing and overall size, and the specific whiteboard panels to
+buy, still to come from Brad. The Module 5 obstacle distance (`OBSTACLE_CM = 15`)
+depends on the spacing, so the recommendation should say what threshold goes with
+it.
+</Todo>
+
+**Obstacles (Module 5).** Lessons 5-7 to 5-9 place boxes on intersections, and the
+robot's rangefinder looks for one on the next intersection before it drives there.
+The lesson's starting threshold is 15 cm; the right value depends on your grid
+spacing and on what the obstacles are made of. Measure it yourself before 5-7 with
+a box on the next intersection and with nothing there, and have a number ready.
+Firm, flat-faced boxes read most reliably; soft or angled ones read
+inconsistently.
+
+**The slow segment (Module 6, optional).** Lesson 6-1 needs one segment of the grid
+re-taped as a winding detour between two neighboring intersections, long enough
+that driving it takes at least four normal blocks' time (five is better). Between
+(0, 1) and (0, 2), up the left edge, works well. Keep the detour's tape the same
+width and its curves gentle enough to line-follow, and test it with a robot before
+students arrive. Lesson 6-1's teacher notes have the details. This physical setup
+is still being tried on real grids; if you find a better one, tell the course
+author.
+
+## Checklists
+
+**Before each class:**
+
+- Enough charged batteries in the "charged" box for every robot in use
+- The courses clean, flat and well lit
+- Computers on Chrome or Edge, with XRP Code loading
+- A couple of known-good data cables at the demo station
+- For Module 5: obstacles ready and your rangefinder threshold measured
+- The lesson's slides open, and the lesson page open in teacher mode
+
+**Each week:**
+
+- Look over every robot: loose wheels, sensor boards, wiring
+- Wipe the reflectance sensors and press down any lifting tape
+- Move spent batteries from the "needs charging" box into the chargers, and retire
+  cells that no longer hold a charge
+
+## When something goes wrong
+
+| What you see | Most likely cause | What to do |
+|---|---|---|
+| The robot never shows up in XRP Code | Safari or Firefox; or a charge-only USB cable | Switch to Chrome or Edge; swap in a known data cable |
+| USB works, Bluetooth doesn't | Low batteries; or a program already running on the robot | Fresh batteries first; then press the robot's reset button and connect again |
+| RUN fails once, for no clear reason | A flaky connection | Wait ten seconds and try once more before digging deeper |
+| Turns are off by a different amount each run | The robot moved while it calibrated at power-on | Put it down, reset, hands off for a few seconds, then press the button |
+| The same program gives different results on different days | Battery level, surface, wheel slip | Expected with timed or effort-based driving; it is the lesson in 1-6, and why later modules stop on sensors |
+| The line follower can't see the line, or sees it everywhere | Threshold from another surface; dirty sensors; glossy tape | Recalibrate on this surface (2-1); clean the sensors; re-tape with matte tape |
+| The robot stops the instant it starts on the grid | It started on an intersection | Start on a segment, facing the next intersection |
+| It misses or overshoots turns on the grid | Turning before the wheels reach the cross; turn settings | Check that every `track_to_intersection()` is followed by `drive_past_intersection()`; then tune the turn settings |
+| The rangefinder gives odd distances | Soft or angled obstacle; threshold not measured for your grid | Use flat, firm boxes; re-measure the threshold |
+
+Module 5's driving is Module 4's, unchanged. If a robot misbehaves on the grid in
+Module 5, it did the same in Module 4; fix it there.
+
+## Safety
+
+- Keep fingers clear of the wheels while a program runs, and keep long hair and
+  loose sleeves away from them.
+- Robots on tables are a falling hazard. Waiting for the button, and starting the
+  robot where it can't drive off an edge, are habits worth enforcing from Lesson 1-1.
+- Keep drinks away from the robots and computers.
+- Mark the floor courses so nobody trips on them, and keep cables off walkways.
+- Report damaged wiring or battery holders instead of fixing them mid-class.
+
+## Before you teach it
+
+The best preparation is to do the lessons yourself, on a robot, a module ahead of
+your class: the setup snags, the tuning, and the bugs students will hit are all
+easier to explain once you've hit them. The [XRP User Guide](https://xrpusersguide.readthedocs.io/)
+and the [XRPLib documentation](https://open-stem.github.io/XRP_MicroPython/) cover
+the robot and its library, and the [support forum](https://xrp.discourse.group/) is
+where other XRP teachers ask and answer questions.

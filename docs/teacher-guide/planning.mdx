@@ -1,0 +1,149 @@
+---
+title: Planning the semester
+sidebar_label: Planning the semester
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Teacher guide"
+  title="Planning the semester"
+  meta={['About 18 weeks', 'Milestones by module', 'Where to trim']}
+/>
+
+Modules 1 to 5 fill a semester of about **18 weeks at three 50-minute periods a
+week**. Module 6 is optional and adds about two more. The [pacing guide](/pacing)
+has the lesson-by-lesson times, totals for your own period length and meetings per
+week, and printable planning sheets; it is generated from the lessons, so trust it
+over the rounded numbers on this page.
+
+## The semester at a glance
+
+At three 50-minute periods a week, counting each multi-day project as two periods:
+
+| Weeks | Module | Lessons | What students build |
+|---|---|---|---|
+| 1 to 5 | **1 · Learning to Drive** | 1-0 to 1-12 | Blockly programs that drive and draw shapes, then the same ideas in Python: loops, functions, parameters, and a project of their own |
+| 6 to 9 | **2 · Line Tracking** | 2-1 to 2-10 | `robot.py` is born: sensor functions, a proportional line follower, intersection detection, and a program that laps a taped circle |
+| 10 to 11 | **3 · Grid Driving** | 3-1 to 3-4 | Driving intersection to intersection, turning on the grid, and a square that closes |
+| 11 to 14 | **4 · Manhattan Navigation** | 4-0 to 4-9 | Coordinates, tuples and lists; a route planner tested on screen; a navigator that drives any route |
+| 15 to 18 | **5 · Pathfinding Around Obstacles** | 5-1 to 5-9 | Breadth-first search, the planner swap, rangefinder obstacle detection, re-planning, and the capstone |
+| (19 to 20) | **6 · Dijkstra's Algorithm** (optional) | 6-0 to 6-5 | A grid with one slow segment, and a planner that plans by time |
+
+Module 2 is the heaviest module for most classes. Module 3 is the lightest, and the
+one to compress if you are short on time. Modules 3 to 5 build one continuous
+system on the same grid, so run them without a long break between them.
+
+## Milestones
+
+What students should have working by the end of each module. If most of a class
+is short of one of these, slow down there; every module after it builds on it.
+
+**Module 1 · Learning to Drive**
+
+- The robot drives and turns reliably, and students can explain why it waits for
+  the button (1-1)
+- A square from a repeat block, and the 360 ÷ sides rule for any regular polygon
+  (1-2)
+- A `polygon(sides, side_length)` function in Blockly, tested with several shapes
+  (1-5)
+- The difference between blocks that finish (`Straight`, `Turn`) and blocks that
+  only start the motors (`Set effort`, `Arcade`) (1-6)
+- The same shapes written in Python with `for` loops and functions (1-10, 1-11)
+- A finished, presented Module 1 project (1-12)
+
+**Module 2 · Line Tracking**
+
+- Calibration data and a threshold for their own robot and tape (2-1)
+- A robot that drives to the line and stops on a sensor, not a timer (2-2)
+- Bounce driving inside the circle, then with random turns (2-3, 2-4)
+- A tuned proportional line follower, one sensor then two (2-5, 2-6)
+- The sensor toolkit tested function by function, and intersections detected
+  (2-7, 2-8)
+- The line-tracking functions, then the final project: four reversals on the
+  circle and a clean stop (2-9, 2-10)
+
+**Module 3 · Grid Driving**
+
+- Reach the next intersection and park on it (3-1)
+- Drive a given number of intersections with one call (3-2)
+- Turn on the grid, sensor-ended, and drive an L (3-3)
+- A square of `SIDE` intersections that ends where it started (3-4)
+
+**Module 4 · Manhattan Navigation**
+
+- Coordinates on the grid, and tuples and lists in Python (4-1 to 4-3)
+- The Manhattan algorithm traced on paper, then coded as
+  `compute_manhattan_path()` (4-4, 4-5)
+- A suite of tests that runs with no robot, and a failing test debugged (4-6)
+- `desired_heading()`, `turn_to()` and `drive_path()`, checked on paper and then
+  on the robot (4-7, 4-8)
+- The final project: four or more destinations, each planned, printed and driven
+  (4-9)
+
+**Module 5 · Pathfinding Around Obstacles**
+
+- The grid as a graph, built with a dictionary (5-1, 5-2)
+- Breadth-first search traced by hand, then implemented as `compute_bfs_path()`
+  (5-3 to 5-5)
+- A test harness that checks what must be true of a path, run against both
+  planners (5-6)
+- Obstacles detected with the rangefinder and routed around (5-7)
+- A second run that starts from what the first run learned (5-8)
+- The capstone demo: discover, re-plan, and improve on the second run (5-9)
+
+**Module 6 · Dijkstra's Algorithm (optional)**
+
+- A slow segment timed with a stopwatch and turned into a weight (6-1, 6-2)
+- BFS copied and changed in two places into Dijkstra (6-3)
+- Two runs on the slow grid, BFS against Dijkstra, with the times to compare (6-4)
+
+## Checkpoints
+
+The module projects are the natural places to stop, assess and regroup:
+
+| Checkpoint | Lesson | About week | What's handed in |
+|---|---|---|---|
+| Module 1 | 1-12 | 5 | A Python project of the student's choice, planned, built, tested and presented |
+| Module 2 | 2-10 | 9 | Four reversals on the taped circle, built from the sensor and line-tracking sections |
+| Module 3 | 3-4 | 11 | A square on the grid that closes |
+| Module 4 | 4-9 | 14 | Navigation to four or more destinations |
+| Capstone | 5-9 | 18 | Navigation around discovered obstacles, and a better second run |
+
+The [assessment page](/teacher-guide/assessment) has the rubrics for each one.
+
+Module 1 also has two natural pauses of its own, marked in its lesson headers: after
+the Blockly foundation (1-5), and after the driving challenges (1-7), before
+Python starts in 1-8.
+
+## A typical lesson
+
+Most lessons are one 50 to 60 minute period, and most run the same way: a short
+look at the problem, a try on the robot, the idea named once students have felt
+the need for it, then the activity. That order matters in this course. Lessons are
+written so students meet the problem before the construct that solves it, and a
+lesson taught explanation-first loses the point. The teacher notes on each page
+say where the timing usually runs long.
+
+## If the class is ahead
+
+- Point students at the optional extensions: the class versions of their code, from
+  Lesson 2-7 on. They are gated on working code, so they suit a student who
+  finishes early.
+- Use the stretch ideas at the end of each project: a return-home leg, a round trip,
+  visiting the nearest destination next, a map printed after each leg.
+- Run Module 6.
+
+## If the class is behind
+
+- Don't skip Module 1's Blockly lessons. They build the intuition the Python
+  lessons rely on, and they move fast once students have it.
+- Give Module 2 an extra week before you cut anything else.
+- Compress Module 3. It is four short lessons that establish the grid.
+- Use the [robot.py templates](/templates) so a student who fell behind starts the
+  next lesson with the right file rather than a broken one.
+- Shrink project scope rather than skipping projects: two destinations instead of
+  four, one obstacle instead of several.
+- Use the course's cut points, described on
+  [How this course works](/how-this-course-works#the-course-can-be-made-shorter):
+  stop after Manhattan, teach pathfinding without discovering obstacles while
+  driving, or leave out Module 6.
