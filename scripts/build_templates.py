@@ -19,10 +19,18 @@ changes the file and for both tracks:
       a byte-identical copy of the module's last lesson file;
   docs/templates.mdx
       the download page, with one table per module;
+  docs/teacher-guide/sample-programs/_module-<N>-files.mdx
+      the COMPLETE end-of-module file for both tracks, every body
+      filled in from the Reveal and teacher-copy fences, with a
+      lesson-by-lesson table of what each lesson adds. These are
+      answers, so every line of the partial sits inside a
+      <TeacherNote> (Brad, 2026-11-03: solutions live in the
+      teacher guide, behind teacher mode, never as a public file).
+      The hand-written module-<N>.mdx pages import them.
   <samples>/<track>/robot-end-of-module-<N>.py   (--samples only)
-      the COMPLETE file with every body filled in from the Reveal
-      and teacher-copy fences. These are answers: never put them
-      in the site.
+      the same complete files as plain .py, for running against
+      stubs or on a robot. Write them OUTSIDE the repo (a scratch
+      dir): never commit them and never put them in static/.
 
 Design: the CONTENT comes from the lessons, the STRUCTURE from the
 recipe below. Nothing in a template is typed here except the two
@@ -112,6 +120,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(ROOT, "docs")
 OUT = os.path.join(ROOT, "static", "templates")
 PAGE = os.path.join(DOCS, "templates.mdx")
+SAMPLE_PAGES = os.path.join(DOCS, "teacher-guide", "sample-programs")
 
 MODULE_DIRS = {
     2: "module-02-line-tracking",
@@ -1721,6 +1730,10 @@ def build_all(samples_dir=None):
                 written.append(path)
     write_file(PAGE, render_page(rendered))
     written.append(PAGE)
+    for module in sorted(MODULE_DIRS):
+        path = os.path.join(SAMPLE_PAGES, "_module-%d-files.mdx" % module)
+        write_file(path, render_sample_partial(module, rendered))
+        written.append(path)
     return written, rendered
 
 
@@ -1787,11 +1800,13 @@ set the run line to the test you are working on.
 
 <TeacherNote title="Where the complete files are">
 
-These pages hold outlines only. The complete `robot.py` for any lesson is the
-`Solution (teacher copy)` note at the end of that lesson's activity, which you
-see with teacher mode on; the files are generated from those copies and the
-student skeletons by `scripts/build_templates.py`, so they stay in step with the
-lessons.
+These files hold outlines only. The complete `robot.py` at the end of each
+module, on both tracks, is in the teacher guide's [sample
+programs](/teacher-guide/sample-programs), and each lesson's own code is the
+`Solution (teacher copy)` note at the end of its activity; you see both with
+teacher mode on. The templates and the sample programs are generated from those
+teacher copies and the student skeletons by `scripts/build_templates.py`, so they
+stay in step with the lessons.
 
 </TeacherNote>
 '''
@@ -1827,6 +1842,124 @@ def render_page(rendered):
 
 def link(track, name):
     return "[%s](pathname:///templates/%s/%s)" % (name, track, name)
+
+
+# ---------------------------------------------------------------
+# docs/teacher-guide/sample-programs/_module-<N>-files.mdx
+# ---------------------------------------------------------------
+
+def file_units(text):
+    """Top-level functions, classes and CAPITAL settings of a file,
+    as {name: (kind, source text)} in file order."""
+    tree = ast.parse(text)
+    lines = text.split("\n")
+    out = {}
+    for st in tree.body:
+        src = "\n".join(lines[st.lineno - 1:st.end_lineno])
+        if isinstance(st, ast.ClassDef):
+            out[st.name] = ("class", src)
+        elif isinstance(st, ast.FunctionDef):
+            out[st.name] = ("func", src)
+        elif (isinstance(st, ast.Assign) and len(st.targets) == 1
+              and isinstance(st.targets[0], ast.Name) and st.targets[0].id.isupper()):
+            out[st.targets[0].id] = ("setting", src)
+    return out
+
+
+def unit_label(name, kind):
+    if kind == "func":
+        return "`%s()`" % name
+    if kind == "class":
+        return "`%s` class" % name
+    return "`%s`" % name
+
+
+def module_lessons(module):
+    """Every numbered lesson of a module, from its folder: ["2-1", ...]."""
+    out = []
+    for path in sorted(glob.glob(os.path.join(DOCS, MODULE_DIRS[module], "lesson-*.mdx"))):
+        n = int(re.match(r"lesson-(\d+)", os.path.basename(path)).group(1))
+        if n > 0:
+            out.append("%d-%d" % (module, n))
+    return out
+
+
+def lesson_changes_table(module, track, rendered):
+    """Markdown table: what each lesson of the module adds to the
+    complete file on this track, and the tests it brings."""
+    prev = {}
+    for (t, l, s) in sorted(rendered, key=lambda k: lkey(k[1])):
+        if t == track and s and lkey(l)[0] < module:
+            prev = file_units(rendered[(t, l, s)])
+    rows = ["| Lesson | Adds | Changes or removes | Tests it adds |", "|---|---|---|---|"]
+    for lesson in module_lessons(module):
+        label = "%s · %s" % (lesson, lesson_title(lesson))
+        key = (track, lesson, True)
+        if key not in rendered:
+            rows.append("| %s | No change to `robot.py` | | |" % label)
+            continue
+        units = file_units(rendered[key])
+        new = [n for n in units if n not in prev]
+        changed = [n for n in units if n in prev and units[n][1] != prev[n][1]]
+        gone = [n for n in prev if n not in units]
+        adds = [unit_label(n, units[n][0]) for n in new if not n.startswith("test_")]
+        tests = [unit_label(n, units[n][0]) for n in new if n.startswith("test_")]
+        edits = [unit_label(n, units[n][0]) + " changed" for n in changed]
+        edits += [unit_label(n, prev[n][0]) + " removed" for n in gone]
+        rows.append("| %s | %s | %s | %s |" % (
+            label, ", ".join(adds), ", ".join(edits), ", ".join(tests)))
+        prev = units
+    return "\n".join(rows)
+
+
+SAMPLE_PARTIAL_HEAD = '''{/* GENERATED by scripts/build_templates.py from the lessons: the
+    complete robot.py at the end of Module %(module)d, both tracks. Answers,
+    so everything is inside a TeacherNote. Don't edit this file: change the
+    lessons (or the script) and re-run the script. Imported by module-%(module)d.mdx. */}
+'''
+
+SAMPLE_TRACK = '''
+## %(track_title)s
+
+<TeacherNote title="Module %(module)d: what each lesson adds (%(track)s track)">
+
+%(table)s
+
+A lesson's tests stay in the file after the lesson, so this one file runs any of
+them: set the call in the `RUN` block to the test you want. A driving test that
+plans first prints the plan, then waits for a second button press.%(gone_note)s
+
+</TeacherNote>
+
+<TeacherNote title="Module %(module)d: complete robot.py (%(track)s track)">
+
+```python title="robot.py · %(track)s track · end of Module %(module)d"
+%(code)s```
+
+</TeacherNote>
+'''
+
+
+def render_sample_partial(module, rendered):
+    out = [SAMPLE_PARTIAL_HEAD % {"module": module}]
+    for track in TRACKS:
+        last = sorted([l for (t, l, s) in rendered if t == track and s and lkey(l)[0] == module],
+                      key=lkey)[-1]
+        table = lesson_changes_table(module, track, rendered)
+        gone_note = ""
+        if " removed" in table:
+            gone_note = ("\n\nWhere the table says something was removed, that lesson "
+                         "replaced or renamed it, and the tests that used it moved to "
+                         "the new version.")
+        out.append(SAMPLE_TRACK % {
+            "track": track,
+            "track_title": "Function track" if track == "function" else "Class track",
+            "module": module,
+            "table": table,
+            "gone_note": gone_note,
+            "code": rendered[(track, last, True)],
+        })
+    return "".join(out)
 
 
 # ---------------------------------------------------------------

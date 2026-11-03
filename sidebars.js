@@ -118,7 +118,20 @@ const sidebars = {
     'teacher-guide/assessment',
     'teacher-guide/differentiation',
     'teacher-guide/course-design',
-    'teacher-guide/sample-programs',
+    {
+      type: 'category',
+      label: 'Sample programs',
+      link: {type: 'doc', id: 'teacher-guide/sample-programs/index'},
+      collapsed: false,
+      items: [
+        'teacher-guide/sample-programs/module-1',
+        'teacher-guide/sample-programs/module-2',
+        'teacher-guide/sample-programs/module-3',
+        'teacher-guide/sample-programs/module-4',
+        'teacher-guide/sample-programs/module-5',
+        'teacher-guide/sample-programs/module-6',
+      ],
+    },
   ],
 };
 

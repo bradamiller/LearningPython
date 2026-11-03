@@ -1,0 +1,165 @@
+---
+title: "Sample programs: Module 5"
+sidebar_label: "Module 5 · Pathfinding Around Obstacles"
+sidebar_position: 5
+---
+
+import ModuleFiles from './_module-5-files.mdx';
+
+<LessonHeader
+  eyebrow="Teacher guide · Sample programs"
+  title="Module 5 · Pathfinding Around Obstacles"
+  meta={['Teacher mode', 'Function track', 'Class track', 'Lesson 5-3 demonstration']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the programs on this page are yours only.
+</TeacherBanner>
+
+The complete `robot.py` at the end of Module 5, on both tracks, for teachers.
+Turn teacher mode on to see it. Students: your file is on the [robot.py
+templates](/templates) page.
+
+<TeacherNote title="Checking a robot against this file">
+
+The planner work runs with the robot sitting still. These tests only print:
+`test_grid_graph()` (16 intersections), `test_blocked_graph()` (15),
+`test_bfs_open()`, `test_bfs_walls()`, `test_rings()`, `test_swap()`,
+`test_capstone_paper()` and the harness, `test_harness()`, which should end with
+`Manhattan: 4 of 6 passed` and `BFS: 6 of 6 passed`. On the class track
+`test_two_planners()` is paper too.
+
+The tests that need the robot are `test_rangefinder()`, `test_detect_once()`,
+`test_navigate()` and the graded `test_capstone()`, on the grid with a box or
+block for an obstacle. `OBSTACLE_CM` is 15, the lessons' value; check it against
+your rangefinder and obstacle.
+
+</TeacherNote>
+
+## Lesson 5-3 · The BFS Concept
+
+<TeacherNote title="5-3 demonstration program (project it, don't hand it out)">
+
+The program the lesson promises: it runs the 3×3 trace with (1, 1) blocked, prints
+each number as it is written and the to-visit list after every step, then the
+path and the grid of ring numbers. Plain Python, no robot. Its steps match the
+lesson's trace table line for line, it ends with the path
+`[(1, 0), (2, 0), (2, 1), (2, 2)]`, and the last lines it prints are:
+
+```text
+ 2 |   2  3  4
+ 1 |   1  X  3
+ 0 |   0  1  2
+    ----------
+       0  1  2
+```
+
+The two calls at the bottom, commented out, run the 4×4 wall (ring 7 on (3, 0),
+as in the lesson's answers) and the blocked column (no path).
+
+```python title="lesson_5_3_bfs_concept.py"
+# Lesson 5-3 demonstration: breadth-first search on the 3x3 grid
+# with (1, 1) blocked, from (0, 0) to (2, 2), step by step.
+# Plain Python: no robot, no XRPLib. Project it; don't hand it
+# out (students write bfs_rings() and print_grid() in 5-5).
+
+def build_graph(rows, cols, blocked):
+    """Return the grid as a dictionary, leaving out every
+    intersection in blocked: not a key, not anyone's neighbor."""
+    graph = {}
+    for x in range(cols):
+        for y in range(rows):
+            if (x, y) in blocked:
+                continue
+            neighbors = []
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:   # left, right, down, up
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < cols and 0 <= ny < rows and (nx, ny) not in blocked:
+                    neighbors.append((nx, ny))
+            graph[(x, y)] = neighbors
+    return graph
+
+def print_grid(rows, cols, blocked, numbers):
+    """Draw the grid the way it lies in front of you: the top
+    line is the far row, y = 0 is the bottom line."""
+    for i in range(rows):
+        y = rows - 1 - i
+        line = " " + str(y) + " | "
+        for x in range(cols):
+            if (x, y) in blocked:
+                cell = "X"
+            elif (x, y) in numbers:
+                cell = numbers[(x, y)]
+            else:
+                cell = "."
+            line = line + "{:>3}".format(cell)
+        print(line)
+    print("    " + "-" * (3 * cols + 1))
+    footer = "     "
+    for x in range(cols):
+        footer = footer + "{:>3}".format(x)
+    print(footer)
+
+def trace(rows, cols, blocked, start, destination):
+    """Run BFS out loud: every number written, the to-visit list
+    after every step, then the path and the grid of rings."""
+    graph = build_graph(rows, cols, blocked)
+    previous = {start: None}     # where each intersection came from
+    ring = {start: 0}            # the number written on it
+    to_visit = [start]
+    print("Start:", start, "gets 0.  To visit:", to_visit)
+
+    step = 0
+    while len(to_visit) > 0:
+        current = to_visit.pop(0)              # the OLDEST one
+        step = step + 1
+        print("Step", step, "- looking around", current)
+        if current == destination:
+            print("  destination reached - stop")
+            break
+        written = []
+        for neighbor in graph[current]:
+            if neighbor not in previous:       # no number yet
+                previous[neighbor] = current
+                ring[neighbor] = ring[current] + 1
+                to_visit.append(neighbor)
+                written.append(neighbor)
+                print("  ", neighbor, "gets", ring[neighbor], "- came from", current)
+        if len(written) == 0:
+            print("   nothing new")
+        print("  To visit:", to_visit)
+
+    print()
+    if destination in previous:
+        path = []
+        current = destination
+        while current != start:                 # walk the arrows back
+            path.append(current)
+            current = previous[current]
+        path.reverse()
+        print("Path:", path)
+        print("Steps:", len(path))
+    else:
+        print("No path: the destination never got a number.")
+    print()
+    print_grid(rows, cols, blocked, ring)
+
+
+# The activity: 3x3, (1, 1) blocked. Matches the trace table.
+trace(3, 3, [(1, 1)], (0, 0), (2, 2))
+
+# The two follow-ups from "The wall, and the dead end", on the
+# 4x4 grid. Uncomment one at a time.
+# trace(4, 4, [(1, 0), (1, 1)], (0, 0), (3, 0))                  # (3,0) is ring 7
+# trace(4, 4, [(1, 0), (1, 1), (1, 2), (1, 3)], (0, 0), (3, 0))  # no path
+```
+
+</TeacherNote>
+
+<TeacherNote title="Lesson 5-1">
+
+Lesson 5-1 is paper only, and its route is in the student reveal.
+
+</TeacherNote>
+
+<ModuleFiles />

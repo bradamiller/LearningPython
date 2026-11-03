@@ -378,8 +378,8 @@ step that broke the property.
 <TeacherNote title="Solution (teacher copy)">
 
 This lesson's addition to the BFS PLANNER section of `robot.py`, plus the run block;
-the rest of the file is as the Lesson 5-5 teacher copy left it. The file is
-`lesson-06-testing-and-swapping.py` in the Module 5 solutions.
+the rest of the file is as the Lesson 5-5 teacher copy left it. The whole file at
+the end of the module is in the [Module 5 sample programs](/teacher-guide/sample-programs/module-5).
 
 **Why the harness is `run_path_test()` and not `run_test()`:** Module 4's
 `run_test(test_name, position, destination, expected)` is still in the file, with
@@ -588,8 +588,7 @@ called `clear_blocked()`; and `check_path()`'s property 4 reads `HARNESS_BLOCKED
 Why not just read `planner.blocked` directly? `Manhattan` has no such attribute, and
 the harness isn't supposed to know what's inside a planner. `test_swap()` gets the
 same treatment: `navigate()` calls `planner.compute_path(...)`, and the test hands it
-`Manhattan()` and your `planner`. The file is `lesson-06-testing-class-addon.py` in the
-Module 5 solutions.
+`Manhattan()` and your `planner`.
 
 <Reveal title="Check your two helpers" hint="run both objects through the harness first">
 

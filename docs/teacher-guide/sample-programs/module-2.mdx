@@ -1,0 +1,41 @@
+---
+title: "Sample programs: Module 2"
+sidebar_label: "Module 2 · Line Tracking"
+sidebar_position: 2
+---
+
+import ModuleFiles from './_module-2-files.mdx';
+
+<LessonHeader
+  eyebrow="Teacher guide · Sample programs"
+  title="Module 2 · Line Tracking"
+  meta={['Teacher mode', 'Function track', 'Class track']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the programs on this page are yours only.
+</TeacherBanner>
+
+The complete `robot.py` at the end of Module 2, on both tracks, for teachers.
+Turn teacher mode on to see it. Students: your file is on the [robot.py
+templates](/templates) page.
+
+<TeacherNote title="Checking a robot against this file">
+
+Every Module 2 test drives or reads the sensors, so there is nothing here to run
+without a robot. Before you trust a driving test, put your robot's own values in
+the settings: `THRESHOLD` from its Lesson 2-1 readings, then `KP`, `BASE_EFFORT`
+and `TURN_EFFORT` tuned on your course (on the class track they are the
+attributes set in each class's `__init__`). The file has the lessons' starting
+values, with `BASE_EFFORT` at 0.4 as Lesson 2-9 sets it.
+
+From Lesson 2-8 on, the tests expect the taped circle with the short cross on it.
+`test_final_project()` is the Lesson 2-10 run around that course.
+
+The class track is the same file with the `LineSensor` class (Lesson 2-7) and the
+`LineTrack` class (Lesson 2-9) in place of the function sections, and `tracker.`
+in front of the driving calls in the tests.
+
+</TeacherNote>
+
+<ModuleFiles />

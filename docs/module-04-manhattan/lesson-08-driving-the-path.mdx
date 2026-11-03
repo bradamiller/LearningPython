@@ -298,8 +298,8 @@ two things to compare are the `return heading` and the `position = next_pos`.
 <TeacherNote title="Solution (teacher copy)">
 
 This lesson's addition to the NAVIGATOR section of `robot.py`, plus the run block; the
-rest of the file is as the Lesson 4-7 teacher copy left it. The file is
-`lesson-08-driving-the-path.py` in the Module 4 solutions. Class-track students with
+rest of the file is as the Lesson 4-7 teacher copy left it. The whole file at
+the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). Class-track students with
 `LineTrack` write `tracker.` in front of the four driving calls; with the `Navigator`
 extension below, the section is replaced wholesale.
 
@@ -634,9 +634,6 @@ every return — forget once and the robot plans from the wrong place. On the ri
 navigator owns them: they live at its address, `drive_path()` updates them there, and the
 caller just reads `navigator.position` whenever it wants to know. There is nothing to
 pass back and forth, so there is nothing to forget.
-
-The full file is `lesson-08-navigator-class-addon.py` in the Module 4 solutions, with the
-Module 2 `LineSensor` and `LineTrack` classes at the top.
 
 **From here on, use your class.** Lesson 4-9 is written with the function names,
 because that is what every student has; where it says `drive_path(path, position,

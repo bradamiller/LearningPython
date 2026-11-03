@@ -1,0 +1,43 @@
+---
+title: "Sample programs: Module 6"
+sidebar_label: "Module 6 · Dijkstra's Algorithm (optional)"
+sidebar_position: 6
+---
+
+import ModuleFiles from './_module-6-files.mdx';
+
+<LessonHeader
+  eyebrow="Teacher guide · Sample programs"
+  title="Module 6 · Dijkstra's Algorithm (optional)"
+  meta={['Teacher mode', 'Function track', 'Class track']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the programs on this page are yours only.
+</TeacherBanner>
+
+The complete `robot.py` at the end of Module 6, on both tracks, for teachers.
+Turn teacher mode on to see it. Students: your file is on the [robot.py
+templates](/templates) page.
+
+<TeacherNote title="Checking a robot against this file">
+
+The planner work runs with the robot sitting still. These tests only print:
+`test_weights()`, `test_cost_check()`, `test_cost_grid()` and the three-planner
+harness, `test_three_planners()`, which should end with `Manhattan: 4 of 7
+passed`, `BFS: 6 of 7 passed` and `Dijkstra: 7 of 7 passed`.
+
+`test_drive_slow_grid()` is the one that drives, on the grid with the slow
+segment between (0, 1) and (0, 2). It plans with the planner `PLANNER_NAME`
+names: `"BFS"` drives straight through the slow segment, `"Dijkstra"` takes the
+detour. The weight in `SLOW_SEGMENT`, 5, is the lessons' example: use the ratio
+your class measured in Lesson 6-1. The physical slow
+segment is still being tried out on a real grid.
+
+The function track ends at Lesson 6-4. The class track goes on to Lesson 6-5,
+where the `Dijkstra` class joins `Manhattan` and `BFS` under one harness, so its
+file is the longer one. Lesson 6-1 is measuring only; there is no program for it.
+
+</TeacherNote>
+
+<ModuleFiles />

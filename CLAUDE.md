@@ -2102,9 +2102,15 @@ goes further):
     `python3 scripts/build_templates.py --samples <dir> --verify --xrplib
     <stubs> --scratch <dir>` and commit the regenerated templates** (stub XRPLib
     modules live in the session scratchpad; recreate them from the script's docstring if
-    needed). `--samples` writes the COMPLETE files (answers) for both tracks per module
-    end; those go to the source repo (`IntoToPython/teacher-guide/robot-py-samples/`),
-    never to the site. The generator fails loudly when a recipe name is missing from the
+    needed). The script also writes the COMPLETE end-of-module files (answers), both
+    tracks, into `docs/teacher-guide/sample-programs/_module-<N>-files.mdx`, every line
+    inside a `<TeacherNote>` (see §19; changed 2026-11-03, they used to be kept out of
+    the site). `--samples <dir>` writes the same files as plain `.py` for running:
+    point it at a scratch dir, never commit them, never put them in `static/`. Stub
+    XRPLib: one class per module (`board`, `differential_drive`, `reflectance`,
+    `rangefinder`, plus `defaults` for Module 1) with `get_default_*()` classmethods and
+    no-op motion; the reflectance stub must cycle through white / left / both / right
+    readings so the "until the line" and "until the cross" loops end. The generator fails loudly when a recipe name is missing from the
     lessons — that is the signal that a rename needs a recipe edit.
   - Source-repo solution files to (re)name when porting: `lesson-NN-<slug>.py` per
     lesson as cited in each teacher copy; the M3 names are new.
@@ -2266,7 +2272,7 @@ navbar item, so they stay out of the students' lesson list.
 | `assessment.mdx` | `assessment-strategy.md` | Rubrics match each project lesson's own teacher note or student-facing rubric table (M4 L9, M5 L9). If you change a lesson's rubric, change it here too |
 | `differentiation.mdx` | `differentiation.md` | Trimmed to what fits this course (no IDE or simulator advice) and tied to its features: skeletons, Reveals, extensions, templates |
 | `course-design.mdx` | `course-design-decisions.md` + `classes-optional.md` | D1–D10 keep their numbers (code comments cite them), updated to the site: extensions at 2-7/2-9/4-5/4-8/5-5/5-6/6-5, `global` in 2-7, `turn_to()` as the clockwise loop. Later decisions (experiential order, no timed driving, one file, fading hints, where answers go, (x, y), hand-carried obstacles) follow, unnumbered. The source's work plan/status table is dropped: it's done |
-| `sample-programs.mdx` | new | Placeholder: one complete program per module, all inside `<TeacherNote>`, to be filled by the solutions follow-up |
+| `sample-programs/` | new, filled 2026-11-03 | `index.mdx` (hub) and `module-1.mdx` … `module-6.mdx`, a sidebar category. See "Sample programs" below |
 
 **Public vs. teacher-only:** the pages are public, like `/pacing` and How this
 course works; anything that is an answer or complete code goes in a `<TeacherNote>`
@@ -2281,3 +2287,31 @@ counted as a module with no duration chips and failed the build).
 decisions doc by path, `src/components/OptionalExtension.js` (D1) and
 `scripts/check_name_parity.js` (D8). Point them at `docs/teacher-guide/course-design.mdx`.
 They were left alone here because that branch edits the same lines.
+
+### Sample programs (`docs/teacher-guide/sample-programs/`, 2026-11-03)
+
+Brad: "add the program solutions, and update them so they match up with the new
+lesson materials." The old `IntoToPython/module-*/code/solutions/` files (49, written
+for the old lessons: `draw_square(size)`, (row, col) grids, old lesson numbers) are
+**replaced, not ported**: every program here comes from the lessons as they stand.
+
+- **Modules 2–6: generated.** `module-<N>.mdx` is hand-written (a "checking a robot
+  against this file" note: which tests are paper-only, what they should print, which
+  need a robot, which settings to tune) and imports `_module-<N>-files.mdx`, which
+  `scripts/build_templates.py` writes: per track, a lesson-by-lesson table (adds /
+  changes or removes / tests) and the complete `robot.py` at the end of the module.
+  Never edit the partials; re-run the script.
+- **Module 1, 4-2 and 5-3: hand-written** in their module pages, one fenced file per
+  activity, each run against the stubs before it went in. Module 1: 1-8 Try it,
+  1-9 every answer, 1-10 steps 2 and 3 (both ways), 1-11 the shape library, 1-12
+  Option A and B samples. 4-2: the Try it. 5-3: the demonstration program the lesson
+  promises (step-by-step trace that matches the lesson's table, then `print_grid`).
+  If you change those lessons, change these by hand.
+- **Everything answer-like is inside a `<TeacherNote>`.** The pages' public text says
+  only what the page is for. The hub says plainly that teacher mode hides content with
+  CSS, so it is in the page source.
+- **Lesson teacher copies point here.** Each "Solution (teacher copy)" used to name a
+  per-lesson file "in the Module N solutions"; they now link the module's sample page.
+  The same sentence in student-visible text (extensions, one reveal, 5-3) and the
+  Module 6 Resources bullets that listed source-repo solution files were removed.
+

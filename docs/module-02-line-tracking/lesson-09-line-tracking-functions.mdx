@@ -315,8 +315,8 @@ a `track_for_distance()` using the drivetrain's encoders rather than a timer.
 
 This lesson's addition to the LINE TRACKING section of `robot.py`, with the
 challenge; the rest of the file is as the Lesson 2-8 teacher copy left it apart from
-`BASE_EFFORT = 0.4`. The file is `lesson-09-line-tracking-functions.py` in the Module
-2 solutions. Students see only the outlines and the three bodies behind the "Check
+`BASE_EFFORT = 0.4`. The whole file at the end of the module is in the
+[Module 2 sample programs](/teacher-guide/sample-programs/module-2). Students see only the outlines and the three bodies behind the "Check
 your three new functions" reveal, which is closed by default and not printed.
 
 ```python
@@ -524,8 +524,7 @@ tracker.track_to_intersection()
 When you create a `LineTrack`, it builds its *own* `LineSensor` inside `__init__` —
 you don't make one separately — and asks it questions with `self.sensor.get_error()`
 and `self.sensor.is_at_cross()`. The functions are the same four, with the same names;
-the settings moved from file-level capitals into `self.` attributes. The file is
-`lesson-09-linetrack-class-addon.py` in the Module 2 solutions. One thing to notice
+the settings moved from file-level capitals into `self.` attributes. One thing to notice
 about your file now: the LINE SENSOR section has a class and no `sensor = LineSensor()`
 line is needed any more — `LineTrack` makes the one it uses. Keep yours for
 `test_sensors()`, or delete it; either is fine.

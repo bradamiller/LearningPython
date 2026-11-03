@@ -1,0 +1,80 @@
+---
+title: "Sample programs: Module 4"
+sidebar_label: "Module 4 · Manhattan Navigation"
+sidebar_position: 4
+---
+
+import ModuleFiles from './_module-4-files.mdx';
+
+<LessonHeader
+  eyebrow="Teacher guide · Sample programs"
+  title="Module 4 · Manhattan Navigation"
+  meta={['Teacher mode', 'Function track', 'Class track', 'Lesson 4-2 practice']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the programs on this page are yours only.
+</TeacherBanner>
+
+The complete `robot.py` at the end of Module 4, on both tracks, for teachers.
+Turn teacher mode on to see it. Students: your file is on the [robot.py
+templates](/templates) page.
+
+<TeacherNote title="Checking a robot against this file">
+
+Most of Module 4 runs with the robot sitting still. These tests only print, so
+you can check a student's planner from their file without a grid:
+`test_paper_paths()`, `test_edge_cases()`, `test_from_everywhere()`,
+`test_planner()` (six lines, all `PASS`), `test_headings()`, `test_turns_paper()`
+and `test_delivery_paper()`. The ones that drive need the grid: `test_one_leg()`,
+`test_drive_path()` and the graded `test_delivery()`.
+
+`turn_to()` turns clockwise one quarter at a time until the heading is right, as
+the lesson has it, so a left turn comes out as three right turns. That is the
+lesson's design, not a bug.
+
+</TeacherNote>
+
+## Lesson 4-2 · Tuples
+
+<TeacherNote title="4-2 Try it: five positions and two distances">
+
+Scratch work: none of this goes into `robot.py`. Any five positions are fine; keep
+each destination up and to the right of its start, as the lesson's teacher note
+says, until Lesson 4-4 deals with negative distances.
+
+```python title="lesson_4_2_tuples.py"
+# Five grid positions, one tuple each
+home = (0, 0)
+school = (2, 3)
+library = (3, 1)
+park = (1, 2)
+store = (3, 3)
+
+print("home: x =", home[0], " y =", home[1])
+print("school: x =", school[0], " y =", school[1])
+print("library: x =", library[0], " y =", library[1])
+print("park: x =", park[0], " y =", park[1])
+print("store: x =", store[0], " y =", store[1])
+
+# Two distances, each destination up and to the right of its start
+x_distance = school[0] - home[0]          # 2
+y_distance = school[1] - home[1]          # 3
+print("home to school:", x_distance + y_distance, "steps")    # 5
+
+x_distance = store[0] - park[0]           # 2
+y_distance = store[1] - park[1]           # 1
+print("park to store:", x_distance + y_distance, "steps")     # 3
+```
+
+</TeacherNote>
+
+<TeacherNote title="Lessons 4-1 and 4-3">
+
+Lesson 4-1 is paper only, and its three answers are in the student reveal.
+Lesson 4-3's code is given in the lesson to trace and change; there is no
+exercise to answer.
+
+</TeacherNote>
+
+<ModuleFiles />

@@ -1,0 +1,336 @@
+---
+title: "Sample programs: Module 1"
+sidebar_label: "Module 1 · Learning to Drive"
+sidebar_position: 1
+---
+
+<LessonHeader
+  eyebrow="Teacher guide · Sample programs"
+  title="Module 1 · Learning to Drive"
+  meta={['Teacher mode', 'One file per activity', 'Lessons 1-8 to 1-12']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the programs on this page are yours only.
+</TeacherBanner>
+
+Complete programs for the Python half of Module 1, for teachers. Students don't
+start `robot.py` until Lesson 2-1, so each activity here is its own short file.
+Turn teacher mode on to see them.
+
+<TeacherNote title="What's here, and what isn't">
+
+Lessons 1-0 to 1-7 have no Python. The Blockly answers (the square, the triangle
+and its angle table, the polygon predictions, the circles) are in each lesson's own
+reveals and teacher notes, as block pictures, and the Lesson 1-7 challenges are
+open-ended. Lesson 1-8's first program is given in full in the lesson, so the file
+below is its **Try it**.
+
+File names follow the pattern Lesson 1-8 teaches (`lesson_1_8_first_drive.py`):
+the lesson number, then what the program does. Every name matches its lesson:
+`polygon(sides, side_length)`, `calculate_angle(sides)`,
+`calculate_perimeter(sides, side_length)`. Lesson 1-10's programs use
+`from XRPLib.defaults import *`, as that lesson's code does; the rest import the
+two classes they need, as Lessons 1-8 and 1-12 do.
+
+</TeacherNote>
+
+## Lesson 1-8 · Hello, Python
+
+<TeacherNote title="1-8 Try it: the L-shape, with a print before each step">
+
+```python title="lesson_1_8_l_shape.py"
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+board.wait_for_button()
+
+print("Driving forward...")
+drivetrain.straight(30)
+
+print("Turning...")
+drivetrain.turn(90)
+
+print("Driving forward again...")
+drivetrain.straight(30)
+
+print("Done!")
+```
+
+The bug in **Read it, then fix it** is `Print`, which should be `print`.
+
+</TeacherNote>
+
+## Lesson 1-9 · Variables & Expressions
+
+<TeacherNote title="1-9 Predict, then print: every answer">
+
+No robot. Steps 1 and 3 are also in the student reveal; steps 4 and 5 are only
+here.
+
+```python title="lesson_1_9_predict_print.py"
+# Step 1: predict all six, then run
+print(3 + 4 * 2)          # 11
+print((3 + 4) * 2)        # 14
+print(10 / 4)             # 2.5
+print(10 - 2 - 3)         # 5
+print(2 * 3 + 4 * 5)      # 26
+print(100 / 10 / 2)       # 5.0
+
+# Step 3: the accumulator pattern
+count = 0
+count = count + 3
+count = count * 2
+print(count)              # 6
+
+# Step 4: the turn angle for an eight-sided shape
+sides = 8
+print(360 / sides)        # 45.0
+
+# Step 5 (challenge): the midpoint of two readings
+white = 0.25
+black = 0.75
+print((white + black) / 2)    # 0.5
+```
+
+</TeacherNote>
+
+## Lesson 1-10 · Python Loops
+
+<TeacherNote title="1-10 step 2: six squares">
+
+Step 1's predictions are in the student reveal (440 cm, 16 turns). For step 2 the
+only change is the outer `range(4)`; six squares drive 780 cm and make 24 turns.
+
+```python title="lesson_1_10_six_squares.py"
+from XRPLib.defaults import *
+
+board.wait_for_button()
+
+for square in range(6):          # was range(4): the only change
+    size = 20 + square * 5       # 20, 25, 30, 35, 40, 45
+    for side in range(4):
+        drivetrain.straight(size)
+        drivetrain.turn(90)
+```
+
+</TeacherNote>
+
+<TeacherNote title="1-10 step 3 (challenge): shrinking squares, both ways">
+
+Change the arithmetic:
+
+```python title="lesson_1_10_shrinking_arithmetic.py"
+from XRPLib.defaults import *
+
+board.wait_for_button()
+
+for square in range(4):
+    size = 35 - square * 5       # 35, 30, 25, 20
+    for side in range(4):
+        drivetrain.straight(size)
+        drivetrain.turn(90)
+```
+
+Or count down, the version the lesson's teacher note calls the showier one:
+
+```python title="lesson_1_10_shrinking_count_down.py"
+from XRPLib.defaults import *
+
+board.wait_for_button()
+
+for square in range(3, -1, -1):  # 3, 2, 1, 0
+    size = 20 + square * 5       # 35, 30, 25, 20
+    for side in range(4):
+        drivetrain.straight(size)
+        drivetrain.turn(90)
+```
+
+</TeacherNote>
+
+## Lesson 1-11 · Python Functions
+
+<TeacherNote title="1-11 Build a shape library: all three steps">
+
+`polygon()` is written once, in its step 3 form: with the default, `polygon(6)`
+draws 30 cm sides and `polygon(6, 50)` still draws 50 cm sides. A student who
+stopped at step 2 has the same function without `=30`. The perimeters print 90,
+100 and 100.
+
+```python title="lesson_1_11_shape_library.py"
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+def calculate_angle(sides):
+    """Return the exterior angle of a regular polygon."""
+    return 360 / sides
+
+def calculate_perimeter(sides, side_length):
+    """Return the distance around a regular polygon."""
+    return sides * side_length
+
+def polygon(sides, side_length=30):
+    """Draw a regular polygon."""
+    angle = calculate_angle(sides)
+    for i in range(sides):
+        drivetrain.straight(side_length)
+        drivetrain.turn(angle)
+
+board.wait_for_button()
+
+# Steps 1 and 2: three shapes, each followed by its perimeter
+polygon(3, 30)
+print("Triangle perimeter:", calculate_perimeter(3, 30))     # 90
+polygon(4, 25)
+print("Square perimeter:", calculate_perimeter(4, 25))       # 100
+polygon(5, 20)
+print("Pentagon perimeter:", calculate_perimeter(5, 20))     # 100
+
+# Step 3 (challenge): the default side_length
+polygon(6)          # hexagon, 30 cm sides
+polygon(6, 50)      # the argument still wins: 50 cm sides
+```
+
+</TeacherNote>
+
+## Lesson 1-12 · Python Final Project
+
+<TeacherNote title="About the final project samples">
+
+Every team's project is different, so these are examples of a finished project,
+not answers. Each follows the layout Lesson 1-12 teaches: a docstring at the top,
+imports and setup, `HELPER FUNCTIONS`, `MAIN FUNCTIONS`, then `RUN`. There are
+samples for Option A and Option B. Option C (sensors) and Option D (your own idea)
+are too open to have one right program; judge those against the team's own plan.
+
+</TeacherNote>
+
+<TeacherNote title="1-12 Option A sample: Polygon artist">
+
+A triangle through an octagon in a row, then a star. The star turns 144 degrees
+at each point, so it goes round twice (5 × 144 = 720): a good question to ask a
+team that tries 72 and gets a pentagon.
+
+```python title="lesson_1_12_polygon_artist.py"
+"""
+Module 1 Final Project: Polygon Artist (sample)
+Team: teacher sample
+Description: Draws a row of shapes that grow from a triangle to an
+octagon, then a five-pointed star, using one polygon function.
+"""
+
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+import time
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+# ===== HELPER FUNCTIONS =====
+def calculate_angle(sides):
+    """Return the exterior angle of a regular polygon."""
+    return 360 / sides
+
+def move_over(distance):
+    """Drive to the start of the next shape without drawing it."""
+    drivetrain.straight(distance)
+    time.sleep(0.5)
+
+# ===== MAIN FUNCTIONS =====
+def polygon(sides, side_length):
+    """Draw one regular polygon."""
+    angle = calculate_angle(sides)
+    for i in range(sides):
+        drivetrain.straight(side_length)
+        drivetrain.turn(angle)
+
+def star(side_length):
+    """Draw a five-pointed star: five sides, turning 144 degrees."""
+    for i in range(5):
+        drivetrain.straight(side_length)
+        drivetrain.turn(144)       # 720 / 5: a star goes round twice
+
+def gallery(side_length):
+    """Draw a triangle through an octagon, moving over between them."""
+    for sides in range(3, 9):
+        print("Drawing a", sides, "sided shape")
+        polygon(sides, side_length)
+        move_over(3 * side_length)     # an octagon is about 2.4 sides wide
+
+# ===== RUN =====
+board.wait_for_button()
+
+print("Starting...")
+gallery(15)
+print("And a star")
+star(30)
+print("Done!")
+```
+
+</TeacherNote>
+
+<TeacherNote title="1-12 Option B sample: Precision navigation">
+
+A rectangular delivery route with three stops, built on
+`navigate_segment(distance, angle)` from the lesson's function inventory. The leg
+lengths are settings at the top, because they're the numbers a team measures and
+changes.
+
+```python title="lesson_1_12_precision_navigation.py"
+"""
+Module 1 Final Project: Precision Navigation (sample)
+Team: teacher sample
+Description: A delivery robot that drives a rectangular route, stops at
+three drop-off points, and returns to where it started.
+"""
+
+from XRPLib.differential_drive import DifferentialDrive
+from XRPLib.board import Board
+import time
+
+drivetrain = DifferentialDrive.get_default_differential_drive()
+board = Board.get_default_board()
+
+# Measured on our floor: change these to fit your course.
+LONG_LEG = 60
+SHORT_LEG = 40
+
+# ===== HELPER FUNCTIONS =====
+def navigate_segment(distance, angle):
+    """Drive one leg of the route, then turn to face the next leg."""
+    print("Leg:", distance, "cm, then turn", angle)
+    drivetrain.straight(distance)
+    drivetrain.turn(angle)
+
+def deliver(stop_name):
+    """Pause at a drop-off point so everyone can see it arrive."""
+    print("Delivered to", stop_name)
+    time.sleep(2)
+
+# ===== MAIN FUNCTIONS =====
+def delivery_route():
+    """Visit the three stops in order and return to the start."""
+    navigate_segment(LONG_LEG, 90)
+    deliver("Stop A")
+    navigate_segment(SHORT_LEG, 90)
+    deliver("Stop B")
+    navigate_segment(LONG_LEG, 90)
+    deliver("Stop C")
+    navigate_segment(SHORT_LEG, 90)     # home, facing the way it began
+    print("Home")
+
+# ===== RUN =====
+board.wait_for_button()
+
+print("Starting delivery run...")
+delivery_route()
+print("Done!")
+```
+
+</TeacherNote>

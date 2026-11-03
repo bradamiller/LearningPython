@@ -1,0 +1,59 @@
+---
+title: Sample programs
+sidebar_label: Sample programs
+sidebar_position: 6
+---
+
+<LessonHeader
+  eyebrow="Teacher guide"
+  title="Sample programs"
+  meta={['Teacher mode', 'One page per module', 'Both tracks']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the sample programs in this section are yours only. Flip the
+switch (bottom-right) to preview what students see.
+</TeacherBanner>
+
+This section holds complete, working programs for every module, for checking
+student work and for getting a robot running when you need one in a hurry. The
+programs are shown only in teacher mode. Students: the [robot.py
+templates](/templates) are the files for you.
+
+| Module | What's on its page |
+|---|---|
+| [Module 1 · Learning to Drive](/teacher-guide/sample-programs/module-1) | One short program per Python lesson (1-8 to 1-11), and two sample final projects |
+| [Module 2 · Line Tracking](/teacher-guide/sample-programs/module-2) | `robot.py` at the end of the module, both tracks |
+| [Module 3 · Grid Driving](/teacher-guide/sample-programs/module-3) | `robot.py` at the end of the module, both tracks |
+| [Module 4 · Manhattan Navigation](/teacher-guide/sample-programs/module-4) | `robot.py` at the end of the module, both tracks, and the Lesson 4-2 practice |
+| [Module 5 · Pathfinding Around Obstacles](/teacher-guide/sample-programs/module-5) | `robot.py` at the end of the module, both tracks, and the Lesson 5-3 demonstration |
+| [Module 6 · Dijkstra's Algorithm (optional)](/teacher-guide/sample-programs/module-6) | `robot.py` at the end of the module, both tracks |
+
+<TeacherNote title="How to use these">
+
+From Module 2 on, each module's page has `robot.py` as it stands at the end of the
+module, on the function track and on the class track, with a table of what each
+lesson adds and which tests it brings. Tests stay in the file after their lesson,
+so the end-of-module file runs any lesson's test: set the call in the `RUN` block
+to the one you want. Module 1's programs are separate files, one per activity,
+because students start `robot.py` in Lesson 2-1.
+
+A student's file won't match these line for line, and doesn't need to. A version
+that works differently and passes the lesson's tests is right. Use these to find
+where a student's version goes wrong, not as the answer it must look like.
+
+For one lesson on its own, the **Solution (teacher copy)** note at the end of the
+lesson's activity has the section that lesson adds.
+
+The settings at the top of each section (`THRESHOLD`, `KP`, `BASE_EFFORT`,
+`TURN_EFFORT`, `OBSTACLE_CM`) are the lessons' starting values. Every robot and
+floor needs its own, so tune them on your robot before you rely on a driving
+test.
+
+**Keeping students out of these.** While teacher mode is off, these programs are
+hidden on screen and in print, the same way every teacher copy in the lessons is. It is not a
+lock on the page itself: the text is in the page that the browser downloads, so a
+student who opens the page source can find it. Treat it as you would an answer key
+left in a desk drawer.
+
+</TeacherNote>
