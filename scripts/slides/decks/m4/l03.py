@@ -114,12 +114,12 @@ DECK = {
          'lead': 'The pattern the whole module depends on: **start empty, append inside a '
                  'loop.**',
          'code': 'path = []\n'
-                 'for x in range(1, 5):            # start at 1, not 0 -- the robot is already '
+                 'for x in range(1, 4):            # start at 1, not 0 -- the robot is already '
                  'at x = 0\n'
                  '    path.append((x, 0))\n'
-                 'print(path)        # [(1, 0), (2, 0), (3, 0), (4, 0)]',
+                 'print(path)        # [(1, 0), (2, 0), (3, 0)]',
          'code_size': 20,
-         'callout': '`range(1, 5)` counts 1, 2, 3, 4: it starts where you tell it to, so the '
+         'callout': '`range(1, 4)` counts 1, 2, 3: it starts where you tell it to, so the '
                     'first intersection you append is the first one the robot drives to',
          'callout_size': 21,
          'tone': 'teal'},

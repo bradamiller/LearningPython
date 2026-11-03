@@ -113,10 +113,10 @@ DECK = {
                   'no check. Good thing to show a fast finisher.'},
 
         {'kind': 'check',
-         'question': 'Going from (1,5) to (1,4), what does `desired_heading` return?',
+         'question': 'Going from (1,3) to (1,2), what does `desired_heading` return?',
          'options': ['0 (North)', '1 (East)', '2 (South)', '3 (West)'],
          'answer': 2,
-         'explanation': 'x is unchanged; y went 5 → 4 (y −1). Decreasing y is moving toward you, '
+         'explanation': 'x is unchanged; y went 3 → 2 (y −1). Decreasing y is moving toward you, '
                         'which is South: heading 2.'},
 
         {'kind': 'code', 'title': 'Say so when you can\'t answer',

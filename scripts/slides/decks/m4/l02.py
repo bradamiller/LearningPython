@@ -58,11 +58,11 @@ DECK = {
                   'slide renderer.)'},
 
         {'kind': 'check',
-         'question': 'Given position = (3, 5), what does position[0] return?',
-         'options': ['5', '3', '(3, 5)', 'An error'],
+         'question': 'Given position = (3, 1), what does position[0] return?',
+         'options': ['1', '3', '(3, 1)', 'An error'],
          'answer': 1,
          'explanation': 'Index 0 is the first element, x, so position[0] is 3. position[1] '
-                        'would be y, 5.'},
+                        'would be y, 1.'},
 
         {'kind': 'code', 'title': 'Unpacking: both numbers at once',
          'lead': 'Indexing pulls out one part at a time. Often you want both, as ordinary '
@@ -90,11 +90,11 @@ DECK = {
          'tone': 'teal'},
 
         {'kind': 'check',
-         'question': 'After start = (4, 1) and then a, b = start, what is b?',
-         'options': ['4', '1', '(4, 1)', 'An error'],
+         'question': 'After start = (3, 2) and then a, b = start, what is b?',
+         'options': ['3', '2', '(3, 2)', 'An error'],
          'answer': 1,
-         'explanation': 'The names take the parts in order: a gets index 0, which is 4, and b '
-                        'gets index 1, which is 1. The names don\'t have to be x and y.'},
+         'explanation': 'The names take the parts in order: a gets index 0, which is 3, and b '
+                        'gets index 1, which is 2. The names don\'t have to be x and y.'},
 
         {'kind': 'code', 'title': 'Tuples don\'t change (and that\'s good)',
          'lead': 'Try to modify a tuple and Python stops you:',
@@ -110,7 +110,7 @@ DECK = {
                  'To represent a new spot, you make a new tuple:',
          'lead_h': 1.2,
          'code': 'old_position = (2, 3)\n'
-                 'new_position = (2, 4)    # one step north -- a brand-new tuple',
+                 'new_position = (3, 3)    # one step east -- a brand-new tuple',
          'code_size': 22,
          'callout': 'Like a street address: move, and you get a **new** address. You don\'t edit '
                     'the old one.',
@@ -153,13 +153,13 @@ DECK = {
                     'different spot.'},
 
         {'kind': 'check',
-         'question': 'Does (1, 4) == (4, 1) evaluate to True?',
+         'question': 'Does (1, 3) == (3, 1) evaluate to True?',
          'options': ['Yes: they contain the same numbers',
                      'No: the parts must match in order, and these are swapped',
                      'Yes: tuples ignore order', 'It causes an error'],
          'answer': 1,
-         'explanation': 'Two tuples are equal only if every element matches in order. (1, 4) is '
-                        '1 for x and 4 for y; (4, 1) is 4 for x and 1 for y: different, so '
+         'explanation': 'Two tuples are equal only if every element matches in order. (1, 3) is '
+                        '1 for x and 3 for y; (3, 1) is 3 for x and 1 for y: different, so '
                         'False.'},
 
         {'kind': 'code', 'title': 'Activity · Manhattan distance in code', 'tag': 'Activity',
@@ -178,10 +178,10 @@ DECK = {
          'caption': 'From (0, 0) to (2, 3): 2 across plus 3 away, 5 steps.'},
 
         {'kind': 'check',
-         'question': 'Using this method, what\'s the Manhattan distance from (1, 1) to (4, 3)?',
+         'question': 'Using this method, what\'s the Manhattan distance from (0, 1) to (3, 3)?',
          'options': ['7', '5', '3', '2'],
          'answer': 1,
-         'explanation': '(4 − 1) across + (3 − 1) up = 3 + 2 = 5 steps.'},
+         'explanation': '(3 − 0) across + (3 − 1) up = 3 + 2 = 5 steps.'},
 
         {'kind': 'steps', 'title': 'Try it',
          'steps': [
@@ -219,6 +219,6 @@ DECK = {
          'notes': 'Answers: [0] and [1]. It can\'t change; a position should stay fixed. The '
                   'elements must match in order. Formative: correct tuple syntax, the right '
                   'index for x versus y, and reading ==. Exit ticket: "Manhattan distance from '
-                  '(1,1) to (4,3), show your work" (5).'},
+                  '(1,0) to (3,3), show your work" (5).'},
     ],
 }

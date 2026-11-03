@@ -62,14 +62,14 @@ print(position[1])   # 3  -> y, away from you
 />
 
 <KnowledgeCheck
-  question="Given position = (3, 5), what does position[0] return?"
+  question="Given position = (3, 1), what does position[0] return?"
   options={[
-    {text: '5'},
+    {text: '1'},
     {text: '3', correct: true},
-    {text: '(3, 5)'},
+    {text: '(3, 1)'},
     {text: 'An error'},
   ]}
-  explanation="Index 0 is the first element — x — so position[0] is 3. position[1] would be y, 5."
+  explanation="Index 0 is the first element — x — so position[0] is 3. position[1] would be y, 1."
 />
 
 ## Unpacking: both numbers at once
@@ -99,14 +99,14 @@ You'll use this constantly from here on. Lesson 4-4's planner starts by unpackin
 the robot is and where it's going, so its loops can compare plain numbers.
 
 <KnowledgeCheck
-  question="After start = (4, 1) and then a, b = start, what is b?"
+  question="After start = (3, 2) and then a, b = start, what is b?"
   options={[
-    {text: '4'},
-    {text: '1', correct: true},
-    {text: '(4, 1)'},
+    {text: '3'},
+    {text: '2', correct: true},
+    {text: '(3, 2)'},
     {text: 'An error'},
   ]}
-  explanation="The names take the parts in order: a gets index 0, which is 4, and b gets index 1, which is 1. The names don't have to be x and y."
+  explanation="The names take the parts in order: a gets index 0, which is 3, and b gets index 1, which is 2. The names don't have to be x and y."
 />
 
 ## Tuples don't change (and that's good)
@@ -124,7 +124,7 @@ you make a new tuple:
 
 ```python
 old_position = (2, 3)
-new_position = (2, 4)    # one step north -- a brand-new tuple
+new_position = (3, 3)    # one step east -- a brand-new tuple
 ```
 
 Think of a street address: it doesn't change. Move, and you get a *new* address — you
@@ -169,14 +169,14 @@ This matters later: the algorithm asks "have we reached the destination yet?" by
 comparing tuples.
 
 <KnowledgeCheck
-  question="Does (1, 4) == (4, 1) evaluate to True?"
+  question="Does (1, 3) == (3, 1) evaluate to True?"
   options={[
     {text: 'Yes — they contain the same numbers'},
     {text: 'No — the parts must match in order, and these are swapped', correct: true},
     {text: 'Yes — tuples ignore order'},
     {text: 'It causes an error'},
   ]}
-  explanation="Two tuples are equal only if every element matches in order. (1, 4) is 1 for x and 4 for y; (4, 1) is 4 for x and 1 for y — different, so False."
+  explanation="Two tuples are equal only if every element matches in order. (1, 3) is 1 for x and 3 for y; (3, 1) is 3 for x and 1 for y — different, so False."
 />
 
 ## Activity · Manhattan distance in code
@@ -194,14 +194,14 @@ print("Total steps:", total_steps)
 ```
 
 <KnowledgeCheck
-  question="Using this method, what's the Manhattan distance from (1, 1) to (4, 3)?"
+  question="Using this method, what's the Manhattan distance from (0, 1) to (3, 3)?"
   options={[
     {text: '7'},
     {text: '5', correct: true},
     {text: '3'},
     {text: '2'},
   ]}
-  explanation="(4 − 1) across + (3 − 1) up = 3 + 2 = 5 steps."
+  explanation="(3 − 0) across + (3 − 1) up = 3 + 2 = 5 steps."
 />
 
 **Try it:** store five of your grid positions as tuples and print each one's x and
@@ -243,7 +243,7 @@ Bundling related values into one unit is everywhere in code:
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** correct tuple syntax, right index for x vs y, and reading `==`.
-**Exit ticket:** "Manhattan distance from (1,1) to (4,3), show your work" (5).
+**Exit ticket:** "Manhattan distance from (1,0) to (3,3), show your work" (5).
 **Preview:** next lesson we store a whole *path* — many tuples — in a **list**.
 
 </TeacherNote>

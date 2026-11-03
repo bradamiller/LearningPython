@@ -169,7 +169,7 @@ DECK = {
          'notes': 'Answers: x, how far across to the right. To match how Python indexes, '
                   'avoiding confusion later. x difference + y difference. Formative: name '
                   'coordinates from pointed positions and vice versa, always x first, and '
-                  'compute a distance. Exit ticket: "Manhattan distance from (0,0) to (4,2)?" '
+                  'compute a distance. Exit ticket: "Manhattan distance from (0,0) to (3,3)?" '
                   '(6).'},
     ],
 }
