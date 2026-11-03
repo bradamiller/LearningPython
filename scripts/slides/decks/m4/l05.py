@@ -205,7 +205,7 @@ DECK = {
          'code': 'print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north\n'
                  'print(compute_manhattan_path((0, 0), (3, 1)))\n'
                  'print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south\n'
-                 'print(compute_manhattan_path((2, 0), (2, 4)))   # same column: north only',
+                 'print(compute_manhattan_path((3, 0), (3, 3)))   # same column: north only',
          'code_size': 18,
          'callout': 'Set the run line to it. Check each result against the promises, then add a '
                     '**fifth call** where position equals destination.',

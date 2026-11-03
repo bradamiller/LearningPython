@@ -169,7 +169,7 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 1 · Test it against your trace',
          'steps': [
              'Write a test, say `test_paper_paths()`, that prints `compute_path((0, 0), (2, 3))` '
-             'and `compute_path((1, 1), (3, 4))`',
+             'and `compute_path((0, 1), (3, 3))`',
              'Set the run line to it and run it',
              'Compare with your paper traces: both should give exactly the hand-traced lists, **5 steps each**',
          ],
