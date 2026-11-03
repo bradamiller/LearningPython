@@ -1,7 +1,7 @@
 """Sketch-style PowerPoint decks for the lessons.
 
 Brad's pick (2026-10-31): one style for every deck, the hand-drawn "sketch"
-look from the Module 3 trial (IntoToPython/templates/sketch-style-html-slides.md),
+look from the Module 3 trial (IntroToPython/templates/sketch-style-html-slides.md),
 built as .pptx so teachers can edit it in PowerPoint or Google Slides.
 
 A deck is a plain Python list of slide dicts (see decks/). This module turns

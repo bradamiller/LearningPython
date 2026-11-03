@@ -6,7 +6,7 @@
  *
  * Why this exists
  * ---------------
- * Decision D8 in IntoToPython/teacher-guide/course-design-decisions.md (Brad,
+ * Decision D8 in docs/teacher-guide/course-design.mdx (Brad,
  * 2026-10-14). Classes are optional: the functions track is the lesson, and the
  * class version lives in an OptionalExtension whose methods are named exactly
  * like the functions (LineSensor.get_left() <-> get_left()), so a student can

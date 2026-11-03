@@ -125,5 +125,5 @@ Not duplicated here — this is the index so nothing gets lost.
 | Whether `abs()` belongs in L4-4's distance work | Brad, 2026-09-24. L4-4 handles negative distances with four `while` loops and explicitly rejects `abs()`. L4-2's teacher note used to promise `abs()` was coming, which was simply wrong, so the promise is gone. If `abs()` is later brought into L4-4, put the preview back in that note. |
 | A separate teacher guide instead of teacher mode | discussed 2026-09-20; Brad thinking about it |
 | Whiteboard panel recommendations for the materials list | Brad to supply |
-| Source-repo sync — `IntoToPython` is behind on naming, Lesson 0, stop-motors | `CLAUDE.md` §11 |
+| Source-repo sync — `IntroToPython` is behind on naming, Lesson 0, stop-motors | `CLAUDE.md` §11 |
 | Real block screenshots for the lessons still on composed art | `CLAUDE.md` §11 |

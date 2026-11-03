@@ -5,14 +5,14 @@ Docusaurus web version of Brad's XRP Python curriculum, styled like the
 VEX STEM Labs lessons. **Read this first before making changes.**
 
 **This repo is `LearningPython` — the website only.** It was split out of the
-`IntoToPython` repo on 2026-09-18, carrying its full history with it (§16). The
-source curriculum it was converted from still lives in `IntoToPython`.
+`IntroToPython` repo on 2026-09-18, carrying its full history with it (§16). The
+source curriculum it was converted from still lives in `IntroToPython`.
 
 ---
 
 ## 1. What this project is
 
-Turn the existing markdown curriculum (the separate `IntoToPython` repo — see §2)
+Turn the existing markdown curriculum (the separate `IntroToPython` repo — see §2)
 into a browsable, VEX STEM Labs-style **website**: multi-page lessons with a sidebar,
 prev/next navigation, embedded videos and graphics, interactive knowledge
 checks, and a teacher-notes toggle.
@@ -44,14 +44,14 @@ checks, and a teacher-notes toggle.
 
 ## 2. Source content (what we convert from)
 
-The curriculum content lives in a **separate repo**, `IntoToPython` — on Brad's
-machine at `/Users/bradmiller/GitHub/IntoToPython`, and on GitHub at
-`bradamiller/IntoToPython`. It is NOT a parent directory of this repo any more
+The curriculum content lives in a **separate repo**, `IntroToPython` — on Brad's
+machine at `/Users/bradmiller/GitHub/IntroToPython`, and on GitHub at
+`bradamiller/IntroToPython`. It is NOT a parent directory of this repo any more
 (it was until the 2026-09-18 split, which is why older notes say `../`). A cloud
 sandbox holds a copy of THIS repo only, so reach the source through the device
 bridge (§13) — it has to be a connected folder before you can read it:
 
-- `<IntoToPython>/module-01-driving/` … `<IntoToPython>/module-06-dijkstra/` (Module 5 is `module-05-pathfinding/` since 2026-10-14), each with:
+- `<IntroToPython>/module-01-driving/` … `<IntroToPython>/module-06-dijkstra/` (Module 5 is `module-05-pathfinding/` since 2026-10-14), each with:
   - `lessons/NN-*.md` — teacher lesson plans (objectives, key concepts, lesson flow, exercises, misconceptions, assessment)
   - `worksheets/NN-*.md` — student worksheets (great source for knowledge-check questions)
   - `code/starter/` and `code/solutions/` — Python/Blockly code
@@ -1021,7 +1021,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     the `is_` prefix it insists on in 2-7).
   - Source-repo solution files are still named for the old numbers
     (`lesson-08-linesensor-class-addon.py`); the site now cites `lesson-07-…` and
-    `lesson-08-detecting-intersections.py`. Rename in `IntoToPython` when porting.
+    `lesson-08-detecting-intersections.py`. Rename in `IntroToPython` when porting.
 - **ONCE A STUDENT BUILDS A CLASS, THEY USE IT FROM THEN ON (Brad, 2026-10-15).** The
   extensions are additive — every gate says "after your functions version works" — so a
   class-track student has both versions. The course had never said which to use next, and
@@ -1424,7 +1424,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   - **M5:** BFS is the required planner; `compute_bfs_path`, `add_blocked`, the
     property harness, function-passing swap; L7–L9 drive with M4's toolkit.
     **Site ported 2026-10-14** (all nine pages under `module-05-pathfinding/`).
-  - **✅ DECIDED 2026-10-14 — read `<IntoToPython>/teacher-guide/course-design-decisions.md`
+  - **✅ DECIDED 2026-10-14 — read `<IntroToPython>/teacher-guide/course-design-decisions.md`
     before touching M2 L8+, M4 or M5 on the site.** The deferral above is over.
     Brad settled the shape in a design review: functions-first with class
     extensions gated *per student* on working code (not a course-wide track);
@@ -1472,7 +1472,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     L3 (hand-tracing) still reconstructs the whole route — correct for tracing —
     but now says the code drops the first entry.
   - **The source repo still has the old M5 shape.** If lessons are ever re-converted
-    from `IntoToPython`, this correction must be re-applied.
+    from `IntroToPython`, this correction must be re-applied.
 - **Module 5 source constructor drift (already normalized on the site).** M5 source
   lessons 4/5/9 use `Dijkstra(start, blocked)` + `compute_path(destination)` (matches
   the real Manhattan/Navigator interface); source lessons 6/7/8 drift to
@@ -2117,28 +2117,28 @@ goes further):
 
 ## 16. The 2026-09-18 repo split (how this repo came to exist)
 
-The site started as `curriculum-site/` inside `IntoToPython`, alongside the source
+The site started as `curriculum-site/` inside `IntroToPython`, alongside the source
 curriculum. Brad split it out once it was clearly its own project.
 
 **What was done, in case it ever needs repeating or explaining:**
 
 ```bash
-# in IntoToPython — extract the 35 commits that touched curriculum-site,
+# in IntroToPython — extract the 35 commits that touched curriculum-site,
 # rewritten so its files sit at the repo root
 git subtree split --prefix=curriculum-site -b curriculum-site-only
 
 # in the new, empty LearningPython repo (which had one stub "first commit")
-git fetch <path-to-IntoToPython> curriculum-site-only:imported
+git fetch <path-to-IntroToPython> curriculum-site-only:imported
 git rebase --onto main --root imported -X theirs   # -X theirs: site README wins
 git checkout main && git merge --ff-only imported && git branch -d imported
 ```
 
 Result: linear history, Brad's `first commit` at the root, then all 35 site
 commits on top, and a push that fast-forwards (no force-push needed). The
-resulting tree hash matched `IntoToPython`'s `HEAD:curriculum-site` exactly, so
+resulting tree hash matched `IntroToPython`'s `HEAD:curriculum-site` exactly, so
 nothing was lost or altered in the move.
 
-**What deliberately did NOT come along** (it stays in `IntoToPython`): the source
+**What deliberately did NOT come along** (it stays in `IntroToPython`): the source
 markdown (`module-01-driving/` … `module-05-dijkstra/` with lesson plans,
 worksheets, starter/solution code and slides), the `generate_pptx_*.py` deck
 scripts, `course-outline.md`, `Module 1 Content Roadmap.md`, the
@@ -2148,15 +2148,15 @@ worth reading when a lesson's source intent is in question.
 
 **Still standing open after the split:**
 
-- `curriculum-site/` is still present in `IntoToPython` (Brad chose to leave it
+- `curriculum-site/` is still present in `IntroToPython` (Brad chose to leave it
   until the new repo is proven). Once he's happy, it should be deleted there in
   its own commit with a pointer to this repo, so the two copies can't drift.
-- The `curriculum-site-only` branch is still in `IntoToPython` too; it's disposable
+- The `curriculum-site-only` branch is still in `IntroToPython` too; it's disposable
   (`git branch -D curriculum-site-only`).
 - ~~Netlify was never connected~~ — settled 2026-09-18: publishing goes through
   GitHub Pages instead, `netlify.toml` deleted, and the site is live at its own
   subdomain (§8).
-- `IntoToPython` commits with a local identity of `Brad Miller <brad@example.com>`,
+- `IntroToPython` commits with a local identity of `Brad Miller <brad@example.com>`,
   which doesn't link to Brad's GitHub account. This repo is set to
   `bradamiller <brad@bradhouse.com>` to match his own first commit. The imported
   commits keep their original author (`brad@example.com`); only the committer is
@@ -2258,7 +2258,7 @@ counted the partial as a 46th lesson and failed the build.
 
 ## 19. The teacher guide (/teacher-guide)
 
-Added 2026-11-03 at Brad's ask: the old `IntoToPython/teacher-guide/` (six markdown
+Added 2026-11-03 at Brad's ask: the old `IntroToPython/teacher-guide/` (six markdown
 files) rebuilt as site pages, updated to the lessons as they stand, so nothing is
 lost when the source repo is archived. Pages live in `docs/teacher-guide/`, with
 their own sidebar (`teacherGuideSidebar` in `sidebars.js`) and a **Teacher Guide**
@@ -2291,7 +2291,7 @@ They were left alone here because that branch edits the same lines.
 ### Sample programs (`docs/teacher-guide/sample-programs/`, 2026-11-03)
 
 Brad: "add the program solutions, and update them so they match up with the new
-lesson materials." The old `IntoToPython/module-*/code/solutions/` files (49, written
+lesson materials." The old `IntroToPython/module-*/code/solutions/` files (49, written
 for the old lessons: `draw_square(size)`, (row, col) grids, old lesson numbers) are
 **replaced, not ported**: every program here comes from the lessons as they stand.
 

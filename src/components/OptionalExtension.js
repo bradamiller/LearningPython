@@ -6,7 +6,7 @@ import React, {useState} from 'react';
  * The course's required content is written with plain functions. Where a lesson
  * has a class version of the same working code, it goes in here: closed by
  * default, opened deliberately, and gated on the functions version working.
- * (See IntoToPython/teacher-guide/course-design-decisions.md, D1.)
+ * (See docs/teacher-guide/course-design.mdx, D1.)
  *
  *   <OptionalExtension title="The BFS class">
  *     <SideBySide left="Functions — what you have" right="Class — the extension">
