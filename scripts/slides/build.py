@@ -5,9 +5,11 @@
     python3 scripts/slides/build.py 2-5 2-6    # just these lessons
 
 Each deck is scripts/slides/decks/m<module>/l<lesson>.py defining DECK (see
-sketchdeck.py). Output goes to static/slides/<doc id>.pptx, next to where the
-lesson lives on the site, and src/data/slides.json maps each lesson's doc id
-to its deck so the lesson page can link it.
+sketchdeck.py). Output goes to static/slides/<module folder>/module-<N>-<lesson
+page>.pptx, for example
+static/slides/module-04-manhattan/module-4-lesson-04-the-manhattan-algorithm.pptx,
+and src/data/slides.json maps each lesson's doc id to its deck so the lesson
+page can link it.
 """
 
 import glob
@@ -40,7 +42,9 @@ def main(only):
         doc = deck['doc']
         if not os.path.exists(os.path.join(REPO, 'docs', doc + '.mdx')):
             sys.exit(f'{path}: no lesson page docs/{doc}.mdx')
-        url = f'/slides/{doc}.pptx'
+        folder, page = os.path.split(doc)
+        # the module number goes in the file name, so a downloaded deck says where it belongs
+        url = f"/slides/{folder}/module-{deck['module']}-{page}.pptx"
         manifest[doc] = url
         if only and key not in only:
             continue

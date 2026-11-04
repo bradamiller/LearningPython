@@ -94,6 +94,30 @@ DECK = {
          'figure': '/img/lesson-m4-00/delivery-overview-xy.svg',
          'caption': 'Three destinations, three legs, each planned from where the last one ended.'},
 
+        {'kind': 'bullets', 'title': 'Far-apart destinations, one-hop paths',
+         'bullets': [
+             '`destinations` is a **supplied list**: the places the robot must reach, in order',
+             'Each destination can be **many intersections** from the one before it',
+             'For each destination, the planner hands back a **list of adjacent intersections**: '
+             'every entry is **one hop** from the one before',
+             'So the loop turns one far-away destination into one list of single hops, and the '
+             'driver drives those hops one block at a time',
+         ],
+         'callout': 'One destination in, one list of single hops out, once per destination',
+         'tone': 'teal',
+         'notes': 'This is the idea the whole module rests on. The destinations list says where to go, '
+                  'not how to get there; the planner fills in every intersection in between. In the '
+                  'example, (2, 0) to (2, 3) is three intersections apart, and its path is '
+                  '[(2, 1), (2, 2), (2, 3)].'},
+
+        {'kind': 'figure', 'title': 'Three destinations, three lists of hops',
+         'figure': './decks/m4/fig/destinations-hops.svg',
+         'caption': 'The destinations list says where to go. For each one, the planner returns the '
+                    'adjacent intersections that get there.',
+         'notes': 'Point at leg 2: the destination (2, 3) is three intersections from (2, 0), and the '
+                  'planner returns three entries, each one block from the last. The path never '
+                  'includes the starting intersection, only the ones to drive to.'},
+
         {'kind': 'bullets', 'title': 'Where the seven lines will live',
          'bullets': [
              'In your `robot.py` they are the body of the module\'s **last test function**',

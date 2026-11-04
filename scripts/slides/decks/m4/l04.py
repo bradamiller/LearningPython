@@ -26,6 +26,15 @@ DECK = {
          'callout': 'Tuples in, a list out. The robot can stay on the desk all lesson.',
          'tone': 'teal'},
 
+        {'kind': 'figure', 'title': 'What goes in, what comes back',
+         'figure': './decks/m4/fig/destinations-hops.svg',
+         'caption': 'Handed one destination, possibly many intersections away. Hands back a list of '
+                    'adjacent intersections, one hop each, ending at the destination.',
+         'notes': 'The main program supplies the destinations list from Lesson 4-0. The function you '
+                  'write today handles one destination at a time: the main loop calls it once per '
+                  'destination. Every entry in the list it returns is one block from the entry before '
+                  'it, and the first is one block from the start.'},
+
         {'kind': 'bullets', 'title': 'Why "Manhattan"?',
          'bullets': [
              'Picture the streets of Manhattan in New York',

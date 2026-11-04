@@ -16,7 +16,7 @@ python3 scripts/slides/build.py 2-5      # one lesson
 - Figures come from `static/img/`. SVGs are rendered with cairosvg into
   `.figcache/` (ignored by git). An animated SVG is frozen at `frame` (0 to 1
   of one run, default 0.5); `crop` keeps part of the figure.
-- Output: `static/slides/<doc id>.pptx`, and `src/data/slides.json`, which the
+- Output: `static/slides/<module folder>/module-<N>-<lesson page>.pptx`, and `src/data/slides.json`, which the
   lesson header reads to show its **Slides (PowerPoint)** link.
 
 Fonts: Caveat (titles), Patrick Hand (body) and Fira Mono (code), all on Google

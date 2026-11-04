@@ -35,6 +35,19 @@ DECK = {
                   'facing North. Leg 3 left 2 to (0, 3), facing West. Leg 4 down 3 back home, facing '
                   'South.'},
 
+        {'kind': 'bullets', 'title': 'Four destinations, four lists of single hops',
+         'bullets': [
+             '`DESTINATIONS` is the supplied list: four stops, each **several intersections** from the last',
+             'The main program sends **one destination at a time** to `compute_manhattan_path()`',
+             'Each call returns a list of **adjacent** intersections: 2, 3, 2 and 3 hops here',
+             '`drive_path()` drives that list one hop at a time, then the next destination is planned '
+             'from where it stopped',
+         ],
+         'callout': 'Destinations say where to go; each path says every intersection on the way',
+         'tone': 'teal',
+         'notes': 'Ask students to say the first path out loud before running: from (0, 0) to (2, 0) it '
+                  'is [(1, 0), (2, 0)].'},
+
         {'kind': 'frames', 'title': 'The whole run, driven',
          'figure': '/img/lesson-m4-09/delivery-drive.svg',
          'crop': (0.0, 0.07, 0.6, 1.0),

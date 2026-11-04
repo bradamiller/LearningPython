@@ -133,6 +133,20 @@ DECK = {
          'callout': '`position, heading = drive_path(path, position, heading)`',
          'tone': 'teal'},
 
+        {'kind': 'bullets', 'title': 'Why one track per entry is enough',
+         'bullets': [
+             'A destination can be many intersections away, but `drive_path()` never sees it',
+             'It gets the planner\'s list, where every entry is **adjacent** to the one before',
+             'So each pass of the loop is **one hop**: one turn (maybe none), then '
+             '`track_to_intersection()` to the very next intersection',
+             'A three-block leg is just three passes of the same loop',
+         ],
+         'callout': 'The planner breaks the trip into single hops; the driver only ever drives one block',
+         'tone': 'teal',
+         'notes': 'This is why the planner returns every intersection instead of only the destination. '
+                  'If the list skipped intersections, track_to_intersection() would stop at the first '
+                  'one and position would be wrong.'},
+
         {'kind': 'bullets', 'title': 'One tuple, unpacked',
          'bullets': [
              '`return position, heading` looks like returning two things, but it is **one**: two values with a comma make a tuple',
