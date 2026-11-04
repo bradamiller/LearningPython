@@ -430,7 +430,51 @@ def block_program(blocks):
     return out
 
 
-def figure(slide, src, left, top, max_w, max_h, frame=None, crop=None):
+ANIMATE = os.environ.get('SLIDES_ANIMATE', '1') != '0'  # animated diagrams play as looping GIFs
+
+
+def animated_gif(path, src, crop, fps=10, width=1200):
+    """Render an animated SVG as a looping GIF that PowerPoint plays on its own.
+    Frames are sampled at `fps` over the longest animation; identical frames in a
+    row are merged into one longer frame. Returns None if the SVG has no animation."""
+    from lxml import etree
+    from PIL import Image
+    import io
+    raw = open(path, 'rb').read()
+    root = etree.fromstring(raw)
+    durs = [float(e.get('dur', '1s').rstrip('s')) for e in root.iter()
+            if isinstance(e.tag, str) and etree.QName(e).localname in ('animate', 'animateTransform')]
+    if not durs:
+        return None
+    os.makedirs(CACHE, exist_ok=True)
+    tag = '@anim' + ('' if not crop else '_' + '_'.join(f'{c:.2f}' for c in crop))
+    gif = os.path.join(CACHE, src.strip('./').replace('/', '__') + tag + '.gif')
+    if os.path.exists(gif) and os.path.getmtime(gif) >= os.path.getmtime(path):
+        return gif
+    n = max(2, round(max(durs) * fps))
+    frames, times = [], []
+    for i in range(n):
+        png = cairosvg.svg2png(bytestring=keep_spaces(freeze_svg(raw, i / n)), output_width=width)
+        im = Image.open(io.BytesIO(png)).convert('RGBA')
+        bg = Image.new('RGBA', im.size, (255, 255, 255, 255))
+        im = Image.alpha_composite(bg, im).convert('RGB')
+        if crop:
+            x0, y0, x1, y1 = crop
+            im = im.crop((int(x0 * im.width), int(y0 * im.height),
+                          int(x1 * im.width), int(y1 * im.height)))
+        if frames and im.tobytes() == frames[-1].tobytes():
+            times[-1] += 1000 / fps
+        else:
+            frames.append(im)
+            times.append(1000 / fps)
+    pal = frames[len(frames) // 2].quantize(colors=255, method=Image.Quantize.MEDIANCUT)
+    q = [f.quantize(palette=pal, dither=Image.Dither.NONE) for f in frames]
+    q[0].save(gif, save_all=True, append_images=q[1:], duration=[int(t) for t in times],
+              loop=0, disposal=1, optimize=False)
+    return gif
+
+
+def figure(slide, src, left, top, max_w, max_h, frame=None, crop=None, animate=False):
     """Place a site figure (path under static/, .svg or raster), fit and centered.
     frame: for an animated SVG, the moment to show, 0..1 of one run (default 0.5).
     crop: (x0, y0, x1, y1) as fractions of the figure, to show only part of it."""
@@ -443,7 +487,10 @@ def figure(slide, src, left, top, max_w, max_h, frame=None, crop=None):
         path = os.path.join(HERE, src[2:])
     else:
         path = os.path.join(STATIC, src.lstrip('/'))
-    if path.endswith('.svg'):
+    gif = animated_gif(path, src, crop) if (animate and ANIMATE and path.endswith('.svg')) else None
+    if gif:
+        path = gif
+    elif path.endswith('.svg'):
         os.makedirs(CACHE, exist_ok=True)
         at = 0.5 if frame is None else frame
         tag = f'@{at:.3f}' + ('' if not crop else '_' + '_'.join(f'{c:.2f}' for c in crop))
@@ -518,7 +565,8 @@ def s_bullets(prs, d, deck):
         sx = MARGIN + (W - 2 * MARGIN) * split
         sw = W - MARGIN - sx
         if 'figure' in d:
-            figure(sl, d['figure'], sx, TOP, sw, bottom - TOP, d.get('frame'), d.get('crop'))
+            figure(sl, d['figure'], sx, TOP, sw, bottom - TOP, d.get('frame'), d.get('crop'),
+                   animate=True)
         else:
             code_block(sl, d['code'], sx, TOP, sw, size=d.get('code_size', 16))
     if d.get('callout'):
@@ -534,7 +582,8 @@ def s_figure(prs, d, deck):
     bottom = H - Inches(0.35)
     if d.get('caption'):
         bottom -= Inches(0.85)
-    figure(sl, d['figure'], MARGIN, TOP, W - 2 * MARGIN, bottom - TOP, d.get('frame'), d.get('crop'))
+    figure(sl, d['figure'], MARGIN, TOP, W - 2 * MARGIN, bottom - TOP, d.get('frame'), d.get('crop'),
+           animate=True)
     if d.get('caption'):
         text(sl, d['caption'], MARGIN, H - Inches(1.1), W - 2 * MARGIN, Inches(0.8),
              size=22, color=MUTED, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
@@ -543,7 +592,23 @@ def s_figure(prs, d, deck):
 
 def s_frames(prs, d, deck):
     """One animated figure shown at several moments, side by side, each captioned.
-    frames: [(moment 0..1, caption), ...]; crop as for figure."""
+    frames: [(moment 0..1, caption), ...]; crop as for figure.
+    With ANIMATE, the first time a deck shows a figure this way, a slide with the
+    whole animation playing comes first, and the stills follow as key moments."""
+    shown = prs.__dict__.setdefault('_animated_shown', set())
+    if ANIMATE and d['figure'] not in shown and str(d['figure']).endswith('.svg'):
+        shown.add(d['figure'])
+        sl = prs.slides.add_slide(prs.slide_layouts[6])
+        paper(sl)
+        title_bar(sl, d['title'], d.get('tag'))
+        bottom = H - Inches(1.2)
+        pic = figure(sl, d['figure'], MARGIN, TOP, W - 2 * MARGIN, bottom - TOP, None,
+                     d.get('crop'), animate=True)
+        if pic.image.content_type == 'image/gif':
+            text(sl, 'Watch it run. The next slide picks out the key moments.', MARGIN,
+                 H - Inches(1.1), W - 2 * MARGIN, Inches(0.8), size=22, color=MUTED,
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+            notes(sl, d.get('notes'))
     sl = prs.slides.add_slide(prs.slide_layouts[6])
     paper(sl)
     title_bar(sl, d['title'], d.get('tag'))
