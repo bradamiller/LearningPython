@@ -289,12 +289,33 @@ def compute_manhattan_path(position, destination):
     Returns a list of (x, y) tuples the robot should move to,
     not including position itself.
     """
-    # 1. path = [] ; unpack start and end into x and y numbers
-    # 2. east loop: while x is short of the end x,
-    #    step x by one and append the new position
-    # 3. north loop: the same for y
-    # 4. return path
-    pass
+    path = []
+    x, y = position           # where the robot is now
+    dest_x, dest_y = destination   # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        next_spot = (x, y)    # the spot it just stepped to
+        path.append(next_spot)
+
+    # West: copy east, flip < to > and + to -
+
+    # North: copy east, but step y until it matches dest_y
+
+    # South: copy north, flip < to > and + to -
+
+    return path
+
+def test_paper_paths():
+    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table
+    print(compute_manhattan_path((0, 1), (3, 3)))
+    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down
+
+def test_edge_cases():
+    print(compute_manhattan_path((2, 0), (2, 3)))   # same column
+    print(compute_manhattan_path((0, 2), (3, 2)))   # same row
+    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
 # ===== RUN =====
 board.wait_for_button()

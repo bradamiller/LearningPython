@@ -1258,6 +1258,10 @@ GIVEN_IN_FULL = {
     "test_turn": ("2-9: Module 2 test, given in full in the skeleton", None),
     "test_course": ("2-9: Module 2 test, given in full in the skeleton", None),
     "set_threshold": ("2-7: the global-keyword demo; its body is the lesson text", None),
+    "compute_path": ("4-4: the skeleton gives the east loop finished", None),
+    "compute_manhattan_path": ("4-5: the 4-4 east loop, renamed, still in the file", None),
+    "test_paper_paths": ("4-4: given in full in the skeleton", None),
+    "test_edge_cases": ("4-4: given in full in the skeleton", None),
     "test_drive_path": ("4-8: the plan, print, button, drive shape, given in full", None),
     "compute_bfs_path": ("5-4: the placeholder body is given ('it isn't the function yet')", ("5-4", "5-4")),
     "print_grid": ("5-5: 'print_grid() is given -- it's formatting, not pathfinding'", None),
@@ -1395,12 +1399,22 @@ RECIPE = [
     ]),
     ("4-4", [
         Banner("MANHATTAN PLANNER", "4-4", "===== MANHATTAN PLANNER ====="),
-        Func("compute_path", "4-4"),
-        Invent("test_paper_paths", "4-4"),
-        Invent("test_edge_cases", "4-4"),
+        # 4-4 gives the east loop finished and both tests in full
+        # (Brad, 2026-11-05: soften 4-4); students write the rest
+        Func("compute_path", "4-4", full=True),
+        Func("test_paper_paths", "4-4", full=True),
+        Func("test_edge_cases", "4-4", full=True),
     ]),
     ("4-5", [
         Rename("compute_path", "compute_manhattan_path", "4-5"),
+        # "The two unpacking lines change with it"
+        EditOutline("compute_manhattan_path", "4-5", "x, y = start              ",
+                    "x, y = position           ", r"`x, y = position` and"),
+        EditOutline("compute_manhattan_path", "4-5", "dest_x, dest_y = end      ",
+                    "dest_x, dest_y = destination   ", r"`dest_x, dest_y = destination`"),
+        # "Update both tests": the 4-4 tests with the new name
+        Refresh("test_paper_paths", "4-5"),
+        Refresh("test_edge_cases", "4-5"),
         Invent("test_from_everywhere", "4-5"),
         # class track: "Paste it in place of the
         # compute_manhattan_path() function (keep your tests)"

@@ -17,8 +17,8 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 Coordinates, tuples, lists — now they come together. In this lesson you write the
 function that **computes a whole path automatically**: give it a start and a
 destination, and it hands back the list of intersections to drive. You'll trace it on
-paper first, then build it in two stages — in a new section of `robot.py`, the first
-one in the file that never touches the robot.
+paper first, then build it one loop at a time — in a new section of `robot.py`, the
+first one in the file that never touches the robot.
 
 <Objectives>
 
@@ -26,8 +26,8 @@ By the end of this lesson you will be able to:
 
 - Explain what **Manhattan distance** is and why it's named after Manhattan, NYC
 - Describe the "across first, then up or down" strategy and hand-trace a path on paper
-- Open the MANHATTAN PLANNER section of `robot.py` and write `compute_path(start, end)` in it, with while loops that build a list of positions
-- Extend it from 2 loops (east/north) to 4 loops (all directions) — no `if/else`
+- Read each row of your trace table as one trip around a while loop, and match the given east loop in `compute_path(start, end)` to it
+- Write the north loop by copying the east loop, then west and south by copying and flipping — four loops, no `if/else`
 - Test it on screen against your paper traces, including the edge cases: same row, same column, and same position
 
 </Objectives>
@@ -116,15 +116,34 @@ short and targeted; the goal is intuition, not mastery. The bulk of the lesson i
 writing and testing `compute_path()`. If you can, show an actual map of Manhattan for
 the hook — the name sticks when it's tied to real streets.
 
-**The hint level drops again here.** The outline names the pieces (unpack, two loops,
-return) because the trace table just did the algorithm by hand, and for the first time
-no test function is given: the lesson says what the test should print and students
-name and write it. Expect two or three print lines per test; the habit is what matters,
-because every planner test from here to Module 6 is written this way. Students who
-want the Module 2 scaffolding back can be pointed at their own trace table — it *is*
-the outline.
+**More hints here, on purpose.** This is the first while loop that builds a list and
+the first section with no robot in it, so the skeleton gives the east loop finished
+and both tests written out. Students read one working loop against their trace table,
+run it, and copy it three times. The step down to writing tests themselves comes in
+Lesson 4-5, once the algorithm is theirs. Students who stall on a loop can be pointed
+at their own trace table: each row is one trip around a loop.
 
 </TeacherNote>
+
+## From the trace table to a loop
+
+Look back at your trace table. **Each row is one trip around a loop.** Rows 1 and 2
+both say *x +1*: that's one loop going around twice, stepping east. Rows 3 to 5 say
+*y +1*: a second loop going around three times, stepping north.
+
+Say the east loop in plain words first: *keep stepping right until your x matches the
+end x.* The code unpacks the end tuple into `dest_x` and `dest_y` (Lesson 4-2), so
+"until x matches" becomes `while x < dest_x`: as long as x is still short, take another
+step. Each trip around does exactly what one row of your table did:
+
+| In your trace table | In the code |
+|---|---|
+| Action: x +1 | `x = x + 1` |
+| New position | `next_spot = (x, y)` |
+| Path so far | `path.append(next_spot)` |
+
+When x reaches `dest_x` the condition is False and the loop stops, just as you stopped
+writing *x +1* rows once you reached x = 2.
 
 ## This lesson's skeleton
 
@@ -143,20 +162,39 @@ all: a function that takes two tuples and returns a list.
 def compute_path(start, end):
     """Return the (x, y) steps from start to end, across
     first, then up or down. The start itself is not in the list."""
-    # 1. path = [] ; unpack start and end into x and y numbers
-    # 2. east loop: while x is short of the end x,
-    #    step x by one and append the new position
-    # 3. north loop: the same for y
-    # 4. return path
-    pass
+    path = []
+    x, y = start              # where the robot is now
+    dest_x, dest_y = end      # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        next_spot = (x, y)    # the spot it just stepped to
+        path.append(next_spot)
+
+    # West: copy east, flip < to > and + to -
+
+    # North: copy east, but step y until it matches dest_y
+
+    # South: copy north, flip < to > and + to -
+
+    return path
+
+def test_paper_paths():
+    print(compute_path((0, 0), (2, 3)))   # your trace table
+    print(compute_path((0, 1), (3, 3)))
+    print(compute_path((3, 3), (1, 0)))   # left and down
+
+def test_edge_cases():
+    print(compute_path((2, 0), (2, 3)))   # same column
+    print(compute_path((0, 2), (3, 2)))   # same row
+    print(compute_path((1, 1), (1, 1)))   # same spot
 ```
 
-Two things are new about this skeleton. The outline is shorter than Module 2's — you
-just traced the algorithm by hand, so the comments name the pieces rather than spell
-them out. And there is no test function in it: from this module on, the lesson tells
-you what a test should show and you write it, name and all. Tests in this section are
-**paper tests** — they print a path, you compare it with your trace, and nothing moves.
-The robot can stay on the desk.
+This skeleton gives you more than usual: the whole east loop and both tests are
+written for you. Your job is the other three loops, and each one is a copy of the east
+loop with a small change. The tests are **paper tests** — they print a path, you
+compare it with your trace, and nothing moves. The robot can stay on the desk.
 
 <Callout kind="note" title="Decomposition, step 3: one part at a time">
 
@@ -169,54 +207,64 @@ else in the file has to work for it to work.
 
 ## Activity · Code the algorithm
 
-Build it in two stages: get the easy half working and *run it* before you
-generalize. A half-finished algorithm you have tested beats a whole one you
-haven't.
+Build it one loop at a time, and *run it* after each one. A half-finished algorithm
+you have tested beats a whole one you haven't.
 
-### Step 1 · East and north only
+### Step 1 · Run the east loop, then write north
 
-Start with just the two "positive" directions (moving right and up) — steps 1 to 4
-of the outline. Step 1 uses **tuple unpacking** from Lesson 4-2: one line pulls both
-numbers out of a tuple into two variables.
+Set the run line to `test_paper_paths()` and run it before you write anything. Only
+the east loop exists, so the first line prints `[(1, 0), (2, 0)]`: rows 1 and 2 of
+your trace, and then it stops short, because nothing moves it up yet.
 
-```python
-x, y = start     # start is (0, 0): x is 0, y is 0
+Now write the north loop under its comment by copying the east loop: compare `y` with
+`dest_y` and step `y` instead of `x`. Leave `next_spot = (x, y)` exactly as it is; it
+always records the whole position. Run the test again:
+
+```
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]
+[]
 ```
 
-Do the same for `end`, and the loops compare plain numbers. Each loop is the
-build-in-a-loop pattern from Lesson 4-3, with a `while` instead of a `for`: as long
-as x is still short of the destination x, step it by one and append the new
-`(x, y)` — the double parentheses in `append((...))` are the function call around
-the tuple.
+The first line is your trace table, 5 steps; the second is 5 steps too. Don't go on
+until both match.
 
-Then write a test — say `test_paper_paths()` — that prints `compute_path((0, 0),
-(2, 3))` and `compute_path((0, 1), (3, 3))`. Set the run line to it, run it, and compare
-with your paper traces: both should give exactly the hand-traced lists, 5 steps each.
-Don't go on until they match.
+<Reveal title="Check your north loop" hint="write it and run the test first">
 
-**Now find the limit:** add `compute_path((3, 3), (1, 0))` to the test and run it
-again. An empty list! `3 < 1` is False and `3 < 0` is False, so *neither* loop runs.
-Going left or down, this version does nothing. We need west and south too.
+```python
+    # North: copy east, but step y until it matches dest_y
+    while y < dest_y:
+        y = y + 1             # one step up
+        next_spot = (x, y)
+        path.append(next_spot)
+```
+
+</Reveal>
+
+**Now look at the third line:** an empty list for `(3, 3)` to `(1, 0)`. `3 < 1` is
+False and `3 < 0` is False, so *neither* loop runs. Going left or down, this version
+does nothing. That's what the west and south comments are for.
 
 <KnowledgeCheck
-  question="Why does the stage-1 function return [] for (3,3) → (1,0)?"
+  question="Why does the Step 1 version (east and north only) return [] for (3,3) → (1,0)?"
   options={[
     {text: 'append() is broken'},
     {text: 'Both while conditions are False from the start (3 is not < 1, 3 is not < 0), so neither loop runs', correct: true},
     {text: 'The start and end are the same'},
     {text: 'It runs forever'},
   ]}
-  explanation="Stage 1 only handles increasing x and y. Moving left or down needs the two decreasing loops we add next."
+  explanation="East and north only handle increasing x and y. Moving left or down needs the two flipped loops you add next."
 />
 
-### Step 2 · All four directions
+### Step 2 · West and south: copy and flip
 
-The fix is elegant: **add two more while loops**, one for west (x decreases) and one
-for south (y decreases). Each is the mirror of the loop it sits next to: the
-comparison flips and the step goes the other way. No `if/else` needed — for any single
-trip, at most one x loop and one y loop will run; the others are skipped because
-their condition is False from the start. Keep the two x loops together, before the
-two y loops, so the path always goes across first.
+The fix is **two more while loops**, and you already have both, backwards. West is the
+east loop flipped: copy it under the west comment, then flip the comparison (`<`
+becomes `>`) and the step (`+ 1` becomes `- 1`). South is the north loop, flipped the
+same way. No `if/else` needed — for any single trip, at most one x loop and one y loop
+will run; the others are skipped because their condition is False from the start. The
+comments keep the two x loops together, before the two y loops, so the path always
+goes across first.
 
 
 <Figure
@@ -264,18 +312,20 @@ The four-loop design is the lesson's big idea: *a while loop whose condition sta
 False simply does nothing.* Students who've seen conditionals will try to wrap this in
 `if x < dest_x ... elif x > dest_x`. Steer them back — the four loops are simpler and
 handle every case, including same-position (all four skipped → `[]`). Check that
-tuple unpacking from Lesson 4-2 (`x, y = start`) stuck, and take real time on the double parentheses in
-`append((x, y))`: the outer pair is the function call, the inner pair is the tuple.
+tuple unpacking from Lesson 4-2 (`x, y = start`) stuck. The loops build the tuple on
+its own line (`next_spot = (x, y)`) and append it on the next, so there are no double
+parentheses to untangle. If a student meets `path.append((x, y))` elsewhere, it's the
+same two lines squeezed into one.
 
 </TeacherNote>
 
 ## Activity · The edge cases
 
-Good algorithms handle the awkward inputs without special code. Write a second test —
-`test_edge_cases()` — with three calls: **same column**, `(2, 0)` to `(2, 3)`; **same
-row**, `(0, 2)` to `(3, 2)`; and **same spot**, `(1, 1)` to `(1, 1)`. Trace all three
-on paper and write your prediction as a comment next to each call *before* you set the
-run line to it.
+Good algorithms handle the awkward inputs without special code. The second test in
+your skeleton, `test_edge_cases()`, has three of them: **same column**, `(2, 0)` to
+`(2, 3)`; **same row**, `(0, 2)` to `(3, 2)`; and **same spot**, `(1, 1)` to `(1, 1)`.
+Trace all three on paper and add your prediction to the comment on each call *before*
+you set the run line to it.
 
 <Reveal title="Check the three edge cases" hint="predict all three first">
 
@@ -298,34 +348,38 @@ def compute_path(start, end):
     """Return the (x, y) steps from start to end, across
     first, then up or down. The start itself is not in the list."""
     path = []
-    x, y = start
-    dest_x, dest_y = end
+    x, y = start              # where the robot is now
+    dest_x, dest_y = end      # where it is going
 
-    # Move east (x increases)
+    # East: keep stepping right until x matches dest_x
     while x < dest_x:
-        x = x + 1
-        path.append((x, y))
+        x = x + 1             # one step right
+        next_spot = (x, y)    # the spot it just stepped to
+        path.append(next_spot)
 
-    # Move west (x decreases)
+    # West: copy east, flip < to > and + to -
     while x > dest_x:
         x = x - 1
-        path.append((x, y))
+        next_spot = (x, y)
+        path.append(next_spot)
 
-    # Move north (y increases)
+    # North: copy east, but step y until it matches dest_y
     while y < dest_y:
-        y = y + 1
-        path.append((x, y))
+        y = y + 1             # one step up
+        next_spot = (x, y)
+        path.append(next_spot)
 
-    # Move south (y decreases)
+    # South: copy north, flip < to > and + to -
     while y > dest_y:
         y = y - 1
-        path.append((x, y))
+        next_spot = (x, y)
+        path.append(next_spot)
 
     return path
 ```
 
-The first and third loops are stage 1; the other two are the mirrors you added in
-stage 2. If yours is laid out differently and passes both tests, keep yours.
+East was given, north is its copy, and west and south are those two flipped. If yours
+is laid out differently and passes both tests, keep yours.
 
 </Reveal>
 
@@ -333,8 +387,8 @@ stage 2. If yours is laid out differently and passes both tests, keep yours.
 
 The MANHATTAN PLANNER section of `robot.py` as this lesson leaves it, plus the run
 block; the rest of the file is as the Lesson 3-4 teacher copy left it. The whole file at
-the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). Test names are the
-students' own from here on; these are the ones the lesson suggests.
+the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). The two tests are
+the ones the skeleton gives, unchanged.
 
 ```python
 # ===== MANHATTAN PLANNER =====
@@ -348,36 +402,44 @@ def compute_path(start, end):
     """Return the (x, y) steps from start to end, across
     first, then up or down. The start itself is not in the list."""
     path = []
-    x, y = start
-    dest_x, dest_y = end
+    x, y = start              # where the robot is now
+    dest_x, dest_y = end      # where it is going
 
+    # East: keep stepping right until x matches dest_x
     while x < dest_x:
-        x = x + 1
-        path.append((x, y))
+        x = x + 1             # one step right
+        next_spot = (x, y)    # the spot it just stepped to
+        path.append(next_spot)
 
+    # West: copy east, flip < to > and + to -
     while x > dest_x:
         x = x - 1
-        path.append((x, y))
+        next_spot = (x, y)
+        path.append(next_spot)
 
+    # North: copy east, but step y until it matches dest_y
     while y < dest_y:
-        y = y + 1
-        path.append((x, y))
+        y = y + 1             # one step up
+        next_spot = (x, y)
+        path.append(next_spot)
 
+    # South: copy north, flip < to > and + to -
     while y > dest_y:
         y = y - 1
-        path.append((x, y))
+        next_spot = (x, y)
+        path.append(next_spot)
 
     return path
 
 def test_paper_paths():
-    print(compute_path((0, 0), (2, 3)))   # east, then north
+    print(compute_path((0, 0), (2, 3)))   # your trace table
     print(compute_path((0, 1), (3, 3)))
-    print(compute_path((3, 3), (1, 0)))   # west, then south
+    print(compute_path((3, 3), (1, 0)))   # left and down
 
 def test_edge_cases():
     print(compute_path((2, 0), (2, 3)))   # same column
     print(compute_path((0, 2), (3, 2)))   # same row
-    print(compute_path((1, 1), (1, 1)))   # same spot: []
+    print(compute_path((1, 1), (1, 1)))   # same spot
 
 # ===== RUN =====
 board.wait_for_button()
@@ -421,9 +483,9 @@ test_edge_cases()
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** trace a path on paper, write the two stage-1 loops, explain why stage 1
-fails for left/down, add the west/south loops without `if/else`, and predict the three
-edge cases. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
+**Formative:** trace a path on paper, match the east loop to the trace table, write
+north by copying it, explain why that version fails for left/down, add west and south
+by copying and flipping, and predict the three edge cases. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
 steps is that?" (`[(1,0),(2,0),(2,1),(2,2),(2,3)]`, 5). **Preview:** next lesson this
 exact function gets its real name, `compute_manhattan_path(position, destination)`, and
 a docstring that writes down what it promises — the algorithm won't change at all.

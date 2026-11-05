@@ -7,8 +7,8 @@ DECK = {
          'objectives': [
              'Explain **Manhattan distance**, and why it is named after Manhattan, NYC',
              'Describe the "across first, then up or down" strategy and hand-trace a path on paper',
-             'Write `compute_path(start, end)` in the MANHATTAN PLANNER section, with while loops that build a list',
-             'Extend it from 2 loops (east/north) to 4 loops (all directions), with no `if/else`',
+             'Read each row of your trace table as one trip around a loop, and match the given east loop to it',
+             'Write north by copying east, then west and south by copying and flipping: four loops, no `if/else`',
              'Test it on screen against your paper traces, edge cases included',
          ],
          'notes': '60 minutes. Coordinates (4-1), tuples (4-2) and lists (4-3) come together: '
@@ -20,7 +20,7 @@ DECK = {
          'bullets': [
              'Today you write the function that **computes a whole path** automatically',
              'Give it a start and a destination; it hands back the **list of intersections** to drive',
-             'Trace it on paper first, then build it in **two stages**',
+             'Trace it on paper first, then build it **one loop at a time**',
              'It goes in a new section of `robot.py`, the first one that **never touches the robot**',
          ],
          'callout': 'Tuples in, a list out. The robot can stay on the desk all lesson.',
@@ -116,42 +116,71 @@ DECK = {
          'explanation': 'Same x, so no moves across, only three moves up. The start (2,0) is not '
                         'included, so the path is [(2,1), (2,2), (2,3)]: three steps.'},
 
+        {'kind': 'table', 'title': 'From the trace table to a loop',
+         'lead': '**Each row of your trace is one trip around a loop.** In plain words, the east '
+                 'loop says: keep stepping right until your x matches the end x.',
+         'lead_h': 1.2,
+         'headers': ['In your trace table', 'In the code'],
+         'widths': [1, 1.3],
+         'rows': [
+             ['Action: x +1', '`x = x + 1`'],
+             ['New position', '`next_spot = (x, y)`'],
+             ['Path so far', '`path.append(next_spot)`'],
+         ],
+         'callout': '"Until x matches" is `while x < dest_x`: as long as x is short, take another step',
+         'tone': 'teal',
+         'notes': 'Rows 1 and 2 of the trace both say x +1: that is one loop going around twice, '
+                  'stepping east. Rows 3 to 5 are a second loop going around three times, stepping '
+                  'north. dest_x and dest_y come from unpacking the end tuple, as in Lesson 4-2. When '
+                  'x reaches dest_x the condition is False and the loop stops, just as students '
+                  'stopped writing x +1 rows once they reached x = 2.'},
+
         {'kind': 'code', 'title': 'Add to robot.py: MANHATTAN PLANNER',
          'code': '# ===== MANHATTAN PLANNER =====\n'
-                 '# Plans a route across the grid: given where the robot is and\n'
-                 '# where it should go, returns the list of (x, y) tuples to\n'
-                 '# drive to, across first and then up or down. Pure arithmetic --\n'
-                 '# nothing in here touches a sensor or a motor, so every test\n'
-                 '# in this section runs on screen with the robot sitting still.\n'
                  '\n'
                  'def compute_path(start, end):\n'
                  '    """Return the (x, y) steps from start to end, across\n'
                  '    first, then up or down. The start itself is not in the list."""\n'
-                 '    # 1. path = [] ; unpack start and end into x and y numbers\n'
-                 '    # 2. east loop: while x is short of the end x,\n'
-                 '    #    step x by one and append the new position\n'
-                 '    # 3. north loop: the same for y\n'
-                 '    # 4. return path\n'
-                 '    pass',
-         'code_size': 16,
-         'notes': 'Paste it into robot.py above RUN, after the GRID DRIVING section. It is the first '
-                  'section in the file with no driving in it at all: a function that takes two tuples '
-                  'and returns a list.'},
+                 '    path = []\n'
+                 '    x, y = start              # where the robot is now\n'
+                 '    dest_x, dest_y = end      # where it is going\n'
+                 '\n'
+                 '    # East: keep stepping right until x matches dest_x\n'
+                 '    while x < dest_x:\n'
+                 '        x = x + 1             # one step right\n'
+                 '        next_spot = (x, y)    # the spot it just stepped to\n'
+                 '        path.append(next_spot)\n'
+                 '\n'
+                 '    # West: copy east, flip < to > and + to -\n'
+                 '    # North: copy east, but step y until it matches dest_y\n'
+                 '    # South: copy north, flip < to > and + to -\n'
+                 '\n'
+                 '    return path',
+         'code_size': 14,
+         'notes': 'Paste it into robot.py above RUN, after the GRID DRIVING section. The lesson page '
+                  'has the whole block, with the section comment, blank lines between the three '
+                  'comments for the loops to come, and the two tests: copy it from '
+                  'there. The east loop is given finished; the other three loops are the students\' '
+                  'work, and each one is a copy of the east loop with a small change.'},
 
-        {'kind': 'bullets', 'title': 'Two things are new about this skeleton',
-         'bullets': [
-             'The **outline is shorter** than Module 2\'s',
-             ['You just traced the algorithm by hand, so the comments name the pieces instead of '
-              'spelling them out'],
-             'There is **no test function** in it',
-             ['From this module on, the lesson says what a test should show, and you write it, name and all'],
-             'These are **paper tests**: they print a path, you compare it with your trace, nothing moves',
-         ],
-         'notes': 'The hint level drops again here. The outline names the pieces (unpack, two loops, '
-                  'return) because the trace table just did the algorithm by hand. Expect two or three '
-                  'print lines per test; the habit is what matters, because every planner test from '
-                  'here to Module 6 is written this way. Students who want the Module 2 scaffolding '
-                  'back can be pointed at their own trace table: it is the outline.'},
+        {'kind': 'code', 'title': 'The two tests come with it',
+         'code': 'def test_paper_paths():\n'
+                 '    print(compute_path((0, 0), (2, 3)))   # your trace table\n'
+                 '    print(compute_path((0, 1), (3, 3)))\n'
+                 '    print(compute_path((3, 3), (1, 0)))   # left and down\n'
+                 '\n'
+                 'def test_edge_cases():\n'
+                 '    print(compute_path((2, 0), (2, 3)))   # same column\n'
+                 '    print(compute_path((0, 2), (3, 2)))   # same row\n'
+                 '    print(compute_path((1, 1), (1, 1)))   # same spot',
+         'code_size': 18,
+         'callout': 'Paper tests: they print a path, you compare it with your trace, nothing moves',
+         'tone': 'teal',
+         'notes': 'More hints than usual, on purpose: this is the first while loop that builds a '
+                  'list and the first section with no robot in it. The step down to writing tests '
+                  'themselves comes in Lesson 4-5, once the algorithm is theirs. Students who stall '
+                  'on a loop can be pointed at their own trace table: each row is one trip around a '
+                  'loop.'},
 
         {'kind': 'bullets', 'title': 'Decomposition: one part at a time',
          'bullets': [
@@ -162,70 +191,60 @@ DECK = {
              'Nothing else in the file has to work for it to work',
          ]},
 
-        {'kind': 'code', 'title': 'Step 1 · East and north only',
+        {'kind': 'steps', 'title': 'Step 1 · Run the east loop',
          'tag': 'Activity',
-         'lead': 'Start with just the two "positive" directions, right and up: steps 1 to 4 of the '
-                 'outline. Step 1 uses **tuple unpacking** from Lesson 4-2: one line pulls both '
-                 'numbers out of a tuple into two variables.',
-         'lead_h': 1.3,
-         'code': 'x, y = start     # start is (0, 0): x is 0, y is 0',
-         'code_size': 26,
-         'callout': 'Do the same for `end`, and the loops compare plain numbers',
-         'tone': 'teal',
-         'notes': 'Build it in two stages: get the easy half working and run it before you '
-                  'generalize. A half-finished algorithm you have tested beats a whole one you '
-                  'haven\'t. Check that tuple unpacking from 4-2 stuck.'},
-
-        {'kind': 'bullets', 'title': 'Step 1 · The two loops',
-         'tag': 'Activity',
-         'bullets': [
-             'Each loop is the **build-in-a-loop** pattern from Lesson 4-3, with a `while` instead of a `for`',
-             'As long as x is still **short of** the destination x, step it by one and append the new `(x, y)`',
-             'The north loop does the same for y',
-         ],
-         'callout': 'The double parentheses in `append((...))`: the outer pair is the function call, '
-                    'the inner pair is the tuple',
-         'tone': 'orange',
-         'notes': 'Take real time on the double parentheses in append((x, y)): the outer pair is the '
-                  'function call, the inner pair is the tuple.'},
-
-        {'kind': 'steps', 'title': 'Step 1 · Test it against your trace',
          'steps': [
-             'Write a test, say `test_paper_paths()`, that prints `compute_path((0, 0), (2, 3))` '
-             'and `compute_path((0, 1), (3, 3))`',
-             'Set the run line to it and run it',
-             'Compare with your paper traces: both should give exactly the hand-traced lists, **5 steps each**',
+             'Set the run line to `test_paper_paths()` and run it **before you write anything**',
+             'The first line prints `[(1, 0), (2, 0)]`: rows 1 and 2 of your trace',
+             'Then it stops short: nothing moves it up yet',
          ],
-         'callout': 'Don\'t go on until they match',
-         'tone': 'orange'},
+         'callout': 'Build it one loop at a time, and run it after each one',
+         'tone': 'orange',
+         'notes': 'A half-finished algorithm you have tested beats a whole one you haven\'t. Check '
+                  'that tuple unpacking from 4-2 (x, y = start) stuck.'},
+
+        {'kind': 'code', 'title': 'Step 1 · Write north by copying east',
+         'tag': 'Activity',
+         'lead': 'Under the north comment, copy the east loop: compare `y` with `dest_y` and step '
+                 '`y` instead of `x`. Leave `next_spot = (x, y)` as it is. Run it again:',
+         'lead_h': 1.3,
+         'code': '[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]\n'
+                 '[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]\n'
+                 '[]',
+         'code_size': 22,
+         'callout': 'The first line is your trace table. Don\'t go on until both match',
+         'tone': 'orange',
+         'notes': 'next_spot = (x, y) always records the whole position, so it does not change when '
+                  'the loop is copied. The tuple is built on its own line and appended on the next, '
+                  'so there are no double parentheses to untangle. The north loop is in a reveal on '
+                  'the lesson page.'},
 
         {'kind': 'bullets', 'title': 'Now find the limit',
          'bullets': [
-             'Add `compute_path((3, 3), (1, 0))` to the test and run it again',
-             'An **empty list!**',
+             'Look at the third line: `(3, 3)` to `(1, 0)` gives an **empty list!**',
              '`3 < 1` is False and `3 < 0` is False, so **neither** loop runs',
              'Going left or down, this version does nothing',
          ],
-         'callout': 'We need west and south too',
+         'callout': 'That is what the west and south comments are for',
          'tone': 'orange'},
 
         {'kind': 'check',
-         'question': 'Why does the stage-1 function return `[]` for (3,3) → (1,0)?',
+         'question': 'Why does the Step 1 version (east and north only) return `[]` for (3,3) → (1,0)?',
          'options': ['`append()` is broken',
                      'Both while conditions start False (3 is not < 1, 3 is not < 0), so neither loop runs',
                      'The start and end are the same',
                      'It runs forever'],
          'answer': 1,
-         'explanation': 'Stage 1 only handles increasing x and y. Moving left or down needs the two '
-                        'decreasing loops we add next.'},
+         'explanation': 'East and north only handle increasing x and y. Moving left or down needs the '
+                        'two flipped loops you add next.'},
 
-        {'kind': 'bullets', 'title': 'Step 2 · All four directions',
+        {'kind': 'bullets', 'title': 'Step 2 · West and south: copy and flip',
          'tag': 'Activity',
          'bullets': [
-             'The fix: **add two more while loops**, west (x decreases) and south (y decreases)',
-             'Each is the **mirror** of the loop it sits next to: the comparison flips and the step goes the other way',
+             'The fix: **two more while loops**, and you already have both, backwards',
+             '**West** is the east loop flipped: `<` becomes `>`, `+ 1` becomes `- 1`',
+             '**South** is the north loop, flipped the same way',
              'No `if/else` needed: for any trip, at most **one x loop and one y loop** run',
-             'Keep the two x loops together, **before** the two y loops, so the path always goes across first',
          ],
          'notes': 'This is the lesson\'s big idea: a while loop whose condition starts False simply '
                   'does nothing. Students who have seen conditionals will try to wrap this in '
@@ -260,16 +279,16 @@ DECK = {
                         'trip. Up-and-right means north + east; the other two are skipped.'},
 
         {'kind': 'steps', 'title': 'Activity · The edge cases',
-         'lead': 'Good algorithms handle the awkward inputs without special code. Write a second '
-                 'test, `test_edge_cases()`, with three calls:',
+         'lead': 'Good algorithms handle the awkward inputs without special code. The second test '
+                 'in your skeleton, `test_edge_cases()`, has three:',
          'lead_h': 1.0,
          'steps': [
              '**Same column**: `(2, 0)` to `(2, 3)`',
              '**Same row**: `(0, 2)` to `(3, 2)`',
              '**Same spot**: `(1, 1)` to `(1, 1)`',
          ],
-         'callout': 'Trace all three on paper and write your prediction as a comment next to each '
-                    'call **before** you set the run line to it',
+         'callout': 'Trace all three on paper and add your prediction to the comment on each call '
+                    '**before** you set the run line to it',
          'tone': 'teal',
          'notes': 'The predicted outputs, and a finished compute_path(), are in reveals on the lesson '
                   'page. Nothing special is written for these cases: the loops just don\'t run when '

@@ -292,6 +292,16 @@ class Manhattan:
     def clear_slow_edges(self):
         pass
 
+def test_paper_paths():
+    print(planner.compute_path((0, 0), (2, 3)))   # your trace table
+    print(planner.compute_path((0, 1), (3, 3)))
+    print(planner.compute_path((3, 3), (1, 0)))   # left and down
+
+def test_edge_cases():
+    print(planner.compute_path((2, 0), (2, 3)))   # same column
+    print(planner.compute_path((0, 2), (3, 2)))   # same row
+    print(planner.compute_path((1, 1), (1, 1)))   # same spot
+
 # --- Lesson 4-6: the test harness ---
 # run_test() asks the planner for a path and compares it
 # with one you traced by hand, printing PASS or FAIL. A

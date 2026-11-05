@@ -2063,6 +2063,13 @@ goes further):
   that is where students need the hand-holding. A composition of pieces they have
   already written and tested gets less; something genuinely new (first class, first
   queue) gets more.
+  **4-4 is the worked case (Brad, 2026-11-05, "a little complicated for the students"):**
+  its skeleton gives `compute_path()`'s unpacking and the east loop finished, with
+  one-line comments for west/north/south ("copy east, flip …"), and both tests
+  (`test_paper_paths`, `test_edge_cases`) in full. A "From the trace table to a loop"
+  section maps trace rows to loop lines. Loops build `next_spot = (x, y)` then
+  `path.append(next_spot)` (no double parentheses) everywhere the planner appears. The
+  first planner test students write themselves is 4-5's `test_from_everywhere()`.
 - **Class track: same file, class skeletons.** The class version of a section is pasted
   *in place of* the function section, settings become attributes, the object is created
   right under its class (`sensor = LineSensor()`, `tracker = LineTrack()`), and the test
