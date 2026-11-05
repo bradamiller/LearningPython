@@ -37,34 +37,26 @@ lesson's design, not a bug.
 
 ## Lesson 4-2 · Tuples
 
-<TeacherNote title="4-2 Try it: five positions and two distances">
+<TeacherNote title="4-2 Try it: compute_distance() and five calls">
 
-Scratch work: none of this goes into `robot.py`. Any five positions are fine; keep
-each destination up and to the right of its start, as the lesson's teacher note
-says, until Lesson 4-4 deals with negative distances.
+Scratch work: none of this goes into `robot.py`. The five calls are the ones the
+lesson gives as its test; each `end` is up and to the right of its `start`, so
+nothing comes out negative until Lesson 4-4 deals with that. The lesson shows the
+output this prints, so students write only the function and check it against that.
 
 ```python title="lesson_4_2_tuples.py"
-# Five grid positions, one tuple each
-home = (0, 0)
-school = (2, 3)
-library = (3, 1)
-park = (1, 2)
-store = (3, 3)
+def compute_distance(start, end):
+    print("From", start, "to", end)
+    x_distance = end[0] - start[0]
+    y_distance = end[1] - start[1]
+    print("Manhattan distance:", x_distance + y_distance)
 
-print("home: x =", home[0], " y =", home[1])
-print("school: x =", school[0], " y =", school[1])
-print("library: x =", library[0], " y =", library[1])
-print("park: x =", park[0], " y =", park[1])
-print("store: x =", store[0], " y =", store[1])
 
-# Two distances, each destination up and to the right of its start
-x_distance = school[0] - home[0]          # 2
-y_distance = school[1] - home[1]          # 3
-print("home to school:", x_distance + y_distance, "steps")    # 5
-
-x_distance = store[0] - park[0]           # 2
-y_distance = store[1] - park[1]           # 1
-print("park to store:", x_distance + y_distance, "steps")     # 3
+compute_distance((0, 0), (2, 3))     # 5
+compute_distance((1, 1), (3, 2))     # 3
+compute_distance((0, 0), (3, 3))     # 6
+compute_distance((2, 0), (2, 3))     # 3
+compute_distance((0, 2), (1, 3))     # 2
 ```
 
 </TeacherNote>

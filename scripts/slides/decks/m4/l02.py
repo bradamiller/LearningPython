@@ -12,6 +12,7 @@ DECK = {
              'coordinate is `position[1]`; or unpack both at once',
              'Explain **immutability** and why it suits coordinates',
              'Compare positions with `==` and compute a Manhattan distance in code',
+             'Write a function that takes two positions as tuples',
          ],
          'notes': '50 minutes. This is where Module 4 turns into code, but scratch code: '
                   'students try the snippets in a scratch file or at the Python prompt and '
@@ -183,11 +184,15 @@ DECK = {
          'answer': 1,
          'explanation': '(3 − 0) across + (3 − 1) up = 3 + 2 = 5 steps.'},
 
-        {'kind': 'steps', 'title': 'Try it',
+        {'kind': 'steps', 'title': 'Try it: write compute_distance()',
+         'lead': 'A program, not paper. New MICROPYTHON file in XRP Code; it only prints, '
+                 'so the robot won\'t move. Scratch work: not in robot.py.',
          'steps': [
-             'Store five of your grid positions as tuples',
-             'Print each one\'s x and y',
-             'Compute a couple of distances',
+             'Write compute_distance(start, end): print both tuples, then print the '
+             'Manhattan distance between them',
+             'Put the test from the next slide under it: five calls. Run the program',
+             'Check the shell against the output shown. If a distance is off, count it on '
+             'your Lesson 4-1 grid and find the wrong part: x or y',
          ],
          'notes': 'More support: a reference card ("the x coordinate is position[0], the y coordinate is position[1]"), the interactive shell '
                   'for instant feedback, and starting with just creating and printing tuples. '
@@ -196,6 +201,38 @@ DECK = {
                   'destination gives a negative distance. Acknowledge it is real and say Lesson '
                   '4-4 deals with it; for now keep destinations up and to the right of the '
                   'start.'},
+
+        {'kind': 'code', 'title': 'The outline and the test', 'tag': 'Activity',
+         'code': 'def compute_distance(start, end):\n'
+                 '    # 1. Print start and end\n'
+                 '    # 2. Work out the x distance and the y distance\n'
+                 '    # 3. Print the total: the Manhattan distance\n'
+                 '    pass\n'
+                 '\n'
+                 '# Test: five calls to compute_distance()\n'
+                 'compute_distance((0, 0), (2, 3))\n'
+                 'compute_distance((1, 1), (3, 2))\n'
+                 'compute_distance((0, 0), (3, 3))\n'
+                 'compute_distance((2, 0), (2, 3))\n'
+                 'compute_distance((0, 2), (1, 3))',
+         'code_size': 18,
+         'notes': 'Every end is up and to the right of its start, so no distance comes out '
+                  'negative; Lesson 4-4 deals with the other directions. The teacher copy '
+                  'is on the Module 4 sample programs page.'},
+
+        {'kind': 'code', 'title': 'What the test prints', 'tag': 'Activity',
+         'lead': 'When your function works, the shell shows this:',
+         'code': 'From (0, 0) to (2, 3)\n'
+                 'Manhattan distance: 5\n'
+                 'From (1, 1) to (3, 2)\n'
+                 'Manhattan distance: 3\n'
+                 'From (0, 0) to (3, 3)\n'
+                 'Manhattan distance: 6\n'
+                 'From (2, 0) to (2, 3)\n'
+                 'Manhattan distance: 3\n'
+                 'From (0, 2) to (1, 3)\n'
+                 'Manhattan distance: 2',
+         'code_size': 18},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [

@@ -29,6 +29,7 @@ By the end of this lesson you will be able to:
 - Read its parts: the x coordinate of the tuple is `position[0]`, and the y coordinate is `position[1]`; or unpack both at once
 - Explain **immutability** and why it suits coordinates
 - Compare positions with `==` and compute a Manhattan distance in code
+- Write a function that takes two positions as tuples
 
 </Objectives>
 
@@ -204,8 +205,66 @@ print("Total steps:", total_steps)
   explanation="(3 − 0) across + (3 − 1) up = 3 + 2 = 5 steps."
 />
 
-**Try it:** store five of your grid positions as tuples and print each one's x and
-y; then compute a couple of distances.
+### Try it: write a `compute_distance()` function
+
+This activity is a program you write, not paper work. In XRP Code, make a new file
+(`File → New File`, then **MICROPYTHON**) and run it on your robot. The robot won't
+move: the program only prints, and everything it prints appears in the shell. Like the
+rest of this lesson, it's scratch work, so it doesn't go into `robot.py`.
+
+1. **Write the function.** `compute_distance(start, end)` takes two positions as
+   tuples. It prints both tuples, then prints the Manhattan distance between them,
+   worked out the way the code above does. Fill in this outline:
+
+   ```python
+   def compute_distance(start, end):
+       # 1. Print start and end
+       # 2. Work out the x distance and the y distance
+       # 3. Print the total: the Manhattan distance
+       pass
+   ```
+
+2. **Run the test.** This test calls your function five times. Put it at the bottom
+   of your file, under the function, and run the program. In every call `end` is up
+   and to the right of `start`, so no distance comes out negative. (Lesson 4-4 deals
+   with the other directions.)
+
+   ```python
+   # Test: five calls to compute_distance()
+   compute_distance((0, 0), (2, 3))
+   compute_distance((1, 1), (3, 2))
+   compute_distance((0, 0), (3, 3))
+   compute_distance((2, 0), (2, 3))
+   compute_distance((0, 2), (1, 3))
+   ```
+
+3. **Check the output.** When your function works, the shell shows this:
+
+   ```text
+   From (0, 0) to (2, 3)
+   Manhattan distance: 5
+   From (1, 1) to (3, 2)
+   Manhattan distance: 3
+   From (0, 0) to (3, 3)
+   Manhattan distance: 6
+   From (2, 0) to (2, 3)
+   Manhattan distance: 3
+   From (0, 2) to (1, 3)
+   Manhattan distance: 2
+   ```
+
+   If a distance doesn't match, count that one on your paper grid from Lesson 4-1, then
+   look at which part of your function gave the wrong number: the x distance or the y
+   distance.
+
+<TeacherNote title="Solution (teacher copy)">
+
+The complete program is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4).
+`compute_distance()` only prints; it returns nothing. Lesson 4-4's `compute_path(start, end)`
+takes the same two tuples and returns a list, so students meet the same parameters again
+there.
+
+</TeacherNote>
 
 <TeacherNote title="Differentiation & the negative-distance preview">
 
