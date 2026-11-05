@@ -70,7 +70,10 @@ DECK = {
          ],
          'callout': 'The route that ran into the box now goes around it',
          'tone': 'teal',
-         'notes': 'This is the payoff of four modules of reusable code. Come back to the figure '
+         'notes': 'This is the payoff of four modules of reusable code, and of the decomposition '
+                  'in Lesson 4-0: what passes between planner and driver was decided before '
+                  'either was written, so either side can be replaced without touching the '
+                  'other. Come back to the figure '
                   'in Lesson 5-6, when the swap happens on screen; from Lesson 5-7 the robot '
                   'drives it.'},
 

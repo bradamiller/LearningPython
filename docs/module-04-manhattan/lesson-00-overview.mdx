@@ -7,7 +7,7 @@ sidebar_position: 0
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="The Big Picture"
-  meta={['15–20 min', 'Top-down design', 'No coding yet']}
+  meta={['20–25 min', 'Problem decomposition', 'No coding yet']}
 />
 
 <TeacherBanner>
@@ -27,7 +27,7 @@ By the end of this overview you will be able to:
 - Describe the goal of Module 4: autonomous multi-destination navigation
 - Name the two halves — the **planner** (`compute_manhattan_path`) and the **driver** (`drive_path`) — and each one's job
 - Read the short main program and explain it in plain English
-- Explain **top-down design**: start with the big picture, then build each piece
+- Use **problem decomposition** to break a big problem into parts: say what each part takes in and hands back, build and test each one alone, then connect them
 
 </Objectives>
 
@@ -163,6 +163,74 @@ lesson, highlighting the piece they're building that day.
 
 </TeacherNote>
 
+## Breaking a big problem into parts
+
+Where did the two halves come from? Nobody writes "drive to every destination, all by
+itself" as one big function and gets it right. It's too much to hold in your head at
+once, and when it goes wrong you'd have no idea where to look. So we split it.
+Breaking a big problem into smaller parts you can build one at a time is called
+**problem decomposition** (you'll also hear **top-down design**: start from the whole
+goal and work down to the pieces). It's how almost every program longer than a page
+gets written.
+
+It's a method, not a lucky guess, and it has four steps you can use on any project:
+
+1. **State the whole problem in one sentence.** If you can't, you don't know yet what you're building.
+2. **Name the parts, and say what each one takes in and hands back.** This is the step that matters most, because it's how the parts will fit together later.
+3. **Build and test each part on its own.** A part you've tested alone is one you can trust when something goes wrong.
+4. **Connect them.** If steps 2 and 3 were done well, this is the short one.
+
+Here is the method applied to this module:
+
+| Step | In Module 4 |
+|---|---|
+| 1 · The whole problem | Visit each destination in order, on its own. |
+| 2 · The parts | **Planner:** takes where the robot is and where it's going; hands back a list of intersections. **Driver:** takes that list, plus where the robot is and which way it faces; hands back where it ended up and which way it faces. |
+| 3 · Build and test each | The planner in Lessons 4-4 to 4-6, on screen, with the robot sitting still. The driver in Lessons 4-7 and 4-8, one leg at a time. |
+| 4 · Connect them | The plan, print, drive test in Lesson 4-8, then the seven lines in Lesson 4-9. |
+
+<Figure
+  src="/img/lesson-m4-00/decomposition.svg"
+  alt="A tree with three levels. At the top, the whole problem: visit each destination in order, on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-4 to 4-6, is small enough to build and test in one go. The driver, drive_path(), built in Lessons 4-7 and 4-8, splits again into three smaller parts: which way to face, desired_heading(), Lesson 4-7; turn to face it, turn_to(), Lesson 4-8; and follow the tape, the LINE TRACKING functions built in Module 2. An arrow from planner to driver is labeled list of intersections, the one thing they share."
+  caption="The module's problem, broken down. The planner is small enough to build in one go; the driver gets split once more."
+/>
+
+**Parts can have parts.** If a part is still too big to write and test in one
+sitting, split it again with the same four steps. The driver is: one small function
+works out which way to face, one turns until the robot faces that way, and your
+Module 2 line-tracking functions do the actual driving. You can stop splitting when
+you can say what a piece does in one sentence and test it on its own.
+
+**What passes between the parts is the agreement.** The only thing the planner hands
+the driver is a list of intersections. Because that was decided in step 2, before
+either half was written, each half can be built without the other, and either one can
+be replaced later. Module 5 does exactly that: a new planner that steers around
+obstacles hands the same kind of list to the same driver, and the driver doesn't
+change at all.
+
+<KnowledgeCheck
+  question="Your next project: the robot drives the grid and blinks its light at every intersection with a box on it. You've written the one-sentence goal. Following the method, what comes next?"
+  options={[
+    {text: 'Write the code for the first function'},
+    {text: 'Name the parts, and what each one takes in and hands back', correct: true},
+    {text: 'Run the whole program on the robot to see what happens'},
+    {text: 'Pick the robot\'s top speed'},
+  ]}
+  explanation="Step 2 comes before any code. Deciding what each part takes in and hands back is what lets you build and test the parts separately, and then connect them with very little work."
+/>
+
+<TeacherNote title="Make the method visible all module">
+
+Put the four steps on the wall and leave them up. Lessons 4-4, 4-7 and 4-8 each open
+the next step with a short callout, so a quick "which step are we on?" at the start of
+those lessons keeps the thread. If there's time, have pairs decompose something that
+isn't a robot (a class trip, a birthday party) into parts with what goes in and what
+comes out; most will find step 2 is the hard one, which is the point. Students met the
+idea in Lesson 1-7 ("break it into functions"); what's new here is naming what passes
+between the parts. Point back to step 2 in Module 5 when the planner is swapped.
+
+</TeacherNote>
+
 ## Your roadmap
 
 Every lesson in this module builds one piece of that program:
@@ -185,7 +253,7 @@ class extensions, Lessons 4-5 and 4-8 each have an optional class version too.)
 
 - What will the robot do by the end of the module? (Visit multiple destinations on its own.)
 - What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
-- What does top-down design mean? (Start with the big goal, break it into buildable pieces.)
+- What are the four steps of problem decomposition? (State the whole problem; name the parts and what each takes in and hands back; build and test each part alone; connect them.)
 
 <TeacherNote title="Teaching note">
 

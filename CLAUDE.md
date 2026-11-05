@@ -1938,6 +1938,16 @@ students need (no `while`/`if`/gain in 2-0, no ripples in 5-0, and 5-0's figure 
 a different grid from 5-1's detour activity). The X-1 lessons' opening paragraphs still
 introduce their module; that overlap is fine.
 
+**Problem decomposition in 4-0 (Brad, 2026-11-05).** Brad: Module 4 never explained the
+method behind the planner/driver split. 4-0 now has a section "Breaking a big problem
+into parts" (20–25 min, was 15–20): four steps (state the whole problem; name the parts
+and what each takes in and hands back; build and test each alone; connect them), a table
+mapping them to Module 4, the tree figure `lesson-m4-00/decomposition.svg` from
+`scripts/figures/fdecomp.py`, and a knowledge check. "Top-down design" survives only as
+the other name for it. Short `Callout`s carry the thread: 4-4 (step 3, planner alone),
+4-7 (step 3, the driver splits again), 4-8 "Plan, print, button, drive" (step 4,
+connect). 4-9's wrap-up and 5-0's "The swap" point back to it. Decks follow.
+
 ### 15b. Skeletons, not answers, for the functions students write (2026-10-15)
 
 Brad: the lesson text gave the code for the exercises — "at the bottom of 2-9, all

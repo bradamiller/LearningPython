@@ -214,6 +214,17 @@ DECK = {
                         'correct printed path clears the planner; whatever went wrong is downstream of it: '
                         'desired_heading, turn_to, drive_path or the Module 2 functions.'},
 
+        {'kind': 'bullets', 'title': 'Decomposition: connect the parts',
+         'bullets': [
+             'The last step of the method from Lesson 4-0',
+             'Each part was built and tested on its own, so connecting them takes **three '
+             'lines**: plan, print, drive',
+             'It is that short because both parts agreed from the start on what passes between '
+             'them: **a list of intersections**',
+         ],
+         'callout': 'When a run goes wrong, the printed path tells you which part to open',
+         'tone': 'teal'},
+
         {'kind': 'steps', 'title': 'Activity · Trace it, then integrate',
          'lead': 'Before running anything, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N) on paper. '
                  'For each step write down:',

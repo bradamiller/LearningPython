@@ -114,6 +114,16 @@ checks *both* differences, which is the "one change at a time" rule from the top
 lesson written down: North means y went up by one **and** x didn't move at
 all.
 
+<Callout kind="note" title="Decomposition, step 3: the second part splits again">
+
+The planner is built and tested; the NAVIGATOR is the second part from Lesson 4-0, the
+driver. It's still too big to write in one go, so it gets split the same way:
+`desired_heading` works out which way to face, `turn_to` turns until the robot faces
+that way, and `drive_path` uses both at every step, with your Module 2 functions doing
+the driving. You build them smallest first, and test each before the next.
+
+</Callout>
+
 <KnowledgeCheck
   question="Going from (1,3) to (1,2), what does desired_heading return?"
   options={[

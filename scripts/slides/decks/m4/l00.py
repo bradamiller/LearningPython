@@ -9,9 +9,10 @@ DECK = {
              'Name the two halves, the **planner** (`compute_manhattan_path`) and the '
              '**driver** (`drive_path`), and each one\'s job',
              'Read the short main program and explain it in plain English',
-             'Explain **top-down design**: start with the big picture, then build each piece',
+             'Use **problem decomposition** to break a big problem into parts: say what each '
+             'part takes in and hands back, build and test each alone, then connect them',
          ],
-         'notes': '15 to 20 minutes, top-down design, no coding yet. This is an advance '
+         'notes': '20 to 25 minutes, problem decomposition, no coding yet. This is an advance '
                   'organizer: the point is the shape, not the detail. Resist explaining how '
                   'anything works. If students ask how compute_manhattan_path works, the answer '
                   'is "that is exactly Lessons 4-4 and 4-5". Tell them plainly they are not '
@@ -169,6 +170,72 @@ DECK = {
          'explanation': 'compute_manhattan_path computes the list of intersections (planning); '
                         'drive_path drives through them (execution). One job each.'},
 
+        {'kind': 'bullets', 'title': 'Breaking a big problem into parts',
+         'bullets': [
+             'Where did the two halves come from? Nobody writes "drive to every destination, all '
+             'by itself" as one big function and gets it right',
+             'Too much to hold in your head, and when it goes wrong you would not know where to look',
+             'So we split it: breaking a big problem into smaller parts you build one at a time '
+             'is **problem decomposition**',
+             'You will also hear **top-down design**: start from the whole goal, work down to the '
+             'pieces',
+         ],
+         'size': 26},
+
+        {'kind': 'steps', 'title': 'Four steps, for any project', 'tag': 'The method',
+         'steps': [
+             '**State the whole problem in one sentence.** If you can\'t, you don\'t know yet what '
+             'you\'re building.',
+             '**Name the parts, and say what each one takes in and hands back.** The step that '
+             'matters most: it is how the parts fit together later.',
+             '**Build and test each part on its own.** A part tested alone is one you can trust '
+             'when something goes wrong.',
+             '**Connect them.** If steps 2 and 3 were done well, this is the short one.',
+         ]},
+
+        {'kind': 'table', 'title': 'The method, applied to Module 4',
+         'headers': ['Step', 'In Module 4'],
+         'widths': [1, 3.4],
+         'rows': [
+             ['1 · The whole problem', 'Visit each destination in order, on its own'],
+             ['2 · The parts', '**Planner:** position and destination in, list of intersections '
+                               'out. **Driver:** that list, position and heading in; where it '
+                               'ended up out'],
+             ['3 · Build and test each', 'Planner in 4-4 to 4-6, on screen. Driver in 4-7 and '
+                                         '4-8, one leg at a time'],
+             ['4 · Connect them', 'Plan, print, drive in 4-8, then the seven lines in 4-9'],
+         ],
+         'size': 19},
+
+        {'kind': 'figure', 'title': 'Parts can have parts',
+         'figure': '/img/lesson-m4-00/decomposition.svg',
+         'caption': 'The planner is small enough to build in one go; the driver gets split once more.',
+         'notes': 'If a part is still too big to write and test in one sitting, split it again '
+                  'with the same four steps. Stop when you can say what a piece does in one '
+                  'sentence and test it on its own. What passes between the parts is the '
+                  'agreement: the planner only ever hands the driver a list of intersections, '
+                  'decided in step 2 before either half was written. That is why Module 5 can '
+                  'swap in a new planner and the driver does not change at all.'},
+
+        {'kind': 'check',
+         'question': 'Your next project: the robot drives the grid and blinks its light at every '
+                     'intersection with a box on it. You\'ve written the one-sentence goal. '
+                     'Following the method, what comes next?',
+         'options': ['Write the code for the first function',
+                     'Name the parts, and what each one takes in and hands back',
+                     'Run the whole program on the robot to see what happens',
+                     'Pick the robot\'s top speed'],
+         'answer': 1,
+         'explanation': 'Step 2 comes before any code. Deciding what each part takes in and hands '
+                        'back is what lets you build and test the parts separately, and then '
+                        'connect them with very little work.',
+         'notes': 'Put the four steps on the wall for the whole module. Lessons 4-4, 4-7 and 4-8 '
+                  'each open the next step with a short callout. If there is time, have pairs '
+                  'decompose something that is not a robot (a class trip, a birthday party) into '
+                  'parts with what goes in and what comes out; most find step 2 is the hard one. '
+                  'Students met the idea in Lesson 1-7 ("break it into functions"); new here is '
+                  'naming what passes between the parts.'},
+
         {'kind': 'bullets', 'title': 'Your roadmap',
          'lead': 'Every lesson in this module builds one piece of that program:',
          'lead_h': 0.7,
@@ -195,12 +262,12 @@ DECK = {
          'questions': [
              'What will the robot do by the end of the module?',
              'What are the two halves, and what is each one\'s job?',
-             'What does top-down design mean?',
+             'What are the four steps of problem decomposition?',
          ],
          'next': 'coordinates: a name for every spot on the grid',
          'notes': 'Answers: visit multiple destinations on its own. compute_manhattan_path '
-                  'plans; drive_path drives. Start with the big goal, break it into buildable '
-                  'pieces. Reference this overview at the start of every lesson: "remember the '
+                  'plans; drive_path drives. State the whole problem; name the parts and what '
+                  'each takes in and hands back; build and test each alone; connect them. Reference this overview at the start of every lesson: "remember the '
                   'big picture? today we build this piece." That thread turns nine separate '
                   'topics into one system. Return to the seven-line program in Lesson 4-9.'},
     ],

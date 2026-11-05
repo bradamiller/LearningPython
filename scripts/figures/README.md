@@ -69,6 +69,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | fmap.py | delivery-overview.svg | /img/lesson-m4-00/delivery-overview-xy.svg |
 | fmap.py | delivery-run.svg | /img/lesson-m4-09/delivery-run-xy.svg |
 | fmap.py | told-not-remembered.svg | /img/lesson-m4-05/told-not-remembered-xy.svg |
+| fdecomp.py | decomposition.svg | /img/lesson-m4-00/decomposition.svg |
 | fpipe.py | two-halves.svg | — |
 | fraise.py, fraise2.py | raise.svg | — |
 | fraise2.py | raise-spin.svg | — |

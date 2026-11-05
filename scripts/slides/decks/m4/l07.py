@@ -119,6 +119,17 @@ DECK = {
          'explanation': 'x is unchanged; y went 3 → 2 (y −1). Decreasing y is moving toward you, '
                         'which is South: heading 2.'},
 
+        {'kind': 'bullets', 'title': 'Decomposition: the driver splits again',
+         'bullets': [
+             'The planner is built and tested; the NAVIGATOR is the second part, **the driver**',
+             'Still too big to write in one go, so it is split the same way:',
+             ['`desired_heading` works out which way to face',
+              '`turn_to` turns until the robot faces that way',
+              '`drive_path` uses both at every step; your Module 2 functions do the driving'],
+             'Build them **smallest first**, and test each before the next',
+         ],
+         'size': 26},
+
         {'kind': 'code', 'title': 'Say so when you can\'t answer',
          'lead': 'None of the four matched? Then the positions aren\'t one step apart (diagonal, '
                  'identical, or across the map), and no heading answers that. `raise` is new: it '

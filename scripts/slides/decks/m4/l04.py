@@ -148,6 +148,15 @@ DECK = {
                   'here to Module 6 is written this way. Students who want the Module 2 scaffolding '
                   'back can be pointed at their own trace table: it is the outline.'},
 
+        {'kind': 'bullets', 'title': 'Decomposition: one part at a time',
+         'bullets': [
+             'Step 3 of the method from Lesson 4-0: **build and test each part on its own**',
+             'The planner is the first part; this lesson and the next two build and test it alone',
+             'What it takes in and hands back is already decided: **two tuples in, a list of '
+             'intersections out**',
+             'Nothing else in the file has to work for it to work',
+         ]},
+
         {'kind': 'code', 'title': 'Step 1 · East and north only',
          'tag': 'Activity',
          'lead': 'Start with just the two "positive" directions, right and up: steps 1 to 4 of the '
