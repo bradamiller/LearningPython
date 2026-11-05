@@ -9,7 +9,8 @@ that list into a .pptx. The lesson page on the site is the source of truth:
 a deck follows its lesson section by section, uses the lesson's own figures
 (rendered from static/img/*.svg), and never shows a solution.
 
-Text in any field may use `code` for Fira Mono and **bold**.
+Text in any field may use `code` for Fira Mono, **bold**, and [text](https://...)
+for a clickable link.
 
 A slide's 'figure' is a site image path ('/img/...'), a slide-only copy under
 scripts/slides ('./...'), or a block program: a list in the same format as the
@@ -68,16 +69,26 @@ TONES = {
 
 # ---------------------------------------------------------------- text runs
 
-_RUN = re.compile(r'(`[^`]+`|\*\*[^*]+\*\*)')
+_RUN = re.compile(r'(`[^`]+`|\*\*[^*]+\*\*|\[[^\]]+\]\(https://[^)\s]+\))')
+_LINK = re.compile(r'\[([^\]]+)\]\((https://[^)\s]+)\)')
 
 
 def _runs(p, text, size, color=DARK, font=BODY_FONT, bold=False):
-    """Fill paragraph p with text, honoring `code` and **bold**."""
+    """Fill paragraph p with text, honoring `code`, **bold** and [text](https://...) links."""
     for part in _RUN.split(text):
         if not part:
             continue
         r = p.add_run()
-        if part.startswith('`'):
+        link = _LINK.fullmatch(part)
+        if link:
+            r.text = link.group(1)
+            r.font.name = font
+            r.font.size = Pt(size)
+            r.font.bold = bold
+            r.hyperlink.address = link.group(2)
+            r.font.color.rgb = TEAL
+            r.font.underline = True
+        elif part.startswith('`'):
             r.text = part[1:-1]
             r.font.name = CODE_FONT
             r.font.size = Pt(round(size * 0.86))
