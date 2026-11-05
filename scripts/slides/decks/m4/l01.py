@@ -130,7 +130,7 @@ DECK = {
              'From `(1, 1)` to `(3, 0)`: how many steps across, how many up or down, how many '
              'total steps?',
          ],
-         'callout': 'Printable grid: [learningpython.bradhouse.com/printables/lesson-4-1-blank-grid.pdf]'
+         'callout': 'Printable worksheet, grid and questions: [learningpython.bradhouse.com/printables/lesson-4-1-blank-grid.pdf]'
                     '(https://learningpython.bradhouse.com/printables/lesson-4-1-blank-grid.pdf)',
          'tone': 'teal',
          'notes': 'The answers are in the lesson\'s "Check your answers" box; students answer '
