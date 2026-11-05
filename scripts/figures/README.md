@@ -75,6 +75,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | fshort.py | turn-shortcut.svg | /img/lesson-m4-08/turn-shortcut-xy.svg |
 | ftrace.py | drive-path-trace.svg | — |
 | ftrace2.py | drive-path-loop.svg | /img/lesson-m4-08/drive-path-loop-xy.svg |
+| g50.py | blocked-route.svg | /img/lesson-m5-00/blocked-route-xy.svg |
 | g51.py | detour.svg | /img/lesson-m5-01/detour-xy.svg |
 | g51.py | graph-3x3.svg | /img/lesson-m5-01/graph-3x3-xy.svg |
 | g51.py | graph-blocked.svg | /img/lesson-m5-01/graph-blocked-xy.svg |

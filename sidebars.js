@@ -37,6 +37,7 @@ const sidebars = {
       label: 'Module 2 · Line Tracking',
       collapsed: true,
       items: [
+        'module-02-line-tracking/lesson-00-overview',
         'module-02-line-tracking/lesson-01-reflectance-sensor',
         'module-02-line-tracking/lesson-02-drive-to-the-edge',
         'module-02-line-tracking/lesson-03-bounce-driving',
@@ -54,6 +55,7 @@ const sidebars = {
       label: 'Module 3 · Grid Driving',
       collapsed: true,
       items: [
+        'module-03-grid-driving/lesson-00-overview',
         'module-03-grid-driving/lesson-01-introduction-to-the-grid',
         'module-03-grid-driving/lesson-02-driving-multiple-intersections',
         'module-03-grid-driving/lesson-03-turning-on-the-grid',
@@ -82,6 +84,7 @@ const sidebars = {
       label: 'Module 5 · Pathfinding Around Obstacles',
       collapsed: true,
       items: [
+        'module-05-pathfinding/lesson-00-overview',
         'module-05-pathfinding/lesson-01-grid-as-a-graph',
         'module-05-pathfinding/lesson-02-dictionaries',
         'module-05-pathfinding/lesson-03-bfs-concept',

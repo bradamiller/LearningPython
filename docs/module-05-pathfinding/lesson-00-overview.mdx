@@ -1,0 +1,157 @@
+---
+title: "Module Overview · When the Road Is Blocked"
+sidebar_label: "5-0 · Overview"
+sidebar_position: 0
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Pathfinding Around Obstacles"
+  title="When the Road Is Blocked"
+  meta={['15–20 min', 'Where the module goes', 'No coding yet']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+Module 4 ended with a robot that plans its own routes: name a few destinations and it
+works out every turn and drives them, one after another. But it plans every route the
+same way, across and then up, and it assumes nothing is ever in the way. Put a box on
+one intersection of its route and it drives straight at it.
+
+By the end of this module your robot will **visit several destinations on a grid with
+obstacles on it, plan its way around the ones it knows about, spot new ones with its
+rangefinder while it drives, re-plan on the spot, and do better on its second run**
+because it remembers what the first run found. It's the last required module, and the
+one where everything you've built works together.
+
+<Figure
+  src="/img/lesson-m5-00/blocked-route-xy.svg"
+  alt="A 4 by 4 grid of tape with (0, 0) at the bottom-left. A box blocks the intersection (2, 0). From S at (0, 0) to D at (3, 2), the Manhattan route goes across first and runs into the box at (2, 0), where it is crossed out; the rest of its route is faded. The breadth-first search route goes around: right to (1, 0), up to (1, 1), right to (3, 1), and up to D, 5 steps. A note: if a box turns up while the robot drives, the rangefinder sees it and the robot plans again."
+  caption="One box on the grid. Module 4's planner has one route and it's blocked; this module's planner finds a way around."
+/>
+
+<Objectives>
+
+By the end of this overview you will be able to:
+
+- Describe what the robot will do by the end of Module 5
+- Explain why the Module 4 planner can't get around a blocked intersection
+- Name the module's three new pieces, a map of the grid, a planner that searches it, and obstacle detection, and say what each one does
+- Explain what it means to swap one planner for another without changing the rest of the program
+
+</Objectives>
+
+<QuizLink id="module-05-pathfinding/lesson-00-overview" />
+
+## Three new pieces
+
+The driving doesn't change. The NAVIGATOR section you built in Module 4 already drives
+any list of intersections it's handed, and it comes across untouched, still built on
+your Module 2 line-tracking functions. Everything new in this module is about *which*
+list it gets handed.
+
+<CardGrid>
+  <InfoCard tag="Map" title="The grid as a graph">
+    A way of writing down the grid that a program can search: every intersection, which ones it connects to, and which ones are blocked.
+  </InfoCard>
+  <InfoCard tag="Planner" title="Breadth-first search">
+    A planner that finds a shortest route from where the robot is to where it's going, around every blocked intersection on the map.
+  </InfoCard>
+  <InfoCard tag="Senses" title="Obstacle detection">
+    The rangefinder looks at the next intersection before the robot drives to it. If something is there, it goes on the map and the robot plans again.
+  </InfoCard>
+</CardGrid>
+
+Each piece gets its own section of `robot.py`: **GRID GRAPH**, **BFS PLANNER** and
+**OBSTACLES**. And like the planner in Module 4, the new planner is tested on screen
+before it ever drives anything.
+
+## The swap
+
+Here's the idea the whole course has been building toward. The Manhattan planner and
+the new one answer **the same request**: you give it where the robot is and where it
+should go, and it hands back a list of intersections to drive through. The navigator
+doesn't care which planner made the list. So once the new planner passes its tests, you
+put it in place of Manhattan by **changing one name**, and the route that ran into the
+box now goes around it.
+
+<KnowledgeCheck
+  question="The Manhattan planner and the new planner both take a position and a destination and return a list of intersections. Why does that matter?"
+  options={[
+    {text: 'It means they always return the same route'},
+    {text: 'The code that drives the route works with either one, so swapping planners changes one name, not the whole program', correct: true},
+    {text: 'It means the new planner is just as fast as Manhattan'},
+    {text: 'It means you can delete the Manhattan planner'},
+  ]}
+  explanation="Because both planners answer the same request in the same form, everything that uses the list, the navigator, the tests and the main program, works with either one. Only the planner's name changes."
+/>
+
+## A robot that learns
+
+Planning around boxes you've told it about is half the job. The other half is finding
+the ones nobody told it about. In the second half of the module the robot looks ahead
+before every block it drives. When it finds a box, it marks that intersection blocked,
+plans a new route from where it's standing, and carries on, again and again, until it
+arrives. At the end of a run it reports every box it found, so the next run can start
+already knowing them. Fewer surprises means fewer detours: your **Run 2** should beat
+your **Run 1**, and you'll have the numbers to prove it.
+
+<TeacherNote title="This is an advance organizer — keep it high-level">
+
+Keep this to the destination and the three pieces. Two things the page deliberately
+doesn't do: it doesn't say *how* the planner searches (students invent that themselves
+in Lesson 5-3, from "I just looked" to a method a computer can follow), and its figure
+uses a different grid from Lesson 5-1's detour activity, so it doesn't give that answer
+away either. If students ask how the robot finds the way around, the answer is
+"Lessons 5-1 and 5-3, with a pencil, before any code."
+
+**Materials:** the 4 × 4 grid from Modules 3 and 4, and from Lesson 5-7 a few flat,
+firm boxes the rangefinder can see, sized to sit on an intersection. Lessons 5-1 to 5-6
+never put a robot on the floor (the code runs and prints, but nothing drives), which is
+a good stretch to catch up on charging and repairs.
+
+**Pacing:** about four weeks, with the capstone (5-9) running over more than one period.
+The course is complete at the end of this module; Module 6 is optional.
+
+</TeacherNote>
+
+## Your roadmap
+
+| Lesson | What happens |
+|---|---|
+| **5-1 · Grid as a Graph** | See the grid as intersections and connections, block one, and find a way around it by hand. No code. |
+| **5-2 · Dictionaries** | Store the graph in Python. The GRID GRAPH section opens. |
+| **5-3 · BFS Concept** | Turn "I just looked" into a method a computer could follow, and trace it with a pencil. No code. |
+| **5-4 · Pathfinding Functions** | Keep a shared list of blocked intersections and build the graph around it. The BFS PLANNER section opens. |
+| **5-5 · compute_bfs_path()** | The pencil method, line for line, in Python, tested after every stage. |
+| **5-6 · Testing and Swapping** | Test any planner without a robot, then swap Manhattan out by changing one name. |
+| **5-7 · Obstacle Detection** | The rangefinder looks before each block; if something is there, plan again. The OBSTACLES section opens. |
+| **5-8 · Building Experience** | Keep re-planning until the robot arrives, and start the next run knowing what this one found. |
+| **5-9 · Capstone Project** | Several destinations, obstacles found and avoided, and a second run that does better. |
+
+The capstone needs little new code. Almost all of it is calls to sections you've
+already written and tested, the same way the projects in Modules 2, 3 and 4 were. (If
+you took on the class extensions, Lessons 5-5 and 5-6 each have an optional class
+version too.)
+
+## Wrap-up
+
+- What will the robot do by the end of the module? (Visit several destinations, plan around known obstacles, find new ones while driving, and improve on its second run.)
+- Why can't the Module 4 planner handle a box on its route? (It always plans across then up, and has no idea anything is blocked.)
+- What are the three new pieces? (A map of the grid, a planner that searches it, and detection with the rangefinder.)
+
+<TeacherNote title="Teaching note">
+
+Come back to the figure in Lesson 5-6, when the swap happens: the same test, one name
+changed, and the route that ran into the box goes around it. That moment is the payoff
+of four modules of reusable code, and from Lesson 5-7 the robot drives it for real. Students who took the functions track and students
+who took the class track get there the same way.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

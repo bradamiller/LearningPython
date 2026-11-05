@@ -23,10 +23,11 @@ checks, and a teacher-notes toggle.
 - **Audience:** high school students (no prior programming); teachers use the
   same pages with teacher-only notes toggled on.
 - **Status (current, 2026-10-15):** **ALL SIX MODULES ARE BUILT.** Module 1 (13:
-  kickoff lesson-00-what-is-a-robot + lessons 1–12), Module 2 (10), Module 3 (4),
-  Module 4 (10: overview + lessons 1–9), Module 5 (9: lessons 1–9, BFS pathfinding),
-  Module 6 (6: overview + lessons 1–5, Dijkstra, optional) — 50 numbered lessons +
-  2 overviews = 52 pages. Site builds clean (`npm run build`).
+  kickoff lesson-00-what-is-a-robot + lessons 1–12), Module 2 (11: overview + lessons
+  1–10), Module 3 (5: overview + lessons 1–4), Module 4 (10: overview + lessons 1–9),
+  Module 5 (10: overview + lessons 1–9, BFS pathfinding), Module 6 (6: overview +
+  lessons 1–5, Dijkstra, optional) — 50 numbered lessons + 5 overviews = 55 pages
+  (the 2-0, 3-0 and 5-0 overviews were added 2026-11-05). Site builds clean (`npm run build`).
   `docs/module-01-driving/lesson-01-meet-the-xrp.mdx` is the canonical template.
 - **Evaluation pass in progress (Brad, since 2026-09-15).** Conversion is done;
   the work now is Brad reading lessons and correcting them. **Module 1 lessons 0–6
@@ -75,10 +76,10 @@ LearningPython/                            # repo root — the site itself
 │   ├── index.mdx                         # welcome / landing page (slug: /)
 │   ├── module-01-driving/                # lesson-00 kickoff + 11 lessons (Blockly→Python) — DONE
 │   │   └── lesson-01-meet-the-xrp.mdx    # THE TEMPLATE lesson — copy its structure
-│   ├── module-02-line-tracking/          # 10 lessons (all Python) — DONE
-│   ├── module-03-grid-driving/           # 4 lessons — DONE
+│   ├── module-02-line-tracking/          # lesson-00-overview + 10 lessons (all Python) — DONE
+│   ├── module-03-grid-driving/           # lesson-00-overview + 4 lessons — DONE
 │   ├── module-04-manhattan/              # lesson-00-overview + lessons 1–9 — DONE
-│   ├── module-05-pathfinding/            # lessons 1–9 (no overview) — BFS as the required planner — DONE
+│   ├── module-05-pathfinding/            # lesson-00-overview + lessons 1–9 — BFS as the required planner — DONE
 │   └── module-06-dijkstra/               # OPTIONAL — lesson-00-overview + lessons 1–5 — DONE
 ├── src/
 │   ├── components/
@@ -1482,8 +1483,8 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   (`Dijkstra(current_pos, blocked_list)`). If Brad prefers the other signature, it's
   a global find/replace across M5.
 - **Module 4 uses a 10-page structure** (lesson-00-overview + 1–9) because its source
-  had `00-module-overview.md`. **Module 5 has no overview page** (source starts at 01) —
-  consider whether M5 wants a parallel "big picture" overview for consistency.
+  had `00-module-overview.md`. Module 5 got its overview on 2026-11-05, with
+  Modules 2 and 3 (Brad's ask), so every module now opens on an X-0 page.
 
 ## 10. Where the evaluation pass has reached
 
@@ -1923,9 +1924,19 @@ with the answers, and the knowledge check under it asks a different kind of ques
 the other.
 
 **Overview pages are exempt from the section conventions (2026-10-28).** A module's
-`lesson-00-overview` (M4, M6) has no Activity and no Real-world connections section,
+`lesson-00-overview` (M2, M3, M4, M5, M6) has no Activity and no Real-world connections section,
 on purpose: it's a map of the module, not a lesson. Every other non-capstone lesson
 keeps both.
+
+**The overview pattern (2026-11-05, when 2-0, 3-0 and 5-0 were added).** Each is a
+15–20 minute (3-0: 10–15) advance organizer: where the module ends up (2-0 and 3-0
+reuse their capstone's animation; 5-0 has `lesson-m5-00/blocked-route-xy.svg` from
+`scripts/figures/g50.py`), the big idea, a roadmap table, a wrap-up, and a slide deck
+like every lesson. Sidebar label `X-0 · Overview`. They describe each lesson by what
+the robot learns to do and never name or explain a construct a later lesson makes
+students need (no `while`/`if`/gain in 2-0, no ripples in 5-0, and 5-0's figure is on
+a different grid from 5-1's detour activity). The X-1 lessons' opening paragraphs still
+introduce their module; that overlap is fine.
 
 ### 15b. Skeletons, not answers, for the functions students write (2026-10-15)
 
