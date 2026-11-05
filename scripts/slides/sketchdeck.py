@@ -700,7 +700,7 @@ def s_table(prs, d, deck):
         y += Inches(0.85)
     headers, rows = d['headers'], d['rows']
     tw = W - 2 * MARGIN
-    row_h = Inches(0.62)
+    row_h = Inches(d.get('row_h', 0.62))
     shape = sl.shapes.add_table(len(rows) + 1, len(headers), MARGIN, y, tw, row_h * (len(rows) + 1))
     tbl = shape.table
     widths = d.get('widths') or [1] * len(headers)
@@ -722,7 +722,8 @@ def s_table(prs, d, deck):
             _runs(cell.text_frame.paragraphs[0], str(v), d.get('size', 20))
     if d.get('callout'):
         callout(sl, d['callout'], MARGIN + Inches(0.5), H - Inches(1.45),
-                W - 2 * MARGIN - Inches(1.0), Inches(0.95), tone=d.get('tone', 'orange'))
+                W - 2 * MARGIN - Inches(1.0), Inches(0.95), tone=d.get('tone', 'orange'),
+                size=d.get('callout_size', 22))
     notes(sl, d.get('notes'))
 
 

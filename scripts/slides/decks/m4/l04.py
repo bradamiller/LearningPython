@@ -89,6 +89,11 @@ DECK = {
              ['4', '', '', ''],
              ['5', '', '', ''],
          ],
+         'row_h': 0.5,
+         'callout_size': 18,
+         'callout': 'Printable worksheet: [learningpython.bradhouse.com/printables/lesson-4-4-trace-worksheet.pdf]'
+                    '(https://learningpython.bradhouse.com/printables/lesson-4-4-trace-worksheet.pdf)',
+         'tone': 'teal',
          'notes': 'Hand out a big grid and markers: one color for moves across, another for moves '
                   'up and down. Keep it short and targeted; the goal is intuition, not mastery. '
                   'Then ask how many steps it took, and check that against the Manhattan distance, '
