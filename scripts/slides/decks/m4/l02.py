@@ -8,8 +8,8 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Create a tuple to hold an `(x, y)` coordinate',
-             'Read its parts with `position[0]` (x) and `position[1]` (y), or unpack both at '
-             'once',
+             'Read its parts: the x coordinate of the tuple is `position[0]`, and the y '
+             'coordinate is `position[1]`; or unpack both at once',
              'Explain **immutability** and why it suits coordinates',
              'Compare positions with `==` and compute a Manhattan distance in code',
          ],
@@ -45,7 +45,7 @@ DECK = {
                  'print(position[0])   # 2  -> x, across\n'
                  'print(position[1])   # 3  -> y, away from you',
          'code_size': 24,
-         'callout': '`[0]` = x,  `[1]` = y',
+         'callout': 'The x coordinate is `position[0]`; the y coordinate is `position[1]`',
          'tone': 'teal'},
 
         {'kind': 'figure', 'title': 'A tuple names one intersection',
@@ -114,8 +114,8 @@ DECK = {
          'code_size': 22,
          'callout': 'Like a street address: move, and you get a **new** address. You don\'t edit '
                     'the old one.',
-         'notes': 'Expect [0] versus [1] confusion for a few exercises: post "[0] = x, [1] = y" '
-                  'on the wall. Flag the bracket rule early: tuples are made with parentheses; '
+         'notes': 'Expect [0] versus [1] confusion for a few exercises: post "the x coordinate is '
+                  'position[0], the y coordinate is position[1]" on the wall. Flag the bracket rule early: tuples are made with parentheses; '
                   'square brackets are only for indexing (and, next lesson, for lists). The '
                   'immutability payoff is not obvious yet; the street-address analogy is enough '
                   'for now. It really pays off once tuples live inside lists and the algorithm.'},
@@ -189,7 +189,7 @@ DECK = {
              'Print each one\'s x and y',
              'Compute a couple of distances',
          ],
-         'notes': 'More support: a reference card ("[0] = x, [1] = y"), the interactive shell '
+         'notes': 'More support: a reference card ("the x coordinate is position[0], the y coordinate is position[1]"), the interactive shell '
                   'for instant feedback, and starting with just creating and printing tuples. '
                   'More challenge: an (x, y, heading) three-tuple (what does [2] give?), or '
                   'tuples built from input. Watch for: subtracting a bigger start from a smaller '
@@ -216,7 +216,7 @@ DECK = {
              'Why is `(2, 3) == (3, 2)` False?',
          ],
          'next': 'a whole path, many tuples, in a list',
-         'notes': 'Answers: [0] and [1]. It can\'t change; a position should stay fixed. The '
+         'notes': 'Answers: the x coordinate is position[0] and the y coordinate is position[1], or unpack both. It can\'t change; a position should stay fixed. The '
                   'elements must match in order. Formative: correct tuple syntax, the right '
                   'index for x versus y, and reading ==. Exit ticket: "Manhattan distance from '
                   '(1,0) to (3,3), show your work" (5).'},

@@ -26,7 +26,7 @@ keeping.
 By the end of this lesson you will be able to:
 
 - Create a tuple to hold an `(x, y)` coordinate
-- Read its parts with `position[0]` (x) and `position[1]` (y), or unpack both at once
+- Read its parts: the x coordinate of the tuple is `position[0]`, and the y coordinate is `position[1]`; or unpack both at once
 - Explain **immutability** and why it suits coordinates
 - Compare positions with `==` and compute a Manhattan distance in code
 
@@ -143,8 +143,8 @@ don't edit the old one.
 
 <TeacherNote title="Index mix-ups and the parentheses/brackets split">
 
-Expect `[0]` vs `[1]` confusion for a few exercises — post "`[0]` = x, `[1]` =
-y" on the wall. Also flag the bracket rule early: tuples are made with
+Expect `[0]` vs `[1]` confusion for a few exercises — post "the x coordinate is
+`position[0]`, the y coordinate is `position[1]`" on the wall. Also flag the bracket rule early: tuples are made with
 parentheses `()`; square brackets `[]` are *only* for indexing (and, next lesson, for
 lists). The immutability payoff isn't obvious yet — the street-address analogy is
 enough for now; it really pays off once tuples live inside lists and the algorithm.
@@ -209,7 +209,7 @@ y; then compute a couple of distances.
 
 <TeacherNote title="Differentiation & the negative-distance preview">
 
-**More support:** reference card ("`[0]` = x, `[1]` = y"); use the interactive
+**More support:** reference card ("the x coordinate is `position[0]`, the y coordinate is `position[1]`"); use the interactive
 shell for instant feedback; start with just creating and printing tuples. **More
 challenge:** an `(x, y, heading)` three-tuple (what does `[2]` give?), or input-
 built tuples. **Watch for:** subtracting a bigger start from a smaller destination
@@ -236,7 +236,7 @@ Bundling related values into one unit is everywhere in code:
 
 ## Wrap-up
 
-- How do you get x and y out of a tuple? (`[0]` and `[1]`.)
+- How do you get x and y out of a tuple? (The x coordinate is `position[0]` and the y coordinate is `position[1]`, or unpack both at once.)
 - What does immutable mean, and why is it good for coordinates? (Can't change; a position should stay fixed.)
 - Why is `(2, 3) == (3, 2)` False? (Elements must match in order.)
 
