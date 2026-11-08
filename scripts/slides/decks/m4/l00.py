@@ -5,20 +5,19 @@ DECK = {'module': 4,
  'slides': [{'kind': 'title',
              'objectives': ['Describe the problem Module 4 solves: drive to a destination on its '
                             'own, then to several in a row',
-                            'Break a complex problem into simpler sub-problems, with a partner',
-                            'Explain why we plan the route first, test it with no robot, then '
-                            'drive it',
+                            'Split a complex problem into simpler parts: plan the route first, '
+                            'test it with no robot, then drive it',
                             'Name the **planner** (`compute_manhattan_path`), the **driver** '
                             '(`drive_path`), and the list of tuples between them',
                             'Use the four steps of **problem decomposition** on a new problem'],
-             'notes': '30 to 35 minutes, problem decomposition, a pair activity, no coding yet. '
-                      'The lesson opens with the whole problem, has pairs suggest the '
-                      'sub-problems, then shows how this module splits it: plan first, test the '
-                      'plan with no robot, then drive it. After that it is an advance organizer: '
-                      'the point is the shape, not the detail. If students ask how '
-                      'compute_manhattan_path works, the answer is "that is exactly Lessons 4-4 '
-                      'and 4-5". Tell them plainly they are not meant to understand every line '
-                      'yet: by Lesson 4-9 they will, because they will have built each piece.'},
+             'notes': '25 to 30 minutes, problem decomposition, a class discussion, no coding yet. '
+                      'The lesson opens with the whole problem, leads a class discussion to the '
+                      'split this module uses: plan first, test the plan with no robot, then drive '
+                      'it. After that it is an advance organizer: the point is the shape, not the '
+                      'detail. If students ask how compute_manhattan_path works, the answer is '
+                      '"that is exactly Lessons 4-4 and 4-5". Tell them plainly they are not meant '
+                      'to understand every line yet: by Lesson 4-9 they will, because they will '
+                      'have built each piece.'},
             {'kind': 'figure',
              'title': 'The problem',
              'figure': '/img/lesson-m4-00/drive-to-destination.svg',
@@ -37,51 +36,34 @@ DECK = {'module': 4,
              'tone': 'teal',
              'size': 28},
             {'kind': 'steps',
-             'title': 'What are the sub-problems?',
-             'tag': 'Pair activity',
-             'lead': 'With a partner, no code:',
-             'lead_h': 0.6,
-             'steps': ['List what the robot has to **figure out** and **do** to reach the '
-                       'destination, one short sentence each. Aim for at least four.',
-                       'Mark any sub-problem your robot can **already** solve from Modules 2 and '
-                       '3.',
-                       'Be ready to share one with the class.'],
-             'size': 22,
-             'notes': '8 to 10 minutes. Think-pair-share: a minute or two alone, five in pairs, '
-                      'then one sub-problem from each pair on the board without judging. Do not '
-                      'steer toward a planner/driver split yet; the next slide does that. Usual '
-                      'answers and where the module builds them: know where the robot is and name '
-                      'the destination (4-1 coordinates, 4-2 tuples); work out the route, which '
-                      'intersections in what order (the planner, 4-4 to 4-6, returning a list, '
-                      '4-3); know which way it is facing (4-7 headings); work out which way to '
-                      'face next (desired_heading, 4-7); turn to face it (turn_to, 4-8); follow '
-                      'the tape to the next intersection and stop (already solved: Module 2 '
-                      'track_to_intersection and drive_past_intersection, reused in 4-8); keep '
-                      'track of where it is and know when it has arrived (drive_path, 4-8). Also '
-                      'common: do not hit anything (Module 5), take the fastest way (Module 6), do '
-                      'not drive off the grid (a Manhattan route never leaves it). If nobody '
-                      'mentions heading, ask: when the robot reaches a corner, how does it know '
-                      'whether to turn left or right?'},
-            {'kind': 'bullets',
-             'title': 'Two piles: deciding and doing',
-             'bullets': ['Sort your list into two piles',
-                         ['**Deciding:** which intersections to drive through',
-                          '**Doing:** turning, following the tape'],
-                         'Solve them **in that order**'],
-             'size': 30},
+             'title': 'How would you split it?',
+             'tag': 'Class discussion',
+             'steps': ['Before the robot moves, could you write down every intersection it will '
+                       'drive through?',
+                       'How could you check that list is right, **without the robot**?',
+                       "Once the list is right, what's left for the robot to do?"],
+             'size': 24,
+             'notes': '5 to 8 minutes, teacher-led. Ask in order; draw the grid on the board. 1: '
+                      'Yes. Expect "two right, then three up"; mark each intersection on the board '
+                      'grid. If someone says the robot should decide as it goes, ask "Does it need '
+                      'to? Nothing on the grid changes." 2: Trace it on the grid by hand, or have '
+                      'the computer print it and compare. Steer to: no robot needed, so the route '
+                      'can be tested on a laptop. 3: Just drive it: at each intersection, face the '
+                      'next one and follow the tape there. It does not decide anything. Then name '
+                      'the split: plan the route, drive the plan, with the list passed between '
+                      'them. Ideas about motors, sensors or turning belong to the driving half.'},
             {'kind': 'figure',
              'title': 'Plan first, then drive',
              'figure': '/img/lesson-m4-00/plan-then-drive.svg',
              'caption': 'The plan is a list of (x, y) tuples. One function makes it; another '
                         'drives it.',
-             'notes': 'Have pairs sort their lists into two piles: deciding (which intersections '
-                      'to drive through) and doing (turning, following the tape), then solve them '
-                      'in that order. The planning function never moves the robot, so it can be '
-                      'tested with no robot: print the route and check it against the grid. Once '
-                      'the plan is right, a second function takes the plan and drives it; it '
-                      'decides nothing. Each intersection is an (x, y) pair, stored as a tuple, so '
-                      'the plan is a list of tuples, the one thing the two functions share. Tuples '
-                      'come properly in Lesson 4-2 and lists in Lesson 4-3.'},
+             'notes': 'That is one way to split the problem, and the one this module uses. The '
+                      'planning function never moves the robot, so it can be tested with no robot: '
+                      'print the route and check it against the grid. Once the plan is right, a '
+                      'second function takes the plan and drives it; it decides nothing. Each '
+                      'intersection is an (x, y) pair, stored as a tuple, so the plan is a list of '
+                      'tuples, the one thing the two functions share. Tuples come properly in '
+                      'Lesson 4-2 and lists in Lesson 4-3.'},
             {'kind': 'check',
              'question': 'Why plan the whole route first, as its own function, before writing the '
                          'code that drives?',
@@ -291,8 +273,8 @@ DECK = {'module': 4,
                             'hands back is what lets you build and test the parts separately, and '
                             'then connect them with very little work.',
              'notes': 'Put the four steps on the wall for the whole module. Lessons 4-4, 4-7 and '
-                      '4-8 each open the next step with a short callout. Pairs already decomposed '
-                      'the robot problem at the start; if there is time, have them decompose '
+                      '4-8 each open the next step with a short callout. The class already split '
+                      'the robot problem at the start; if there is time, have pairs decompose '
                       'something that is not a robot (a class trip, a birthday party) into parts '
                       'with what goes in and what comes out; most find step 2 is the hard one. '
                       'Students met the idea in Lesson 1-7 ("break it into functions"); new here '

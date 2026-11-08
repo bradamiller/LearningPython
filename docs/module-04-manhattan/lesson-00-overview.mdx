@@ -7,7 +7,7 @@ sidebar_position: 0
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="The Big Picture"
-  meta={['30–35 min', 'Problem decomposition', 'Pair activity', 'No coding yet']}
+  meta={['25–30 min', 'Problem decomposition', 'Class discussion', 'No coding yet']}
 />
 
 <TeacherBanner>
@@ -29,8 +29,7 @@ destination on the grid, all by itself.**
 By the end of this overview you will be able to:
 
 - Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
-- Break a complex problem into simpler sub-problems, with a partner
-- Explain why we plan the route first, test it with no robot, then drive it
+- Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
 - Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of tuples between them
 - Use the four steps of **problem decomposition** on a new problem
 
@@ -41,46 +40,32 @@ By the end of this overview you will be able to:
 ## Harder than it sounds
 
 "Drive over there" sounds like one job, but it's a somewhat complex problem, too much to
-get right in one go. One way to
-tackle a complex problem is to **break it into simpler sub-problems** and solve each
-one. That's called **problem decomposition** (or **top-down design**).
+get right in one go. One way to tackle a complex problem is to **break it into simpler
+sub-problems** and solve each one. That's called **problem decomposition** (or **top-down design**).
 
-## Activity · What are the sub-problems?
+## Discuss · How would you split it?
 
-With a partner, no code:
+1. Before the robot moves, could you write down every intersection it will drive through?
+2. How could you check that list is right, without the robot?
+3. Once the list is right, what's left for the robot to do?
 
-1. List what the robot has to **figure out** and **do** to reach the destination, one short sentence each. Aim for at least four.
-2. Mark any sub-problem your robot can **already** solve from Modules 2 and 3.
-3. Be ready to share one with the class.
+<TeacherNote title="Leading the discussion (5–8 min)">
 
-Finish your list before you read on.
+Ask the questions in order and let the class answer; draw the grid on the board.
 
-<TeacherNote title="Running the pair activity (8–10 min)">
+1. **Yes.** Expect "two right, then three up." Mark each intersection on the board grid in order. If someone says the robot should decide as it goes, ask: "Does it need to? Nothing on the grid changes."
+2. **Trace it on the grid by hand**, or have the computer print it and compare. Steer to: *no robot needed*, so the route can be tested on a laptop.
+3. **Just drive it:** at each intersection on the list, face the next one and follow the tape there. It doesn't have to decide anything.
 
-Think-pair-share works well: a minute or two alone, five minutes in pairs, then collect
-one sub-problem from each pair on the board without judging. Don't steer toward a
-planner/driver split yet; the next section does that, and it lands better when the
-board list is messy. Sub-problems pairs usually find, and where the module builds each:
-
-- **Know where the robot is, and name the destination:** coordinates (4-1), a position stored as a tuple (4-2)
-- **Work out the route, which intersections and in what order:** the planner, `compute_manhattan_path` (4-4 to 4-6), returning a list (4-3)
-- **Know which way the robot is facing:** headings as numbers (4-7)
-- **Work out which way to face for the next intersection:** `desired_heading` (4-7)
-- **Turn to face it:** `turn_to` (4-8)
-- **Follow the tape to the next intersection and stop there:** already solved, Module 2's `track_to_intersection` and `drive_past_intersection`, reused in 4-8
-- **Keep track of where it is as it goes, and know when it has arrived:** `drive_path` updates position and heading after every step (4-8)
-
-Also common: "don't hit anything" (Module 5, and see the big assumption below), "take
-the fastest way" (optional Module 6), and "don't drive off the grid" (a Manhattan route
-never leaves it). If no pair mentions heading, ask: "When the robot reaches a corner,
-how does it know whether to turn left or right?"
+Then name the split: **plan** the route, **drive** the plan, with the list passed between
+them. Ideas about motors, sensors or turning belong to the driving half; park them there.
 
 </TeacherNote>
 
 ## Plan first, then drive
 
-Sort your list into two piles: **deciding** (which intersections to drive through) and
-**doing** (turning, following the tape). Then solve them in that order.
+That's one way to split the problem, and the one this module uses: **plan** the whole
+route first, then **drive** it.
 
 <Figure
   src="/img/lesson-m4-00/plan-then-drive.svg"
@@ -292,8 +277,8 @@ change at all.
 
 Put the four steps on the wall and leave them up. Lessons 4-4, 4-7 and 4-8 each open
 the next step with a short callout, so a quick "which step are we on?" at the start of
-those lessons keeps the thread. Pairs already decomposed the robot problem at the start of this lesson; if there's
-time, have them decompose something that isn't a robot (a class trip, a birthday party)
+those lessons keeps the thread. The class already split the robot problem at the start of this lesson; if there's
+time, have pairs decompose something that isn't a robot (a class trip, a birthday party)
 into parts with what goes in and what comes out. Most will find step 2 is the hard one,
 which is the point. Students met the
 idea in Lesson 1-7 ("break it into functions"); what's new here is naming what passes
