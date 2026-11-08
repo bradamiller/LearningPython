@@ -10,7 +10,7 @@ DECK = {
              'Loop through a list with a `for` loop',
              'Build a list step by step inside a loop, and store a path as a list of tuples',
              'Explain what a variable holds when the value is a list, and what happens when two '
-             'names refer to the same one',
+             'variables refer to the same one',
          ],
          'notes': '50 minutes. Scratch work again, like Lesson 4-2: a scratch file or the Python '
                   'prompt, not robot.py. The build-in-a-loop pattern practiced here is what next '
@@ -175,8 +175,8 @@ DECK = {
          'callout': 'An address stored in a variable is called a **reference**',
          'tone': 'teal'},
 
-        {'kind': 'code', 'title': 'Two names, one address',
-         'lead': 'That sounds like a technicality until two names hold the same address:',
+        {'kind': 'code', 'title': 'Two variables, one address',
+         'lead': 'That sounds like a technicality until two variables hold the same address:',
          'code': 'path = []\n'
                  'path.append((1, 0))\n'
                  '\n'
@@ -190,13 +190,13 @@ DECK = {
          'callout_size': 21,
          'tone': 'orange'},
 
-        {'kind': 'figure', 'title': 'Two names, one list',
+        {'kind': 'figure', 'title': 'Two variables, one list',
          'figure': '/img/lesson-m4-03/two-names-one-list.svg',
          'caption': 'Two locations, the same address in each, one list at the end of both '
                     'arrows.'},
 
         {'kind': 'code', 'title': 'Compare: a number is copied',
-         'lead': 'There is only **one list** above: appending through either name changes it. '
+         'lead': 'There is only **one list** above: appending through either variable changes it. '
                  'A number is small and fixed in size, so it really is stored in the location:',
          'lead_h': 1.2,
          'code': 'a = 5\n'
@@ -212,12 +212,12 @@ DECK = {
          'question': 'After scores = [10, 20], then backup = scores, then backup.append(30), '
                      'what does scores hold?',
          'options': ['[10, 20]: backup is a separate copy',
-                     '[10, 20, 30]: both names refer to the same list',
+                     '[10, 20, 30]: both variables refer to the same list',
                      '[30]',
                      'An error: you cannot assign a list to another name'],
          'answer': 1,
          'explanation': 'backup = scores stores the address that was in scores, not a copy of '
-                        'the list, so both names lead to one list. Appending through either name '
+                        'the list, so both variables lead to one list. Appending through either variable '
                         'changes what both see. To get an independent copy you would have to make '
                         'a new list.'},
 
@@ -285,12 +285,12 @@ DECK = {
              'Tuple vs list: which is for a position, which for a path?',
              'What does `append()` do?',
              'What\'s the pattern for building a path?',
-             'Two names refer to the same list and you append through one. What does the other '
+             'Two variables refer to the same list and you append through one. What does the other '
              'see?',
          ],
          'next': 'computing a path automatically: the Manhattan algorithm',
          'notes': 'Answers: tuple = position, list = path. Adds an item to the end. Start with '
-                  '[], append() inside a loop. The change: there\'s only one list, and both names '
+                  '[], append() inside a loop. The change: there\'s only one list, and both variables '
                   'hold its address. Formative: create a list, append() in a loop, index into a '
                   'list of tuples (path[3][1]), and spot the indentation bug. Exit ticket: '
                   '"Given path = [(1,0),(2,0),(3,0)], what is path[2][1]?" (0). Next lesson '

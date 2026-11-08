@@ -77,8 +77,8 @@ position = (2, 3)
 x, y = position      # x is 2, y is 3
 ```
 
-That's **tuple unpacking**. Python takes the names on the left in order and gives each
-one the matching part of the tuple: the first name gets index 0, and the second gets
+That's **tuple unpacking**. Python takes the variables on the left in order and gives each
+one the matching part of the tuple: the first variable gets index 0, and the second gets
 index 1. It does exactly what these two lines do:
 
 ```python
@@ -86,9 +86,9 @@ x = position[0]
 y = position[1]
 ```
 
-The names are yours to choose (`dest_x, dest_y = destination` works the same way), but
-there must be exactly as many names as parts. Two names and a three-part tuple, or three
-names and a two-part tuple, and Python stops with a `ValueError`.
+The variable names are yours to choose (`dest_x, dest_y = destination` works the same way), but
+there must be exactly as many variables as parts. Two variables and a three-part tuple, or three
+variables and a two-part tuple, and Python stops with a `ValueError`.
 
 <KnowledgeCheck
   question="After start = (3, 2) and then a, b = start, what is b?"
@@ -98,10 +98,10 @@ names and a two-part tuple, and Python stops with a `ValueError`.
     {text: '(3, 2)'},
     {text: 'An error'},
   ]}
-  explanation="The names take the parts in order: a gets index 0, which is 3, and b gets index 1, which is 2. The names don't have to be x and y."
+  explanation="The variables take the parts in order: a gets index 0, which is 3, and b gets index 1, which is 2. The variables don't have to be called x and y."
 />
 
-## Tuples don't change (and that's good)
+## Tuples can't change (and that's good)
 
 Try to modify a tuple and Python stops you:
 

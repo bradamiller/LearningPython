@@ -44,7 +44,7 @@ By the end of this lesson you will be able to:
 - Loop through a list with a `for` loop
 - Build a list step by step inside a loop, and store a path as a list of tuples
 - Explain what a variable holds when the value is a list, and what happens when two
-  names refer to the same one
+  variables refer to the same one
 
 </Objectives>
 
@@ -177,7 +177,7 @@ somewhere else in memory, in as much room as it needs, and what goes in `path`'s
 location is that area's **address** — the number that says where to find it. An
 address stored in a variable is called a **reference**.
 
-That sounds like a technicality until two names hold the same address:
+That sounds like a technicality until two variables hold the same address:
 
 ```python
 path = []
@@ -201,7 +201,7 @@ because the list was never in `path` to begin with.
 />
 
 There is only **one list** here. `path` and `same_path` hold the same address, so
-appending through either name changes the one list both of them lead to. If a list
+appending through either variable changes the one list both of them lead to. If a list
 were copied on assignment, `path` would still be one item long — it isn't.
 
 Compare that with a number, which is small and fixed in size, so it really is
@@ -219,11 +219,11 @@ print(a)                  # 5  <- unchanged
   code={'scores = [10, 20]\nbackup = scores\nbackup.append(30)'}
   options={[
     {text: '[10, 20]  — backup is a separate copy'},
-    {text: '[10, 20, 30]  — both names refer to the same list', correct: true},
+    {text: '[10, 20, 30]  — both variables refer to the same list', correct: true},
     {text: '[30]'},
     {text: 'An error — you cannot assign a list to another name'},
   ]}
-  explanation="backup = scores stores the address that was in scores, not a copy of the list, so both names lead to one list. Appending through either name changes what both see. To get an independent copy you would have to make a new list."
+  explanation="backup = scores stores the address that was in scores, not a copy of the list, so both variables lead to one list. Appending through either variable changes what both see. To get an independent copy you would have to make a new list."
 />
 
 This is not a trap to avoid — it's the mechanism the rest of the course relies on.
@@ -308,7 +308,7 @@ for x in range(1, 4):
 - Tuple vs list — which is for a position, which for a path? (Tuple = position; list = path.)
 - What does `append()` do? (Adds an item to the end.)
 - What's the pattern for building a path? (Start with `[]`, `append()` inside a loop.)
-- If two names refer to the same list and you append through one, what does the other see? (The change — there's only one list, and both names hold its address.)
+- If two variables refer to the same list and you append through one, what does the other see? (The change — there's only one list, and both variables hold its address.)
 
 <TeacherNote title="Assessment & next lesson">
 

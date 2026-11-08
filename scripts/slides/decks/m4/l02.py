@@ -61,15 +61,15 @@ DECK = {
          'code': 'position = (2, 3)\n'
                  'x, y = position      # x is 2, y is 3',
          'code_size': 26, 'width': 9,
-         'callout': 'That\'s **tuple unpacking**: the first name gets index 0, the second gets '
+         'callout': 'That\'s **tuple unpacking**: the first variable gets index 0, the second gets '
                     'index 1',
          'tone': 'teal'},
 
         {'kind': 'bullets', 'title': 'It does exactly what two lines do',
          'bullets': [
-             'The names are yours to choose: `dest_x, dest_y = destination` works the same way',
-             'There must be **exactly as many names as parts**',
-             'Two names and a three-part tuple, or three names and a two-part tuple: Python '
+             'The variable names are yours to choose: `dest_x, dest_y = destination` works the same way',
+             'There must be **exactly as many variables as parts**',
+             'Two variables and a three-part tuple, or three variables and a two-part tuple: Python '
              'stops with a `ValueError`',
          ],
          'split': 0.58,
@@ -81,10 +81,10 @@ DECK = {
          'question': 'After start = (3, 2) and then a, b = start, what is b?',
          'options': ['3', '2', '(3, 2)', 'An error'],
          'answer': 1,
-         'explanation': 'The names take the parts in order: a gets index 0, which is 3, and b '
-                        'gets index 1, which is 2. The names don\'t have to be x and y.'},
+         'explanation': 'The variables take the parts in order: a gets index 0, which is 3, and b '
+                        'gets index 1, which is 2. The variables don\'t have to be called x and y.'},
 
-        {'kind': 'code', 'title': 'Tuples don\'t change (and that\'s good)',
+        {'kind': 'code', 'title': 'Tuples can\'t change (and that\'s good)',
          'lead': 'Try to modify a tuple and Python stops you:',
          'code': 'position = (2, 3)\n'
                  'position[0] = 5      # TypeError: \'tuple\' object does not support item '

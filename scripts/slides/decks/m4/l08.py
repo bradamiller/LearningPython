@@ -152,7 +152,7 @@ DECK = {
              '`return position, heading` looks like returning two things, but it is **one**: two values with a comma make a tuple',
              'That tuple is the robot\'s **pose**, say `((1, 1), 0)`',
              'The left-hand side unpacks it, exactly like `x, y = position` in Lesson 4-2',
-             'First name gets the position, second gets the heading',
+             'First variable gets the position, second gets the heading',
          ],
          'callout': 'Forget the left-hand side and the robot drives fine, **once**. The next path gets '
                     'planned from where the robot was.',
