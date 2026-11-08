@@ -12,10 +12,9 @@ DECK = {
              'Explain what a variable holds when the value is a list, and what happens when two '
              'variables refer to the same one',
          ],
-         'notes': '50 minutes. Scratch work again, like Lesson 4-2: a scratch file or the Python '
-                  'prompt, not robot.py. The build-in-a-loop pattern practiced here is what next '
-                  'lesson\'s planner function is made of; that function is what goes in the '
-                  'file.'},
+         'notes': '50 minutes. Practice code goes in a new file, not robot.py. The '
+                  'build-in-a-loop pattern practiced here is what next lesson\'s planner '
+                  'function is made of.'},
 
         {'kind': 'bullets', 'title': 'A path is many positions',
          'bullets': [
@@ -26,7 +25,7 @@ DECK = {
              'And build one up step by step: exactly what the Manhattan algorithm does next '
              'lesson',
          ],
-         'callout': 'Scratch work again: a scratch file or the Python prompt, not `robot.py`',
+         'callout': 'Try this lesson\'s code in a new file, not `robot.py`',
          'tone': 'teal'},
 
         {'kind': 'bullets', 'title': 'The start is not in the path',

@@ -13,20 +13,16 @@ DECK = {
              'Compare positions with `==` and compute a Manhattan distance in code',
              'Write a function that takes two positions as tuples',
          ],
-         'notes': '50 minutes. This is where Module 4 turns into code, but scratch code: '
-                  'students try the snippets in a scratch file or at the Python prompt and '
-                  'throw them away. Nothing goes into robot.py until Lesson 4-4.'},
+         'notes': '50 minutes. Practice code goes in a new file; nothing goes into robot.py '
+                  'until Lesson 4-4.'},
 
         {'kind': 'bullets', 'title': 'From the grid to Python',
          'bullets': [
              'You can name any grid spot with `(x, y)`',
              'Now you\'ll store one in Python, using a **tuple**: a single value that packages '
              'two numbers',
-             'Scratch code, this lesson and the next: a scratch file or the Python prompt',
-             'The file gets its next section in Lesson 4-4, once there is a function worth '
-             'keeping',
          ],
-         'callout': 'Nothing here goes into `robot.py`',
+         'callout': 'Try this lesson\'s code in a new file, not `robot.py`',
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'One value, two numbers',
@@ -159,7 +155,7 @@ DECK = {
 
         {'kind': 'steps', 'title': 'Try it: write compute_distance()',
          'lead': 'A program, not paper. New MICROPYTHON file in XRP Code; it only prints, '
-                 'so the robot won\'t move. Scratch work: not in robot.py.',
+                 'so the robot won\'t move.',
          'steps': [
              'Write compute_distance(start, end): print both tuples, then print the '
              'Manhattan distance between them',
