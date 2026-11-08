@@ -1970,7 +1970,7 @@ seven lines" paragraph, the two-halves figure on this page, and the lesson-by-le
 (now two sentences under "What's next"). 20–25 min. The 4-4, 4-7, 4-8 callouts no longer
 cite step numbers: "Plan first: the planner on its own", "Then drive: the driver splits
 again", "Plan, then drive: connect the parts". `decomposition-one-destination.svg` is no
-longer used. "Two halves, two jobs" was then folded into "Plan first, then drive" (function names in the Plan/Drive items, separation-of-concerns line, one knowledge check), and the 4-7 callout says the driver "gets split into smaller parts". Brad's style rule from the same day, for every lesson: as clear as possible in as few
+longer used. "Two halves, two jobs" was then folded into "Plan first, then drive" (function names in the Plan/Drive items, separation-of-concerns line, one knowledge check), and the 4-7 callout says the driver "gets split into smaller parts". **Pose (Nov 8, light version, Brad's pick):** 4-7 has a short "The robot's pose" section after "Heading as a number" with `pose.svg` (`scripts/figures/fpose.py`): position plus heading is the pose, a tuple like `((1, 1), 1)`. Code is unchanged: `(position, heading)` stays two variables, and prose/slides in 4-7, 4-8, 4-9, 5-8, 5-9, 6-4 and course-design D4 call that pair the pose. Brad turned down a single `pose` variable. Brad's style rule from the same day, for every lesson: as clear as possible in as few
 words as possible; a figure that shows the technique beats paragraphs describing what the
 robot does. Verbose explanations lose students.
 

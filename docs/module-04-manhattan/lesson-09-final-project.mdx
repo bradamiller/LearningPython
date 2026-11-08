@@ -25,7 +25,7 @@ By the end of this project you will be able to:
 
 - Integrate the planner and the driving functions into one program, written as the last test function in `robot.py`
 - Write a main loop that computes and drives a path to each destination in a list
-- Carry `position` and `heading` from one leg into the next by assigning from `drive_path()`'s return
+- Carry the robot's pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`'s return
 - Print the first leg's path before the button, and say why only the first
 - Test incrementally — planner alone, then one leg, then the full sequence
 - Demonstrate a working multi-destination run on the XRP robot
@@ -38,8 +38,8 @@ By the end of this project you will be able to:
 
 Four destinations, visited in order, starting and (optionally) ending at home base
 (0,0). The two halves do the heavy lifting: `compute_manhattan_path(position, dest)`
-returns the list of intersections, and `drive_path(path, position, heading)` turns and
-drives it. Your job is the **main program** that connects them — about ten lines, and
+returns the list of intersections, and `drive_path(path, position, heading)` drives it
+and hands back the new pose. Your job is the **main program** that connects them — about ten lines, and
 like every program in this course it is a test function at the bottom of `robot.py`.
 
 <Figure

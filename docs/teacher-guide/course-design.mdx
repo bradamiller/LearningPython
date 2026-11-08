@@ -140,8 +140,8 @@ planner.add_blocked(intersection)
 ## D4. The navigator owns position and heading
 
 In the function track, `turn_to(heading, desired)` returns the new heading, and
-`drive_path(path, position, heading)` returns the new position and heading; the
-main program keeps them. In the extension, the `Navigator` holds both. Nothing else
+`drive_path(path, position, heading)` returns the new position and heading, the
+robot's **pose** (named in Lesson 4-7); the main program keeps it. In the extension, the `Navigator` holds both. Nothing else
 in the program tracks where the robot is. The planner is told the position when
 asked for a path (D3.1).
 

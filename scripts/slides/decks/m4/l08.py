@@ -8,7 +8,7 @@ DECK = {
              'Name the four Module 2 functions the driving code is built on, and what each does',
              'Explain why the robot must `drive_past_intersection()` after every `track_to_intersection()`',
              'Write `turn_to()` and `drive_path()` from their outlines, and test them one at a time',
-             'Keep `position` and `heading` up to date by assigning from what `drive_path()` returns',
+             'Keep the robot\'s pose (`position` and `heading`) up to date by assigning from what `drive_path()` returns',
              'Plan, **print the path**, wait for the button, then drive',
          ],
          'notes': '60 minutes, Python plus robot. The two paper designs from Lesson 4-7 become real '
@@ -150,7 +150,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'One tuple, unpacked',
          'bullets': [
              '`return position, heading` looks like returning two things, but it is **one**: two values with a comma make a tuple',
-             'Say `((1, 1), 0)`',
+             'That tuple is the robot\'s **pose**, say `((1, 1), 0)`',
              'The left-hand side unpacks it, exactly like `x, y = position` in Lesson 4-2',
              'First name gets the position, second gets the heading',
          ],
@@ -338,13 +338,13 @@ DECK = {
          'questions': [
              'What four Module 2 functions does the driving code use?',
              'Why `drive_past_intersection()` after every track?',
-             'What two values does `drive_path` return, and why?',
+             'What does `drive_path` return, and why?',
              'What do you do before pressing the button?',
          ],
          'next': 'the final project: a delivery run to several destinations',
          'notes': 'Answers: track_to_intersection, turn_clockwise, turn_counterclockwise, '
                   'drive_past_intersection. To put the center of rotation on the cross, so turns pivot '
-                  'there and the next track starts clean. position and heading, so the caller plans '
+                  'there and the next track starts clean. The robot\'s pose, so the caller plans '
                   'the next path from the right place. Read the printed path. Exit ticket: "At (1,2) '
                   'heading 1 (E), next is (1,1): heading needed, headings turn_to() steps through, '
                   'and what the robot does?" (2 (S), since y goes down by 1; E, S: one clockwise turn, '

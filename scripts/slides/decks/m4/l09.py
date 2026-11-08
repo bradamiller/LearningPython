@@ -7,7 +7,7 @@ DECK = {
          'objectives': [
              'Integrate the planner and the driving functions in one program: the last test function in `robot.py`',
              'Write a main loop that computes and drives a path to each destination in a list',
-             'Carry `position` and `heading` from one leg into the next by assigning from `drive_path()`',
+             'Carry the robot\'s pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`',
              'Print the first leg\'s path before the button, and say why only the first',
              'Test incrementally, then demonstrate a working multi-destination run on the XRP',
          ],

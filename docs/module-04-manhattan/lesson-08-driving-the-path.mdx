@@ -27,7 +27,7 @@ By the end of this lesson you will be able to:
 - Name the four Module 2 functions the driving code is built on, and what each does
 - Explain why the robot must `drive_past_intersection()` after every `track_to_intersection()`
 - Write `turn_to()` and `drive_path()` from their outlines, and test them one at a time — on screen first, then one leg, then a path
-- Keep `position` and `heading` up to date by assigning from what `drive_path()` returns
+- Keep the robot's pose (`position` and `heading`) up to date by assigning from what `drive_path()` returns
 - Plan, **print the path**, wait for the button, then drive — and use the printed path as the first diagnostic
 
 </Objectives>
@@ -151,7 +151,7 @@ position, heading = drive_path(path, position, heading)
 
 The `return position, heading` at the end of `drive_path()` looks like a function
 returning two things, but it is really one: two values with a comma between them make a
-tuple, so the function hands back a single tuple, say `((1, 1), 0)`. The left-hand side
+tuple, so the function hands back a single tuple, the robot's **pose**, say `((1, 1), 0)`. The left-hand side
 above unpacks it, exactly like `x, y = position` in Lesson 4-2: the first name gets the
 position, the second gets the heading.
 
@@ -476,7 +476,7 @@ Building on a well-tested lower layer is how real systems scale:
 
 - What four Module 2 functions does the driving code use? (`track_to_intersection`, `turn_clockwise`, `turn_counterclockwise`, `drive_past_intersection`.)
 - Why `drive_past_intersection()` after every track? (Center of rotation onto the cross, so turns pivot there and the next track starts clean.)
-- What two values does `drive_path` return, and why? (`position` and `heading` — so the caller can plan the next path from the right place.)
+- What does `drive_path` return, and why? (The robot's pose, `position` and `heading`, so the caller can plan the next path from the right place.)
 - What do you do before pressing the button? (Read the printed path.)
 
 <TeacherNote title="Assessment & next lesson">
@@ -637,10 +637,10 @@ print("Arrived at:", navigator.position)
 </div>
 </SideBySide>
 
-This is the one class in the course with a *felt* reason to exist. On the left,
-`position` and `heading` have to be threaded through every call and assigned back from
+This is the one class in the course with a *felt* reason to exist. On the left, the
+pose (`position` and `heading`) has to be threaded through every call and assigned back from
 every return — forget once and the robot plans from the wrong place. On the right, the
-navigator owns them: they live at its address, `drive_path()` updates them there, and the
+navigator owns the pose: it lives at its address, `drive_path()` updates it there, and the
 caller just reads `navigator.position` whenever it wants to know. There is nothing to
 pass back and forth, so there is nothing to forget.
 

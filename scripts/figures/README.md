@@ -72,6 +72,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | fdecomp.py | decomposition.svg | — |
 | fproblem.py | drive-to-destination.svg | /img/lesson-m4-00/drive-to-destination.svg |
 | fplan.py | plan-then-drive.svg | /img/lesson-m4-00/plan-then-drive.svg |
+| fpose.py | pose.svg | /img/lesson-m4-07/pose.svg (deck copy: scripts/slides/decks/m4/fig/l07-pose.svg) |
 | fpipe.py | two-halves.svg | — |
 | fraise.py, fraise2.py | raise.svg | — |
 | fraise2.py | raise-spin.svg | — |

@@ -5,12 +5,12 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Explain why only x **or** y changes between adjacent intersections',
-             'Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W',
-             'Write `desired_heading(position, next_pos)` in the new NAVIGATOR section, with a paper test',
-             'Raise an error when a function cannot answer, and say why that makes a bug easier to find',
-             'Design a turn as a loop: clockwise quarter turns, `% 4` to wrap, until the heading matches',
-             'Describe how `drive_path` uses both and hands back where the robot ended up',
+             'Explain why only x **or** y changes between neighbors',
+             'Store heading as 0 = N to 3 = W; position plus heading is the **pose**',
+             'Write `desired_heading(position, next_pos)`, with a paper test',
+             'Raise an error when a function cannot answer, and say why',
+             'Design a turn: clockwise quarter turns, `% 4` to wrap',
+             'Describe how `drive_path` uses both and hands back the new pose',
          ],
          'notes': '55 minutes, design on paper. Only one function is written today, '
                   'desired_heading(), and it runs on the desk. turn_to() and drive_path() are '
@@ -76,6 +76,14 @@ DECK = {
          'tone': 'teal',
          'notes': 'Odometer analogy for the wrap: "...3, and one more is 0, not 4." HEADING_NAMES is '
                   'the one setting in the section students paste next.'},
+
+        {'kind': 'figure', 'title': 'The robot\'s pose',
+         'figure': './decks/m4/fig/l07-pose.svg',
+         'caption': 'A pose is a tuple of the two. The functions that drive take the pose and hand '
+                    'back the new one.',
+         'notes': 'Position says where the robot is; heading says which way it faces. Together they '
+                  'are its pose. From here on, "pass the pose" and "return the pose" mean the '
+                  'position and heading together.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: the NAVIGATOR section',
          'lead': 'The last section of the file. Paste it above `RUN`, after the MANHATTAN PLANNER '
@@ -301,7 +309,7 @@ DECK = {
          'code_size': 19,
          'notes': 'Step 3 is track_to_intersection(), the Module 2 function that follows the line '
                   'until both sensors hit a crossing: the robot drives exactly one intersection '
-                  'without measuring distance. It returns position and heading because the caller '
+                  'without measuring distance. It returns the robot\'s new pose because the caller '
                   'will plan the next path from wherever the robot ended up. Lesson 4-8 adds one '
                   'real-world wrinkle to step 3.'},
 

@@ -148,7 +148,7 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Two details that are easy to get wrong',
          'bullets': [
-             '`position` and `heading` must be **assigned from the return value**',
+             'The pose, `position` and `heading`, must be **assigned from the return value**',
              ['Forget the `position, heading, ... =` part and leg 2 plans from (0, 0) while the robot '
               'sits somewhere else'],
              'Only the **first** leg is printed before the button',

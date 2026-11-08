@@ -119,14 +119,14 @@ declare itself arrived at the wrong intersection.
 />
 
 <KnowledgeCheck
-  question="Why does the function return position and heading, not just the step counts?"
+  question="Why does the function return the pose (position and heading), not just the step counts?"
   options={[
     {text: 'Python requires functions to return at least two values'},
     {text: 'So the next trip can be planned from where the robot actually ended up, facing the way it actually faces', correct: true},
     {text: 'To reset them to (0, 0) and 0'},
     {text: 'For the print statement only'},
   ]}
-  explanation="position and heading are local variables inside the function. The caller only learns their new values if the function hands them back — and Lesson 5-9 needs them to chain several destinations."
+  explanation="The pose, position and heading, is local to the function. The caller only learns the new pose if the function hands it back — and Lesson 5-9 needs them to chain several destinations."
 />
 
 If you built the `Navigator` class in Lesson 4-8, this function wants to be a method

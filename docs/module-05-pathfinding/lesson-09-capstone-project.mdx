@@ -135,8 +135,8 @@ with the leg's destination in place of a fixed one:
         )
 ```
 
-Two details are easy to get wrong. `position` and `heading` must be **assigned from the
-return value** — forget the `position, heading, ... =` part and the second leg plans from
+Two details are easy to get wrong. The pose, `position` and `heading`, must be **assigned
+from the return value** — forget the `position, heading, ... =` part and the second leg plans from
 (0, 0) while the robot sits somewhere else. And only the *first* leg is printed before
 the button, because later legs are planned from wherever the robot actually ends up,
 including around obstacles it hasn't found yet.

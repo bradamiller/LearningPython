@@ -99,7 +99,7 @@ DECK = {
              '**broke out** early',
              ['Set it `False` before the `for`', 'Set it `True` in the obstacle branch',
               'After the `for`, "not rerouted" means "drove the whole path": **arrived**'],
-             'The function returns the robot\'s new `position` and `heading`',
+             'The function returns the robot\'s new pose (`position` and `heading`)',
              ['The caller needs them to plan the **next** trip: Lesson 5-9 strings several of these together'],
          ],
          'size': 24,
@@ -143,14 +143,14 @@ DECK = {
                         'position. Only a complete, uninterrupted pass sets `arrived`.'},
 
         {'kind': 'check',
-         'question': 'Why does the function return `position` and `heading`, not just the step counts?',
+         'question': 'Why does the function return the pose (`position` and `heading`), not just the step counts?',
          'options': ['Python requires functions to return at least two values',
                      'So the next trip is planned from where the robot actually ended up, facing the way it faces',
                      'To reset them to (0, 0) and 0',
                      'For the print statement only'],
          'answer': 1,
-         'explanation': '`position` and `heading` are local variables inside the function. The caller '
-                        'only learns their new values if the function hands them back, and Lesson 5-9 '
+         'explanation': 'The pose, `position` and `heading`, is local to the function. The caller '
+                        'only learns the new pose if the function hands it back, and Lesson 5-9 '
                         'needs them to chain several destinations.'},
 
         {'kind': 'table', 'title': 'Why memory matters',
