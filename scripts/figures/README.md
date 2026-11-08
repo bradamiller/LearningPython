@@ -134,7 +134,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | phone.py | phone-route.svg | /img/lesson-m5-01/phone-route.svg |
 | square.py | square-run.svg | — |
 | toolkit.py | toolkit-by-hand.svg | /img/lesson-m2-07/toolkit-by-hand.svg |
-| tuples.py | tuple-on-grid.svg | /img/lesson-m4-02/tuple-on-grid.svg |
+| tuples.py | tuple-on-grid.svg | — (removed from 4-2, 2026-11-08) |
 | m28track.py | track-to-cross.svg | /img/lesson-m2-08/track-to-cross.svg |
 | m21slide.py | slide-across-tape.svg | /img/lesson-m2-01/slide-across-tape.svg |
 | m110nest.py | nest-two-squares.svg | /img/lesson-10/nest-two-squares.svg |

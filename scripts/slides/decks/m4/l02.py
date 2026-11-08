@@ -1,4 +1,3 @@
-FIG = './decks/m4/fig/tuple-on-grid.svg'
 
 DECK = {
     'module': 4, 'lesson': 2,
@@ -48,15 +47,6 @@ DECK = {
          'code_size': 24,
          'callout': 'The x coordinate is `position[0]`; the y coordinate is `position[1]`',
          'tone': 'teal'},
-
-        {'kind': 'figure', 'title': 'A tuple names one intersection',
-         'figure': FIG, 'frame': 0.22,
-         'caption': '`position[0]` is 2, drawn as 2 across; `position[1]` is 3, drawn as 3 away.',
-         'notes': 'The lesson figure is one animation that runs through the whole lesson: make '
-                  'a tuple, index it, fail to change it, make a new one, compare two, and count '
-                  'the steps between them. This deck shows its moments section by section. '
-                  '(The slides use a copy of the figure with its text halos redrawn for the '
-                  'slide renderer.)'},
 
         {'kind': 'check',
          'question': 'Given position = (3, 1), what does position[0] return?',
@@ -121,11 +111,6 @@ DECK = {
                   'immutability payoff is not obvious yet; the street-address analogy is enough '
                   'for now. It really pays off once tuples live inside lists and the algorithm.'},
 
-        {'kind': 'figure', 'title': 'Can\'t change it, so make a new one',
-         'figure': FIG, 'frame': 0.55,
-         'caption': 'A tuple can\'t be changed, so one step east makes a new tuple, `(3, 3)`, '
-                    'beside the old one.'},
-
         {'kind': 'check',
          'question': 'What happens when you run position[0] = 5 on a tuple?',
          'options': ['x changes to 5', 'You get a TypeError: tuples cannot be modified',
@@ -148,11 +133,6 @@ DECK = {
                     'comparing tuples',
          'tone': 'teal'},
 
-        {'kind': 'figure', 'title': 'Same spot, or a different one?',
-         'figure': FIG, 'frame': 0.72,
-         'caption': '`(1, 2) == (1, 2)` is True, the same spot. `(1, 2) == (2, 1)` is False, a '
-                    'different spot.'},
-
         {'kind': 'check',
          'question': 'Does (1, 3) == (3, 1) evaluate to True?',
          'options': ['Yes: they contain the same numbers',
@@ -173,10 +153,6 @@ DECK = {
                  'total_steps = x_distance + y_distance      # 5\n'
                  'print("Total steps:", total_steps)',
          'code_size': 22},
-
-        {'kind': 'figure', 'title': 'Counting the steps',
-         'figure': FIG, 'frame': 0.95,
-         'caption': 'From (0, 0) to (2, 3): 2 across plus 3 away, 5 steps.'},
 
         {'kind': 'check',
          'question': 'Using this method, what\'s the Manhattan distance from (0, 1) to (3, 3)?',
