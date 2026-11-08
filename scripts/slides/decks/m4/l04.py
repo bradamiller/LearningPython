@@ -5,7 +5,7 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Explain **Manhattan distance**, and why it is named after Manhattan, NYC',
+             'Use **Manhattan distance**, steps across plus steps up or down, to check a path\'s length',
              'Describe the "across first, then up or down" strategy and hand-trace a path on paper',
              'Read each row of your trace table as one trip around a loop, and match the given east loop to it',
              'Write north by copying east, then west and south by copying and flipping: four loops, no `if/else`',
@@ -35,20 +35,6 @@ DECK = {
                   'destination. Every entry in the list it returns is one block from the entry before '
                   'it, and the first is one block from the start.'},
 
-        {'kind': 'bullets', 'title': 'Why "Manhattan"?',
-         'bullets': [
-             'Picture the streets of Manhattan in New York',
-             'You can\'t cut diagonally through the buildings: you walk along the **streets and avenues**',
-             'The distance is the blocks across **plus** the blocks up or down',
-             'Taxi drivers know it too: it is also called **taxicab distance**',
-             'Our robot is in the same spot: it drives along grid lines, never diagonally',
-         ],
-         'callout': 'Manhattan distance = steps across + steps up or down, the idea you computed '
-                    'by hand in Lesson 4-1',
-         'tone': 'teal',
-         'notes': 'If you can, show an actual map of Manhattan for the hook: the name sticks when '
-                  'it is tied to real streets.'},
-
         {'kind': 'bullets', 'title': 'The strategy: across first, then up or down',
          'bullets': [
              'The simplest strategy that always works:',
@@ -63,17 +49,6 @@ DECK = {
          'notes': 'The figure is the right half of the lesson\'s four-loops figure: the trip from '
                   '(1, 3) to (3, 0), across two, then down three. The whole figure comes back in '
                   'Step 2.'},
-
-        {'kind': 'check',
-         'question': 'Why can\'t the robot use a straight diagonal to shorten the trip?',
-         'options': ['Diagonals are slower than straight lines',
-                     'The robot follows grid lines, so it can only move along rows and columns',
-                     'The grid is too small',
-                     'It can: the Manhattan algorithm just chooses not to'],
-         'answer': 1,
-         'explanation': 'Like walking Manhattan\'s streets, the robot can\'t cut through the middle '
-                        'of a block, only along the lines. That is why the distance is steps '
-                        'across + steps up or down.'},
 
         {'kind': 'table', 'title': 'Activity · Trace it on paper first',
          'tag': 'Activity',
