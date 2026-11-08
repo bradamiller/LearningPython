@@ -161,56 +161,28 @@ scope tight — they need `[]`, `append()`, `len()`, indexing, and `for`. No `in
 
 ## What the variable actually holds
 
-Back in Lesson 1-9, a variable was a named location in memory, and `=` stored a
-value there. That's still true, and for a number it's the whole story:
-`side_length = 30` puts a `30` in that location.
+In Lesson 1-9, a variable was a named location in memory, and `=` stored a value
+there. For a number, that's the whole story.
 
-Remember the numbers on those locations — the **addresses**. Here is what they're
-for.
-
-A list can't be stored the way a number is, and the reason is physical. A list
-grows: `append()` makes it longer. A memory location is a fixed size, so there is
-no way to set aside one that's guaranteed big enough. Instead the list lives
-somewhere else in memory, in as much room as it needs, and what goes in `path`'s
-location is that area's **address** — the number that says where to find it. An
-address stored in a variable is called a **reference**.
-
-That sounds like a technicality until two variables hold the same address:
-
-```python
-path = []
-path.append((1, 0))
-
-same_path = path          # copies the ADDRESS, not the list
-same_path.append((2, 0))
-
-print(path)               # [(1, 0), (2, 0)]  <- path changed too
-```
-
-`same_path = path` obeys exactly the rule you already know: work out the right
-side, then store the result. The right side is what's *in* `path` — an address —
-so that address is what gets stored in `same_path`. Nothing copied the list,
-because the list was never in `path` to begin with.
-
-<Figure
-  src="/img/lesson-m4-03/two-names-one-list.svg"
-  alt="The memory locations named path and same_path each hold the number 5120, and arrows run from both of them to one list stored at address 5120."
-  caption="Two locations, the same address in each, one list at the end of both arrows."
-/>
-
-There is only **one list** here. `path` and `same_path` hold the same address, so
-appending through either variable changes the one list both of them lead to. If a list
-were copied on assignment, `path` would still be one item long — it isn't.
-
-Compare that with a number, which is small and fixed in size, so it really is
-stored in the location itself:
+A list grows, but a memory location is a fixed size. So the list lives somewhere else
+in memory, and the variable holds its **address**. An address stored in a variable is
+called a **reference**. It matters when two variables hold the same address:
 
 ```python
 a = 5
-b = a                     # copies the VALUE
-b = b + 1
-print(a)                  # 5  <- unchanged
+b = a                     # copies the VALUE: two 5s
+
+path = [(1, 0)]
+same_path = path          # copies the ADDRESS: still one list
+same_path.append((2, 0))
+print(path)               # [(1, 0), (2, 0)]  <- path changed too
 ```
+
+<Figure
+  src="/img/lesson-m4-03/number-vs-list.svg"
+  alt="Left: the memory locations named a and b each hold their own 5. Right: the locations named path and same_path each hold the number 5120, and arrows run from both of them to one list stored at address 5120."
+  caption="b = a makes a second 5. same_path = path makes a second arrow to the same list."
+/>
 
 <KnowledgeCheck
   question="What does scores hold after these three lines?"
@@ -224,11 +196,8 @@ print(a)                  # 5  <- unchanged
   explanation="backup = scores stores the address that was in scores, not a copy of the list, so both variables lead to one list. Appending through either variable changes what both see. To get an independent copy you would have to make a new list."
 />
 
-This is not a trap to avoid — it's the mechanism the rest of the course relies on.
-In Module 5 you'll build a list of blocked intersections, hand it to a planner
-object, and keep adding to it as the robot discovers obstacles. The planner sees
-every new obstacle precisely *because* it holds the address of your list rather
-than a frozen copy of it.
+This isn't a trap; the course relies on it. In Module 5 a planner sees each obstacle
+you add to your list because it holds the list's address, not a copy.
 
 <TeacherNote title="Nothing from Lesson 1-9 gets taken back here">
 

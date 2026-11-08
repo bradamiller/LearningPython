@@ -154,58 +154,28 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'What the variable actually holds',
          'bullets': [
-             'Back in Lesson 1-9, a variable was a **named location in memory**, and `=` stored '
-             'a value there',
-             'That\'s still true, and for a number it\'s the whole story: `side_length = 30` puts '
-             'a `30` in that location',
-             'Remember the numbers on those locations, the **addresses**? Here is what they\'re '
-             'for.',
-         ],
-         'size': 26},
-
-        {'kind': 'bullets', 'title': 'A list can\'t fit in a location',
-         'bullets': [
-             'A list **grows**: `append()` makes it longer',
-             'A memory location is a **fixed size**, so none is guaranteed big enough',
-             'So the list lives somewhere else in memory, in as much room as it needs',
-             'What goes in `path`\'s location is that area\'s **address**: the number that says '
-             'where to find it',
+             'Lesson 1-9: a variable is a **named location in memory**. For a number, that\'s '
+             'the whole story',
+             'A list grows, but a location is a **fixed size**, so the list lives somewhere else',
+             'The variable holds the list\'s **address**',
          ],
          'callout': 'An address stored in a variable is called a **reference**',
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'Two variables, one address',
-         'lead': 'That sounds like a technicality until two variables hold the same address:',
-         'code': 'path = []\n'
-                 'path.append((1, 0))\n'
-                 '\n'
-                 'same_path = path          # copies the ADDRESS, not the list\n'
-                 'same_path.append((2, 0))\n'
-                 '\n'
-                 'print(path)               # [(1, 0), (2, 0)]  <- path changed too',
-         'code_size': 21,
-         'callout': '`same_path = path` works out the right side, an address, and stores it. '
-                    'Nothing copied the list.',
-         'callout_size': 21,
-         'tone': 'orange'},
-
-        {'kind': 'figure', 'title': 'Two variables, one list',
-         'figure': '/img/lesson-m4-03/two-names-one-list.svg',
-         'caption': 'Two locations, the same address in each, one list at the end of both '
-                    'arrows.'},
-
-        {'kind': 'code', 'title': 'Compare: a number is copied',
-         'lead': 'There is only **one list** above: appending through either variable changes it. '
-                 'A number is small and fixed in size, so it really is stored in the location:',
-         'lead_h': 1.2,
          'code': 'a = 5\n'
-                 'b = a                     # copies the VALUE\n'
-                 'b = b + 1\n'
-                 'print(a)                  # 5  <- unchanged',
-         'code_size': 22,
-         'callout': 'If a list were copied on assignment, `path` would still be one item long. '
-                    'It isn\'t.',
-         'tone': 'teal'},
+                 'b = a                     # copies the VALUE: two 5s\n'
+                 '\n'
+                 'path = [(1, 0)]\n'
+                 'same_path = path          # copies the ADDRESS: still one list\n'
+                 'same_path.append((2, 0))\n'
+                 'print(path)               # [(1, 0), (2, 0)]  <- path changed too',
+         'code_size': 21},
+
+        {'kind': 'figure', 'title': 'A number is copied, a list is shared',
+         'figure': '/img/lesson-m4-03/number-vs-list.svg',
+         'caption': 'b = a makes a second 5. same_path = path makes a second arrow to the same '
+                    'list.'},
 
         {'kind': 'check',
          'question': 'After scores = [10, 20], then backup = scores, then backup.append(30), '
@@ -222,12 +192,9 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Not a trap: a mechanism',
          'bullets': [
-             'This is the mechanism the rest of the course relies on',
-             'In **Module 5** you\'ll build a list of blocked intersections and hand it to a '
-             'planner object',
-             'You keep adding to it as the robot discovers obstacles',
-             'The planner sees every new obstacle precisely **because** it holds the address of '
-             'your list, not a frozen copy of it',
+             'The course relies on this',
+             'In **Module 5** a planner sees each obstacle you add to your list because it holds '
+             'the list\'s address, not a copy',
          ],
          'notes': 'Be explicit: this section adds to Lesson 1-9, it does not correct it. A '
                   'variable is still a named memory location, and = still works out the right '

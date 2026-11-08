@@ -62,6 +62,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | f41.py | coordinates.svg | — (replaced in 4-1 by coordinate-axes.svg, 2026-11-08) |
 | f41axes.py | coordinate-axes.svg | /img/lesson-m4-01/coordinate-axes.svg |
 | f43.py | path-list.svg | — |
+| f43alias.py | number-vs-list.svg | /img/lesson-m4-03/number-vs-list.svg (right panel lifted from the hand-made two-names-one-list.svg, no longer used, 2026-11-08) |
 | f44.py, m44.py | four-loops.svg | /img/lesson-m4-04/four-loops-xy.svg |
 | f47.py | headings.svg | /img/lesson-m4-07/headings-xy.svg |
 | f47.py | short-way.svg | — |
