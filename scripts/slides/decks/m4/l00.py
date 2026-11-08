@@ -8,9 +8,8 @@ DECK = {'module': 4,
                             'Split a complex problem into simpler parts: plan the route first, '
                             'test it with no robot, then drive it',
                             'Name the **planner** (`compute_manhattan_path`), the **driver** '
-                            '(`drive_path`), and the list of tuples between them',
-                            'Use the four steps of **problem decomposition** on a new problem'],
-             'notes': '25 to 30 minutes, problem decomposition, a class discussion, no coding yet. '
+                            '(`drive_path`), and the list of tuples between them'],
+             'notes': '20 to 25 minutes, problem decomposition, a class discussion, no coding yet. '
                       'The lesson opens with the whole problem, leads a class discussion to the '
                       'split this module uses: plan first, test the plan with no robot, then drive '
                       'it. After that it is an advance organizer: the point is the shape, not the '
@@ -80,25 +79,18 @@ DECK = {'module': 4,
              'title': 'Two halves, two jobs',
              'cards': [('Planner',
                         'compute_manhattan_path',
-                        'Told where the robot is and where it wants to go, it computes a **list of '
-                        'intersections** to follow. It never touches the robot.'),
+                        'Takes where the robot is and where it is going; returns the **list of '
+                        'tuples**. Never moves the robot.'),
                        ('Driver',
                         'drive_path',
-                        'Given that list, it **drives the robot** through each intersection, '
-                        'turning and line-following, and reports where it ended up. It never '
-                        'decides the route.')],
+                        'Takes the list and **drives it**, then reports where the robot ended up. '
+                        'Never decides the route.')],
              'height': 3.4,
              'notes': 'In this module the planning function is compute_manhattan_path and the '
                       'driving function is drive_path.'},
-            {'kind': 'figure',
-             'title': 'A path goes one way',
-             'figure': '/img/lesson-m4-00/two-halves.svg',
-             'caption': 'A path goes from planner to driver; where the robot ended up comes back '
-                        'for the next plan.'},
             {'kind': 'bullets',
              'title': 'Separation of concerns',
              'bullets': ['One job each is called **separation of concerns**',
-                         'It makes bugs easy to find',
                          ['A wrong **route** is a planner problem',
                           'A wrong **turn** is a driver problem']],
              'size': 30},
@@ -113,15 +105,11 @@ DECK = {'module': 4,
                             'drive_path drives through them (execution). One job each.'},
             {'kind': 'bullets',
              'title': 'How the planner computes the route',
-             'lead': 'The planner works out every route the same simple way:',
-             'lead_h': 0.75,
              'bullets': ['**Go across until x is right. Then go up or down until y is right.**',
-                         "That's the whole algorithm",
-                         'It always gives an L-shaped route, or a straight line if the robot is '
-                         'already in the right column or row',
-                         "It never takes a step it doesn't need"],
+                         "That's the whole algorithm"],
              'callout': "It's called the **Manhattan algorithm**, after a real place",
-             'tone': 'teal'},
+             'tone': 'teal',
+             'size': 30},
             {'kind': 'figure',
              'title': 'Why "Manhattan"?',
              'figure': './decks/m4/fig/manhattan-grid.svg',
@@ -140,25 +128,14 @@ DECK = {'module': 4,
                       'the lesson figure with its text halos redrawn for the slide renderer.)'},
             {'kind': 'bullets',
              'title': 'The big assumption: every street is clear',
-             'bullets': ['The Manhattan algorithm assumes **nothing is in the way**: every line of '
-                         'tape and every intersection can be driven',
-                         "That's why it can be so simple: it never has to look for a detour",
-                         "Real streets aren't always clear",
-                         ['**Module 5** puts obstacles on the grid: the robot plans around them, '
-                          "and even notices a new one while it's driving",
-                          '**Module 6** (optional) handles streets that are open but slow, where '
-                          "the shortest route in steps isn't the fastest"]],
-             'size': 26},
-            {'kind': 'bullets',
-             'title': 'From one destination to several',
-             'bullets': ['Once the robot can reach one destination, several is just a loop',
-                         'Plan from where it is, drive, repeat'],
-             'callout': 'Here is the whole main program you are building toward',
-             'tone': 'teal',
-             'size': 30},
+             'bullets': ['The algorithm assumes **nothing is in the way**, so it never needs a '
+                         'detour',
+                         '**Module 5** adds obstacles; **Module 6** (optional) adds slow streets'],
+             'size': 28},
             {'kind': 'code',
-             'title': 'The whole program, really',
-             'lead': "Here's the **entire** main program you're building toward. Seven lines:",
+             'title': 'From one destination to several',
+             'lead': 'Several destinations is just a loop: plan, drive, repeat. The whole program, '
+                     'seven lines:',
              'code': 'position = (0, 0)\n'
                      'heading = 0                      # facing North\n'
                      'destinations = [(2, 0), (2, 3), (0, 3)]\n'
@@ -182,137 +159,20 @@ DECK = {'module': 4,
              'caption': 'Three destinations, three legs, each planned from where the last one '
                         'ended.'},
             {'kind': 'bullets',
-             'title': 'Far-apart destinations, one-hop paths',
-             'bullets': ['`destinations` is a **supplied list**: the places the robot must reach, '
-                         'in order',
-                         'Each destination can be **many intersections** from the one before it',
-                         'For each destination, the planner hands back a **list of adjacent '
-                         'intersections**: every entry is **one hop** from the one before',
-                         'So the loop turns one far-away destination into one list of single hops, '
-                         'and the driver drives those hops one block at a time'],
-             'callout': 'One destination in, one list of single hops out, once per destination',
-             'tone': 'teal',
-             'notes': 'This is the idea the whole module rests on. The destinations list says '
-                      'where to go, not how to get there; the planner fills in every intersection '
-                      'in between. In the example, (2, 0) to (2, 3) is three intersections apart, '
-                      'and its path is [(2, 1), (2, 2), (2, 3)].'},
-            {'kind': 'figure',
-             'title': 'Three destinations, three lists of hops',
-             'figure': './decks/m4/fig/destinations-hops.svg',
-             'caption': 'The destinations list says where to go. For each one, the planner returns '
-                        'the adjacent intersections that get there.',
-             'notes': 'Point at leg 2: the destination (2, 3) is three intersections from (2, 0), '
-                      'and the planner returns three entries, each one block from the last. The '
-                      'path never includes the starting intersection, only the ones to drive to.'},
-            {'kind': 'bullets',
-             'title': 'Where the seven lines will live',
-             'bullets': ["In your `robot.py` they are the body of the module's **last test "
-                         'function**',
-                         'The two functions they call live in two new sections above it: '
-                         '**MANHATTAN PLANNER** and **NAVIGATOR**',
-                         'Those sit on top of the **LINE TRACKING** and **GRID DRIVING** sections '
-                         'you already have',
-                         'The `RUN` block waits for the button, as always'],
-             'callout': 'All of that is left out of the seven lines so the shape stands out',
-             'tone': 'teal'},
-            {'kind': 'bullets',
-             'title': 'The method behind the split',
-             'bullets': ['You and your partner already broke one problem into parts',
-                         'Doing it well is a **method**, not a lucky guess',
-                         'It has four steps you can use on any project'],
-             'size': 28},
-            {'kind': 'steps',
-             'title': 'Four steps, for any project',
-             'tag': 'The method',
-             'steps': ["**State the whole problem in one sentence.** If you can't, you don't know "
-                       "yet what you're building.",
-                       '**Name the parts, and say what each one takes in and hands back.** The '
-                       'step that matters most: it is how the parts fit together later.',
-                       '**Build and test each part on its own.** A part tested alone is one you '
-                       'can trust when something goes wrong.',
-                       '**Connect them.** If steps 2 and 3 were done well, this is the short '
-                       'one.']},
-            {'kind': 'table',
-             'title': 'The method, applied to Module 4',
-             'headers': ['Step', 'In Module 4'],
-             'widths': [1, 3.4],
-             'rows': [['1 · The whole problem',
-                       'Drive from where the robot is to a destination, on its own'],
-                      ['2 · The parts',
-                       '**Planner:** position and destination in, list of `(x, y)` tuples out. '
-                       '**Driver:** that list, position and heading in; where it ended up out'],
-                      ['3 · Build and test each',
-                       'Planner in 4-4 to 4-6, on screen. Driver in 4-7 and 4-8, one leg at a '
-                       'time'],
-                      ['4 · Connect them',
-                       'Plan, print, drive in 4-8 (one destination), then the seven lines in 4-9 '
-                       '(several)']],
-             'size': 19},
-            {'kind': 'figure',
-             'title': 'Parts can have parts',
-             'figure': '/img/lesson-m4-00/decomposition-one-destination.svg',
-             'caption': 'The planner is small enough to build in one go; the driver gets split '
-                        'once more.',
-             'notes': 'If a part is still too big to write and test in one sitting, split it again '
-                      'with the same four steps. Stop when you can say what a piece does in one '
-                      'sentence and test it on its own. What passes between the parts is the '
-                      'agreement: the planner only ever hands the driver a list of intersections, '
-                      'stored as (x, y) tuples, decided in step 2 before either half was written. '
-                      'That is why Module 5 can swap in a new planner and the driver does not '
-                      'change at all.'},
-            {'kind': 'check',
-             'question': 'Your next project: the robot drives the grid and blinks its light at '
-                         "every intersection with a box on it. You've written the one-sentence "
-                         'goal. Following the method, what comes next?',
-             'options': ['Write the code for the first function',
-                         'Name the parts, and what each one takes in and hands back',
-                         'Run the whole program on the robot to see what happens',
-                         "Pick the robot's top speed"],
-             'answer': 1,
-             'explanation': 'Step 2 comes before any code. Deciding what each part takes in and '
-                            'hands back is what lets you build and test the parts separately, and '
-                            'then connect them with very little work.',
-             'notes': 'Put the four steps on the wall for the whole module. Lessons 4-4, 4-7 and '
-                      '4-8 each open the next step with a short callout. The class already split '
-                      'the robot problem at the start; if there is time, have pairs decompose '
-                      'something that is not a robot (a class trip, a birthday party) into parts '
-                      'with what goes in and what comes out; most find step 2 is the hard one. '
-                      'Students met the idea in Lesson 1-7 ("break it into functions"); new here '
-                      'is naming what passes between the parts.'},
-            {'kind': 'bullets',
-             'title': 'Your roadmap',
-             'lead': 'Every lesson in this module builds one piece of that program:',
-             'lead_h': 0.7,
-             'bullets': ['**4-1** coordinates: the `(x, y)` system',
-                         '**4-2** tuples: storing a position like `(2, 3)` (scratch work)',
-                         '**4-3** lists: storing a path like `[(1,0), (2,0), (3,0)]` (scratch work '
-                         'too)',
-                         '**4-4** the Manhattan algorithm, on paper then in code: the MANHATTAN '
-                         'PLANNER section opens',
-                         '**4-5** the planner function: its name, its promises, and why it is told '
-                         'where the robot is',
-                         '**4-6** testing without a robot: a test harness joins the planner '
-                         'section',
-                         '**4-7** turning logic, headings as numbers: the NAVIGATOR section opens',
-                         '**4-8** driving the path, built on your Module 2 line-tracking functions',
-                         '**4-9** the final project: it all comes together in one test function'],
-             'size': 23,
-             'notes': 'drive_path reuses the Module 2 functions for the actual driving, so '
-                      'students are not starting from scratch: that is the payoff of building a '
-                      'toolkit. If the class did the Module 2 class extensions, Lessons 4-5 and '
-                      '4-8 each have an optional class version too.'},
+             'title': "What's next",
+             'bullets': ['**4-1 to 4-3:** the background: coordinates, tuples and lists',
+                         '**4-4 to 4-6:** write and test the planner',
+                         '**4-7 and 4-8:** write and test the driver',
+                         '**4-9:** put them together'],
+             'size': 30},
             {'kind': 'wrapup',
              'questions': ['What problem does Module 4 solve?',
                            'Why plan the route first, before writing the code that drives?',
-                           "What are the two halves, and what is each one's job?",
-                           'What are the four steps of problem decomposition?'],
+                           "What are the two halves, and what is each one's job?"],
              'next': 'coordinates: a name for every spot on the grid',
              'notes': 'Answers: drive from where it starts to a destination on its own, then to '
                       'several in a row. The planner never moves the robot, so its list of tuples '
                       'can be printed and checked with no robot; then the driver only follows a '
-                      'plan you trust. compute_manhattan_path plans; drive_path drives. State the '
-                      'whole problem; name the parts and what each takes in and hands back; build '
-                      'and test each alone; connect them. Reference this overview at the start of '
-                      'every lesson: "remember the big picture? today we build this piece." That '
-                      'thread turns nine separate topics into one system. Return to the seven-line '
-                      'program in Lesson 4-9.'}]}
+                      'plan you trust. compute_manhattan_path plans; drive_path drives. Open each '
+                      'lesson with "remember the big picture? Today we build this piece." Return '
+                      'to the seven-line program in Lesson 4-9.'}]}

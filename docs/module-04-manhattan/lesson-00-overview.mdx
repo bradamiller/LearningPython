@@ -7,7 +7,7 @@ sidebar_position: 0
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="The Big Picture"
-  meta={['25–30 min', 'Problem decomposition', 'Class discussion', 'No coding yet']}
+  meta={['20–25 min', 'Problem decomposition', 'Class discussion', 'No coding yet']}
 />
 
 <TeacherBanner>
@@ -31,7 +31,6 @@ By the end of this overview you will be able to:
 - Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
 - Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
 - Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of tuples between them
-- Use the four steps of **problem decomposition** on a new problem
 
 </Objectives>
 
@@ -100,18 +99,12 @@ function is `drive_path`.
 
 <CardGrid>
   <InfoCard tag="Planner" title="compute_manhattan_path">
-    Told where the robot is and where it wants to go, it computes a <strong>list of intersections</strong> to follow. It never touches the robot.
+    Takes where the robot is and where it's going; returns the <strong>list of tuples</strong>. Never moves the robot.
   </InfoCard>
   <InfoCard tag="Driver" title="drive_path">
-    Given that list, it <strong>drives the robot</strong> through each intersection — turning and line-following — and reports where it ended up. It never decides the route.
+    Takes the list and <strong>drives it</strong>, then reports where the robot ended up. Never decides the route.
   </InfoCard>
 </CardGrid>
-
-<Figure
-  src="/img/lesson-m4-00/two-halves.svg"
-  alt="Two boxes. The planner, compute_manhattan_path(), takes a position and destination, plans the route and never drives. It hands a path, such as [(1,0), (2,0)], to the driver, drive_path(), which drives the route and never plans. The driver hands back position and heading, where the robot ended up, which go into the next plan."
-  caption="A path goes one way, from planner to driver; where the robot ended up comes back for the next plan."
-/>
 
 One job each is called **separation of concerns**, and it makes bugs easy to find: a
 wrong route is a planner problem; a wrong turn is a driver problem.
@@ -129,30 +122,17 @@ wrong route is a planner problem; a wrong turn is a driver problem.
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
 
-The whole point of this lesson is *shape, not detail*. Resist explaining how
-anything works; deflect "how does compute_manhattan_path work?" with "that's exactly Lessons 4-4
-and 5." Tell students plainly: "You're not meant to understand every line yet — by
-Lesson 4-9 you will, because you'll have built each piece." Consider printing the
-seven-line main program on a card students keep and revisit at the start of each
-lesson, highlighting the piece they're building that day.
+Shape, not detail. Deflect "how does it work?" with "that's Lessons 4-4 and 4-5." Tell
+students they're not meant to understand every line yet; by Lesson 4-9 they will.
 
 </TeacherNote>
 
 ## How the planner computes the route
 
-The planner works out every route the same simple way:
-
 > **Go across until x is right. Then go up or down until y is right.**
 
-That's the whole algorithm. It always gives an L-shaped route (or a straight line, if
-the robot is already in the right column or row), and it never takes a step it
-doesn't need.
-
-It's called the **Manhattan algorithm**, after a real place. Most of Manhattan, the
-island in the middle of New York City, is laid out as a rectangular grid. Long
-**avenues** run north and south up the island, shorter numbered **streets** cross them
-east and west, and every rectangle in between is a city block packed solid with
-buildings.
+That's the whole algorithm. It's called the **Manhattan algorithm**, after the New York
+island where buildings fill every block of a grid of streets.
 
 <Figure
   src="/img/lesson-m4-00/manhattan-grid.svg"
@@ -160,34 +140,18 @@ buildings.
   caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
 />
 
-
-A taxi can't drive diagonally from one corner to another, because there are buildings
-in the way. It goes along a street, then up an avenue, and the trip is simply *blocks
-across + blocks up or down*. New Yorkers even give directions that way: "two blocks
-east, then three up." Your robot is in exactly the same situation, because it can only
-drive along the tape. Lesson 4-4 builds the algorithm properly.
-
 <Callout kind="note" title="The big assumption: every street is clear">
 
-The Manhattan algorithm assumes nothing is in the way: every line of tape and every
-intersection on the grid can be driven. That's why it can be so simple. It never has
-to look for a detour, because it assumes there's never a reason to take one.
-
-Real streets aren't always clear. **Module 5** puts obstacles on the grid and teaches
-the robot to plan around them, and even to notice a new one while it's driving.
-**Module 6** (optional) handles streets that are open but slow, where the shortest
-route in steps isn't the fastest.
+The algorithm assumes nothing is in the way, so it never needs a detour. **Module 5**
+adds obstacles; **Module 6** (optional) adds slow streets.
 
 </Callout>
 
 <TeacherNote title="Manhattan, for the curious">
 
-The grid dates from the Commissioners' Plan of 1811, which laid streets and avenues
-over most of the island before much of it was built on. Two details students enjoy:
-the grid isn't aligned with true north (it is turned roughly 29 degrees, so
-"Manhattan north" is a local convention), and the same distance is called **taxicab
-distance** in mathematics. Neither matters for the robot; the map is a hook, not a
-lesson. Lesson 4-4 opens with "Why Manhattan?" and assumes students have seen this.
+The grid dates from 1811 and is turned about 29 degrees from true north; the same
+distance is called **taxicab distance** in math. The map is a hook, not a lesson.
+Lesson 4-4 opens with "Why Manhattan?" and assumes students have seen it.
 
 </TeacherNote>
 
@@ -207,10 +171,7 @@ for dest in destinations:
     position, heading = drive_path(path, position, heading)
 ```
 
-In plain English: *start at corner (0, 0) facing North; for each destination, compute
-the path from where we are, print it, drive it, and remember where we ended up.* You
-don't need to understand `compute_manhattan_path` or `drive_path` yet — just see that
-the program is short **because the functions do all the work**.
+It's short **because the functions do all the work**.
 
 <Figure
   src="/img/lesson-m4-00/delivery-overview-xy.svg"
@@ -218,108 +179,24 @@ the program is short **because the functions do all the work**.
   caption="The seven-line program, on the floor: three destinations, three legs, each planned from where the last one ended."
 />
 
-(Those seven lines are the *interesting* part. In your `robot.py` they are the body of
-the module's last test function, and the two functions they call live in two new
-sections above it — MANHATTAN PLANNER and NAVIGATOR — on top of the LINE TRACKING and
-GRID DRIVING sections you already have. The `RUN` block waits for the button as always.
-All of that is left out here so the shape stands out.)
+## What's next
 
-## The method behind the split
-
-You and your partner already broke one problem into parts. Doing it well is a method,
-not a lucky guess, and it has four steps you can use on any project:
-
-1. **State the whole problem in one sentence.** If you can't, you don't know yet what you're building.
-2. **Name the parts, and say what each one takes in and hands back.** This is the step that matters most, because it's how the parts will fit together later.
-3. **Build and test each part on its own.** A part you've tested alone is one you can trust when something goes wrong.
-4. **Connect them.** If steps 2 and 3 were done well, this is the short one.
-
-Here is the method applied to this module:
-
-| Step | In Module 4 |
-|---|---|
-| 1 · The whole problem | Drive from where the robot is to a destination, on its own. |
-| 2 · The parts | **Planner:** takes where the robot is and where it's going; hands back a list of intersections, as `(x, y)` tuples. **Driver:** takes that list, plus where the robot is and which way it faces; hands back where it ended up and which way it faces. |
-| 3 · Build and test each | The planner in Lessons 4-4 to 4-6, on screen, with the robot sitting still. The driver in Lessons 4-7 and 4-8, one leg at a time. |
-| 4 · Connect them | The plan, print, drive test in Lesson 4-8 (one destination), then the seven lines in Lesson 4-9 (several in a row). |
-
-<Figure
-  src="/img/lesson-m4-00/decomposition-one-destination.svg"
-  alt="A tree with three levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-4 to 4-6, is small enough to build and test in one go. The driver, drive_path(), built in Lessons 4-7 and 4-8, splits again into three smaller parts: which way to face, desired_heading(), Lesson 4-7; turn to face it, turn_to(), Lesson 4-8; and follow the tape, the LINE TRACKING functions built in Module 2. An arrow from planner to driver is labeled list of (x, y) tuples, the one thing they share."
-  caption="The module's problem, broken down. The planner is small enough to build in one go; the driver gets split once more."
-/>
-
-**Parts can have parts.** If a part is still too big to write and test in one
-sitting, split it again with the same four steps. The driver is: one small function
-works out which way to face, one turns until the robot faces that way, and your
-Module 2 line-tracking functions do the actual driving. You can stop splitting when
-you can say what a piece does in one sentence and test it on its own.
-
-**What passes between the parts is the agreement.** The only thing the planner hands
-the driver is a list of intersections, stored as tuples. Because that was decided in step 2, before
-either half was written, each half can be built without the other, and either one can
-be replaced later. Module 5 does exactly that: a new planner that steers around
-obstacles hands the same kind of list to the same driver, and the driver doesn't
-change at all.
-
-<KnowledgeCheck
-  question="Your next project: the robot drives the grid and blinks its light at every intersection with a box on it. You've written the one-sentence goal. Following the method, what comes next?"
-  options={[
-    {text: 'Write the code for the first function'},
-    {text: 'Name the parts, and what each one takes in and hands back', correct: true},
-    {text: 'Run the whole program on the robot to see what happens'},
-    {text: 'Pick the robot\'s top speed'},
-  ]}
-  explanation="Step 2 comes before any code. Deciding what each part takes in and hands back is what lets you build and test the parts separately, and then connect them with very little work."
-/>
-
-<TeacherNote title="Make the method visible all module">
-
-Put the four steps on the wall and leave them up. Lessons 4-4, 4-7 and 4-8 each open
-the next step with a short callout, so a quick "which step are we on?" at the start of
-those lessons keeps the thread. The class already split the robot problem at the start of this lesson; if there's
-time, have pairs decompose something that isn't a robot (a class trip, a birthday party)
-into parts with what goes in and what comes out. Most will find step 2 is the hard one,
-which is the point. Students met the
-idea in Lesson 1-7 ("break it into functions"); what's new here is naming what passes
-between the parts. Point back to step 2 in Module 5 when the planner is swapped.
-
-</TeacherNote>
-
-## Your roadmap
-
-Every lesson in this module builds one piece of that program:
-
-- **Lesson 4-1** — coordinates: the `(x, y)` system
-- **Lesson 4-2** — tuples: storing a position like `(2, 3)` (scratch work, nothing goes in the file yet)
-- **Lesson 4-3** — lists: storing a path like `[(1,0), (2,0), (3,0)]` (scratch work too)
-- **Lesson 4-4** — the Manhattan algorithm: computing paths on paper, then in code — the MANHATTAN PLANNER section of `robot.py` opens
-- **Lesson 4-5** — the planner function: its name, its promises, and why it is told where the robot is
-- **Lesson 4-6** — testing your code without a robot: a test harness joins the planner section
-- **Lesson 4-7** — turning logic: headings as numbers — the NAVIGATOR section opens
-- **Lesson 4-8** — driving the path, built on your Module 2 line-tracking functions
-- **Lesson 4-9** — the final project: it all comes together in one test function
-
-Notice `drive_path` reuses the Module 2 functions for the actual driving — you're not
-starting from scratch. That's the payoff of building a toolkit. (If you did the Module 2
-class extensions, Lessons 4-5 and 4-8 each have an optional class version too.)
+Lessons 4-1 to 4-3 give you the background: coordinates, tuples and lists. Then you
+write and test the planner (4-4 to 4-6), write and test the driver (4-7 and 4-8), and
+put them together (4-9).
 
 ## Wrap-up
 
 - What problem does Module 4 solve? (Drive the robot from where it starts to a destination on its own, then to several destinations in a row.)
 - Why plan first? (The planner never moves the robot, so its list of tuples can be printed and checked with no robot at all. Then the driver only has to follow a plan you already trust.)
 - What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
-- What are the four steps of problem decomposition? (State the whole problem; name the parts and what each takes in and hands back; build and test each part alone; connect them.)
 
 <TeacherNote title="Teaching note">
 
-Reference this overview at the *start* of every lesson — "remember the big picture?
-today we build this piece." That thread is what turns nine separate topics into one
-coherent system in students' minds. Return to the seven-line program in Lesson 4-9;
-they'll understand every line because they wrote every piece.
+Open each lesson with "remember the big picture? Today we build this piece." Return to
+the seven-line program in Lesson 4-9.
 
 </TeacherNote>
-
 
 ## Resources
 

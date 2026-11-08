@@ -198,9 +198,9 @@ Then press the button. This habit costs two lines and is the first thing to chec
 run goes wrong: if the printed path is right and the robot still went wrong, the bug is
 in the driving, not the planner — and you know which half of the file to open.
 
-<Callout kind="note" title="Decomposition, step 4: connect the parts">
+<Callout kind="note" title="Plan, then drive: connect the parts">
 
-This test is the last step of the method from Lesson 4-0. Each part was built and
+This test connects the two halves from Lesson 4-0. Each part was built and
 tested on its own, so connecting them takes three lines: plan, print, drive. It's that
 short because both parts agreed from the start on what passes between them, a list of
 intersections. And when a run goes wrong, the printed path tells you which part to open.

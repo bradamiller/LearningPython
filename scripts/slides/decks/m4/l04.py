@@ -182,9 +182,9 @@ DECK = {
                   'on a loop can be pointed at their own trace table: each row is one trip around a '
                   'loop.'},
 
-        {'kind': 'bullets', 'title': 'Decomposition: one part at a time',
+        {'kind': 'bullets', 'title': 'Plan first: the planner on its own',
          'bullets': [
-             'Step 3 of the method from Lesson 4-0: **build and test each part on its own**',
+             'Lesson 4-0 split the problem into **planning** and **driving**',
              'The planner is the first part; this lesson and the next two build and test it alone',
              'What it takes in and hands back is already decided: **two tuples in, a list of '
              'intersections out**',

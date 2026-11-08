@@ -119,7 +119,7 @@ DECK = {
          'explanation': 'x is unchanged; y went 3 → 2 (y −1). Decreasing y is moving toward you, '
                         'which is South: heading 2.'},
 
-        {'kind': 'bullets', 'title': 'Decomposition: the driver splits again',
+        {'kind': 'bullets', 'title': 'Then drive: the driver splits again',
          'bullets': [
              'The planner is built and tested; the NAVIGATOR is the second part, **the driver**',
              'Still too big to write in one go, so it is split the same way:',

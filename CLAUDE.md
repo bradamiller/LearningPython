@@ -1964,7 +1964,13 @@ tuples, shown in `plan-then-drive.svg` from `scripts/figures/fplan.py`; knowledg
 destination to several (the seven lines), The method behind the split (four steps,
 step 1 is now one destination), roadmap, wrap-up. 25–30 min. The tree figure's top box
 and the planner-to-driver label changed ("list of (x, y) tuples"), so it was renamed.
-The 4-4, 4-7, 4-8 callouts (steps 3 and 4) and 5-0 still match unchanged. Brad's style rule from the same day, for every lesson: as clear as possible in as few
+The 4-4, 4-7, 4-8 callouts (steps 3 and 4) and 5-0 still match unchanged. **Later on Nov 8 Brad cut 4-0 further:** the "method behind the split" section (four
+steps, table, tree figure, its knowledge check and teacher note) is gone, as are the "Those
+seven lines" paragraph, the two-halves figure on this page, and the lesson-by-lesson roadmap
+(now two sentences under "What's next"). 20–25 min. The 4-4, 4-7, 4-8 callouts no longer
+cite step numbers: "Plan first: the planner on its own", "Then drive: the driver splits
+again", "Plan, then drive: connect the parts". `decomposition-one-destination.svg` is no
+longer used. Brad's style rule from the same day, for every lesson: as clear as possible in as few
 words as possible; a figure that shows the technique beats paragraphs describing what the
 robot does. Verbose explanations lose students.
 

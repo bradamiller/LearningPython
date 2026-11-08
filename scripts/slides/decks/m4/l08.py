@@ -214,9 +214,9 @@ DECK = {
                         'correct printed path clears the planner; whatever went wrong is downstream of it: '
                         'desired_heading, turn_to, drive_path or the Module 2 functions.'},
 
-        {'kind': 'bullets', 'title': 'Decomposition: connect the parts',
+        {'kind': 'bullets', 'title': 'Plan, then drive: connect the parts',
          'bullets': [
-             'The last step of the method from Lesson 4-0',
+             'This test connects the two halves from Lesson 4-0',
              'Each part was built and tested on its own, so connecting them takes **three '
              'lines**: plan, print, drive',
              'It is that short because both parts agreed from the start on what passes between '
