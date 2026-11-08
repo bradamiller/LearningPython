@@ -59,7 +59,8 @@ they match the generator byte for byte. **Known stale:** the deployed
 | dictpic.py | word-dictionary.svg | /img/lesson-m5-02/word-dictionary.svg |
 | edge.py | drive-to-line.svg | /img/lesson-m2-02/drive-to-line.svg |
 | em.py | earth-moon-mission.svg | /img/lesson-06/earth-moon-mission.svg |
-| f41.py | coordinates.svg | /img/lesson-m4-01/coordinates-xy.svg |
+| f41.py | coordinates.svg | — (replaced in 4-1 by coordinate-axes.svg, 2026-11-08) |
+| f41axes.py | coordinate-axes.svg | /img/lesson-m4-01/coordinate-axes.svg |
 | f43.py | path-list.svg | — |
 | f44.py, m44.py | four-loops.svg | /img/lesson-m4-04/four-loops-xy.svg |
 | f47.py | headings.svg | /img/lesson-m4-07/headings-xy.svg |

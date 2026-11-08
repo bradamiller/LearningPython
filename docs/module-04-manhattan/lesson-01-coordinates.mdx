@@ -35,30 +35,22 @@ By the end of this lesson you will be able to:
 ## Two numbers name any spot
 
 You already know coordinate systems: Battleship ("B4"), chess ("e5"), a spreadsheet
-cell ("A1"), GPS latitude and longitude. Two numbers are enough to pinpoint any spot
-on a flat surface. Our grid uses **(x, y)**, the same order as a graph in math class,
-with `(0, 0)` at the **bottom-left corner — the one nearest you** as the grid lies in
-front of you:
+cell ("A1"). Our grid names every intersection with two numbers, **(x, y)**, counted
+from **(0, 0)**, the corner nearest you. x counts across to the right and y counts up,
+away from you, both starting at zero. Order matters: `(2, 3)` and `(3, 2)` are
+different spots.
 
-- **x** (first number) is how far *across to the right* from the left edge — the left column is x = `0`.
-- **y** (second number) is how far *away from you* from the near edge — the bottom row, nearest you, is y = `0`.
-
-North is away from you, up the page. So x counts east and y counts north.
+<Figure
+  src="/img/lesson-m4-01/coordinate-axes.svg"
+  alt="A 4 by 4 grid of black tape. The bottom-left intersection is ringed and labeled origin (0, 0). A red arrow starts at the origin and points right along the bottom line, labeled increasing x. A green arrow starts at the origin and points up along the left line, labeled increasing y. x is numbered 0 to 3 along the bottom and y 0 to 3 up the left side. Labeled intersections: (3, 0) bottom-right, (0, 3) top-left, (2, 1), (1, 2) and (3, 3) top-right."
+  caption="x increases to the right and y increases up."
+/>
 
 <Figure
   src="/img/lesson-m4-01/naming-intersections.svg"
   alt="An animation of a 4 by 4 grid of taped lines, seen from above, with you standing at the near (bottom) edge. First the bottom-left intersection, the one nearest you, is ringed and labeled (0, 0). Then x is counted 0, 1, 2, 3 along the bottom, left to right, and y is counted 0, 1, 2, 3 up the left side, away from you. A red line goes across 2 and away 3 to reach (2, 3); a green line goes across 3 and away 2 to reach (3, 2), a different intersection. Finally every intersection is labeled in turn, from (0, 0) in the near corner to (3, 3) in the far corner. A panel beside it lists the six ideas, highlighting the one being shown."
   caption="How every intersection gets its name: start at the corner nearest you, count across for x, then away for y."
 />
-
-<Figure
-  src="/img/lesson-m4-01/coordinates-xy.svg"
-  alt="A 4 by 4 grid of taped lines. x is numbered 0 to 3 along the bottom, left to right; y is numbered 0 to 3 up the left side, bottom to top; north is up. The bottom-left intersection, nearest you, is labeled (0, 0) and the top-right (3, 3). Two highlighted intersections, (2, 3) and (3, 2), are in different places. A dotted path from (0, 0) goes 2 right and 3 up to (2, 3): 5 steps, the Manhattan distance."
-  caption="Across first, then away. Bottom-left is (0, 0) — we count from zero."
-/>
-
-Two things to burn in: we **count from zero** (the bottom-left is `(0, 0)`, not
-`(1, 1)`), and **order matters** — `(2, 3)` and `(3, 2)` are *different* spots.
 
 <KnowledgeCheck
   question="In the coordinate (2, 3), what does the 2 mean?"
@@ -69,17 +61,6 @@ Two things to burn in: we **count from zero** (the bottom-left is `(0, 0)`, not
     {text: 'Nothing — the order is flexible'},
   ]}
   explanation="x comes first. (2, 3) means x = 2 (two right), y = 3 (three away from you, up the page)."
-/>
-
-<KnowledgeCheck
-  question="Are (2, 3) and (3, 2) the same position?"
-  options={[
-    {text: 'Yes — same two numbers'},
-    {text: 'No — (2,3) is 2 for x and 3 for y; (3,2) is 3 for x and 2 for y — different spots', correct: true},
-    {text: 'Only on a square grid'},
-    {text: 'Yes, if the robot is facing north'},
-  ]}
-  explanation="Order matters. Swapping the numbers names a completely different intersection."
 />
 
 ## Counting steps: Manhattan distance

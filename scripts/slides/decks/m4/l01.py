@@ -24,29 +24,15 @@ DECK = {
                     'click later',
          'tone': 'teal'},
 
-        {'kind': 'bullets', 'title': 'Two numbers name any spot',
-         'lead': 'You already know coordinate systems:',
-         'lead_h': 0.75,
-         'bullets': [
-             'Battleship ("B4"), chess ("e5"), a spreadsheet cell ("A1")',
-             'GPS latitude and longitude',
-             'Two numbers are enough to pinpoint any spot on a flat surface',
-             'Our grid uses **(x, y)**, the same order as a graph in math class',
-         ],
-         'callout': '`(0, 0)` is the **bottom-left corner, the one nearest you** as the grid '
-                    'lies in front of you',
-         'tone': 'teal'},
-
-        {'kind': 'bullets', 'title': 'x is across, y is away from you',
-         'bullets': [
-             '**x** (first number): how far **across to the right** from the left edge',
-             ['The left column is x = `0`'],
-             '**y** (second number): how far **away from you** from the near edge',
-             ['The bottom row, nearest you, is y = `0`'],
-             'North is away from you, up the page',
-         ],
-         'callout': 'So x counts **east** and y counts **north**',
-         'tone': 'teal'},
+        {'kind': 'figure', 'title': 'Two numbers name any spot',
+         'figure': '/img/lesson-m4-01/coordinate-axes.svg',
+         'caption': 'x increases to the right and y increases up.',
+         'notes': 'One paragraph on the page: like Battleship ("B4") or a spreadsheet cell '
+                  '("A1"), two numbers name every intersection, counted from (0, 0), the corner '
+                  'nearest you. x counts across to the right, y counts up, away from you, both '
+                  'from zero. Order matters: (2, 3) and (3, 2) are different spots. Getting x '
+                  'and y in the right order is the number one stumble; what is new for most '
+                  'students is counting from zero, so name why: Python indexes from 0.'},
 
         {'kind': 'frames', 'title': 'How every intersection gets its name',
          'figure': './decks/m4/fig/naming-intersections.svg',
@@ -61,26 +47,6 @@ DECK = {
                   'students stand at the near edge, physically walk the grid and call out their '
                   'coordinates: kinesthetic beats diagrams here.'},
 
-        {'kind': 'figure', 'title': 'Across first, then away',
-         'figure': './decks/m4/fig/coordinates-xy.svg',
-         'caption': 'Bottom-left is (0, 0): we count from zero.',
-         'notes': 'This slide uses a copy of the lesson figure with its text halos redrawn for '
-                  'the slide renderer.'},
-
-        {'kind': 'bullets', 'title': 'Two things to burn in',
-         'bullets': [
-             'We **count from zero**: the bottom-left is `(0, 0)`, not `(1, 1)`',
-             '**Order matters**: `(2, 3)` and `(3, 2)` are **different** spots',
-         ],
-         'callout': 'x first, y second; x is across, y is away from you',
-         'tone': 'orange',
-         'notes': 'Getting x and y in the right order is the number one stumble. Repeat the '
-                  'convention constantly and consider posting it. Students who have graphed in '
-                  'math class know the order; what is new is counting from zero and that (0, 0) '
-                  'is the corner nearest them. Zero-indexing trips most of them because they '
-                  'count from 1 by habit, so name why: Python indexes from 0, and matching now '
-                  'avoids pain later.'},
-
         {'kind': 'check',
          'question': 'In the coordinate (2, 3), what does the 2 mean?',
          'options': ['The y: 2 steps away from you',
@@ -90,16 +56,6 @@ DECK = {
          'answer': 1,
          'explanation': 'x comes first. (2, 3) means x = 2 (two right), y = 3 (three away from '
                         'you, up the page).'},
-
-        {'kind': 'check',
-         'question': 'Are (2, 3) and (3, 2) the same position?',
-         'options': ['Yes: same two numbers',
-                     'No: (2,3) is x 2, y 3; (3,2) is x 3, y 2, different spots',
-                     'Only on a square grid',
-                     'Yes, if the robot is facing north'],
-         'answer': 1,
-         'explanation': 'Order matters. Swapping the numbers names a completely different '
-                        'intersection.'},
 
         {'kind': 'bullets', 'title': 'Counting steps: Manhattan distance',
          'bullets': [
