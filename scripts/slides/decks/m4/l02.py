@@ -75,10 +75,7 @@ DECK = {
          'split': 0.58,
          'code': 'x = position[0]\n'
                  'y = position[1]',
-         'code_size': 22,
-         'callout': 'Lesson 4-4\'s planner starts by unpacking where the robot is and where it\'s '
-                    'going',
-         'tone': 'teal'},
+         'code_size': 22},
 
         {'kind': 'check',
          'question': 'After start = (3, 2) and then a, b = start, what is b?',
