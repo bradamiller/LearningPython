@@ -1942,11 +1942,30 @@ introduce their module; that overlap is fine.
 method behind the planner/driver split. 4-0 now has a section "Breaking a big problem
 into parts" (20–25 min, was 15–20): four steps (state the whole problem; name the parts
 and what each takes in and hands back; build and test each alone; connect them), a table
-mapping them to Module 4, the tree figure `lesson-m4-00/decomposition.svg` from
+mapping them to Module 4, the tree figure (now `lesson-m4-00/decomposition-one-destination.svg`) from
 `scripts/figures/fdecomp.py`, and a knowledge check. "Top-down design" survives only as
 the other name for it. Short `Callout`s carry the thread: 4-4 (step 3, planner alone),
 4-7 (step 3, the driver splits again), 4-8 "Plan, print, button, drive" (step 4,
 connect). 4-9's wrap-up and 5-0's "The swap" point back to it. Decks follow.
+
+**4-0 opens with the whole problem and a pair activity (Brad, 2026-11-08).** Brad: 4-0
+should start with the full problem (drive the robot from its start to one destination),
+say it's somewhat complex, that one way to tackle that is to break it into simpler
+sub-problems, and have pairs suggest the sub-problems. Then: plan first, because a
+planning function can be tested without driving a robot; once the plan is right, a second
+function takes the plan and drives; a list of tuples carries the path between them. Order
+now: the problem (figure `drive-to-destination.svg` from `scripts/figures/fproblem.py`,
+no route drawn so it gives no sub-problem away), "Harder than it sounds" (decomposition
+named here), **"Activity · What are the sub-problems?"** (an exception to the
+no-Activity rule for overviews, on Brad's word; teacher note lists the usual answers and
+where each is built), "Plan first, then drive" (two piles, deciding and doing; list of
+tuples, shown in `plan-then-drive.svg` from `scripts/figures/fplan.py`; knowledge check), Two halves, How the planner computes the route, From one
+destination to several (the seven lines), The method behind the split (four steps,
+step 1 is now one destination), roadmap, wrap-up. 30–35 min. The tree figure's top box
+and the planner-to-driver label changed ("list of (x, y) tuples"), so it was renamed.
+The 4-4, 4-7, 4-8 callouts (steps 3 and 4) and 5-0 still match unchanged. Brad's style rule from the same day, for every lesson: as clear as possible in as few
+words as possible; a figure that shows the technique beats paragraphs describing what the
+robot does. Verbose explanations lose students.
 
 ### 15b. Skeletons, not answers, for the functions students write (2026-10-15)
 

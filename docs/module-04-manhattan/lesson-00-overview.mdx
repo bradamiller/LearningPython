@@ -7,7 +7,7 @@ sidebar_position: 0
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="The Big Picture"
-  meta={['20–25 min', 'Problem decomposition', 'No coding yet']}
+  meta={['30–35 min', 'Problem decomposition', 'Pair activity', 'No coding yet']}
 />
 
 <TeacherBanner>
@@ -15,27 +15,147 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-Before we learn a single new piece, let's look at where we're headed. By the end of
-this module, your robot will start at one corner of the grid and **visit several
-destinations in order, all by itself** — no remote control, no manual steering. It
-figures out each route and drives it, intersection by intersection.
+Here's the problem this module solves: **get the robot from where it starts to a
+destination on the grid, all by itself.**
+
+<Figure
+  src="/img/lesson-m4-00/drive-to-destination.svg"
+  alt="A 4 by 4 grid of black tape. The robot sits at the bottom-left corner, labeled start, facing north. A red target near the top, two columns across and three rows up, is labeled destination. Between them is a question mark and no route. Beside it: the problem is to get the robot from where it starts to the destination, all by itself. It can only drive along the tape, and nobody steers it or tells it which way to go at each corner."
+  caption="From here to there, on its own. Where would you even start?"
+/>
 
 <Objectives>
 
 By the end of this overview you will be able to:
 
-- Describe the goal of Module 4: autonomous multi-destination navigation
-- Name the two halves — the **planner** (`compute_manhattan_path`) and the **driver** (`drive_path`) — and each one's job
-- Read the short main program and explain it in plain English
-- Use **problem decomposition** to break a big problem into parts: say what each part takes in and hands back, build and test each one alone, then connect them
+- Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
+- Break a complex problem into simpler sub-problems, with a partner
+- Explain why we plan the route first, test it with no robot, then drive it
+- Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of tuples between them
+- Use the four steps of **problem decomposition** on a new problem
 
 </Objectives>
 
 <QuizLink id="module-04-manhattan/lesson-00-overview" />
 
-## How we compute the route
+## Harder than it sounds
 
-The robot plans every route the same simple way:
+"Drive over there" sounds like one job, but it's a somewhat complex problem, too much to
+get right in one go. One way to
+tackle a complex problem is to **break it into simpler sub-problems** and solve each
+one. That's called **problem decomposition** (or **top-down design**).
+
+## Activity · What are the sub-problems?
+
+With a partner, no code:
+
+1. List what the robot has to **figure out** and **do** to reach the destination, one short sentence each. Aim for at least four.
+2. Mark any sub-problem your robot can **already** solve from Modules 2 and 3.
+3. Be ready to share one with the class.
+
+Finish your list before you read on.
+
+<TeacherNote title="Running the pair activity (8–10 min)">
+
+Think-pair-share works well: a minute or two alone, five minutes in pairs, then collect
+one sub-problem from each pair on the board without judging. Don't steer toward a
+planner/driver split yet; the next section does that, and it lands better when the
+board list is messy. Sub-problems pairs usually find, and where the module builds each:
+
+- **Know where the robot is, and name the destination:** coordinates (4-1), a position stored as a tuple (4-2)
+- **Work out the route, which intersections and in what order:** the planner, `compute_manhattan_path` (4-4 to 4-6), returning a list (4-3)
+- **Know which way the robot is facing:** headings as numbers (4-7)
+- **Work out which way to face for the next intersection:** `desired_heading` (4-7)
+- **Turn to face it:** `turn_to` (4-8)
+- **Follow the tape to the next intersection and stop there:** already solved, Module 2's `track_to_intersection` and `drive_past_intersection`, reused in 4-8
+- **Keep track of where it is as it goes, and know when it has arrived:** `drive_path` updates position and heading after every step (4-8)
+
+Also common: "don't hit anything" (Module 5, and see the big assumption below), "take
+the fastest way" (optional Module 6), and "don't drive off the grid" (a Manhattan route
+never leaves it). If no pair mentions heading, ask: "When the robot reaches a corner,
+how does it know whether to turn left or right?"
+
+</TeacherNote>
+
+## Plan first, then drive
+
+Sort your list into two piles: **deciding** (which intersections to drive through) and
+**doing** (turning, following the tape). Then solve them in that order.
+
+<Figure
+  src="/img/lesson-m4-00/plan-then-drive.svg"
+  alt="Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with its tuple. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow carries the list [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], a list of (x, y) tuples, down to step 2, Drive: take the list and drive it, one intersection at a time."
+  caption="The plan is a list of (x, y) tuples. One function makes it; another drives it."
+/>
+
+1. **Plan.** A planning function works out the whole route. It never moves the robot, so
+   you can test it **without a robot**: print the route and check it against the grid.
+2. **Drive.** Once the plan is right, a second function **takes the plan and drives
+   it**. It decides nothing; the plan already did.
+
+Each intersection is a pair of numbers, `(x, y)`, which Python stores as a **tuple**. So
+the plan is a **list of tuples**, the one thing the two functions share. (Tuples come in
+Lesson 4-2, lists in 4-3.)
+
+<KnowledgeCheck
+  question="Why plan the whole route first, as its own function, before writing the code that drives?"
+  options={[
+    {text: 'Because the robot can only run one function at a time'},
+    {text: 'Because the plan can be checked with no robot, and the driver then follows a route you trust', correct: true},
+    {text: 'Because planning makes the robot drive faster'},
+    {text: 'Because the driving function has to be written last in the file'},
+  ]}
+  explanation="The planning function never moves the robot, so you can test it on screen and check its list of tuples on paper. Once you trust the plan, a wrong move on the floor can only be a driving problem."
+/>
+
+## Two halves, two jobs
+
+In this module the planning function is `compute_manhattan_path` and the driving
+function is `drive_path`.
+
+<CardGrid>
+  <InfoCard tag="Planner" title="compute_manhattan_path">
+    Told where the robot is and where it wants to go, it computes a <strong>list of intersections</strong> to follow. It never touches the robot.
+  </InfoCard>
+  <InfoCard tag="Driver" title="drive_path">
+    Given that list, it <strong>drives the robot</strong> through each intersection — turning and line-following — and reports where it ended up. It never decides the route.
+  </InfoCard>
+</CardGrid>
+
+<Figure
+  src="/img/lesson-m4-00/two-halves.svg"
+  alt="Two boxes. The planner, compute_manhattan_path(), takes a position and destination, plans the route and never drives. It hands a path, such as [(1,0), (2,0)], to the driver, drive_path(), which drives the route and never plans. The driver hands back position and heading, where the robot ended up, which go into the next plan."
+  caption="A path goes one way, from planner to driver; where the robot ended up comes back for the next plan."
+/>
+
+One job each is called **separation of concerns**, and it makes bugs easy to find: a
+wrong route is a planner problem; a wrong turn is a driver problem.
+
+<KnowledgeCheck
+  question="Which half decides the route, and which one drives the robot?"
+  options={[
+    {text: 'drive_path plans; compute_manhattan_path drives'},
+    {text: 'compute_manhattan_path plans the path; drive_path drives it', correct: true},
+    {text: 'They both do both jobs'},
+    {text: 'track_to_intersection does everything'},
+  ]}
+  explanation="compute_manhattan_path computes the list of intersections (planning); drive_path drives through them (execution). One job each."
+/>
+
+<TeacherNote title="This is an advance organizer — keep it high-level">
+
+The whole point of this lesson is *shape, not detail*. Resist explaining how
+anything works; deflect "how does compute_manhattan_path work?" with "that's exactly Lessons 4-4
+and 5." Tell students plainly: "You're not meant to understand every line yet — by
+Lesson 4-9 you will, because you'll have built each piece." Consider printing the
+seven-line main program on a card students keep and revisit at the start of each
+lesson, highlighting the piece they're building that day.
+
+</TeacherNote>
+
+## How the planner computes the route
+
+The planner works out every route the same simple way:
 
 > **Go across until x is right. Then go up or down until y is right.**
 
@@ -86,9 +206,10 @@ lesson. Lesson 4-4 opens with "Why Manhattan?" and assumes students have seen th
 
 </TeacherNote>
 
-## The whole program — really
+## From one destination to several
 
-Here's the *entire* main program you're building toward. Seven lines:
+Once the robot can reach one destination, several is just a loop: plan from where it
+is, drive, repeat. Here's the *entire* main program you're building toward. Seven lines:
 
 ```python
 position = (0, 0)
@@ -118,62 +239,10 @@ sections above it — MANHATTAN PLANNER and NAVIGATOR — on top of the LINE TRA
 GRID DRIVING sections you already have. The `RUN` block waits for the button as always.
 All of that is left out here so the shape stands out.)
 
-## Two halves, two jobs
+## The method behind the split
 
-<CardGrid>
-  <InfoCard tag="Planner" title="compute_manhattan_path">
-    Told where the robot is and where it wants to go, it computes a <strong>list of intersections</strong> to follow. It never touches the robot.
-  </InfoCard>
-  <InfoCard tag="Driver" title="drive_path">
-    Given that list, it <strong>drives the robot</strong> through each intersection — turning and line-following — and reports where it ended up. It never decides the route.
-  </InfoCard>
-</CardGrid>
-
-<Figure
-  src="/img/lesson-m4-00/two-halves.svg"
-  alt="Two boxes. The planner, compute_manhattan_path(), takes a position and destination, plans the route and never drives. It hands a path, such as [(1,0), (2,0)], to the driver, drive_path(), which drives the route and never plans. The driver hands back position and heading, where the robot ended up, which go into the next plan."
-  caption="A path goes one way, from planner to driver; where the robot ended up comes back for the next plan."
-/>
-
-The planner produces a path; the driver consumes it. Each half has exactly one
-responsibility — that's called **separation of concerns**, and it makes bugs easy to
-find: a wrong route is a planner problem; a wrong turn is a driver problem. And because
-the planner is *told* where the robot is rather than remembering, the printed path is
-always checkable before the robot moves.
-
-<KnowledgeCheck
-  question="Which half decides the route, and which one drives the robot?"
-  options={[
-    {text: 'drive_path plans; compute_manhattan_path drives'},
-    {text: 'compute_manhattan_path plans the path; drive_path drives it', correct: true},
-    {text: 'They both do both jobs'},
-    {text: 'track_to_intersection does everything'},
-  ]}
-  explanation="compute_manhattan_path computes the list of intersections (planning); drive_path drives through them (execution). One job each."
-/>
-
-<TeacherNote title="This is an advance organizer — keep it high-level">
-
-The whole point of this lesson is *shape, not detail*. Resist explaining how
-anything works; deflect "how does compute_manhattan_path work?" with "that's exactly Lessons 4-4
-and 5." Tell students plainly: "You're not meant to understand every line yet — by
-Lesson 4-9 you will, because you'll have built each piece." Consider printing the
-seven-line main program on a card students keep and revisit at the start of each
-lesson, highlighting the piece they're building that day.
-
-</TeacherNote>
-
-## Breaking a big problem into parts
-
-Where did the two halves come from? Nobody writes "drive to every destination, all by
-itself" as one big function and gets it right. It's too much to hold in your head at
-once, and when it goes wrong you'd have no idea where to look. So we split it.
-Breaking a big problem into smaller parts you can build one at a time is called
-**problem decomposition** (you'll also hear **top-down design**: start from the whole
-goal and work down to the pieces). It's how almost every program longer than a page
-gets written.
-
-It's a method, not a lucky guess, and it has four steps you can use on any project:
+You and your partner already broke one problem into parts. Doing it well is a method,
+not a lucky guess, and it has four steps you can use on any project:
 
 1. **State the whole problem in one sentence.** If you can't, you don't know yet what you're building.
 2. **Name the parts, and say what each one takes in and hands back.** This is the step that matters most, because it's how the parts will fit together later.
@@ -184,14 +253,14 @@ Here is the method applied to this module:
 
 | Step | In Module 4 |
 |---|---|
-| 1 · The whole problem | Visit each destination in order, on its own. |
-| 2 · The parts | **Planner:** takes where the robot is and where it's going; hands back a list of intersections. **Driver:** takes that list, plus where the robot is and which way it faces; hands back where it ended up and which way it faces. |
+| 1 · The whole problem | Drive from where the robot is to a destination, on its own. |
+| 2 · The parts | **Planner:** takes where the robot is and where it's going; hands back a list of intersections, as `(x, y)` tuples. **Driver:** takes that list, plus where the robot is and which way it faces; hands back where it ended up and which way it faces. |
 | 3 · Build and test each | The planner in Lessons 4-4 to 4-6, on screen, with the robot sitting still. The driver in Lessons 4-7 and 4-8, one leg at a time. |
-| 4 · Connect them | The plan, print, drive test in Lesson 4-8, then the seven lines in Lesson 4-9. |
+| 4 · Connect them | The plan, print, drive test in Lesson 4-8 (one destination), then the seven lines in Lesson 4-9 (several in a row). |
 
 <Figure
-  src="/img/lesson-m4-00/decomposition.svg"
-  alt="A tree with three levels. At the top, the whole problem: visit each destination in order, on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-4 to 4-6, is small enough to build and test in one go. The driver, drive_path(), built in Lessons 4-7 and 4-8, splits again into three smaller parts: which way to face, desired_heading(), Lesson 4-7; turn to face it, turn_to(), Lesson 4-8; and follow the tape, the LINE TRACKING functions built in Module 2. An arrow from planner to driver is labeled list of intersections, the one thing they share."
+  src="/img/lesson-m4-00/decomposition-one-destination.svg"
+  alt="A tree with three levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-4 to 4-6, is small enough to build and test in one go. The driver, drive_path(), built in Lessons 4-7 and 4-8, splits again into three smaller parts: which way to face, desired_heading(), Lesson 4-7; turn to face it, turn_to(), Lesson 4-8; and follow the tape, the LINE TRACKING functions built in Module 2. An arrow from planner to driver is labeled list of (x, y) tuples, the one thing they share."
   caption="The module's problem, broken down. The planner is small enough to build in one go; the driver gets split once more."
 />
 
@@ -202,7 +271,7 @@ Module 2 line-tracking functions do the actual driving. You can stop splitting w
 you can say what a piece does in one sentence and test it on its own.
 
 **What passes between the parts is the agreement.** The only thing the planner hands
-the driver is a list of intersections. Because that was decided in step 2, before
+the driver is a list of intersections, stored as tuples. Because that was decided in step 2, before
 either half was written, each half can be built without the other, and either one can
 be replaced later. Module 5 does exactly that: a new planner that steers around
 obstacles hands the same kind of list to the same driver, and the driver doesn't
@@ -223,9 +292,10 @@ change at all.
 
 Put the four steps on the wall and leave them up. Lessons 4-4, 4-7 and 4-8 each open
 the next step with a short callout, so a quick "which step are we on?" at the start of
-those lessons keeps the thread. If there's time, have pairs decompose something that
-isn't a robot (a class trip, a birthday party) into parts with what goes in and what
-comes out; most will find step 2 is the hard one, which is the point. Students met the
+those lessons keeps the thread. Pairs already decomposed the robot problem at the start of this lesson; if there's
+time, have them decompose something that isn't a robot (a class trip, a birthday party)
+into parts with what goes in and what comes out. Most will find step 2 is the hard one,
+which is the point. Students met the
 idea in Lesson 1-7 ("break it into functions"); what's new here is naming what passes
 between the parts. Point back to step 2 in Module 5 when the planner is swapped.
 
@@ -251,7 +321,8 @@ class extensions, Lessons 4-5 and 4-8 each have an optional class version too.)
 
 ## Wrap-up
 
-- What will the robot do by the end of the module? (Visit multiple destinations on its own.)
+- What problem does Module 4 solve? (Drive the robot from where it starts to a destination on its own, then to several destinations in a row.)
+- Why plan first? (The planner never moves the robot, so its list of tuples can be printed and checked with no robot at all. Then the driver only has to follow a plan you already trust.)
 - What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
 - What are the four steps of problem decomposition? (State the whole problem; name the parts and what each takes in and hands back; build and test each part alone; connect them.)
 
