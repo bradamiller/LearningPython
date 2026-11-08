@@ -122,7 +122,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'Then drive: the driver splits again',
          'bullets': [
              'The planner is built and tested; the NAVIGATOR is the second part, **the driver**',
-             'Still too big to write in one go, so it is split the same way:',
+             'Still too big to write in one go, so it is split into smaller parts:',
              ['`desired_heading` works out which way to face',
               '`turn_to` turns until the robot faces that way',
               '`drive_path` uses both at every step; your Module 2 functions do the driving'],

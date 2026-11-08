@@ -63,6 +63,16 @@ DECK = {'module': 4,
                       'intersection is an (x, y) pair, stored as a tuple, so the plan is a list of '
                       'tuples, the one thing the two functions share. Tuples come properly in '
                       'Lesson 4-2 and lists in Lesson 4-3.'},
+            {'kind': 'bullets',
+             'title': 'Planner and driver',
+             'bullets': ['**Planner:** `compute_manhattan_path` returns the list of tuples. Never '
+                         'moves the robot.',
+                         '**Driver:** `drive_path` drives the list, then reports where the robot '
+                         'ended up. Never decides the route.',
+                         'One job each is called **separation of concerns**',
+                         ['A wrong **route** is a planner problem',
+                          'A wrong **turn** is a driver problem']],
+             'size': 26},
             {'kind': 'check',
              'question': 'Why plan the whole route first, as its own function, before writing the '
                          'code that drives?',
@@ -75,34 +85,6 @@ DECK = {'module': 4,
              'explanation': 'The planning function never moves the robot, so you can test it on '
                             'screen and check its list of tuples on paper. Once you trust the '
                             'plan, a wrong move on the floor can only be a driving problem.'},
-            {'kind': 'cards',
-             'title': 'Two halves, two jobs',
-             'cards': [('Planner',
-                        'compute_manhattan_path',
-                        'Takes where the robot is and where it is going; returns the **list of '
-                        'tuples**. Never moves the robot.'),
-                       ('Driver',
-                        'drive_path',
-                        'Takes the list and **drives it**, then reports where the robot ended up. '
-                        'Never decides the route.')],
-             'height': 3.4,
-             'notes': 'In this module the planning function is compute_manhattan_path and the '
-                      'driving function is drive_path.'},
-            {'kind': 'bullets',
-             'title': 'Separation of concerns',
-             'bullets': ['One job each is called **separation of concerns**',
-                         ['A wrong **route** is a planner problem',
-                          'A wrong **turn** is a driver problem']],
-             'size': 30},
-            {'kind': 'check',
-             'question': 'Which half decides the route, and which one drives the robot?',
-             'options': ['drive_path plans; compute_manhattan_path drives',
-                         'compute_manhattan_path plans the path; drive_path drives it',
-                         'They both do both jobs',
-                         'track_to_intersection does everything'],
-             'answer': 1,
-             'explanation': 'compute_manhattan_path computes the list of intersections (planning); '
-                            'drive_path drives through them (execution). One job each.'},
             {'kind': 'bullets',
              'title': 'How the planner computes the route',
              'bullets': ['**Go across until x is right. Then go up or down until y is right.**',

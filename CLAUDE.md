@@ -1960,7 +1960,7 @@ named here), "Discuss · How would you split it?" (three teacher-led questions t
 to plan-then-drive; answers and steering in the teacher note. It replaced a pair activity
 on Nov 8 because Brad wanted the questions to lead students to the planning/driving split,
 so overviews still have no Activity section), "Plan first, then drive" (list of
-tuples, shown in `plan-then-drive.svg` from `scripts/figures/fplan.py`; knowledge check), Two halves, How the planner computes the route, From one
+tuples, shown in `plan-then-drive.svg` from `scripts/figures/fplan.py`; knowledge check), How the planner computes the route, From one
 destination to several (the seven lines), The method behind the split (four steps,
 step 1 is now one destination), roadmap, wrap-up. 25–30 min. The tree figure's top box
 and the planner-to-driver label changed ("list of (x, y) tuples"), so it was renamed.
@@ -1970,7 +1970,7 @@ seven lines" paragraph, the two-halves figure on this page, and the lesson-by-le
 (now two sentences under "What's next"). 20–25 min. The 4-4, 4-7, 4-8 callouts no longer
 cite step numbers: "Plan first: the planner on its own", "Then drive: the driver splits
 again", "Plan, then drive: connect the parts". `decomposition-one-destination.svg` is no
-longer used. Brad's style rule from the same day, for every lesson: as clear as possible in as few
+longer used. "Two halves, two jobs" was then folded into "Plan first, then drive" (function names in the Plan/Drive items, separation-of-concerns line, one knowledge check), and the 4-7 callout says the driver "gets split into smaller parts". Brad's style rule from the same day, for every lesson: as clear as possible in as few
 words as possible; a figure that shows the technique beats paragraphs describing what the
 robot does. Verbose explanations lose students.
 
