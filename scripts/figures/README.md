@@ -54,7 +54,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | b23.py, b24.py | bounce-run.svg | /img/lesson-m2-03/bounce-run.svg |
 | b24.py | random-bounce-run.svg | /img/lesson-m2-04/random-bounce-run.svg |
 | circles.py | arcade-circles.svg | /img/lesson-06/arcade-circles.svg |
-| coords.py | naming-intersections.svg | /img/lesson-m4-01/naming-intersections.svg |
+| coords.py | naming-intersections.svg | — (removed from 4-1, 2026-11-08) |
 | coords.py, f41.py, f43.py, f44.py, fmap.py, ftrace.py, ftrace2.py, g51.py, g52.py, g53.py, g55.py, g56.py, g59.py, g6.py, grings.py, m31.py, m32.py, m33.py, m34a.py, m34b.py, m3_grid_figures.py, m43.py, m44.py, m49.py, manhattan.py, phone.py, square.py, tuples.py | grid.svg | — |
 | dictpic.py | word-dictionary.svg | /img/lesson-m5-02/word-dictionary.svg |
 | edge.py | drive-to-line.svg | /img/lesson-m2-02/drive-to-line.svg |

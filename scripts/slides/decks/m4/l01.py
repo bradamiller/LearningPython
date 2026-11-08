@@ -32,20 +32,9 @@ DECK = {
                   'nearest you. x counts across to the right, y counts up, away from you, both '
                   'from zero. Order matters: (2, 3) and (3, 2) are different spots. Getting x '
                   'and y in the right order is the number one stumble; what is new for most '
-                  'students is counting from zero, so name why: Python indexes from 0.'},
-
-        {'kind': 'frames', 'title': 'How every intersection gets its name',
-         'figure': './decks/m4/fig/naming-intersections.svg',
-         'crop': (0.0, 0.0, 0.62, 1.0),
-         'frames': [(0.375, 'x counts across, y counts away'),
-                    (0.71, '`(2, 3)` and `(3, 2)` differ'),
-                    (0.96, 'Every intersection has a name')],
-         'callout': 'Start at the corner nearest you, count across for x, then away for y',
-         'tone': 'teal',
-         'notes': 'The lesson figure is an animation that walks through six ideas; these are '
-                  'three of its moments, with its side panel cropped off. If you can, have '
-                  'students stand at the near edge, physically walk the grid and call out their '
-                  'coordinates: kinesthetic beats diagrams here.'},
+                  'students is counting from zero, so name why: Python indexes from 0. If you can, '
+                  'have students stand at the near edge, walk the grid and call out their '
+                  'coordinates.'},
 
         {'kind': 'check',
          'question': 'In the coordinate (2, 3), what does the 2 mean?',
