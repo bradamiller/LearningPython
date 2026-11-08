@@ -357,26 +357,22 @@ def compute_manhattan_path(position, destination):
     # East: keep stepping right until x matches dest_x
     while x < dest_x:
         x = x + 1             # one step right
-        next_spot = (x, y)    # the spot it just stepped to
-        path.append(next_spot)
+        path.append((x, y))   # record the new spot
 
     # West: copy east, flip < to > and + to -
     while x > dest_x:
         x = x - 1
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     # North: copy east, but step y until it matches dest_y
     while y < dest_y:
         y = y + 1             # one step up
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     # South: copy north, flip < to > and + to -
     while y > dest_y:
         y = y - 1
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     return path
 
@@ -889,26 +885,22 @@ class Manhattan:
         # East: keep stepping right until x matches dest_x
         while x < dest_x:
             x = x + 1             # one step right
-            next_spot = (x, y)    # the spot it just stepped to
-            path.append(next_spot)
+            path.append((x, y))   # record the new spot
 
         # West: copy east, flip < to > and + to -
         while x > dest_x:
             x = x - 1
-            next_spot = (x, y)
-            path.append(next_spot)
+            path.append((x, y))
 
         # North: copy east, but step y until it matches dest_y
         while y < dest_y:
             y = y + 1             # one step up
-            next_spot = (x, y)
-            path.append(next_spot)
+            path.append((x, y))
 
         # South: copy north, flip < to > and + to -
         while y > dest_y:
             y = y - 1
-            next_spot = (x, y)
-            path.append(next_spot)
+            path.append((x, y))
 
         return path
 

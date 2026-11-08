@@ -298,8 +298,7 @@ def compute_manhattan_path(position, destination):
     # East: keep stepping right until x matches dest_x
     while x < dest_x:
         x = x + 1             # one step right
-        next_spot = (x, y)    # the spot it just stepped to
-        path.append(next_spot)
+        path.append((x, y))   # record the new spot
 
     # West: copy east, flip < to > and + to -
 

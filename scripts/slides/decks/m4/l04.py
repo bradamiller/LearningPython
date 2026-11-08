@@ -124,8 +124,7 @@ DECK = {
          'widths': [1, 1.3],
          'rows': [
              ['Action: x +1', '`x = x + 1`'],
-             ['New position', '`next_spot = (x, y)`'],
-             ['Path so far', '`path.append(next_spot)`'],
+             ['New position, added to the path so far', '`path.append((x, y))`'],
          ],
          'callout': '"Until x matches" is `while x < dest_x`: as long as x is short, take another step',
          'tone': 'teal',
@@ -133,7 +132,9 @@ DECK = {
                   'stepping east. Rows 3 to 5 are a second loop going around three times, stepping '
                   'north. dest_x and dest_y come from unpacking the end tuple, as in Lesson 4-2. When '
                   'x reaches dest_x the condition is False and the loop stops, just as students '
-                  'stopped writing x +1 rows once they reached x = 2.'},
+                  'stopped writing x +1 rows once they reached x = 2. Take real time on the double '
+                  'parentheses in path.append((x, y)): the inner pair makes the tuple, the outer '
+                  'pair is the call to append().'},
 
         {'kind': 'code', 'title': 'Add to robot.py: MANHATTAN PLANNER',
          'code': '# ===== MANHATTAN PLANNER =====\n'
@@ -148,8 +149,7 @@ DECK = {
                  '    # East: keep stepping right until x matches dest_x\n'
                  '    while x < dest_x:\n'
                  '        x = x + 1             # one step right\n'
-                 '        next_spot = (x, y)    # the spot it just stepped to\n'
-                 '        path.append(next_spot)\n'
+                 '        path.append((x, y))   # record the new spot\n'
                  '\n'
                  '    # West: copy east, flip < to > and + to -\n'
                  '    # North: copy east, but step y until it matches dest_y\n'
@@ -174,7 +174,7 @@ DECK = {
                  '    print(compute_path((0, 2), (3, 2)))   # same row\n'
                  '    print(compute_path((1, 1), (1, 1)))   # same spot',
          'code_size': 18,
-         'callout': 'Paper tests: they print a path, you compare it with your trace, nothing moves',
+         'callout': 'Paper tests: they print a path, you compare it with your answer key, nothing moves',
          'tone': 'teal',
          'notes': 'More hints than usual, on purpose: this is the first while loop that builds a '
                   'list and the first section with no robot in it. The step down to writing tests '
@@ -191,11 +191,50 @@ DECK = {
              'Nothing else in the file has to work for it to work',
          ]},
 
+        {'kind': 'table', 'title': 'Activity · Make your answer key',
+         'tag': 'Activity',
+         'lead': 'Before any more code, work out by hand what each test call should print. '
+                 'Across first, then up or down; the start is never in the path.',
+         'lead_h': 1.2,
+         'headers': ['#', 'Call', 'Expected path', 'Steps'],
+         'widths': [0.5, 4, 4.6, 1],
+         'rows': [
+             ['1', '`compute_path((0, 0), (2, 3))`', '', ''],
+             ['2', '`compute_path((0, 1), (3, 3))`', '', ''],
+             ['3', '`compute_path((3, 3), (1, 0))`', '', ''],
+             ['4', '`compute_path((2, 0), (2, 3))`', '', ''],
+             ['5', '`compute_path((0, 2), (3, 2))`', '', ''],
+             ['6', '`compute_path((1, 1), (1, 1))`', '', ''],
+         ],
+         'row_h': 0.42,
+         'callout_size': 18,
+         'callout': 'Printable worksheet: [learningpython.bradhouse.com/printables/lesson-4-4-answer-key-worksheet.pdf]'
+                    '(https://learningpython.bradhouse.com/printables/lesson-4-4-answer-key-worksheet.pdf)',
+         'tone': 'teal',
+         'notes': 'About 10 minutes. Paths 1 to 3 are test_paper_paths(), paths 4 to 6 are '
+                  'test_edge_cases(), and path 1 is the trace they already did. Check the sheets '
+                  'before students go on: a wrong key sends them hunting for a bug that is not '
+                  'there. The filled-in key is behind a reveal on the lesson page.'},
+
+        {'kind': 'bullets', 'title': 'Last question on your answer key',
+         'tag': 'Activity',
+         'bullets': [
+             'What is different about **path 3** compared with **paths 1 and 2**?',
+             'Look at which way x and y change',
+             'Write it down: you will need it in a few minutes',
+         ],
+         'callout': 'Your answer key is how you know your program is correct: every line your tests '
+                    'print should match it',
+         'tone': 'teal',
+         'notes': 'Answer: paths 1 and 2 go right and up, so x and y get bigger; path 3 goes left and '
+                  'down, so they get smaller. It sets up Step 1: the first version only handles x '
+                  'and y getting bigger, so path 3 comes back empty.'},
+
         {'kind': 'steps', 'title': 'Step 1 · Run the east loop',
          'tag': 'Activity',
          'steps': [
              'Set the run line to `test_paper_paths()` and run it **before you write anything**',
-             'The first line prints `[(1, 0), (2, 0)]`: rows 1 and 2 of your trace',
+             'The first line prints `[(1, 0), (2, 0)]`: the first two spots of path 1 in your answer key',
              'Then it stops short: nothing moves it up yet',
          ],
          'callout': 'Build it one loop at a time, and run it after each one',
@@ -203,25 +242,23 @@ DECK = {
          'notes': 'A half-finished algorithm you have tested beats a whole one you haven\'t. Check '
                   'that tuple unpacking from 4-2 (x, y = start) stuck.'},
 
-        {'kind': 'code', 'title': 'Step 1 · Write north by copying east',
+        {'kind': 'bullets', 'title': 'Step 1 · Write north by copying east',
          'tag': 'Activity',
-         'lead': 'Under the north comment, copy the east loop: compare `y` with `dest_y` and step '
-                 '`y` instead of `x`. Leave `next_spot = (x, y)` as it is. Run it again:',
-         'lead_h': 1.3,
-         'code': '[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]\n'
-                 '[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]\n'
-                 '[]',
-         'code_size': 22,
-         'callout': 'The first line is your trace table. Don\'t go on until both match',
+         'bullets': [
+             'Under the north comment, **copy the east loop**',
+             'Compare `y` with `dest_y`, and step `y` instead of `x`',
+             'Leave `path.append((x, y))` as it is: it always records the whole position',
+             'Run it again and check the first two lines against **paths 1 and 2** of your answer key',
+         ],
+         'callout': 'Don\'t go on until both match',
          'tone': 'orange',
-         'notes': 'next_spot = (x, y) always records the whole position, so it does not change when '
-                  'the loop is copied. The tuple is built on its own line and appended on the next, '
-                  'so there are no double parentheses to untangle. The north loop is in a reveal on '
-                  'the lesson page.'},
+         'notes': 'The north loop is in a reveal on the lesson page. Students with a wrong line '
+                  'should check their key first, then their code: one of the two is wrong.'},
 
         {'kind': 'bullets', 'title': 'Now find the limit',
          'bullets': [
              'Look at the third line: `(3, 3)` to `(1, 0)` gives an **empty list!**',
+             'Your answer key says path 3 has five steps: it goes left and down',
              '`3 < 1` is False and `3 < 0` is False, so **neither** loop runs',
              'Going left or down, this version does nothing',
          ],
@@ -258,13 +295,13 @@ DECK = {
          'notes': 'Walk the right half: (1, 3) to (3, 0). East runs twice, west and north are '
                   'skipped, south runs three times. Five steps, matching |3−1| + |0−3|.'},
 
-        {'kind': 'steps', 'title': 'Step 2 · Trace it, then run it',
+        {'kind': 'steps', 'title': 'Step 2 · Check it against your key',
          'steps': [
-             'Trace **(3, 3) → (1, 0)** on paper',
+             'Look at path 3 in your answer key, **(3, 3) → (1, 0)**',
              'Say which of the four loops run: the robot has to go **left** and **down**, so two of them stay idle',
-             'Run `test_paper_paths()` again and compare with your trace',
+             'Run `test_paper_paths()` again: all three lines should match your key',
          ],
-         'notes': 'The finished trace is behind a reveal on the lesson page. The page also has an '
+         'notes': 'Which loops run is behind a reveal on the lesson page. The page also has an '
                   'animation of the four loops running three trips, in a reveal for students whose '
                   'tests already match; it is not on these slides because it shows the traced '
                   'answers.'},
@@ -287,11 +324,10 @@ DECK = {
              '**Same row**: `(0, 2)` to `(3, 2)`',
              '**Same spot**: `(1, 1)` to `(1, 1)`',
          ],
-         'callout': 'Trace all three on paper and add your prediction to the comment on each call '
-                    '**before** you set the run line to it',
+         'callout': 'They are paths 4 to 6 in your answer key. Set the run line to `test_edge_cases()` '
+                    'and check all three lines against it',
          'tone': 'teal',
-         'notes': 'The predicted outputs, and a finished compute_path(), are in reveals on the lesson '
-                  'page. Nothing special is written for these cases: the loops just don\'t run when '
+         'notes': 'A finished compute_path() is in a reveal on the lesson page. Nothing special is written for these cases: the loops just don\'t run when '
                   'there is no distance to cover.'},
 
         {'kind': 'check',

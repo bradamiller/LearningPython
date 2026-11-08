@@ -139,11 +139,12 @@ step. Each trip around does exactly what one row of your table did:
 | In your trace table | In the code |
 |---|---|
 | Action: x +1 | `x = x + 1` |
-| New position | `next_spot = (x, y)` |
-| Path so far | `path.append(next_spot)` |
+| New position, added to the path so far | `path.append((x, y))` |
 
 When x reaches `dest_x` the condition is False and the loop stops, just as you stopped
-writing *x +1* rows once you reached x = 2.
+writing *x +1* rows once you reached x = 2. The double parentheses in
+`path.append((x, y))` are two different things: the inner pair makes the tuple
+`(x, y)`, and the outer pair is the call to `append()`.
 
 ## This lesson's skeleton
 
@@ -169,8 +170,7 @@ def compute_path(start, end):
     # East: keep stepping right until x matches dest_x
     while x < dest_x:
         x = x + 1             # one step right
-        next_spot = (x, y)    # the spot it just stepped to
-        path.append(next_spot)
+        path.append((x, y))   # record the new spot
 
     # West: copy east, flip < to > and + to -
 
@@ -194,7 +194,7 @@ def test_edge_cases():
 This skeleton gives you more than usual: the whole east loop and both tests are
 written for you. Your job is the other three loops, and each one is a copy of the east
 loop with a small change. The tests are **paper tests** — they print a path, you
-compare it with your trace, and nothing moves. The robot can stay on the desk.
+compare it with your answer key, and nothing moves. The robot can stay on the desk.
 
 <Callout kind="note" title="Decomposition, step 3: one part at a time">
 
@@ -205,7 +205,63 @@ else in the file has to work for it to work.
 
 </Callout>
 
+## Activity · Make your answer key
+
+Your two tests make six calls to `compute_path()`. Before you write any more code, work
+out by hand what each one should print, the same way you filled in the trace table.
+When you run your tests later, this is your **answer key**: if a line on screen doesn't
+match it, either your code or your trace is wrong, and finding out which is the job.
+
+Fill in the [answer key worksheet](pathname:///printables/lesson-4-4-answer-key-worksheet.pdf),
+or copy this table onto paper. Path 1 is the trace you just did.
+
+| # | Test | Call | Expected path | Steps |
+|---|---|---|---|---|
+| 1 | `test_paper_paths` | `compute_path((0, 0), (2, 3))` | | |
+| 2 | `test_paper_paths` | `compute_path((0, 1), (3, 3))` | | |
+| 3 | `test_paper_paths` | `compute_path((3, 3), (1, 0))` | | |
+| 4 | `test_edge_cases` | `compute_path((2, 0), (2, 3))` | | |
+| 5 | `test_edge_cases` | `compute_path((0, 2), (3, 2))` | | |
+| 6 | `test_edge_cases` | `compute_path((1, 1), (1, 1))` | | |
+
+The rules are the ones from your trace: across first, then up or down, and the start
+is never in the path. The number of steps is the Manhattan distance, which is a quick
+check on each list's length.
+
+**Last, write down what is different about path 3 compared with paths 1 and 2.**
+
+<Reveal title="Check your answer key" hint="fill in all six and the question first">
+
+| # | Expected path | Steps |
+|---|---|---|
+| 1 | `[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]` | 5 |
+| 2 | `[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]` | 5 |
+| 3 | `[(2, 3), (1, 3), (1, 2), (1, 1), (1, 0)]` | 5 |
+| 4 | `[(2, 1), (2, 2), (2, 3)]` | 3 |
+| 5 | `[(1, 2), (2, 2), (3, 2)]` | 3 |
+| 6 | `[]` | 0 |
+
+Paths 1 and 2 go right and up: x and y both get **bigger**. Path 3 goes left and down:
+x and y both get **smaller**. Keep that in mind when you run your code.
+
+</Reveal>
+
+<TeacherNote title="Why an answer key before the code">
+
+Give this about 10 minutes, and check the sheets before students go on: a wrong key
+sends them hunting for a bug that isn't there. Doing all six by hand is the point. It
+gives every student a key to judge their own output with, and a second round of
+tracing, including the left-and-down trip and the three edge cases, before any loop
+is written. The last question sets up Step 1: the first version only handles x and y
+getting bigger, so path 3 comes back empty, and the students who wrote down "path 3
+goes the other way" already know why.
+
+</TeacherNote>
+
 ## Activity · Code the algorithm
+
+Keep your answer key next to you: it is how you know your program is correct. When
+every line your tests print matches the paths you wrote out by hand, you're done.
 
 Build it one loop at a time, and *run it* after each one. A half-finished algorithm
 you have tested beats a whole one you haven't.
@@ -213,21 +269,14 @@ you have tested beats a whole one you haven't.
 ### Step 1 · Run the east loop, then write north
 
 Set the run line to `test_paper_paths()` and run it before you write anything. Only
-the east loop exists, so the first line prints `[(1, 0), (2, 0)]`: rows 1 and 2 of
-your trace, and then it stops short, because nothing moves it up yet.
+the east loop exists, so the first line prints `[(1, 0), (2, 0)]`: the first two spots
+of path 1 in your answer key, and then it stops short, because nothing moves it up
+yet.
 
 Now write the north loop under its comment by copying the east loop: compare `y` with
-`dest_y` and step `y` instead of `x`. Leave `next_spot = (x, y)` exactly as it is; it
-always records the whole position. Run the test again:
-
-```
-[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]
-[]
-```
-
-The first line is your trace table, 5 steps; the second is 5 steps too. Don't go on
-until both match.
+`dest_y` and step `y` instead of `x`. Leave `path.append((x, y))` exactly as it is; it
+always records the whole position. Run the test again and check the first two lines
+against paths 1 and 2 of your answer key. Don't go on until both match.
 
 <Reveal title="Check your north loop" hint="write it and run the test first">
 
@@ -235,14 +284,14 @@ until both match.
     # North: copy east, but step y until it matches dest_y
     while y < dest_y:
         y = y + 1             # one step up
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 ```
 
 </Reveal>
 
-**Now look at the third line:** an empty list for `(3, 3)` to `(1, 0)`. `3 < 1` is
-False and `3 < 0` is False, so *neither* loop runs. Going left or down, this version
+**Now look at the third line:** an empty list, where your answer key says path 3 has
+five steps. This is the difference you wrote down: path 3 goes left and down. `3 < 1`
+is False and `3 < 0` is False, so *neither* loop runs. Going left or down, this version
 does nothing. That's what the west and south comments are for.
 
 <KnowledgeCheck
@@ -273,11 +322,11 @@ goes across first.
   caption="Every trip runs at most one x loop and one y loop. The other two find their condition False on the first check and never run."
 />
 
-Before you run it, trace **(3, 3) → (1, 0)** on paper and say which of the four loops
-run: the robot has to go *left* and *down*, so two of them stay idle. Then run
-`test_paper_paths()` again and compare.
+Before you run it, look at path 3 in your answer key, **(3, 3) → (1, 0)**, and say
+which of the four loops run: the robot has to go *left* and *down*, so two of them stay
+idle. Then run `test_paper_paths()` again: all three lines should match your key.
 
-<Reveal title="Check the (3, 3) → (1, 0) trace" hint="work it out first">
+<Reveal title="Which loops run for (3, 3) → (1, 0)?" hint="work it out first">
 
 East is skipped (3 isn't < 1). **West runs** (3 > 1), moving x only: (2,3),
 (1,3). North is skipped. **South runs** (3 > 0): (1,2), (1,1), (1,0). Path:
@@ -312,10 +361,9 @@ The four-loop design is the lesson's big idea: *a while loop whose condition sta
 False simply does nothing.* Students who've seen conditionals will try to wrap this in
 `if x < dest_x ... elif x > dest_x`. Steer them back — the four loops are simpler and
 handle every case, including same-position (all four skipped → `[]`). Check that
-tuple unpacking from Lesson 4-2 (`x, y = start`) stuck. The loops build the tuple on
-its own line (`next_spot = (x, y)`) and append it on the next, so there are no double
-parentheses to untangle. If a student meets `path.append((x, y))` elsewhere, it's the
-same two lines squeezed into one.
+tuple unpacking from Lesson 4-2 (`x, y = start`) stuck, and take real time on the
+double parentheses in `path.append((x, y))`: the outer pair is the function call, the
+inner pair is the tuple.
 
 </TeacherNote>
 
@@ -324,22 +372,12 @@ same two lines squeezed into one.
 Good algorithms handle the awkward inputs without special code. The second test in
 your skeleton, `test_edge_cases()`, has three of them: **same column**, `(2, 0)` to
 `(2, 3)`; **same row**, `(0, 2)` to `(3, 2)`; and **same spot**, `(1, 1)` to `(1, 1)`.
-Trace all three on paper and add your prediction to the comment on each call *before*
-you set the run line to it.
-
-<Reveal title="Check the three edge cases" hint="predict all three first">
-
-```
-[(2, 1), (2, 2), (2, 3)]
-[(1, 2), (2, 2), (3, 2)]
-[]
-```
+They are paths 4 to 6 in your answer key. Set the run line to `test_edge_cases()`, run
+it, and check all three lines against your key.
 
 Same column (same x) means the two x loops are skipped; same row (same y) skips the
-y loops; same position skips all four and returns `[]`. Nothing special written — the loops just
-don't run when there's no distance to cover.
-
-</Reveal>
+y loops; same position skips all four and returns `[]`. Nothing special written — the
+loops just don't run when there's no distance to cover.
 
 <Reveal title="Check your compute_path()" hint="write and test it first">
 
@@ -354,26 +392,22 @@ def compute_path(start, end):
     # East: keep stepping right until x matches dest_x
     while x < dest_x:
         x = x + 1             # one step right
-        next_spot = (x, y)    # the spot it just stepped to
-        path.append(next_spot)
+        path.append((x, y))   # record the new spot
 
     # West: copy east, flip < to > and + to -
     while x > dest_x:
         x = x - 1
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     # North: copy east, but step y until it matches dest_y
     while y < dest_y:
         y = y + 1             # one step up
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     # South: copy north, flip < to > and + to -
     while y > dest_y:
         y = y - 1
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     return path
 ```
@@ -408,26 +442,22 @@ def compute_path(start, end):
     # East: keep stepping right until x matches dest_x
     while x < dest_x:
         x = x + 1             # one step right
-        next_spot = (x, y)    # the spot it just stepped to
-        path.append(next_spot)
+        path.append((x, y))   # record the new spot
 
     # West: copy east, flip < to > and + to -
     while x > dest_x:
         x = x - 1
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     # North: copy east, but step y until it matches dest_y
     while y < dest_y:
         y = y + 1             # one step up
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     # South: copy north, flip < to > and + to -
     while y > dest_y:
         y = y - 1
-        next_spot = (x, y)
-        path.append(next_spot)
+        path.append((x, y))
 
     return path
 
@@ -485,7 +515,7 @@ test_edge_cases()
 
 **Formative:** trace a path on paper, match the east loop to the trace table, write
 north by copying it, explain why that version fails for left/down, add west and south
-by copying and flipping, and predict the three edge cases. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
+by copying and flipping, and fill in the six-path answer key by hand. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
 steps is that?" (`[(1,0),(2,0),(2,1),(2,2),(2,3)]`, 5). **Preview:** next lesson this
 exact function gets its real name, `compute_manhattan_path(position, destination)`, and
 a docstring that writes down what it promises — the algorithm won't change at all.
