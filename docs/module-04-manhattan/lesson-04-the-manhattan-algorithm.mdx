@@ -36,9 +36,18 @@ By the end of this lesson you will be able to:
 
 ## The strategy: across first, then up or down
 
-The strategy we'll use is the simplest one that always works: **move across first
-until x is right, then move up or down until y is right.** That always traces an
-L-shaped path (or a straight line, if x or y is already correct).
+Each step moves the robot to a neighboring intersection, so **exactly one of x or y
+changes, by 1**. Never both: that would be a diagonal, and the robot can't drive one.
+
+<Figure
+  src="/img/lesson-m4-04/one-step.svg"
+  alt="A 3 by 3 grid with the robot's intersection (1, 1) in the middle. Red arrows go right to (2, 1), x + 1, and left to (0, 1), x − 1. Green arrows go up to (1, 2), y + 1, and down to (1, 0), y − 1. A dashed diagonal to (2, 2) is crossed out: x and y both change, so it is not one step."
+  caption="One step changes x or y by 1, never both."
+/>
+
+The strategy is the simplest one that always works: **step across until x is right,
+then step up or down until y is right.** That traces an L-shaped path, or a straight
+line if x or y is already right.
 
 ## Activity · Trace it on paper first
 
@@ -105,24 +114,18 @@ at their own trace table: each row is one trip around a loop.
 
 ## From the trace table to a loop
 
-Look back at your trace table. **Each row is one trip around a loop.** Rows 1 and 2
-both say *x +1*: that's one loop going around twice, stepping east. Rows 3 to 5 say
-*y +1*: a second loop going around three times, stepping north.
+Write the code the same way you worked out each new position. In one loop, keep adding
+1 to x while x is less than the destination x. In a second loop, do the same for y.
+Inside each loop, append the new position to the path.
 
-Say the east loop in plain words first: *keep stepping right until your x matches the
-end x.* The code unpacks the end tuple into `dest_x` and `dest_y` (Lesson 4-2), so
-"until x matches" becomes `while x < dest_x`: as long as x is still short, take another
-step. Each trip around does exactly what one row of your table did:
+<Figure
+  src="/img/lesson-m4-04/trace-to-loops.svg"
+  alt="The trace table for (0, 0) to (2, 3). Rows 1 and 2, in red, say x + 1 and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). Rows 3 to 5, in green, say y + 1 and are bracketed to loop 2, the same loop for y."
+  caption="Each row is one trip around a loop."
+/>
 
-| In your trace table | In the code |
-|---|---|
-| Action: x +1 | `x = x + 1` |
-| New position, added to the path so far | `path.append((x, y))` |
-
-When x reaches `dest_x` the condition is False and the loop stops, just as you stopped
-writing *x +1* rows once you reached x = 2. The double parentheses in
-`path.append((x, y))` are two different things: the inner pair makes the tuple
-`(x, y)`, and the outer pair is the call to `append()`.
+`dest_x` and `dest_y` come from unpacking the end tuple (Lesson 4-2). Going left or
+down, the same loops subtract 1 instead; that's Step 2.
 
 ## This lesson's skeleton
 

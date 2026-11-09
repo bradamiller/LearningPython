@@ -35,6 +35,14 @@ DECK = {
                   'destination. Every entry in the list it returns is one block from the entry before '
                   'it, and the first is one block from the start.'},
 
+        {'kind': 'figure', 'title': 'One step: x or y, never both',
+         'figure': '/img/lesson-m4-04/one-step.svg',
+         'caption': 'One step changes x or y by 1, never both. Both would be a diagonal, and the '
+                    'robot can\'t drive one.',
+         'notes': 'Make this solid before the trace: every row of the trace table changes '
+                  'exactly one coordinate by 1. Ask for the four neighbors of (2, 2), then ask '
+                  'why (3, 3) is not one of them.'},
+
         {'kind': 'bullets', 'title': 'The strategy: across first, then up or down',
          'bullets': [
              'The simplest strategy that always works:',
@@ -91,25 +99,22 @@ DECK = {
          'explanation': 'Same x, so no moves across, only three moves up. The start (2,0) is not '
                         'included, so the path is [(2,1), (2,2), (2,3)]: three steps.'},
 
-        {'kind': 'table', 'title': 'From the trace table to a loop',
-         'lead': '**Each row of your trace is one trip around a loop.** In plain words, the east '
-                 'loop says: keep stepping right until your x matches the end x.',
-         'lead_h': 1.2,
-         'headers': ['In your trace table', 'In the code'],
-         'widths': [1, 1.3],
-         'rows': [
-             ['Action: x +1', '`x = x + 1`'],
-             ['New position, added to the path so far', '`path.append((x, y))`'],
+        {'kind': 'bullets', 'title': 'From the trace table to a loop',
+         'bullets': [
+             'Write the code the way you worked out each new position',
+             'Loop 1: keep adding 1 to x while x is less than the destination x',
+             'Loop 2: do the same for y',
+             'Inside each loop, **append** the new position to the path',
          ],
-         'callout': '"Until x matches" is `while x < dest_x`: as long as x is short, take another step',
-         'tone': 'teal',
-         'notes': 'Rows 1 and 2 of the trace both say x +1: that is one loop going around twice, '
-                  'stepping east. Rows 3 to 5 are a second loop going around three times, stepping '
-                  'north. dest_x and dest_y come from unpacking the end tuple, as in Lesson 4-2. When '
-                  'x reaches dest_x the condition is False and the loop stops, just as students '
-                  'stopped writing x +1 rows once they reached x = 2. Take real time on the double '
-                  'parentheses in path.append((x, y)): the inner pair makes the tuple, the outer '
-                  'pair is the call to append().'},
+         'size': 26},
+
+        {'kind': 'figure', 'title': 'Each row is one trip around a loop',
+         'figure': '/img/lesson-m4-04/trace-to-loops.svg',
+         'caption': 'Going left or down, the same loops subtract 1 instead: that\'s Step 2.',
+         'notes': 'dest_x and dest_y come from unpacking the end tuple, as in Lesson 4-2. When x '
+                  'reaches dest_x the condition is False and the loop stops, just as students '
+                  'stopped writing x + 1 rows once they reached x = 2. The inner parentheses in '
+                  'path.append((x, y)) make the tuple; the outer pair is the call to append().'},
 
         {'kind': 'code', 'title': 'Add to robot.py: MANHATTAN PLANNER',
          'code': '# ===== MANHATTAN PLANNER =====\n'
