@@ -125,9 +125,14 @@ Lesson 4-5, once the algorithm is theirs.
 
 ## From the trace table to a loop
 
-Write the code the same way you worked out each new position. In one loop, keep adding
-1 to x while x is less than the destination x. In a second loop, do the same for y.
-Inside each loop, append the new position to the path.
+Write the code the same way you worked out each new position. `x` and `y` are the
+robot's **current position**: they start as the start tuple (`x, y = start`) and
+change by 1 on every move. `dest_x` and `dest_y` are the destination
+(`dest_x, dest_y = end`).
+
+In one loop, keep adding 1 to x while x is less than `dest_x`. In a second loop, do
+the same for y. Inside each loop, append the new current position `(x, y)` to the
+path.
 
 <Figure
   src="/img/lesson-m4-04/trace-to-loops.svg"
@@ -135,8 +140,7 @@ Inside each loop, append the new position to the path.
   caption="Each row is one trip around a loop."
 />
 
-`dest_x` and `dest_y` come from unpacking the end tuple (Lesson 4-2). Going left or
-down, the same loops subtract 1 instead; that's Step 2.
+Going left or down, the same loops subtract 1 instead; that's Step 2.
 
 ## This lesson's skeleton
 

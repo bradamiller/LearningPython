@@ -110,16 +110,18 @@ DECK = {
         {'kind': 'bullets', 'title': 'From the trace table to a loop',
          'bullets': [
              'Write the code the way you worked out each new position',
-             'Loop 1: keep adding 1 to x while x is less than the destination x',
+             '`x` and `y` are the robot\'s **current position**: `x, y = start`',
+             '`dest_x` and `dest_y` are the destination: `dest_x, dest_y = end`',
+             'Loop 1: keep adding 1 to x while x is less than `dest_x`',
              'Loop 2: do the same for y',
-             'Inside each loop, **append** the new position to the path',
+             'Inside each loop, **append** the new current position `(x, y)` to the path',
          ],
          'size': 26},
 
         {'kind': 'figure', 'title': 'Each row is one trip around a loop',
          'figure': '/img/lesson-m4-04/trace-to-loops.svg',
          'caption': 'Going left or down, the same loops subtract 1 instead: that\'s Step 2.',
-         'notes': 'dest_x and dest_y come from unpacking the end tuple, as in Lesson 4-2. When x '
+         'notes': 'x and y are the robot\'s current position; they change by 1 each trip. When x '
                   'reaches dest_x the condition is False and the loop stops, just as students '
                   'stopped writing x + 1 rows once they reached x = 2. The inner parentheses in '
                   'path.append((x, y)) make the tuple; the outer pair is the call to append().'},
