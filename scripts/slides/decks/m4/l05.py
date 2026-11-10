@@ -39,8 +39,9 @@ DECK = {
              'There are many ways to plan a route. Each method is an **algorithm**',
              'Manhattan: fast and easy to write, but fails if a road is blocked',
              'Later you\'ll build more robust planners',
+             'Same promises (the **interface**) means planners can be swapped as the need changes',
          ],
-         'callout': 'Same promises (the **interface**) means planners can be swapped as the need changes',
+         'callout': 'That\'s why the Manhattan planner gets a unique name that reflects its algorithm',
          'tone': 'teal',
          'notes': 'Module 5 adds compute_bfs_path() beside this one. position is where the robot is now; '
                   'destination is where it is going.'},
