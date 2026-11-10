@@ -74,7 +74,7 @@ DECK = {
                  '        # your function, reading self.slow_edges\n'
                  '        pass\n'
                  '\n'
-                 '    def compute_path(self, position, destination):\n'
+                 '    def compute_path(self, start, destination):\n'
                  '        # your compute_dijkstra_path(), with\n'
                  '        # build_graph(self.rows, self.cols, self.blocked)\n'
                  '        # and self.weight(); closest() stays a function\n'
@@ -86,7 +86,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'A copy of `BFS`, with one more list',
          'bullets': [
              '`BFS` holds its blocked list in `self.blocked` and has `add_blocked()`, '
-             '`clear_blocked()` and `compute_path(position, destination)`',
+             '`clear_blocked()` and `compute_path(start, destination)`',
              '`Dijkstra` is a copy of it with **one more list** and the **two changes**',
              'Same shape as the other two: told the position every call, returning a path that '
              'excludes the start',
@@ -183,7 +183,7 @@ DECK = {
                  '# Objects (6-5)\n'
                  'run_all_tests("Dijkstra", Dijkstra())\n'
                  '\n'
-                 'path = planner.compute_path(position, destination)\n'
+                 'path = planner.compute_path(start, destination)\n'
                  'slow(planner, (0, 1), (0, 2), 5)',
          'code_size': 20,
          'notes': 'On the lesson page these are two blocks side by side; the slide stacks them.'},

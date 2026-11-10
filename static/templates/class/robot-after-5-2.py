@@ -270,7 +270,7 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_manhattan_path(), unchanged: nothing in
         # it needs self., because the planner holds nothing
         pass
@@ -292,8 +292,8 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
     pass
 

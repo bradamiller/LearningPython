@@ -7,7 +7,7 @@ sidebar_position: 5
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-5 · Naming and Testing the Planner"
-  meta={['60–75 min', 'Functions as contracts', 'Test on screen first']}
+  meta={['55–70 min', 'Functions as contracts', 'Test on screen first']}
 />
 
 <TeacherBanner>
@@ -22,7 +22,7 @@ ever moves: **test on screen before you test on the floor.**
 
 By the end of this lesson you will be able to:
 
-- Rename `compute_path()` to `compute_manhattan_path(position, destination)` in `robot.py`, update every call to it, and say why each part of the name matters
+- Rename `compute_path()` to `compute_manhattan_path()` and say why the name names the algorithm
 - State the function's three promises and record them in a docstring
 - Explain why testing on screen is faster than debugging on the robot (**separation of concerns**)
 - Hand-calculate an expected path, then compare it to the actual output
@@ -40,10 +40,10 @@ section of `robot.py`:
 
 ```python
 # Lesson 4-4
-def compute_path(start, end):
+def compute_path(start, destination):
 
 # Lesson 4-5
-def compute_manhattan_path(position, destination):
+def compute_manhattan_path(start, destination):
 ```
 
 There are many ways to plan a route between two points. Each method, called an
@@ -70,14 +70,14 @@ the guarantee down, right under the `def` line, in a **docstring** — a string 
 quotes that Python keeps attached to the function:
 
 ```python
-def compute_manhattan_path(position, destination):
-    """Compute a Manhattan path from position to destination.
+def compute_manhattan_path(start, destination):
+    """Compute a Manhattan path from start to destination.
 
-    position:    an (x, y) tuple -- where the robot is now
+    start:       an (x, y) tuple -- where the robot is now
     destination: an (x, y) tuple -- where it needs to go
 
     Returns a list of (x, y) tuples the robot should move to,
-    not including position itself.
+    not including the start itself.
     """
     path = []
     ...
@@ -93,7 +93,7 @@ Every planner in this course, Manhattan now and BFS and Dijkstra later, makes th
 three promises.
 
 <KnowledgeCheck
-  question="A classmate's version returns [(0, 0), (1, 0), (2, 0)] for position (0, 0), destination (2, 0). Which promise did it break, and why does it matter?"
+  question="A classmate's version returns [(0, 0), (1, 0), (2, 0)] for start (0, 0), destination (2, 0). Which promise did it break, and why does it matter?"
   options={[
     {text: 'Promise 2 — the path does not end at the destination'},
     {text: 'Promise 1 — the path includes the start, so the robot would be told to drive to the intersection it is already standing on', correct: true},
@@ -103,16 +103,9 @@ three promises.
   explanation="The path is a list of places to drive TO. The robot is already at (0, 0); listing it as a step gives the driving code a zero-length move and a turn it cannot work out."
 />
 
-## Activity · The rename
-
-The rename is an edit to a function you already have, as Lesson 2-6 did with
-`get_error()`. In the MANHATTAN PLANNER section, change the `def` line and replace the
-one-line docstring with the full one above. The two unpacking lines change with it:
-`x, y = position` and `dest_x, dest_y = destination`. Then set the run line to
-`test_paper_paths()` and run it, and read the error. Your Lesson 4-4 tests still call
-`compute_path()`, which no longer exists. A rename changes every *call* as well as the
-definition, which is why names in this file are chosen carefully and changed almost
-never. Update both tests and run them again; same output as yesterday.
+**Make the change in `robot.py`:** rename the function, replace its one-line docstring with
+the one above, and update the calls in your two Lesson 4-4 tests. Run `test_paper_paths()`:
+same output as last lesson.
 
 <TeacherNote title="Solution after the rename (teacher copy)">
 
@@ -128,17 +121,17 @@ are byte-for-byte the Lesson 4-4 ones.
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_manhattan_path(position, destination):
-    """Compute a Manhattan path from position to destination.
+def compute_manhattan_path(start, destination):
+    """Compute a Manhattan path from start to destination.
 
-    position:    an (x, y) tuple -- where the robot is now
+    start:       an (x, y) tuple -- where the robot is now
     destination: an (x, y) tuple -- where it needs to go
 
     Returns a list of (x, y) tuples the robot should move to,
-    not including position itself.
+    not including the start itself.
     """
     path = []
-    x, y = position           # where the robot is now
+    x, y = start              # where the robot is now
     dest_x, dest_y = destination   # where it is going
 
     # East: keep stepping right until x matches dest_x
@@ -256,8 +249,8 @@ Paste this into `robot.py` at the end of the MANHATTAN PLANNER section — it is
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
     pass
 ```
@@ -290,10 +283,10 @@ move.
 <Reveal title="Check your run_test()" hint="write it and run all six cases first">
 
 ```python
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    actual = compute_manhattan_path(position, destination)
+    actual = compute_manhattan_path(start, destination)
     if actual == expected:
         print(test_name, "- PASS")
     else:
@@ -303,7 +296,7 @@ def run_test(test_name, position, destination, expected):
 ```
 
 If you built the `Manhattan` class (the optional extension below), the first line is
-`planner.compute_path(position, destination)` and nothing else changes.
+`planner.compute_path(start, destination)` and nothing else changes.
 
 </Reveal>
 
@@ -325,10 +318,10 @@ on day three.
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    actual = compute_manhattan_path(position, destination)
+    actual = compute_manhattan_path(start, destination)
     if actual == expected:
         print(test_name, "- PASS")
     else:
@@ -349,7 +342,7 @@ board.wait_for_button()
 test_planner()
 ```
 
-**Class track:** `run_test()` calls `planner.compute_path(position, destination)`;
+**Class track:** `run_test()` calls `planner.compute_path(start, destination)`;
 the suite is identical.
 
 </TeacherNote>
@@ -385,7 +378,7 @@ to watch the logic run. One at the top, and one inside each loop right after the
 `append`:
 
 ```python
-    print("Computing from", position, "to", destination)   # first line
+    print("Computing from", start, "to", destination)   # first line
     ...
         print("  added:", (x, y))                          # in each loop
 ```
@@ -402,7 +395,7 @@ to `- 1`, run `test_planner()`, and watch a test catch the bug — then change i
     {text: 'The destination tuple is backwards'},
     {text: 'The south loop ran before the west loop'},
   ]}
-  explanation="Swapping the two lines inside a loop (append first, then change x) shifts every entry of that leg by one: the start appears and the corner is missed. Promise 1 is the quickest way to spot it: the first element should never equal position."
+  explanation="Swapping the two lines inside a loop (append first, then change x) shifts every entry of that leg by one: the start appears and the corner is missed. Promise 1 is the quickest way to spot it: the first element should never equal the start."
 />
 
 <KnowledgeCheck
@@ -443,7 +436,7 @@ A function with a written promise and a set of tests is how big systems stay cor
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** state the three promises from memory; hand-calculate an expected path,
-write a `run_test()` call, and debug a failing test with prints. **Exit ticket:** "Write a test for position `(1,1)`, destination
+write a `run_test()` call, and debug a failing test with prints. **Exit ticket:** "Write a test for start `(1,1)`, destination
 `(3,2)` — what's the expected path?" (`[(2,1),(3,1),(3,2)]`). **Preview:** the algorithm's
 proven correct — next lesson we tackle *turning*, so the robot can actually face the right
 way at each step.
@@ -478,7 +471,7 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_manhattan_path(), unchanged: nothing in
         # it needs self., because the planner holds nothing
         pass
@@ -493,9 +486,9 @@ lines.
 <Reveal title="Check your Manhattan" hint="move the loops in and rerun the tests first">
 
 ```python
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         path = []
-        x, y = position           # where the robot is now
+        x, y = start              # where the robot is now
         dest_x, dest_y = destination   # where it is going
 
         # East: keep stepping right until x matches dest_x

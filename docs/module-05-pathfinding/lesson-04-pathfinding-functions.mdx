@@ -70,7 +70,7 @@ Before any code, two rules that every planner in this course follows, and that
 nothing later ever breaks. Keep them in view all module.
 
 **Rule 1 — the planner is told where the robot is.** Every planner looks like
-`compute_something_path(position, destination)`. It never remembers the position
+`compute_something_path(start, destination)`. It never remembers the position
 between calls. The driving code already knows where the robot is; if the planner
 kept its own copy, the two could disagree, and a planner that believes the robot is
 somewhere it isn't will plan from the wrong place. One owner.
@@ -121,15 +121,15 @@ isn't the function yet; Lesson 5-5 replaces it.
 
 ```python
 # ===== BFS PLANNER =====
-# The second planner. compute_bfs_path(position, destination)
+# The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
 # leaves the start out), but it searches the GRID GRAPH ring
 # by ring, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
     print("compute_bfs_path is not written yet!")
@@ -373,15 +373,15 @@ def test_blocked_graph():
 
 
 # ===== BFS PLANNER =====
-# The second planner. compute_bfs_path(position, destination)
+# The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
 # leaves the start out), but it searches the GRID GRAPH ring
 # by ring, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
     print("compute_bfs_path is not written yet!")

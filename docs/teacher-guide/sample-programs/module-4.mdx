@@ -40,15 +40,15 @@ lesson's design, not a bug.
 <TeacherNote title="4-2 Try it: compute_distance() and five calls">
 
 Scratch work: none of this goes into `robot.py`. The five calls are the ones the
-lesson gives as its test; each `end` is up and to the right of its `start`, so
+lesson gives as its test; each `destination` is up and to the right of its `start`, so
 nothing comes out negative until Lesson 4-4 deals with that. The lesson shows the
 output this prints, so students write only the function and check it against that.
 
 ```python title="lesson_4_2_tuples.py"
-def compute_distance(start, end):
-    print("From", start, "to", end)
-    x_distance = end[0] - start[0]
-    y_distance = end[1] - start[1]
+def compute_distance(start, destination):
+    print("From", start, "to", destination)
+    x_distance = destination[0] - start[0]
+    y_distance = destination[1] - start[1]
     print("Manhattan distance:", x_distance + y_distance)
 
 

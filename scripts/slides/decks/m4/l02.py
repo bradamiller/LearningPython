@@ -157,7 +157,7 @@ DECK = {
          'lead': 'A program, not paper. New MICROPYTHON file in XRP Code; it only prints, '
                  'so the robot won\'t move.',
          'steps': [
-             'Write compute_distance(start, end): print both tuples, then print the '
+             'Write compute_distance(start, destination): print both tuples, then print the '
              'Manhattan distance between them',
              'Put the test from the next slide under it: five calls. Run the program',
              'Check the shell against the output shown. If a distance is off, count it on '
@@ -172,8 +172,8 @@ DECK = {
                   'start.'},
 
         {'kind': 'code', 'title': 'The outline and the test', 'tag': 'Activity',
-         'code': 'def compute_distance(start, end):\n'
-                 '    # 1. Print start and end\n'
+         'code': 'def compute_distance(start, destination):\n'
+                 '    # 1. Print start and destination\n'
                  '    # 2. Work out the x distance and the y distance\n'
                  '    # 3. Print the total: the Manhattan distance\n'
                  '    pass\n'
@@ -185,7 +185,7 @@ DECK = {
                  'compute_distance((2, 0), (2, 3))\n'
                  'compute_distance((0, 2), (1, 3))',
          'code_size': 18,
-         'notes': 'Every end is up and to the right of its start, so no distance comes out '
+         'notes': 'Every destination is up and to the right of its start, so no distance comes out '
                   'negative; Lesson 4-4 deals with the other directions. The teacher copy '
                   'is on the Module 4 sample programs page.'},
 

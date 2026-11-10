@@ -340,17 +340,17 @@ def test_square():
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_manhattan_path(position, destination):
-    """Compute a Manhattan path from position to destination.
+def compute_manhattan_path(start, destination):
+    """Compute a Manhattan path from start to destination.
 
-    position:    an (x, y) tuple -- where the robot is now
+    start:       an (x, y) tuple -- where the robot is now
     destination: an (x, y) tuple -- where it needs to go
 
     Returns a list of (x, y) tuples the robot should move to,
-    not including position itself.
+    not including the start itself.
     """
     path = []
-    x, y = position           # where the robot is now
+    x, y = start              # where the robot is now
     dest_x, dest_y = destination   # where it is going
 
     # East: keep stepping right until x matches dest_x
@@ -390,10 +390,10 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    actual = compute_manhattan_path(position, destination)
+    actual = compute_manhattan_path(start, destination)
     if actual == expected:
         print(test_name, "- PASS")
     else:
@@ -868,9 +868,9 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         path = []
-        x, y = position           # where the robot is now
+        x, y = start              # where the robot is now
         dest_x, dest_y = destination   # where it is going
 
         # East: keep stepping right until x matches dest_x
@@ -912,10 +912,10 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    actual = planner.compute_path(position, destination)
+    actual = planner.compute_path(start, destination)
     if actual == expected:
         print(test_name, "- PASS")
     else:

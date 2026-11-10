@@ -272,7 +272,7 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_manhattan_path(), unchanged: nothing in
         # it needs self., because the planner holds nothing
         pass
@@ -301,8 +301,8 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
     pass
 
@@ -444,16 +444,16 @@ class BFS:
         # attribute freely; no global, no pop loop
         pass
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_bfs_path(), with
         # build_graph(self.rows, self.cols, self.blocked)
         pass
 
 planner = BFS()
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     # the SETUP and SEARCH of planner.compute_path, with two
     # changes: never stop early, and instead of came-from,
     # write the ring number: one more than current's
@@ -507,9 +507,9 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     pass
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     # problems = []
     # an empty path is fine only if already there; return
     # 1. first step next to the start?
@@ -519,17 +519,17 @@ def check_path(path, position, destination):
     # return problems
     pass
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    # path = planner.compute_path(position, destination)
+    # path = planner.compute_path(start, destination)
     # problems from check_path(), plus 5. the step count
     # no problems: print "  PASS ", test_name, "", path
     # otherwise: print "  FAIL " the same way, then each
     # problem on its own line, "          - " in front
     pass
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
     pass
@@ -675,7 +675,7 @@ def path_cost(position, path):
     of every segment, starting with position to path[0]."""
     pass
 
-def check_cost(test_name, position, destination, path, expected_cost):
+def check_cost(test_name, start, destination, path, expected_cost):
     """Print PASS if path costs expected_cost, else FAIL with
     the cost and the path; return True on a pass."""
     pass
@@ -694,11 +694,11 @@ def closest(intersections, distance):
     value in distance: a plain find-the-minimum loop."""
     pass
 
-def compute_dijkstra_path(position, destination):
-    """Cheapest path from position to destination around
+def compute_dijkstra_path(start, destination):
+    """Cheapest path from start to destination around
     planner.blocked, by weight(), as the intersections to drive to."""
     # SETUP: as planner.compute_path(), plus
-    #    distance = {position: 0}   cheapest cost so far
+    #    distance = {start: 0}      cheapest cost so far
     # SEARCH
     #    while to_visit is not empty:
     #       CHANGE 1: current = the closest() one; remove it
@@ -712,19 +712,19 @@ def compute_dijkstra_path(position, destination):
     # WALK-BACK: unchanged from planner.compute_path()
     pass
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     pass
 
-def compare(position, destination):
+def compare(start, destination):
     """Print BFS's and Dijkstra's answers for one trip:
     steps, cost and path, one line each."""
     for (name, planner) in [("BFS", planner.compute_path),
                             ("Dijkstra", compute_dijkstra_path)]:
-        path = planner(position, destination)
+        path = planner(start, destination)
         print(" ", "{:<9}".format(name), "steps:", len(path),
-              " cost:", path_cost(position, path), " ", path)
+              " cost:", path_cost(start, path), " ", path)
 
 # ===== RUN =====
 board.wait_for_button()

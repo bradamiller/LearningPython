@@ -43,15 +43,15 @@ outline. It is the Lesson 5-3 method, step by step; the comments are the pencil 
 Under it, paste the two functions that draw the picture at the end of the lesson.
 
 ```python
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     # SETUP
     # 1. graph = build_graph(ROWS, COLS, BLOCKED)
-    # 2. guard: if position or destination is not in the
+    # 2. guard: if start or destination is not in the
     #    graph, there is nothing to search -- return []
-    # 3. previous = {position: None}   the came-from table
-    #    to_visit = [position]        the list beside the grid
+    # 3. previous = {start: None}      the came-from table
+    #    to_visit = [start]           the list beside the grid
     # SEARCH
     # 4. while to_visit is not empty:
     #       take the OLDEST one off the FRONT -> current
@@ -63,14 +63,14 @@ def compute_bfs_path(position, destination):
     # WALK-BACK
     # 5. if destination never got an entry: return []
     # 6. path = [] ; current = destination
-    #    while current is not position:
+    #    while current is not start:
     #        append current; current = where it came from
     # 7. reverse path and return it
     pass
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     # the SETUP and SEARCH of compute_bfs_path, with two
     # changes: never stop early, and instead of came-from,
     # write the ring number: one more than current's
@@ -116,7 +116,7 @@ where it came from.
 
 <Figure
   src="/img/lesson-m5-05/code-pencil.svg"
-  alt="Seven lines of compute_bfs_path matched to the pencil method from Lesson 5-3. previous = {position: None} is the came-from table. to_visit = [position] is the to-visit list. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in previous means it has no number yet. previous[neighbor] = current writes where it came from. to_visit.append(neighbor) adds it to the end. while current != position walks back along came-from and stops at the start."
+  alt="Seven lines of compute_bfs_path matched to the pencil method from Lesson 5-3. previous = {start: None} is the came-from table. to_visit = [start] is the to-visit list. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in previous means it has no number yet. previous[neighbor] = current writes where it came from. to_visit.append(neighbor) adds it to the end. while current != start walks back along came-from and stops at the start."
   caption="Nothing in the function is new: each line is a step you already did with a pencil."
 />
 
@@ -177,7 +177,7 @@ Steps 5 to 7. Start at the destination and follow `previous` back until you reac
 start, appending as you go; then reverse, because you collected the path backwards.
 Lists have a `reverse()` method that does it in place.
 
-Why `while current != position` and not `while current is not None`? Both would
+Why `while current != start` and not `while current is not None`? Both would
 end the loop, but stopping *at* the start means the start is never appended — which
 is Rule 2 from Lesson 5-4 with no trimming needed afterwards. And it gives you
 "already there" for free: when `position == destination`, the loop never runs and
@@ -235,14 +235,14 @@ the test harness tells those two apart.
 <Reveal title="Check your compute_bfs_path()" hint="all five tests first">
 
 ```python
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph or destination not in graph:
+    if start not in graph or destination not in graph:
         return []
-    previous = {position: None}
-    to_visit = [position]
+    previous = {start: None}
+    to_visit = [start]
 
     while len(to_visit) > 0:
         current = to_visit.pop(0)
@@ -257,7 +257,7 @@ def compute_bfs_path(position, destination):
         return []
     path = []
     current = destination
-    while current != position:
+    while current != start:
         path.append(current)
         current = previous[current]
     path.reverse()
@@ -335,14 +335,14 @@ one route down these numbers, 1, 2, 3 … to the 7.
 <Reveal title="Check your bfs_rings()" hint="draw the wall grid first">
 
 ```python
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph:
+    if start not in graph:
         return {}
-    rings = {position: 0}
-    to_visit = [position]
+    rings = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = to_visit.pop(0)
         for neighbor in graph[current]:
@@ -362,21 +362,21 @@ the end of the module is in the [Module 5 sample programs](/teacher-guide/sample
 
 ```python
 # ===== BFS PLANNER =====
-# The second planner. compute_bfs_path(position, destination)
+# The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
 # leaves the start out), but it searches the GRID GRAPH ring
 # by ring, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph or destination not in graph:
+    if start not in graph or destination not in graph:
         return []
-    previous = {position: None}
-    to_visit = [position]
+    previous = {start: None}
+    to_visit = [start]
 
     while len(to_visit) > 0:
         current = to_visit.pop(0)
@@ -391,20 +391,20 @@ def compute_bfs_path(position, destination):
         return []
     path = []
     current = destination
-    while current != position:
+    while current != start:
         path.append(current)
         current = previous[current]
     path.reverse()
     return path
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph:
+    if start not in graph:
         return {}
-    rings = {position: 0}
-    to_visit = [position]
+    rings = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = to_visit.pop(0)
         for neighbor in graph[current]:
@@ -515,7 +515,7 @@ def add_blocked(intersection):
     if intersection not in BLOCKED:
         BLOCKED.append(intersection)
 
-def compute_bfs_path(position, destination):
+def compute_bfs_path(start, destination):
     graph = build_graph(ROWS, COLS, BLOCKED)
     ...   # the function body
 
@@ -535,7 +535,7 @@ class BFS:
         if intersection not in self.blocked:
             self.blocked.append(intersection)
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
         ...   # the function body, unchanged
 
@@ -578,7 +578,7 @@ class BFS:
         # attribute freely; no global, no pop loop
         pass
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_bfs_path(), with
         # build_graph(self.rows, self.cols, self.blocked)
         pass
@@ -634,12 +634,12 @@ goes around; `Manhattan` drives straight through — the same calls, different o
     def clear_blocked(self):
         self.blocked = []
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
-        if position not in graph or destination not in graph:
+        if start not in graph or destination not in graph:
             return []
-        previous = {position: None}
-        to_visit = [position]
+        previous = {start: None}
+        to_visit = [start]
 
         while len(to_visit) > 0:
             current = to_visit.pop(0)
@@ -654,7 +654,7 @@ goes around; `Manhattan` drives straight through — the same calls, different o
             return []
         path = []
         current = destination
-        while current != position:
+        while current != start:
             path.append(current)
             current = previous[current]
         path.reverse()
@@ -690,7 +690,7 @@ names, because that is what every student has; yours are the same names with
 
 - Which line is "take the oldest one"? (`to_visit.pop(0)`.) What would `pop()` do? (Newest first — depth-first, not shortest.)
 - Which line is "numbered once"? (`if neighbor not in previous`.)
-- Why does the walk-back stop at `position`? (So the start is never appended — Rule 2.)
+- Why does the walk-back stop at `start`? (So the start is never appended — Rule 2.)
 - Two cases return `[]`. What are they? (Already there; walled off.)
 
 <TeacherNote title="Assessment & next lesson">

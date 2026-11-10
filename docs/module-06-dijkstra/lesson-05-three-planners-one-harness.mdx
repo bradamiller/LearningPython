@@ -76,7 +76,7 @@ class Dijkstra:
         # your function, reading self.slow_edges
         pass
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_dijkstra_path(), with
         # build_graph(self.rows, self.cols, self.blocked)
         # and self.weight(); closest() stays a function
@@ -88,9 +88,9 @@ planner = Dijkstra()
 ## The third class
 
 `BFS` from Lesson 5-5 holds its blocked list in `self.blocked` and exposes
-`add_blocked()`, `clear_blocked()` and `compute_path(position, destination)`. `Dijkstra`
+`add_blocked()`, `clear_blocked()` and `compute_path(start, destination)`. `Dijkstra`
 is a copy of it with one more list and the two changes. Same shape as the other two:
-`compute_path(position, destination)`, told the position every call, returning a path
+`compute_path(start, destination)`, told the start every call, returning a path
 that excludes the start. The slow list is the planner's own data, as the blocked list
 already was, so nothing outside the object reaches in to change it.
 
@@ -120,7 +120,7 @@ run_all_tests("BFS",       BFS())
 run_all_tests("Dijkstra",  Dijkstra())
 ```
 
-Inside, every line is `planner.compute_path(position, destination)`,
+Inside, every line is `planner.compute_path(start, destination)`,
 `block(planner, ...)` or `clear(planner)`. Nothing in the harness names a class. The
 seventh case needs one more helper of the `block()` kind — `slow(planner, a, b, cost)`
 tells the planner about a slow edge *and* records it in `SLOW_EDGES`, so that
@@ -173,7 +173,7 @@ add_slow_edge((0, 1), (0, 2), 5)
 ```python
 run_all_tests("Dijkstra", Dijkstra())
 
-path = planner.compute_path(position, destination)
+path = planner.compute_path(start, destination)
 slow(planner, (0, 1), (0, 2), 5)
 ```
 
@@ -254,13 +254,13 @@ that showed you that is the one you wrote in Lesson 5-6, with one case added.
                 return cost
         return 1
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
-        if position not in graph or destination not in graph:
+        if start not in graph or destination not in graph:
             return []
-        previous = {position: None}
-        distance = {position: 0}
-        to_visit = [position]
+        previous = {start: None}
+        distance = {start: 0}
+        to_visit = [start]
 
         while len(to_visit) > 0:
             current = closest(to_visit, distance)
@@ -279,7 +279,7 @@ that showed you that is the one you wrote in Lesson 5-6, with one case added.
             return []
         path = []
         current = destination
-        while current != position:
+        while current != start:
             path.append(current)
             current = previous[current]
         path.reverse()
@@ -414,13 +414,13 @@ class Dijkstra:
                 return cost
         return 1
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
-        if position not in graph or destination not in graph:
+        if start not in graph or destination not in graph:
             return []
-        previous = {position: None}
-        distance = {position: 0}
-        to_visit = [position]
+        previous = {start: None}
+        distance = {start: 0}
+        to_visit = [start]
 
         while len(to_visit) > 0:
             current = closest(to_visit, distance)
@@ -439,7 +439,7 @@ class Dijkstra:
             return []
         path = []
         current = destination
-        while current != position:
+        while current != start:
             path.append(current)
             current = previous[current]
         path.reverse()
@@ -447,14 +447,14 @@ class Dijkstra:
 
 planner = Dijkstra()
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     graph = build_graph(ROWS, COLS, planner.blocked)
-    if position not in graph:
+    if start not in graph:
         return {}
-    distance = {position: 0}
-    to_visit = [position]
+    distance = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
         to_visit.remove(current)
@@ -466,15 +466,15 @@ def dijkstra_distances(position):
                     to_visit.append(neighbor)
     return distance
 
-def compare(position, destination):
+def compare(start, destination):
     """Print BFS's and Dijkstra's answers for one trip:
     steps, cost and path, one line each."""
     for (name, p) in [("BFS", BFS()), ("Dijkstra", Dijkstra())]:
         for (a, b, cost) in SLOW_EDGES:        # a fresh object knows nothing
             p.add_slow_edge(a, b, cost)
-        path = p.compute_path(position, destination)
+        path = p.compute_path(start, destination)
         print(" ", "{:<9}".format(name), "steps:", len(path),
-              " cost:", path_cost(position, path), " ", path)
+              " cost:", path_cost(start, path), " ", path)
 
 def test_three_planners():
     run_all_tests("Manhattan", Manhattan())

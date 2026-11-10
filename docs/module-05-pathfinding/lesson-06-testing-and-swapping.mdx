@@ -112,9 +112,9 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     pass
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     # problems = []
     # an empty path is fine only if already there; return
     # 1. first step next to the start?
@@ -124,17 +124,17 @@ def check_path(path, position, destination):
     # return problems
     pass
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    # path = planner(position, destination)
+    # path = planner(start, destination)
     # problems from check_path(), plus 5. the step count
     # no problems: print "  PASS ", test_name, "", path
     # otherwise: print "  FAIL " the same way, then each
     # problem on its own line, "          - " in front
     pass
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
     pass
@@ -220,8 +220,8 @@ Here's the one new Python idea in the lesson. Look at `run_path_test()`'s first
 parameter and the test you're about to write:
 
 ```python
-def run_path_test(test_name, planner, position, destination, expected_steps):
-    path = planner(position, destination)
+def run_path_test(test_name, planner, start, destination, expected_steps):
+    path = planner(start, destination)
     ...
 
 run_all_tests("Manhattan", compute_manhattan_path)
@@ -262,9 +262,9 @@ the outline; here is a PASS line and a FAIL line as they should look:
 ```
 
 <KnowledgeCheck
-  question={'Inside run_path_test, what does `path = planner(position, destination)` do when the harness was called with run_all_tests("BFS", compute_bfs_path)?'}
+  question={'Inside run_path_test, what does `path = planner(start, destination)` do when the harness was called with run_all_tests("BFS", compute_bfs_path)?'}
   options={[
-    {text: 'Calls compute_bfs_path(position, destination) — whichever planner was handed in', correct: true},
+    {text: 'Calls compute_bfs_path(start, destination) — whichever planner was handed in', correct: true},
     {text: 'Calls every planner in the file'},
     {text: 'Looks up a planner named "BFS"'},
     {text: 'Causes an error, because planner is a parameter'},
@@ -322,16 +322,16 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     return manhattan_distance(a, b) == 1
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     problems = []
     if len(path) == 0:
-        if position != destination:
+        if start != destination:
             problems.append("empty path, but the robot is not at the destination")
         return problems
-    if not is_neighbor(position, path[0]):
-        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if not is_neighbor(start, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(start))
     if path[-1] != destination:
         problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
     for i in range(1, len(path)):
@@ -342,11 +342,11 @@ def check_path(path, position, destination):
             problems.append("drives through blocked intersection " + str(step))
     return problems
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    path = planner(position, destination)
-    problems = check_path(path, position, destination)
+    path = planner(start, destination)
+    problems = check_path(path, start, destination)
     if len(path) != expected_steps:
         problems.append("expected " + str(expected_steps) + " steps, got " + str(len(path)))
     if len(problems) == 0:
@@ -357,10 +357,10 @@ def run_path_test(test_name, planner, position, destination, expected_steps):
         print("          -", problem)
     return False
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
-    path = planner(position, destination)
+    path = planner(start, destination)
     if len(path) == 0:
         print("  PASS ", test_name, "", path)
         return True
@@ -382,7 +382,7 @@ the rest of the file is as the Lesson 5-5 teacher copy left it. The whole file a
 the end of the module is in the [Module 5 sample programs](/teacher-guide/sample-programs/module-5).
 
 **Why the harness is `run_path_test()` and not `run_test()`:** Module 4's
-`run_test(test_name, position, destination, expected)` is still in the file, with
+`run_test(test_name, start, destination, expected)` is still in the file, with
 `test_planner()` calling it six times, and it calls `compute_manhattan_path()` by
 name with an exact-match compare. Reusing the name with a different parameter list
 would silently replace it and break `test_planner()`; renaming Module 4's would
@@ -407,16 +407,16 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     return manhattan_distance(a, b) == 1
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     problems = []
     if len(path) == 0:
-        if position != destination:
+        if start != destination:
             problems.append("empty path, but the robot is not at the destination")
         return problems
-    if not is_neighbor(position, path[0]):
-        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if not is_neighbor(start, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(start))
     if path[-1] != destination:
         problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
     for i in range(1, len(path)):
@@ -427,11 +427,11 @@ def check_path(path, position, destination):
             problems.append("drives through blocked intersection " + str(step))
     return problems
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    path = planner(position, destination)
-    problems = check_path(path, position, destination)
+    path = planner(start, destination)
+    problems = check_path(path, start, destination)
     if len(path) != expected_steps:
         problems.append("expected " + str(expected_steps) + " steps, got " + str(len(path)))
     if len(problems) == 0:
@@ -442,10 +442,10 @@ def run_path_test(test_name, planner, position, destination, expected_steps):
         print("          -", problem)
     return False
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
-    path = planner(position, destination)
+    path = planner(start, destination)
     if len(path) == 0:
         print("  PASS ", test_name, "", path)
         return True
@@ -548,7 +548,7 @@ run_all_tests("Manhattan", Manhattan())
 run_all_tests("BFS", BFS())
 
 # inside the harness:
-path = planner.compute_path(position, destination)
+path = planner.compute_path(start, destination)
 block(planner, (1, 0))
 clear(planner)
 ```
@@ -580,7 +580,7 @@ def clear(planner):
 ```
 
 Then the four edits: `run_path_test()` and `run_no_path_test()` call
-`planner.compute_path(position, destination)`; `run_all_tests()` calls
+`planner.compute_path(start, destination)`; `run_all_tests()` calls
 `block(planner, ...)` where it called `add_blocked(...)` and `clear(planner)` where it
 called `clear_blocked()`; and `check_path()`'s property 4 reads `HARNESS_BLOCKED`.
 `test_harness()` hands in `Manhattan()` and `BFS()`.

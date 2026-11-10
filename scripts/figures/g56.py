@@ -43,11 +43,11 @@ b.append('<rect x="160" y="40" width="360" height="120" rx="12" fill="#F1F6FB" s
 b.append('<text class="m" x="340" y="68" text-anchor="middle">run_all_tests(name, planner)</text>')
 b.append('<text class="sm" x="340" y="88" text-anchor="middle">the same six cases, the same checks</text>')
 b.append('<rect x="222" y="104" width="236" height="40" rx="8" fill="#FFFFFF" stroke="#22527B" stroke-width="2" stroke-dasharray="6 4"/>')
-b.append('<text class="ms" x="340" y="128" text-anchor="middle">planner(position, destination)</text>')
+b.append('<text class="ms" x="340" y="128" text-anchor="middle">planner(start, destination)</text>')
 for x,name,col,res in ((60,"compute_manhattan_path","#C77C02","Manhattan: 4 of 6 passed"),(440,"compute_bfs_path","#2E7D32","BFS: 6 of 6 passed")):
     b.append(f'<rect x="{x}" y="196" width="190" height="38" rx="8" fill="#FFFFFF" stroke="{col}" stroke-width="2"/><text class="ms" x="{x+95}" y="219" text-anchor="middle">{name}</text>')
     b.append(f'<path d="M {x+95} 194 C {x+95} 172, 340 176, 340 148" fill="none" stroke="{col}" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#aG)"/>')
     b.append(f'<text class="nb" x="{x+95}" y="254" text-anchor="middle" style="fill:{col}">{res}</text>')
 b+=['<text class="n" x="340" y="286" text-anchor="middle">Hand the harness a function, no parentheses: <tspan class="ms">run_all_tests("BFS", compute_bfs_path)</tspan></text>']
 open(OUTDIR+'planner-slot.svg','w').write(svg('One harness, either planner',
- 'The test harness run_all_tests(name, planner) runs the same six cases and checks, calling planner(position, destination) through a slot. Either compute_manhattan_path or compute_bfs_path can be handed in. Manhattan passes 4 of 6; BFS passes 6 of 6. Hand the harness the function with no parentheses: run_all_tests("BFS", compute_bfs_path).',b,H=300))
+ 'The test harness run_all_tests(name, planner) runs the same six cases and checks, calling planner(start, destination) through a slot. Either compute_manhattan_path or compute_bfs_path can be handed in. Manhattan passes 4 of 6; BFS passes 6 of 6. Hand the harness the function with no parentheses: run_all_tests("BFS", compute_bfs_path).',b,H=300))

@@ -5,14 +5,14 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Rename `compute_path()` to `compute_manhattan_path(position, destination)`, update every call, and say why each part of the name matters',
+             'Rename `compute_path()` to `compute_manhattan_path()` and say why the name names the algorithm',
              'State the function\'s **three promises** and record them in a **docstring**',
              'Explain why testing on screen is faster than debugging on the robot (**separation of concerns**)',
              'Hand-calculate an expected path, then compare it to the actual output',
              'Add a reusable `run_test()` helper and a test that runs six cases through it',
              'Debug a failing test with print statements',
          ],
-         'notes': '60 to 75 minutes. Not a line inside the planner changes: it gets its real name and '
+         'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets its real name and '
                   'its promises written down, and then the promises are proven on screen. Two '
                   'non-negotiables: expected paths are calculated by hand before anything runs, and '
                   'the suite covers every direction and edge case.'},
@@ -28,10 +28,10 @@ DECK = {
         {'kind': 'code', 'title': 'A rename with a reason',
          'lead': 'The whole change to the function\'s first line, in the MANHATTAN PLANNER section:',
          'code': '# Lesson 4-4\n'
-                 'def compute_path(start, end):\n'
+                 'def compute_path(start, destination):\n'
                  '\n'
                  '# Lesson 4-5\n'
-                 'def compute_manhattan_path(position, destination):',
+                 'def compute_manhattan_path(start, destination):',
          'code_size': 24},
 
         {'kind': 'bullets', 'title': 'Why name the planner?',
@@ -43,8 +43,7 @@ DECK = {
          ],
          'callout': 'That\'s why the Manhattan planner gets a unique name that reflects its algorithm',
          'tone': 'teal',
-         'notes': 'Module 5 adds compute_bfs_path() beside this one. position is where the robot is now; '
-                  'destination is where it is going.'},
+         'notes': 'Module 5 adds compute_bfs_path() beside this one, with the same parameters.'},
 
         {'kind': 'check',
          'question': 'Why does the function\'s name include \'manhattan\' when it is the only planner '
@@ -63,14 +62,14 @@ DECK = {
                  'the guarantee in a **docstring**: a string in triple quotes, right under the `def` '
                  'line, that Python keeps attached to the function.',
          'lead_h': 1.25,
-         'code': 'def compute_manhattan_path(position, destination):\n'
-                 '    """Compute a Manhattan path from position to destination.\n'
+         'code': 'def compute_manhattan_path(start, destination):\n'
+                 '    """Compute a Manhattan path from start to destination.\n'
                  '\n'
-                 '    position:    an (x, y) tuple -- where the robot is now\n'
+                 '    start:       an (x, y) tuple -- where the robot is now\n'
                  '    destination: an (x, y) tuple -- where it needs to go\n'
                  '\n'
                  '    Returns a list of (x, y) tuples the robot should move to,\n'
-                 '    not including position itself.\n'
+                 '    not including the start itself.\n'
                  '    """\n'
                  '    path = []\n'
                  '    ...',
@@ -79,7 +78,7 @@ DECK = {
                   'the first line is a one-sentence summary by convention. Don\'t go further than '
                   'that. The last sentence is the one people get wrong: check it against the code. '
                   'The first thing appended to path is the position after the first step, never '
-                  'position itself.'},
+                  'the start itself.'},
 
         {'kind': 'bullets', 'title': 'The three promises',
          'bullets': [
@@ -90,11 +89,11 @@ DECK = {
          'callout': 'Every planner in this course makes the same three promises',
          'tone': 'teal',
          'notes': 'Promise 1 matters because each element is a place to drive to, and the robot '
-                  'already stands on position. It bites in Lesson 4-7: a path that includes the start '
+                  'already stands on the start. It bites in Lesson 4-7: a path that includes the start '
                   'makes the first desired_heading() call see a zero move and return None.'},
 
         {'kind': 'check',
-         'question': 'A classmate\'s version returns `[(0, 0), (1, 0), (2, 0)]` for position (0, 0), '
+         'question': 'A classmate\'s version returns `[(0, 0), (1, 0), (2, 0)]` for start (0, 0), '
                      'destination (2, 0). Which promise did it break, and why does it matter?',
          'options': ['Promise 2: the path does not end at the destination',
                      'Promise 1: it includes the start, so the robot is told to drive where it already is',
@@ -105,17 +104,12 @@ DECK = {
                         'listing it as a step gives the driving code a zero-length move and a turn '
                         'it cannot work out.'},
 
-        {'kind': 'steps', 'title': 'Activity · The rename',
-         'steps': [
-             'The rename is an edit to the function you have, as Lesson 2-6 did with `get_error()`',
-             'In MANHATTAN PLANNER, change the `def` line and replace the one-line docstring with the full one',
-             'Set the run line to `test_paper_paths()`, run it, and **read the error**: your Lesson 4-4 '
-             'tests still call `compute_path()`, which no longer exists',
-             'Update both tests and run them again: same output as yesterday',
-         ],
-         'callout': 'A rename changes every **call** as well as the definition. That\'s why names in '
-                    'this file are chosen carefully and changed almost never.',
-         'tone': 'orange'},
+        {'kind': 'bullets', 'title': 'Make the change in robot.py',
+         'bullets': [
+             'Rename the function and replace its one-line docstring with the full one',
+             'Update the calls in your two Lesson 4-4 tests',
+             'Run `test_paper_paths()`: same output as last lesson',
+         ]},
 
         {'kind': 'bullets', 'title': 'Why test without the robot?',
          'bullets': [
@@ -203,8 +197,8 @@ DECK = {
                  '# with one you traced by hand, printing PASS or FAIL. A\n'
                  '# planner test from here on is a list of run_test() calls.\n'
                  '\n'
-                 'def run_test(test_name, position, destination, expected):\n'
-                 '    """Plan position -> destination and compare the result\n'
+                 'def run_test(test_name, start, destination, expected):\n'
+                 '    """Plan start -> destination and compare the result\n'
                  '    with expected; print test_name with PASS or FAIL."""\n'
                  '    pass',
          'code_size': 17,
@@ -212,7 +206,7 @@ DECK = {
                     'parameters. On a FAIL, print **both** lists.',
          'tone': 'teal',
          'notes': 'A harness is a function whose only job is to test another one. Class-track '
-                  'students ask planner.compute_path(position, destination) for the path; the rest '
+                  'students ask planner.compute_path(start, destination) for the path; the rest '
                   'is the same. The finished run_test() is behind a reveal on the lesson page.'},
 
         {'kind': 'code', 'title': 'Activity · A suite of cases',
@@ -262,7 +256,7 @@ DECK = {
                  '`compute_manhattan_path` to watch the logic run. One at the top, and one inside each '
                  'loop right after the `append`:',
          'lead_h': 1.25,
-         'code': '    print("Computing from", position, "to", destination)   # first line\n'
+         'code': '    print("Computing from", start, "to", destination)   # first line\n'
                  '    ...\n'
                  '        print("  added:", (x, y))                          # in each loop',
          'code_size': 18,
@@ -289,7 +283,7 @@ DECK = {
          'answer': 1,
          'explanation': 'Swapping the two lines inside a loop (append first, then change x) shifts that '
                         'leg by one: the start appears and the corner is missed. Promise 1 spots it '
-                        'fastest: the first element should never equal position.',
+                        'fastest: the first element should never equal the start.',
          'notes': 'Answer: B. The append-before-update bug is the one students actually make. '
                   'Promise 1 is broken, and the corner (1, 3) is missing.'},
 
@@ -327,7 +321,7 @@ DECK = {
          'next': 'turning, so the robot faces the right way at each step',
          'notes': 'Answers: Module 5 adds compute_bfs_path, and the name says which. No start in the path; ends at the destination; [] when already there. Faster, and it points to the exact broken input. Hand-calculation, before '
                   'you run the code. Every direction and edge case, not just one happy path. Exit '
-                  'ticket: "Write a test for position (1,1), destination (3,2): what\'s the expected '
+                  'ticket: "Write a test for start (1,1), destination (3,2): what\'s the expected '
                   'path?" ([(2,1),(3,1),(3,2)]). The algorithm is proven correct; next lesson tackles '
                   'turning.'},
 
@@ -362,7 +356,7 @@ DECK = {
                  '    def __init__(self):\n'
                  '        pass        # nothing to set up\n'
                  '\n'
-                 '    def compute_path(self, position, destination):\n'
+                 '    def compute_path(self, start, destination):\n'
                  '        # your compute_manhattan_path(), unchanged: nothing in\n'
                  '        # it needs self., because the planner holds nothing\n'
                  '        pass\n'

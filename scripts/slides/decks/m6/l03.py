@@ -69,11 +69,11 @@ DECK = {
          'code_size': 17},
 
         {'kind': 'code', 'title': 'Skeleton (2 of 3): the planner\'s outline',
-         'code': 'def compute_dijkstra_path(position, destination):\n'
-                 '    """Cheapest path from position to destination around\n'
+         'code': 'def compute_dijkstra_path(start, destination):\n'
+                 '    """Cheapest path from start to destination around\n'
                  '    BLOCKED, by weight(), as the intersections to drive to."""\n'
                  '    # SETUP: as compute_bfs_path(), plus\n'
-                 '    #    distance = {position: 0}   cheapest cost so far\n'
+                 '    #    distance = {start: 0}      cheapest cost so far\n'
                  '    # SEARCH\n'
                  '    #    while to_visit is not empty:\n'
                  '    #       CHANGE 1: current = the closest() one; remove it\n'
@@ -91,17 +91,17 @@ DECK = {
                   'body goes in first, and the comments are a checklist, not a second algorithm.'},
 
         {'kind': 'code', 'title': 'Skeleton (3 of 3): the cost map, the printer',
-         'code': 'def dijkstra_distances(position):\n'
+         'code': 'def dijkstra_distances(start):\n'
                  '    """Cheapest cost to every reachable intersection, as a\n'
                  '    dictionary -- the search with no break, like bfs_rings()."""\n'
                  '    pass\n'
                  '\n'
-                 'def compare(position, destination):\n'
+                 'def compare(start, destination):\n'
                  '    """Print BFS\'s and Dijkstra\'s answers for one trip:\n'
                  '    steps, cost and path, one line each."""\n'
                  '    for (name, planner) in [("BFS", compute_bfs_path),\n'
                  '                            ("Dijkstra", compute_dijkstra_path)]:\n'
-                 '        path = planner(position, destination)\n'
+                 '        path = planner(start, destination)\n'
                  '        print(" ", "{:<9}".format(name), "steps:", len(path),\n'
                  '              " cost:", path_cost(position, path), " ", path)',
          'code_size': 15,
@@ -164,7 +164,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'Change 1 · `distance` and `closest()`',
          'bullets': [
              'A second dictionary, `distance`: the cheapest cost found so far to each intersection',
-             'It starts as `{position: 0}`, because the start costs nothing to reach',
+             'It starts as `{start: 0}`, because the start costs nothing to reach',
              'Each time round the loop: `closest(to_visit, distance)`',
              ['Assume the first entry is best, loop over the rest, keep any entry whose `distance` is smaller',
               'Finding the biggest number in a list (Module 1), with the comparison turned round'],
@@ -250,7 +250,7 @@ DECK = {
          'lead': 'Work on your copy, in order. Run `test_three_planners()` after each step, and don\'t '
                  'go on until the result matches.',
          'steps': [
-             'Write `closest()`. Add `distance = {position: 0}` to the setup and swap `to_visit.pop(0)` '
+             'Write `closest()`. Add `distance = {start: 0}` to the setup and swap `to_visit.pop(0)` '
              'for `closest()` + `remove()`. Harness: still **6 of 7**: the cost case still fails, '
              'because nothing adds a weight yet.',
              'Replace the neighbor loop with the weighted version. Harness: **7 of 7**. The cost check '

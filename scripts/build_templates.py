@@ -1407,11 +1407,6 @@ RECIPE = [
     ]),
     ("4-5", [
         Rename("compute_path", "compute_manhattan_path", "4-5"),
-        # "The two unpacking lines change with it"
-        EditOutline("compute_manhattan_path", "4-5", "x, y = start              ",
-                    "x, y = position           ", r"`x, y = position` and"),
-        EditOutline("compute_manhattan_path", "4-5", "dest_x, dest_y = end      ",
-                    "dest_x, dest_y = destination   ", r"`dest_x, dest_y = destination`"),
         # "Update both tests": the 4-4 tests with the new name
         Refresh("test_paper_paths", "4-5"),
         Refresh("test_edge_cases", "4-5"),

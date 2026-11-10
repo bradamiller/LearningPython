@@ -111,7 +111,7 @@ DECK = {
          'bullets': [
              'Write the code the way you worked out each new position',
              '`x` and `y` are the robot\'s **current position**: `x, y = start`',
-             '`dest_x` and `dest_y` are the destination: `dest_x, dest_y = end`',
+             '`dest_x` and `dest_y` are the destination: `dest_x, dest_y = destination`',
              'Loop 1: keep adding 1 to x while x is less than `dest_x`',
              'Loop 2: do the same for y',
              'Inside each loop, **append** the new current position `(x, y)` to the path',
@@ -132,12 +132,12 @@ DECK = {
         {'kind': 'code', 'title': 'Add to robot.py: MANHATTAN PLANNER',
          'code': '# ===== MANHATTAN PLANNER =====\n'
                  '\n'
-                 'def compute_path(start, end):\n'
-                 '    """Return the (x, y) steps from start to end, across\n'
+                 'def compute_path(start, destination):\n'
+                 '    """Return the (x, y) steps from start to destination, across\n'
                  '    first, then up or down. The start itself is not in the list."""\n'
                  '    path = []\n'
                  '    x, y = start              # where the robot is now\n'
-                 '    dest_x, dest_y = end      # where it is going\n'
+                 '    dest_x, dest_y = destination   # where it is going\n'
                  '\n'
                  '    # East: keep stepping right until x matches dest_x\n'
                  '    while x < dest_x:\n'
@@ -233,7 +233,7 @@ DECK = {
          'question': 'Why does the Step 2 version (east and north only) return `[]` for (3,3) → (1,0)?',
          'options': ['`append()` is broken',
                      'Both while conditions start False (3 is not < 1, 3 is not < 0), so neither loop runs',
-                     'The start and end are the same',
+                     'The start and destination are the same',
                      'It runs forever'],
          'answer': 1,
          'explanation': 'East and north only handle increasing x and y. Moving left or down needs the '

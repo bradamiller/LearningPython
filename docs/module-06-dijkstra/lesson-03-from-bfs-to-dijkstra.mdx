@@ -55,11 +55,11 @@ def closest(intersections, distance):
     value in distance: a plain find-the-minimum loop."""
     pass
 
-def compute_dijkstra_path(position, destination):
-    """Cheapest path from position to destination around
+def compute_dijkstra_path(start, destination):
+    """Cheapest path from start to destination around
     BLOCKED, by weight(), as the intersections to drive to."""
     # SETUP: as compute_bfs_path(), plus
-    #    distance = {position: 0}   cheapest cost so far
+    #    distance = {start: 0}      cheapest cost so far
     # SEARCH
     #    while to_visit is not empty:
     #       CHANGE 1: current = the closest() one; remove it
@@ -73,19 +73,19 @@ def compute_dijkstra_path(position, destination):
     # WALK-BACK: unchanged from compute_bfs_path()
     pass
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     pass
 
-def compare(position, destination):
+def compare(start, destination):
     """Print BFS's and Dijkstra's answers for one trip:
     steps, cost and path, one line each."""
     for (name, planner) in [("BFS", compute_bfs_path),
                             ("Dijkstra", compute_dijkstra_path)]:
-        path = planner(position, destination)
+        path = planner(start, destination)
         print(" ", "{:<9}".format(name), "steps:", len(path),
-              " cost:", path_cost(position, path), " ", path)
+              " cost:", path_cost(start, path), " ", path)
 ```
 
 `compare()` is given — it's a print, not a planner. Its `for` line unpacks each pair in
@@ -143,7 +143,7 @@ the closest. With weights that's no longer true. An intersection reached by a ch
 detour may be closer, in cost, than one that went on the list earlier by a slow road.
 
 So Dijkstra keeps a second dictionary, `distance`, holding the cheapest cost found so
-far to each intersection — it starts as `{position: 0}`, because the start costs
+far to each intersection — it starts as `{start: 0}`, because the start costs
 nothing to reach — and each time round the loop it takes the waiting intersection with
 the smallest value. That lookup is `closest(to_visit, distance)`: start by assuming the
 first entry is best, loop over the rest, and keep any entry whose `distance` is smaller
@@ -226,7 +226,7 @@ at the end of the function is untouched. The only new idea is that `previous` ca
 Work on your copy, in this order, running `test_three_planners()` after each step.
 Don't go on until the step's result matches.
 
-1. Write `closest()`. Add `distance = {position: 0}` to the setup and swap
+1. Write `closest()`. Add `distance = {start: 0}` to the setup and swap
    `to_visit.pop(0)` for `closest()` + `remove()`. Harness: still 6 of 7 — the
    Module 5 properties all hold, and the cost case still fails, because nothing adds
    a weight yet.
@@ -329,15 +329,15 @@ def closest(intersections, distance):
             best = node
     return best
 
-def compute_dijkstra_path(position, destination):
-    """Cheapest path from position to destination around
+def compute_dijkstra_path(start, destination):
+    """Cheapest path from start to destination around
     BLOCKED, by weight(), as the intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph or destination not in graph:
+    if start not in graph or destination not in graph:
         return []
-    previous = {position: None}
-    distance = {position: 0}                   # NEW
-    to_visit = [position]
+    previous = {start: None}
+    distance = {start: 0}                      # NEW
+    to_visit = [start]
 
     while len(to_visit) > 0:
         current = closest(to_visit, distance)  # CHANGE 1: was pop(0)
@@ -356,20 +356,20 @@ def compute_dijkstra_path(position, destination):
         return []
     path = []
     current = destination
-    while current != position:
+    while current != start:
         path.append(current)
         current = previous[current]
     path.reverse()
     return path
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph:
+    if start not in graph:
         return {}
-    distance = {position: 0}
-    to_visit = [position]
+    distance = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
         to_visit.remove(current)
@@ -445,15 +445,15 @@ def closest(intersections, distance):
             best = node
     return best
 
-def compute_dijkstra_path(position, destination):
-    """Cheapest path from position to destination around
+def compute_dijkstra_path(start, destination):
+    """Cheapest path from start to destination around
     BLOCKED, by weight(), as the intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph or destination not in graph:
+    if start not in graph or destination not in graph:
         return []
-    previous = {position: None}
-    distance = {position: 0}
-    to_visit = [position]
+    previous = {start: None}
+    distance = {start: 0}
+    to_visit = [start]
 
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
@@ -472,20 +472,20 @@ def compute_dijkstra_path(position, destination):
         return []
     path = []
     current = destination
-    while current != position:
+    while current != start:
         path.append(current)
         current = previous[current]
     path.reverse()
     return path
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph:
+    if start not in graph:
         return {}
-    distance = {position: 0}
-    to_visit = [position]
+    distance = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
         to_visit.remove(current)
@@ -497,14 +497,14 @@ def dijkstra_distances(position):
                     to_visit.append(neighbor)
     return distance
 
-def compare(position, destination):
+def compare(start, destination):
     """Print BFS's and Dijkstra's answers for one trip:
     steps, cost and path, one line each."""
     for (name, planner) in [("BFS", compute_bfs_path),
                             ("Dijkstra", compute_dijkstra_path)]:
-        path = planner(position, destination)
+        path = planner(start, destination)
         print(" ", "{:<9}".format(name), "steps:", len(path),
-              " cost:", path_cost(position, path), " ", path)
+              " cost:", path_cost(start, path), " ", path)
 
 def test_three_planners():
     run_all_tests("Manhattan", compute_manhattan_path)

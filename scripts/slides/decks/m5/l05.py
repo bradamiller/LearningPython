@@ -30,15 +30,15 @@ DECK = {
                   'They compare against both today.'},
 
         {'kind': 'code', 'title': 'Skeleton, part 1: setup and search',
-         'code': 'def compute_bfs_path(position, destination):\n'
-                 '    """Shortest path from position to destination around\n'
+         'code': 'def compute_bfs_path(start, destination):\n'
+                 '    """Shortest path from start to destination around\n'
                  '    BLOCKED, as the list of intersections to drive to."""\n'
                  '    # SETUP\n'
                  '    # 1. graph = build_graph(ROWS, COLS, BLOCKED)\n'
-                 '    # 2. guard: if position or destination is not in the\n'
+                 '    # 2. guard: if start or destination is not in the\n'
                  '    #    graph, there is nothing to search -- return []\n'
-                 '    # 3. previous = {position: None}   the came-from table\n'
-                 '    #    to_visit = [position]        the list beside the grid\n'
+                 '    # 3. previous = {start: None}      the came-from table\n'
+                 '    #    to_visit = [start]           the list beside the grid\n'
                  '    # SEARCH\n'
                  '    # 4. while to_visit is not empty:\n'
                  '    #       take the OLDEST one off the FRONT -> current\n'
@@ -72,9 +72,9 @@ DECK = {
          'lead': 'Under `compute_bfs_path()`, paste the two functions that draw the picture at the end '
                  'of the lesson. The first is an outline:',
          'lead_h': 1.2,
-         'code': 'def bfs_rings(position):\n'
+         'code': 'def bfs_rings(start):\n'
                  '    """Ring number of every intersection reachable from\n'
-                 '    position, as a dictionary -- the search with no break."""\n'
+                 '    start, as a dictionary -- the search with no break."""\n'
                  '    # the SETUP and SEARCH of compute_bfs_path, with two\n'
                  '    # changes: never stop early, and instead of came-from,\n'
                  '    # write the ring number: one more than current\'s\n'
@@ -187,9 +187,9 @@ DECK = {
              'Run `test_bfs_open()` again. Now the step counts should match',
          ]},
 
-        {'kind': 'bullets', 'title': 'Why stop at `position`, and not at `None`?',
+        {'kind': 'bullets', 'title': 'Why stop at `start`, and not at `None`?',
          'notes': 'The check on the next slide is the exit ticket.',
-         'lead': '`while current != position` or `while current is not None`: both would end the loop.',
+         'lead': '`while current != start` or `while current is not None`: both would end the loop.',
          'lead_h': 1.3,
          'bullets': [
              'Stopping **at** the start means the start is never appended',
@@ -349,7 +349,7 @@ DECK = {
                  '        # attribute freely; no global, no pop loop\n'
                  '        pass\n'
                  '\n'
-                 '    def compute_path(self, position, destination):\n'
+                 '    def compute_path(self, start, destination):\n'
                  '        # your compute_bfs_path(), with\n'
                  '        # build_graph(self.rows, self.cols, self.blocked)\n'
                  '        pass\n'
@@ -369,7 +369,7 @@ DECK = {
          'questions': [
              'Which line is "take the oldest one"? What would `pop()` do?',
              'Which line is "numbered once"?',
-             'Why does the walk-back stop at `position`?',
+             'Why does the walk-back stop at `start`?',
              'Two cases return `[]`. What are they?',
          ],
          'next': 'test it properly, and swap in Manhattan',

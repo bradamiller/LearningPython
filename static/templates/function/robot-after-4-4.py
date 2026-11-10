@@ -280,12 +280,12 @@ def test_square():
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_path(start, end):
-    """Return the (x, y) steps from start to end, across
+def compute_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
     path = []
     x, y = start              # where the robot is now
-    dest_x, dest_y = end      # where it is going
+    dest_x, dest_y = destination   # where it is going
 
     # East: keep stepping right until x matches dest_x
     while x < dest_x:

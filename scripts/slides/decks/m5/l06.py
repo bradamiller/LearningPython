@@ -100,9 +100,9 @@ DECK = {
 
         {'kind': 'code', 'title': 'The skeleton: the checker',
          'notes': "Students write this in Step 2. The outline's first line after problems = [] is the empty-path special case.",
-         'code': 'def check_path(path, position, destination):\n'
+         'code': 'def check_path(path, start, destination):\n'
                  '    """Return a list of everything wrong with path as a route\n'
-                 '    from position to destination; [] means it is good."""\n'
+                 '    from start to destination; [] means it is good."""\n'
                  '    # problems = []\n'
                  '    # an empty path is fine only if already there; return\n'
                  '    # 1. first step next to the start?\n'
@@ -117,17 +117,17 @@ DECK = {
 
         {'kind': 'code', 'title': 'The skeleton: the two tests',
          'notes': 'Students write both in Step 3, after the idea of handing over a function. Each returns True on a pass so run_all_tests() can count.',
-         'code': 'def run_path_test(test_name, planner, position, destination, expected_steps):\n'
+         'code': 'def run_path_test(test_name, planner, start, destination, expected_steps):\n'
                  '    """Ask planner for a path, check the five properties, print\n'
                  '    PASS or FAIL with the path; return True on a pass."""\n'
-                 '    # path = planner(position, destination)\n'
+                 '    # path = planner(start, destination)\n'
                  '    # problems from check_path(), plus 5. the step count\n'
                  '    # no problems: print "  PASS ", test_name, "", path\n'
                  '    # otherwise: print "  FAIL " the same way, then each\n'
                  '    # problem on its own line, "          - " in front\n'
                  '    pass\n'
                  '\n'
-                 'def run_no_path_test(test_name, planner, position, destination):\n'
+                 'def run_no_path_test(test_name, planner, start, destination):\n'
                  '    """For a walled-off destination the only right answer is\n'
                  '    []; print PASS or FAIL and return True on a pass."""\n'
                  '    pass',
@@ -220,8 +220,8 @@ DECK = {
          'notes': 'Read the last two lines aloud: the name of the function, with no parentheses, goes in like any other value.',
          'lead': 'The one new Python idea in the lesson. Look at the last two lines:',
          'lead_h': 0.8,
-         'code': 'def run_path_test(test_name, planner, position, destination, expected_steps):\n'
-                 '    path = planner(position, destination)\n'
+         'code': 'def run_path_test(test_name, planner, start, destination, expected_steps):\n'
+                 '    path = planner(start, destination)\n'
                  '    ...\n'
                  '\n'
                  'run_all_tests("Manhattan", compute_manhattan_path)\n'
@@ -279,7 +279,7 @@ DECK = {
          'notes': 'Answer: A. The lesson\'s question says the harness was called with '
                   'run_all_tests("BFS", compute_bfs_path); the slide shortens that to fit. planner is a '
                   'parameter holding a function, and calling it calls the function that was passed in.',
-         'options': ['Calls `compute_bfs_path(position, destination)`: whichever planner was handed in',
+         'options': ['Calls `compute_bfs_path(start, destination)`: whichever planner was handed in',
                      'Calls every planner in the file',
                      'Looks up a planner named "BFS"',
                      'Causes an error, because `planner` is a parameter'],
@@ -370,12 +370,12 @@ DECK = {
                  'run_all_tests("BFS", BFS())\n'
                  '\n'
                  '# inside the harness:\n'
-                 'path = planner.compute_path(position, destination)\n'
+                 'path = planner.compute_path(start, destination)\n'
                  'block(planner, (1, 0))\n'
                  'clear(planner)',
          'code_size': 16,
          'notes': 'Optional extension for the class track. The four edits: run_path_test() and '
-                  'run_no_path_test() call planner.compute_path(position, destination); run_all_tests() '
+                  'run_no_path_test() call planner.compute_path(start, destination); run_all_tests() '
                   'calls block(planner, ...) and clear(planner); check_path()\'s property 4 reads '
                   'HARNESS_BLOCKED; test_harness() hands in Manhattan() and BFS(). test_swap() gets the '
                   'same treatment. Solution file: lesson-06-testing-class-addon.py.'},

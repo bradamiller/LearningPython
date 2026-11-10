@@ -242,7 +242,7 @@ b.append('<rect x="150" y="20" width="380" height="104" rx="12" fill="#F1F6FB" s
 b.append('<text class="m" x="340" y="46" text-anchor="middle">run_all_tests(name, planner)</text>')
 b.append('<text class="sm" x="340" y="64" text-anchor="middle">seven cases; never names a class</text>')
 b.append('<rect x="186" y="76" width="308" height="34" rx="8" fill="#FFFFFF" stroke="#22527B" stroke-width="2" stroke-dasharray="6 4"/>')
-b.append('<text class="ms" x="340" y="98" text-anchor="middle">planner.compute_path(position, destination)</text>')
+b.append('<text class="ms" x="340" y="98" text-anchor="middle">planner.compute_path(start, destination)</text>')
 meth=["compute_path()","add_blocked()","clear_blocked()","add_slow_edge()","clear_slow_edges()"]
 cols=[("Manhattan()",AMB,[1,0,0,0,0],"4 of 7"),("BFS()",BLU,[1,1,1,0,0],"6 of 7"),("Dijkstra()",GRN,[1,1,1,1,1],"7 of 7")]
 for k,(n,col,use,res) in enumerate(cols):

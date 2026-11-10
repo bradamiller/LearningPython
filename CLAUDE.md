@@ -670,6 +670,14 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   `test_from_everywhere()` was dropped with it. Old 4-7 to 4-9 are now 4-6 to 4-8
   everywhere (files, decks, image folders `lesson-m4-0N`, templates, cross-references).
   Anything older in this file that says 4-6 to 4-9 means the pre-merge numbers.
+- **2026-11-10: planner parameters are `(start, destination)` everywhere (Brad).** 4-4's
+  `compute_path(start, destination)`, 4-5's `compute_manhattan_path(start, destination)`,
+  BFS, Dijkstra, the class `compute_path(self, start, destination)`, and the test helpers
+  (`run_test`, `run_path_test`, `run_no_path_test`, `check_path`, `check_cost`, `compare`,
+  `bfs_rings`, `dijkstra_distances`). 4-2's `compute_distance(start, destination)` too. The
+  4-5 rename changes only the name, so it is a short paragraph, not an activity. Callers
+  still pass the robot's pose variable `position` (and `navigator.position`); pose functions
+  (`desired_heading`, `drive_path`, `navigate`, `path_cost`) keep `position`.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   the middle header chip names the TOPIC, matching Modules 2–5 ("while loops",
   "Python data"). Module 1's reads "Blockly Foundation" (1-1 to 1-5), "Driving
@@ -1110,7 +1118,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   and the cross-reference resolver: every `Lessons? N-M` in `docs/` must match a
   frontmatter `title: "Lesson N-M …"`. The identifier check is a def/class signature
   diff across modules; function-vs-`self` method pairs are the intended two tracks, and
-  `compute_path(self, position, destination)` must agree in M4, M5 and M6.
+  `compute_path(self, start, destination)` must agree in M4, M5 and M6.
 
 - **CODE FENCES ARE ASCII-ONLY, AND THE BUILD ENFORCES IT (Brad, 2026-09-29).** Brad hit a
   `\u2190` (left arrow) in a comment inside M2 L2's `while` program: it renders beautifully
@@ -1438,7 +1446,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     Brad settled the shape in a design review: functions-first with class
     extensions gated *per student* on working code (not a course-wide track);
     extensions are `LineSensor`, `LineTrack`, `Navigator` and the planners;
-    planners are stateless (`compute_path(position, destination)`, path excludes
+    planners are stateless (`compute_path(start, destination)`, path excludes
     the start, `add_blocked(intersection)`, graph rebuilt from the blocked list
     each call, no XRPLib imports); the Navigator is the sole owner of position
     and heading, so the 4-9 sync step is gone; paper testing is structural
@@ -2132,9 +2140,9 @@ goes further):
     the test; a test that plans first prints the plan and then calls
     `board.wait_for_button()` itself before driving (the "plan, print, button, drive"
     habit from 4-8). Paper tests need only the `RUN` press.
-  - **Two harnesses, two names.** M4's `run_test(test_name, position, destination,
+  - **Two harnesses, two names.** M4's `run_test(test_name, start, destination,
     expected)` is exact-match (right for Manhattan) and stays; M5 L6's property
-    harness is `run_path_test(test_name, planner, position, destination,
+    harness is `run_path_test(test_name, planner, start, destination,
     expected_steps)` + `run_no_path_test(...)`, wrapped by `run_all_tests(name,
     planner)` — the polymorphism demo. Module 6 adds `clear_slow_edges()` and a
     seventh "slow row" case inside `run_all_tests()` (Manhattan 4/7, BFS 6/7,
@@ -2292,7 +2300,7 @@ design intent, not decoration, so don't contradict them in a lesson:**
 3. **The swap is the payoff.** Manhattan and the BFS planner answer the same
    request, so the navigator doesn't care which it holds: get Manhattan working,
    then hand it BFS with almost no other change — and Module 6 does it a third time
-   with Dijkstra. All three use `compute_path(self, position, destination)` and
+   with Dijkstra. All three use `compute_path(self, start, destination)` and
    exclude the start from the path they return (§9); verified 2026-10-15.
 4. **Planners are testable without a robot** — they're arithmetic that returns a
    list of intersections. M4 L6 is the worked example.

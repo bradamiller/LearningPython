@@ -58,7 +58,7 @@ DECK = {
                  '    of every segment, starting with position to path[0]."""\n'
                  '    pass\n'
                  '\n'
-                 'def check_cost(test_name, position, destination, path, expected_cost):\n'
+                 'def check_cost(test_name, start, destination, path, expected_cost):\n'
                  '    """Print PASS if path costs expected_cost, else FAIL with\n'
                  '    the cost and the path; return True on a pass."""\n'
                  '    pass',

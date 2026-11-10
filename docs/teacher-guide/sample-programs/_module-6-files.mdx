@@ -337,17 +337,17 @@ def test_square():
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_manhattan_path(position, destination):
-    """Compute a Manhattan path from position to destination.
+def compute_manhattan_path(start, destination):
+    """Compute a Manhattan path from start to destination.
 
-    position:    an (x, y) tuple -- where the robot is now
+    start:       an (x, y) tuple -- where the robot is now
     destination: an (x, y) tuple -- where it needs to go
 
     Returns a list of (x, y) tuples the robot should move to,
-    not including position itself.
+    not including the start itself.
     """
     path = []
-    x, y = position           # where the robot is now
+    x, y = start              # where the robot is now
     dest_x, dest_y = destination   # where it is going
 
     # East: keep stepping right until x matches dest_x
@@ -387,10 +387,10 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    actual = compute_manhattan_path(position, destination)
+    actual = compute_manhattan_path(start, destination)
     if actual == expected:
         print(test_name, "- PASS")
     else:
@@ -578,21 +578,21 @@ def test_blocked_graph():
 
 
 # ===== BFS PLANNER =====
-# The second planner. compute_bfs_path(position, destination)
+# The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
 # leaves the start out), but it searches the GRID GRAPH ring
 # by ring, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph or destination not in graph:
+    if start not in graph or destination not in graph:
         return []
-    previous = {position: None}
-    to_visit = [position]
+    previous = {start: None}
+    to_visit = [start]
 
     while len(to_visit) > 0:
         current = to_visit.pop(0)
@@ -607,20 +607,20 @@ def compute_bfs_path(position, destination):
         return []
     path = []
     current = destination
-    while current != position:
+    while current != start:
         path.append(current)
         current = previous[current]
     path.reverse()
     return path
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph:
+    if start not in graph:
         return {}
-    rings = {position: 0}
-    to_visit = [position]
+    rings = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = to_visit.pop(0)
         for neighbor in graph[current]:
@@ -701,16 +701,16 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     return manhattan_distance(a, b) == 1
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     problems = []
     if len(path) == 0:
-        if position != destination:
+        if start != destination:
             problems.append("empty path, but the robot is not at the destination")
         return problems
-    if not is_neighbor(position, path[0]):
-        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if not is_neighbor(start, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(start))
     if path[-1] != destination:
         problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
     for i in range(1, len(path)):
@@ -721,11 +721,11 @@ def check_path(path, position, destination):
             problems.append("drives through blocked intersection " + str(step))
     return problems
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    path = planner(position, destination)
-    problems = check_path(path, position, destination)
+    path = planner(start, destination)
+    problems = check_path(path, start, destination)
     if len(path) != expected_steps:
         problems.append("expected " + str(expected_steps) + " steps, got " + str(len(path)))
     if len(problems) == 0:
@@ -736,10 +736,10 @@ def run_path_test(test_name, planner, position, destination, expected_steps):
         print("          -", problem)
     return False
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
-    path = planner(position, destination)
+    path = planner(start, destination)
     if len(path) == 0:
         print("  PASS ", test_name, "", path)
         return True
@@ -996,10 +996,10 @@ def path_cost(position, path):
         here = step
     return total
 
-def check_cost(test_name, position, destination, path, expected_cost):
+def check_cost(test_name, start, destination, path, expected_cost):
     """Print PASS if path costs expected_cost, else FAIL with
     the cost and the path; return True on a pass."""
-    cost = path_cost(position, path)
+    cost = path_cost(start, path)
     if cost == expected_cost:
         print("  PASS ", test_name, "", path, " cost:", cost)
         return True
@@ -1045,15 +1045,15 @@ def closest(intersections, distance):
             best = node
     return best
 
-def compute_dijkstra_path(position, destination):
-    """Cheapest path from position to destination around
+def compute_dijkstra_path(start, destination):
+    """Cheapest path from start to destination around
     BLOCKED, by weight(), as the intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph or destination not in graph:
+    if start not in graph or destination not in graph:
         return []
-    previous = {position: None}
-    distance = {position: 0}
-    to_visit = [position]
+    previous = {start: None}
+    distance = {start: 0}
+    to_visit = [start]
 
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
@@ -1072,20 +1072,20 @@ def compute_dijkstra_path(position, destination):
         return []
     path = []
     current = destination
-    while current != position:
+    while current != start:
         path.append(current)
         current = previous[current]
     path.reverse()
     return path
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if position not in graph:
+    if start not in graph:
         return {}
-    distance = {position: 0}
-    to_visit = [position]
+    distance = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
         to_visit.remove(current)
@@ -1097,14 +1097,14 @@ def dijkstra_distances(position):
                     to_visit.append(neighbor)
     return distance
 
-def compare(position, destination):
+def compare(start, destination):
     """Print BFS's and Dijkstra's answers for one trip:
     steps, cost and path, one line each."""
     for (name, planner) in [("BFS", compute_bfs_path),
                             ("Dijkstra", compute_dijkstra_path)]:
-        path = planner(position, destination)
+        path = planner(start, destination)
         print(" ", "{:<9}".format(name), "steps:", len(path),
-              " cost:", path_cost(position, path), " ", path)
+              " cost:", path_cost(start, path), " ", path)
 
 def test_three_planners():
     run_all_tests("Manhattan", compute_manhattan_path)
@@ -1498,9 +1498,9 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         path = []
-        x, y = position           # where the robot is now
+        x, y = start              # where the robot is now
         dest_x, dest_y = destination   # where it is going
 
         # East: keep stepping right until x matches dest_x
@@ -1555,10 +1555,10 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    actual = Manhattan().compute_path(position, destination)
+    actual = Manhattan().compute_path(start, destination)
     if actual == expected:
         print(test_name, "- PASS")
     else:
@@ -1772,12 +1772,12 @@ class BFS:
     def clear_blocked(self):
         self.blocked = []
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
-        if position not in graph or destination not in graph:
+        if start not in graph or destination not in graph:
             return []
-        previous = {position: None}
-        to_visit = [position]
+        previous = {start: None}
+        to_visit = [start]
 
         while len(to_visit) > 0:
             current = to_visit.pop(0)
@@ -1792,7 +1792,7 @@ class BFS:
             return []
         path = []
         current = destination
-        while current != position:
+        while current != start:
             path.append(current)
             current = previous[current]
         path.reverse()
@@ -1804,14 +1804,14 @@ class BFS:
     def clear_slow_edges(self):
         pass
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     graph = build_graph(ROWS, COLS, planner.blocked)
-    if position not in graph:
+    if start not in graph:
         return {}
-    rings = {position: 0}
-    to_visit = [position]
+    rings = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = to_visit.pop(0)
         for neighbor in graph[current]:
@@ -1924,16 +1924,16 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     return manhattan_distance(a, b) == 1
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     problems = []
     if len(path) == 0:
-        if position != destination:
+        if start != destination:
             problems.append("empty path, but the robot is not at the destination")
         return problems
-    if not is_neighbor(position, path[0]):
-        problems.append("first step " + str(path[0]) + " is not next to the start " + str(position))
+    if not is_neighbor(start, path[0]):
+        problems.append("first step " + str(path[0]) + " is not next to the start " + str(start))
     if path[-1] != destination:
         problems.append("last step " + str(path[-1]) + " is not the destination " + str(destination))
     for i in range(1, len(path)):
@@ -1944,11 +1944,11 @@ def check_path(path, position, destination):
             problems.append("drives through blocked intersection " + str(step))
     return problems
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    path = planner.compute_path(position, destination)
-    problems = check_path(path, position, destination)
+    path = planner.compute_path(start, destination)
+    problems = check_path(path, start, destination)
     if len(path) != expected_steps:
         problems.append("expected " + str(expected_steps) + " steps, got " + str(len(path)))
     if len(problems) == 0:
@@ -1959,10 +1959,10 @@ def run_path_test(test_name, planner, position, destination, expected_steps):
         print("          -", problem)
     return False
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
-    path = planner.compute_path(position, destination)
+    path = planner.compute_path(start, destination)
     if len(path) == 0:
         print("  PASS ", test_name, "", path)
         return True
@@ -2174,10 +2174,10 @@ def path_cost(position, path):
         here = step
     return total
 
-def check_cost(test_name, position, destination, path, expected_cost):
+def check_cost(test_name, start, destination, path, expected_cost):
     """Print PASS if path costs expected_cost, else FAIL with
     the cost and the path; return True on a pass."""
-    cost = path_cost(position, path)
+    cost = path_cost(start, path)
     if cost == expected_cost:
         print("  PASS ", test_name, "", path, " cost:", cost)
         return True
@@ -2249,13 +2249,13 @@ class Dijkstra:
                 return cost
         return 1
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
-        if position not in graph or destination not in graph:
+        if start not in graph or destination not in graph:
             return []
-        previous = {position: None}
-        distance = {position: 0}
-        to_visit = [position]
+        previous = {start: None}
+        distance = {start: 0}
+        to_visit = [start]
 
         while len(to_visit) > 0:
             current = closest(to_visit, distance)
@@ -2274,7 +2274,7 @@ class Dijkstra:
             return []
         path = []
         current = destination
-        while current != position:
+        while current != start:
             path.append(current)
             current = previous[current]
         path.reverse()
@@ -2282,14 +2282,14 @@ class Dijkstra:
 
 planner = Dijkstra()
 
-def dijkstra_distances(position):
+def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
     dictionary -- the search with no break, like bfs_rings()."""
     graph = build_graph(ROWS, COLS, planner.blocked)
-    if position not in graph:
+    if start not in graph:
         return {}
-    distance = {position: 0}
-    to_visit = [position]
+    distance = {start: 0}
+    to_visit = [start]
     while len(to_visit) > 0:
         current = closest(to_visit, distance)
         to_visit.remove(current)
@@ -2301,15 +2301,15 @@ def dijkstra_distances(position):
                     to_visit.append(neighbor)
     return distance
 
-def compare(position, destination):
+def compare(start, destination):
     """Print BFS's and Dijkstra's answers for one trip:
     steps, cost and path, one line each."""
     for (name, p) in [("BFS", BFS()), ("Dijkstra", Dijkstra())]:
         for (a, b, cost) in SLOW_EDGES:        # a fresh object knows nothing
             p.add_slow_edge(a, b, cost)
-        path = p.compute_path(position, destination)
+        path = p.compute_path(start, destination)
         print(" ", "{:<9}".format(name), "steps:", len(path),
-              " cost:", path_cost(position, path), " ", path)
+              " cost:", path_cost(start, path), " ", path)
 
 def test_three_planners():
     run_all_tests("Manhattan", Manhattan())

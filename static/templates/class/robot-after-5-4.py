@@ -270,7 +270,7 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_manhattan_path(), unchanged: nothing in
         # it needs self., because the planner holds nothing
         pass
@@ -292,8 +292,8 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
     pass
 
@@ -404,15 +404,15 @@ def clear_blocked():
 
 
 # ===== BFS PLANNER =====
-# The second planner. compute_bfs_path(position, destination)
+# The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
 # leaves the start out), but it searches the GRID GRAPH ring
 # by ring, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
-def compute_bfs_path(position, destination):
-    """Shortest path from position to destination around
+def compute_bfs_path(start, destination):
+    """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call
     print("compute_bfs_path is not written yet!")

@@ -69,7 +69,7 @@ def path_cost(position, path):
     of every segment, starting with position to path[0]."""
     pass
 
-def check_cost(test_name, position, destination, path, expected_cost):
+def check_cost(test_name, start, destination, path, expected_cost):
     """Print PASS if path costs expected_cost, else FAIL with
     the cost and the path; return True on a pass."""
     pass
@@ -230,10 +230,10 @@ def path_cost(position, path):
         here = step
     return total
 
-def check_cost(test_name, position, destination, path, expected_cost):
+def check_cost(test_name, start, destination, path, expected_cost):
     """Print PASS if path costs expected_cost, else FAIL with
     the cost and the path; return True on a pass."""
-    cost = path_cost(position, path)
+    cost = path_cost(start, path)
     if cost == expected_cost:
         print("  PASS ", test_name, "", path, " cost:", cost)
         return True
@@ -294,10 +294,10 @@ def path_cost(position, path):
         here = step
     return total
 
-def check_cost(test_name, position, destination, path, expected_cost):
+def check_cost(test_name, start, destination, path, expected_cost):
     """Print PASS if path costs expected_cost, else FAIL with
     the cost and the path; return True on a pass."""
-    cost = path_cost(position, path)
+    cost = path_cost(start, path)
     if cost == expected_cost:
         print("  PASS ", test_name, "", path, " cost:", cost)
         return True

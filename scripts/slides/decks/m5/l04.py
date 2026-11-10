@@ -48,7 +48,7 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Two rules we will never break',
          'bullets': [
-             '**Rule 1: the planner is told where the robot is.** Every planner looks like `compute_something_path(position, destination)`',
+             '**Rule 1: the planner is told where the robot is.** Every planner looks like `compute_something_path(start, destination)`',
              ['It never remembers the position between calls',
               'The driving code already knows. Two copies could disagree, and the planner would plan from the wrong place. **One owner.**'],
              '**Rule 2: the path is the list of intersections to drive to.** The start is not in it',
@@ -96,15 +96,15 @@ DECK = {
          'lead': 'Paste it after GRID GRAPH, above `RUN`. The placeholder body is given: Lesson 5-5 replaces it.',
          'lead_h': 0.7,
          'code': '# ===== BFS PLANNER =====\n'
-                 '# The second planner. compute_bfs_path(position, destination)\n'
+                 '# The second planner. compute_bfs_path(start, destination)\n'
                  '# has the same shape as the MANHATTAN PLANNER\'s function and\n'
                  '# keeps the same two promises (told the position; the path\n'
                  '# leaves the start out), but it searches the GRID GRAPH ring\n'
                  '# by ring, so it routes AROUND whatever is in BLOCKED. Pure\n'
                  '# dictionary work: every test here runs with the robot still.\n'
                  '\n'
-                 'def compute_bfs_path(position, destination):\n'
-                 '    """Shortest path from position to destination around\n'
+                 'def compute_bfs_path(start, destination):\n'
+                 '    """Shortest path from start to destination around\n'
                  '    BLOCKED, as the list of intersections to drive to."""\n'
                  '    graph = build_graph(ROWS, COLS, BLOCKED)      # rebuilt every call\n'
                  '    print("compute_bfs_path is not written yet!")\n'

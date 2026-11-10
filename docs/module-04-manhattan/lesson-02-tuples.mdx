@@ -200,20 +200,20 @@ This activity is a program you write, not paper work. In XRP Code, make a new fi
 (`File → New File`, then **MICROPYTHON**) and run it on your robot. The robot won't
 move: the program only prints, and everything it prints appears in the shell.
 
-1. **Write the function.** `compute_distance(start, end)` takes two positions as
+1. **Write the function.** `compute_distance(start, destination)` takes two positions as
    tuples. It prints both tuples, then prints the Manhattan distance between them,
    worked out the way the code above does. Fill in this outline:
 
    ```python
-   def compute_distance(start, end):
-       # 1. Print start and end
+   def compute_distance(start, destination):
+       # 1. Print start and destination
        # 2. Work out the x distance and the y distance
        # 3. Print the total: the Manhattan distance
        pass
    ```
 
 2. **Run the test.** This test calls your function five times. Put it at the bottom
-   of your file, under the function, and run the program. In every call `end` is up
+   of your file, under the function, and run the program. In every call `destination` is up
    and to the right of `start`, so no distance comes out negative. (Lesson 4-4 deals
    with the other directions.)
 
@@ -248,7 +248,7 @@ move: the program only prints, and everything it prints appears in the shell.
 <TeacherNote title="Solution (teacher copy)">
 
 The complete program is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4).
-`compute_distance()` only prints; it returns nothing. Lesson 4-4's `compute_path(start, end)`
+`compute_distance()` only prints; it returns nothing. Lesson 4-4's `compute_path(start, destination)`
 takes the same two tuples and returns a list, so students meet the same parameters again
 there.
 

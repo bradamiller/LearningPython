@@ -270,7 +270,7 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_manhattan_path(), unchanged: nothing in
         # it needs self., because the planner holds nothing
         pass
@@ -299,8 +299,8 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
     pass
 
@@ -416,16 +416,16 @@ class BFS:
         # attribute freely; no global, no pop loop
         pass
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_bfs_path(), with
         # build_graph(self.rows, self.cols, self.blocked)
         pass
 
 planner = BFS()
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     # the SETUP and SEARCH of planner.compute_path, with two
     # changes: never stop early, and instead of came-from,
     # write the ring number: one more than current's

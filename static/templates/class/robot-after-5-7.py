@@ -272,7 +272,7 @@ class Manhattan:
     def __init__(self):
         pass        # nothing to set up
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_manhattan_path(), unchanged: nothing in
         # it needs self., because the planner holds nothing
         pass
@@ -301,8 +301,8 @@ def test_edge_cases():
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
 
-def run_test(test_name, position, destination, expected):
-    """Plan position -> destination and compare the result
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
     pass
 
@@ -418,16 +418,16 @@ class BFS:
         # attribute freely; no global, no pop loop
         pass
 
-    def compute_path(self, position, destination):
+    def compute_path(self, start, destination):
         # your compute_bfs_path(), with
         # build_graph(self.rows, self.cols, self.blocked)
         pass
 
 planner = BFS()
 
-def bfs_rings(position):
+def bfs_rings(start):
     """Ring number of every intersection reachable from
-    position, as a dictionary -- the search with no break."""
+    start, as a dictionary -- the search with no break."""
     # the SETUP and SEARCH of planner.compute_path, with two
     # changes: never stop early, and instead of came-from,
     # write the ring number: one more than current's
@@ -481,9 +481,9 @@ def is_neighbor(a, b):
     """True when a and b are one step apart."""
     pass
 
-def check_path(path, position, destination):
+def check_path(path, start, destination):
     """Return a list of everything wrong with path as a route
-    from position to destination; [] means it is good."""
+    from start to destination; [] means it is good."""
     # problems = []
     # an empty path is fine only if already there; return
     # 1. first step next to the start?
@@ -493,17 +493,17 @@ def check_path(path, position, destination):
     # return problems
     pass
 
-def run_path_test(test_name, planner, position, destination, expected_steps):
+def run_path_test(test_name, planner, start, destination, expected_steps):
     """Ask planner for a path, check the five properties, print
     PASS or FAIL with the path; return True on a pass."""
-    # path = planner.compute_path(position, destination)
+    # path = planner.compute_path(start, destination)
     # problems from check_path(), plus 5. the step count
     # no problems: print "  PASS ", test_name, "", path
     # otherwise: print "  FAIL " the same way, then each
     # problem on its own line, "          - " in front
     pass
 
-def run_no_path_test(test_name, planner, position, destination):
+def run_no_path_test(test_name, planner, start, destination):
     """For a walled-off destination the only right answer is
     []; print PASS or FAIL and return True on a pass."""
     pass
