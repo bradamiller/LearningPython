@@ -82,14 +82,17 @@ DECK = {
                   'The first thing appended to path is the position after the first step, never '
                   'position itself.'},
 
-        {'kind': 'figure', 'title': 'The three promises',
-         'figure': '/img/lesson-m4-05/three-promises.svg',
-         'caption': 'Promise 1 matters because each element is a place to drive to, and the robot '
-                    'already stands on position. Every planner in this course makes the same three '
-                    'promises.',
-         'notes': 'Promise 1 bites in Lesson 4-7: a path that includes the start makes the first '
-                  'desired_heading() call see a zero move and return None. Promise 3: every while '
-                  'loop is skipped, so path stays empty.'},
+        {'kind': 'bullets', 'title': 'The three promises',
+         'bullets': [
+             'The path **never includes the start**',
+             'The path **ends at the destination**',
+             'The path is **empty** if you\'re already there: every `while` loop is skipped',
+         ],
+         'callout': 'Every planner in this course makes the same three promises',
+         'tone': 'teal',
+         'notes': 'Promise 1 matters because each element is a place to drive to, and the robot '
+                  'already stands on position. It bites in Lesson 4-7: a path that includes the start '
+                  'makes the first desired_heading() call see a zero move and return None.'},
 
         {'kind': 'check',
          'question': 'A classmate\'s version returns `[(0, 0), (1, 0), (2, 0)]` for position (0, 0), '

@@ -89,12 +89,6 @@ The function promises three things:
 2. The path **ends at the destination.**
 3. The path is **empty** if you're already there, because every `while` loop is skipped.
 
-<Figure
-  src="/img/lesson-m4-05/three-promises.svg"
-  alt="A 4 by 4 grid with the robot at (0, 0) and the path to (2, 1) drawn through (1, 0) and (2, 0). Badge 1 marks the robot's spot, badge 2 the destination. Beside it, the call returns [(1, 0), (2, 0), (2, 1)], and the three promises: never includes the start; ends at the destination; empty if already there, so compute_manhattan_path((1, 1), (1, 1)) returns []."
-  caption="Promise 1 matters because each element is a place to drive to, and the robot already stands on position."
-/>
-
 Every planner in this course, Manhattan now and BFS and Dijkstra later, makes the same
 three promises.
 
