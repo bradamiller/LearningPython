@@ -328,7 +328,7 @@ DECK = {
              'Why four while loops instead of `if/else`?',
              'Why isn\'t the starting position in the path?',
          ],
-         'next': 'the same function gets its real name, and a written promise',
+         'next': 'the same function gets a name for its algorithm, a written promise and unit tests',
          'notes': 'Answers: an L-shaped path, predictable and always valid. Only the relevant loops '
                   'run; a False condition just skips. The robot is already there, so len(path) is the '
                   'number of steps. Exit ticket: "What does compute_path((0,0),(2,3)) return, and how '

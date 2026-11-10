@@ -5,34 +5,25 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Rename `compute_path()` to `compute_manhattan_path()` and say why the name names the algorithm',
+             'Say why the planner\'s name says which algorithm it uses',
              'State the function\'s **three promises** and record them in a **docstring**',
-             'Explain why testing on screen is faster than debugging on the robot (**separation of concerns**)',
+             'Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)',
              'Hand-calculate an expected path, then compare it to the actual output',
              'Add a reusable `run_test()` helper and a test that runs six cases through it',
              'Debug a failing test with print statements',
          ],
-         'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets its real name and '
-                  'its promises written down, and then the promises are proven on screen. Two '
+         'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets a name for its '
+                  'algorithm and its promises written down, and unit tests prove them on screen. Two '
                   'non-negotiables: expected paths are calculated by hand before anything runs, and '
                   'the suite covers every direction and edge case.'},
 
-        {'kind': 'bullets', 'title': 'Same function, its real name',
+        {'kind': 'bullets', 'title': 'Same function, a name for its algorithm',
          'bullets': [
              'Last lesson you wrote `compute_path()` and it worked',
-             'Today it gets its real name and its promises written down, and you prove them on screen',
+             'Today it gets a name for its algorithm and its promises written down, and unit tests prove them',
          ],
          'callout': '**Test on screen before you test on the floor.**',
          'tone': 'teal'},
-
-        {'kind': 'code', 'title': 'A rename with a reason',
-         'lead': 'The whole change to the function\'s first line, in the MANHATTAN PLANNER section:',
-         'code': '# Lesson 4-4\n'
-                 'def compute_path(start, destination):\n'
-                 '\n'
-                 '# Lesson 4-5\n'
-                 'def compute_manhattan_path(start, destination):',
-         'code_size': 24},
 
         {'kind': 'bullets', 'title': 'Why name the planner?',
          'bullets': [
@@ -104,18 +95,21 @@ DECK = {
                         'listing it as a step gives the driving code a zero-length move and a turn '
                         'it cannot work out.'},
 
-        {'kind': 'bullets', 'title': 'Make the change in robot.py',
+        {'kind': 'bullets', 'title': 'In robot.py',
          'bullets': [
-             'Rename the function and replace its one-line docstring with the full one',
-             'Update the calls in your two Lesson 4-4 tests',
+             'Change `compute_path` to `compute_manhattan_path` everywhere it appears',
+             'Replace the one-line docstring with the full one',
              'Run `test_paper_paths()`: same output as last lesson',
          ]},
 
-        {'kind': 'bullets', 'title': 'Why test without the robot?',
+        {'kind': 'bullets', 'title': 'Unit testing',
          'bullets': [
-             'A robot driving into a wall tells you **something** is wrong, but not **what** or **where**',
-             'A failing test on screen tells you the **exact input** that produced the wrong output',
+             'A **unit test** checks one function on its own: inputs you chose, an answer you worked out',
+             'Professional software runs thousands on every change, catching a mistake minutes after it is made',
+             'A robot driving into a wall says **something** is wrong; a failing test shows the **exact input**',
          ],
+         'callout': 'Your planner is an ideal unit: tuples in, list out',
+         'tone': 'teal',
          'notes': 'Five minutes of testing saves thirty minutes chasing a robot.'},
 
         {'kind': 'table', 'title': 'Separation of concerns',
@@ -301,9 +295,6 @@ DECK = {
          'cards': [
              ('Maps', 'Routing engines', '\nA map app\'s router is handed your location every time '
                                          'you ask. Swap in a bike router and the app does not change.'),
-             ('Software', 'Unit tests', '\nProfessional code ships with automated tests that check '
-                                        'each function against known answers: a formal version of '
-                                        'run_test().'),
              ('Aerospace', 'Simulation', '\nRockets and planes fly thousands of simulated missions '
                                          'before a real one, catching problems on screen.'),
          ],

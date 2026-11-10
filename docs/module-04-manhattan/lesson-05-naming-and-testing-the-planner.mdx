@@ -14,17 +14,17 @@ sidebar_position: 5
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Last lesson you wrote `compute_path()` and it worked. This lesson gives it its real name,
-writes down what it promises, and then proves those promises on screen, before the robot
-ever moves: **test on screen before you test on the floor.**
+Last lesson you wrote `compute_path()` and it worked. This lesson names it after its
+algorithm, writes down what it promises, and proves those promises with **unit tests**,
+before the robot ever moves: **test on screen before you test on the floor.**
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Rename `compute_path()` to `compute_manhattan_path()` and say why the name names the algorithm
+- Say why the planner's name says which algorithm it uses
 - State the function's three promises and record them in a docstring
-- Explain why testing on screen is faster than debugging on the robot (**separation of concerns**)
+- Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)
 - Hand-calculate an expected path, then compare it to the actual output
 - Add a reusable `run_test()` helper to the MANHATTAN PLANNER section, and a test that runs a suite of six cases through it
 - Debug a failing test with print statements
@@ -33,24 +33,14 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-05-naming-and-testing-the-planner" />
 
-## A rename with a reason
-
-Here is the whole change to the function's first line, in the MANHATTAN PLANNER
-section of `robot.py`:
-
-```python
-# Lesson 4-4
-def compute_path(start, destination):
-
-# Lesson 4-5
-def compute_manhattan_path(start, destination):
-```
+## A name for the algorithm
 
 There are many ways to plan a route between two points. Each method, called an
 **algorithm**, has its own strengths. The Manhattan planner is fast and easy to write, but it
 fails if a road is blocked; later you'll build more robust planners. When every planner makes
 the same promises (its **interface**), a program can swap one for another as the need changes.
-That's why the Manhattan planner gets a unique name that reflects its algorithm.
+That's why the Manhattan planner gets a unique name that reflects its algorithm:
+`compute_manhattan_path()`.
 
 <KnowledgeCheck
   question="Why does the function's name include 'manhattan' when it is the only planner in the course so far?"
@@ -103,13 +93,13 @@ three promises.
   explanation="The path is a list of places to drive TO. The robot is already at (0, 0); listing it as a step gives the driving code a zero-length move and a turn it cannot work out."
 />
 
-**Make the change in `robot.py`:** rename the function, replace its one-line docstring with
-the one above, and update the calls in your two Lesson 4-4 tests. Run `test_paper_paths()`:
-same output as last lesson.
+**In `robot.py`:** change `compute_path` to `compute_manhattan_path` everywhere it appears,
+replace the one-line docstring with the one above, and run `test_paper_paths()`: same
+output as last lesson.
 
-<TeacherNote title="Solution after the rename (teacher copy)">
+<TeacherNote title="Solution with the new name and docstring (teacher copy)">
 
-The MANHATTAN PLANNER section of `robot.py` after the rename, plus the run block; the rest of the file is as the Lesson 4-4 teacher copy left it. The whole file at
+The MANHATTAN PLANNER section of `robot.py` with the new name and docstring, plus the run block; the rest of the file is as the Lesson 4-4 teacher copy left it. The whole file at
 the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). The four `while` loops
 are byte-for-byte the Lesson 4-4 ones.
 
@@ -173,7 +163,13 @@ test_paper_paths()
 
 </TeacherNote>
 
-## Why test without the robot?
+## Unit testing
+
+A **unit test** checks one small piece of a program, usually one function, on its own: give it
+inputs you chose and compare what it returns with the answer you worked out. Professional
+software runs thousands of them every time the code changes, so a mistake is caught minutes
+after it is made, by a test, not weeks later by a user. Your planner is an ideal unit:
+tuples in, list out.
 
 A robot driving into a wall tells you *something* is wrong, but not *what* or *where*.
 A failing test on screen tells you the exact input that produced the wrong output.
@@ -241,7 +237,8 @@ you have only assumed the code is right.
 
 That compare-and-report pattern repeats for every case, so it becomes a function.
 Paste this into `robot.py` at the end of the MANHATTAN PLANNER section — it is a
-*harness*: a function whose only job is to test another one.
+*harness*: a function whose only job is to test another one. Each `run_test()` call is one
+unit test.
 
 ```python
 # --- Lesson 4-5: the test harness ---
@@ -416,9 +413,6 @@ A function with a written promise and a set of tests is how big systems stay cor
 <CardGrid>
   <InfoCard tag="Maps" title="Routing engines">
     A map app's router is handed your current location every time you ask. Swap in a bike router and the app does not change.
-  </InfoCard>
-  <InfoCard tag="Software" title="Unit tests">
-    Professional code ships with automated tests that check each function against known answers — a formal version of run_test().
   </InfoCard>
   <InfoCard tag="Aerospace" title="Simulation">
     Rockets and planes fly thousands of simulated missions before a real one, catching problems on screen.
