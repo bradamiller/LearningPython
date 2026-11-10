@@ -34,18 +34,16 @@ DECK = {
                  'def compute_manhattan_path(position, destination):',
          'code_size': 24},
 
-        {'kind': 'table', 'title': 'Three words changed, each on purpose',
-         'headers': ['Old', 'New', 'Why'],
-         'widths': [3.0, 3.8, 5.2],
-         'rows': [
-             ['`compute_path`', '`compute_manhattan_path`', 'Says which planner. Module 5 adds '
-                                                            '`compute_bfs_path()` beside it.'],
-             ['`start`', '`position`', 'Where the robot is now. After it drives to (2, 3), the '
-                                       'next path starts at (2, 3).'],
-             ['`end`', '`destination`', 'Where it\'s going.'],
+        {'kind': 'bullets', 'title': 'Why name the planner?',
+         'bullets': [
+             'There are many ways to plan a route. Each method is an **algorithm**',
+             'Manhattan: fast and easy to write, but fails if a road is blocked',
+             'Later you\'ll build more robust planners',
          ],
-         'size': 20,
-         'notes': 'Right now it is the only planner, so "manhattan" feels redundant until Module 5.'},
+         'callout': 'Same promises (the **interface**) means planners can be swapped as the need changes',
+         'tone': 'teal',
+         'notes': 'Module 5 adds compute_bfs_path() beside this one. position is where the robot is now; '
+                  'destination is where it is going.'},
 
         {'kind': 'check',
          'question': 'Why does the function\'s name include \'manhattan\' when it is the only planner '
