@@ -56,7 +56,7 @@ DECK = {
          'crop': (0.49, 0.03, 0.83, 0.82),
          'notes': 'The figure is the right half of the lesson\'s four-loops figure: the trip from '
                   '(1, 3) to (3, 0), across two, then down three. The whole figure comes back in '
-                  'Step 2.'},
+                  'Step 3.'},
 
         {'kind': 'table', 'title': 'Activity · Trace it on paper',
          'tag': 'Activity',
@@ -103,7 +103,7 @@ DECK = {
          'tone': 'teal',
          'notes': 'Paths 1 to 3 are test_paper_paths(), paths 4 to 6 are test_edge_cases(). '
                   'Answer to the question: paths 1 and 2 go right and up, so x and y get bigger; '
-                  'path 3 goes left and down, so they get smaller. It sets up Step 1: the first '
+                  'path 3 goes left and down, so they get smaller. It sets up Step 2: the first '
                   'version only handles x and y getting bigger, so path 3 comes back empty. Path 6 '
                   'is [] because the robot is already there.'},
 
@@ -120,7 +120,7 @@ DECK = {
 
         {'kind': 'figure', 'title': 'Each row is one trip around a loop',
          'figure': '/img/lesson-m4-04/trace-to-loops.svg',
-         'caption': 'Going left or down, the same loops subtract 1 instead: that\'s Step 2.',
+         'caption': 'Going left or down, the same loops subtract 1 instead: that\'s Step 3.',
          'notes': 'x and y are the robot\'s current position; they change by 1 each trip. When x '
                   'reaches dest_x the condition is False and the loop stops, just as students '
                   'stopped writing x + 1 rows once they reached x = 2. The inner parentheses in '
@@ -181,7 +181,17 @@ DECK = {
              'Nothing else in the file has to work for it to work',
          ]},
 
-        {'kind': 'steps', 'title': 'Step 1 · Run the east loop',
+        {'kind': 'steps', 'title': 'Step 1 · Paste in the skeleton',
+         'tag': 'Activity',
+         'steps': [
+             'Copy the MANHATTAN PLANNER skeleton shown earlier: the function and both tests',
+             'Paste it into `robot.py` in the editor, **above `RUN`**, after the GRID DRIVING section',
+             'Save the file',
+         ],
+         'notes': 'The skeleton is on the "Add to robot.py: MANHATTAN PLANNER" and "The two tests '
+                  'come with it" slides, and on the lesson page under This lesson\'s skeleton.'},
+
+        {'kind': 'steps', 'title': 'Step 2 · Run the east loop',
          'tag': 'Activity',
          'steps': [
              'Set the run line to `test_paper_paths()` and run it **before you write anything**',
@@ -193,7 +203,7 @@ DECK = {
          'notes': 'A half-finished algorithm you have tested beats a whole one you haven\'t. Check '
                   'that tuple unpacking from 4-2 (x, y = start) stuck.'},
 
-        {'kind': 'bullets', 'title': 'Step 1 · Write north by copying east',
+        {'kind': 'bullets', 'title': 'Step 2 · Write north by copying east',
          'tag': 'Activity',
          'bullets': [
              'Under the north comment, **copy the east loop**',
@@ -217,7 +227,7 @@ DECK = {
          'tone': 'orange'},
 
         {'kind': 'check',
-         'question': 'Why does the Step 1 version (east and north only) return `[]` for (3,3) → (1,0)?',
+         'question': 'Why does the Step 2 version (east and north only) return `[]` for (3,3) → (1,0)?',
          'options': ['`append()` is broken',
                      'Both while conditions start False (3 is not < 1, 3 is not < 0), so neither loop runs',
                      'The start and end are the same',
@@ -226,7 +236,7 @@ DECK = {
          'explanation': 'East and north only handle increasing x and y. Moving left or down needs the '
                         'two flipped loops you add next.'},
 
-        {'kind': 'bullets', 'title': 'Step 2 · West and south: copy and flip',
+        {'kind': 'bullets', 'title': 'Step 3 · West and south: copy and flip',
          'tag': 'Activity',
          'bullets': [
              'The fix: **two more while loops**, and you already have both, backwards',
@@ -252,7 +262,7 @@ DECK = {
          'notes': 'Walk the right half: (1, 3) to (3, 0). East runs twice, west and north are '
                   'skipped, south runs three times. Five steps, matching |3−1| + |0−3|.'},
 
-        {'kind': 'steps', 'title': 'Step 2 · Check it against your key',
+        {'kind': 'steps', 'title': 'Step 3 · Check it against your key',
          'steps': [
              'Look at path 3 in your answer key, **(3, 3) → (1, 0)**',
              'Say which of the four loops run: the robot has to go **left** and **down**, so two of them stay idle',
