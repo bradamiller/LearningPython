@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 364" role="img" aria-labelledby="sk-t sk-d" font-family="Montserrat, Helvetica, Arial, sans-serif">
+  <title id="sk-t">Only one x loop runs</title>
+  <desc id="sk-d">Going left, with x = 3 and dest_x = 1. The east loop, while x &lt; dest_x, is grayed out: 3 &lt; 1 is False on the first check, so it never runs. The west loop, while x &gt; dest_x, is highlighted: 3 &gt; 1 is True, so it runs twice and x goes 3, 2, 1. For any trip, at most one of the two x loops runs, and the same goes for the two y loops.</desc>
+  <style>
+    .hdr { font-size: 13px; font-weight: 700; letter-spacing: .6px; }
+    .c { font-size: 16px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .v { font-size: 15px; font-weight: 700; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .w { font-size: 14px; }
+    .cap { font-size: 13px; }
+  </style>
+  <text class="hdr" x="24" y="30" text-anchor="start" fill="#22527B" xml:space="preserve">GOING LEFT: x = 3, dest_x = 1</text>
+  <rect x="24" y="48" width="330" height="122" rx="8" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <text class="c" x="40" y="78" text-anchor="start" fill="#868E96" xml:space="preserve"># East</text>
+  <text class="c" x="40" y="102" text-anchor="start" fill="#868E96" xml:space="preserve">while x &lt; dest_x:</text>
+  <text class="c" x="40" y="126" text-anchor="start" fill="#868E96" xml:space="preserve">    x = x + 1</text>
+  <text class="c" x="40" y="150" text-anchor="start" fill="#868E96" xml:space="preserve">    path.append((x, y))</text>
+  <text class="v" x="380" y="76" text-anchor="start" fill="#D1182C" xml:space="preserve">3 &lt; 1 is False</text>
+  <text class="w" x="380" y="98" text-anchor="start" fill="#343A40" xml:space="preserve">on the first check,</text>
+  <text class="w" x="380" y="120" text-anchor="start" fill="#343A40" xml:space="preserve">so this loop never runs.</text>
+  <rect x="24" y="192" width="330" height="122" rx="8" fill="#E8F3E9" stroke="#2E7D32" stroke-width="2.5" />
+  <text class="c" x="40" y="222" text-anchor="start" fill="#343A40" xml:space="preserve"># West</text>
+  <text class="c" x="40" y="246" text-anchor="start" fill="#343A40" xml:space="preserve">while x &gt; dest_x:</text>
+  <text class="c" x="40" y="270" text-anchor="start" fill="#343A40" xml:space="preserve">    x = x - 1</text>
+  <text class="c" x="40" y="294" text-anchor="start" fill="#343A40" xml:space="preserve">    path.append((x, y))</text>
+  <text class="v" x="380" y="220" text-anchor="start" fill="#2E7D32" xml:space="preserve">3 &gt; 1 is True,</text>
+  <text class="w" x="380" y="242" text-anchor="start" fill="#343A40" xml:space="preserve">so this loop runs twice:</text>
+  <text class="w" x="380" y="264" text-anchor="start" fill="#343A40" xml:space="preserve">x goes 3, 2, 1.</text>
+  <text class="cap" x="24" y="346" text-anchor="start" fill="#495057" xml:space="preserve">For any trip, at most one of the two x loops runs. The same goes for the two y loops.</text>
+</svg>

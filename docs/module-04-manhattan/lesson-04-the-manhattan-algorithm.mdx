@@ -253,9 +253,21 @@ does nothing. That's what the west and south comments are for.
 The fix is **two more while loops**, and you already have both, backwards. West is the
 east loop flipped: copy it under the west comment, then flip the comparison (`<`
 becomes `>`) and the step (`+ 1` becomes `- 1`). South is the north loop, flipped the
-same way. No `if/else` needed — for any single trip, at most one x loop and one y loop
-will run; the others are skipped because their condition is False from the start. The
-comments keep the two x loops together, before the two y loops, so the path always
+same way.
+
+**Why two x loops can sit next to each other:** a while loop checks its condition
+before its first trip. To go left, x is already bigger than `dest_x`, so the east
+loop's `x < dest_x` is False on that first check and the east loop never runs. Only
+the west loop moves x. Going right, it's the other way round. The two y loops work the
+same way, so no `if/else` is needed.
+
+<Figure
+  src="/img/lesson-m4-04/one-x-loop-runs.svg"
+  alt="Going left with x = 3 and dest_x = 1. The east loop, while x < dest_x, is grayed out: 3 < 1 is False on the first check, so it never runs. The west loop, while x > dest_x, is highlighted: 3 > 1 is True, so it runs twice and x goes 3, 2, 1."
+  caption="For any trip, at most one of the two x loops runs. The same goes for the two y loops."
+/>
+
+The comments keep the two x loops together, before the two y loops, so the path always
 goes across first.
 
 

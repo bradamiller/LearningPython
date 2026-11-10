@@ -232,12 +232,18 @@ DECK = {
              'The fix: **two more while loops**, and you already have both, backwards',
              '**West** is the east loop flipped: `<` becomes `>`, `+ 1` becomes `- 1`',
              '**South** is the north loop, flipped the same way',
-             'No `if/else` needed: for any trip, at most **one x loop and one y loop** run',
          ],
          'notes': 'This is the lesson\'s big idea: a while loop whose condition starts False simply '
                   'does nothing. Students who have seen conditionals will try to wrap this in '
                   'if x < dest_x ... elif x > dest_x. Steer them back: the four loops are simpler and '
                   'handle every case, including the same position (all four skipped, so []).'},
+
+        {'kind': 'figure', 'title': 'Only one x loop runs',
+         'figure': '/img/lesson-m4-04/one-x-loop-runs.svg',
+         'caption': 'A while loop checks its condition first. Going left, east\'s first check is '
+                    'False, so it never runs. Same for the two y loops: no `if/else` needed.',
+         'notes': 'Ask: going right, which x loop never runs? (West: x > dest_x is False from the '
+                  'start.) Then: going up, which y loop never runs? (South.)'},
 
         {'kind': 'figure', 'title': 'Four loops, one per direction',
          'figure': '/img/lesson-m4-04/four-loops-xy.svg',
