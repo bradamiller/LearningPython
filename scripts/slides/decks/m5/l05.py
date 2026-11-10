@@ -326,7 +326,7 @@ DECK = {
                   'self.cols, self.blocked; inside methods they gain self.; outside, calls go through the '
                   'object. Manhattan also gets add_blocked() and clear_blocked() methods that deliberately '
                   'do nothing, so next lesson\'s harness can call them on either planner. Delete the '
-                  'planner = Manhattan() line and change Lesson 4-6\'s run_test() to call '
+                  'planner = Manhattan() line and change Lesson 4-5\'s run_test() to call '
                   'Manhattan().compute_path(...). Then test_two_planners(): BFS goes around the wall, '
                   'Manhattan drives straight through. The lesson\'s check: why give Manhattan an '
                   'add_blocked() that does nothing? So every planner has the same shape and the harness '

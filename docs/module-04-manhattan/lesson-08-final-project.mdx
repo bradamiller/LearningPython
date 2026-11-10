@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-9 · Final Project"
-sidebar_label: "4-9 · Final Project"
-sidebar_position: 9
+title: "Lesson 4-8 · Final Project"
+sidebar_label: "4-8 · Final Project"
+sidebar_position: 8
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 4-9 · Final Project"
+  title="Lesson 4-8 · Final Project"
   meta={['Multi-day', 'Project day', 'Multi-destination delivery']}
 />
 
@@ -32,7 +32,7 @@ By the end of this project you will be able to:
 
 </Objectives>
 
-<QuizLink id="module-04-manhattan/lesson-09-final-project" />
+<QuizLink id="module-04-manhattan/lesson-08-final-project" />
 
 ## The mission
 
@@ -43,13 +43,13 @@ and hands back the new pose. Your job is the **main program** that connects them
 like every program in this course it is a test function at the bottom of `robot.py`.
 
 <Figure
-  src="/img/lesson-m4-09/delivery-run-xy.svg"
+  src="/img/lesson-m4-08/delivery-run-xy.svg"
   alt="A 4 by 4 grid. The robot starts at home, (0, 0), the bottom-left corner, facing north. Leg 1 goes right 2 steps to (2, 0), ending facing east. Leg 2 goes up 3 steps to (2, 3), ending facing north. Leg 3 goes left 2 steps to (0, 3), ending facing west. Leg 4 goes down 3 steps back home, ending facing south."
   caption="DESTINATIONS on the floor: 2, 3, 2 and 3 steps. Each small arrow is the heading a leg ends with, and the next leg starts from it."
 />
 
 <Figure
-  src="/img/lesson-m4-09/delivery-drive.svg"
+  src="/img/lesson-m4-08/delivery-drive.svg"
   alt="An animation, seen from above, of the delivery run on a 4 by 4 grid. The robot starts at home, (0, 0), facing North. The four destinations are numbered 1 to 4: (2, 0), (2, 3), (0, 3) and back to (0, 0). For each leg the planned Manhattan path appears as a dotted line from where the robot is, then the robot drives it: before each step it turns clockwise, one sensor-ended right turn at a time, until it faces the next intersection, then tracks to it and drives past. Leg 1 is one right turn and two steps east. Leg 2 needs three right turns to face North, then three steps up. Leg 3, three right turns to face West, two steps left. Leg 4, three right turns to face South, three steps down to home. Beside it, the main loop in plain words with the running line highlighted, and a box naming the leg, the step and the heading."
   caption="The whole run, driven. Each leg is planned from where the last one ended, and because turn_to() only turns clockwise, most legs start with three right turns."
 />
@@ -60,7 +60,7 @@ Paste this above `RUN`, at the end of the NAVIGATOR section. No new function is
 defined: one setting, a paper test, and the project itself.
 
 ```python
-# --- Lesson 4-9: final project, the delivery run ---
+# --- Lesson 4-8: final project, the delivery run ---
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
@@ -92,12 +92,12 @@ finishes, and what it doesn't — unless you ask.
 <TeacherNote title="Solution (teacher copy)">
 
 This lesson's addition to the NAVIGATOR section of `robot.py`, plus the run block; the
-rest of the file is as the Lesson 4-8 teacher copy left it. The whole file is
+rest of the file is as the Lesson 4-7 teacher copy left it. The whole file is
 in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). `test_delivery()` is the
 graded work, and there is no student reveal for it; the paper test has one.
 
 ```python
-# --- Lesson 4-9: final project, the delivery run ---
+# --- Lesson 4-8: final project, the delivery run ---
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
@@ -161,7 +161,7 @@ planner call is `planner.compute_path(...)`.
 
 ## Only the first leg is printed before the button
 
-Lesson 4-8's habit — plan, print, button, drive — appears here with one limit. The main
+Lesson 4-7's habit — plan, print, button, drive — appears here with one limit. The main
 program prints the path for leg 1 before the button. It can't print legs 2, 3 and 4 yet,
 because each of them is planned from wherever the previous leg actually finished.
 Instead, each leg is printed as it's planned, just before the robot drives it. (In
@@ -203,9 +203,9 @@ which piece. Build up, one test on the run line at a time:
 
 1. **Planner alone (no robot).** Write `test_delivery_paper()` from its outline and set
    the run line to it: loop the destinations, print each path, set `position = dest`
-   between them. Confirm every path looks right on screen — this is the Lesson 4-6
+   between them. Confirm every path looks right on screen — this is the Lesson 4-5
    habit, run on today's destinations. Count the steps: 2, 3, 2, 3.
-2. **One leg on the robot.** Set the run line to Lesson 4-8's `test_drive_path()` with
+2. **One leg on the robot.** Set the run line to Lesson 4-7's `test_drive_path()` with
    `DESTINATIONS[0]` as its destination. Place the robot at (0,0) facing North, both
    presses. Correct turns? Wheels on the right intersection at the end?
 3. **Full sequence.** Write `test_delivery()` and run it. Read the leg-1 path before the
@@ -251,9 +251,9 @@ lessons. For 50-minute periods, plan two days: planning + desktop testing, then 
 day.
 
 **Class track:** students who did the extensions run the project on their objects —
-`navigator.drive_path(path)` on the `navigator` created under the class in Lesson 4-8,
+`navigator.drive_path(path)` on the `navigator` created under the class in Lesson 4-7,
 and `planner.compute_path()` if they built `Manhattan` — not on the functions. There is
-no return value to drop, which is the point of the Lesson 4-8 side-by-side, and it is
+no return value to drop, which is the point of the Lesson 4-7 side-by-side, and it is
 the first time the encapsulation pays off in a whole program rather than a snippet.
 Same rubric.
 
@@ -265,7 +265,7 @@ You're graded on the whole system working together:
 
 | Category | Points | What it takes |
 |---|---|---|
-| Planner | 10 | `compute_manhattan_path` correct for any position and destination; Lesson 4-6 tests pass |
+| Planner | 10 | `compute_manhattan_path` correct for any position and destination; Lesson 4-5 tests pass |
 | Driving functions | 15 | Correct `desired_heading`, `turn_to`, `drive_path`; parked on the cross at every arrival; position and heading returned |
 | Main program | 10 | `test_delivery()`: 4+ destinations, prints leg 1 before the button, drives each leg, assigns `position, heading` from `drive_path` |
 | Robot demo | 10 | Physically visits all destinations with correct turns |
@@ -273,7 +273,7 @@ You're graded on the whole system working together:
 
 **If you finish early**, try an extension: add a "return home" leg, do a round trip
 (destinations forward then reversed), let the user type destinations, count total
-intersections driven and turns made across the whole journey — or the Lesson 4-8 class
+intersections driven and turns made across the whole journey — or the Lesson 4-7 class
 extension, a `Navigator` object so the main loop has nothing to pass back and forth.
 
 <KnowledgeCheck

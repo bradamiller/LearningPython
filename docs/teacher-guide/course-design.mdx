@@ -40,7 +40,7 @@ functions as a class.
 **The extension is per student, per lesson, and the gate is working code, not
 ability.** Finish the functions version, test it on the robot, and if there is time
 left, do the extension. A student might reach it in 2-7, miss it in 2-9 because
-line following fought them all period, and reach it again in 4-8. Nobody is "the
+line following fought them all period, and reach it again in 4-7. Nobody is "the
 functions kid."
 
 **Why a mixed room works:** every class method has the same name and, apart from
@@ -62,7 +62,7 @@ plain words, at the first place the payoff is visible.
   student loses the thread.
 - **The class "lecture" is 5 to 10 minutes, twice:** once at the first class
   (`LineSensor`, 2-7: what a class is, and why you might want one) and once at the
-  `Navigator` (4-8: where owning state visibly pays off). It is not re-taught every
+  `Navigator` (4-7: where owning state visibly pays off). It is not re-taught every
   lesson.
 - **The extension earns no points, or a small challenge credit.** If a rubric
   quietly rewards the class version, the extension becomes a requirement with
@@ -87,13 +87,13 @@ theory belong to a later course and are **not taught here**, even in extensions.
 | 2-7 | `LineSensor` | The simplest possible first class: a couple of settings and a handful of one-line methods. Introduces `class`, `__init__` and `self`. |
 | 2-9 | `LineTrack` | One object holding another (`self.sensor = LineSensor()`), shown by example. "Composition" is not taught as a vocabulary word. From here on, class-track students use their objects. |
 | 4-5 | `Manhattan` | A class only so it has the same shape as the planners after it; the lesson says so plainly. |
-| 4-8 | `Navigator` | The one class with a *felt* reason: it owns `position` and `heading`, so the functions version's passing of both in and out of `drive_path()` disappears. The first constructor with parameters, taught with the picture of a house's address as `self`. |
+| 4-7 | `Navigator` | The one class with a *felt* reason: it owns `position` and `heading`, so the functions version's passing of both in and out of `drive_path()` disappears. The first constructor with parameters, taught with the picture of a house's address as `self`. |
 | 5-5 | `BFS` | Has setup to hold (its blocked list). |
 | 5-6 | The class harness | The planner swap with objects: the same tests run against `Manhattan()` and `BFS()` by changing one name. |
 | 6-5 | `Dijkstra` | Three planners through one harness (optional module). |
 
 Module 3 has no extension: it only *uses* the Module 2 toolkit. Projects (2-10,
-4-9, 5-9) add no new class; class-track students build them on their objects and
+4-8, 5-9) add no new class; class-track students build them on their objects and
 are graded the same way.
 
 ## D3. The planner interface
@@ -141,13 +141,13 @@ planner.add_blocked(intersection)
 
 In the function track, `turn_to(heading, desired)` returns the new heading, and
 `drive_path(path, position, heading)` returns the new position and heading, the
-robot's **pose** (named in Lesson 4-7); the main program keeps it. In the extension, the `Navigator` holds both. Nothing else
+robot's **pose** (named in Lesson 4-6); the main program keeps it. In the extension, the `Navigator` holds both. Nothing else
 in the program tracks where the robot is. The planner is told the position when
 asked for a path (D3.1).
 
 ## D5. Testing without a robot is part of the structure, not one lesson
 
-Lessons 4-6 and 5-6 teach testing on screen, and the rest of the course is built
+Lessons 4-5 and 5-6 teach testing on screen, and the rest of the course is built
 so that the habit sticks:
 
 - **Every driving program from Module 4 on prints its plan, waits for the button,
@@ -162,7 +162,7 @@ so that the habit sticks:
   will run. Rerouting is debugged on screen in 5-6, and 5-7 is only about detection:
   two hard things, one at a time.
 - **Check what must be true, once there's more than one right answer.** Manhattan's
-  answer is unique, so Lesson 4-6 compares against an exact expected list. BFS and
+  answer is unique, so Lesson 4-5 compares against an exact expected list. BFS and
   Dijkstra have many equally short paths on an open grid, so an exact match would
   fail correct answers. The Module 5 harness checks properties instead: the path
   starts next to the position, ends at the destination, every step is a neighbor of
@@ -261,7 +261,7 @@ parked on the intersection.
 **`turn_to(heading, desired)` turns clockwise, a quarter at a time, until the heading
 matches.** It reuses Module 2's loop-until-a-condition shape. It sometimes takes
 three turns where one counterclockwise turn would do, and that is accepted on
-purpose; turning the short way round is an optional challenge in Lesson 4-8.
+purpose; turning the short way round is an optional challenge in Lesson 4-7.
 Headings are the numbers 0 to 3: North, East, South, West.
 
 **Module 5 drives with Module 4's functions, unchanged.** It adds one thing: a

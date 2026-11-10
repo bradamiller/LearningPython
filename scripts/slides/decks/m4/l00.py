@@ -15,7 +15,7 @@ DECK = {'module': 4,
                       'it. After that it is an advance organizer: the point is the shape, not the '
                       'detail. If students ask how compute_manhattan_path works, the answer is '
                       '"that is exactly Lessons 4-4 and 4-5". Tell them plainly they are not meant '
-                      'to understand every line yet: by Lesson 4-9 they will, because they will '
+                      'to understand every line yet: by Lesson 4-8 they will, because they will '
                       'have built each piece.'},
             {'kind': 'figure',
              'title': 'The problem',
@@ -143,9 +143,9 @@ DECK = {'module': 4,
             {'kind': 'bullets',
              'title': "What's next",
              'bullets': ['**4-1 to 4-3:** the background: coordinates, tuples and lists',
-                         '**4-4 to 4-6:** write and test the planner',
-                         '**4-7 and 4-8:** write and test the driver',
-                         '**4-9:** put them together'],
+                         '**4-4 and 4-5:** write and test the planner',
+                         '**4-6 and 4-7:** write and test the driver',
+                         '**4-8:** put them together'],
              'size': 30},
             {'kind': 'wrapup',
              'questions': ['What problem does Module 4 solve?',
@@ -157,4 +157,4 @@ DECK = {'module': 4,
                       'can be printed and checked with no robot; then the driver only follows a '
                       'plan you trust. compute_manhattan_path plans; drive_path drives. Open each '
                       'lesson with "remember the big picture? Today we build this piece." Return '
-                      'to the seven-line program in Lesson 4-9.'}]}
+                      'to the seven-line program in Lesson 4-8.'}]}

@@ -171,7 +171,7 @@ DECK = {
              '`position`.',
          ],
          'notes': 'Make students write the expected cost by hand before they run the check; if they '
-                  'let the program tell them what to expect, the test tests nothing (Lesson 4-6\'s '
+                  'let the program tell them what to expect, the test tests nothing (Lesson 4-5\'s '
                   'point).'},
 
         {'kind': 'bullets', 'title': 'Step 3 · `check_cost()`, against BFS',

@@ -1,25 +1,28 @@
 DECK = {
     'module': 4, 'lesson': 5,
-    'doc': 'module-04-manhattan/lesson-05-manhattan-function',
-    'title': 'A Reusable Planner Function',
+    'doc': 'module-04-manhattan/lesson-05-naming-and-testing-the-planner',
+    'title': 'Naming and Testing the Planner',
     'slides': [
         {'kind': 'title',
          'objectives': [
              'Rename `compute_path()` to `compute_manhattan_path(position, destination)`, update every call, and say why each part of the name matters',
-             'State the function\'s **three promises**',
-             'Write a **docstring** that records those promises',
-             'Explain why the planner takes the robot\'s position as a **parameter** instead of storing it',
-             'Write a test that calls the planner from several positions, and check each result against a figure',
+             'State the function\'s **three promises** and record them in a **docstring**',
+             'Explain why testing on screen is faster than debugging on the robot (**separation of concerns**)',
+             'Hand-calculate an expected path, then compare it to the actual output',
+             'Add a reusable `run_test()` helper and a test that runs six cases through it',
+             'Debug a failing test with print statements',
          ],
-         'notes': '50 minutes. A small lesson on purpose: students own the algorithm from 4-4, so '
-                  'keep the load on the contract. Not a line inside the function changes.'},
+         'notes': '60 to 75 minutes. Not a line inside the planner changes: it gets its real name and '
+                  'its promises written down, and then the promises are proven on screen. Two '
+                  'non-negotiables: expected paths are calculated by hand before anything runs, and '
+                  'the suite covers every direction and edge case.'},
 
         {'kind': 'bullets', 'title': 'Same function, its real name',
          'bullets': [
              'Last lesson you wrote `compute_path()` and it worked',
-             'Today it gets its real name, its promises written down, and one rule',
+             'Today it gets its real name and its promises written down, and you prove them on screen',
          ],
-         'callout': '**The planner is told where the robot is; it never remembers.**',
+         'callout': '**Test on screen before you test on the floor.**',
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'A rename with a reason',
@@ -84,7 +87,7 @@ DECK = {
          'caption': 'Promise 1 matters because each element is a place to drive to, and the robot '
                     'already stands on position. Every planner in this course makes the same three '
                     'promises.',
-         'notes': 'Promise 1 bites in Lesson 4-8: a path that includes the start makes the first '
+         'notes': 'Promise 1 bites in Lesson 4-7: a path that includes the start makes the first '
                   'desired_heading() call see a zero move and return None. Promise 3: every while '
                   'loop is skipped, so path stays empty.'},
 
@@ -100,48 +103,9 @@ DECK = {
                         'listing it as a step gives the driving code a zero-length move and a turn '
                         'it cannot work out.'},
 
-        {'kind': 'code', 'title': 'The planner is told, it doesn\'t remember',
-         'lead': 'Look at how the same function is used three times in a row:',
-         'code': 'path1 = compute_manhattan_path((0, 0), (2, 3))     # plan from the corner\n'
-                 'path2 = compute_manhattan_path((2, 3), (0, 3))     # robot drove there; plan from there\n'
-                 'path3 = compute_manhattan_path((0, 3), (0, 0))     # and again',
-         'code_size': 18,
-         'callout': 'Every call is handed the robot\'s position. The planner never stores it.',
-         'tone': 'teal',
-         'notes': 'The "told, not remembered" rule is Module 5\'s foundation, so give it the full ten '
-                  'minutes.'},
-
-        {'kind': 'figure', 'title': 'Three legs, three positions',
-         'figure': '/img/lesson-m4-05/told-not-remembered-xy.svg',
-         'caption': 'The first argument changes every time, because the robot has moved. The planner '
-                    'never has to know that; it is told.'},
-
-        {'kind': 'bullets', 'title': 'One owner for the robot\'s position',
-         'bullets': [
-             'Only the **driving code** (Lesson 4-8) tracks where the robot is, and hands it to the planner every call',
-             'A second copy inside the planner would sooner or later disagree, and the robot would plan from a place it isn\'t',
-         ],
-         'tone': 'teal',
-         'notes': 'The bug it prevents is concrete: in the old class version of this lesson, the '
-                  'planner stored self.position and the driving code stored its own, and every '
-                  'student program needed a line to keep them in sync. Nobody misses that line. '
-                  'The easiest way to never have the bug is to never have the second copy.'},
-
-        {'kind': 'check',
-         'question': 'Why does `compute_manhattan_path()` take position as a parameter every call, '
-                     'instead of remembering where the robot started?',
-         'options': ['Functions cannot store values between calls',
-                     'So only the driving code tracks the robot; a copy in the planner would drift from it',
-                     'Because the start is always (0, 0)',
-                     'To make the function slower and more careful'],
-         'answer': 1,
-         'explanation': 'One owner for the robot\'s position. The driving code updates it after every '
-                        'intersection; the planner is handed the current value and does arithmetic '
-                        'with it. No second copy, no disagreement.'},
-
-        {'kind': 'steps', 'title': 'Step 1 · The rename',
+        {'kind': 'steps', 'title': 'Activity · The rename',
          'steps': [
-             'Nothing is pasted: you edit the function you have, as Lesson 2-6 did with `get_error()`',
+             'The rename is an edit to the function you have, as Lesson 2-6 did with `get_error()`',
              'In MANHATTAN PLANNER, change the `def` line and replace the one-line docstring with the full one',
              'Set the run line to `test_paper_paths()`, run it, and **read the error**: your Lesson 4-4 '
              'tests still call `compute_path()`, which no longer exists',
@@ -151,21 +115,167 @@ DECK = {
                     'this file are chosen carefully and changed almost never.',
          'tone': 'orange'},
 
-        {'kind': 'code', 'title': 'Step 2 · A test from everywhere',
-         'tag': 'Activity',
-         'lead': 'Write your own `test_from_everywhere()` that prints the three legs from the figure, '
-                 'plus a **fourth call** where position equals destination.',
-         'lead_h': 1.2,
-         'code': 'print(compute_manhattan_path((0, 0), (2, 3)))   # leg 1\n'
-                 'print(compute_manhattan_path((2, 3), (0, 3)))   # leg 2\n'
-                 'print(compute_manhattan_path((0, 3), (0, 0)))   # leg 3',
-         'code_size': 18,
-         'callout': 'Set the run line to it. Check each list against its leg in the figure: no start, '
-                    'ends at the destination, `[]` for the fourth call.',
+        {'kind': 'bullets', 'title': 'Why test without the robot?',
+         'bullets': [
+             'A robot driving into a wall tells you **something** is wrong, but not **what** or **where**',
+             'A failing test on screen tells you the **exact input** that produced the wrong output',
+         ],
+         'notes': 'Five minutes of testing saves thirty minutes chasing a robot.'},
+
+        {'kind': 'table', 'title': 'Separation of concerns',
+         'lead': '`compute_manhattan_path()` only **computes** a path; the driving functions (Lesson 4-7) '
+                 '**drive** it. Each can be checked on its own.',
+         'headers': ['Problem', 'Where it runs', 'What you test'],
+         'widths': [3, 3, 4],
+         'rows': [
+             ['Computing the path', 'Any computer', 'Does the path make sense?'],
+             ['Driving the path', 'On the robot', 'Does the robot follow it?'],
+         ],
+         'size': 24,
+         'callout': 'The planner is handed the robot\'s position as a parameter, so there is nothing '
+                    'to set up before a test: tuples in, list out',
+         'tone': 'teal'},
+
+        {'kind': 'check',
+         'question': 'What does \'separation of concerns\' let you do here?',
+         'options': ['Run the robot faster',
+                     'Test the path-planning math on its own, separately from the driving',
+                     'Skip testing entirely',
+                     'Combine planning and driving into one function'],
+         'answer': 1,
+         'explanation': 'Because the planner only computes paths and the driving functions only drive '
+                        'them, you can verify the algorithm on any computer before hardware is ever '
+                        'involved.'},
+
+        {'kind': 'code', 'title': 'Expected vs. actual',
+         'lead': 'Decide what the answer **should** be by hand, then check whether the code agrees. '
+                 'Hand-trace (0,0) → (2,3): right 2, then up 3.',
+         'lead_h': 1.15,
+         'code': 'expected = [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]\n'
+                 '\n'
+                 'actual = compute_manhattan_path((0, 0), (2, 3))\n'
+                 '\n'
+                 'if actual == expected:\n'
+                 '    print("Test 1: PASS")\n'
+                 'else:\n'
+                 '    print("Test 1: FAIL")\n'
+                 '    print("  Expected:", expected)\n'
+                 '    print("  Actual:  ", actual)',
+         'code_size': 19,
+         'notes': 'This is the heart of testing. The block is on the lesson page as written; the next '
+                  'slide is its picture.'},
+
+        {'kind': 'figure', 'title': 'Two sources, one comparison',
+         'figure': '/img/lesson-m4-05/test-harness.svg',
+         'caption': 'The test is only worth something because the two sides were worked out '
+                    'independently.'},
+
+        {'kind': 'bullets', 'title': 'Expected comes from you',
+         'bullets': [
+             'The expected list has to come from **your own** tracing',
+             'Copy whatever the code prints and call it "expected"?',
+             ['You haven\'t tested anything', 'You\'ve **assumed** the code is right'],
+         ],
+         'callout': 'A test needs an **independent** source of truth: your trace',
+         'tone': 'orange',
+         'notes': 'Watch for the student who runs the code first and pastes the output into expected: '
+                  'that student\'s suite will pass on day one and hide a real bug on day three.'},
+
+        {'kind': 'check',
+         'question': 'Where should the \'expected\' path come from?',
+         'options': ['Whatever the code prints when you run it',
+                     'Hand-calculated by you, before running the code',
+                     'A random guess',
+                     'The robot\'s actual movement'],
+         'answer': 1,
+         'explanation': 'Testing needs an independent source of truth. You trace the path by hand '
+                        'first; the whole point is to catch the case where the code disagrees with '
+                        'the correct answer.'},
+
+        {'kind': 'code', 'title': 'Add to robot.py: the test harness',
+         'lead': 'That compare-and-report pattern repeats for every case, so it becomes a function. '
+                 'Paste this at the **end** of the MANHATTAN PLANNER section.',
+         'lead_h': 1.15,
+         'code': '# --- Lesson 4-5: the test harness ---\n'
+                 '# run_test() asks the planner for a path and compares it\n'
+                 '# with one you traced by hand, printing PASS or FAIL. A\n'
+                 '# planner test from here on is a list of run_test() calls.\n'
+                 '\n'
+                 'def run_test(test_name, position, destination, expected):\n'
+                 '    """Plan position -> destination and compare the result\n'
+                 '    with expected; print test_name with PASS or FAIL."""\n'
+                 '    pass',
+         'code_size': 17,
+         'callout': 'The body is the expected-vs-actual block with the four values coming in as '
+                    'parameters. On a FAIL, print **both** lists.',
          'tone': 'teal',
-         'notes': 'Output: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], [(1, 3), (0, 3)], '
-                  '[(0, 2), (0, 1), (0, 0)], []. First test students write themselves: the hint '
-                  'level drops here.'},
+         'notes': 'A harness is a function whose only job is to test another one. Class-track '
+                  'students ask planner.compute_path(position, destination) for the path; the rest '
+                  'is the same. The finished run_test() is behind a reveal on the lesson page.'},
+
+        {'kind': 'code', 'title': 'Activity · A suite of cases',
+         'tag': 'Activity',
+         'lead': 'Write `test_planner()`: six `run_test()` calls, each case one line. One is worked out; '
+                 'trace the other five, then fill them in.',
+         'lead_h': 1.15,
+         'code': 'run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])\n'
+                 'run_test("Backward left", (2, 3), (0, 0), [ ... ])   # trace it, then fill it in\n'
+                 'run_test("Same column",   (1, 0), (1, 3), [ ... ])\n'
+                 'run_test("Same row",      (0, 2), (3, 2), [ ... ])\n'
+                 'run_test("Same spot",     (1, 1), (1, 1), [ ... ])\n'
+                 'run_test("One step",      (0, 0), (0, 1), [ ... ])',
+         'code_size': 17,
+         'callout': '**Work each expected out by hand before you run anything.**',
+         'tone': 'orange',
+         'notes': 'Don\'t hand the expected values out: the hand-tracing is the lesson. Trace on the '
+                  'Lesson 4-1 grid worksheet.'},
+
+        {'kind': 'bullets', 'title': 'Six PASS lines, and why six',
+         'bullets': [
+             'A test whose expected came from the program\'s own output proves nothing except that the program **agrees with itself**',
+             'If a test fails, one of two things is wrong: **your trace or your code**. Finding out which is the skill',
+             'Set the run line to `test_planner()`. Six PASS lines is the goal; the robot does not move',
+             'Only ever test (0,0) → (2,3), and a bug that only shows up going **backward** slips right past you',
+         ],
+         'callout': 'A good suite covers **every direction and every edge case**',
+         'tone': 'teal',
+         'notes': 'Celebrate the FAILs: reframe a failing test as the test doing its job. "The test '
+                  'found a bug for you."'},
+
+        {'kind': 'check',
+         'question': 'Your test shows actual = `[(1,0),(2,0),(2,1)]` but expected = '
+                     '`[(1,0),(2,0),(2,1),(2,2),(2,3)]`. What\'s the likely problem?',
+         'options': ['The robot battery is low',
+                     'The north (y) loop stops early or doesn\'t run fully: the moves up are missing',
+                     'The test is wrong',
+                     'Nothing: that output is fine'],
+         'answer': 1,
+         'explanation': 'The moves across are all there but the moves up are cut short. That points '
+                        'straight at the north while loop: exactly the kind of pinpointing '
+                        'screen-testing gives you.'},
+
+        {'kind': 'code', 'title': 'Activity · Debug a failing test',
+         'tag': 'Activity',
+         'lead': 'When a test fails, don\'t guess: add print statements inside '
+                 '`compute_manhattan_path` to watch the logic run. One at the top, and one inside each '
+                 'loop right after the `append`:',
+         'lead_h': 1.25,
+         'code': '    print("Computing from", position, "to", destination)   # first line\n'
+                 '    ...\n'
+                 '        print("  added:", (x, y))                          # in each loop',
+         'code_size': 18,
+         'callout': 'The trace shows exactly which loop ran and what it appended',
+         'tone': 'teal'},
+
+        {'kind': 'steps', 'title': 'Try it: catch a bug on purpose',
+         'steps': [
+             'Change one `+ 1` to `- 1` in `compute_manhattan_path`',
+             'Run `test_planner()` and watch a test **catch the bug**',
+             'Change it back',
+         ],
+         'callout': 'Once you\'ve found and fixed a bug, **remove the debug prints** so the output '
+                    'stays clean',
+         'tone': 'orange'},
 
         {'kind': 'check',
          'question': 'A classmate runs `compute_manhattan_path((3, 3), (1, 0))` and gets '
@@ -181,31 +291,43 @@ DECK = {
          'notes': 'Answer: B. The append-before-update bug is the one students actually make. '
                   'Promise 1 is broken, and the corner (1, 3) is missing.'},
 
+        {'kind': 'check',
+         'question': 'After using print statements to fix a bug, what should you do with them?',
+         'options': ['Leave them in: more output is always better',
+                     'Remove or comment them out so the test output stays clean',
+                     'Move them outside the function',
+                     'Turn them into knowledge checks'],
+         'answer': 1,
+         'explanation': 'Debug prints are scaffolding. Once the bug is fixed, clear them so future test '
+                        'runs are easy to read.'},
+
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
              ('Maps', 'Routing engines', '\nA map app\'s router is handed your location every time '
                                          'you ask. Swap in a bike router and the app does not change.'),
-             ('Software', 'Pure functions', '\nInputs in, output out, nothing stored: the easiest '
-                                            'code to test and the hardest to get subtly wrong.'),
-             ('Teams', 'Interfaces', '\nWrite down what a function promises and two people can work '
-                                     'on either side of it without talking every hour.'),
+             ('Software', 'Unit tests', '\nProfessional code ships with automated tests that check '
+                                        'each function against known answers: a formal version of '
+                                        'run_test().'),
+             ('Aerospace', 'Simulation', '\nRockets and planes fly thousands of simulated missions '
+                                         'before a real one, catching problems on screen.'),
          ],
          'height': 4.0,
-         'notes': 'A function with a written promise, no memory, and the same shape as its '
-                  'alternatives is how big systems stay swappable.'},
+         'notes': '"Verify before you deploy" is everywhere in engineering.'},
 
         {'kind': 'wrapup',
          'questions': [
              'Why `compute_manhattan_path` and not `compute_path`?',
              'What are the three promises?',
-             'Who knows where the robot is?',
+             'Why test on screen before the robot?',
+             'Where does the expected path come from?',
+             'What makes a good test suite?',
          ],
-         'next': 'testing the planner systematically, on screen',
-         'notes': 'Answers: Module 5 adds compute_bfs_path, and the name says which. No start in the '
-                  'path; ends at the destination; [] when already there. The driving code, and only '
-                  'it: the planner is told. Exit ticket: "Your partner\'s planner stores the start '
-                  'position inside it. Describe one bug that could cause." Next lesson adds a '
-                  'run_test() helper, possible only because the planner is pure arithmetic.'},
+         'next': 'turning, so the robot faces the right way at each step',
+         'notes': 'Answers: Module 5 adds compute_bfs_path, and the name says which. No start in the path; ends at the destination; [] when already there. Faster, and it points to the exact broken input. Hand-calculation, before '
+                  'you run the code. Every direction and edge case, not just one happy path. Exit '
+                  'ticket: "Write a test for position (1,1), destination (3,2): what\'s the expected '
+                  'path?" ([(2,1),(3,1),(3,2)]). The algorithm is proven correct; next lesson tackles '
+                  'turning.'},
 
         {'kind': 'code', 'title': 'Optional: the Manhattan class',
          'tag': 'Optional extension',
@@ -223,7 +345,7 @@ DECK = {
          'tone': 'teal',
          'notes': 'Optional extension, for students who built classes in Module 2. The code is the '
                   'lesson\'s side-by-side: the function call, then the same call on the class. '
-                  'From here on, class-track students use their class: when Lesson 4-6 says '
+                  'From here on, class-track students use their class: when a lesson says '
                   'compute_manhattan_path(position, destination), they write '
                   'planner.compute_path(position, destination), in the test harness, in the final '
                   'project, everywhere.'},
@@ -250,7 +372,7 @@ DECK = {
          'tone': 'teal',
          'notes': 'On the lesson page the skeleton also has a section comment and a docstring (the '
                   '"why bother" from the previous slide); the slide leaves them out to fit. Run '
-                  'test_from_everywhere() again: same four lists. The __init__ is empty because '
+                  'test_planner() again: six PASS lines. The __init__ is empty because '
                   'Manhattan has nothing to set up; BFS in Module 5 uses its __init__ to hold the '
                   'list of blocked intersections, and that is when the class earns its keep. The '
                   'finished method is behind a reveal on the lesson page and is not shown here. '

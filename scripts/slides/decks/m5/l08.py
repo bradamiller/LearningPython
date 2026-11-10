@@ -103,12 +103,12 @@ DECK = {
              ['The caller needs them to plan the **next** trip: Lesson 5-9 strings several of these together'],
          ],
          'size': 24,
-         'notes': 'Class track: if students built the Navigator class in Lesson 4-8, this function '
+         'notes': 'Class track: if students built the Navigator class in Lesson 4-7, this function '
                   'wants to be a method of it. position and heading become self.position and '
                   'self.heading and drop out of the parameters and the return; the driving calls go '
                   'through self.line_track. and self.desired_heading() / self.turn_to(); the planner '
                   'calls are planner.add_blocked() and planner.compute_path(). It returns only the '
-                  'two counts, and the caller reads navigator.position afterwards, as in Lesson 4-9.'},
+                  'two counts, and the caller reads navigator.position afterwards, as in Lesson 4-8.'},
 
         {'kind': 'bullets', 'title': 'Two parameters that look odd',
          'bullets': [

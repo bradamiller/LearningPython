@@ -130,6 +130,10 @@ robot's **current position**: they start as the start tuple (`x, y = start`) and
 change by 1 on every move. `dest_x` and `dest_y` are the destination
 (`dest_x, dest_y = end`).
 
+The function doesn't know on its own where the robot is. Whoever calls it supplies the
+robot's position as the `start` parameter, so the same function plans from any
+intersection.
+
 In one loop, keep adding 1 to x while x is less than `dest_x`. In a second loop, do
 the same for y. Inside each loop, append the new current position `(x, y)` to the
 path.

@@ -287,7 +287,7 @@ def test_edge_cases():
     print(planner.compute_path((0, 2), (3, 2)))   # same row
     print(planner.compute_path((1, 1), (1, 1)))   # same spot
 
-# --- Lesson 4-6: the test harness ---
+# --- Lesson 4-5: the test harness ---
 # run_test() asks the planner for a path and compares it
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
@@ -298,22 +298,49 @@ def run_test(test_name, position, destination, expected):
     pass
 
 
-# ===== NAVIGATOR =====
-# Drives a planned path. The MANHATTAN PLANNER section says
-# WHERE to go (a list of intersections); this section works
-# out which way to face at each one and does the driving with
-# the LINE TRACKING functions. It is the only code that knows
-# the robot's position and heading, and it hands both back.
+# ===== NAVIGATOR (class version) =====
+# One Navigator object owns the robot's position and heading.
+# It HAS a LineTrack (built in __init__) and gives it the
+# driving orders; it is told where to go and keeps its own
+# record of where it got to. Same three methods as the
+# function version, same names, with navigator. in front.
 HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
-def desired_heading(position, next_pos):
-    """Return the heading (0-3) that points from position to
-    next_pos, which must be one step away; raise if it is not."""
-    # 1. x_diff and y_diff: next_pos minus position
-    # 2. one if per direction, from the table above; each
-    #    checks BOTH differences, because the other one is 0
-    # 3. none matched: raise ValueError, naming both positions
-    pass
+class Navigator:
+    def __init__(self, start, heading):
+        self.position = start
+        self.heading = heading
+        self.line_track = LineTrack()        # has-a LineTrack
+
+    def desired_heading(self, next_pos):
+        # your function; position is self.position now, so
+        # it is no longer a parameter
+        pass
+
+    def turn_to(self, desired):
+        # your function, with self.heading in place of the
+        # parameter and self.line_track. in front of each
+        # turn; it STORES the new heading, not returns it
+        pass
+
+    def drive_path(self, path):
+        # your function, with self. in front of position,
+        # heading and the two LINE TRACKING calls; it stores
+        # the final position instead of returning it
+        pass
+
+navigator = Navigator((0, 0), 0)
+
+def test_drive_path():
+    destination = (2, 3)
+
+    path = planner.compute_path(navigator.position, destination)
+    print("Path:", path)
+
+    board.wait_for_button()       # read the path, THEN press
+
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 
 # ===== RUN =====
 board.wait_for_button()

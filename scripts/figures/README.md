@@ -68,23 +68,23 @@ they match the generator byte for byte. **Known stale:** the deployed
 | f44loops.py | trace-to-loops.svg | /img/lesson-m4-04/trace-to-loops.svg |
 | f44skip.py | one-x-loop-runs.svg | /img/lesson-m4-04/one-x-loop-runs.svg |
 | f45promises.py | three-promises.svg | /img/lesson-m4-05/three-promises.svg |
-| f47.py | headings.svg | /img/lesson-m4-07/headings-xy.svg |
+| f47.py | headings.svg | /img/lesson-m4-06/headings-xy.svg |
 | f47.py | short-way.svg | — |
 | fharness.py | test-harness.svg | — |
 | first.py | first-drive.svg | /img/lesson-08/first-drive.svg |
 | fmap.py | delivery-overview.svg | /img/lesson-m4-00/delivery-overview-xy.svg |
-| fmap.py | delivery-run.svg | /img/lesson-m4-09/delivery-run-xy.svg |
-| fmap.py | told-not-remembered.svg | /img/lesson-m4-05/told-not-remembered-xy.svg |
+| fmap.py | delivery-run.svg | /img/lesson-m4-08/delivery-run-xy.svg |
+| fmap.py | told-not-remembered.svg | no longer used (was /img/lesson-m4-05/told-not-remembered-xy.svg, dropped 2026-11-10) |
 | fdecomp.py | decomposition.svg | — |
 | fproblem.py | drive-to-destination.svg | /img/lesson-m4-00/drive-to-destination.svg |
 | fplan.py | plan-then-drive.svg | /img/lesson-m4-00/plan-then-drive.svg |
-| fpose.py | pose.svg | /img/lesson-m4-07/pose.svg (deck copy: scripts/slides/decks/m4/fig/l07-pose.svg) |
+| fpose.py | pose.svg | /img/lesson-m4-06/pose.svg (deck copy: scripts/slides/decks/m4/fig/l06-pose.svg) |
 | fpipe.py | two-halves.svg | — |
 | fraise.py, fraise2.py | raise.svg | — |
 | fraise2.py | raise-spin.svg | — |
-| fshort.py | turn-shortcut.svg | /img/lesson-m4-08/turn-shortcut-xy.svg |
+| fshort.py | turn-shortcut.svg | /img/lesson-m4-07/turn-shortcut-xy.svg |
 | ftrace.py | drive-path-trace.svg | — |
-| ftrace2.py | drive-path-loop.svg | /img/lesson-m4-08/drive-path-loop-xy.svg |
+| ftrace2.py | drive-path-loop.svg | /img/lesson-m4-07/drive-path-loop-xy.svg |
 | g50.py | blocked-route.svg | /img/lesson-m5-00/blocked-route-xy.svg |
 | g51.py | detour.svg | /img/lesson-m5-01/detour-xy.svg |
 | g51.py | graph-3x3.svg | /img/lesson-m5-01/graph-3x3-xy.svg |
@@ -133,7 +133,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m3_second_track.py | second-track.svg | — |
 | m43.py | build-path.svg | /img/lesson-m4-03/build-path.svg |
 | m44.py | four-loops-run.svg | /img/lesson-m4-04/four-loops-run.svg |
-| m49.py | delivery-drive.svg | /img/lesson-m4-09/delivery-drive.svg |
+| m49.py | delivery-drive.svg | /img/lesson-m4-08/delivery-drive.svg |
 | manhattan.py | manhattan-grid.svg | /img/lesson-m4-00/manhattan-grid.svg |
 | mission.py | final-project-mission.svg | — |
 | phone.py | phone-route.svg | /img/lesson-m5-01/phone-route.svg |

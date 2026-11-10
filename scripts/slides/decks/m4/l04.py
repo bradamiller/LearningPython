@@ -116,7 +116,10 @@ DECK = {
              'Loop 2: do the same for y',
              'Inside each loop, **append** the new current position `(x, y)` to the path',
          ],
-         'size': 26},
+         'size': 24,
+         'callout': 'The function doesn\'t know where the robot is: whoever calls it supplies the '
+                    'position as `start`',
+         'tone': 'teal'},
 
         {'kind': 'figure', 'title': 'Each row is one trip around a loop',
          'figure': '/img/lesson-m4-04/trace-to-loops.svg',

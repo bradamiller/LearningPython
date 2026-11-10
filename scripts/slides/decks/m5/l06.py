@@ -29,7 +29,7 @@ DECK = {
          'notes': 'Have pairs actually compare paths on screen before showing the slide.'},
 
         {'kind': 'code', 'title': '...and one test',
-         'lead': 'Module 4\'s test from Lesson 4-6, still in your file as `run_test()`:',
+         'lead': 'Module 4\'s test from Lesson 4-5, still in your file as `run_test()`:',
          'lead_h': 0.8,
          'code': 'if actual == expected:\n'
                  '    print(test_name, "- PASS")',

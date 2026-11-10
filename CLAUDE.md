@@ -662,6 +662,14 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
+- **2026-11-10: Module 4 lessons 4-5 and 4-6 merged (Brad: "Fold into 4-6").** The new
+  4-5 is "Naming and Testing the Planner" (`lesson-05-naming-and-testing-the-planner`):
+  the rename, the docstring and three promises, then run_test() and the six-case suite.
+  The old "told, not remembered" section was dropped (Brad: position is a parameter,
+  so it's obvious); 4-4 now says in a few sentences that the caller supplies the start.
+  `test_from_everywhere()` was dropped with it. Old 4-7 to 4-9 are now 4-6 to 4-8
+  everywhere (files, decks, image folders `lesson-m4-0N`, templates, cross-references).
+  Anything older in this file that says 4-6 to 4-9 means the pre-merge numbers.
 - **Module 1 style rules applied in the 2026-09-15 review** (keep enforcing):
   the middle header chip names the TOPIC, matching Modules 2–5 ("while loops",
   "Python data"). Module 1's reads "Blockly Foundation" (1-1 to 1-5), "Driving

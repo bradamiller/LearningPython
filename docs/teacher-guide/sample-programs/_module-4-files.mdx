@@ -13,11 +13,10 @@
 | 4-2 · Tuples | No change to `robot.py` | | |
 | 4-3 · Lists | No change to `robot.py` | | |
 | 4-4 · The Manhattan Algorithm | `compute_path()` |  | `test_paper_paths()`, `test_edge_cases()` |
-| 4-5 · A Reusable Planner Function | `compute_manhattan_path()` | `test_paper_paths()` changed, `test_edge_cases()` changed, `compute_path()` removed | `test_from_everywhere()` |
-| 4-6 · Testing Without a Robot | `run_test()` |  | `test_planner()` |
-| 4-7 · The Challenge of Turning | `HEADING_NAMES`, `desired_heading()` |  | `test_headings()` |
-| 4-8 · Driving the Path | `turn_to()`, `drive_path()` |  | `test_turns_paper()`, `test_one_leg()`, `test_drive_path()` |
-| 4-9 · Final Project | `DESTINATIONS` |  | `test_delivery_paper()`, `test_delivery()` |
+| 4-5 · Naming and Testing the Planner | `compute_manhattan_path()`, `run_test()` | `test_paper_paths()` changed, `test_edge_cases()` changed, `compute_path()` removed | `test_planner()` |
+| 4-6 · The Challenge of Turning | `HEADING_NAMES`, `desired_heading()` |  | `test_headings()` |
+| 4-7 · Driving the Path | `turn_to()`, `drive_path()` |  | `test_turns_paper()`, `test_one_leg()`, `test_drive_path()` |
+| 4-8 · Final Project | `DESTINATIONS` |  | `test_delivery_paper()`, `test_delivery()` |
 
 A lesson's tests stay in the file after the lesson, so this one file runs any of
 them: set the call in the `RUN` block to the test you want. A driving test that
@@ -31,7 +30,7 @@ Where the table says something was removed, that lesson replaced or renamed it, 
 
 ```python title="robot.py · function track · end of Module 4"
 # robot.py, COMPLETE, as the teacher copies leave it after
-# Lesson 4-9 (function track). Answers: not for students.
+# Lesson 4-8 (function track). Answers: not for students.
 
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
@@ -386,13 +385,7 @@ def test_edge_cases():
     print(compute_manhattan_path((0, 2), (3, 2)))   # same row
     print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
-def test_from_everywhere():
-    print(compute_manhattan_path((0, 0), (2, 3)))   # leg 1
-    print(compute_manhattan_path((2, 3), (0, 3)))   # leg 2
-    print(compute_manhattan_path((0, 3), (0, 0)))   # leg 3
-    print(compute_manhattan_path((2, 2), (2, 2)))   # already there: []
-
-# --- Lesson 4-6: the test harness ---
+# --- Lesson 4-5: the test harness ---
 # run_test() asks the planner for a path and compares it
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
@@ -442,7 +435,7 @@ def test_headings():
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
     # desired_heading((1, 1), (2, 2))   # diagonal: stops here
 
-# --- Lesson 4-8: turn to a heading, drive a path ---
+# --- Lesson 4-7: turn to a heading, drive a path ---
 # turn_to() turns a quarter turn at a time, with the LINE
 # TRACKING turns, until the robot faces the heading it
 # needs. drive_path() is the loop: for each
@@ -497,7 +490,7 @@ def test_drive_path():
     position, heading = drive_path(path, position, heading)
     print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 
-# --- Lesson 4-9: final project, the delivery run ---
+# --- Lesson 4-8: final project, the delivery run ---
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
@@ -543,11 +536,10 @@ board.wait_for_button()
 | 4-2 · Tuples | No change to `robot.py` | | |
 | 4-3 · Lists | No change to `robot.py` | | |
 | 4-4 · The Manhattan Algorithm | `compute_path()` |  | `test_paper_paths()`, `test_edge_cases()` |
-| 4-5 · A Reusable Planner Function | `Manhattan` class | `test_paper_paths()` changed, `test_edge_cases()` changed, `compute_path()` removed | `test_from_everywhere()` |
-| 4-6 · Testing Without a Robot | `run_test()` |  | `test_planner()` |
-| 4-7 · The Challenge of Turning | `HEADING_NAMES`, `desired_heading()` |  | `test_headings()` |
-| 4-8 · Driving the Path | `Navigator` class | `test_headings()` changed, `desired_heading()` removed | `test_turns_paper()`, `test_one_leg()`, `test_drive_path()` |
-| 4-9 · Final Project | `DESTINATIONS` |  | `test_delivery_paper()`, `test_delivery()` |
+| 4-5 · Naming and Testing the Planner | `Manhattan` class, `run_test()` | `test_paper_paths()` changed, `test_edge_cases()` changed, `compute_path()` removed | `test_planner()` |
+| 4-6 · The Challenge of Turning | `HEADING_NAMES`, `desired_heading()` |  | `test_headings()` |
+| 4-7 · Driving the Path | `Navigator` class | `test_headings()` changed, `desired_heading()` removed | `test_turns_paper()`, `test_one_leg()`, `test_drive_path()` |
+| 4-8 · Final Project | `DESTINATIONS` |  | `test_delivery_paper()`, `test_delivery()` |
 
 A lesson's tests stay in the file after the lesson, so this one file runs any of
 them: set the call in the `RUN` block to the test you want. A driving test that
@@ -561,7 +553,7 @@ Where the table says something was removed, that lesson replaced or renamed it, 
 
 ```python title="robot.py · class track · end of Module 4"
 # robot.py, COMPLETE, as the teacher copies leave it after
-# Lesson 4-9 (class track). Answers: not for students.
+# Lesson 4-8 (class track). Answers: not for students.
 
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
@@ -915,13 +907,7 @@ def test_edge_cases():
     print(planner.compute_path((0, 2), (3, 2)))   # same row
     print(planner.compute_path((1, 1), (1, 1)))   # same spot
 
-def test_from_everywhere():
-    print(planner.compute_path((0, 0), (2, 3)))   # leg 1
-    print(planner.compute_path((2, 3), (0, 3)))   # leg 2
-    print(planner.compute_path((0, 3), (0, 0)))   # leg 3
-    print(planner.compute_path((2, 2), (2, 2)))   # already there: []
-
-# --- Lesson 4-6: the test harness ---
+# --- Lesson 4-5: the test harness ---
 # run_test() asks the planner for a path and compares it
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
@@ -1015,7 +1001,7 @@ def test_drive_path():
     navigator.drive_path(path)
     print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 
-# --- Lesson 4-9: final project, the delivery run ---
+# --- Lesson 4-8: final project, the delivery run ---
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is

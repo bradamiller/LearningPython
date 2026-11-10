@@ -41,7 +41,7 @@ b+=[f'<text class="nb" x="{X}" y="210">Start: home, (0, 0), facing North.</text>
     f'<text class="n" x="{X}" y="287">No remote control, no steering.</text>']
 open(OUTDIR+'delivery-overview.svg','w').write(svg('Module 4: visit three destinations in order',
  'A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3). Beside it: destinations = [(2, 0), (2, 3), (0, 3)]. For each destination the robot plans a path from where it is, drives it, and remembers where it ended up.',b,H=350))
-# --- 4-9 project map ---
+# --- 4-8 project map ---
 g=G(110,96,sp=60,pad=30)
 stops=[(2,0),(2,3),(0,3),(0,0)]
 b=legs_map(g,stops)

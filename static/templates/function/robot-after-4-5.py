@@ -316,6 +316,16 @@ def test_edge_cases():
     print(compute_manhattan_path((0, 2), (3, 2)))   # same row
     print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
+# --- Lesson 4-5: the test harness ---
+# run_test() asks the planner for a path and compares it
+# with one you traced by hand, printing PASS or FAIL. A
+# planner test from here on is a list of run_test() calls.
+
+def run_test(test_name, position, destination, expected):
+    """Plan position -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    pass
+
 # ===== RUN =====
 board.wait_for_button()
 # call ONE test function here

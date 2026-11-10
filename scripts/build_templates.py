@@ -848,11 +848,11 @@ C = ("class",)   # class-track-only ops
 # lesson that specify it. Comment lines stay <= 62 characters.
 
 CLASS_OVERRIDES = {
-    # 4-8 extension: "drive_path([(1, 0)], (0, 0), 0) becomes
+    # 4-7 extension: "drive_path([(1, 0)], (0, 0), 0) becomes
     # navigator.drive_path([(1, 0)]), and the print afterwards reads
     # navigator.position and navigator.heading. The planner call in
     # test_drive_path() is handed navigator.position."
-    "test_drive_path": dict(frm="4-8", outline='''
+    "test_drive_path": dict(frm="4-7", outline='''
 def test_drive_path():
     destination = (2, 3)
 
@@ -864,15 +864,15 @@ def test_drive_path():
     navigator.drive_path(path)
     print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 '''),
-    "test_one_leg": dict(frm="4-8", outline=None, body='''
+    "test_one_leg": dict(frm="4-7", outline=None, body='''
 def test_one_leg():
     navigator.drive_path([(1, 0)])
     print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 '''),
-    # 4-8: desired_heading(self, next_pos) "has lost its position
-    # parameter ... the object already knows both"; the 4-7 test
+    # 4-7: desired_heading(self, next_pos) "has lost its position
+    # parameter ... the object already knows both"; the 4-6 test
     # asks from (1, 1), so it builds a navigator standing there.
-    "test_headings": dict(frm="4-8", outline=None, body='''
+    "test_headings": dict(frm="4-7", outline=None, body='''
 def test_headings():
     nav = Navigator((1, 1), 0)
     for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
@@ -880,7 +880,7 @@ def test_headings():
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
     # nav.desired_heading((2, 2))   # diagonal: stops here
 '''),
-    "test_turns_paper": dict(frm="4-8", outline=None, body='''
+    "test_turns_paper": dict(frm="4-7", outline=None, body='''
 def test_turns_paper():
     for next_pos in [(1, 0), (1, 1)]:
         needed = navigator.desired_heading(next_pos)
@@ -890,11 +890,11 @@ def test_turns_paper():
             print("  clockwise ->", HEADING_NAMES[navigator.heading])
         navigator.position = next_pos
 '''),
-    # 4-9 teacher copy: "test_delivery() is handed navigator.position
+    # 4-8 teacher copy: "test_delivery() is handed navigator.position
     # by the planner call, drives with navigator.drive_path(path),
     # and prints navigator.position -- there is no
     # position, heading = ... line to get half right."
-    "test_delivery": dict(frm="4-9", outline='''
+    "test_delivery": dict(frm="4-8", outline='''
 def test_delivery():
     # the navigator starts at home, facing North
     # plan the FIRST leg and print it; wait for the button
@@ -953,7 +953,7 @@ def test_swap():
     position = navigate(planner, position, (0, 0))
 '''),
     # 5-7: "the driving calls in the outline are tracker. or
-    # navigator.line_track. calls, as in Lesson 4-8, and the planner
+    # navigator.line_track. calls, as in Lesson 4-7, and the planner
     # calls are planner.add_blocked() and planner.compute_path()."
     "test_detect_once": dict(frm="5-7", outline='''
 def test_detect_once():
@@ -1008,7 +1008,7 @@ def test_detect_once():
 '''),
     # 5-8: the function "wants to be a method of [Navigator] ... It
     # returns only the two counts; the caller reads
-    # navigator.position afterwards, as in Lesson 4-9."
+    # navigator.position afterwards, as in Lesson 4-8."
     "test_navigate": dict(frm="5-8", outline=None, body='''
 def test_navigate():
     for intersection in KNOWN_OBSTACLES:
@@ -1114,7 +1114,7 @@ def test_drive_slow_grid():
 '''),
 }
 
-# 5-8: "If you built the Navigator class in Lesson 4-8, this
+# 5-8: "If you built the Navigator class in Lesson 4-7, this
 # function wants to be a method of it: position and heading become
 # self.position and self.heading and drop out of the parameter list
 # and the return, the four driving calls go through self.line_track.
@@ -1213,7 +1213,7 @@ CLASS_RULES = [
     # 4-5: "each compute_manhattan_path( in them becomes
     # planner.compute_path("
     ("4-5", None, NOT_ATTR + r"compute_manhattan_path\(", "planner.compute_path("),
-    # 5-5: "in Lesson 4-6's run_test() change planner.compute_path(...)
+    # 5-5: "in Lesson 4-5's run_test() change planner.compute_path(...)
     # to Manhattan().compute_path(...)"
     ("5-5", {"run_test"}, r"planner\.compute_path\(", "Manhattan().compute_path("),
     # 5-6 extension: the four edits
@@ -1262,7 +1262,7 @@ GIVEN_IN_FULL = {
     "compute_manhattan_path": ("4-5: the 4-4 east loop, renamed, still in the file", None),
     "test_paper_paths": ("4-4: given in full in the skeleton", None),
     "test_edge_cases": ("4-4: given in full in the skeleton", None),
-    "test_drive_path": ("4-8: the plan, print, button, drive shape, given in full", None),
+    "test_drive_path": ("4-7: the plan, print, button, drive shape, given in full", None),
     "compute_bfs_path": ("5-4: the placeholder body is given ('it isn't the function yet')", ("5-4", "5-4")),
     "print_grid": ("5-5: 'print_grid() is given -- it's formatting, not pathfinding'", None),
     "run_all_tests": ("5-6: the suite is given ('the same program'); 6-3/6-5 edit it", None),
@@ -1415,7 +1415,6 @@ RECIPE = [
         # "Update both tests": the 4-4 tests with the new name
         Refresh("test_paper_paths", "4-5"),
         Refresh("test_edge_cases", "4-5"),
-        Invent("test_from_everywhere", "4-5"),
         # class track: "Paste it in place of the
         # compute_manhattan_path() function (keep your tests)"
         Delete("banner:MANHATTAN PLANNER", tracks=C),
@@ -1424,41 +1423,39 @@ RECIPE = [
                before="test_paper_paths", tracks=C),
         Class("Manhattan", "4-5", ["compute_path"], after="banner:MANHATTAN PLANNER", tracks=C),
         Object("planner", "4-5", after="Manhattan", tracks=C),
+        Banner("L4-5", "4-5", "--- Lesson 4-5:"),
+        Func("run_test", "4-5"),
+        Invent("test_planner", "4-5"),
     ]),
     ("4-6", [
-        Banner("L4-6", "4-6", "--- Lesson 4-6:"),
-        Func("run_test", "4-6"),
-        Invent("test_planner", "4-6"),
+        Banner("NAVIGATOR", "4-6", "===== NAVIGATOR ====="),
+        Setting("HEADING_NAMES", "4-6"),
+        Func("desired_heading", "4-6"),
+        Invent("test_headings", "4-6"),
     ]),
     ("4-7", [
-        Banner("NAVIGATOR", "4-7", "===== NAVIGATOR ====="),
-        Setting("HEADING_NAMES", "4-7"),
-        Func("desired_heading", "4-7"),
-        Invent("test_headings", "4-7"),
-    ]),
-    ("4-8", [
-        Banner("L4-8", "4-8", "--- Lesson 4-8:"),
-        Func("turn_to", "4-8"),
-        Func("drive_path", "4-8"),
-        Invent("test_turns_paper", "4-8"),
-        Invent("test_one_leg", "4-8"),
-        Func("test_drive_path", "4-8", full=True),
+        Banner("L4-7", "4-7", "--- Lesson 4-7:"),
+        Func("turn_to", "4-7"),
+        Func("drive_path", "4-7"),
+        Invent("test_turns_paper", "4-7"),
+        Invent("test_one_leg", "4-7"),
+        Func("test_drive_path", "4-7", full=True),
         # class track: "paste it in place of the three functions
         # (keep HEADING_NAMES and your tests)"
         Delete("banner:NAVIGATOR", tracks=C),
         Delete("desired_heading", tracks=C),
-        Delete("banner:L4-8", tracks=C),
+        Delete("banner:L4-7", tracks=C),
         Delete("turn_to", tracks=C), Delete("drive_path", tracks=C),
-        Banner("NAVIGATOR", "4-8", "NAVIGATOR (class version)", before="HEADING_NAMES", tracks=C),
-        Class("Navigator", "4-8", ["desired_heading", "turn_to", "drive_path"],
+        Banner("NAVIGATOR", "4-7", "NAVIGATOR (class version)", before="HEADING_NAMES", tracks=C),
+        Class("Navigator", "4-7", ["desired_heading", "turn_to", "drive_path"],
               after="HEADING_NAMES", tracks=C),
-        Object("navigator", "4-8", after="Navigator", tracks=C),
+        Object("navigator", "4-7", after="Navigator", tracks=C),
     ]),
-    ("4-9", [
-        Banner("L4-9", "4-9", "--- Lesson 4-9:"),
-        Setting("DESTINATIONS", "4-9"),
-        Func("test_delivery_paper", "4-9"),
-        Func("test_delivery", "4-9"),
+    ("4-8", [
+        Banner("L4-8", "4-8", "--- Lesson 4-8:"),
+        Setting("DESTINATIONS", "4-8"),
+        Func("test_delivery_paper", "4-8"),
+        Func("test_delivery", "4-8"),
     ]),
     ("5-2", [
         Banner("GRID GRAPH", "5-2", "===== GRID GRAPH ====="),
@@ -1796,7 +1793,7 @@ file is the same as the module's last lesson.
 Two tracks, because the course has two. The **function track** is the course
 everyone does: each section is plain functions and settings. The **class track**
 is for students who take every *optional extension* — `LineSensor` (2-7),
-`LineTrack` (2-9), `Manhattan` (4-5), `Navigator` (4-8), `BFS` (5-5), the class
+`LineTrack` (2-9), `Manhattan` (4-5), `Navigator` (4-7), `BFS` (5-5), the class
 harness (5-6) and `Dijkstra` (6-5). On that track a class skeleton replaces the
 function section, the object is created right under its class, and the tests
 call the object (`tracker.track_to_intersection()`,
@@ -2064,7 +2061,7 @@ SMOKE = {
         "test_reversal", "test_final_project"],
     3: ["test_first_intersection", "test_arrive_and_turn", "test_two_by_hand",
         "test_drive_run", "test_l_shape", "test_my_path", "test_one_side", "test_square"],
-    4: ["test_paper_paths", "test_edge_cases", "test_from_everywhere", "test_planner",
+    4: ["test_paper_paths", "test_edge_cases", "test_planner",
         "test_headings", "test_turns_paper", "test_one_leg", "test_drive_path",
         "test_delivery_paper", "test_delivery"],
     5: ["test_grid_graph", "test_blocked_graph", "test_bfs_open", "test_bfs_walls",
