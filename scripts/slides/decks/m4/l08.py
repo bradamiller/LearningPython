@@ -40,7 +40,7 @@ DECK = {
          'callout': 'No coordinates, headings or paths: they follow tape and have no idea where the robot '
                     'is. Today\'s three functions sit between them and the planner.',
          'tone': 'teal',
-         'notes': 'The split from Lesson 4-5 again: the planner doesn\'t know how to drive, and the '
+         'notes': 'The split from Lesson 4-0 again: the planner doesn\'t know how to drive, and the '
                   'driving functions don\'t know what a path is. Class-track students with LineTrack '
                   'write tracker. in front of each.'},
 

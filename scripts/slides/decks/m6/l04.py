@@ -99,7 +99,7 @@ DECK = {
                      '`turn_to()` has to know about the slow segment',
                      '`track_to_intersection()` runs slower on purpose'],
          'answer': 1,
-         'explanation': 'The plan-versus-drive split from Lesson 4-5 pays off a third time. The driving '
+         'explanation': 'The plan-versus-drive split from Lesson 4-0 pays off a third time. The driving '
                         'functions never knew what a path meant, so a path chosen for cost instead of '
                         'steps is just another list.'},
 
