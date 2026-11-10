@@ -14,12 +14,9 @@ sidebar_position: 5
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Last lesson you wrote `compute_path()` and it worked. This lesson doesn't change a single
-line inside it. Instead you'll give it its real name, write down exactly what it promises,
-and settle one design rule that the rest of the course depends on: **the planner is told
-where the robot is. It never remembers.** Small lesson, big consequences — Module 5 swaps
-in a completely different planner behind this same function shape, and nothing else has
-to change.
+Last lesson you wrote `compute_path()` and it worked. This lesson gives it its real name,
+writes down what it promises, and settles one rule the rest of the course depends on:
+**the planner is told where the robot is; it never remembers.**
 
 <Objectives>
 
@@ -29,7 +26,7 @@ By the end of this lesson you will be able to:
 - State the function's three promises: the path never includes the start, it ends at the destination, and it is `[]` when you are already there
 - Write a docstring that records those promises
 - Explain why the planner takes the robot's position as a parameter instead of storing it
-- Write a paper test that calls the planner from several different positions, and check each result by hand
+- Write a test that calls the planner from several positions, and check each result against a figure
 
 </Objectives>
 
@@ -48,20 +45,11 @@ def compute_path(start, end):
 def compute_manhattan_path(position, destination):
 ```
 
-Three words changed, each on purpose. (Nothing is pasted in this lesson — it's an
-edit to a function you already have, the same way Lesson 2-6 rewrote `get_error()`.)
-
-**`manhattan`** says *which* algorithm this is. Right now it's the only planner you have,
-so the name feels redundant. In Module 5 you'll write a second one, `compute_bfs_path()`,
-that finds routes around obstacles — and the two need to sit in the same file without
-colliding.
-
-**`position`**, not `start`, says what the argument *is*: where the robot is right now.
-A path isn't always planned from the robot's starting corner. After the robot drives to
-(2, 3), the next path is planned from (2, 3).
-
-**`destination`**, not `end`, because `end` is a vague word and a worse one next to
-`start`. The path ends at the destination; the robot ends there too.
+| Old | New | Why |
+|---|---|---|
+| `compute_path` | `compute_manhattan_path` | Says which planner. Module 5 adds `compute_bfs_path()` beside it. |
+| `start` | `position` | Where the robot is now. After it drives to (2, 3), the next path starts at (2, 3). |
+| `end` | `destination` | Where it's going. |
 
 <KnowledgeCheck
   question="Why does the function's name include 'manhattan' when it is the only planner in the course so far?"
@@ -94,32 +82,20 @@ def compute_manhattan_path(position, destination):
     ...
 ```
 
-That last sentence is the one people get wrong, so check it against the code. The first
-thing appended to `path` is the position *after* the first step, never `position` itself.
-So the function promises three things:
+The function promises three things:
 
-1. The path **never includes the start.** `compute_manhattan_path((0, 0), (2, 0))` is
-   `[(1, 0), (2, 0)]`, not `[(0, 0), (1, 0), (2, 0)]`.
-2. The path **ends at the destination** — the last element is always `destination`.
-3. If you're already there, the path is **empty**: `compute_manhattan_path((1, 1), (1, 1))`
-   returns `[]`, because every `while` loop is skipped.
+1. The path **never includes the start.**
+2. The path **ends at the destination.**
+3. The path is **empty** if you're already there, because every `while` loop is skipped.
 
-Why does promise 1 matter? Because the robot is going to drive this list. Each element is
-an intersection to drive *to*. The robot is already standing on `position`; telling it to
-drive there would mean driving zero distance and getting confused about which way to turn.
-Every planner in this course — Manhattan now, BFS and Dijkstra later — makes the same
-three promises.
-
-<KnowledgeCheck
-  question="What does compute_manhattan_path((2, 1), (2, 1)) return, and why?"
-  options={[
-    {text: '[(2, 1)] — the destination is always included'},
-    {text: '[] — the robot is already there, so every while loop condition is false and nothing is appended', correct: true},
-    {text: 'An error, because position equals destination'},
-    {text: '[(2, 1), (2, 1)]'},
-  ]}
-  explanation="Promise 3. With x == dest_x and y == dest_y, none of the four loops run, and path stays empty. That is the right answer: there is nowhere to go."
+<Figure
+  src="/img/lesson-m4-05/three-promises.svg"
+  alt="A 4 by 4 grid with the robot at (0, 0) and the path to (2, 1) drawn through (1, 0) and (2, 0). Badge 1 marks the robot's spot, badge 2 the destination. Beside it, the call returns [(1, 0), (2, 0), (2, 1)], and the three promises: never includes the start; ends at the destination; empty if already there, so compute_manhattan_path((1, 1), (1, 1)) returns []."
+  caption="Promise 1 matters because each element is a place to drive to, and the robot already stands on position."
 />
+
+Every planner in this course, Manhattan now and BFS and Dijkstra later, makes the same
+three promises.
 
 <KnowledgeCheck
   question="A classmate's version returns [(0, 0), (1, 0), (2, 0)] for position (0, 0), destination (2, 0). Which promise did it break, and why does it matter?"
@@ -148,19 +124,9 @@ path3 = compute_manhattan_path((0, 3), (0, 0))     # and again
   caption="The first argument changes every time, because the robot has moved. The planner never has to know that; it is told."
 />
 
-Every call is handed the robot's position. The planner never stores it. That might look
-like extra typing, but it buys something important: **only one piece of code is in charge
-of knowing where the robot is** — the driving code, which you'll write in Lesson 4-8.
-It updates its `position` variable after every intersection and hands the current value
-to the planner whenever it needs a route.
-
-If the planner *also* kept a copy of the position, you'd have two variables that are
-supposed to agree. The first time one gets updated and the other doesn't, the robot
-plans from a place it isn't. That's a real bug, and the easiest way to never have it is
-to never have the second copy.
-
-So: a planner has no memory. It's a pure calculation — tuples in, list out. That's also
-exactly why you can test it on any computer with no robot attached, which is next lesson.
+Only the driving code (Lesson 4-8) keeps track of where the robot is, and it hands that
+position to the planner on every call. A second copy inside the planner would sooner or
+later disagree with it, and the robot would plan from a place it isn't.
 
 <KnowledgeCheck
   question="Why does compute_manhattan_path() take position as a parameter every call, instead of remembering where the robot started?"
@@ -177,7 +143,8 @@ exactly why you can test it on any computer with no robot attached, which is nex
 
 ### Step 1 · The rename
 
-In the MANHATTAN PLANNER section, change the `def` line and replace the one-line
+Nothing is pasted in this lesson; you edit a function you already have, as Lesson 2-6
+did with `get_error()`. In the MANHATTAN PLANNER section, change the `def` line and replace the one-line
 docstring with the full one above. The two unpacking lines change with it:
 `x, y = position` and `dest_x, dest_y = destination`. Then set the run line to `test_paper_paths()` and
 run it — and read the error. Your Lesson 4-4 tests still call `compute_path()`, which
@@ -187,33 +154,26 @@ both tests and run them again; same output as yesterday.
 
 ### Step 2 · A test from everywhere
 
-Write a new test — `test_from_everywhere()` — with these four calls, each printed.
-This one is yours to write: Lesson 4-4 handed you its tests, and here the lesson gives
-the calls while the `def` line, the prints and the predictions are up to you. From here
-on, a lesson says what a test should show and you write it, name and all. Before you
-run it, trace each answer by hand on the grid diagram and write what you expect as a
-comment next to the call:
+Write your own test, `test_from_everywhere()`, that prints the three legs from the
+three-legs figure above, plus a fourth call where position equals destination:
 
 ```python
-print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north
-print(compute_manhattan_path((0, 0), (3, 1)))
-print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south
-print(compute_manhattan_path((3, 0), (3, 3)))   # same column: north only
+print(compute_manhattan_path((0, 0), (2, 3)))   # leg 1
+print(compute_manhattan_path((2, 3), (0, 3)))   # leg 2
+print(compute_manhattan_path((0, 3), (0, 0)))   # leg 3
 ```
 
-Set the run line to it. Then check all three promises against each result — no start,
-ends at the destination — and add a fifth call where position equals destination.
+Set the run line to it and check each list against its leg in the figure: no start,
+ends at the destination, and `[]` for the fourth call.
 
-<Reveal title="Check your four traces" hint="trace all four by hand first">
+<Reveal title="Check your output" hint="check each leg against the figure first">
 
 ```
 [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-[(1, 0), (2, 0), (3, 0), (3, 1)]
-[(2, 3), (1, 3), (1, 2), (1, 1), (1, 0)]
-[(3, 1), (3, 2), (3, 3)]
+[(1, 3), (0, 3)]
+[(0, 2), (0, 1), (0, 0)]
+[]
 ```
-
-And the fifth call prints `[]`, promise 3.
 
 </Reveal>
 
@@ -278,10 +238,9 @@ def test_edge_cases():
     print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
 def test_from_everywhere():
-    print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north
-    print(compute_manhattan_path((0, 0), (3, 1)))
-    print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south
-    print(compute_manhattan_path((3, 0), (3, 3)))   # same column: north only
+    print(compute_manhattan_path((0, 0), (2, 3)))   # leg 1
+    print(compute_manhattan_path((2, 3), (0, 3)))   # leg 2
+    print(compute_manhattan_path((0, 3), (0, 0)))   # leg 3
     print(compute_manhattan_path((2, 2), (2, 2)))   # already there: []
 
 # ===== RUN =====
@@ -304,27 +263,13 @@ test_from_everywhere()
 
 <TeacherNote title="A small lesson on purpose — spend the time on the three promises">
 
-Students own the algorithm from 4-4; keep the load on the contract. The one that bites
-later is promise 1: in Lesson 4-8 the driving loop is `for next_pos in path`, and a path
-that includes the start makes the first `desired_heading()` call see a zero move and
-return `None`. Have students write the promise in the docstring *and* say it out loud.
+Promise 1 is the one that bites: in Lesson 4-8 a path that includes the start makes the
+first `desired_heading()` call see a zero move and return `None`. The "told, not
+remembered" rule is Module 5's foundation, so give it the full ten minutes.
 
-The "told, not remembered" rule is Module 5's foundation, so give it the full ten
-minutes. The bug it prevents is concrete: in the old class version of this lesson, the
-planner stored `self.position` and the driving code stored its own — and every student
-program needed a line to keep them in sync. Nobody misses that line.
-
-Docstrings are new. Show that `help(compute_manhattan_path)` prints it, and that the
-first line is a one-sentence summary by convention. Don't go further than that.
-
-The append-before-update bug in the last knowledge check is the one students actually
-make; reading their own output against the three promises is the habit 4-6 builds on.
-
-**The hint level drops here.** Lesson 4-4 gave its tests in full; `test_from_everywhere()`
-is the first planner test students write themselves. The calls are given, so the new
-work is the `def` line, the prints and a hand-traced prediction on each line. Expect
-short tests; the habit is what matters, because every planner test from here to
-Module 6 is written this way.
+Docstrings are new: show that `help(compute_manhattan_path)` prints one, and stop there.
+**The hint level drops here:** `test_from_everywhere()` is the first test students write
+themselves, and from now on a lesson says what a test should show and they write it.
 
 </TeacherNote>
 
@@ -354,8 +299,8 @@ how big systems stay swappable:
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** state the three promises from memory; explain why the planner takes
-`position` rather than storing it; produce output matching the 4-4 hand traces from
-three different positions. **Exit ticket:** "Your partner's planner stores the start
+`position` rather than storing it; produce output matching the three legs in the
+figure. **Exit ticket:** "Your partner's planner stores the start
 position inside it. Describe one bug that could cause." **Preview:** next lesson tests
 this function *systematically*, on screen, with a `run_test()` helper — possible only
 because the planner is pure arithmetic.
@@ -399,7 +344,7 @@ planner = Manhattan()
 ```
 
 Your tests stay where they are; each `compute_manhattan_path(` in them becomes
-`planner.compute_path(`. Run `test_from_everywhere()` again: same five lists.
+`planner.compute_path(`. Run `test_from_everywhere()` again: same four lists.
 
 <Reveal title="Check your Manhattan" hint="move the loops in and rerun the tests first">
 

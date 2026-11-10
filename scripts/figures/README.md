@@ -67,6 +67,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | f44step.py | one-step.svg | /img/lesson-m4-04/one-step.svg |
 | f44loops.py | trace-to-loops.svg | /img/lesson-m4-04/trace-to-loops.svg |
 | f44skip.py | one-x-loop-runs.svg | /img/lesson-m4-04/one-x-loop-runs.svg |
+| f45promises.py | three-promises.svg | /img/lesson-m4-05/three-promises.svg |
 | f47.py | headings.svg | /img/lesson-m4-07/headings-xy.svg |
 | f47.py | short-way.svg | — |
 | fharness.py | test-harness.svg | — |

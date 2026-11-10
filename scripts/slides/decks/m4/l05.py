@@ -9,7 +9,7 @@ DECK = {
              'State the function\'s **three promises**',
              'Write a **docstring** that records those promises',
              'Explain why the planner takes the robot\'s position as a **parameter** instead of storing it',
-             'Write a paper test that calls the planner from several positions, and check each result by hand',
+             'Write a test that calls the planner from several positions, and check each result against a figure',
          ],
          'notes': '50 minutes. A small lesson on purpose: students own the algorithm from 4-4, so '
                   'keep the load on the contract. Not a line inside the function changes.'},
@@ -17,14 +17,10 @@ DECK = {
         {'kind': 'bullets', 'title': 'Same function, its real name',
          'bullets': [
              'Last lesson you wrote `compute_path()` and it worked',
-             'Today **not a single line inside it changes**',
-             'You give it its real name and **write down exactly what it promises**',
-             'And you settle one design rule the rest of the course depends on',
+             'Today it gets its real name, its promises written down, and one rule',
          ],
-         'callout': '**The planner is told where the robot is. It never remembers.**',
-         'tone': 'teal',
-         'notes': 'Small lesson, big consequences: Module 5 swaps in a completely different planner '
-                  'behind this same function shape, and nothing else has to change.'},
+         'callout': '**The planner is told where the robot is; it never remembers.**',
+         'tone': 'teal'},
 
         {'kind': 'code', 'title': 'A rename with a reason',
          'lead': 'The whole change to the function\'s first line, in the MANHATTAN PLANNER section:',
@@ -33,28 +29,20 @@ DECK = {
                  '\n'
                  '# Lesson 4-5\n'
                  'def compute_manhattan_path(position, destination):',
-         'code_size': 24,
-         'callout': 'Nothing is pasted in this lesson: it\'s an edit to a function you already have, '
-                    'the same way Lesson 2-6 rewrote `get_error()`',
-         'tone': 'teal'},
+         'code_size': 24},
 
         {'kind': 'table', 'title': 'Three words changed, each on purpose',
-         'headers': ['Word', 'Why'],
-         'widths': [2.8, 8],
+         'headers': ['Old', 'New', 'Why'],
+         'widths': [3.0, 3.8, 5.2],
          'rows': [
-             ['`manhattan`', 'Says **which** algorithm. In Module 5 you write a second planner, '
-                             '`compute_bfs_path()`, and the two must not collide.'],
-             ['`position`, not `start`', 'Where the robot is **right now**. After it drives to '
-                                         '(2, 3), the next path is planned from (2, 3).'],
-             ['`destination`, not `end`', '`end` is a vague word, and a worse one next to `start`. '
-                                          'The path ends at the destination; so does the robot.'],
+             ['`compute_path`', '`compute_manhattan_path`', 'Says which planner. Module 5 adds '
+                                                            '`compute_bfs_path()` beside it.'],
+             ['`start`', '`position`', 'Where the robot is now. After it drives to (2, 3), the '
+                                       'next path starts at (2, 3).'],
+             ['`end`', '`destination`', 'Where it\'s going.'],
          ],
-         'size': 22,
-         'callout': 'A path isn\'t always planned from the robot\'s starting corner',
-         'tone': 'teal',
-         'notes': 'Right now it is the only planner, so "manhattan" feels redundant. A path is not '
-                  'always planned from the robot\'s starting corner, which is why "start" is the '
-                  'wrong word for the first parameter.'},
+         'size': 20,
+         'notes': 'Right now it is the only planner, so "manhattan" feels redundant until Module 5.'},
 
         {'kind': 'check',
          'question': 'Why does the function\'s name include \'manhattan\' when it is the only planner '
@@ -91,45 +79,14 @@ DECK = {
                   'The first thing appended to path is the position after the first step, never '
                   'position itself.'},
 
-        {'kind': 'table', 'title': 'The three promises',
-         'headers': ['The path...', 'Example'],
-         'widths': [3.2, 7],
-         'rows': [
-             ['1. **never includes the start**',
-              '`compute_manhattan_path((0, 0), (2, 0))` is `[(1, 0), (2, 0)]`'],
-             ['2. **ends at the destination**', 'the last element is always `destination`'],
-             ['3. is **empty** if you\'re already there',
-              '`compute_manhattan_path((1, 1), (1, 1))` is `[]`: every loop is skipped'],
-         ],
-         'size': 20,
-         'callout': 'Every planner in this course, Manhattan now, BFS and Dijkstra later, makes the '
-                    'same three promises',
-         'tone': 'teal',
-         'notes': 'Promise 1: the path for (0, 0) to (2, 0) is not [(0, 0), (1, 0), (2, 0)]. Have '
-                  'students write the promises in the docstring and say them out loud.'},
-
-        {'kind': 'bullets', 'title': 'Why promise 1 matters',
-         'bullets': [
-             'The robot is going to **drive this list**',
-             'Each element is an intersection to drive **to**',
-             'The robot is already standing on `position`',
-             'Telling it to drive there means driving **zero distance**, and getting confused about which way to turn',
-         ],
-         'callout': 'A path is a list of places to go, never the place you are',
-         'tone': 'orange',
-         'notes': 'This is the promise that bites later. In Lesson 4-8 the driving loop is '
-                  'for next_pos in path, and a path that includes the start makes the first '
-                  'desired_heading() call see a zero move and return None.'},
-
-        {'kind': 'check',
-         'question': 'What does `compute_manhattan_path((2, 1), (2, 1))` return, and why?',
-         'options': ['`[(2, 1)]`: the destination is always included',
-                     '`[]`: the robot is already there, so every while condition is false',
-                     'An error, because position equals destination',
-                     '`[(2, 1), (2, 1)]`'],
-         'answer': 1,
-         'explanation': 'Promise 3. With x == dest_x and y == dest_y, none of the four loops run, '
-                        'and path stays empty. That is the right answer: there is nowhere to go.'},
+        {'kind': 'figure', 'title': 'The three promises',
+         'figure': '/img/lesson-m4-05/three-promises.svg',
+         'caption': 'Promise 1 matters because each element is a place to drive to, and the robot '
+                    'already stands on position. Every planner in this course makes the same three '
+                    'promises.',
+         'notes': 'Promise 1 bites in Lesson 4-8: a path that includes the start makes the first '
+                  'desired_heading() call see a zero move and return None. Promise 3: every while '
+                  'loop is skipped, so path stays empty.'},
 
         {'kind': 'check',
          'question': 'A classmate\'s version returns `[(0, 0), (1, 0), (2, 0)]` for position (0, 0), '
@@ -161,13 +118,9 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'One owner for the robot\'s position',
          'bullets': [
-             'Only **one piece of code** is in charge of knowing where the robot is: the **driving code**, in Lesson 4-8',
-             'It updates its `position` variable after every intersection, and hands the current value to the planner',
-             'If the planner also kept a copy, you\'d have **two variables that are supposed to agree**',
-             'The first time one is updated and the other isn\'t, the robot plans from a place it isn\'t',
+             'Only the **driving code** (Lesson 4-8) tracks where the robot is, and hands it to the planner every call',
+             'A second copy inside the planner would sooner or later disagree, and the robot would plan from a place it isn\'t',
          ],
-         'callout': 'A planner has no memory: tuples in, list out. That\'s also why you can test it '
-                    'with no robot attached, next lesson.',
          'tone': 'teal',
          'notes': 'The bug it prevents is concrete: in the old class version of this lesson, the '
                   'planner stored self.position and the driving code stored its own, and every '
@@ -188,6 +141,7 @@ DECK = {
 
         {'kind': 'steps', 'title': 'Step 1 · The rename',
          'steps': [
+             'Nothing is pasted: you edit the function you have, as Lesson 2-6 did with `get_error()`',
              'In MANHATTAN PLANNER, change the `def` line and replace the one-line docstring with the full one',
              'Set the run line to `test_paper_paths()`, run it, and **read the error**: your Lesson 4-4 '
              'tests still call `compute_path()`, which no longer exists',
@@ -199,19 +153,19 @@ DECK = {
 
         {'kind': 'code', 'title': 'Step 2 · A test from everywhere',
          'tag': 'Activity',
-         'lead': 'Write `test_from_everywhere()` with these four calls. Before you run it, trace each '
-                 'answer by hand on the grid and write what you expect as a comment.',
+         'lead': 'Write your own `test_from_everywhere()` that prints the three legs from the figure, '
+                 'plus a **fourth call** where position equals destination.',
          'lead_h': 1.2,
-         'code': 'print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north\n'
-                 'print(compute_manhattan_path((0, 0), (3, 1)))\n'
-                 'print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south\n'
-                 'print(compute_manhattan_path((3, 0), (3, 3)))   # same column: north only',
+         'code': 'print(compute_manhattan_path((0, 0), (2, 3)))   # leg 1\n'
+                 'print(compute_manhattan_path((2, 3), (0, 3)))   # leg 2\n'
+                 'print(compute_manhattan_path((0, 3), (0, 0)))   # leg 3',
          'code_size': 18,
-         'callout': 'Set the run line to it. Check each result against the promises, then add a '
-                    '**fifth call** where position equals destination.',
+         'callout': 'Set the run line to it. Check each list against its leg in the figure: no start, '
+                    'ends at the destination, `[]` for the fourth call.',
          'tone': 'teal',
-         'notes': 'The traced answers are behind a reveal on the lesson page. Reading their own '
-                  'output against the three promises is the habit Lesson 4-6 builds on.'},
+         'notes': 'Output: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], [(1, 3), (0, 3)], '
+                  '[(0, 2), (0, 1), (0, 0)], []. First test students write themselves: the hint '
+                  'level drops here.'},
 
         {'kind': 'check',
          'question': 'A classmate runs `compute_manhattan_path((3, 3), (1, 0))` and gets '
@@ -296,7 +250,7 @@ DECK = {
          'tone': 'teal',
          'notes': 'On the lesson page the skeleton also has a section comment and a docstring (the '
                   '"why bother" from the previous slide); the slide leaves them out to fit. Run '
-                  'test_from_everywhere() again: same five lists. The __init__ is empty because '
+                  'test_from_everywhere() again: same four lists. The __init__ is empty because '
                   'Manhattan has nothing to set up; BFS in Module 5 uses its __init__ to hold the '
                   'list of blocked intersections, and that is when the class earns its keep. The '
                   'finished method is behind a reveal on the lesson page and is not shown here. '

@@ -389,10 +389,9 @@ def test_edge_cases():
     print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
 def test_from_everywhere():
-    print(compute_manhattan_path((0, 0), (2, 3)))   # east, then north
-    print(compute_manhattan_path((0, 0), (3, 1)))
-    print(compute_manhattan_path((3, 3), (1, 0)))   # west, then south
-    print(compute_manhattan_path((3, 0), (3, 3)))   # same column: north only
+    print(compute_manhattan_path((0, 0), (2, 3)))   # leg 1
+    print(compute_manhattan_path((2, 3), (0, 3)))   # leg 2
+    print(compute_manhattan_path((0, 3), (0, 0)))   # leg 3
     print(compute_manhattan_path((2, 2), (2, 2)))   # already there: []
 
 # --- Lesson 4-6: the test harness ---
@@ -1365,10 +1364,9 @@ def test_edge_cases():
     print(planner.compute_path((1, 1), (1, 1)))   # same spot
 
 def test_from_everywhere():
-    print(planner.compute_path((0, 0), (2, 3)))   # east, then north
-    print(planner.compute_path((0, 0), (3, 1)))
-    print(planner.compute_path((3, 3), (1, 0)))   # west, then south
-    print(planner.compute_path((3, 0), (3, 3)))   # same column: north only
+    print(planner.compute_path((0, 0), (2, 3)))   # leg 1
+    print(planner.compute_path((2, 3), (0, 3)))   # leg 2
+    print(planner.compute_path((0, 3), (0, 0)))   # leg 3
     print(planner.compute_path((2, 2), (2, 2)))   # already there: []
 
 # --- Lesson 4-6: the test harness ---
