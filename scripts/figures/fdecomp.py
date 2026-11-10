@@ -1,6 +1,6 @@
 """Lesson 4-0: Module 4's problem broken down into parts (problem decomposition).
 
-Output: out/decomposition.svg -> static/img/lesson-m4-00/decomposition-one-destination.svg
+Output: out/decomposition.svg -> static/img/lesson-m4-06/decomposition.svg (Lesson 4-6 opening)
 (renamed 2026-11-08 when the top box changed, so browsers don't show the cached old one)
 """
 import os, sys
@@ -51,22 +51,21 @@ b.append(f'<text class="sm" x="340" y="{Y2+70}" text-anchor="middle">the one thi
 b.append(f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+40}" text-anchor="middle">small enough to build</text>')
 b.append(f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+56}" text-anchor="middle">and test in one go</text>')
 
-# Level 3: the driver splits again
-W3, G3, Y3, H3 = 146, 10, 240, 76
-x0 = 680 - 10 - 3 * W3 - 2 * G3
-xs = [x0 + i * (W3 + G3) for i in range(3)]
+# Level 3: the driver splits again, into two steps per intersection
+W3, G3, Y3, H3 = 210, 12, 240, 76
+x0 = 680 - 10 - 2 * W3 - G3
+xs = [x0 + i * (W3 + G3) for i in range(2)]
 b += elbow(DX + W2/2, Y2 + H2, [x + W3/2 for x in xs], Y3, Y2 + H2 + 24)
-b += box(xs[0], Y3, W3, H3, "Which way to face?", "desired_heading()", "Lesson 4-6", RED, "#FFFFFF", hcls="nb")
-b += box(xs[1], Y3, W3, H3, "Turn to face it", "turn_to()", "Lesson 4-7", RED, "#FFFFFF", hcls="nb")
-b += box(xs[2], Y3, W3, H3, "Follow the tape", "LINE TRACKING", "built in Module 2", RED, "#FFFFFF", hcls="nb")
+b += box(xs[0], Y3, W3, H3, "1 · Turn to face it", "desired_heading(), turn_to()", "Lessons 4-6 and 4-7", RED, "#FFFFFF", hcls="nb")
+b += box(xs[1], Y3, W3, H3, "2 · Drive to it", "LINE TRACKING", "built in Module 2", RED, "#FFFFFF", hcls="nb")
 
 open(OUTDIR + 'decomposition.svg', 'w').write(svg(
     'Module 4, broken into parts',
     'A tree with three levels. At the top, the whole problem: drive from the start to a destination, '
     'on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-4 '
     'and 4-5, is small enough to build and test in one go. The driver, drive_path(), built in '
-    'Lessons 4-6 and 4-7, splits again into three smaller parts: which way to face, '
-    'desired_heading(), Lesson 4-6; turn to face it, turn_to(), Lesson 4-7; and follow the tape, '
-    'the LINE TRACKING functions built in Module 2. An arrow from planner to driver is labeled '
+    'Lessons 4-6 and 4-7, splits again into two steps for each intersection: 1, turn to face it, '
+    'desired_heading() and turn_to(), Lessons 4-6 and 4-7; 2, drive to it, the LINE TRACKING '
+    'functions built in Module 2. An arrow from planner to driver is labeled '
     '"list of (x, y) tuples, the one thing they share".',
     b, H=330))

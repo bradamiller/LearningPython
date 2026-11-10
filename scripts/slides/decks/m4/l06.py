@@ -5,6 +5,7 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
+             'Break driving a path into two steps, turn then drive, as in Lesson 4-0',
              'Explain why only x **or** y changes between neighbors',
              'Store heading as 0 = N to 3 = W; position plus heading is the **pose**',
              'Write `desired_heading(position, next_pos)`, with a paper test',
@@ -16,18 +17,14 @@ DECK = {
                   'desired_heading(), and it runs on the desk. turn_to() and drive_path() are '
                   'designed here and written in Lesson 4-7. Resist jumping to the driving code.'},
 
-        {'kind': 'bullets', 'title': 'A path is not enough',
-         'bullets': [
-             'Your path is a list of intersections',
-             'But the robot has a **heading**: the direction it is facing right now',
-             'Driving forward only works if it is already pointed the right way',
-             'Today: open the last section of `robot.py`, the **NAVIGATOR**, and design the turning',
-         ],
-         'callout': 'Which way should I face, and how do I turn until I face it? '
-                    'The first is arithmetic you write today; the second is designed on paper.',
-         'tone': 'teal',
-         'notes': 'The arithmetic piece (desired_heading) is written and tested on screen today. The '
-                  'two pieces that move the robot are designed on paper and written next lesson.'},
+        {'kind': 'figure', 'title': 'Decompose further, like 4-0',
+         'figure': '/img/lesson-m4-06/decomposition.svg',
+         'caption': 'Driving a planned path breaks into two steps at each intersection: turn to face '
+                    'the next one, then drive to it.',
+         'notes': 'Tie back to the 4-0 discussion: same move, one level down. The robot has a heading '
+                  'and only drives forward, so it has to turn to face each next intersection before '
+                  'it drives. Today: write desired_heading() and test it on screen; design turn_to() and '
+                  'drive_path() on paper. Lesson 4-7 writes them.'},
 
         {'kind': 'table', 'title': 'One change at a time: four directions',
          'lead': 'Between **adjacent** intersections, either x changes by one **or** y changes by one. '
@@ -126,17 +123,6 @@ DECK = {
          'answer': 2,
          'explanation': 'x is unchanged; y went 3 → 2 (y −1). Decreasing y is moving toward you, '
                         'which is South: heading 2.'},
-
-        {'kind': 'bullets', 'title': 'Then drive: the driver splits again',
-         'bullets': [
-             'The planner is built and tested; the NAVIGATOR is the second part, **the driver**',
-             'Still too big to write in one go, so it is split into smaller parts:',
-             ['`desired_heading` works out which way to face',
-              '`turn_to` turns until the robot faces that way',
-              '`drive_path` uses both at every step; your Module 2 functions do the driving'],
-             'Build them **smallest first**, and test each before the next',
-         ],
-         'size': 26},
 
         {'kind': 'code', 'title': 'Say so when you can\'t answer',
          'lead': 'None of the four matched? Then the positions aren\'t one step apart (diagonal, '

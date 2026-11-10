@@ -75,7 +75,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | fmap.py | delivery-overview.svg | /img/lesson-m4-00/delivery-overview-xy.svg |
 | fmap.py | delivery-run.svg | /img/lesson-m4-08/delivery-run-xy.svg |
 | fmap.py | told-not-remembered.svg | no longer used (was /img/lesson-m4-05/told-not-remembered-xy.svg, dropped 2026-11-10) |
-| fdecomp.py | decomposition.svg | — |
+| fdecomp.py | decomposition.svg | /img/lesson-m4-06/decomposition.svg |
 | fproblem.py | drive-to-destination.svg | /img/lesson-m4-00/drive-to-destination.svg |
 | fplan.py | plan-then-drive.svg | /img/lesson-m4-00/plan-then-drive.svg |
 | fpose.py | pose.svg | /img/lesson-m4-06/pose.svg (deck copy: scripts/slides/decks/m4/fig/l06-pose.svg) |

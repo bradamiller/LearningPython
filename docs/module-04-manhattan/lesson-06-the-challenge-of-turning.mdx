@@ -14,17 +14,26 @@ sidebar_position: 6
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Your path is a list of intersections — but the robot has a **heading**, a direction it's
-currently facing, and driving forward only works if it's already pointed the right way.
-This lesson opens the last section of `robot.py`, the NAVIGATOR, and designs the turning
-logic: how to figure out which way to face, and how to turn until you're facing it. The
-first piece is pure arithmetic, so you write and test it today, on screen; the two that
-move the robot are designed on paper here and written next lesson.
+In Lesson 4-0 you split the problem into a planner and a driver, and the planner is now
+built and tested. Just like before, we **decompose further**: driving a planned path can be
+broken down into two steps at each intersection, **turn** to face the next one, then
+**drive** to it. Driving is your Module 2 line tracking, so this lesson is about turning.
+
+<Figure
+  src="/img/lesson-m4-06/decomposition.svg"
+  alt="A tree with three levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-4 and 4-5, and the driver, drive_path(), Lessons 4-6 and 4-7. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits again into two steps at each intersection: 1, turn to face it, desired_heading() and turn_to(), Lessons 4-6 and 4-7; 2, drive to it, the LINE TRACKING functions built in Module 2."
+  caption="Lesson 4-0's split, one level deeper: at each intersection, turn, then drive."
+/>
+
+The robot has a **heading**, the direction it faces, and only drives forward. This lesson
+opens the last section of `robot.py`, the NAVIGATOR: you write `desired_heading` and test it
+on screen, and design `turn_to` and `drive_path` on paper for next lesson.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
+- Break driving a planned path into two steps, turn then drive, as Lesson 4-0 broke down the whole problem
 - Explain why only x **or** y changes between adjacent intersections
 - Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W
 - Describe the robot's **pose**: its position and heading together
@@ -127,16 +136,6 @@ rather than remembering it. Step 2 is the table as four `if` lines, and each con
 checks *both* differences, which is the "one change at a time" rule from the top of the
 lesson written down: North means y went up by one **and** x didn't move at
 all.
-
-<Callout kind="note" title="Then drive: the driver splits again">
-
-The planner is built and tested; the NAVIGATOR is the second part from Lesson 4-0, the
-driver. It's still too big to write in one go, so it gets split into smaller parts:
-`desired_heading` works out which way to face, `turn_to` turns until the robot faces
-that way, and `drive_path` uses both at every step, with your Module 2 functions doing
-the driving. You build them smallest first, and test each before the next.
-
-</Callout>
 
 <KnowledgeCheck
   question="Going from (1,3) to (1,2), what does desired_heading return?"
