@@ -58,46 +58,54 @@ DECK = {
                   '(1, 3) to (3, 0), across two, then down three. The whole figure comes back in '
                   'Step 2.'},
 
-        {'kind': 'table', 'title': 'Activity · Trace it on paper first',
+        {'kind': 'table', 'title': 'Activity · Trace it on paper',
          'tag': 'Activity',
-         'lead': 'Take **(0, 0) → (2, 3)**: right first, then up. The robot is **already** at the '
-                 'start, so the path lists only the spots it moves **to**. Fill in a row per move.',
-         'lead_h': 1.2,
-         'headers': ['Step', 'Action', 'New position', 'Path so far'],
-         'widths': [1, 1.6, 2.2, 5],
+         'lead': '**Path 1, move by move:** trace (0, 0) → (2, 3), one row per move. The start is '
+                 'never in the path.',
+         'lead_h': 1.0,
+         'headers': ['Step', 'Action', 'New position'],
+         'widths': [1, 1.6, 2.2],
          'rows': [
-             ['1', 'x +1', '(1, 0)', '`[(1,0)]`'],
-             ['2', '', '', ''],
-             ['3', '', '', ''],
-             ['4', '', '', ''],
-             ['5', '', '', ''],
+             ['1', 'x + 1', '(1, 0)'],
+             ['2', '', ''],
+             ['3', '', ''],
+             ['4', '', ''],
+             ['5', '', ''],
          ],
          'row_h': 0.5,
          'callout_size': 18,
          'callout': 'Printable worksheet: [learningpython.bradhouse.com/printables/lesson-4-4-trace-worksheet.pdf]'
                     '(https://learningpython.bradhouse.com/printables/lesson-4-4-trace-worksheet.pdf)',
          'tone': 'teal',
-         'notes': 'Hand out a big grid and markers: one color for moves across, another for moves '
-                  'up and down. Keep it short and targeted; the goal is intuition, not mastery. '
-                  'Then ask how many steps it took, and check that against the Manhattan distance, '
-                  '|2−0| + |3−0|. The finished table is behind a reveal on the lesson page.'},
+         'notes': 'One paper activity, about 15 minutes: this table, then all six paths, then the '
+                  'path 3 question. Big grid and markers: one color for moves across, another for '
+                  'moves up and down. The sheet becomes their answer key for the coding steps. '
+                  'Check the sheets before students go on: a wrong key sends them hunting for a bug '
+                  'that is not there. The filled-in key is behind a reveal on the lesson page.'},
 
-        {'kind': 'bullets', 'title': 'Now try the same spot',
-         'bullets': [
-             'Trace **(1, 1) → (1, 1)**',
-             'No moves across, no moves up or down',
-             'The path is `[]`: an **empty list**, zero steps',
+        {'kind': 'table', 'title': 'Activity · All six paths',
+         'tag': 'Activity',
+         'lead': 'Write each expected path and its steps. Path 1 is the one you just traced. '
+                 'Steps should equal the Manhattan distance.',
+         'lead_h': 1.2,
+         'headers': ['#', 'From → to', 'Expected path', 'Steps'],
+         'widths': [0.5, 2.6, 6, 1],
+         'rows': [
+             ['1', '(0, 0) → (2, 3)', '', ''],
+             ['2', '(0, 1) → (3, 3)', '', ''],
+             ['3', '(3, 3) → (1, 0)', '', ''],
+             ['4', '(2, 0) → (2, 3)', '', ''],
+             ['5', '(0, 2) → (3, 2)', '', ''],
+             ['6', '(1, 1) → (1, 1)', '', ''],
          ],
-         'callout': 'That\'s not a bug: the robot is already there',
-         'tone': 'green'},
-
-        {'kind': 'check',
-         'question': 'Hand-tracing (2,0) → (2,3), what path do you get?',
-         'options': ['`[(2,0), (2,1), (2,2), (2,3)]`', '`[(2,1), (2,2), (2,3)]`',
-                     '`[(2,3)]`', '`[]`'],
-         'answer': 1,
-         'explanation': 'Same x, so no moves across, only three moves up. The start (2,0) is not '
-                        'included, so the path is [(2,1), (2,2), (2,3)]: three steps.'},
+         'row_h': 0.42,
+         'callout': 'Then: what is different about **path 3** compared with paths 1 and 2?',
+         'tone': 'teal',
+         'notes': 'Paths 1 to 3 are test_paper_paths(), paths 4 to 6 are test_edge_cases(). '
+                  'Answer to the question: paths 1 and 2 go right and up, so x and y get bigger; '
+                  'path 3 goes left and down, so they get smaller. It sets up Step 1: the first '
+                  'version only handles x and y getting bigger, so path 3 comes back empty. Path 6 '
+                  'is [] because the robot is already there.'},
 
         {'kind': 'bullets', 'title': 'From the trace table to a loop',
          'bullets': [
@@ -170,45 +178,6 @@ DECK = {
              'intersections out**',
              'Nothing else in the file has to work for it to work',
          ]},
-
-        {'kind': 'table', 'title': 'Activity · Make your answer key',
-         'tag': 'Activity',
-         'lead': 'Before any more code, work out by hand what each test call should print. '
-                 'Across first, then up or down; the start is never in the path.',
-         'lead_h': 1.2,
-         'headers': ['#', 'Call', 'Expected path', 'Steps'],
-         'widths': [0.5, 4, 4.6, 1],
-         'rows': [
-             ['1', '`compute_path((0, 0), (2, 3))`', '', ''],
-             ['2', '`compute_path((0, 1), (3, 3))`', '', ''],
-             ['3', '`compute_path((3, 3), (1, 0))`', '', ''],
-             ['4', '`compute_path((2, 0), (2, 3))`', '', ''],
-             ['5', '`compute_path((0, 2), (3, 2))`', '', ''],
-             ['6', '`compute_path((1, 1), (1, 1))`', '', ''],
-         ],
-         'row_h': 0.42,
-         'callout_size': 18,
-         'callout': 'Printable worksheet: [learningpython.bradhouse.com/printables/lesson-4-4-answer-key-worksheet.pdf]'
-                    '(https://learningpython.bradhouse.com/printables/lesson-4-4-answer-key-worksheet.pdf)',
-         'tone': 'teal',
-         'notes': 'About 10 minutes. Paths 1 to 3 are test_paper_paths(), paths 4 to 6 are '
-                  'test_edge_cases(), and path 1 is the trace they already did. Check the sheets '
-                  'before students go on: a wrong key sends them hunting for a bug that is not '
-                  'there. The filled-in key is behind a reveal on the lesson page.'},
-
-        {'kind': 'bullets', 'title': 'Last question on your answer key',
-         'tag': 'Activity',
-         'bullets': [
-             'What is different about **path 3** compared with **paths 1 and 2**?',
-             'Look at which way x and y change',
-             'Write it down: you will need it in a few minutes',
-         ],
-         'callout': 'Your answer key is how you know your program is correct: every line your tests '
-                    'print should match it',
-         'tone': 'teal',
-         'notes': 'Answer: paths 1 and 2 go right and up, so x and y get bigger; path 3 goes left and '
-                  'down, so they get smaller. It sets up Step 1: the first version only handles x '
-                  'and y getting bigger, so path 3 comes back empty.'},
 
         {'kind': 'steps', 'title': 'Step 1 · Run the east loop',
          'tag': 'Activity',

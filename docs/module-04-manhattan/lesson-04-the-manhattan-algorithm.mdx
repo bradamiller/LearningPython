@@ -49,66 +49,77 @@ The strategy is the simplest one that always works: **step across until x is rig
 then step up or down until y is right.** That traces an L-shaped path, or a straight
 line if x or y is already right.
 
-## Activity · Trace it on paper first
+## Activity · Trace it on paper
 
-Before any code, walk the algorithm by hand. Take **(0, 0) → (2, 3)**: move right
-first, then up. Remember the robot is *already* at the start,
-so the path lists only the spots it moves **to**:
+Before any code, trace by hand the six paths your tests will check: across first,
+then up or down, one step at a time. The start is never in the path. Use the
+[worksheet](pathname:///printables/lesson-4-4-trace-worksheet.pdf) or copy the tables
+onto paper. When you run your code later, this sheet is your **answer key**.
 
-Fill in a row per move. The first one is done to show the shape of it (or [print the worksheet](pathname:///printables/lesson-4-4-trace-worksheet.pdf), which has a grid, this table and the questions below on one page to hand in):
+**1. Path 1, move by move.** Trace (0, 0) → (2, 3), one row per move. Row 1 is done
+for you.
 
-| Step | Action | New position | Path so far |
+| Step | Action | New position |
+|---|---|---|
+| 1 | x + 1 | (1, 0) |
+| 2 | | |
+| 3 | | |
+| 4 | | |
+| 5 | | |
+
+**2. All six paths.** Write each expected path and its number of steps. Path 1 is the
+one you just traced. The steps should equal the Manhattan distance, a quick check on
+each list's length.
+
+| # | From → to | Expected path | Steps |
 |---|---|---|---|
-| 1 | x +1 | (1, 0) | `[(1,0)]` |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | (0, 0) → (2, 3) | | |
+| 2 | (0, 1) → (3, 3) | | |
+| 3 | (3, 3) → (1, 0) | | |
+| 4 | (2, 0) → (2, 3) | | |
+| 5 | (0, 2) → (3, 2) | | |
+| 6 | (1, 1) → (1, 1) | | |
 
-How many steps did it take? Check that against the Manhattan distance,
-|2−0| + |3−0|.
+**3. What is different about path 3** compared with paths 1 and 2?
 
-<Reveal title="Check your trace" hint="fill the table in first">
+<Reveal title="Check your answer key" hint="fill in both tables and the question first">
 
-| Step | Action | New position | Path so far |
-|---|---|---|---|
-| 1 | x +1 | (1, 0) | `[(1,0)]` |
-| 2 | x +1 | (2, 0) | `[(1,0), (2,0)]` |
-| 3 | y +1 | (2, 1) | `[(1,0), (2,0), (2,1)]` |
-| 4 | y +1 | (2, 2) | `[(1,0), (2,0), (2,1), (2,2)]` |
-| 5 | y +1 | (2, 3) | `[(1,0), (2,0), (2,1), (2,2), (2,3)]` |
+| Step | Action | New position |
+|---|---|---|
+| 1 | x + 1 | (1, 0) |
+| 2 | x + 1 | (2, 0) |
+| 3 | y + 1 | (2, 1) |
+| 4 | y + 1 | (2, 2) |
+| 5 | y + 1 | (2, 3) |
 
-Five steps — and `len(path)` is 5, matching the Manhattan distance of 5.
+| # | Expected path | Steps |
+|---|---|---|
+| 1 | `[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]` | 5 |
+| 2 | `[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]` | 5 |
+| 3 | `[(2, 3), (1, 3), (1, 2), (1, 1), (1, 0)]` | 5 |
+| 4 | `[(2, 1), (2, 2), (2, 3)]` | 3 |
+| 5 | `[(1, 2), (2, 2), (3, 2)]` | 3 |
+| 6 | `[]` | 0 |
+
+Paths 1 and 2 go right and up: x and y both get **bigger**. Path 3 goes left and down:
+x and y both get **smaller**. Path 6 is empty because the robot is already there.
 
 </Reveal>
 
-Now try **(1, 1) → (1, 1)** (same spot): no moves across, no moves up or down. The path is
-`[]` — an empty list, zero steps. That's not a bug; the robot is already there.
+<TeacherNote title="One paper activity, then code">
 
-<KnowledgeCheck
-  question="Hand-tracing (2,0) → (2,3), what path do you get?"
-  options={[
-    {text: '[(2,0), (2,1), (2,2), (2,3)]'},
-    {text: '[(2,1), (2,2), (2,3)]', correct: true},
-    {text: '[(2,3)]'},
-    {text: '[]'},
-  ]}
-  explanation="Same x, so no moves across — only three moves up. The start (2,0) is not included, so the path is [(2,1), (2,2), (2,3)]: three steps."
-/>
-
-<TeacherNote title="Paper first, then code — but coding is the main event">
-
-Spend 8–10 minutes tracing on a big grid before anyone opens a laptop — have students
-walk paths with markers, one color for moves across, another for moves up and down. Keep it
-short and targeted; the goal is intuition, not mastery. The bulk of the lesson is
-writing and testing `compute_path()`.
+Give it about 15 minutes on a big grid, one marker color for moves across and another
+for moves up and down, and check the sheets before students go on: a wrong key sends
+them hunting for a bug that isn't there. Paths 1 to 3 are `test_paper_paths()`, paths 4
+to 6 are `test_edge_cases()`. The last question sets up Step 1: the first version only
+handles x and y getting bigger, so path 3 comes back empty, and students who wrote
+"path 3 goes the other way" already know why.
 
 **More hints here, on purpose.** This is the first while loop that builds a list and
 the first section with no robot in it, so the skeleton gives the east loop finished
-and both tests written out. Students read one working loop against their trace table,
+and both tests written out. Students read one working loop against their path 1 table,
 run it, and copy it three times. The step down to writing tests themselves comes in
-Lesson 4-5, once the algorithm is theirs. Students who stall on a loop can be pointed
-at their own trace table: each row is one trip around a loop.
+Lesson 4-5, once the algorithm is theirs.
 
 </TeacherNote>
 
@@ -185,59 +196,6 @@ hands back is already decided: two tuples in, a list of intersections out. Nothi
 else in the file has to work for it to work.
 
 </Callout>
-
-## Activity · Make your answer key
-
-Your two tests make six calls to `compute_path()`. Before you write any more code, work
-out by hand what each one should print, the same way you filled in the trace table.
-When you run your tests later, this is your **answer key**: if a line on screen doesn't
-match it, either your code or your trace is wrong, and finding out which is the job.
-
-Fill in the [answer key worksheet](pathname:///printables/lesson-4-4-answer-key-worksheet.pdf),
-or copy this table onto paper. Path 1 is the trace you just did.
-
-| # | Test | Call | Expected path | Steps |
-|---|---|---|---|---|
-| 1 | `test_paper_paths` | `compute_path((0, 0), (2, 3))` | | |
-| 2 | `test_paper_paths` | `compute_path((0, 1), (3, 3))` | | |
-| 3 | `test_paper_paths` | `compute_path((3, 3), (1, 0))` | | |
-| 4 | `test_edge_cases` | `compute_path((2, 0), (2, 3))` | | |
-| 5 | `test_edge_cases` | `compute_path((0, 2), (3, 2))` | | |
-| 6 | `test_edge_cases` | `compute_path((1, 1), (1, 1))` | | |
-
-The rules are the ones from your trace: across first, then up or down, and the start
-is never in the path. The number of steps is the Manhattan distance, which is a quick
-check on each list's length.
-
-**Last, write down what is different about path 3 compared with paths 1 and 2.**
-
-<Reveal title="Check your answer key" hint="fill in all six and the question first">
-
-| # | Expected path | Steps |
-|---|---|---|
-| 1 | `[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]` | 5 |
-| 2 | `[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3)]` | 5 |
-| 3 | `[(2, 3), (1, 3), (1, 2), (1, 1), (1, 0)]` | 5 |
-| 4 | `[(2, 1), (2, 2), (2, 3)]` | 3 |
-| 5 | `[(1, 2), (2, 2), (3, 2)]` | 3 |
-| 6 | `[]` | 0 |
-
-Paths 1 and 2 go right and up: x and y both get **bigger**. Path 3 goes left and down:
-x and y both get **smaller**. Keep that in mind when you run your code.
-
-</Reveal>
-
-<TeacherNote title="Why an answer key before the code">
-
-Give this about 10 minutes, and check the sheets before students go on: a wrong key
-sends them hunting for a bug that isn't there. Doing all six by hand is the point. It
-gives every student a key to judge their own output with, and a second round of
-tracing, including the left-and-down trip and the three edge cases, before any loop
-is written. The last question sets up Step 1: the first version only handles x and y
-getting bigger, so path 3 comes back empty, and the students who wrote down "path 3
-goes the other way" already know why.
-
-</TeacherNote>
 
 ## Activity · Code the algorithm
 
