@@ -459,17 +459,6 @@ def drive_path(path, position, heading):
         position = next_pos
     return position, heading
 
-def test_turns_paper():
-    position = (0, 0)
-    heading = 0
-    for next_pos in [(1, 0), (1, 1)]:
-        needed = desired_heading(position, next_pos)
-        print("to", next_pos, ": need", HEADING_NAMES[needed])
-        while heading != needed:
-            heading = (heading + 1) % 4
-            print("  clockwise ->", HEADING_NAMES[heading])
-        position = next_pos
-
 def test_one_leg():
     position, heading = drive_path([(1, 0)], (0, 0), 0)
     print("Arrived at:", position, "facing", HEADING_NAMES[heading])
@@ -1658,15 +1647,6 @@ def test_headings():
         heading = nav.desired_heading(next_pos)
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
     # nav.desired_heading((2, 2))   # diagonal: stops here
-
-def test_turns_paper():
-    for next_pos in [(1, 0), (1, 1)]:
-        needed = navigator.desired_heading(next_pos)
-        print("to", next_pos, ": need", HEADING_NAMES[needed])
-        while navigator.heading != needed:
-            navigator.heading = (navigator.heading + 1) % 4
-            print("  clockwise ->", HEADING_NAMES[navigator.heading])
-        navigator.position = next_pos
 
 def test_one_leg():
     navigator.drive_path([(1, 0)])

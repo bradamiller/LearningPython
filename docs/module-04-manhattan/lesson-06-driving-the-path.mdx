@@ -7,7 +7,7 @@ sidebar_position: 6
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-6 · Driving the Path"
-  meta={['60 min', 'Python + robot', 'Reusing Module 2']}
+  meta={['50 min', 'Python + robot', 'Reusing Module 2']}
 />
 
 <TeacherBanner>
@@ -27,7 +27,7 @@ By the end of this lesson you will be able to:
 
 - Name the four Module 2 functions the driving code is built on, and what each does
 - Explain why the robot must `drive_past_intersection()` after every `track_to_intersection()`
-- Write `turn_to()` and `drive_path()` from their outlines, and test them one at a time — on screen first, then one leg, then a path
+- Write `turn_to()` and `drive_path()` from their outlines, and test them on one leg, then a whole path
 - Keep the robot's pose (`position` and `heading`) up to date by assigning from what `drive_path()` returns
 - Plan, **print the path**, wait for the button, then drive — and use the printed path as the first diagnostic
 
@@ -52,17 +52,6 @@ Notice what's *not* in that table: any mention of coordinates, headings or paths
 Module 2 functions know how to follow tape. They have no idea where the robot is. That's
 the split from Lesson 4-0 again — the planner doesn't know how to drive, and the driving
 functions don't know what a path is. Today's three functions sit between them.
-
-<KnowledgeCheck
-  question="Which of these does track_to_intersection() know about?"
-  options={[
-    {text: 'The robot\'s x and y coordinates'},
-    {text: 'Only the reflectance sensors and the motors — it follows tape until both sensors see a cross', correct: true},
-    {text: 'The heading number'},
-    {text: 'The path list'},
-  ]}
-  explanation="Module 2's functions are about tape, not grids. That is what makes them reusable: the same track_to_intersection() drove the Module 3 square and drives paths here."
-/>
 
 ## Arriving: the same pair as Module 3
 
@@ -95,11 +84,9 @@ drive_past_intersection()      # center of rotation on the cross; sensors past i
 
 The distance in `drive_past_intersection()` is the gap between the reflectance sensors
 and the center of rotation (the pen hole between the drive wheels) on an XRP, so that point ends up where the sensors were. If a class
-has a robot with a different mounting, measure it. The old version of this lesson only
-cleared the intersection in the straight-ahead case and relied on the turn to clear it
-otherwise; that depended on turn behavior nobody had checked. Doing it after every
-track removes the special case, and the turns now pivot on the cross, which is what
-makes a sensor-ended turn land on the new line reliably.
+has a robot with a different mounting, measure it. Doing it after every track makes
+every turn pivot on the cross, which is what makes a sensor-ended turn land on the new
+line reliably.
 
 </TeacherNote>
 
@@ -140,29 +127,20 @@ def drive_path(path, position, heading):
     pass
 ```
 
-Read the two assignments in `drive_path()` carefully. `heading = turn_to(heading,
-needed)` — the turn function hands back the new heading and the loop keeps it.
-`position = next_pos` — the robot has arrived, so its position is the intersection it
-just drove to. And the function returns both at the end, so whoever called it can keep
-its own record straight:
+`drive_path()` keeps two things up to date: `heading = turn_to(heading, needed)` keeps
+the new heading, and `position = next_pos` records the intersection it just reached. It
+returns both as one tuple, the robot's **pose**, and the caller unpacks it just like
+`x, y = position` in Lesson 4-1:
 
 ```python
 position, heading = drive_path(path, position, heading)
 ```
-
-The `return position, heading` at the end of `drive_path()` looks like a function
-returning two things, but it is really one: two values with a comma between them make a
-tuple, so the function hands back a single tuple: where the robot is and which way it faces.
-Together those are the robot's **pose**.
 
 <Figure
   src="/img/lesson-m4-06/pose.svg"
   alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose."
   caption="The pose ((1, 1), 1): at (1, 1), facing East."
 />
-
-The left-hand side of the `drive_path()` call above unpacks it, exactly like `x, y = position` in Lesson 4-1: the first variable gets the
-position, the second gets the heading.
 
 Forget that left-hand side and the robot drives fine — once. The next path gets planned
 from where the robot *was*.
@@ -207,15 +185,6 @@ Then press the button. This habit costs two lines and is the first thing to chec
 run goes wrong: if the printed path is right and the robot still went wrong, the bug is
 in the driving, not the planner — and you know which half of the file to open.
 
-<Callout kind="note" title="Plan, then drive: connect the parts">
-
-This test connects the two halves from Lesson 4-0. Each part was built and
-tested on its own, so connecting them takes three lines: plan, print, drive. It's that
-short because both parts agreed from the start on what passes between them, a list of
-intersections. And when a run goes wrong, the printed path tells you which part to open.
-
-</Callout>
-
 That makes two button presses per run, and both are useful. The one in the `RUN` block
 starts the test: the path prints and the robot sits still while you read it. The one in
 the test is *go*. A test that drives is the only kind that waits twice.
@@ -258,26 +227,16 @@ the challenge at the end of this lesson is for anyone who wants it to be quicker
 
 </Reveal>
 
-Then build it in stages, one function per step, and don't go on until each works:
+Then build it in two stages, and don't go on until the first works:
 
-### Step 1 · The logic, on screen
+### Step 1 · One leg
 
-Write the body of `turn_to()` from its outline. Before it touches the robot, prove the
-loop on screen: write a paper test — `test_turns_paper()` — that walks `[(1, 0), (1, 1)]`
-from `(0, 0)` heading 0 the way `drive_path()` will, but prints instead of turning. For
-each step, print the intersection and the heading needed, then run the same `while` loop
-as `turn_to()` with a `print` of the new heading where the `turn_clockwise()` would be,
-and update `position`. Set the run line to it and compare with your trace: E for the
-first step, then S, W, N. Nothing moves.
-
-### Step 2 · One leg
-
-Write the body of `drive_path()`, then a test — `test_one_leg()` — that drives the
+Write the bodies of `turn_to()` and `drive_path()` from their outlines, then a test — `test_one_leg()` — that drives the
 one-element path `[(1, 0)]` from `(0, 0)` heading 0 and prints where it arrived. Robot at
 (0, 0) facing North, run line set to it, both presses. One clockwise turn, one track,
 one drive-past. Does the robot stop with its *center of rotation* on the intersection?
 
-### Step 3 · A real path
+### Step 2 · A real path
 
 Add `test_drive_path()` from above and run it: `(0, 0)` to `(2, 3)`. Read the printed
 path before the second press. Watch each arrival: center of rotation on the cross, turns
@@ -348,17 +307,6 @@ def drive_path(path, position, heading):
         drive_past_intersection()
         position = next_pos
     return position, heading
-
-def test_turns_paper():
-    position = (0, 0)
-    heading = 0
-    for next_pos in [(1, 0), (1, 1)]:
-        needed = desired_heading(position, next_pos)
-        print("to", next_pos, ": need", HEADING_NAMES[needed])
-        while heading != needed:
-            heading = (heading + 1) % 4
-            print("  clockwise ->", HEADING_NAMES[heading])
-        position = next_pos
 
 def test_one_leg():
     position, heading = drive_path([(1, 0)], (0, 0), 0)
@@ -431,28 +379,7 @@ that turns left and then *also* loops because it forgot to update `heading`.
 
 </TeacherNote>
 
-<KnowledgeCheck
-  question="The path is [(1,0),(2,0),(2,1)]. How many times does drive_path call track_to_intersection(), and how many times drive_past_intersection()?"
-  options={[
-    {text: 'Three and zero'},
-    {text: 'Three and three — one pair per intersection in the path', correct: true},
-    {text: 'Four and four — including the start'},
-    {text: 'It depends on the turns'},
-  ]}
-  explanation="drive_path loops once per element in the path, and every pass ends with the track-then-drive-past pair. Three elements, three pairs. The start is not in the path."
-/>
-
-<TeacherNote title="Build incrementally, and test on the desktop first">
-
-Write and test one function at a time — the steps above — never the whole
-section at once. The paper test in step 1 is the old "desktop mode" without editing
-the Module 2 functions: it walks the path with `desired_heading()` and the turning
-loop and prints what the robot *would* do, which is where most logic bugs get
-caught. The clockwise-only loop spins 270° at the corner of the step 3 path; that's
-correct behavior, and the optional challenge is there for students who want to fix it. Hammer the reuse point: the Module 2 functions drove the Module 3 square and
-now drive grid paths unchanged. The two button presses per driving test (start, then
-go) will need saying once; after that students like it, because the first press is
-when they read the path.
+<TeacherNote title="Usual bugs and hardware">
 
 Usual bugs, in order of frequency: not assigning `position, heading` from `drive_path`'s
 return; the start sneaking into the path (Lesson 4-4's promise 1 — `desired_heading`

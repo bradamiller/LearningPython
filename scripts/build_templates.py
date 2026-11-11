@@ -880,16 +880,6 @@ def test_headings():
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
     # nav.desired_heading((2, 2))   # diagonal: stops here
 '''),
-    "test_turns_paper": dict(frm="4-6", outline=None, body='''
-def test_turns_paper():
-    for next_pos in [(1, 0), (1, 1)]:
-        needed = navigator.desired_heading(next_pos)
-        print("to", next_pos, ": need", HEADING_NAMES[needed])
-        while navigator.heading != needed:
-            navigator.heading = (navigator.heading + 1) % 4
-            print("  clockwise ->", HEADING_NAMES[navigator.heading])
-        navigator.position = next_pos
-'''),
     # 4-7 teacher copy: "test_delivery() is handed navigator.position
     # by the planner call, drives with navigator.drive_path(path),
     # and prints navigator.position -- there is no
@@ -1432,7 +1422,6 @@ RECIPE = [
         Banner("L4-6", "4-6", "--- Lesson 4-6:"),
         Func("turn_to", "4-6"),
         Func("drive_path", "4-6"),
-        Invent("test_turns_paper", "4-6"),
         Invent("test_one_leg", "4-6"),
         Func("test_drive_path", "4-6", full=True),
         # class track: "paste it in place of the three functions
@@ -2057,7 +2046,7 @@ SMOKE = {
     3: ["test_first_intersection", "test_arrive_and_turn", "test_two_by_hand",
         "test_drive_run", "test_l_shape", "test_my_path", "test_one_side", "test_square"],
     4: ["test_paper_paths", "test_edge_cases", "test_planner",
-        "test_headings", "test_turns_paper", "test_one_leg", "test_drive_path",
+        "test_headings", "test_one_leg", "test_drive_path",
         "test_delivery_paper", "test_delivery"],
     5: ["test_grid_graph", "test_blocked_graph", "test_bfs_open", "test_bfs_walls",
         "test_rings", "test_harness", "test_swap", "test_detect_once", "test_navigate",
