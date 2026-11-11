@@ -123,7 +123,7 @@ at 5, that's 1 + 5 + 1 = 7.
   question="Why does path_cost() need the position parameter, when the path is right there?"
   options={[
     {text: 'It does not; position is unused'},
-    {text: 'The path excludes the start (Lesson 4-5\'s promise 1), so the first segment runs from position to path[0], and only the caller knows position', correct: true},
+    {text: 'The path excludes the start (Lesson 4-4\'s promise 1), so the first segment runs from position to path[0], and only the caller knows position', correct: true},
     {text: 'To check the path is not empty'},
     {text: 'Because weight() requires three arguments'},
   ]}
@@ -243,7 +243,7 @@ def check_cost(test_name, start, destination, path, expected_cost):
 ```
 
 The `for` line unpacks each three-part entry into the segment's two ends, `end1` and
-`end2`, and its `cost` as the loop goes: the unpacking from Lesson 4-2, done once per
+`end2`, and its `cost` as the loop goes: the unpacking from Lesson 4-1, done once per
 pass. The parentheses around the three names are optional; Python reads the line the
 same way without them. (They are not called `x` and `y`: those are the two numbers
 *inside* one intersection, and each end here is a whole intersection.) If yours differs and
@@ -337,7 +337,7 @@ test_cost_check()
 This is Lesson 5-6's idea doing its job: the failure is a FAIL line with the offending
 path, found at a desk, not a robot taking the long way while everyone wonders. Make
 students write the expected cost by hand before they run the check; if they let the
-program tell them what to expect, the test tests nothing (Lesson 4-5's point).
+program tell them what to expect, the test tests nothing (Lesson 4-4's point).
 
 Two things to watch. The `or` in `weight()` is easy to drop, and then the check passes
 or fails depending on which way the robot happens to drive the segment — a good bug to

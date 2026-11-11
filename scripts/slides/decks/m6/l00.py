@@ -84,7 +84,7 @@ DECK = {
               'harness.'],
          ],
          'notes': 'Lesson 6-5 is for students on the class track (the Manhattan and BFS classes '
-                  'from Lessons 4-5 and 5-5).'},
+                  'from Lessons 4-4 and 5-5).'},
 
         {'kind': 'check',
          'question': 'On a grid where every segment takes the same time, how do BFS and Dijkstra\'s '

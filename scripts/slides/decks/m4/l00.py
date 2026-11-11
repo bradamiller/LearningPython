@@ -14,8 +14,8 @@ DECK = {'module': 4,
                       'split this module uses: plan first, test the plan with no robot, then drive '
                       'it. After that it is an advance organizer: the point is the shape, not the '
                       'detail. If students ask how compute_manhattan_path works, the answer is '
-                      '"that is exactly Lessons 4-4 and 4-5". Tell them plainly they are not meant '
-                      'to understand every line yet: by Lesson 4-8 they will, because they will '
+                      '"that is exactly Lessons 4-3 and 4-4". Tell them plainly they are not meant '
+                      'to understand every line yet: by Lesson 4-7 they will, because they will '
                       'have built each piece.'},
             {'kind': 'figure',
              'title': 'The problem',
@@ -62,7 +62,7 @@ DECK = {'module': 4,
                       'second function takes the plan and drives it; it decides nothing. Each '
                       'intersection is an (x, y) pair, stored as a tuple, so the plan is a list of '
                       'tuples, the one thing the two functions share. Tuples come properly in '
-                      'Lesson 4-2 and lists in Lesson 4-3.'},
+                      'Lesson 4-1 and lists in Lesson 4-2.'},
             {'kind': 'bullets',
              'title': 'Planner and driver',
              'bullets': ['**Planner:** `compute_manhattan_path` returns the list of tuples. Never '
@@ -101,11 +101,11 @@ DECK = {'module': 4,
                       'shorter numbered streets cross them east and west, and every block is '
                       'packed with buildings. New Yorkers give directions this way: "two blocks '
                       'east, then three up." The robot is in exactly the same situation, because '
-                      'it can only drive along the tape. Lesson 4-4 builds the algorithm properly. '
+                      'it can only drive along the tape. Lesson 4-3 builds the algorithm properly. '
                       "For the curious: the grid comes from the Commissioners' Plan of 1811; it is "
                       'turned roughly 29 degrees from true north, so "Manhattan north" is a local '
                       'convention; and the same distance is called taxicab distance in '
-                      'mathematics. The map is a hook, not a lesson. Lesson 4-4 opens with "Why '
+                      'mathematics. The map is a hook, not a lesson. Lesson 4-3 opens with "Why '
                       'Manhattan?" and assumes students have seen this. (This slide uses a copy of '
                       'the lesson figure with its text halos redrawn for the slide renderer.)'},
             {'kind': 'bullets',
@@ -142,10 +142,10 @@ DECK = {'module': 4,
                         'ended.'},
             {'kind': 'bullets',
              'title': "What's next",
-             'bullets': ['**4-1 to 4-3:** the background: coordinates, tuples and lists',
-                         '**4-4 and 4-5:** write and test the planner',
-                         '**4-6 and 4-7:** write and test the driver',
-                         '**4-8:** put them together'],
+             'bullets': ['**4-1 and 4-2:** the background: coordinates, tuples and lists',
+                         '**4-3 and 4-4:** write and test the planner',
+                         '**4-5 and 4-6:** write and test the driver',
+                         '**4-7:** put them together'],
              'size': 30},
             {'kind': 'wrapup',
              'questions': ['What problem does Module 4 solve?',
@@ -157,4 +157,4 @@ DECK = {'module': 4,
                       'can be printed and checked with no robot; then the driver only follows a '
                       'plan you trust. compute_manhattan_path plans; drive_path drives. Open each '
                       'lesson with "remember the big picture? Today we build this piece." Return '
-                      'to the seven-line program in Lesson 4-8.'}]}
+                      'to the seven-line program in Lesson 4-7.'}]}

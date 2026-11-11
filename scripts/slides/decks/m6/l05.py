@@ -12,12 +12,12 @@ DECK = {
              'Explain why the harness can treat three different classes the same way',
          ],
          'notes': '45 minutes. Optional extension, class track only: for students who built the '
-                  'Manhattan and BFS classes in Lessons 4-5 and 5-5. Everything is Lesson 6-3 with '
+                  'Manhattan and BFS classes in Lessons 4-4 and 5-5. Everything is Lesson 6-3 with '
                   'self. in front; students who did 6-3 carefully finish this in half an hour.'},
 
         {'kind': 'bullets', 'title': 'The third class',
          'bullets': [
-             'You built the `Manhattan` and `BFS` classes in Lessons 4-5 and 5-5',
+             'You built the `Manhattan` and `BFS` classes in Lessons 4-4 and 5-5',
              'Today: the third one, `Dijkstra`, and all three as objects through the Module 5 class harness',
              'The harness **never finds out** which one it is holding',
              'That property has a name: **polymorphism**',

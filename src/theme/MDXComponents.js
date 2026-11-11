@@ -1,7 +1,7 @@
 import MDXComponents from '@theme-original/MDXComponents';
 import TeacherNote from '@site/src/components/TeacherNote';
 import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
-import {Video, Figure, PlayFigure, TreeFigure} from '@site/src/components/Media';
+import {Video, Figure, PlayFigure, TreeFigure, StepFigure} from '@site/src/components/Media';
 import {Block, BlockProgram, BlockShot} from '@site/src/components/Blocks';
 import {QuizSheet, QuizLink, QuizIndex} from '@site/src/components/Quiz';
 import Reveal from '@site/src/components/Reveal';
@@ -27,6 +27,7 @@ export default {
   Figure,
   PlayFigure,
   TreeFigure,
+  StepFigure,
   Block,
   BlockProgram,
   BlockShot,

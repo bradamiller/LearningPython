@@ -1,4 +1,4 @@
-"""4-3: a number is copied, a list is shared. Writes out/number-vs-list.svg.
+"""4-2: a number is copied, a list is shared. Writes out/number-vs-list.svg.
 Right panel is the hand-made two-names-one-list.svg, moved over."""
 import os
 from _paths import OUTDIR

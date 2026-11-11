@@ -8,7 +8,7 @@ def make(out,title,scenes,note,desc,H=440,n=4,panel_title="In Python",cell=46):
     g=G(92,66,sp=88,n=n,pad=36) if n==4 else G(80,70,sp=72,n=n,pad=34)
     P=g.p
     t=0.0; segs=[]   # timeline pieces
-    hl=[]; varsv=[]; labels=[]; marker=[]; tags=[]; cells=[]; starts=[]; codes=[]; lens=[]
+    steps=[]; hl=[]; varsv=[]; labels=[]; marker=[]; tags=[]; cells=[]; starts=[]; codes=[]; lens=[]
     for si,sc in enumerate(scenes):
         s0=t
         pos=sc.get('start')
@@ -16,6 +16,7 @@ def make(out,title,scenes,note,desc,H=440,n=4,panel_title="In Python",cell=46):
         k=0
         for ev in sc['events']:
             a=t; t+=ev.get('dur',1.0)
+            steps.append(round(t-0.02,2))   # each event's finished frame, for <StepFigure>
             if ev.get('line') is not None: hl.append((si,a,t,ev['line']))
             if ev.get('vars'): varsv.append((a,t,ev['vars']))
             if ev.get('label'): labels.append((a,t)+tuple(ev['label']))
@@ -95,4 +96,5 @@ def make(out,title,scenes,note,desc,H=440,n=4,panel_title="In Python",cell=46):
     style_extra='<style>.halo{paint-order:stroke;stroke:#FFFFFF;stroke-width:5px;stroke-linejoin:round} .still{display:none} @media (prefers-reduced-motion: reduce){.anim{display:none}.still{display:inline}}</style>'
     H=max(H,RB+72+len(note)*15)
     o=svg(title,desc,b,H=H).replace('<rect width="680"',style_extra+'\n  <rect width="680"',1)
+    o=o.replace('<svg ','<svg data-steps="'+','.join(f'{x:g}' for x in steps)+f'" data-dur="{T:.2f}" ',1)
     open(out,'w').write(o); print(out,round(T,1),'H',H)

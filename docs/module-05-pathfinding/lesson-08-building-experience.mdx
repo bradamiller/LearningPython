@@ -129,12 +129,12 @@ declare itself arrived at the wrong intersection.
   explanation="The pose, position and heading, is local to the function. The caller only learns the new pose if the function hands it back — and Lesson 5-9 needs them to chain several destinations."
 />
 
-If you built the `Navigator` class in Lesson 4-7, this function wants to be a method
+If you built the `Navigator` class in Lesson 4-6, this function wants to be a method
 of it: `position` and `heading` become `self.position` and `self.heading` and drop
 out of the parameter list and the return, the four driving calls go through
 `self.line_track.` and `self.desired_heading()` / `self.turn_to()`, and the planner
 calls are `planner.add_blocked()` and `planner.compute_path()`. It returns only the
-two counts; the caller reads `navigator.position` afterwards, as in Lesson 4-8.
+two counts; the caller reads `navigator.position` afterwards, as in Lesson 4-7.
 
 ## Why memory matters
 

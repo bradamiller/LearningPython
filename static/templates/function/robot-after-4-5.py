@@ -316,7 +316,7 @@ def test_edge_cases():
     print(compute_manhattan_path((0, 2), (3, 2)))   # same row
     print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
-# --- Lesson 4-5: the test harness ---
+# --- Lesson 4-4: the test harness ---
 # run_test() asks the planner for a path and compares it
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
@@ -324,6 +324,24 @@ def test_edge_cases():
 def run_test(test_name, start, destination, expected):
     """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
+    pass
+
+
+# ===== NAVIGATOR =====
+# Drives a planned path. The MANHATTAN PLANNER section says
+# WHERE to go (a list of intersections); this section works
+# out which way to face at each one and does the driving with
+# the LINE TRACKING functions. It is the only code that knows
+# the robot's position and heading, and it hands both back.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
+def desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away; raise if it is not."""
+    # 1. x_diff and y_diff: next_pos minus position
+    # 2. one if per direction, from the table above; each
+    #    checks BOTH differences, because the other one is 0
+    # 3. none matched: raise ValueError, naming both positions
     pass
 
 # ===== RUN =====

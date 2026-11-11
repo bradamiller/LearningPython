@@ -62,29 +62,29 @@ they match the generator byte for byte. **Known stale:** the deployed
 | f41.py | coordinates.svg | — (replaced in 4-1 by coordinate-axes.svg, 2026-11-08) |
 | f41axes.py | coordinate-axes.svg | /img/lesson-m4-01/coordinate-axes.svg |
 | f43.py | path-list.svg | — |
-| f43alias.py | number-vs-list.svg | /img/lesson-m4-03/number-vs-list.svg (right panel lifted from the hand-made two-names-one-list.svg, no longer used, 2026-11-08) |
-| f44.py, m44.py | four-loops.svg | /img/lesson-m4-04/four-loops-xy.svg |
-| f44step.py | one-step.svg | /img/lesson-m4-04/one-step.svg |
-| f44loops.py | trace-to-loops.svg | /img/lesson-m4-04/trace-to-loops.svg |
-| f44skip.py | one-x-loop-runs.svg | /img/lesson-m4-04/one-x-loop-runs.svg |
+| f43alias.py | number-vs-list.svg | /img/lesson-m4-02/number-vs-list.svg (right panel lifted from the hand-made two-names-one-list.svg, no longer used, 2026-11-08) |
+| f44.py, m44.py | four-loops.svg | /img/lesson-m4-03/four-loops-xy.svg |
+| f44step.py | one-step.svg | /img/lesson-m4-03/one-step.svg |
+| f44loops.py | trace-to-loops.svg | /img/lesson-m4-03/trace-to-loops.svg |
+| f44skip.py | one-x-loop-runs.svg | /img/lesson-m4-03/one-x-loop-runs.svg |
 | f45promises.py | three-promises.svg | no longer used (removed 2026-11-10) |
-| f47.py | headings.svg | /img/lesson-m4-06/headings-xy.svg |
+| f47.py | headings.svg | /img/lesson-m4-05/headings-xy.svg |
 | f47.py | short-way.svg | — |
 | fharness.py | test-harness.svg | — |
 | first.py | first-drive.svg | /img/lesson-08/first-drive.svg |
 | fmap.py | delivery-overview.svg | /img/lesson-m4-00/delivery-overview-xy.svg |
-| fmap.py | delivery-run.svg | /img/lesson-m4-08/delivery-run-xy.svg |
-| fmap.py | told-not-remembered.svg | no longer used (was /img/lesson-m4-05/told-not-remembered-xy.svg, dropped 2026-11-10) |
-| fdecomp.py | decomposition.svg, decomposition-1..4.svg | /img/lesson-m4-06/decomposition.svg (page, a `<TreeFigure>` that opens a level per click); scripts/slides/decks/m4/fig/l06-decomp-1..4.svg (deck, one slide per level) |
+| fmap.py | delivery-run.svg | /img/lesson-m4-07/delivery-run-xy.svg |
+| fmap.py | told-not-remembered.svg | no longer used (was /img/lesson-m4-04/told-not-remembered-xy.svg, dropped 2026-11-10) |
+| fdecomp.py | decomposition.svg, decomposition-1..4.svg | /img/lesson-m4-05/decomposition.svg (page, a `<TreeFigure>` that opens a level per click); scripts/slides/decks/m4/fig/l05-decomp-1..4.svg (deck, one slide per level) |
 | fproblem.py | drive-to-destination.svg | /img/lesson-m4-00/drive-to-destination.svg |
 | fplan.py | plan-then-drive.svg | /img/lesson-m4-00/plan-then-drive.svg |
-| fpose.py | pose.svg | /img/lesson-m4-07/pose.svg (deck copy: scripts/slides/decks/m4/fig/l07-pose.svg) |
+| fpose.py | pose.svg | /img/lesson-m4-06/pose.svg (deck copy: scripts/slides/decks/m4/fig/l06-pose.svg) |
 | fpipe.py | two-halves.svg | — |
 | fraise.py, fraise2.py | raise.svg | — |
 | fraise2.py | raise-spin.svg | — |
-| fshort.py | turn-shortcut.svg | /img/lesson-m4-07/turn-shortcut-xy.svg |
+| fshort.py | turn-shortcut.svg | /img/lesson-m4-06/turn-shortcut-xy.svg |
 | ftrace.py | drive-path-trace.svg | — |
-| ftrace2.py | drive-path-loop.svg | /img/lesson-m4-07/drive-path-loop-xy.svg |
+| ftrace2.py | drive-path-loop.svg | /img/lesson-m4-06/drive-path-loop-xy.svg |
 | g50.py | blocked-route.svg | /img/lesson-m5-00/blocked-route-xy.svg |
 | g51.py | detour.svg | /img/lesson-m5-01/detour-xy.svg |
 | g51.py | graph-3x3.svg | /img/lesson-m5-01/graph-3x3-xy.svg |
@@ -131,15 +131,15 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m3_grid_figures.py | l-path.svg | /img/lesson-m3-03/l-path-xy.svg |
 | m3_grid_figures.py | square-path.svg | /img/lesson-m3-04/square-path-xy.svg |
 | m3_second_track.py | second-track.svg | — |
-| m43.py | build-path.svg | /img/lesson-m4-03/build-path.svg |
-| m44.py | four-loops-run.svg | /img/lesson-m4-04/four-loops-run.svg |
-| m49.py | delivery-drive.svg | /img/lesson-m4-08/delivery-drive.svg |
+| m43.py | build-path.svg | /img/lesson-m4-02/build-path.svg |
+| m44.py | four-loops-run.svg | /img/lesson-m4-03/four-loops-run.svg |
+| m49.py | delivery-drive.svg | /img/lesson-m4-07/delivery-drive.svg |
 | manhattan.py | manhattan-grid.svg | /img/lesson-m4-00/manhattan-grid.svg |
 | mission.py | final-project-mission.svg | — |
 | phone.py | phone-route.svg | /img/lesson-m5-01/phone-route.svg |
 | square.py | square-run.svg | — |
 | toolkit.py | toolkit-by-hand.svg | /img/lesson-m2-07/toolkit-by-hand.svg |
-| tuples.py | tuple-on-grid.svg | — (removed from 4-2, 2026-11-08) |
+| tuples.py | tuple-on-grid.svg | — (removed from 4-1, 2026-11-08) |
 | m28track.py | track-to-cross.svg | /img/lesson-m2-08/track-to-cross.svg |
 | m21slide.py | slide-across-tape.svg | /img/lesson-m2-01/slide-across-tape.svg |
 | m110nest.py | nest-two-squares.svg | /img/lesson-10/nest-two-squares.svg |

@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR
-# Lesson 4-4: going left, the east loop's first check is False, so only west runs.
+# Lesson 4-3: going left, the east loop's first check is False, so only west runs.
 INK,MUTE,RED,GRN="#343A40","#868E96","#D1182C","#2E7D32"
 o=[]
 T=lambda x,y,t,cls,col=INK,anc="start": f'<text class="{cls}" x="{x}" y="{y}" text-anchor="{anc}" fill="{col}" xml:space="preserve">{t}</text>'

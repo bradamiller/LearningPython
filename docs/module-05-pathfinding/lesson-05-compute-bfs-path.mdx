@@ -500,7 +500,7 @@ two changes to this function."
 
 Two reasons to wrap the toolkit in a class, and it's worth saying both. `BFS` is a
 class because it has setup to hold: the grid size and the blocked list. `Manhattan`
-got a class in Lesson 4-5 *only* so that it has the same shape as `BFS` — then one
+got a class in Lesson 4-4 *only* so that it has the same shape as `BFS` — then one
 main program and one test harness (next lesson) work with either by changing one name.
 That second reason is the swap, and it's the point.
 
@@ -587,7 +587,7 @@ planner = BFS()
 ```
 
 Two edits in the Manhattan part of the file, so that the two planners have the same
-shape. First, give the `Manhattan` class from Lesson 4-5 an `add_blocked()` and a
+shape. First, give the `Manhattan` class from Lesson 4-4 an `add_blocked()` and a
 `clear_blocked()` that deliberately do nothing:
 
 ```python
@@ -601,9 +601,9 @@ shape. First, give the `Manhattan` class from Lesson 4-5 an `add_blocked()` and 
         pass
 ```
 
-Second, the name. Lesson 4-5 created `planner = Manhattan()` under its class; today's
+Second, the name. Lesson 4-4 created `planner = Manhattan()` under its class; today's
 skeleton creates `planner = BFS()` under this one, and from here on `planner` is your
-BFS. Delete the Manhattan line — one object called `planner` — and in Lesson 4-5's
+BFS. Delete the Manhattan line — one object called `planner` — and in Lesson 4-4's
 `run_test()` change `planner.compute_path(...)` to `Manhattan().compute_path(...)`,
 so that Module 4's exact-match suite keeps testing the planner it was written for.
 (Exact match is the right test for Manhattan and the wrong one for BFS; that is where

@@ -2,7 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR
 from common import *
-# Lesson 4-5: the planner's three promises, labeled on one path.
+# Lesson 4-4: the planner's three promises, labeled on one path.
 g=G(84,62,sp=72); b=g.base(north=False)
 BL,OR="#4C8BF5","#C77C02"
 start,dest=(0,0),(2,1)

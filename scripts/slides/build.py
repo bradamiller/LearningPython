@@ -7,7 +7,7 @@
 Each deck is scripts/slides/decks/m<module>/l<lesson>.py defining DECK (see
 sketchdeck.py). Output goes to static/slides/<module folder>/module-<N>-<lesson
 page>.pptx, for example
-static/slides/module-04-manhattan/module-4-lesson-04-the-manhattan-algorithm.pptx,
+static/slides/module-04-manhattan/module-4-lesson-03-the-manhattan-algorithm.pptx,
 and src/data/slides.json maps each lesson's doc id to its deck so the lesson
 page can link it.
 """

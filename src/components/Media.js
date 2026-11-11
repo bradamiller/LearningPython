@@ -175,7 +175,7 @@ export function PlayFigure({src, alt = '', caption, playLabel = 'Drive it', agai
 }
 
 /**
- * TreeFigure — a tree diagram that opens one level per click (L4-6's problem
+ * TreeFigure — a tree diagram that opens one level per click (L4-5's problem
  * decomposition). It starts with only the top box; clicking a box that breaks
  * down (it shows a +) reveals its parts, and clicking it again folds them away.
  *
@@ -188,7 +188,7 @@ export function PlayFigure({src, alt = '', caption, playLabel = 'Drive it', agai
  * under a closed box.
  *
  * Usage:
- *   <TreeFigure src="/img/lesson-m4-06/decomposition.svg" alt="..." caption="..." />
+ *   <TreeFigure src="/img/lesson-m4-05/decomposition.svg" alt="..." caption="..." />
  */
 export function TreeFigure({src, alt = '', caption, hint = 'Click a box with a + to break it down.'}) {
   const url = useMediaUrl(src);
@@ -276,6 +276,107 @@ export function TreeFigure({src, alt = '', caption, hint = 'Click a box with a +
           Start over
         </button>
       </div>
+      {caption && <figcaption className="mediaCaption">{caption}</figcaption>}
+    </figure>
+  );
+}
+
+/**
+ * StepFigure — an animated SVG that plays like a video and can also be walked
+ * through one step at a time, so a teacher can stop on each step and explain it
+ * (L4-2's "Building a path in a loop").
+ *
+ * The SVG is embedded with <object> so it can be paused and moved. Its root
+ * carries data-steps="t1,t2,...": the time, in seconds, of each step's finished
+ * frame, and data-dur="<seconds>" its length (scripts/figures/pathanim.py
+ * writes both). Step goes to the next one
+ * and pauses there, Back to the one before, Play carries on from where it is.
+ *
+ * Usage:
+ *   <StepFigure src="/img/lesson-m4-02/build-path.svg" alt="..." caption="..." />
+ */
+export function StepFigure({src, alt = '', caption}) {
+  const url = useMediaUrl(src);
+  const ref = React.useRef(null);
+  const [steps, setSteps] = React.useState([]);
+  const [loop, setLoop] = React.useState(0);       // the animation's length, to read where a loop is
+  const [at, setAt] = React.useState(-1);          // step showing while paused; -1 when playing
+  const [paused, setPaused] = React.useState(false);
+  const [ratio, setRatio] = React.useState('680 / 440');
+
+  const svgRoot = () => {
+    const o = ref.current;
+    try { return o && o.contentDocument && o.contentDocument.documentElement; } catch (e) { return null; }
+  };
+  React.useEffect(() => {
+    const o = ref.current;
+    if (!o) return undefined;
+    const setup = () => {
+      const svg = svgRoot();
+      if (!svg || !svg.getAttribute) return;
+      const s = (svg.getAttribute('data-steps') || '').split(',').map(parseFloat).filter((x) => !isNaN(x));
+      setSteps(s);
+      setLoop(parseFloat(svg.getAttribute('data-dur')) || 0);
+      const vb = svg.viewBox && svg.viewBox.baseVal;
+      if (vb && vb.width) setRatio(`${vb.width} / ${vb.height}`);
+    };
+    o.addEventListener('load', setup);
+    setup();   // in case it loaded before the effect ran
+    return () => o.removeEventListener('load', setup);
+  }, [url]);
+
+  const show = (i) => {
+    const svg = svgRoot();
+    if (!svg || !svg.pauseAnimations || !steps.length) return;
+    const k = Math.max(0, Math.min(steps.length - 1, i));
+    svg.pauseAnimations();
+    svg.setCurrentTime(steps[k]);
+    setAt(k); setPaused(true);
+  };
+  // the step at or after the current time, when stepping out of playback
+  const nextFromNow = () => {
+    const svg = svgRoot();
+    const now = svg && svg.getCurrentTime ? (loop ? svg.getCurrentTime() % loop : svg.getCurrentTime()) : 0;
+    const k = steps.findIndex((t) => t > now + 0.05);
+    return k < 0 ? 0 : k;
+  };
+  const step = () => show(paused ? (at >= steps.length - 1 ? 0 : at + 1) : nextFromNow());
+  const back = () => show(paused ? at - 1 : nextFromNow() - 1);
+  const play = () => {
+    const svg = svgRoot();
+    if (!svg || !svg.unpauseAnimations) return;
+    if (paused && at >= steps.length - 1) svg.setCurrentTime(0);
+    svg.unpauseAnimations();
+    setPaused(false); setAt(-1);
+  };
+  // pause on the last step already shown, so the picture is a clean frame
+  const pause = () => {
+    const svg = svgRoot();
+    const now = svg && svg.getCurrentTime ? (loop ? svg.getCurrentTime() % loop : svg.getCurrentTime()) : 0;
+    let k = 0;
+    steps.forEach((t, i) => { if (t <= now) k = i; });
+    show(k);
+  };
+
+  return (
+    <figure className="videoBlock stepFigure">
+      <object ref={ref} data={url} type="image/svg+xml" aria-label={alt} role="img"
+              style={{aspectRatio: ratio}}>
+        {alt}
+      </object>
+      {steps.length > 0 && (
+        <div className="treeFigure__bar">
+          <button type="button" className="treeFigure__button" onClick={back}
+                  disabled={paused && at <= 0}>◀ Back</button>
+          <button type="button" className="treeFigure__button" onClick={step}>Step ▶</button>
+          {paused
+            ? <button type="button" className="treeFigure__button" onClick={play}>▶ Play</button>
+            : <button type="button" className="treeFigure__button" onClick={pause}>⏸ Pause</button>}
+          <span className="treeFigure__hint" aria-live="polite">
+            {paused ? `Step ${at + 1} of ${steps.length}` : 'Playing'}
+          </span>
+        </div>
+      )}
       {caption && <figcaption className="mediaCaption">{caption}</figcaption>}
     </figure>
   );

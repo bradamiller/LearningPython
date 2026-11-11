@@ -316,7 +316,7 @@ def test_edge_cases():
     print(compute_manhattan_path((0, 2), (3, 2)))   # same row
     print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
-# --- Lesson 4-5: the test harness ---
+# --- Lesson 4-4: the test harness ---
 # run_test() asks the planner for a path and compares it
 # with one you traced by hand, printing PASS or FAIL. A
 # planner test from here on is a list of run_test() calls.
@@ -344,7 +344,7 @@ def desired_heading(position, next_pos):
     # 3. none matched: raise ValueError, naming both positions
     pass
 
-# --- Lesson 4-7: turn to a heading, drive a path ---
+# --- Lesson 4-6: turn to a heading, drive a path ---
 # turn_to() turns a quarter turn at a time, with the LINE
 # TRACKING turns, until the robot faces the heading it
 # needs. drive_path() is the loop: for each
@@ -385,6 +385,30 @@ def test_drive_path():
 
     position, heading = drive_path(path, position, heading)
     print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+# --- Lesson 4-7: final project, the delivery run ---
+# The module project: visit DESTINATIONS in order, planning
+# each leg with the MANHATTAN PLANNER from wherever the last
+# leg ended and driving it with the NAVIGATOR. Nothing new is
+# defined; the two sections did the work.
+DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
+
+def test_delivery_paper():
+    # no robot: from (0, 0), plan the path to each destination
+    # in turn, print it with its step count, and move
+    # position on to that destination for the next leg
+    pass
+
+def test_delivery():
+    # position and heading start at home, facing North
+    # plan the FIRST leg and print it; wait for the button
+    # for each destination:
+    #     compute the path from where the robot is
+    #     print it
+    #     drive it
+    #     ... and keep position and heading up to date
+    #     print where the robot arrived
+    pass
 
 # ===== RUN =====
 board.wait_for_button()

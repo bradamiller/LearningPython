@@ -280,9 +280,15 @@ def test_square():
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_path(start, destination):
-    """Return the (x, y) steps from start to destination, across
-    first, then up or down. The start itself is not in the list."""
+def compute_manhattan_path(start, destination):
+    """Compute a Manhattan path from start to destination.
+
+    start:       an (x, y) tuple -- where the robot is now
+    destination: an (x, y) tuple -- where it needs to go
+
+    Returns a list of (x, y) tuples the robot should move to,
+    not including the start itself.
+    """
     path = []
     x, y = start              # where the robot is now
     dest_x, dest_y = destination   # where it is going
@@ -301,14 +307,24 @@ def compute_path(start, destination):
     return path
 
 def test_paper_paths():
-    print(compute_path((0, 0), (2, 3)))   # your trace table
-    print(compute_path((0, 1), (3, 3)))
-    print(compute_path((3, 3), (1, 0)))   # left and down
+    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table
+    print(compute_manhattan_path((0, 1), (3, 3)))
+    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down
 
 def test_edge_cases():
-    print(compute_path((2, 0), (2, 3)))   # same column
-    print(compute_path((0, 2), (3, 2)))   # same row
-    print(compute_path((1, 1), (1, 1)))   # same spot
+    print(compute_manhattan_path((2, 0), (2, 3)))   # same column
+    print(compute_manhattan_path((0, 2), (3, 2)))   # same row
+    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
+
+# --- Lesson 4-4: the test harness ---
+# run_test() asks the planner for a path and compares it
+# with one you traced by hand, printing PASS or FAIL. A
+# planner test from here on is a list of run_test() calls.
+
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    pass
 
 # ===== RUN =====
 board.wait_for_button()

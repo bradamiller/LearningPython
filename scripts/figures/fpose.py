@@ -1,9 +1,9 @@
-"""Lesson 4-7: the robot's pose is its position and its heading, together.
+"""Lesson 4-6: the robot's pose is its position and its heading, together.
 
 The robot at (1, 1) facing East; beside it the pose as Python holds it,
 ((1, 1), 1), with each half labeled.
 
-Output: out/pose.svg -> static/img/lesson-m4-07/pose.svg
+Output: out/pose.svg -> static/img/lesson-m4-06/pose.svg
 """
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

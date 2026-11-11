@@ -1,19 +1,19 @@
-"""Lesson 4-4 worksheet: trace path 1 move by move, then all six test paths.
-Writes static/printables/lesson-4-4-trace-worksheet.pdf. Needs reportlab."""
+"""Lesson 4-3 worksheet: trace path 1 move by move, then all six test paths.
+Writes static/printables/lesson-4-3-trace-worksheet.pdf. Needs reportlab."""
 import os
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor, black
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-OUT = os.path.join(ROOT, 'static', 'printables', 'lesson-4-4-trace-worksheet.pdf')
+OUT = os.path.join(ROOT, 'static', 'printables', 'lesson-4-3-trace-worksheet.pdf')
 W, H = letter
 M = 50
 INK, MUTE, LINE, HEAD = black, HexColor('#6C757D'), HexColor('#868E96'), HexColor('#E9ECEF')
 RED, GREEN = HexColor('#D1182C'), HexColor('#2E7D32')
 
 c = canvas.Canvas(OUT, pagesize=letter)
-c.setTitle('Lesson 4-4 · Trace it on paper')
+c.setTitle('Lesson 4-3 · Trace it on paper')
 
 def text(x, y, s, font='Helvetica', size=10, col=INK):
     c.setFont(font, size); c.setFillColor(col); c.drawString(x, y, s)
@@ -60,7 +60,7 @@ def table(x, y, widths, header, rows, rh=20, hh=20, mono=(), shade=()):
     return yy
 
 # header
-text(M, H - 58, 'Lesson 4-4 · Trace it on paper', 'Helvetica-Bold', 17)
+text(M, H - 58, 'Lesson 4-3 · Trace it on paper', 'Helvetica-Bold', 17)
 text(M, H - 82, 'Name: ________________________________', size=10)
 text(W - M - 160, H - 82, 'Date: ______________', size=10)
 intro = ['Trace by hand the six paths your tests will check. Across first, then up or down. Each move',

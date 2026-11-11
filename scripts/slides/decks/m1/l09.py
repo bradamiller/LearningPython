@@ -59,7 +59,7 @@ DECK = {
          'caption': 'Three named locations, and two that no program has claimed yet.',
          'notes': 'The numbers on the plates are real: every location has an address, whether or '
                   'not anything is stored there. Students use the name, not the address, for a '
-                  'long time; addresses come back in Lesson 4-3 with lists. Leave the address '
+                  'long time; addresses come back in Lesson 4-2 with lists. Leave the address '
                   'alone unless asked. If someone asks: that is how the processor finds the box, '
                   'and you get to use the name instead.'},
 
@@ -123,7 +123,7 @@ DECK = {
                         'it, and stores the result back: 10, then 10+5 = 15, then 15+5 = 20.',
          'notes': 'Answer: C. If someone asks about drivetrain = ...: the location holds the '
                   'address of where the drivetrain object lives, not the object itself, because '
-                  'something that can grow does not fit in a fixed-size location. Lesson 4-3 '
+                  'something that can grow does not fit in a fixed-size location. Lesson 4-2 '
                   'makes it precise.'},
 
         {'kind': 'code', 'title': 'Choosing names: `snake_case`',

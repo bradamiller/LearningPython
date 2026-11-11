@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 440" width="680" height="440" role="img" aria-labelledby="fT fD">
+<svg data-steps="0.98,1.78,2.78,3.58,4.58,5.38,6.38,8.38,10.98,11.58,12.48,13.08,13.98,14.58,15.48,16.08,16.98,17.58,18.48,20.48" data-dur="22.10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 440" width="680" height="440" role="img" aria-labelledby="fT fD">
   <title id="fT">Building a path in a loop</title>
   <desc id="fD">An animation of a 4 by 4 grid with Python beside it. First, path = [] and a for loop over range(1, 4): on each pass x is 1, 2, then 3, a red dot steps one intersection to the right, the tuple (x, 0) is appended, and a new box joins the list, numbered 0, 1, 2. The start (0, 0) is ringed and never added. len(path) is 3. Then two loops one after the other: a go-right loop appends (1, 0) and (2, 0), and a go-up loop appends (2, 1), (2, 2) and (2, 3): the path from (0, 0) to (2, 3), five steps.</desc>
   <style>

@@ -1,7 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR
-# Lesson 4-4: the trace table's rows become two loops.
+# Lesson 4-3: the trace table's rows become two loops.
 XC,YC,INK,MUTE="#D1182C","#2E7D32","#343A40","#868E96"
 XB,YB="#FDECEE","#E8F3E9"
 rows=[("1","x + 1","(1, 0)"),("2","x + 1","(2, 0)"),("3","y + 1","(2, 1)"),("4","y + 1","(2, 2)"),("5","y + 1","(2, 3)")]

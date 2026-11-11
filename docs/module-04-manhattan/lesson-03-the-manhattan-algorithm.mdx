@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-4 · The Manhattan Algorithm"
-sidebar_label: "4-4 · The Algorithm"
-sidebar_position: 4
+title: "Lesson 4-3 · The Manhattan Algorithm"
+sidebar_label: "4-3 · The Algorithm"
+sidebar_position: 3
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 4-4 · The Manhattan Algorithm"
+  title="Lesson 4-3 · The Manhattan Algorithm"
   meta={['60 min', 'Python code', 'Computing a path']}
 />
 
@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 </Objectives>
 
-<QuizLink id="module-04-manhattan/lesson-04-the-manhattan-algorithm" />
+<QuizLink id="module-04-manhattan/lesson-03-the-manhattan-algorithm" />
 
 ## The strategy: across first, then up or down
 
@@ -40,7 +40,7 @@ Each step moves the robot to a neighboring intersection, so **exactly one of x o
 changes, by 1**. Never both: that would be a diagonal, and the robot can't drive one.
 
 <Figure
-  src="/img/lesson-m4-04/one-step.svg"
+  src="/img/lesson-m4-03/one-step.svg"
   alt="A 3 by 3 grid with the robot's intersection (1, 1) in the middle. Red arrows go right to (2, 1), x + 1, and left to (0, 1), x − 1. Green arrows go up to (1, 2), y + 1, and down to (1, 0), y − 1. A dashed diagonal to (2, 2) is crossed out: x and y both change, so it is not one step."
   caption="One step changes x or y by 1, never both."
 />
@@ -53,7 +53,7 @@ line if x or y is already right.
 
 Before any code, trace by hand the six paths your tests will check: across first,
 then up or down, one step at a time. The start is never in the path. Use the
-[worksheet](pathname:///printables/lesson-4-4-trace-worksheet.pdf) or copy the tables
+[worksheet](pathname:///printables/lesson-4-3-trace-worksheet.pdf) or copy the tables
 onto paper. When you run your code later, this sheet is your **answer key**.
 
 **1. Path 1, move by move.** Trace (0, 0) → (2, 3), one row per move. Row 1 is done
@@ -119,7 +119,7 @@ handles x and y getting bigger, so path 3 comes back empty, and students who wro
 the first section with no robot in it, so the skeleton gives the east loop finished
 and both tests written out. Students read one working loop against their path 1 table,
 run it, and copy it three times. The step down to writing tests themselves comes in
-Lesson 4-5, once the algorithm is theirs.
+Lesson 4-4, once the algorithm is theirs.
 
 </TeacherNote>
 
@@ -139,7 +139,7 @@ the same for y. Inside each loop, append the new current position `(x, y)` to th
 path.
 
 <Figure
-  src="/img/lesson-m4-04/trace-to-loops.svg"
+  src="/img/lesson-m4-03/trace-to-loops.svg"
   alt="The trace table for (0, 0) to (2, 3). Rows 1 and 2, in red, say x + 1 and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). Rows 3 to 5, in green, say y + 1 and are bracketed to loop 2, the same loop for y."
   caption="Each row is one trip around a loop."
 />
@@ -271,7 +271,7 @@ the west loop moves x. Going right, it's the other way round. The two y loops wo
 same way, so no `if/else` is needed.
 
 <Figure
-  src="/img/lesson-m4-04/one-x-loop-runs.svg"
+  src="/img/lesson-m4-03/one-x-loop-runs.svg"
   alt="Going left with x = 3 and dest_x = 1. The east loop, while x < dest_x, is grayed out: 3 < 1 is False on the first check, so it never runs. The west loop, while x > dest_x, is highlighted: 3 > 1 is True, so it runs twice and x goes 3, 2, 1."
   caption="For any trip, at most one of the two x loops runs. The same goes for the two y loops."
 />
@@ -281,7 +281,7 @@ goes across first.
 
 
 <Figure
-  src="/img/lesson-m4-04/four-loops-xy.svg"
+  src="/img/lesson-m4-03/four-loops-xy.svg"
   alt="Left: one intersection with four arrows. North: y plus 1, while y < dest. South: y minus 1, while y > dest. East: x plus 1, while x < dest. West: x minus 1, while x > dest. Right: the trip from (1, 3) to (3, 0) on a 4 by 4 grid: right two, then down three. East runs twice, west and north are skipped, south runs three times. The path is [(2,3), (3,3), (3,2), (3,1), (3,0)]."
   caption="Every trip runs at most one x loop and one y loop. The other two find their condition False on the first check and never run."
 />
@@ -312,7 +312,7 @@ East is skipped (3 isn't < 1). **West runs** (3 > 1), moving x only: (2,3),
 <Reveal title="Watch the four loops run" hint="after your tests match">
 
 <Figure
-  src="/img/lesson-m4-04/four-loops-run.svg"
+  src="/img/lesson-m4-03/four-loops-run.svg"
   alt="An animation of compute_path() on a 4 by 4 grid, with the four loops listed beside it. Trip one, (0, 0) to (2, 3): east runs twice, appending (1, 0) and (2, 0); west is skipped; north runs three times, appending (2, 1), (2, 2) and (2, 3); south is skipped; five steps. Trip two, (3, 3) to (1, 0): east is skipped; west runs twice, (2, 3) and (1, 3); north is skipped; south runs three times, (1, 2), (1, 1), (1, 0); five steps. Trip three, (1, 1) to (1, 1): all four loops are skipped and the path is empty. A red dot steps along each move and each appended spot is numbered by its index."
   caption="Three trips through the same four loops. Each loop checks its condition once before it runs; a False on that first check means it never runs at all."
 />
@@ -325,7 +325,7 @@ The four-loop design is the lesson's big idea: *a while loop whose condition sta
 False simply does nothing.* Students who've seen conditionals will try to wrap this in
 `if x < dest_x ... elif x > dest_x`. Steer them back — the four loops are simpler and
 handle every case, including same-position (all four skipped → `[]`). Check that
-tuple unpacking from Lesson 4-2 (`x, y = start`) stuck, and take real time on the
+tuple unpacking from Lesson 4-1 (`x, y = start`) stuck, and take real time on the
 double parentheses in `path.append((x, y))`: the outer pair is the function call, the
 inner pair is the tuple.
 

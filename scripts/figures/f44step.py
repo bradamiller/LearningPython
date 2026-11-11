@@ -2,7 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR
 from common import *
-# Lesson 4-4: one step changes x or y by 1, never both.
+# Lesson 4-3: one step changes x or y by 1, never both.
 g=G(210,64,sp=110,n=3); b=g.base(axes=False,north=False)
 n,sp,pad=g.n,g.sp,g.pad
 ox,oy=g.p(0,0)

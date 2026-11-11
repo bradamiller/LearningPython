@@ -106,7 +106,7 @@ DECK = {
                  '              " cost:", path_cost(position, path), " ", path)',
          'code_size': 15,
          'callout': '`compare()` is given: a print, not a planner. Its `for` line unpacks each pair as '
-                    'it loops (Lesson 4-2): a label, and the planner function to call with it.',
+                    'it loops (Lesson 4-1): a label, and the planner function to call with it.',
          'tone': 'teal',
          'notes': '"{:<9}".format(name) is "this name, left-aligned in nine spaces", the same trick as '
                   'print_grid()\'s "{:>3}".'},

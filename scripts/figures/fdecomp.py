@@ -1,4 +1,4 @@
-"""Lesson 4-6 opening: Module 4's problem broken down into parts (problem decomposition).
+"""Lesson 4-5 opening: Module 4's problem broken down into parts (problem decomposition).
 
 A tree that opens one level per click on the page (<TreeFigure>): every element
 carries data-parent, the box it belongs under; a box that breaks down further
@@ -6,8 +6,8 @@ carries data-node and data-expand. The page SVG has everything showing, so it
 reads in full where scripts don't run; the component hides levels on load.
 
 Outputs:
-  out/decomposition.svg -> static/img/lesson-m4-06/decomposition.svg (the page)
-  out/decomposition-1.svg .. -4.svg -> scripts/slides/decks/m4/fig/l06-decomp-N.svg
+  out/decomposition.svg -> static/img/lesson-m4-05/decomposition.svg (the page)
+  out/decomposition-1.svg .. -4.svg -> scripts/slides/decks/m4/fig/l05-decomp-N.svg
     (the deck: one slide per level, the levels below simply left out)
 (renamed 2026-11-08 when the top box changed, so browsers don't show the cached old one)
 """
@@ -76,9 +76,9 @@ box(160, 12, 360, 52, "The whole problem", None,
 # Level 2: the planner and the driver
 PX, DX, W2, Y2, H2 = 16, 428, 236, 112, 76
 under("whole", elbow(340, 64, [PX + W2/2, DX + W2/2], Y2, 88))
-box(PX, Y2, W2, H2, "The planner", "compute_manhattan_path()", "Lessons 4-4 and 4-5", BLUE, BLUE_BG,
+box(PX, Y2, W2, H2, "The planner", "compute_manhattan_path()", "Lessons 4-3 and 4-4", BLUE, BLUE_BG,
     parent="whole")
-box(DX, Y2, W2, H2, "The driver", "drive_path()", "Lessons 4-6 and 4-7", RED, RED_BG,
+box(DX, Y2, W2, H2, "The driver", "drive_path()", "Lessons 4-5 and 4-6", RED, RED_BG,
     node="driver", parent="whole")
 under("whole",
       f'<line x1="{PX+W2+2}" y1="{Y2+50}" x2="{DX-4}" y2="{Y2+50}" stroke="#495057" stroke-width="2.2" marker-end="url(#aG)"/>',
@@ -92,7 +92,7 @@ W3, G3, Y3, H3 = 210, 12, 240, 76
 x0 = 680 - 10 - 2 * W3 - G3
 xs = [x0 + i * (W3 + G3) for i in range(2)]
 under("driver", elbow(DX + W2/2, Y2 + H2, [x + W3/2 for x in xs], Y3, Y2 + H2 + 24))
-box(xs[0], Y3, W3, H3, "1 · Turn to face it", None, "Lessons 4-6 and 4-7", RED, "#FFFFFF",
+box(xs[0], Y3, W3, H3, "1 · Turn to face it", None, "Lessons 4-5 and 4-6", RED, "#FFFFFF",
     hcls="nb", node="turn", parent="driver")
 box(xs[1], Y3, W3, H3, "2 · Drive to it", "LINE TRACKING", "built in Module 2", RED, "#FFFFFF",
     hcls="nb", parent="driver")
@@ -102,18 +102,18 @@ W4, G4, Y4, H4 = 200, 12, 360, 76
 tc = xs[0] + W3 / 2
 x4 = [tc - W4 - G4 / 2, tc + G4 / 2]
 under("turn", elbow(tc, Y3 + H3, [x + W4/2 for x in x4], Y4, Y3 + H3 + 22))
-box(x4[0], Y4, W4, H4, "Which way to face?", "desired_heading()", "Lesson 4-6", RED, "#FFFFFF",
+box(x4[0], Y4, W4, H4, "Which way to face?", "desired_heading()", "Lesson 4-5", RED, "#FFFFFF",
     hcls="nb", parent="turn")
-box(x4[1], Y4, W4, H4, "Turn until facing it", "turn_to()", "Lesson 4-7", RED, "#FFFFFF",
+box(x4[1], Y4, W4, H4, "Turn until facing it", "turn_to()", "Lesson 4-6", RED, "#FFFFFF",
     hcls="nb", parent="turn")
 
 DESC = ('A tree with four levels. At the top, the whole problem: drive from the start to a '
         'destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), '
-        'built in Lessons 4-4 and 4-5, is small enough to build and test in one go. The driver, '
-        'drive_path(), built in Lessons 4-6 and 4-7, splits into two steps at each intersection: '
+        'built in Lessons 4-3 and 4-4, is small enough to build and test in one go. The driver, '
+        'drive_path(), built in Lessons 4-5 and 4-6, splits into two steps at each intersection: '
         '1, turn to face it; 2, drive to it, with the LINE TRACKING functions built in Module 2. '
-        'Turning splits once more: which way to face, desired_heading(), Lesson 4-6, and turn '
-        'until facing it, turn_to(), Lesson 4-7. An arrow from planner to driver is labeled '
+        'Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn '
+        'until facing it, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled '
         '"list of (x, y) tuples, the one thing they share".')
 
 

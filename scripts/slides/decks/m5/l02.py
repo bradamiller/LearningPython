@@ -68,7 +68,7 @@ DECK = {
          'notes': 'Have students open their Lesson 5-1 drawings and translate each node into a '
                   'key-value pair: it makes the paper-to-code jump concrete. The snippets in this '
                   'part of the lesson are for trying out in a scratch file or at the Python '
-                  'prompt, as with tuples in Lesson 4-2. Only the two functions in the skeleton '
+                  'prompt, as with tuples in Lesson 4-1. Only the two functions in the skeleton '
                   'go into robot.py.'},
 
         {'kind': 'check',
@@ -146,7 +146,7 @@ DECK = {
                  '    # 3. return graph\n'
                  '    pass',
          'code_size': 18,
-         'callout': 'The build-in-a-loop pattern from Lesson 4-3, with two loops, one inside the '
+         'callout': 'The build-in-a-loop pattern from Lesson 4-2, with two loops, one inside the '
                     'other, and a value that is itself a list you build',
          'tone': 'teal',
          'callout_size': 20,

@@ -252,42 +252,50 @@ def test_square():
     pass
 
 
-# ===== MANHATTAN PLANNER =====
-# Plans a route across the grid: given where the robot is and
-# where it should go, returns the list of (x, y) tuples to
-# drive to, across first and then up or down. Pure arithmetic --
-# nothing in here touches a sensor or a motor, so every test
-# in this section runs on screen with the robot sitting still.
+# ===== MANHATTAN PLANNER (class version) =====
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
+# is told the robot's position every call. Pure arithmetic.
 
-def compute_path(start, destination):
-    """Return the (x, y) steps from start to destination, across
-    first, then up or down. The start itself is not in the list."""
-    path = []
-    x, y = start              # where the robot is now
-    dest_x, dest_y = destination   # where it is going
+class Manhattan:
+    """The Lesson 4-4 planner as a class.
 
-    # East: keep stepping right until x matches dest_x
-    while x < dest_x:
-        x = x + 1             # one step right
-        path.append((x, y))   # record the new spot
+    It holds NO state: compute_path() is told the robot's position
+    every time. Manhattan is a class only so that it has the same
+    shape as the Module 5 and 6 planners (BFS, Dijkstra) -- then one
+    main program and one test harness work with any of them by
+    changing one name.
+    """
 
-    # West: copy east, flip < to > and + to -
+    def __init__(self):
+        pass        # nothing to set up
 
-    # North: copy east, but step y until it matches dest_y
+    def compute_path(self, start, destination):
+        # your compute_manhattan_path(), unchanged: nothing in
+        # it needs self., because the planner holds nothing
+        pass
 
-    # South: copy north, flip < to > and + to -
-
-    return path
+planner = Manhattan()
 
 def test_paper_paths():
-    print(compute_path((0, 0), (2, 3)))   # your trace table
-    print(compute_path((0, 1), (3, 3)))
-    print(compute_path((3, 3), (1, 0)))   # left and down
+    print(planner.compute_path((0, 0), (2, 3)))   # your trace table
+    print(planner.compute_path((0, 1), (3, 3)))
+    print(planner.compute_path((3, 3), (1, 0)))   # left and down
 
 def test_edge_cases():
-    print(compute_path((2, 0), (2, 3)))   # same column
-    print(compute_path((0, 2), (3, 2)))   # same row
-    print(compute_path((1, 1), (1, 1)))   # same spot
+    print(planner.compute_path((2, 0), (2, 3)))   # same column
+    print(planner.compute_path((0, 2), (3, 2)))   # same row
+    print(planner.compute_path((1, 1), (1, 1)))   # same spot
+
+# --- Lesson 4-4: the test harness ---
+# run_test() asks the planner for a path and compares it
+# with one you traced by hand, printing PASS or FAIL. A
+# planner test from here on is a list of run_test() calls.
+
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    pass
 
 # ===== RUN =====
 board.wait_for_button()

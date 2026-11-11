@@ -1441,3 +1441,8 @@ html[data-todos='on'] .navbar__item--todos { display: inline-block; }
 .treeFigure__button:hover { filter: brightness(1.1); }
 .treeFigure__button:focus-visible { outline: 3px solid #D1182C; outline-offset: 2px; }
 @media print { .treeFigure__bar { display: none; } }
+.treeFigure__button:disabled { opacity: 0.45; cursor: default; filter: none; }
+
+/* StepFigure (Media.js): an animation with Step, Back and Play buttons. */
+.stepFigure object { display: block; width: 100%; max-width: 680px; margin: 0 auto; border-radius: 12px; }
+@media print { .stepFigure .treeFigure__bar { display: none; } }

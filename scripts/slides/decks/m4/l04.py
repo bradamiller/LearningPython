@@ -1,339 +1,368 @@
 DECK = {
     'module': 4, 'lesson': 4,
-    'doc': 'module-04-manhattan/lesson-04-the-manhattan-algorithm',
-    'title': 'The Manhattan Algorithm',
+    'doc': 'module-04-manhattan/lesson-04-naming-and-testing-the-planner',
+    'title': 'Naming and Testing the Planner',
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Count steps across plus steps up or down to check a path\'s length',
-             'Describe the "across first, then up or down" strategy and hand-trace a path on paper',
-             'Read each row of your trace table as one trip around a loop, and match the given east loop to it',
-             'Write north by copying east, then west and south by copying and flipping: four loops, no `if/else`',
-             'Test it on screen against your paper traces, edge cases included',
+             'Say why the planner\'s name says which algorithm it uses',
+             'State the function\'s **three promises** and record them in a **docstring**',
+             'Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)',
+             'Hand-calculate an expected path, then compare it to the actual output',
+             'Add a reusable `run_test()` helper and a test that runs six cases through it',
+             'Debug a failing test with print statements',
          ],
-         'notes': '60 minutes. Coordinates (4-1), tuples (4-2) and lists (4-3) come together: '
-                  'a function that computes a whole path from a start and a destination. Paper '
-                  'first for 8 to 10 minutes, then the bulk of the lesson is writing and testing '
-                  'compute_path().'},
+         'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets a name for its '
+                  'algorithm and its promises written down, and unit tests prove them on screen. Two '
+                  'non-negotiables: expected paths are calculated by hand before anything runs, and '
+                  'the suite covers every direction and edge case.'},
 
-        {'kind': 'bullets', 'title': 'Coordinates, tuples, lists: together',
+        {'kind': 'bullets', 'title': 'Same function, a name for its algorithm',
          'bullets': [
-             'Today you write the function that **computes a whole path** automatically',
-             'Give it a start and a destination; it hands back the **list of intersections** to drive',
-             'Trace it on paper first, then build it **one loop at a time**',
-             'It goes in a new section of `robot.py`, the first one that **never touches the robot**',
+             'Last lesson you wrote `compute_path()` and it worked',
+             'Today it gets a name for its algorithm and its promises written down, and unit tests prove them',
          ],
-         'callout': 'Tuples in, a list out. The robot can stay on the desk all lesson.',
+         'callout': '**Test on screen before you test on the floor.**',
          'tone': 'teal'},
 
-        {'kind': 'figure', 'title': 'What goes in, what comes back',
-         'figure': './decks/m4/fig/destinations-hops.svg',
-         'caption': 'Handed one destination, possibly many intersections away. Hands back a list of '
-                    'adjacent intersections, one hop each, ending at the destination.',
-         'notes': 'The main program supplies the destinations list from Lesson 4-0. The function you '
-                  'write today handles one destination at a time: the main loop calls it once per '
-                  'destination. Every entry in the list it returns is one block from the entry before '
-                  'it, and the first is one block from the start.'},
-
-        {'kind': 'figure', 'title': 'One step: x or y, never both',
-         'figure': '/img/lesson-m4-04/one-step.svg',
-         'caption': 'One step changes x or y by 1, never both. Both would be a diagonal, and the '
-                    'robot can\'t drive one.',
-         'notes': 'Make this solid before the trace: every row of the trace table changes '
-                  'exactly one coordinate by 1. Ask for the four neighbors of (2, 2), then ask '
-                  'why (3, 3) is not one of them.'},
-
-        {'kind': 'bullets', 'title': 'The strategy: across first, then up or down',
+        {'kind': 'bullets', 'title': 'Why name the planner?',
          'bullets': [
-             'The simplest strategy that always works:',
-             ['Move **across** until x is right', 'Then move **up or down** until y is right'],
-             'That always traces an **L-shaped** path',
-             'Or a straight line, if x or y is already correct',
+             'There are many ways to plan a route. Each method is an **algorithm**',
+             'Manhattan: fast and easy to write, but fails if a road is blocked',
+             'Later you\'ll build more robust planners',
+             'Same promises (the **interface**) means planners can be swapped as the need changes',
          ],
-         'size': 26,
-         'split': 0.5,
-         'figure': '/img/lesson-m4-04/four-loops-xy.svg',
-         'crop': (0.49, 0.03, 0.83, 0.82),
-         'notes': 'The figure is the right half of the lesson\'s four-loops figure: the trip from '
-                  '(1, 3) to (3, 0), across two, then down three. The whole figure comes back in '
-                  'Step 3.'},
-
-        {'kind': 'table', 'title': 'Activity · Trace it on paper',
-         'tag': 'Activity',
-         'lead': '**Path 1, move by move:** trace (0, 0) → (2, 3), one row per move. The start is '
-                 'never in the path.',
-         'lead_h': 1.0,
-         'headers': ['Step', 'Action', 'New position'],
-         'widths': [1, 1.6, 2.2],
-         'rows': [
-             ['1', 'x + 1', '(1, 0)'],
-             ['2', '', ''],
-             ['3', '', ''],
-             ['4', '', ''],
-             ['5', '', ''],
-         ],
-         'row_h': 0.5,
-         'callout_size': 18,
-         'callout': 'Printable worksheet: [learningpython.bradhouse.com/printables/lesson-4-4-trace-worksheet.pdf]'
-                    '(https://learningpython.bradhouse.com/printables/lesson-4-4-trace-worksheet.pdf)',
+         'callout': 'That\'s why the Manhattan planner gets a unique name that reflects its algorithm',
          'tone': 'teal',
-         'notes': 'One paper activity, about 15 minutes: this table, then all six paths, then the '
-                  'path 3 question. Big grid and markers: one color for moves across, another for '
-                  'moves up and down. The sheet becomes their answer key for the coding steps. '
-                  'Check the sheets before students go on: a wrong key sends them hunting for a bug '
-                  'that is not there. The filled-in key is behind a reveal on the lesson page.'},
+         'notes': 'Module 5 adds compute_bfs_path() beside this one, with the same parameters.'},
 
-        {'kind': 'table', 'title': 'Activity · All six paths',
-         'tag': 'Activity',
-         'lead': 'Write each expected path and its steps. Path 1 is the one you just traced. '
-                 'Steps should equal steps across plus steps up or down.',
-         'lead_h': 1.2,
-         'headers': ['#', 'From → to', 'Expected path', 'Steps'],
-         'widths': [0.5, 2.6, 6, 1],
-         'rows': [
-             ['1', '(0, 0) → (2, 3)', '', ''],
-             ['2', '(0, 1) → (3, 3)', '', ''],
-             ['3', '(3, 3) → (1, 0)', '', ''],
-             ['4', '(2, 0) → (2, 3)', '', ''],
-             ['5', '(0, 2) → (3, 2)', '', ''],
-             ['6', '(1, 1) → (1, 1)', '', ''],
-         ],
-         'row_h': 0.42,
-         'callout': 'Then: what is different about **path 3** compared with paths 1 and 2?',
-         'tone': 'teal',
-         'notes': 'Paths 1 to 3 are test_paper_paths(), paths 4 to 6 are test_edge_cases(). '
-                  'Answer to the question: paths 1 and 2 go right and up, so x and y get bigger; '
-                  'path 3 goes left and down, so they get smaller. It sets up Step 2: the first '
-                  'version only handles x and y getting bigger, so path 3 comes back empty. Path 6 '
-                  'is [] because the robot is already there.'},
+        {'kind': 'check',
+         'question': 'Why does the function\'s name include \'manhattan\' when it is the only planner '
+                     'in the course so far?',
+         'options': ['Python requires function names to have three parts',
+                     'Module 5 adds `compute_bfs_path()`, and both must exist in one program without colliding',
+                     'Because it is faster to type',
+                     'It is a convention for while loops'],
+         'answer': 1,
+         'explanation': 'A name that says which algorithm it is costs nothing now and saves a rename '
+                        'later. compute_manhattan_path() and compute_bfs_path() will sit side by '
+                        'side in Module 5.'},
 
-        {'kind': 'bullets', 'title': 'From the trace table to a loop',
-         'bullets': [
-             'Write the code the way you worked out each new position',
-             '`x` and `y` are the robot\'s **current position**: `x, y = start`',
-             '`dest_x` and `dest_y` are the destination: `dest_x, dest_y = destination`',
-             'Loop 1: keep adding 1 to x while x is less than `dest_x`',
-             'Loop 2: do the same for y',
-             'Inside each loop, **append** the new current position `(x, y)` to the path',
-         ],
-         'size': 24,
-         'callout': 'The function doesn\'t know where the robot is: whoever calls it supplies the '
-                    'position as `start`',
-         'tone': 'teal'},
-
-        {'kind': 'figure', 'title': 'Each row is one trip around a loop',
-         'figure': '/img/lesson-m4-04/trace-to-loops.svg',
-         'caption': 'Going left or down, the same loops subtract 1 instead: that\'s Step 3.',
-         'notes': 'x and y are the robot\'s current position; they change by 1 each trip. When x '
-                  'reaches dest_x the condition is False and the loop stops, just as students '
-                  'stopped writing x + 1 rows once they reached x = 2. The inner parentheses in '
-                  'path.append((x, y)) make the tuple; the outer pair is the call to append().'},
-
-        {'kind': 'code', 'title': 'Add to robot.py: MANHATTAN PLANNER',
-         'code': '# ===== MANHATTAN PLANNER =====\n'
+        {'kind': 'code', 'title': 'What the function promises: a docstring',
+         'lead': 'A function is a contract: give me these inputs, and I guarantee this output. Write '
+                 'the guarantee in a **docstring**: a string in triple quotes, right under the `def` '
+                 'line, that Python keeps attached to the function.',
+         'lead_h': 1.25,
+         'code': 'def compute_manhattan_path(start, destination):\n'
+                 '    """Compute a Manhattan path from start to destination.\n'
                  '\n'
-                 'def compute_path(start, destination):\n'
-                 '    """Return the (x, y) steps from start to destination, across\n'
-                 '    first, then up or down. The start itself is not in the list."""\n'
+                 '    start:       an (x, y) tuple -- where the robot is now\n'
+                 '    destination: an (x, y) tuple -- where it needs to go\n'
+                 '\n'
+                 '    Returns a list of (x, y) tuples the robot should move to,\n'
+                 '    not including the start itself.\n'
+                 '    """\n'
                  '    path = []\n'
-                 '    x, y = start              # where the robot is now\n'
-                 '    dest_x, dest_y = destination   # where it is going\n'
-                 '\n'
-                 '    # East: keep stepping right until x matches dest_x\n'
-                 '    while x < dest_x:\n'
-                 '        x = x + 1             # one step right\n'
-                 '        path.append((x, y))   # record the new spot\n'
-                 '\n'
-                 '    # West: copy east, flip < to > and + to -\n'
-                 '    # North: copy east, but step y until it matches dest_y\n'
-                 '    # South: copy north, flip < to > and + to -\n'
-                 '\n'
-                 '    return path',
-         'code_size': 14,
-         'notes': 'Paste it into robot.py above RUN, after the GRID DRIVING section. The lesson page '
-                  'has the whole block, with the section comment, blank lines between the three '
-                  'comments for the loops to come, and the two tests: copy it from '
-                  'there. The east loop is given finished; the other three loops are the students\' '
-                  'work, and each one is a copy of the east loop with a small change.'},
-
-        {'kind': 'code', 'title': 'The two tests come with it',
-         'code': 'def test_paper_paths():\n'
-                 '    print(compute_path((0, 0), (2, 3)))   # your trace table\n'
-                 '    print(compute_path((0, 1), (3, 3)))\n'
-                 '    print(compute_path((3, 3), (1, 0)))   # left and down\n'
-                 '\n'
-                 'def test_edge_cases():\n'
-                 '    print(compute_path((2, 0), (2, 3)))   # same column\n'
-                 '    print(compute_path((0, 2), (3, 2)))   # same row\n'
-                 '    print(compute_path((1, 1), (1, 1)))   # same spot',
+                 '    ...',
          'code_size': 18,
-         'callout': 'Paper tests: they print a path, you compare it with your answer key, nothing moves',
-         'tone': 'teal',
-         'notes': 'More hints than usual, on purpose: this is the first while loop that builds a '
-                  'list and the first section with no robot in it. The step down to writing tests '
-                  'themselves comes in Lesson 4-5, once the algorithm is theirs. Students who stall '
-                  'on a loop can be pointed at their own trace table: each row is one trip around a '
-                  'loop.'},
+         'notes': 'Docstrings are new. Show that help(compute_manhattan_path) prints it, and that '
+                  'the first line is a one-sentence summary by convention. Don\'t go further than '
+                  'that. The last sentence is the one people get wrong: check it against the code. '
+                  'The first thing appended to path is the position after the first step, never '
+                  'the start itself.'},
 
-        {'kind': 'bullets', 'title': 'Plan first: the planner on its own',
+        {'kind': 'bullets', 'title': 'The three promises',
          'bullets': [
-             'Lesson 4-0 split the problem into **planning** and **driving**',
-             'The planner is the first part; this lesson and the next two build and test it alone',
-             'What it takes in and hands back is already decided: **two tuples in, a list of '
-             'intersections out**',
-             'Nothing else in the file has to work for it to work',
+             'The path **never includes the start**',
+             'The path **ends at the destination**',
+             'The path is **empty** if you\'re already there: every `while` loop is skipped',
+         ],
+         'callout': 'Every planner in this course makes the same three promises',
+         'tone': 'teal',
+         'notes': 'Promise 1 matters because each element is a place to drive to, and the robot '
+                  'already stands on the start. It bites in Lesson 4-6: a path that includes the start '
+                  'makes the first desired_heading() call see a zero move and return None.'},
+
+        {'kind': 'check',
+         'question': 'A classmate\'s version returns `[(0, 0), (1, 0), (2, 0)]` for start (0, 0), '
+                     'destination (2, 0). Which promise did it break, and why does it matter?',
+         'options': ['Promise 2: the path does not end at the destination',
+                     'Promise 1: it includes the start, so the robot is told to drive where it already is',
+                     'Promise 3: the path should be empty',
+                     'No promise was broken; this is also correct'],
+         'answer': 1,
+         'explanation': 'The path is a list of places to drive TO. The robot is already at (0, 0); '
+                        'listing it as a step gives the driving code a zero-length move and a turn '
+                        'it cannot work out.'},
+
+        {'kind': 'bullets', 'title': 'In robot.py',
+         'bullets': [
+             'Change `compute_path` to `compute_manhattan_path` everywhere it appears',
+             'Replace the one-line docstring with the full one',
+             'Run `test_paper_paths()`: same output as last lesson',
          ]},
 
-        {'kind': 'steps', 'title': 'Step 1 · Paste in the skeleton',
-         'tag': 'Activity',
-         'steps': [
-             'Copy the MANHATTAN PLANNER skeleton shown earlier: the function and both tests',
-             'Paste it into `robot.py` in the editor, **above `RUN`**, after the GRID DRIVING section',
-             'Save the file',
-         ],
-         'notes': 'The skeleton is on the "Add to robot.py: MANHATTAN PLANNER" and "The two tests '
-                  'come with it" slides, and on the lesson page under This lesson\'s skeleton.'},
-
-        {'kind': 'steps', 'title': 'Step 2 · Run the east loop',
-         'tag': 'Activity',
-         'steps': [
-             'Set the run line to `test_paper_paths()` and run it **before you write anything**',
-             'The first line prints `[(1, 0), (2, 0)]`: the first two spots of path 1 in your answer key',
-             'Then it stops short: nothing moves it up yet',
-         ],
-         'callout': 'Build it one loop at a time, and run it after each one',
-         'tone': 'orange',
-         'notes': 'A half-finished algorithm you have tested beats a whole one you haven\'t. Check '
-                  'that tuple unpacking from 4-2 (x, y = start) stuck.'},
-
-        {'kind': 'bullets', 'title': 'Step 2 · Write north by copying east',
-         'tag': 'Activity',
+        {'kind': 'bullets', 'title': 'Unit testing',
          'bullets': [
-             'Under the north comment, **copy the east loop**',
-             'Compare `y` with `dest_y`, and step `y` instead of `x`',
-             'Leave `path.append((x, y))` as it is: it always records the whole position',
-             'Run it again and check the first two lines against **paths 1 and 2** of your answer key',
+             'A **unit test** checks one function on its own: inputs you chose, an answer you worked out',
+             'Professional software runs thousands on every change, catching a mistake minutes after it is made',
+             'A robot driving into a wall says **something** is wrong; a failing test shows the **exact input**',
          ],
-         'callout': 'Don\'t go on until both match',
-         'tone': 'orange',
-         'notes': 'The north loop is in a reveal on the lesson page. Students with a wrong line '
-                  'should check their key first, then their code: one of the two is wrong.'},
+         'callout': 'Your planner is an ideal unit: tuples in, list out',
+         'tone': 'teal',
+         'notes': 'Five minutes of testing saves thirty minutes chasing a robot.'},
 
-        {'kind': 'bullets', 'title': 'Now find the limit',
-         'bullets': [
-             'Look at the third line: `(3, 3)` to `(1, 0)` gives an **empty list!**',
-             'Your answer key says path 3 has five steps: it goes left and down',
-             '`3 < 1` is False and `3 < 0` is False, so **neither** loop runs',
-             'Going left or down, this version does nothing',
+        {'kind': 'table', 'title': 'Separation of concerns',
+         'lead': '`compute_manhattan_path()` only **computes** a path; the driving functions (Lesson 4-6) '
+                 '**drive** it. Each can be checked on its own.',
+         'headers': ['Problem', 'Where it runs', 'What you test'],
+         'widths': [3, 3, 4],
+         'rows': [
+             ['Computing the path', 'Any computer', 'Does the path make sense?'],
+             ['Driving the path', 'On the robot', 'Does the robot follow it?'],
          ],
-         'callout': 'That is what the west and south comments are for',
+         'size': 24,
+         'callout': 'The planner is handed the robot\'s position as a parameter, so there is nothing '
+                    'to set up before a test: tuples in, list out',
+         'tone': 'teal'},
+
+        {'kind': 'check',
+         'question': 'What does \'separation of concerns\' let you do here?',
+         'options': ['Run the robot faster',
+                     'Test the path-planning math on its own, separately from the driving',
+                     'Skip testing entirely',
+                     'Combine planning and driving into one function'],
+         'answer': 1,
+         'explanation': 'Because the planner only computes paths and the driving functions only drive '
+                        'them, you can verify the algorithm on any computer before hardware is ever '
+                        'involved.'},
+
+        {'kind': 'code', 'title': 'Expected vs. actual',
+         'lead': 'Decide what the answer **should** be by hand, then check whether the code agrees. '
+                 'Hand-trace (0,0) → (2,3): right 2, then up 3.',
+         'lead_h': 1.15,
+         'code': 'expected = [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]\n'
+                 '\n'
+                 'actual = compute_manhattan_path((0, 0), (2, 3))\n'
+                 '\n'
+                 'if actual == expected:\n'
+                 '    print("Test 1: PASS")\n'
+                 'else:\n'
+                 '    print("Test 1: FAIL")\n'
+                 '    print("  Expected:", expected)\n'
+                 '    print("  Actual:  ", actual)',
+         'code_size': 19,
+         'notes': 'This is the heart of testing. The block is on the lesson page as written; the next '
+                  'slide is its picture.'},
+
+        {'kind': 'figure', 'title': 'Two sources, one comparison',
+         'figure': '/img/lesson-m4-04/test-harness.svg',
+         'caption': 'The test is only worth something because the two sides were worked out '
+                    'independently.'},
+
+        {'kind': 'bullets', 'title': 'Expected comes from you',
+         'bullets': [
+             'The expected list has to come from **your own** tracing',
+             'Copy whatever the code prints and call it "expected"?',
+             ['You haven\'t tested anything', 'You\'ve **assumed** the code is right'],
+         ],
+         'callout': 'A test needs an **independent** source of truth: your trace',
+         'tone': 'orange',
+         'notes': 'Watch for the student who runs the code first and pastes the output into expected: '
+                  'that student\'s suite will pass on day one and hide a real bug on day three.'},
+
+        {'kind': 'check',
+         'question': 'Where should the \'expected\' path come from?',
+         'options': ['Whatever the code prints when you run it',
+                     'Hand-calculated by you, before running the code',
+                     'A random guess',
+                     'The robot\'s actual movement'],
+         'answer': 1,
+         'explanation': 'Testing needs an independent source of truth. You trace the path by hand '
+                        'first; the whole point is to catch the case where the code disagrees with '
+                        'the correct answer.'},
+
+        {'kind': 'code', 'title': 'Add to robot.py: the test harness',
+         'lead': 'That compare-and-report pattern repeats for every case, so it becomes a function. '
+                 'Paste this at the **end** of the MANHATTAN PLANNER section.',
+         'lead_h': 1.15,
+         'code': '# --- Lesson 4-4: the test harness ---\n'
+                 '# run_test() asks the planner for a path and compares it\n'
+                 '# with one you traced by hand, printing PASS or FAIL. A\n'
+                 '# planner test from here on is a list of run_test() calls.\n'
+                 '\n'
+                 'def run_test(test_name, start, destination, expected):\n'
+                 '    """Plan start -> destination and compare the result\n'
+                 '    with expected; print test_name with PASS or FAIL."""\n'
+                 '    pass',
+         'code_size': 17,
+         'callout': 'The body is the expected-vs-actual block with the four values coming in as '
+                    'parameters. On a FAIL, print **both** lists.',
+         'tone': 'teal',
+         'notes': 'A harness is a function whose only job is to test another one. Class-track '
+                  'students ask planner.compute_path(start, destination) for the path; the rest '
+                  'is the same. The finished run_test() is behind a reveal on the lesson page.'},
+
+        {'kind': 'code', 'title': 'Activity · A suite of cases',
+         'tag': 'Activity',
+         'lead': 'Write `test_planner()`: six `run_test()` calls, each case one line. One is worked out; '
+                 'trace the other five, then fill them in.',
+         'lead_h': 1.15,
+         'code': 'run_test("Forward right", (0, 0), (2, 3), [(1,0), (2,0), (2,1), (2,2), (2,3)])\n'
+                 'run_test("Backward left", (2, 3), (0, 0), [ ... ])   # trace it, then fill it in\n'
+                 'run_test("Same column",   (1, 0), (1, 3), [ ... ])\n'
+                 'run_test("Same row",      (0, 2), (3, 2), [ ... ])\n'
+                 'run_test("Same spot",     (1, 1), (1, 1), [ ... ])\n'
+                 'run_test("One step",      (0, 0), (0, 1), [ ... ])',
+         'code_size': 17,
+         'callout': '**Work each expected out by hand before you run anything.**',
+         'tone': 'orange',
+         'notes': 'Don\'t hand the expected values out: the hand-tracing is the lesson. Trace on the '
+                  'Lesson 4-1 grid worksheet.'},
+
+        {'kind': 'bullets', 'title': 'Six PASS lines, and why six',
+         'bullets': [
+             'A test whose expected came from the program\'s own output proves nothing except that the program **agrees with itself**',
+             'If a test fails, one of two things is wrong: **your trace or your code**. Finding out which is the skill',
+             'Set the run line to `test_planner()`. Six PASS lines is the goal; the robot does not move',
+             'Only ever test (0,0) → (2,3), and a bug that only shows up going **backward** slips right past you',
+         ],
+         'callout': 'A good suite covers **every direction and every edge case**',
+         'tone': 'teal',
+         'notes': 'Celebrate the FAILs: reframe a failing test as the test doing its job. "The test '
+                  'found a bug for you."'},
+
+        {'kind': 'check',
+         'question': 'Your test shows actual = `[(1,0),(2,0),(2,1)]` but expected = '
+                     '`[(1,0),(2,0),(2,1),(2,2),(2,3)]`. What\'s the likely problem?',
+         'options': ['The robot battery is low',
+                     'The north (y) loop stops early or doesn\'t run fully: the moves up are missing',
+                     'The test is wrong',
+                     'Nothing: that output is fine'],
+         'answer': 1,
+         'explanation': 'The moves across are all there but the moves up are cut short. That points '
+                        'straight at the north while loop: exactly the kind of pinpointing '
+                        'screen-testing gives you.'},
+
+        {'kind': 'code', 'title': 'Activity · Debug a failing test',
+         'tag': 'Activity',
+         'lead': 'When a test fails, don\'t guess: add print statements inside '
+                 '`compute_manhattan_path` to watch the logic run. One at the top, and one inside each '
+                 'loop right after the `append`:',
+         'lead_h': 1.25,
+         'code': '    print("Computing from", start, "to", destination)   # first line\n'
+                 '    ...\n'
+                 '        print("  added:", (x, y))                          # in each loop',
+         'code_size': 18,
+         'callout': 'The trace shows exactly which loop ran and what it appended',
+         'tone': 'teal'},
+
+        {'kind': 'steps', 'title': 'Try it: catch a bug on purpose',
+         'steps': [
+             'Change one `+ 1` to `- 1` in `compute_manhattan_path`',
+             'Run `test_planner()` and watch a test **catch the bug**',
+             'Change it back',
+         ],
+         'callout': 'Once you\'ve found and fixed a bug, **remove the debug prints** so the output '
+                    'stays clean',
          'tone': 'orange'},
 
         {'kind': 'check',
-         'question': 'Why does the Step 2 version (east and north only) return `[]` for (3,3) → (1,0)?',
-         'options': ['`append()` is broken',
-                     'Both while conditions start False (3 is not < 1, 3 is not < 0), so neither loop runs',
-                     'The start and destination are the same',
-                     'It runs forever'],
+         'question': 'A classmate runs `compute_manhattan_path((3, 3), (1, 0))` and gets '
+                     '`[(3, 3), (2, 3), (1, 2), (1, 1), (1, 0)]`. What went wrong?',
+         'options': ['Nothing: that is a valid Manhattan path',
+                     'The west loop appends before it subtracts 1, so the start is in and (1, 3) is skipped',
+                     'The destination tuple is backwards',
+                     'The south loop ran before the west loop'],
          'answer': 1,
-         'explanation': 'East and north only handle increasing x and y. Moving left or down needs the '
-                        'two flipped loops you add next.'},
-
-        {'kind': 'bullets', 'title': 'Step 3 · West and south: copy and flip',
-         'tag': 'Activity',
-         'bullets': [
-             'The fix: **two more while loops**, and you already have both, backwards',
-             '**West** is the east loop flipped: `<` becomes `>`, `+ 1` becomes `- 1`',
-             '**South** is the north loop, flipped the same way',
-         ],
-         'notes': 'This is the lesson\'s big idea: a while loop whose condition starts False simply '
-                  'does nothing. Students who have seen conditionals will try to wrap this in '
-                  'if x < dest_x ... elif x > dest_x. Steer them back: the four loops are simpler and '
-                  'handle every case, including the same position (all four skipped, so []).'},
-
-        {'kind': 'figure', 'title': 'Only one x loop runs',
-         'figure': '/img/lesson-m4-04/one-x-loop-runs.svg',
-         'caption': 'A while loop checks its condition first. Going left, east\'s first check is '
-                    'False, so it never runs. Same for the two y loops: no `if/else` needed.',
-         'notes': 'Ask: going right, which x loop never runs? (West: x > dest_x is False from the '
-                  'start.) Then: going up, which y loop never runs? (South.)'},
-
-        {'kind': 'figure', 'title': 'Four loops, one per direction',
-         'figure': '/img/lesson-m4-04/four-loops-xy.svg',
-         'caption': 'Every trip runs at most one x loop and one y loop. The other two find their '
-                    'condition False on the first check and never run.',
-         'notes': 'Walk the right half: (1, 3) to (3, 0). East runs twice, west and north are '
-                  'skipped, south runs three times. Five steps, matching |3−1| + |0−3|.'},
-
-        {'kind': 'steps', 'title': 'Step 3 · Check it against your key',
-         'steps': [
-             'Look at path 3 in your answer key, **(3, 3) → (1, 0)**',
-             'Say which of the four loops run: the robot has to go **left** and **down**, so two of them stay idle',
-             'Run `test_paper_paths()` again: all three lines should match your key',
-         ],
-         'notes': 'Which loops run is behind a reveal on the lesson page. The page also has an '
-                  'animation of the four loops running three trips, in a reveal for students whose '
-                  'tests already match; it is not on these slides because it shows the traced '
-                  'answers.'},
+         'explanation': 'Swapping the two lines inside a loop (append first, then change x) shifts that '
+                        'leg by one: the start appears and the corner is missed. Promise 1 spots it '
+                        'fastest: the first element should never equal the start.',
+         'notes': 'Answer: B. The append-before-update bug is the one students actually make. '
+                  'Promise 1 is broken, and the corner (1, 3) is missing.'},
 
         {'kind': 'check',
-         'question': 'For a trip that goes up and to the right, how many of the four while loops '
-                     'actually run?',
-         'options': ['All four', 'Two: the north loop and the east loop', 'Just one',
-                     'None: it needs if/else'],
+         'question': 'After using print statements to fix a bug, what should you do with them?',
+         'options': ['Leave them in: more output is always better',
+                     'Remove or comment them out so the test output stays clean',
+                     'Move them outside the function',
+                     'Turn them into knowledge checks'],
          'answer': 1,
-         'explanation': 'At most one x loop (east OR west) and one y loop (north OR south) run for any '
-                        'trip. Up-and-right means north + east; the other two are skipped.'},
-
-        {'kind': 'steps', 'title': 'Activity · The edge cases',
-         'lead': 'Good algorithms handle the awkward inputs without special code. The second test '
-                 'in your skeleton, `test_edge_cases()`, has three:',
-         'lead_h': 1.0,
-         'steps': [
-             '**Same column**: `(2, 0)` to `(2, 3)`',
-             '**Same row**: `(0, 2)` to `(3, 2)`',
-             '**Same spot**: `(1, 1)` to `(1, 1)`',
-         ],
-         'callout': 'They are paths 4 to 6 in your answer key. Set the run line to `test_edge_cases()` '
-                    'and check all three lines against it',
-         'tone': 'teal',
-         'notes': 'A finished compute_path() is in a reveal on the lesson page. Nothing special is written for these cases: the loops just don\'t run when '
-                  'there is no distance to cover.'},
-
-        {'kind': 'check',
-         'question': 'What does `compute_path((2, 2), (2, 2))` return, and why?',
-         'options': ['`[(2, 2)]`: the current position',
-                     '`[]`: all four loop conditions are False, so nothing is appended',
-                     'An error', '`0`'],
-         'answer': 1,
-         'explanation': 'Start equals destination, so every while condition is False from the start. '
-                        'No loop runs, the path stays empty, and len(path) is 0: the robot is '
-                        'already there.'},
+         'explanation': 'Debug prints are scaffolding. Once the bug is fixed, clear them so future test '
+                        'runs are easy to read.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Games', 'Grid movement', '\nTurn-based and tile games count moves across plus up '
-                                        'or down: no diagonal shortcuts.'),
-             ('AI', 'Pathfinding heuristics', '\nSteps across plus steps up or down is a classic "how '
-                                              'far, roughly?" estimate that guides search algorithms like A*.'),
-             ('Data', 'Clustering', '\nSome machine-learning methods measure how far apart '
-                                    'points are the same way, instead of in a straight line.'),
+             ('Maps', 'Routing engines', '\nA map app\'s router is handed your location every time '
+                                         'you ask. Swap in a bike router and the app does not change.'),
+             ('Aerospace', 'Simulation', '\nRockets and planes fly thousands of simulated missions '
+                                         'before a real one, catching problems on screen.'),
          ],
          'height': 4.0,
-         'notes': '"Move one axis, then the other" shows up all over computing.'},
+         'notes': '"Verify before you deploy" is everywhere in engineering.'},
 
         {'kind': 'wrapup',
          'questions': [
-             'What does "across first, then up or down" produce?',
-             'Why four while loops instead of `if/else`?',
-             'Why isn\'t the starting position in the path?',
+             'Why `compute_manhattan_path` and not `compute_path`?',
+             'What are the three promises?',
+             'Why test on screen before the robot?',
+             'Where does the expected path come from?',
+             'What makes a good test suite?',
          ],
-         'next': 'the same function gets a name for its algorithm, a written promise and unit tests',
-         'notes': 'Answers: an L-shaped path, predictable and always valid. Only the relevant loops '
-                  'run; a False condition just skips. The robot is already there, so len(path) is the '
-                  'number of steps. Exit ticket: "What does compute_path((0,0),(2,3)) return, and how '
-                  'many steps is that?" ([(1,0),(2,0),(2,1),(2,2),(2,3)], 5). Next lesson the '
-                  'function becomes compute_manhattan_path(position, destination), with a docstring; '
-                  'the algorithm does not change at all.'},
+         'next': 'turning, so the robot faces the right way at each step',
+         'notes': 'Answers: Module 5 adds compute_bfs_path, and the name says which. No start in the path; ends at the destination; [] when already there. Faster, and it points to the exact broken input. Hand-calculation, before '
+                  'you run the code. Every direction and edge case, not just one happy path. Exit '
+                  'ticket: "Write a test for start (1,1), destination (3,2): what\'s the expected '
+                  'path?" ([(2,1),(3,1),(3,2)]). The algorithm is proven correct; next lesson tackles '
+                  'turning.'},
+
+        {'kind': 'code', 'title': 'Optional: the Manhattan class',
+         'tag': 'Optional extension',
+         'lead': 'Did the class extensions in Module 2? Here is the same planner as a class. It holds '
+                 '**no state**: `compute_path()` is told the robot\'s position every call.',
+         'lead_h': 1.2,
+         'code': 'path = compute_manhattan_path((0, 0), (2, 3))\n'
+                 '\n'
+                 'planner = Manhattan()\n'
+                 'path = planner.compute_path((0, 0), (2, 3))',
+         'code_size': 24,
+         'callout': 'Why bother? So it has the **same shape** as the Module 5 and 6 planners (BFS, '
+                    'Dijkstra): one main program and one test harness work with any of them by '
+                    'changing one name.',
+         'tone': 'teal',
+         'notes': 'Optional extension, for students who built classes in Module 2. The code is the '
+                  'lesson\'s side-by-side: the function call, then the same call on the class. '
+                  'From here on, class-track students use their class: when a lesson says '
+                  'compute_manhattan_path(position, destination), they write '
+                  'planner.compute_path(position, destination), in the test harness, in the final '
+                  'project, everywhere.'},
+
+        {'kind': 'code', 'title': 'Optional: the class skeleton',
+         'tag': 'Optional extension',
+         'lead': 'Paste it in place of `compute_manhattan_path()` (keep your tests), and move the four '
+                 'loops into the method. In your tests, `compute_manhattan_path(` becomes '
+                 '`planner.compute_path(`.',
+         'lead_h': 1.1,
+         'code': 'class Manhattan:\n'
+                 '    def __init__(self):\n'
+                 '        pass        # nothing to set up\n'
+                 '\n'
+                 '    def compute_path(self, start, destination):\n'
+                 '        # your compute_manhattan_path(), unchanged: nothing in\n'
+                 '        # it needs self., because the planner holds nothing\n'
+                 '        pass\n'
+                 '\n'
+                 'planner = Manhattan()',
+         'code_size': 16,
+         'callout': 'No start position in `__init__`, no `self.position`: the planner is still told '
+                    'where the robot is',
+         'tone': 'teal',
+         'notes': 'On the lesson page the skeleton also has a section comment and a docstring (the '
+                  '"why bother" from the previous slide); the slide leaves them out to fit. Run '
+                  'test_planner() again: six PASS lines. The __init__ is empty because '
+                  'Manhattan has nothing to set up; BFS in Module 5 uses its __init__ to hold the '
+                  'list of blocked intersections, and that is when the class earns its keep. The '
+                  'finished method is behind a reveal on the lesson page and is not shown here. '
+                  'Solution file: lesson-05-manhattan-class-addon.py.'},
     ],
 }

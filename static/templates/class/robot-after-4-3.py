@@ -1,5 +1,5 @@
-# robot.py after Lesson 4-8 (class track): every skeleton
-# through Lesson 4-8 pasted in, nothing written yet.
+# robot.py after Lesson 4-3 (class track): every skeleton
+# through Lesson 4-3 pasted in, nothing written yet.
 
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
@@ -252,118 +252,42 @@ def test_square():
     pass
 
 
-# ===== MANHATTAN PLANNER (class version) =====
-# One Manhattan object plans routes on the grid, across
-# first and then up or down. It holds NO state: compute_path()
-# is told the robot's position every call. Pure arithmetic.
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (x, y) tuples to
+# drive to, across first and then up or down. Pure arithmetic --
+# nothing in here touches a sensor or a motor, so every test
+# in this section runs on screen with the robot sitting still.
 
-class Manhattan:
-    """The Lesson 4-5 planner as a class.
+def compute_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    path = []
+    x, y = start              # where the robot is now
+    dest_x, dest_y = destination   # where it is going
 
-    It holds NO state: compute_path() is told the robot's position
-    every time. Manhattan is a class only so that it has the same
-    shape as the Module 5 and 6 planners (BFS, Dijkstra) -- then one
-    main program and one test harness work with any of them by
-    changing one name.
-    """
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        path.append((x, y))   # record the new spot
 
-    def __init__(self):
-        pass        # nothing to set up
+    # West: copy east, flip < to > and + to -
 
-    def compute_path(self, start, destination):
-        # your compute_manhattan_path(), unchanged: nothing in
-        # it needs self., because the planner holds nothing
-        pass
+    # North: copy east, but step y until it matches dest_y
 
-planner = Manhattan()
+    # South: copy north, flip < to > and + to -
+
+    return path
 
 def test_paper_paths():
-    print(planner.compute_path((0, 0), (2, 3)))   # your trace table
-    print(planner.compute_path((0, 1), (3, 3)))
-    print(planner.compute_path((3, 3), (1, 0)))   # left and down
+    print(compute_path((0, 0), (2, 3)))   # your trace table
+    print(compute_path((0, 1), (3, 3)))
+    print(compute_path((3, 3), (1, 0)))   # left and down
 
 def test_edge_cases():
-    print(planner.compute_path((2, 0), (2, 3)))   # same column
-    print(planner.compute_path((0, 2), (3, 2)))   # same row
-    print(planner.compute_path((1, 1), (1, 1)))   # same spot
-
-# --- Lesson 4-5: the test harness ---
-# run_test() asks the planner for a path and compares it
-# with one you traced by hand, printing PASS or FAIL. A
-# planner test from here on is a list of run_test() calls.
-
-def run_test(test_name, start, destination, expected):
-    """Plan start -> destination and compare the result
-    with expected; print test_name with PASS or FAIL."""
-    pass
-
-
-# ===== NAVIGATOR (class version) =====
-# One Navigator object owns the robot's position and heading.
-# It HAS a LineTrack (built in __init__) and gives it the
-# driving orders; it is told where to go and keeps its own
-# record of where it got to. Same three methods as the
-# function version, same names, with navigator. in front.
-HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
-
-class Navigator:
-    def __init__(self, start, heading):
-        self.position = start
-        self.heading = heading
-        self.line_track = LineTrack()        # has-a LineTrack
-
-    def desired_heading(self, next_pos):
-        # your function; position is self.position now, so
-        # it is no longer a parameter
-        pass
-
-    def turn_to(self, desired):
-        # your function, with self.heading in place of the
-        # parameter and self.line_track. in front of each
-        # turn; it STORES the new heading, not returns it
-        pass
-
-    def drive_path(self, path):
-        # your function, with self. in front of position,
-        # heading and the two LINE TRACKING calls; it stores
-        # the final position instead of returning it
-        pass
-
-navigator = Navigator((0, 0), 0)
-
-def test_drive_path():
-    destination = (2, 3)
-
-    path = planner.compute_path(navigator.position, destination)
-    print("Path:", path)
-
-    board.wait_for_button()       # read the path, THEN press
-
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-# --- Lesson 4-8: final project, the delivery run ---
-# The module project: visit DESTINATIONS in order, planning
-# each leg with the MANHATTAN PLANNER from wherever the last
-# leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work.
-DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
-
-def test_delivery_paper():
-    # no robot: from (0, 0), plan the path to each destination
-    # in turn, print it with its step count, and move
-    # position on to that destination for the next leg
-    pass
-
-def test_delivery():
-    # the navigator starts at home, facing North
-    # plan the FIRST leg and print it; wait for the button
-    # for each destination:
-    #     compute the path from navigator.position
-    #     print it
-    #     navigator.drive_path(path) -- it keeps the record
-    #     print where the navigator arrived
-    pass
+    print(compute_path((2, 0), (2, 3)))   # same column
+    print(compute_path((0, 2), (3, 2)))   # same row
+    print(compute_path((1, 1), (1, 1)))   # same spot
 
 # ===== RUN =====
 board.wait_for_button()

@@ -50,7 +50,7 @@ DECK = {
         {'kind': 'code', 'title': 'One name changes',
          'lead': '`SLOW_SEGMENT` is one tuple: the two ends and the weight. Type it once, hand it to '
                  '`add_slow_edge()` as `SLOW_SEGMENT[0]`, `SLOW_SEGMENT[1]`, `SLOW_SEGMENT[2]` (Lesson '
-                 '4-2\'s indexing). Then the test chooses its planner by name:',
+                 '4-1\'s indexing). Then the test chooses its planner by name:',
          'lead_h': 1.5,
          'code': '    if PLANNER_NAME == "Dijkstra":\n'
                  '        planner = compute_dijkstra_path\n'

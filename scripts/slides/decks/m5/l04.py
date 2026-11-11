@@ -117,7 +117,7 @@ DECK = {
          'bullets': [
              '**Step 1:** write `add_blocked()` and `clear_blocked()`',
              '**Step 2:** rewrite `build_grid_graph()` as `build_graph(rows, cols, blocked)`',
-             ['Like the rename in Lesson 4-5, it changes **every call** as well as the definition'],
+             ['Like the rename in Lesson 4-4, it changes **every call** as well as the definition'],
              '**Step 3:** read the placeholder, and write a test with a wall in it',
          ],
          'callout': 'Every test today is a paper test: the robot stays on the desk',
@@ -197,7 +197,7 @@ DECK = {
                   'that walks into a wall. Catch it today.'},
 
         {'kind': 'steps', 'title': 'Step 2 · Tidy up, then test',
-         'notes': 'Like the rename in Lesson 4-5, every call to build_grid_graph() has to change, not only the definition. A NameError at this point usually means a call was missed.',
+         'notes': 'Like the rename in Lesson 4-4, every call to build_grid_graph() has to change, not only the definition. A NameError at this point usually means a call was missed.',
          'steps': [
              'Delete `remove_blocked()` and its test: the new function has absorbed them, the way `SETPOINT` disappeared in Lesson 2-6',
              'Fix `test_grid_graph()`, which still calls a function that no longer exists: build with `build_graph(ROWS, COLS, BLOCKED)`',

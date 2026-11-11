@@ -41,7 +41,7 @@ b+=[f'<text class="nb" x="{X}" y="210">Start: home, (0, 0), facing North.</text>
     f'<text class="n" x="{X}" y="287">No remote control, no steering.</text>']
 open(OUTDIR+'delivery-overview.svg','w').write(svg('Module 4: visit three destinations in order',
  'A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3). Beside it: destinations = [(2, 0), (2, 3), (0, 3)]. For each destination the robot plans a path from where it is, drives it, and remembers where it ended up.',b,H=350))
-# --- 4-8 project map ---
+# --- 4-7 project map ---
 g=G(110,96,sp=60,pad=30)
 stops=[(2,0),(2,3),(0,3),(0,0)]
 b=legs_map(g,stops)
@@ -63,7 +63,7 @@ b+=[f'<text class="n" x="{X}" y="246">The small arrows are the heading each</tex
     f'<text class="n" x="{X}" y="297">that way, and turn_to() works from there.</text>']
 open(OUTDIR+'delivery-run.svg','w').write(svg('The delivery run: four legs, heading carried over',
  'A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Leg 1 goes right 2 steps to (2, 0), ending facing east. Leg 2 goes up 3 steps to (2, 3), ending facing north. Leg 3 goes left 2 steps to (0, 3), ending facing west. Leg 4 goes down 3 steps back home to (0, 0), ending facing south. The heading is not reset between legs: each leg starts facing the way the last one ended.',b,H=350))
-# --- 4-5 told, not remembered ---
+# --- 4-4 told, not remembered ---
 g=G(110,96,sp=60,pad=30)
 stops=[(2,3),(0,3),(0,0)]
 b=legs_map(g,stops)

@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-7 · Driving the Path"
-sidebar_label: "4-7 · Driving the Path"
-sidebar_position: 7
+title: "Lesson 4-6 · Driving the Path"
+sidebar_label: "4-6 · Driving the Path"
+sidebar_position: 6
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 4-7 · Driving the Path"
+  title="Lesson 4-6 · Driving the Path"
   meta={['60 min', 'Python + robot', 'Reusing Module 2']}
 />
 
@@ -14,7 +14,7 @@ sidebar_position: 7
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Time to make the robot move. The two functions you designed on paper in Lesson 4-6
+Time to make the robot move. The two functions you designed on paper in Lesson 4-5
 join `desired_heading()` in the NAVIGATOR section, and together they drive any
 Manhattan path on the grid — by calling the **line-tracking functions you built in
 Module 2**, no motor code to rewrite. That's the payoff of building a toolkit. There is
@@ -32,7 +32,7 @@ By the end of this lesson you will be able to:
 
 </Objectives>
 
-<QuizLink id="module-04-manhattan/lesson-07-driving-the-path" />
+<QuizLink id="module-04-manhattan/lesson-06-driving-the-path" />
 
 ## The toolkit you already have
 
@@ -105,11 +105,11 @@ makes a sensor-ended turn land on the new line reliably.
 ## This lesson's skeleton
 
 Paste this into `robot.py` at the end of the NAVIGATOR section, under
-`desired_heading()`. The two outlines are the Lesson 4-6 designs; `drive_path()`'s step
+`desired_heading()`. The two outlines are the Lesson 4-5 designs; `drive_path()`'s step
 3 has grown the wrinkle.
 
 ```python
-# --- Lesson 4-7: turn to a heading, drive a path ---
+# --- Lesson 4-6: turn to a heading, drive a path ---
 # turn_to() turns a quarter turn at a time, with the LINE
 # TRACKING turns, until the robot faces the heading it
 # needs. drive_path() is the loop: for each
@@ -155,12 +155,12 @@ tuple, so the function hands back a single tuple: where the robot is and which w
 Together those are the robot's **pose**.
 
 <Figure
-  src="/img/lesson-m4-07/pose.svg"
+  src="/img/lesson-m4-06/pose.svg"
   alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose."
   caption="The pose ((1, 1), 1): at (1, 1), facing East."
 />
 
-The left-hand side of the `drive_path()` call above unpacks it, exactly like `x, y = position` in Lesson 4-2: the first variable gets the
+The left-hand side of the `drive_path()` call above unpacks it, exactly like `x, y = position` in Lesson 4-1: the first variable gets the
 position, the second gets the heading.
 
 Forget that left-hand side and the robot drives fine — once. The next path gets planned
@@ -246,7 +246,7 @@ Step 2: next (1,1). needed = 0 (N). heading 1, 2, 3, 0: three clockwise turns.
 ```
 
 <Figure
-  src="/img/lesson-m4-07/drive-path-loop-xy.svg"
+  src="/img/lesson-m4-06/drive-path-loop-xy.svg"
   alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 1, east; the loop turns clockwise north to east, one turn, then it arrives at (1, 0) facing east. Step 2, to (1, 1): the heading needed is 0, north; the loop turns clockwise east to south to west to north, three turns, 270 degrees, then it arrives at (1, 1) facing north."
   caption="The same trace, on the grid. The faded robot is where each turn happens."
 />
@@ -315,13 +315,13 @@ two things to compare are the `return heading` and the `position = next_pos`.
 <TeacherNote title="Solution (teacher copy)">
 
 This lesson's addition to the NAVIGATOR section of `robot.py`, plus the run block; the
-rest of the file is as the Lesson 4-6 teacher copy left it. The whole file at
+rest of the file is as the Lesson 4-5 teacher copy left it. The whole file at
 the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). Class-track students with
 `LineTrack` write `tracker.` in front of the four driving calls; with the `Navigator`
 extension below, the section is replaced wholesale.
 
 ```python
-# --- Lesson 4-7: turn to a heading, drive a path ---
+# --- Lesson 4-6: turn to a heading, drive a path ---
 # turn_to() turns a quarter turn at a time, with the LINE
 # TRACKING turns, until the robot faces the heading it
 # needs. drive_path() is the loop: for each
@@ -390,7 +390,7 @@ what was a quarter turn to its left. It got there, slowly, with three sensor-end
 where one would do. Make `turn_to()` turn whichever way takes **fewer** turns.
 
 <Figure
-  src="/img/lesson-m4-07/turn-shortcut-xy.svg"
+  src="/img/lesson-m4-06/turn-shortcut-xy.svg"
   alt="Two drawings of the robot at an intersection facing east, needing to face north. Left, the loop alone, always clockwise: three clockwise quarter turns, 270 degrees. Right, turning the short way: one counterclockwise quarter turn, 90 degrees. Same place, a third of the turning."
   caption="Three clockwise steps around the compass land where one counterclockwise turn does."
 />
@@ -454,7 +454,7 @@ go) will need saying once; after that students like it, because the first press 
 when they read the path.
 
 Usual bugs, in order of frequency: not assigning `position, heading` from `drive_path`'s
-return; the start sneaking into the path (Lesson 4-5's promise 1 — `desired_heading`
+return; the start sneaking into the path (Lesson 4-4's promise 1 — `desired_heading`
 raises, which is the lesson working as intended); and a `turn_to` that forgets to
 `return heading`.
 
@@ -508,7 +508,7 @@ Back in Lesson 2-7, the class was a blueprint and the objects were the houses bu
 it. Here is the same picture with one thing added: every house has an **address**.
 
 <Figure
-  src="/img/lesson-m4-07/house-address.svg"
+  src="/img/lesson-m4-06/house-address.svg"
   alt="A blueprint labeled 'class House:' listing __init__(self, color) and paint(self). Below it, three houses built from the plan, each with an address plaque: red at 12 Oak, yellow at 48 Elm, blue at 7 Pine, with the code that built each one. At the bottom, the call elm.paint() with an arrow to the yellow house and the note: inside paint(), self is 48 Elm — the one house this call is about."
   caption="The plan says what painting is. The address says which house. When you call elm.paint(), self is 48 Elm — nothing else."
 />
@@ -652,7 +652,7 @@ navigator owns the pose: it lives at its address, `drive_path()` updates it ther
 caller just reads `navigator.position` whenever it wants to know. There is nothing to
 pass back and forth, so there is nothing to forget.
 
-**From here on, use your class.** Lesson 4-8 is written with the function names,
+**From here on, use your class.** Lesson 4-7 is written with the function names,
 because that is what every student has; where it says `drive_path(path, position,
 heading)` you write `navigator.drive_path(path)`, and where it reads `position` you
 read `navigator.position`. The `position, heading = ...` line the lesson warns about

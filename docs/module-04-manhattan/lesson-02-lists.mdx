@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-3 · Lists"
-sidebar_label: "4-3 · Lists"
-sidebar_position: 3
+title: "Lesson 4-2 · Lists"
+sidebar_label: "4-2 · Lists"
+sidebar_position: 2
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 4-3 · Lists"
+  title="Lesson 4-2 · Lists"
   meta={['50 min', 'Python data', 'Storing a path']}
 />
 
@@ -28,7 +28,7 @@ you already are." Every path in this module and the next works that way.
 
 
 <Figure
-  src="/img/lesson-m4-03/path-list-xy.svg"
+  src="/img/lesson-m4-02/path-list-xy.svg"
   alt="The 4 by 4 grid with the route from (0, 0) to (2, 3): right two, then up three. The robot sits on (0, 0), marked start. The five intersections it drives to are tagged path[0] (1, 0), path[1] (2, 0), path[2] (2, 1), path[3] (2, 2) and path[4] (2, 3). Beside it the list is drawn as five boxes with indexes 0 to 4: len(path) is 5, the number of steps, and the start is not in the list."
   caption="One tuple per intersection the robot drives to, in order. The start is where it already is, so it is not in the list, and len(path) is the number of steps."
 />
@@ -46,7 +46,7 @@ By the end of this lesson you will be able to:
 
 </Objectives>
 
-<QuizLink id="module-04-manhattan/lesson-03-lists" />
+<QuizLink id="module-04-manhattan/lesson-02-lists" />
 
 ## List vs. tuple
 
@@ -142,15 +142,15 @@ Trace it and you'll see the list grow by one each pass. Change the loop to vary
 *y* instead, and you build a vertical path. Combine a "go right" loop and a "go
 up" loop and you've basically written the Manhattan algorithm.
 
-<Figure
-  src="/img/lesson-m4-03/build-path.svg"
+<StepFigure
+  src="/img/lesson-m4-02/build-path.svg"
   alt="An animation of a 4 by 4 grid with Python beside it. First, path = [] and a for loop over range(1, 4): on each pass x is 1, 2, then 3, a red dot steps one intersection to the right, the tuple (x, 0) is appended, and a new box joins the list, numbered 0, 1, 2. The start (0, 0) is ringed and never added. len(path) is 3. Then two loops one after the other: a go-right loop appends (1, 0) and (2, 0), and a go-up loop appends (2, 1), (2, 2) and (2, 3): the path from (0, 0) to (2, 3), five steps."
   caption="The pattern traced: one append per pass, so the list grows by one each time. Drawn on a 4 by 4 grid, so the first loop stops at x = 3. Then a go-right loop and a go-up loop together."
 />
 
 <TeacherNote title="The build-in-a-loop pattern is make-or-break">
 
-Spend real time on the build-in-a-loop activity and a trace table — Lesson 4-4's algorithm relies
+Spend real time on the build-in-a-loop activity and a trace table — Lesson 4-3's algorithm relies
 *entirely* on "empty list, append inside a loop." If students don't own this pattern,
 next lesson is brutal. **Demo the classic bug live:** put `append()` *outside* the
 loop (wrong indentation) so only the last item lands, then fix the indentation. Keep
@@ -179,7 +179,7 @@ print(path)               # [(1, 0), (2, 0)]  <- path changed too
 ```
 
 <Figure
-  src="/img/lesson-m4-03/number-vs-list.svg"
+  src="/img/lesson-m4-02/number-vs-list.svg"
   alt="Left: the memory locations named a and b each hold their own 5. Right: the locations named path and same_path each hold the number 5120, and arrows run from both of them to one list stored at address 5120."
   caption="b = a makes a second 5. same_path = path makes a second arrow to the same list."
 />

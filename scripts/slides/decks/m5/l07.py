@@ -173,10 +173,10 @@ DECK = {
                  '    pass',
          'code_size': 16,
          'notes': 'Students write it as test_detect_once() under the skeleton. Today\'s driving test is drive_path()\'s loop with exactly one step added, '
-                  'between turning and driving: look ahead. Everything else is Lesson 4-7.'},
+                  'between turning and driving: look ahead. Everything else is Lesson 4-6.'},
 
         {'kind': 'code', 'title': 'The new branch',
-         'lead': 'The one piece that isn\'t Lesson 4-7:',
+         'lead': 'The one piece that isn\'t Lesson 4-6:',
          'lead_h': 0.65,
          'code': '        if distance < OBSTACLE_CM:\n'
                  '            add_blocked(next_pos)\n'
@@ -203,7 +203,7 @@ DECK = {
          'size': 24,
          'notes': 'Nothing moves the robot during a re-plan. Class track: if students built the '
                   'LineTrack or Navigator class, the driving calls are tracker. or '
-                  'navigator.line_track. calls, as in Lesson 4-7, and the planner calls are '
+                  'navigator.line_track. calls, as in Lesson 4-6, and the planner calls are '
                   'planner.add_blocked() and planner.compute_path().'},
 
         {'kind': 'check',
@@ -229,7 +229,7 @@ DECK = {
                         'found at step 3 is already missing from the graph used at step 4.'},
 
         {'kind': 'code', 'title': 'Print the plan before the button',
-         'lead': 'The first two lines of the outline are the Lesson 4-7 habit: plan and **print** '
+         'lead': 'The first two lines of the outline are the Lesson 4-6 habit: plan and **print** '
                  'the path before the robot moves.',
          'lead_h': 0.95,
          'code': '    path = compute_bfs_path(position, destination)\n'

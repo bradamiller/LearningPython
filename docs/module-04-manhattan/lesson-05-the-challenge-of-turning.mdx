@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-6 · The Challenge of Turning"
-sidebar_label: "4-6 · Turning"
-sidebar_position: 6
+title: "Lesson 4-5 · The Challenge of Turning"
+sidebar_label: "4-5 · Turning"
+sidebar_position: 5
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 4-6 · The Challenge of Turning"
+  title="Lesson 4-5 · The Challenge of Turning"
   meta={['35 min', 'Design on paper', 'Headings as numbers']}
 />
 
@@ -20,8 +20,8 @@ broken down into two steps at each intersection, **turn** to face the next one, 
 **drive** to it. Driving is your Module 2 line tracking, so this lesson is about turning.
 
 <TreeFigure
-  src="/img/lesson-m4-06/decomposition.svg"
-  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-4 and 4-5, and the driver, drive_path(), Lessons 4-6 and 4-7. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-6 and 4-7; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-6, and turn until facing it, turn_to(), Lesson 4-7."
+  src="/img/lesson-m4-05/decomposition.svg"
+  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-5 and 4-6; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6."
   caption="Lesson 4-0's split, two levels deeper: at each intersection, turn, then drive."
 />
 
@@ -41,7 +41,7 @@ By the end of this lesson you will be able to:
 
 </Objectives>
 
-<QuizLink id="module-04-manhattan/lesson-06-the-challenge-of-turning" />
+<QuizLink id="module-04-manhattan/lesson-05-the-challenge-of-turning" />
 
 ## One change at a time → four directions
 
@@ -69,7 +69,7 @@ moving South makes it smaller.
 
 
 <Figure
-  src="/img/lesson-m4-06/headings-xy.svg"
+  src="/img/lesson-m4-05/headings-xy.svg"
   alt="The robot at an intersection facing north, with a card at each neighbor. North is heading 0, y goes up by 1. East is 1, x goes up by 1. South is 2, y goes down by 1. West is 3, x goes down by 1. Curved arrows between them, each marked +1, show that every clockwise turn adds 1, wrapping from 3 back to 0."
   caption="The four neighbors of an intersection, the coordinate change that reaches each one, and its heading number. Clockwise adds 1."
 />
@@ -147,7 +147,7 @@ forever for a heading of `None`, and the robot spins with no message, in code th
 correct:
 
 <Figure
-  src="/img/lesson-m4-06/raise-spin.svg"
+  src="/img/lesson-m4-05/raise-spin.svg"
   alt="Two rows. Without the raise: desired_heading is asked for the heading from (1, 1) to (2, 2), matches none of its cases and silently returns None; turn_to receives None and its loop waits for a heading of None that never comes, so the robot spins forever with no error, while the mistake was back at desired_heading. With the raise: desired_heading stops immediately with a ValueError naming both positions, and turn_to never runs."
   caption="Same bad input both times. Without the raise the program never even stops; with it, it stops where the mistake is."
 />
@@ -190,7 +190,7 @@ off for the rest of their programming lives.
 If someone asks whether the error can actually happen: with `compute_manhattan_path` feeding it,
 no — the planner only ever produces adjacent steps. It becomes reachable the moment they
 call `desired_heading` themselves — the diagonal call at the end of `test_headings()`
-does exactly that, on purpose — or wire it into their own project in Lesson 4-8. That
+does exactly that, on purpose — or wire it into their own project in Lesson 4-7. That
 is exactly when a good error message is worth the most.
 
 **Why each condition tests both differences.** Earlier drafts of this function checked
@@ -239,7 +239,7 @@ W, N, E, S. `(0, 1)` is one step left, so it is West.
 <TeacherNote title="Solution (teacher copy)">
 
 The NAVIGATOR section of `robot.py` as this lesson leaves it, plus the run block; the
-rest of the file is as the Lesson 4-5 teacher copy left it. The whole file at
+rest of the file is as the Lesson 4-4 teacher copy left it. The whole file at
 the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). The diagonal call
 is commented out here so the file runs clean; students leave it in to see the error.
 
@@ -336,7 +336,7 @@ orientation (x first in the tuple, but North is +y, away from you) is the #1 con
 quiz it. Odometer analogy for the wrap: "…3, and one more is 0, not 4."
 
 The loop always turns clockwise, and that is deliberate: it is the simplest turn that
-always works. In Lesson 4-7 students write it, run a path that bends left, and watch the
+always works. In Lesson 4-6 students write it, run a path that bends left, and watch the
 robot spin 270°; an optional challenge there has them turn whichever way is fewer turns.
 If someone spots the problem today, agree, and point them at that challenge. Why it's
 worth doing for those who want it: three sensor-ended turns take three times as long as

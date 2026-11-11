@@ -670,6 +670,15 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   `test_from_everywhere()` was dropped with it. Old 4-7 to 4-9 are now 4-6 to 4-8
   everywhere (files, decks, image folders `lesson-m4-0N`, templates, cross-references).
   Anything older in this file that says 4-6 to 4-9 means the pre-merge numbers.
+- **2026-11-11: Manhattan distance cut from Module 4, then 4-1 and 4-2 merged (Brad).**
+  "Get rid of the manhattan distance stuff", "Module 4 only": 4-1's Counting steps section
+  and 4-2's `compute_distance()` activity are gone; 4-3 says "steps across plus steps up
+  or down"; Module 5-1 now introduces the term Manhattan distance itself, and 5-6's
+  `manhattan_distance()` stays. Then "merge the coordinates and tuples lessons": the new
+  4-1 is "Coordinates and Tuples" (`lesson-01-coordinates-and-tuples`, 60–70 min, grid on
+  paper then tuples). Old 4-3 to 4-8 are now 4-2 to 4-7 everywhere (files, decks, image
+  folders, deck figures, templates, printables, cross-references). Anything older in this
+  file that says 4-2 to 4-8 means the pre-merge numbers.
 - **2026-11-10: planner parameters are `(start, destination)` everywhere (Brad).** 4-4's
   `compute_path(start, destination)`, 4-5's `compute_manhattan_path(start, destination)`,
   BFS, Dijkstra, the class `compute_path(self, start, destination)`, and the test helpers
