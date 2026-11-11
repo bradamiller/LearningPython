@@ -124,7 +124,7 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Obstacles make paths longer',
          'bullets': [
-             'Without the obstacle, the Manhattan distance from (0,0) to (2,0) is only 2',
+             'Without the obstacle, (0,0) to (2,0) is only 2 steps: steps across plus steps up or down, the **Manhattan distance**',
              'With obstacles, Manhattan distance is just a **lower bound**, not the real answer',
              'There\'s usually more than one shortest path',
              'Our grid is **unweighted**: every edge costs 1 step',

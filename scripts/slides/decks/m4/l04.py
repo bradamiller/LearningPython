@@ -5,7 +5,7 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Use **Manhattan distance**, steps across plus steps up or down, to check a path\'s length',
+             'Count steps across plus steps up or down to check a path\'s length',
              'Describe the "across first, then up or down" strategy and hand-trace a path on paper',
              'Read each row of your trace table as one trip around a loop, and match the given east loop to it',
              'Write north by copying east, then west and south by copying and flipping: four loops, no `if/else`',
@@ -86,7 +86,7 @@ DECK = {
         {'kind': 'table', 'title': 'Activity · All six paths',
          'tag': 'Activity',
          'lead': 'Write each expected path and its steps. Path 1 is the one you just traced. '
-                 'Steps should equal the Manhattan distance.',
+                 'Steps should equal steps across plus steps up or down.',
          'lead_h': 1.2,
          'headers': ['#', 'From → to', 'Expected path', 'Steps'],
          'widths': [0.5, 2.6, 6, 1],
@@ -312,15 +312,15 @@ DECK = {
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Games', 'Grid movement', '\nTurn-based and tile games measure moves in Manhattan '
-                                        'steps: no diagonal shortcuts.'),
-             ('AI', 'Pathfinding heuristics', '\nManhattan distance is a classic "how far, roughly?" '
-                                              'estimate that guides search algorithms like A*.'),
-             ('Data', 'Clustering', '\nSome machine-learning methods group points by Manhattan '
-                                    '(taxicab) distance instead of straight-line distance.'),
+             ('Games', 'Grid movement', '\nTurn-based and tile games count moves across plus up '
+                                        'or down: no diagonal shortcuts.'),
+             ('AI', 'Pathfinding heuristics', '\nSteps across plus steps up or down is a classic "how '
+                                              'far, roughly?" estimate that guides search algorithms like A*.'),
+             ('Data', 'Clustering', '\nSome machine-learning methods measure how far apart '
+                                    'points are the same way, instead of in a straight line.'),
          ],
          'height': 4.0,
-         'notes': '"Move one axis, then the other" and Manhattan distance show up all over computing.'},
+         'notes': '"Move one axis, then the other" shows up all over computing.'},
 
         {'kind': 'wrapup',
          'questions': [

@@ -674,7 +674,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   `compute_path(start, destination)`, 4-5's `compute_manhattan_path(start, destination)`,
   BFS, Dijkstra, the class `compute_path(self, start, destination)`, and the test helpers
   (`run_test`, `run_path_test`, `run_no_path_test`, `check_path`, `check_cost`, `compare`,
-  `bfs_rings`, `dijkstra_distances`). 4-2's `compute_distance(start, destination)` too. The
+  `bfs_rings`, `dijkstra_distances`). The
   4-5 rename changes only the name, so it is a short paragraph, not an activity. Callers
   still pass the robot's pose variable `position` (and `navigator.position`); pose functions
   (`desired_heading`, `drive_path`, `navigate`, `path_cost`) keep `position`.

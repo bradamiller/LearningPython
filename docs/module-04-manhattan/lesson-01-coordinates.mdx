@@ -26,7 +26,6 @@ By the end of this lesson you will be able to:
 - Explain what a coordinate system is and why a robot needs one
 - Name any intersection with an `(x, y)` pair
 - Tell x (across) from y (away from you), and remember order matters
-- Count the steps between two positions (the Manhattan distance)
 
 </Objectives>
 
@@ -57,28 +56,6 @@ different spots.
   explanation="x comes first. (2, 3) means x = 2 (two right), y = 3 (three away from you, up the page)."
 />
 
-## Counting steps: Manhattan distance
-
-Since the robot follows lines (no diagonals), the distance between two spots is just
-the steps across plus the steps up or down:
-
-> steps = (x difference) + (y difference)
-
-From `(0, 0)` to `(2, 3)`: 2 right + 3 up = **5 steps**. This "blocks
-you'd walk" total is called the **Manhattan distance** — named for walking a city
-grid where you can't cut through buildings.
-
-<KnowledgeCheck
-  question="How many steps from (0, 0) to (3, 2), moving only along grid lines?"
-  options={[
-    {text: '5', correct: true},
-    {text: '6'},
-    {text: '1'},
-    {text: '3'},
-  ]}
-  explanation="3 right + 2 up = 5 steps. That sum is the Manhattan distance."
-/>
-
 <TeacherNote title="Getting x and y in the right order is the #1 stumble">
 
 Repeat the convention constantly — "x first, y second; x is across, y is away from
@@ -99,13 +76,13 @@ the top-right of a 4×4 grid, the far corner, should be `(3, 3)`. Then answer a 
 
 - What's the bottom-right corner's coordinate?
 - If the robot is at `(2, 1)`, what's directly to its left? Directly below it, toward you?
-- From `(1, 1)` to `(3, 0)`: how many steps across, how many up or down, how many total steps?
+- From `(1, 1)` to `(3, 0)`: how many steps across, how many up or down?
 
 <Reveal title="Check your answers" hint="answer all three first">
 
 - The bottom-right corner is `(3, 0)`: all the way across, no steps away from you.
 - Left of `(2, 1)` is `(1, 1)`: x goes down by one, y stays. Below it, toward you, is `(2, 0)`: y goes down by one, x stays.
-- From `(1, 1)` to `(3, 0)`: 2 across and 1 down, so 3 steps in all.
+- From `(1, 1)` to `(3, 0)`: 2 across and 1 down.
 
 </Reveal>
 
@@ -140,7 +117,7 @@ Grid coordinates run a surprising amount of the world:
     Latitude and longitude are just two numbers naming any spot on Earth.
   </InfoCard>
   <InfoCard tag="Cities" title="Street grids">
-    "5th Ave and 42nd St" is a coordinate — the reason this is called Manhattan distance.
+    "5th Ave and 42nd St" is a coordinate: two numbers name a corner.
   </InfoCard>
   <InfoCard tag="Computers" title="Screens & spreadsheets">
     Every pixel and every cell is addressed by a row/column pair, counted from zero.
@@ -151,13 +128,12 @@ Grid coordinates run a surprising amount of the world:
 
 - Which number comes first, and what does it mean? (x — how far across to the right.)
 - Why start counting at 0? (To match how Python indexes, avoiding confusion later.)
-- How do you find the number of steps between two spots? (x difference + y difference.)
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** name coordinates from pointed positions and vice-versa, always x
-first, and compute a distance. **Exit ticket:** "Manhattan distance from (0,0) to
-(3,3)?" (6). **Preview:** next lesson we store a coordinate like `(2, 3)` in Python —
+first. **Exit ticket:** "Which corner is `(0, 3)`, and how do you get there from
+`(0, 0)`?" (The far-left corner, 3 steps away from you.) **Preview:** next lesson we store a coordinate like `(2, 3)` in Python —
 that's a **tuple**.
 
 </TeacherNote>

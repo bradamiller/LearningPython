@@ -24,7 +24,7 @@ first one in the file that never touches the robot.
 
 By the end of this lesson you will be able to:
 
-- Use **Manhattan distance**, steps across plus steps up or down, to check a path's length
+- Count steps across plus steps up or down to check a path's length
 - Describe the "across first, then up or down" strategy and hand-trace a path on paper
 - Read each row of your trace table as one trip around a while loop, and match the given east loop in `compute_path(start, destination)` to it
 - Write the north loop by copying the east loop, then west and south by copying and flipping — four loops, no `if/else`
@@ -68,8 +68,8 @@ for you.
 | 5 | | |
 
 **2. All six paths.** Write each expected path and its number of steps. Path 1 is the
-one you just traced. The steps should equal the Manhattan distance, a quick check on
-each list's length.
+one you just traced. The steps should equal the steps across plus the steps up or
+down, a quick check on each list's length.
 
 | # | From → to | Expected path | Steps |
 |---|---|---|---|
@@ -455,17 +455,17 @@ test_edge_cases()
 
 ## Real-world connections
 
-"Move one axis, then the other" and Manhattan distance show up all over computing:
+"Move one axis, then the other" shows up all over computing:
 
 <CardGrid>
   <InfoCard tag="Games" title="Grid movement">
-    Turn-based and tile games measure moves in Manhattan steps — no diagonal shortcuts.
+    Turn-based and tile games count moves across plus up or down — no diagonal shortcuts.
   </InfoCard>
   <InfoCard tag="AI" title="Pathfinding heuristics">
-    Manhattan distance is a classic "how far, roughly?" estimate that guides search algorithms like A*.
+    Steps across plus steps up or down is a classic "how far, roughly?" estimate that guides search algorithms like A*.
   </InfoCard>
   <InfoCard tag="Data" title="Clustering">
-    Some machine-learning methods group points by Manhattan (taxicab) distance instead of straight-line distance.
+    Some machine-learning methods measure how far apart points are the same way, instead of in a straight line.
   </InfoCard>
 </CardGrid>
 

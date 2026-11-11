@@ -168,7 +168,7 @@ DECK = {
 
         {'kind': 'steps', 'title': 'Step 1 · Two helpers',
          'steps': [
-             '`manhattan_distance()` is the Lesson 4-2 formula: the x difference plus the y difference, each made positive with `abs()`',
+             '`manhattan_distance()` is the Lesson 5-1 count: the x difference plus the y difference, each made positive with `abs()`',
              '`is_neighbor()` asks whether that distance is **exactly 1**',
          ],
          'size': 24,

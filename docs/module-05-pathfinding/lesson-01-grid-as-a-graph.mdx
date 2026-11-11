@@ -149,8 +149,9 @@ shortest path.
 
 </Reveal>
 
-Without the obstacle, the Manhattan distance is only 2. **Obstacles make paths
-longer** — and Manhattan distance becomes just a lower bound, not the real answer.
+Without the obstacle, the path is only 2 steps: the steps across plus the steps up or
+down. That count is called the **Manhattan distance**. **Obstacles make paths longer**,
+and the Manhattan distance becomes just a lower bound, not the real answer.
 
 One more idea for later: our grid is **unweighted** — every edge costs 1 step. (In a
 *weighted* graph, a highway edge might cost less than a side-street edge.) This module

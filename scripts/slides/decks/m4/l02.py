@@ -10,8 +10,7 @@ DECK = {
              'Read its parts: the x coordinate of the tuple is `position[0]`, and the y '
              'coordinate is `position[1]`; or unpack both at once',
              'Explain **immutability** and why it suits coordinates',
-             'Compare positions with `==` and compute a Manhattan distance in code',
-             'Write a function that takes two positions as tuples',
+             'Compare positions with `==`',
          ],
          'notes': '50 minutes. Practice code goes in a new file; nothing goes into robot.py '
                   'until Lesson 4-4.'},
@@ -136,73 +135,6 @@ DECK = {
                         '1 for x and 3 for y; (3, 1) is 3 for x and 1 for y: different, so '
                         'False.'},
 
-        {'kind': 'code', 'title': 'Activity · Manhattan distance in code', 'tag': 'Activity',
-         'lead': 'The paper counting from Lesson 4-1 becomes simple arithmetic on tuple parts:',
-         'code': 'start = (0, 0)\n'
-                 'destination = (2, 3)\n'
-                 '\n'
-                 'x_distance = destination[0] - start[0]     # 2\n'
-                 'y_distance = destination[1] - start[1]     # 3\n'
-                 'total_steps = x_distance + y_distance      # 5\n'
-                 'print("Total steps:", total_steps)',
-         'code_size': 22},
-
-        {'kind': 'check',
-         'question': 'Using this method, what\'s the Manhattan distance from (0, 1) to (3, 3)?',
-         'options': ['7', '5', '3', '2'],
-         'answer': 1,
-         'explanation': '(3 − 0) across + (3 − 1) up = 3 + 2 = 5 steps.'},
-
-        {'kind': 'steps', 'title': 'Try it: write compute_distance()',
-         'lead': 'A program, not paper. New MICROPYTHON file in XRP Code; it only prints, '
-                 'so the robot won\'t move.',
-         'steps': [
-             'Write compute_distance(start, destination): print both tuples, then print the '
-             'Manhattan distance between them',
-             'Put the test from the next slide under it: five calls. Run the program',
-             'Check the shell against the output shown. If a distance is off, count it on '
-             'your Lesson 4-1 grid and find the wrong part: x or y',
-         ],
-         'notes': 'More support: a reference card ("the x coordinate is position[0], the y coordinate is position[1]"), the interactive shell '
-                  'for instant feedback, and starting with just creating and printing tuples. '
-                  'More challenge: an (x, y, heading) three-tuple (what does [2] give?), or '
-                  'tuples built from input. Watch for: subtracting a bigger start from a smaller '
-                  'destination gives a negative distance. Acknowledge it is real and say Lesson '
-                  '4-4 deals with it; for now keep destinations up and to the right of the '
-                  'start.'},
-
-        {'kind': 'code', 'title': 'The outline and the test', 'tag': 'Activity',
-         'code': 'def compute_distance(start, destination):\n'
-                 '    # 1. Print start and destination\n'
-                 '    # 2. Work out the x distance and the y distance\n'
-                 '    # 3. Print the total: the Manhattan distance\n'
-                 '    pass\n'
-                 '\n'
-                 '# Test: five calls to compute_distance()\n'
-                 'compute_distance((0, 0), (2, 3))\n'
-                 'compute_distance((1, 1), (3, 2))\n'
-                 'compute_distance((0, 0), (3, 3))\n'
-                 'compute_distance((2, 0), (2, 3))\n'
-                 'compute_distance((0, 2), (1, 3))',
-         'code_size': 18,
-         'notes': 'Every destination is up and to the right of its start, so no distance comes out '
-                  'negative; Lesson 4-4 deals with the other directions. The teacher copy '
-                  'is on the Module 4 sample programs page.'},
-
-        {'kind': 'code', 'title': 'What the test prints', 'tag': 'Activity',
-         'lead': 'When your function works, the shell shows this:',
-         'code': 'From (0, 0) to (2, 3)\n'
-                 'Manhattan distance: 5\n'
-                 'From (1, 1) to (3, 2)\n'
-                 'Manhattan distance: 3\n'
-                 'From (0, 0) to (3, 3)\n'
-                 'Manhattan distance: 6\n'
-                 'From (2, 0) to (2, 3)\n'
-                 'Manhattan distance: 3\n'
-                 'From (0, 2) to (1, 3)\n'
-                 'Manhattan distance: 2',
-         'code_size': 18},
-
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
              ('Graphics', 'Points & colors',
@@ -224,7 +156,8 @@ DECK = {
          'next': 'a whole path, many tuples, in a list',
          'notes': 'Answers: the x coordinate is position[0] and the y coordinate is position[1], or unpack both. It can\'t change; a position should stay fixed. The '
                   'elements must match in order. Formative: correct tuple syntax, the right '
-                  'index for x versus y, and reading ==. Exit ticket: "Manhattan distance from '
-                  '(1,0) to (3,3), show your work" (5).'},
+                  'index for x versus y, and reading ==. Exit ticket: "Write the tuple for '
+                  'the spot 3 across and 1 up, then the line that gets its y" (spot = (3, 1), '
+                  'spot[1]).'},
     ],
 }

@@ -8,7 +8,6 @@ DECK = {
              'Explain what a coordinate system is and why a robot needs one',
              'Name any intersection with an `(x, y)` pair',
              'Tell x (across) from y (away from you), and remember order matters',
-             'Count the steps between two positions (the Manhattan distance)',
          ],
          'notes': '40 to 50 minutes, no coding: mental model first. When students ask "when do '
                   'we code?", answer "next lesson; today you are building the map the code will '
@@ -46,23 +45,6 @@ DECK = {
          'explanation': 'x comes first. (2, 3) means x = 2 (two right), y = 3 (three away from '
                         'you, up the page).'},
 
-        {'kind': 'bullets', 'title': 'Counting steps: Manhattan distance',
-         'bullets': [
-             'The robot follows lines: **no diagonals**',
-             'So the distance between two spots is the steps across plus the steps up or down',
-             'From `(0, 0)` to `(2, 3)`: 2 right + 3 up = **5 steps**',
-             'This "blocks you\'d walk" total is the **Manhattan distance**, named for walking '
-             'a city grid where you can\'t cut through buildings',
-         ],
-         'callout': 'steps = (x difference) + (y difference)',
-         'tone': 'teal'},
-
-        {'kind': 'check',
-         'question': 'How many steps from (0, 0) to (3, 2), moving only along grid lines?',
-         'options': ['5', '6', '1', '3'],
-         'answer': 0,
-         'explanation': '3 right + 2 up = 5 steps. That sum is the Manhattan distance.'},
-
         {'kind': 'steps', 'title': 'Activity · Map it',
          'lead': 'Grab a blank grid and label every intersection with its `(x, y)`. Check '
                  'yourself: the top-right of a 4×4 grid, the far corner, should be `(3, 3)`. '
@@ -72,8 +54,7 @@ DECK = {
              'What\'s the bottom-right corner\'s coordinate?',
              'If the robot is at `(2, 1)`, what\'s directly to its left? Directly below it, '
              'toward you?',
-             'From `(1, 1)` to `(3, 0)`: how many steps across, how many up or down, how many '
-             'total steps?',
+             'From `(1, 1)` to `(3, 0)`: how many steps across, how many up or down?',
          ],
          'callout': 'Printable worksheet, grid and questions: [learningpython.bradhouse.com/printables/lesson-4-1-blank-grid.pdf]'
                     '(https://learningpython.bradhouse.com/printables/lesson-4-1-blank-grid.pdf)',
@@ -100,8 +81,7 @@ DECK = {
              ('Navigation', 'GPS & maps',
               'Latitude and longitude are just two numbers naming any spot on Earth.'),
              ('Cities', 'Street grids',
-              '"5th Ave and 42nd St" is a coordinate: the reason this is called Manhattan '
-              'distance.'),
+              '"5th Ave and 42nd St" is a coordinate: two numbers name a corner.'),
              ('Computers', 'Screens & spreadsheets',
               'Every pixel and every cell is addressed by a row/column pair, counted from '
               'zero.'),
@@ -111,13 +91,11 @@ DECK = {
          'questions': [
              'Which number comes first, and what does it mean?',
              'Why start counting at 0?',
-             'How do you find the number of steps between two spots?',
          ],
          'next': 'storing a coordinate like (2, 3) in Python: a tuple',
          'notes': 'Answers: x, how far across to the right. To match how Python indexes, '
-                  'avoiding confusion later. x difference + y difference. Formative: name '
-                  'coordinates from pointed positions and vice versa, always x first, and '
-                  'compute a distance. Exit ticket: "Manhattan distance from (0,0) to (3,3)?" '
-                  '(6).'},
+                  'avoiding confusion later. Formative: name coordinates from pointed positions '
+                  'and vice versa, always x first. Exit ticket: "Which corner is (0, 3), and how '
+                  'do you get there from (0, 0)?" (The far-left corner, 3 steps away from you.)'},
     ],
 }
