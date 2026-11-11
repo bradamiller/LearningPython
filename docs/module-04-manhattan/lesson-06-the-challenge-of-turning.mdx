@@ -7,7 +7,7 @@ sidebar_position: 6
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-6 · The Challenge of Turning"
-  meta={['55 min', 'Design on paper', 'Headings as numbers']}
+  meta={['45 min', 'Design on paper', 'Headings as numbers']}
 />
 
 <TeacherBanner>
@@ -34,14 +34,10 @@ on screen, and design `turn_to` and `drive_path` on paper for next lesson.
 By the end of this lesson you will be able to:
 
 - Break driving a planned path into two steps, turn then drive, as Lesson 4-0 broke down the whole problem
-- Explain why only x **or** y changes between adjacent intersections
-- Represent heading as a number: 0 = N, 1 = E, 2 = S, 3 = W
-- Describe the robot's **pose**: its position and heading together
-- Open the NAVIGATOR section of `robot.py` and write `desired_heading(position, next_pos)` in it, returning 0–3 from the coordinate change, with a paper test
-- Raise an error when a function is asked something it cannot answer, and say why that
-  makes a bug easier to find than letting a wrong value travel
-- Design a turn as a loop: one clockwise quarter turn at a time, adding 1 to the heading and using `% 4` to wrap from 3 back to 0, until it matches
-- Describe how `drive_path` uses both to move through a whole path and hand back where the robot ended up
+- Write `desired_heading(position, next_pos)`, which turns a one-step coordinate change into a heading (0 = N, 1 = E, 2 = S, 3 = W), and test it on screen
+- Raise an error when a function is asked something it cannot answer, and say why that makes a bug easier to find
+- Design a turn as a loop: one clockwise quarter turn at a time, `(heading + 1) % 4`, until the heading matches
+- Describe how `drive_path` uses both to drive a whole path and hand back where the robot ended up
 
 </Objectives>
 
@@ -64,6 +60,9 @@ For example, if x increases by one, the robot needs to move East, so its desired
 is 1, because East is represented by 1. So we can determine the robot's desired heading
 with four `if` statements that find out which value changed, and set the heading accordingly.
 
+The numbers count clockwise from North, so **each clockwise turn adds 1**, and one more
+than 3 wraps back to 0, like an odometer rolling over.
+
 The part to keep straight: x comes first in the tuple, but North and South change the
 *second* number. **North is away from you**, so moving North makes y *bigger*, and
 moving South makes it smaller.
@@ -85,30 +84,6 @@ moving South makes it smaller.
   ]}
   explanation="x went 2 → 3 (x +1) and y stayed 3. Increasing x means moving right across the grid, which is East — heading 1."
 />
-
-## Heading as a number
-
-Store the robot's facing as a number 0–3, clockwise from North: **0 = N, 1 = E, 2 = S,
-3 = W.** A handy list, `HEADING_NAMES`, converts back to letters for display —
-`HEADING_NAMES[2]` is `"S"` — and it is the one setting of the section you're about to
-paste.
-
-Why numbers? Because **each clockwise turn just adds 1** — and when you'd reach 4, you
-wrap back to 0 (like an odometer rolling over). That single rule is the whole turning
-mechanism.
-
-## The robot's pose
-
-Position says where the robot is; heading says which way it faces. Together they are
-its **pose**, and in Python a pose is a tuple of the two.
-
-<Figure
-  src="/img/lesson-m4-06/pose.svg"
-  alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose."
-  caption="The pose ((1, 1), 1): at (1, 1), facing East."
-/>
-
-The functions that drive take the robot's pose and hand back the new one.
 
 ## This lesson's skeleton
 
@@ -135,8 +110,7 @@ def desired_heading(position, next_pos):
 ```
 
 `desired_heading` compares where the robot is now with where it's going next, and
-returns the matching number from the table. Like the planner, it is *told* the position
-rather than remembering it. Step 2 is the table as four `if` lines, and each condition
+returns the matching number from the table. Step 2 is the table as four `if` lines, and each condition
 checks *both* differences, which is the "one change at a time" rule from the top of the
 lesson written down: North means y went up by one **and** x didn't move at
 all.
@@ -168,20 +142,9 @@ raise ValueError("what went wrong, in words")
 is yours. Make it name the two positions — `str(position)` turns a tuple into text you
 can add to a string — so the person reading it knows exactly which pair caused it.
 
-Leave the `raise` out and Python does not complain. **A function that runs off the end without
-returning anything hands back `None`**, silently. So `desired_heading` returns `None`,
-and the next line, `turn_to(heading, None)`, starts the turning loop you'll design below:
-keep turning until the heading equals `None`. It never will. The robot spins in place,
-turn after turn, and nothing is printed at all.
-
-Now go and find that bug. The robot is spinning inside `turn_to`, so that's where you'd
-look, and `turn_to` is perfectly correct. The real problem is somewhere else entirely:
-whatever handed `desired_heading` two positions that aren't next to each other. You could
-read `turn_to` twenty times and never see anything wrong with it, because there is nothing
-wrong with it. And there is no message at all to tell you which positions caused it.
-
-With the `raise`, the program stops on the line that *noticed* the problem and tells
-you the two positions that caused it. Same bug, ten seconds instead of an afternoon.
+Leave the `raise` out and the function silently returns `None`. Then `turn_to` waits
+forever for a heading of `None`, and the robot spins with no message, in code that is
+correct:
 
 <Figure
   src="/img/lesson-m4-06/raise-spin.svg"
@@ -351,8 +314,7 @@ If the robot already faces the right way, the condition is false on the first ch
 the loop does nothing, with no special case. `turn_clockwise()` is the Module 2 function
 that turns the robot until the sensors find the next line. The function returns
 `heading` at the end, which by then equals `desired`, so the caller can write
-`heading = turn_to(heading, needed)` and keep its own record up to date. Like the
-planner, it is handed what it needs as parameters and keeps nothing.
+`heading = turn_to(heading, needed)` and keep its own record up to date.
 
 <KnowledgeCheck
   question="The robot faces West (3) and makes one clockwise turn. What does (heading + 1) % 4 give?"
@@ -363,17 +325,6 @@ planner, it is handed what it needs as parameters and keeps nothing.
     {text: 'An error, because there is no heading 4'},
   ]}
   explanation="3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from West faces North, and the heading never becomes 4."
-/>
-
-<KnowledgeCheck
-  question="Starting at heading 0 (N) and wanting heading 3 (W), how many times does the turning loop turn the robot?"
-  options={[
-    {text: 'Once'},
-    {text: 'Three times: N to E, E to S, S to W', correct: true},
-    {text: 'Twice'},
-    {text: 'Not at all, because 0 and 3 are next to each other'},
-  ]}
-  explanation="The loop only ever adds 1: 0, 1, 2, 3. Three clockwise turns, where one turn to the left would have done. Lesson 4-7 has an optional challenge for that."
 />
 
 <TeacherNote title="The long way round is on purpose">
@@ -419,7 +370,7 @@ def drive_path(path, position, heading):
 Step 3 is `track_to_intersection()`, the Module 2 function that follows the line until
 both sensors hit a crossing — that's how the robot drives exactly one intersection
 without measuring any distance. The function returns `position` and `heading` at the
-end (the robot's new pose), because the caller will want to plan the *next* path from
+end, because the caller will want to plan the *next* path from
 wherever the robot ended up. This is the paper version; Lesson 4-7 adds one real-world wrinkle to step 3.
 
 Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N), one
@@ -473,7 +424,6 @@ Tracking heading and turning to a target direction is core to real navigation:
 - Between adjacent intersections, what can change, and how many cases result? (x *or* y, four cases.)
 - Why store heading as a number? (Each clockwise turn adds 1; `% 4` wraps 4 back to 0.)
 - How does `turn_to` know when to stop? (Its loop runs until the heading equals the one it wants; already facing it means zero turns.)
-- What's the catch with always turning clockwise? (South to East takes three right turns for what is a quarter turn left. It still gets there; an optional challenge in Lesson 4-7 makes it quicker.)
 
 <TeacherNote title="Assessment & next lesson">
 

@@ -158,6 +158,14 @@ DECK = {
                     'planned from where the robot was.',
          'tone': 'orange'},
 
+        {'kind': 'figure', 'title': 'The robot\'s pose',
+         'figure': './decks/m4/fig/l07-pose.svg',
+         'caption': 'Where the robot is and which way it faces, as one tuple. drive_path takes the '
+                    'pose and hands back the new one.',
+         'notes': 'Position says where the robot is; heading says which way it faces. Together they '
+                  'are its pose. From here on, "pass the pose" and "return the pose" mean the '
+                  'position and heading together.'},
+
         {'kind': 'check',
          'question': 'A student writes `drive_path(path, position, heading)` on its own line, then plans '
                      'the next path with `compute_manhattan_path(position, dest)`. What goes wrong?',

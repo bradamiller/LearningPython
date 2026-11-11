@@ -6,14 +6,12 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Break driving a path into two steps, turn then drive, as in Lesson 4-0',
-             'Explain why only x **or** y changes between neighbors',
-             'Store heading as 0 = N to 3 = W; position plus heading is the **pose**',
-             'Write `desired_heading(position, next_pos)`, with a paper test',
+             'Write `desired_heading(position, next_pos)`: coordinate change to heading 0 to 3',
              'Raise an error when a function cannot answer, and say why',
-             'Design a turn: clockwise quarter turns, `% 4` to wrap',
-             'Describe how `drive_path` uses both and hands back the new pose',
+             'Design a turn: clockwise quarter turns, `(heading + 1) % 4`',
+             'Describe how `drive_path` uses both to drive a whole path',
          ],
-         'notes': '55 minutes, design on paper. Only one function is written today, '
+         'notes': '45 minutes, design on paper. Only one function is written today, '
                   'desired_heading(), and it runs on the desk. turn_to() and drive_path() are '
                   'designed here and written in Lesson 4-7. Resist jumping to the driving code.'},
 
@@ -52,7 +50,7 @@ DECK = {
          'notes': 'The lesson figure, with its card labels redrawn as plain text: the slide renderer '
                   'overlapped the bold letter and the "= 0" in the original. Get students standing '
                   'and turning clockwise a quarter at a time, calling out 0, 1, 2, 3, 0. The '
-                  'kinesthetic bit cements the wrap.'},
+                  'kinesthetic bit cements the wrap. Odometer analogy: "...3, and one more is 0, not 4."'},
 
         {'kind': 'check',
          'question': 'The robot moves from (2,3) to (3,3). Which direction is that, and what heading number?',
@@ -60,28 +58,6 @@ DECK = {
          'answer': 2,
          'explanation': 'x went 2 → 3 (x +1) and y stayed 3. Increasing x means moving right across '
                         'the grid, which is East: heading 1.'},
-
-        {'kind': 'bullets', 'title': 'Heading as a number',
-         'bullets': [
-             'Store the robot\'s facing as a number 0 to 3, clockwise from North: '
-             '**0 = N, 1 = E, 2 = S, 3 = W**',
-             'A list, `HEADING_NAMES`, turns it back into letters for display: '
-             '`HEADING_NAMES[2]` is `"S"`',
-             'Why numbers? **Each clockwise turn just adds 1**',
-             'When you would reach 4, you wrap back to 0, like an odometer rolling over',
-         ],
-         'callout': 'That single rule is the whole turning mechanism',
-         'tone': 'teal',
-         'notes': 'Odometer analogy for the wrap: "...3, and one more is 0, not 4." HEADING_NAMES is '
-                  'the one setting in the section students paste next.'},
-
-        {'kind': 'figure', 'title': 'The robot\'s pose',
-         'figure': './decks/m4/fig/l06-pose.svg',
-         'caption': 'A pose is a tuple of the two. The functions that drive take the pose and hand '
-                    'back the new one.',
-         'notes': 'Position says where the robot is; heading says which way it faces. Together they '
-                  'are its pose. From here on, "pass the pose" and "return the pose" mean the '
-                  'position and heading together.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: the NAVIGATOR section',
          'lead': 'The last section of the file. Paste it above `RUN`, after the MANHATTAN PLANNER '
@@ -112,8 +88,7 @@ DECK = {
          'callout': 'Step 2 is the table as four `if` lines. North means y went up by one **and** '
                     'x didn\'t move at all: the "one change at a time" rule, written down.',
          'tone': 'teal',
-         'notes': 'Like the planner, desired_heading is told the position rather than remembering '
-                  'it. Why both differences: a version that checks only one (if y_diff == 1: '
+         'notes': 'Why both differences: a version that checks only one (if y_diff == 1: '
                   'return 0) looks equivalent and is not. From (2,1) to (3,3), x_diff is 1, so it '
                   'returns East and never reaches the raise. A check with a hole in it is worse than '
                   'no check. Good thing to show a fast finisher.'},
@@ -139,28 +114,15 @@ DECK = {
                   '"the program stops and prints your message"; students never write try/except to '
                   'benefit from it. Don\'t turn this into a detour on exception handling.'},
 
-        {'kind': 'bullets', 'title': 'Leave the raise out, and...',
-         'bullets': [
-             'Python does not complain. A function that runs off the end hands back `None`, **silently**',
-             'The next line, `turn_to(heading, None)`, keeps turning until the heading equals `None`',
-             'It never will. The robot spins in place, and **nothing is printed**',
-             'You would look in `turn_to`, which is perfectly correct. The real problem is whatever '
-             'handed `desired_heading` two positions that aren\'t neighbors',
-         ],
-         'callout': 'With the `raise`, the program stops on the line that **noticed** the problem and '
-                    'names both positions. Ten seconds instead of an afternoon.',
-         'tone': 'orange',
-         'notes': 'Worth ten minutes: ask the class to predict what they would see without the '
-                  'raise, then how they would find the cause. "A robot spinning forever, and the '
-                  'first place you would look is the one piece of code that is right" makes the '
-                  'point better than any rule.'},
-
         {'kind': 'figure', 'title': 'Same bad input, two programs',
          'figure': '/img/lesson-m4-06/raise-spin.svg',
          'caption': 'Without the raise the program never even stops; with it, it stops where the '
                     'mistake is.',
-         'notes': 'Top row: no match, None travels to turn_to, the robot spins forever with no '
-                  'error. Bottom row: ValueError at desired_heading, turn_to never runs.'},
+         'notes': 'Top row: no match, the function silently returns None, turn_to waits forever for a '
+                  'heading of None, and the robot spins with no message. Bottom row: ValueError at '
+                  'desired_heading, turn_to never runs. Worth a few minutes: ask the class to predict '
+                  'what they would see without the raise, and where they would look first (turn_to, '
+                  'the one piece of code that is right).'},
 
         {'kind': 'bullets', 'title': 'Stop it at the door',
          'bullets': [
@@ -256,7 +218,7 @@ DECK = {
              'It returns `heading` at the end, which by then equals `desired`',
              'So the caller writes `heading = turn_to(heading, needed)` and keeps its own record up to date',
          ],
-         'callout': 'Like the planner, it is handed what it needs as parameters and keeps nothing. You write it next lesson.',
+         'callout': 'You write it next lesson.',
          'tone': 'teal',
          'notes': 'Three sensor-ended turns take three times as long as one and give the line sensors '
                   'three chances to miss. That is the reason the optional challenge in 4-7 is worth '
@@ -269,15 +231,6 @@ DECK = {
          'answer': 1,
          'explanation': '3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from '
                         'West faces North, and the heading never becomes 4.'},
-
-        {'kind': 'check',
-         'question': 'Starting at heading 0 (N) and wanting heading 3 (W), how many times does the '
-                     'turning loop turn the robot?',
-         'options': ['Once', 'Three times: N to E, E to S, S to W', 'Twice',
-                     'Not at all, because 0 and 3 are next to each other'],
-         'answer': 1,
-         'explanation': 'The loop only ever adds 1: 0, 1, 2, 3. Three clockwise turns, where one turn '
-                        'to the left would have done. Lesson 4-7 has an optional challenge for that.'},
 
         {'kind': 'code', 'title': 'Activity · Putting it together: drive_path on paper',
          'lead': 'For each intersection: figure out the heading, turn to it, drive forward one, '
@@ -296,7 +249,7 @@ DECK = {
          'code_size': 19,
          'notes': 'Step 3 is track_to_intersection(), the Module 2 function that follows the line '
                   'until both sensors hit a crossing: the robot drives exactly one intersection '
-                  'without measuring distance. It returns the robot\'s new pose because the caller '
+                  'without measuring distance. It returns position and heading because the caller '
                   'will plan the next path from wherever the robot ended up. Lesson 4-7 adds one '
                   'real-world wrinkle to step 3.'},
 
@@ -339,13 +292,11 @@ DECK = {
              'Between adjacent intersections, what can change, and how many cases result?',
              'Why store heading as a number?',
              'How does `turn_to` know when to stop?',
-             'What\'s the catch with always turning clockwise?',
          ],
          'next': 'driving the path: turn_to() and drive_path() become real code',
          'notes': 'Answers: x or y, four cases. Each clockwise turn adds 1, and % 4 wraps 4 back to 0. '
                   'Its loop runs until the heading equals the one it wants; already facing it means '
-                  'zero turns. South to East takes three right turns for a quarter turn left; it '
-                  'still gets there, and a 4-7 challenge makes it quicker. Exit ticket: "Heading 3 '
+                  'zero turns. Exit ticket: "Heading 3 '
                   '(W), desired 1 (E): which headings does the loop step through, and how many '
                   'turns?" (W, N, E: two clockwise turns, a turn-around.)'},
     ],

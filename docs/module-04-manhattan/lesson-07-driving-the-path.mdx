@@ -151,8 +151,16 @@ position, heading = drive_path(path, position, heading)
 
 The `return position, heading` at the end of `drive_path()` looks like a function
 returning two things, but it is really one: two values with a comma between them make a
-tuple, so the function hands back a single tuple, the robot's **pose**, say `((1, 1), 0)`. The left-hand side
-above unpacks it, exactly like `x, y = position` in Lesson 4-2: the first variable gets the
+tuple, so the function hands back a single tuple: where the robot is and which way it faces.
+Together those are the robot's **pose**.
+
+<Figure
+  src="/img/lesson-m4-07/pose.svg"
+  alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose."
+  caption="The pose ((1, 1), 1): at (1, 1), facing East."
+/>
+
+The left-hand side of the `drive_path()` call above unpacks it, exactly like `x, y = position` in Lesson 4-2: the first variable gets the
 position, the second gets the heading.
 
 Forget that left-hand side and the robot drives fine — once. The next path gets planned
