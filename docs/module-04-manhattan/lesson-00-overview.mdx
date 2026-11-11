@@ -18,36 +18,19 @@ to preview the student view.
 Here's the problem this module solves: **get the robot from where it starts to a
 destination on the grid, all by itself.**
 
-A taxi in Manhattan has the same problem. Buildings fill every block, so it can't drive
-straight from A to B; it can only drive along the streets.
-
 <Figure
   src="/img/lesson-m4-00/manhattan-grid.svg"
   alt="A cartoon map of midtown Manhattan from above, not to scale. Between the Hudson River on the left and the East River on the right, long avenues run north and south (9th Ave to Madison) and shorter cross streets run east and west (53rd to 59th Street), with Central Park along the top. Every block is filled with buildings. A yellow taxi waits at A, the corner of 8th Avenue and 54th Street. A red dashed straight line from A to B, at 6th Avenue and 57th Street, is crossed out: no cutting through buildings. The taxi route in blue goes 2 blocks east along 54th Street, then 3 blocks north up 6th Avenue, numbered 1 to 5."
   caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
 />
 
-The robot's grid works the same way. It can only drive along the tape, and nobody steers
-it at the corners. Where would you even start?
-
-<Objectives>
-
-By the end of this overview you will be able to:
-
-- Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
-- Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
-- Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of tuples between them
-
-</Objectives>
-
-<QuizLink id="module-04-manhattan/lesson-00-overview" />
-
-## How to find the route
+A taxi in Manhattan has the same problem. Buildings fill every block, so it can't drive
+straight from A to B; it drives along the streets, 2 blocks across, then 3 up. The robot
+is the same: it can only drive along the tape. So the route comes from one rule:
 
 > **Go across until x is right. Then go up or down until y is right.**
 
-That's the whole algorithm, the one the taxi uses. It's called the **Manhattan
-algorithm**.
+That's the whole algorithm. It's called the **Manhattan algorithm**.
 
 <Callout kind="note" title="The big assumption: every street is clear">
 
@@ -63,6 +46,18 @@ distance is called **taxicab distance** in math. The map is a hook, not a lesson
 Lesson 4-3 opens with "Why Manhattan?" and assumes students have seen it.
 
 </TeacherNote>
+
+<Objectives>
+
+By the end of this overview you will be able to:
+
+- Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
+- Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
+- Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of tuples between them
+
+</Objectives>
+
+<QuizLink id="module-04-manhattan/lesson-00-overview" />
 
 ## Breaking down a complex problem
 

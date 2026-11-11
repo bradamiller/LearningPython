@@ -20,8 +20,8 @@ DECK = {'module': 4,
             {'kind': 'figure',
              'title': 'The problem',
              'figure': './decks/m4/fig/manhattan-grid.svg',
-             'caption': "A taxi can't cut through the buildings. The robot is in the same spot: it "
-                        'can only drive along the tape. Where would you even start?',
+             'caption': "A taxi can't cut through the buildings: 2 blocks across, then 3 up. The "
+                        'robot is the same: it can only drive along the tape.',
              'notes': 'The problem: get the robot from where it starts to a destination on the '
                       'grid, all by itself. A taxi in Manhattan has the same problem: buildings '
                       'fill every block, so it can only drive along the streets. The robot can '
@@ -39,8 +39,7 @@ DECK = {'module': 4,
              'title': 'How to find the route',
              'bullets': ['**Go across until x is right. Then go up or down until y is right.**',
                          "That's the whole algorithm"],
-             'callout': "It's called the **Manhattan algorithm**: the taxi's route, two blocks "
-                        'across, then three up',
+             'callout': "It's called the **Manhattan algorithm**",
              'tone': 'teal',
              'size': 30},
             {'kind': 'bullets',
