@@ -18,11 +18,17 @@ to preview the student view.
 Here's the problem this module solves: **get the robot from where it starts to a
 destination on the grid, all by itself.**
 
+A taxi in Manhattan has the same problem. Buildings fill every block, so it can't drive
+straight from A to B; it can only drive along the streets.
+
 <Figure
-  src="/img/lesson-m4-00/drive-to-destination.svg"
-  alt="A 4 by 4 grid of black tape. The robot sits at the bottom-left corner, labeled start, facing north. A red target near the top, two columns across and three rows up, is labeled destination. Between them is a question mark and no route. Beside it: the problem is to get the robot from where it starts to the destination, all by itself. It can only drive along the tape, and nobody steers it or tells it which way to go at each corner."
-  caption="From here to there, on its own. Where would you even start?"
+  src="/img/lesson-m4-00/manhattan-grid.svg"
+  alt="A cartoon map of midtown Manhattan from above, not to scale. Between the Hudson River on the left and the East River on the right, long avenues run north and south (9th Ave to Madison) and shorter cross streets run east and west (53rd to 59th Street), with Central Park along the top. Every block is filled with buildings. A yellow taxi waits at A, the corner of 8th Avenue and 54th Street. A red dashed straight line from A to B, at 6th Avenue and 57th Street, is crossed out: no cutting through buildings. The taxi route in blue goes 2 blocks east along 54th Street, then 3 blocks north up 6th Avenue, numbered 1 to 5."
+  caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
 />
+
+The robot's grid works the same way. It can only drive along the tape, and nobody steers
+it at the corners. Where would you even start?
 
 <Objectives>
 
@@ -36,9 +42,31 @@ By the end of this overview you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-00-overview" />
 
+## How to find the route
+
+> **Go across until x is right. Then go up or down until y is right.**
+
+That's the whole algorithm, the one the taxi uses. It's called the **Manhattan
+algorithm**.
+
+<Callout kind="note" title="The big assumption: every street is clear">
+
+The algorithm assumes nothing is in the way, so it never needs a detour. **Module 5**
+adds obstacles; **Module 6** (optional) adds slow streets.
+
+</Callout>
+
+<TeacherNote title="Manhattan, for the curious">
+
+The grid dates from 1811 and is turned about 29 degrees from true north; the same
+distance is called **taxicab distance** in math. The map is a hook, not a lesson.
+Lesson 4-3 opens with "Why Manhattan?" and assumes students have seen it.
+
+</TeacherNote>
+
 ## Harder than it sounds
 
-"Drive over there" sounds like one job, but it's a somewhat complex problem, too much to
+Knowing the route is only part of it. "Drive over there" sounds like one job, but it's a somewhat complex problem, too much to
 get right in one go. One way to tackle a complex problem is to **break it into simpler
 sub-problems** and solve each one. That's called **problem decomposition** (or **top-down design**).
 
@@ -101,34 +129,6 @@ wrong route is a planner problem; a wrong turn is a driver problem.
 
 Shape, not detail. Deflect "how does it work?" with "that's Lessons 4-3 and 4-4." Tell
 students they're not meant to understand every line yet; by Lesson 4-7 they will.
-
-</TeacherNote>
-
-## How the planner computes the route
-
-> **Go across until x is right. Then go up or down until y is right.**
-
-That's the whole algorithm. It's called the **Manhattan algorithm**, after the New York
-island where buildings fill every block of a grid of streets.
-
-<Figure
-  src="/img/lesson-m4-00/manhattan-grid.svg"
-  alt="A cartoon map of midtown Manhattan from above, not to scale. Between the Hudson River on the left and the East River on the right, long avenues run north and south (9th Ave to Madison) and shorter cross streets run east and west (53rd to 59th Street), with Central Park along the top. Every block is filled with buildings. A yellow taxi waits at A, the corner of 8th Avenue and 54th Street. A red dashed straight line from A to B, at 6th Avenue and 57th Street, is crossed out: no cutting through buildings. The taxi route in blue goes 2 blocks east along 54th Street, then 3 blocks north up 6th Avenue, numbered 1 to 5."
-  caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
-/>
-
-<Callout kind="note" title="The big assumption: every street is clear">
-
-The algorithm assumes nothing is in the way, so it never needs a detour. **Module 5**
-adds obstacles; **Module 6** (optional) adds slow streets.
-
-</Callout>
-
-<TeacherNote title="Manhattan, for the curious">
-
-The grid dates from 1811 and is turned about 29 degrees from true north; the same
-distance is called **taxicab distance** in math. The map is a hook, not a lesson.
-Lesson 4-3 opens with "Why Manhattan?" and assumes students have seen it.
 
 </TeacherNote>
 

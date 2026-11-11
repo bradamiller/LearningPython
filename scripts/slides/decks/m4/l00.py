@@ -19,14 +19,40 @@ DECK = {'module': 4,
                       'have built each piece.'},
             {'kind': 'figure',
              'title': 'The problem',
-             'figure': '/img/lesson-m4-00/drive-to-destination.svg',
-             'caption': 'From here to there, on its own. Where would you even start?',
-             'notes': 'Let the question hang for a moment. The robot can only drive along the '
-                      'tape, nobody steers it, and nobody tells it which way to go at each corner. '
-                      'One destination for now; several in a row comes at the end of the module.'},
+             'figure': './decks/m4/fig/manhattan-grid.svg',
+             'caption': "A taxi can't cut through the buildings. The robot is in the same spot: it "
+                        'can only drive along the tape. Where would you even start?',
+             'notes': 'The problem: get the robot from where it starts to a destination on the '
+                      'grid, all by itself. A taxi in Manhattan has the same problem: buildings '
+                      'fill every block, so it can only drive along the streets. The robot can '
+                      'only drive along the tape, and nobody steers it at the corners. One '
+                      'destination for now; several in a row comes at the end of the module. New '
+                      'Yorkers give directions this way: "two blocks east, then three up." Lesson '
+                      '4-3 builds the algorithm properly. For the curious: the grid comes from the '
+                      "Commissioners' Plan of 1811; it is turned roughly 29 degrees from true "
+                      'north, so "Manhattan north" is a local convention; and the same distance is '
+                      'called taxicab distance in mathematics. The map is a hook, not a lesson. '
+                      'Lesson 4-3 opens with "Why Manhattan?" and assumes students have seen this. '
+                      '(This slide uses a copy of the lesson figure with its text halos redrawn '
+                      'for the slide renderer.)'},
+            {'kind': 'bullets',
+             'title': 'How to find the route',
+             'bullets': ['**Go across until x is right. Then go up or down until y is right.**',
+                         "That's the whole algorithm"],
+             'callout': "It's called the **Manhattan algorithm**: the taxi's route, two blocks "
+                        'across, then three up',
+             'tone': 'teal',
+             'size': 30},
+            {'kind': 'bullets',
+             'title': 'The big assumption: every street is clear',
+             'bullets': ['The algorithm assumes **nothing is in the way**, so it never needs a '
+                         'detour',
+                         '**Module 5** adds obstacles; **Module 6** (optional) adds slow streets'],
+             'size': 28},
             {'kind': 'bullets',
              'title': 'Harder than it sounds',
-             'bullets': ['"Drive over there" sounds like one job, but it is a **somewhat complex '
+             'bullets': ['Knowing the route is only part of it',
+                         '"Drive over there" sounds like one job, but it is a **somewhat complex '
                          'problem**',
                          'Too much to get right in one go',
                          'One way to tackle it: **break it into simpler sub-problems**, and solve '
@@ -85,35 +111,6 @@ DECK = {'module': 4,
              'explanation': 'The planning function never moves the robot, so you can test it on '
                             'screen and check its list of tuples on paper. Once you trust the '
                             'plan, a wrong move on the floor can only be a driving problem.'},
-            {'kind': 'bullets',
-             'title': 'How the planner computes the route',
-             'bullets': ['**Go across until x is right. Then go up or down until y is right.**',
-                         "That's the whole algorithm"],
-             'callout': "It's called the **Manhattan algorithm**, after a real place",
-             'tone': 'teal',
-             'size': 30},
-            {'kind': 'figure',
-             'title': 'Why "Manhattan"?',
-             'figure': './decks/m4/fig/manhattan-grid.svg',
-             'caption': "A taxi can't cut through the buildings, so every trip is blocks across "
-                        'plus blocks up or down.',
-             'notes': 'Most of Manhattan is a rectangular grid: long avenues run north and south, '
-                      'shorter numbered streets cross them east and west, and every block is '
-                      'packed with buildings. New Yorkers give directions this way: "two blocks '
-                      'east, then three up." The robot is in exactly the same situation, because '
-                      'it can only drive along the tape. Lesson 4-3 builds the algorithm properly. '
-                      "For the curious: the grid comes from the Commissioners' Plan of 1811; it is "
-                      'turned roughly 29 degrees from true north, so "Manhattan north" is a local '
-                      'convention; and the same distance is called taxicab distance in '
-                      'mathematics. The map is a hook, not a lesson. Lesson 4-3 opens with "Why '
-                      'Manhattan?" and assumes students have seen this. (This slide uses a copy of '
-                      'the lesson figure with its text halos redrawn for the slide renderer.)'},
-            {'kind': 'bullets',
-             'title': 'The big assumption: every street is clear',
-             'bullets': ['The algorithm assumes **nothing is in the way**, so it never needs a '
-                         'detour',
-                         '**Module 5** adds obstacles; **Module 6** (optional) adds slow streets'],
-             'size': 28},
             {'kind': 'code',
              'title': 'From one destination to several',
              'lead': 'Several destinations is just a loop: plan, drive, repeat. The whole program, '
@@ -144,22 +141,27 @@ DECK = {'module': 4,
              'title': 'The module at a glance',
              'figure': './decks/m4/fig/l05-decomp-1.svg',
              'caption': 'The whole problem. What are its parts?',
-             'notes': 'Four slides, one level each, as in Lesson 4-5. Click through as the class answers.'},
+             'notes': 'Four slides, one level each, as in Lesson 4-5. Click through as the class '
+                      'answers.'},
             {'kind': 'figure',
              'title': 'The module at a glance',
              'figure': './decks/m4/fig/l05-decomp-2.svg',
              'caption': 'Plan, then drive: the split you just made.',
-             'notes': 'The planner is small enough to build and test in one go (4-3, 4-4); the driver needs breaking down.'},
+             'notes': 'The planner is small enough to build and test in one go (4-3, 4-4); the '
+                      'driver needs breaking down.'},
             {'kind': 'figure',
              'title': 'The module at a glance',
              'figure': './decks/m4/fig/l05-decomp-3.svg',
-             'caption': 'Driving breaks into two steps at each intersection: turn to face the next one, then drive to it.',
+             'caption': 'Driving breaks into two steps at each intersection: turn to face the next '
+                        'one, then drive to it.',
              'notes': 'Driving is Module 2 line tracking, already built.'},
             {'kind': 'figure',
              'title': 'The module at a glance',
              'figure': './decks/m4/fig/l05-decomp-4.svg',
-             'caption': 'And turning breaks into two: which way to face, then turn until facing it.',
-             'notes': 'Each box names the lesson that builds it. Lesson 4-5 opens with this same tree.'},
+             'caption': 'And turning breaks into two: which way to face, then turn until facing '
+                        'it.',
+             'notes': 'Each box names the lesson that builds it. Lesson 4-5 opens with this same '
+                      'tree.'},
             {'kind': 'bullets',
              'title': "What's next",
              'bullets': ['**4-1 and 4-2:** the background: coordinates, tuples and lists',
