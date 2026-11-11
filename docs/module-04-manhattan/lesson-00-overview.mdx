@@ -61,8 +61,8 @@ By the end of this overview you will be able to:
 
 ## Breaking down a complex problem
 
-Knowing the route is only part of it. "Drive over there" sounds like one job, but it's a somewhat complex problem, too much to
-get right in one go. One way to tackle a complex problem is to **break it into simpler
+Now you know how to find the route. Getting the robot to do it is the next problem.
+"Drive over there" sounds like one job, but it's too much to get right in one go. One way to tackle a complex problem is to **break it into simpler
 sub-problems** and solve each one. That's called **problem decomposition** (or **top-down design**).
 
 ## Discuss · How would you split it?
@@ -83,6 +83,14 @@ Then name the split: **plan** the route, **drive** the plan, with the list passe
 them. Ideas about motors, sensors or turning belong to the driving half; park them there.
 
 </TeacherNote>
+
+Here is that split, one level at a time:
+
+<TreeFigure
+  src="/img/lesson-m4-05/decomposition.svg"
+  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-5 and 4-6; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6."
+  caption="The problem, broken into parts. Click a box to open it; each one names the lesson that builds it."
+/>
 
 ## Plan first, then drive
 
@@ -152,12 +160,6 @@ It's short **because the functions do all the work**.
 />
 
 ## The module at a glance
-
-<TreeFigure
-  src="/img/lesson-m4-05/decomposition.svg"
-  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-5 and 4-6; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6."
-  caption="Module 4, broken into parts. Each box names the lesson that builds it."
-/>
 
 Lessons 4-1 and 4-2 give you the background: coordinates, tuples and lists. Then you
 write and test the planner (4-3 and 4-4), write and test the driver (4-5 and 4-6), and

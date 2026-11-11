@@ -50,10 +50,10 @@ DECK = {'module': 4,
              'size': 28},
             {'kind': 'bullets',
              'title': 'Breaking down a complex problem',
-             'bullets': ['Knowing the route is only part of it',
-                         '"Drive over there" sounds like one job, but it is a **somewhat complex '
-                         'problem**',
-                         'Too much to get right in one go',
+             'bullets': ['Now you know how to find the route. Getting the **robot** to do it is '
+                         'the next problem',
+                         '"Drive over there" sounds like one job, but it is too much to get right '
+                         'in one go',
                          'One way to tackle it: **break it into simpler sub-problems**, and solve '
                          'each one'],
              'callout': 'That is called **problem decomposition** (or **top-down design**)',
@@ -76,6 +76,31 @@ DECK = {'module': 4,
                       'next one and follow the tape there. It does not decide anything. Then name '
                       'the split: plan the route, drive the plan, with the list passed between '
                       'them. Ideas about motors, sensors or turning belong to the driving half.'},
+            {'kind': 'figure',
+             'title': 'Breaking it down',
+             'figure': './decks/m4/fig/l05-decomp-1.svg',
+             'caption': 'The whole problem. What are its parts?',
+             'notes': 'Four slides, one level each, as in Lesson 4-5. Click through as the class '
+                      'answers.'},
+            {'kind': 'figure',
+             'title': 'Breaking it down',
+             'figure': './decks/m4/fig/l05-decomp-2.svg',
+             'caption': 'Plan, then drive: the split you just made.',
+             'notes': 'The planner is small enough to build and test in one go (4-3, 4-4); the '
+                      'driver needs breaking down.'},
+            {'kind': 'figure',
+             'title': 'Breaking it down',
+             'figure': './decks/m4/fig/l05-decomp-3.svg',
+             'caption': 'Driving breaks into two steps at each intersection: turn to face the next '
+                        'one, then drive to it.',
+             'notes': 'Driving is Module 2 line tracking, already built.'},
+            {'kind': 'figure',
+             'title': 'Breaking it down',
+             'figure': './decks/m4/fig/l05-decomp-4.svg',
+             'caption': 'And turning breaks into two: which way to face, then turn until facing '
+                        'it.',
+             'notes': 'Each box names the lesson that builds it. Lesson 4-5 opens with this same '
+                      'tree.'},
             {'kind': 'figure',
              'title': 'Plan first, then drive',
              'figure': '/img/lesson-m4-00/plan-then-drive.svg',
@@ -136,31 +161,6 @@ DECK = {'module': 4,
              'figure': '/img/lesson-m4-00/delivery-overview-xy.svg',
              'caption': 'Three destinations, three legs, each planned from where the last one '
                         'ended.'},
-            {'kind': 'figure',
-             'title': 'The module at a glance',
-             'figure': './decks/m4/fig/l05-decomp-1.svg',
-             'caption': 'The whole problem. What are its parts?',
-             'notes': 'Four slides, one level each, as in Lesson 4-5. Click through as the class '
-                      'answers.'},
-            {'kind': 'figure',
-             'title': 'The module at a glance',
-             'figure': './decks/m4/fig/l05-decomp-2.svg',
-             'caption': 'Plan, then drive: the split you just made.',
-             'notes': 'The planner is small enough to build and test in one go (4-3, 4-4); the '
-                      'driver needs breaking down.'},
-            {'kind': 'figure',
-             'title': 'The module at a glance',
-             'figure': './decks/m4/fig/l05-decomp-3.svg',
-             'caption': 'Driving breaks into two steps at each intersection: turn to face the next '
-                        'one, then drive to it.',
-             'notes': 'Driving is Module 2 line tracking, already built.'},
-            {'kind': 'figure',
-             'title': 'The module at a glance',
-             'figure': './decks/m4/fig/l05-decomp-4.svg',
-             'caption': 'And turning breaks into two: which way to face, then turn until facing '
-                        'it.',
-             'notes': 'Each box names the lesson that builds it. Lesson 4-5 opens with this same '
-                      'tree.'},
             {'kind': 'bullets',
              'title': "What's next",
              'bullets': ['**4-1 and 4-2:** the background: coordinates, tuples and lists',
