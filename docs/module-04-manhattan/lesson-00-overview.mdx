@@ -25,10 +25,10 @@ destination on the grid, all by itself.**
 />
 
 A taxi in Manhattan has the same problem. Buildings fill every block, so it can't drive
-straight from A to B; it drives along the streets, 2 blocks across, then 3 up. The robot
+straight from A to B; it drives along the streets, 2 blocks east, then 3 blocks north. The robot
 is the same: it can only drive along the tape. So the route comes from one rule:
 
-> **Go across until x is right. Then go up or down until y is right.**
+> **Go east or west until we are at the destination avenue, then north or south until we're at the destination street.**
 
 That's the whole algorithm. It's called the **Manhattan algorithm**.
 
