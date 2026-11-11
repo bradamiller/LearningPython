@@ -53,7 +53,7 @@ By the end of this overview you will be able to:
 
 - Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
 - Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
-- Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of tuples between them
+- Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of (x, y) coordinates between them
 
 </Objectives>
 
@@ -88,7 +88,7 @@ Here is that split, one level at a time:
 
 <TreeFigure
   src="/img/lesson-m4-05/decomposition.svg"
-  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-5 and 4-6; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6."
+  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) coordinates runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-5 and 4-6; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6."
   caption="The problem, broken into parts. Click a box to open it; each one names the lesson that builds it."
 />
 
@@ -99,8 +99,8 @@ route first, then **drive** it.
 
 <Figure
   src="/img/lesson-m4-00/plan-then-drive.svg"
-  alt="Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with its tuple. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow carries the list [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], a list of (x, y) tuples, down to step 2, Drive: take the list and drive it, one intersection at a time."
-  caption="The plan is a list of (x, y) tuples. One function makes it; another drives it."
+  alt="Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with its coordinates. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow carries the list [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], a list of (x, y) coordinates, down to step 2, Drive: take the list and drive it, one intersection at a time."
+  caption="The plan is a list of (x, y) coordinates. One function makes it; another drives it."
 />
 
 1. **Plan.** The planner, `compute_manhattan_path`, works out the whole route. It never
@@ -110,9 +110,8 @@ route first, then **drive** it.
    drives it**, then reports where the robot ended up. It decides nothing; the plan
    already did.
 
-Each intersection is a pair of numbers, `(x, y)`, which Python stores as a **tuple**. So
-the plan is a **list of tuples**, the one thing the two functions share. (Tuples come in
-Lesson 4-1, lists in 4-2.)
+Each intersection is a pair of numbers, its `(x, y)` coordinates. So the plan is a
+**list of coordinates**, the one thing the two functions share.
 
 One job each is called **separation of concerns**, and it makes bugs easy to find: a
 wrong route is a planner problem; a wrong turn is a driver problem.
@@ -125,7 +124,7 @@ wrong route is a planner problem; a wrong turn is a driver problem.
     {text: 'Because planning makes the robot drive faster'},
     {text: 'Because the driving function has to be written last in the file'},
   ]}
-  explanation="The planning function never moves the robot, so you can test it on screen and check its list of tuples on paper. Once you trust the plan, a wrong move on the floor can only be a driving problem."
+  explanation="The planning function never moves the robot, so you can test it on screen and check its list of coordinates on paper. Once you trust the plan, a wrong move on the floor can only be a driving problem."
 />
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
@@ -168,7 +167,7 @@ put them together (4-7).
 ## Wrap-up
 
 - What problem does Module 4 solve? (Drive the robot from where it starts to a destination on its own, then to several destinations in a row.)
-- Why plan first? (The planner never moves the robot, so its list of tuples can be printed and checked with no robot at all. Then the driver only has to follow a plan you already trust.)
+- Why plan first? (The planner never moves the robot, so its list of coordinates can be printed and checked with no robot at all. Then the driver only has to follow a plan you already trust.)
 - What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
 
 <TeacherNote title="Teaching note">

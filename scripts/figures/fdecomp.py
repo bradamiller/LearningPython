@@ -39,7 +39,12 @@ items = []   # (parent, svg text)
 def box(x, y, w, h, head, code, sub, stroke, fill, hcls="h", node=None, parent=None):
     mid = y + h / 2
     o = [f'<rect class="bx" x="{x}" y="{y}" width="{w}" height="{h}" rx="10" fill="{fill}" stroke="{stroke}" stroke-width="2"/>']
-    if code:
+    if isinstance(head, tuple):   # a two-line heading, no code line
+        o += [f'<text class="{hcls}" x="{x+w/2}" y="{mid-18}" text-anchor="middle">{head[0]}</text>',
+              f'<text class="{hcls}" x="{x+w/2}" y="{mid+1}" text-anchor="middle">{head[1]}</text>',
+              f'<text class="sm" x="{x+w/2}" y="{mid+22}" text-anchor="middle">{sub}</text>']
+        head = " ".join(head)
+    elif code:
         o += [f'<text class="{hcls}" x="{x+w/2}" y="{mid-16}" text-anchor="middle">{head}</text>',
               f'<text class="ms" x="{x+w/2}" y="{mid+4}" text-anchor="middle">{code}</text>',
               f'<text class="sm" x="{x+w/2}" y="{mid+22}" text-anchor="middle">{sub}</text>']
@@ -82,7 +87,7 @@ box(DX, Y2, W2, H2, "The driver", "drive_path()", "Lessons 4-5 and 4-6", RED, RE
     node="driver", parent="whole")
 under("whole",
       f'<line x1="{PX+W2+2}" y1="{Y2+50}" x2="{DX-4}" y2="{Y2+50}" stroke="#495057" stroke-width="2.2" marker-end="url(#aG)"/>',
-      tag(340, Y2 + 30, "list of (x, y) tuples", fill="#FFFFFF", stroke="#ADB5BD", cls="nb", w=158),
+      tag(340, Y2 + 30, "list of (x, y) coordinates", fill="#FFFFFF", stroke="#ADB5BD", cls="nb", w=172),
       f'<text class="sm" x="340" y="{Y2+70}" text-anchor="middle">the one thing they share</text>',
       f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+40}" text-anchor="middle">small enough to build</text>',
       f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+56}" text-anchor="middle">and test in one go</text>')
@@ -92,7 +97,7 @@ W3, G3, Y3, H3 = 210, 12, 240, 76
 x0 = 680 - 10 - 2 * W3 - G3
 xs = [x0 + i * (W3 + G3) for i in range(2)]
 under("driver", elbow(DX + W2/2, Y2 + H2, [x + W3/2 for x in xs], Y3, Y2 + H2 + 24))
-box(xs[0], Y3, W3, H3, "1 · Turn to face it", None, "Lessons 4-5 and 4-6", RED, "#FFFFFF",
+box(xs[0], Y3, W3, H3, ("1 · Turn to face", "the next intersection"), None, "Lessons 4-5 and 4-6", RED, "#FFFFFF",
     hcls="nb", node="turn", parent="driver")
 box(xs[1], Y3, W3, H3, "2 · Drive to it", "LINE TRACKING", "built in Module 2", RED, "#FFFFFF",
     hcls="nb", parent="driver")
@@ -111,10 +116,10 @@ DESC = ('A tree with four levels. At the top, the whole problem: drive from the 
         'destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), '
         'built in Lessons 4-3 and 4-4, is small enough to build and test in one go. The driver, '
         'drive_path(), built in Lessons 4-5 and 4-6, splits into two steps at each intersection: '
-        '1, turn to face it; 2, drive to it, with the LINE TRACKING functions built in Module 2. '
+        '1, turn to face the next intersection; 2, drive to it, with the LINE TRACKING functions built in Module 2. '
         'Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn '
         'until facing it, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled '
-        '"list of (x, y) tuples, the one thing they share".')
+        '"list of (x, y) coordinates, the one thing they share".')
 
 
 def render(levels, opened):
