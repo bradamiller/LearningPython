@@ -173,3 +173,110 @@ export function PlayFigure({src, alt = '', caption, playLabel = 'Drive it', agai
     </figure>
   );
 }
+
+/**
+ * TreeFigure — a tree diagram that opens one level per click (L4-6's problem
+ * decomposition). It starts with only the top box; clicking a box that breaks
+ * down (it shows a +) reveals its parts, and clicking it again folds them away.
+ *
+ * The SVG is embedded with <object> so its boxes can be clicked. It is drawn
+ * with everything showing (so it reads in full anywhere scripts don't run),
+ * and marks its structure with attributes (scripts/figures/fdecomp.py):
+ *   data-parent="<id>"  this element belongs under box <id>
+ *   data-node="<id>" data-expand  a box that breaks down further
+ * The picture's height follows the levels showing, so no empty space is left
+ * under a closed box.
+ *
+ * Usage:
+ *   <TreeFigure src="/img/lesson-m4-06/decomposition.svg" alt="..." caption="..." />
+ */
+export function TreeFigure({src, alt = '', caption, hint = 'Click a box with a + to break it down.'}) {
+  const url = useMediaUrl(src);
+  const ref = React.useRef(null);
+  const api = React.useRef(null);
+  const [ratio, setRatio] = React.useState('680 / 76');
+
+  React.useEffect(() => {
+    const o = ref.current;
+    if (!o) return undefined;
+    const setup = () => {
+      let svg;
+      try { svg = o.contentDocument && o.contentDocument.documentElement; } catch (e) { return; }
+      if (!svg || svg.tagName.toLowerCase() !== 'svg' || svg.__tree) return;
+      svg.__tree = true;
+      const fullH = svg.viewBox.baseVal.height;
+      const W = svg.viewBox.baseVal.width;
+      const nodes = {};
+      svg.querySelectorAll('[data-node]').forEach((g) => { nodes[g.getAttribute('data-node')] = g; });
+      const parentOf = (id) => nodes[id] && nodes[id].getAttribute('data-parent');
+      const open = new Set();
+      const shown = (id) => { const p = parentOf(id); return !p || (open.has(p) && shown(p)); };
+      const under = (id, anc) => { const p = parentOf(id); return !!p && (p === anc || under(p, anc)); };
+      const render = () => {
+        svg.querySelectorAll('[data-parent]').forEach((el) => {
+          const p = el.getAttribute('data-parent');
+          el.classList.toggle('hid', !(open.has(p) && shown(p)));
+        });
+        Object.entries(nodes).forEach(([id, g]) => {
+          g.classList.toggle('open', open.has(id));
+          g.setAttribute('tabindex', shown(id) ? '0' : '-1');
+          g.setAttribute('aria-expanded', open.has(id) ? 'true' : 'false');
+        });
+        let bottom = 0;
+        Array.from(svg.children).forEach((el) => {
+          if (el.tagName.toLowerCase() !== 'g' || el.classList.contains('hid')) return;
+          const b = el.getBBox();
+          bottom = Math.max(bottom, b.y + b.height);
+        });
+        const h = Math.min(fullH, Math.ceil(bottom + 12));
+        svg.setAttribute('viewBox', `0 0 ${W} ${h}`);
+        svg.removeAttribute('height');
+        svg.removeAttribute('width');
+        setRatio(`${W} / ${h}`);
+      };
+      const toggle = (id) => {
+        if (open.has(id)) {
+          open.delete(id);
+          Object.keys(nodes).forEach((k) => { if (under(k, id)) open.delete(k); });
+        } else {
+          open.add(id);
+        }
+        render();
+      };
+      Object.entries(nodes).forEach(([id, g]) => {
+        g.setAttribute('role', 'button');
+        g.addEventListener('click', () => toggle(id));
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(id); }
+        });
+      });
+      api.current = {
+        all: () => { Object.keys(nodes).forEach((k) => open.add(k)); render(); },
+        reset: () => { open.clear(); render(); },
+      };
+      render();
+    };
+    o.addEventListener('load', setup);
+    setup();   // in case it loaded before the effect ran
+    return () => o.removeEventListener('load', setup);
+  }, [url]);
+
+  return (
+    <figure className="videoBlock treeFigure">
+      <object ref={ref} data={url} type="image/svg+xml" aria-label={alt} role="img"
+              style={{aspectRatio: ratio}}>
+        {alt}
+      </object>
+      <div className="treeFigure__bar">
+        <span className="treeFigure__hint">{hint}</span>
+        <button type="button" className="treeFigure__button" onClick={() => api.current && api.current.all()}>
+          Show all
+        </button>
+        <button type="button" className="treeFigure__button" onClick={() => api.current && api.current.reset()}>
+          Start over
+        </button>
+      </div>
+      {caption && <figcaption className="mediaCaption">{caption}</figcaption>}
+    </figure>
+  );
+}

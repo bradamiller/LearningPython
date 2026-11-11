@@ -1771,6 +1771,12 @@ The Get-a-feel-for-circles Reveal has a four-button one, `arcade-circles.svg` (T
 right"; fixed. A PlayFigure's parked frame is t = 0, so anything meant to show before a button is
 pressed must be visible AT t = 0 (an opacity animate whose first keyTime is 0 with value 1).
 
+**`<TreeFigure>` (Media.js), added 2026-11-11 for L4-6's decomposition tree (Brad's ask):** a tree
+that starts with only its top box and opens one level per click (a + on boxes that break down; click
+again folds). The SVG marks structure with `data-parent` / `data-node` + `data-expand` (see
+`scripts/figures/fdecomp.py`) and is drawn fully open, so it reads in full without scripts. The deck
+shows the same tree as one slide per level, on a fixed canvas so boxes don't move.
+
 **HEIF/HEIC from Brad's Mac won't render in a browser** — convert to JPG first.
 On his machine ImageMagick handles it (`magick in.heif -background white -flatten
 out.jpg`); in this sandbox install the decoder first:

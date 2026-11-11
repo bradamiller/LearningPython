@@ -19,10 +19,10 @@ built and tested. Just like before, we **decompose further**: driving a planned 
 broken down into two steps at each intersection, **turn** to face the next one, then
 **drive** to it. Driving is your Module 2 line tracking, so this lesson is about turning.
 
-<Figure
+<TreeFigure
   src="/img/lesson-m4-06/decomposition.svg"
-  alt="A tree with three levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-4 and 4-5, and the driver, drive_path(), Lessons 4-6 and 4-7. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits again into two steps at each intersection: 1, turn to face it, desired_heading() and turn_to(), Lessons 4-6 and 4-7; 2, drive to it, the LINE TRACKING functions built in Module 2."
-  caption="Lesson 4-0's split, one level deeper: at each intersection, turn, then drive."
+  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-4 and 4-5, and the driver, drive_path(), Lessons 4-6 and 4-7. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-6 and 4-7; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-6, and turn until facing it, turn_to(), Lesson 4-7."
+  caption="Lesson 4-0's split, two levels deeper: at each intersection, turn, then drive."
 />
 
 The robot has a **heading**, the direction it faces, and only drives forward. This lesson

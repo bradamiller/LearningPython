@@ -16,12 +16,29 @@ DECK = {
                   'designed here and written in Lesson 4-7. Resist jumping to the driving code.'},
 
         {'kind': 'figure', 'title': 'Decompose further, like 4-0',
-         'figure': '/img/lesson-m4-06/decomposition.svg',
+         'figure': './decks/m4/fig/l06-decomp-1.svg',
+         'caption': 'The whole problem, as in Lesson 4-0. What are its parts?',
+         'notes': 'Four slides, one level each: click through as the class answers. Ask what the '
+                  'parts are before each click.'},
+
+        {'kind': 'figure', 'title': 'Decompose further, like 4-0',
+         'figure': './decks/m4/fig/l06-decomp-2.svg',
+         'caption': 'Lesson 4-0\'s split: the planner is built and tested. Now the driver.',
+         'notes': 'Recap of 4-0. The planner is small enough to build and test in one go; the driver '
+                  'still needs breaking down.'},
+
+        {'kind': 'figure', 'title': 'Decompose further, like 4-0',
+         'figure': './decks/m4/fig/l06-decomp-3.svg',
          'caption': 'Driving a planned path breaks into two steps at each intersection: turn to face '
                     'the next one, then drive to it.',
-         'notes': 'Tie back to the 4-0 discussion: same move, one level down. The robot has a heading '
-                  'and only drives forward, so it has to turn to face each next intersection before '
-                  'it drives. Today: write desired_heading() and test it on screen; design turn_to() and '
+         'notes': 'Same move as 4-0, one level down. The robot has a heading and only drives forward, '
+                  'so it has to turn to face each next intersection before it drives. Driving is '
+                  'Module 2 line tracking, already built.'},
+
+        {'kind': 'figure', 'title': 'Decompose further, like 4-0',
+         'figure': './decks/m4/fig/l06-decomp-4.svg',
+         'caption': 'And turning breaks into two: work out which way to face, then turn until facing it.',
+         'notes': 'Today: write desired_heading() and test it on screen; design turn_to() and '
                   'drive_path() on paper. Lesson 4-7 writes them.'},
 
         {'kind': 'table', 'title': 'One change, four directions',
