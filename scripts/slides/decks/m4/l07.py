@@ -8,15 +8,14 @@ DECK = {
              'Integrate the planner and the driving functions in one program: the last test function in `robot.py`',
              'Write a main loop that computes and drives a path to each destination in a list',
              'Carry the robot\'s pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`',
-             'Print the first leg\'s path before the button, and say why only the first',
-             'Test incrementally, then demonstrate a working multi-destination run on the XRP',
+             'Demonstrate a working multi-destination run on the XRP',
          ],
          'notes': 'Multi-day project. Keep the intro brief: this is a build-and-test day. For '
                   '50-minute periods plan two days: planning and desktop testing, then robot day.'},
 
         {'kind': 'bullets', 'title': 'The mission: a delivery drone on a city grid',
          'bullets': [
-             'Start at home base, **(0,0)**, and visit four destinations **in order**',
+             'Start at home base, **(0,0)**, visit four destinations **in order**, and end back home',
              'Compute a fresh path for each leg, and drive it autonomously',
              '`compute_manhattan_path(position, dest)` returns the list of intersections',
              '`drive_path(path, position, heading)` turns and drives it',
@@ -24,16 +23,7 @@ DECK = {
          'callout': 'Your job: the **main program** that connects them. About ten lines, and like every '
                     'program in this course it is a test function at the bottom of `robot.py`.',
          'tone': 'teal',
-         'notes': 'Everything comes together: students already built every piece. Optionally the run '
-                  'ends back at home base.'},
-
-        {'kind': 'figure', 'title': 'The delivery run',
-         'figure': '/img/lesson-m4-07/delivery-run-xy.svg',
-         'caption': '`DESTINATIONS` on the floor: 2, 3, 2 and 3 steps. Each small arrow is the heading a '
-                    'leg ends with, and the next leg starts from it.',
-         'notes': 'Leg 1 goes right 2 steps to (2, 0), ending facing East. Leg 2 goes up 3 to (2, 3), '
-                  'facing North. Leg 3 left 2 to (0, 3), facing West. Leg 4 down 3 back home, facing '
-                  'South.'},
+         'notes': 'Everything comes together: students already built every piece.'},
 
         {'kind': 'bullets', 'title': 'Four destinations, four lists of single hops',
          'bullets': [
@@ -54,7 +44,7 @@ DECK = {
          'frames': [(0.2, 'Leg 2 is planned from (2, 0), where leg 1 ended'),
                     (0.3, 'Three right turns to face North'),
                     (0.9, 'Leg 4 drives home')],
-         'callout': 'Each leg is planned from where the last one ended. `turn_to()` only turns clockwise, '
+         'callout': '2, 3, 2 and 3 steps. Each leg is planned from where the last one ended. `turn_to()` only turns clockwise, '
                     'so most legs start with three right turns.',
          'tone': 'teal',
          'notes': 'On the lesson page this is an animation of the whole run, with the main loop in plain '
@@ -102,24 +92,13 @@ DECK = {
                   'North. If a robot drives a sensible first route and then wanders, ask what position is '
                   'in their main program after leg 1.'},
 
-        {'kind': 'check',
-         'question': 'Why must the main program write `position, heading = drive_path(...)` rather than '
-                     'just `drive_path(...)`?',
-         'options': ['Python requires return values to be assigned',
-                     'drive_path changes only its own copies: the caller learns them only from the return',
-                     'It resets the robot to (0,0)',
-                     'It is not necessary'],
-         'answer': 1,
-         'explanation': 'position and heading inside drive_path are the function\'s own variables. Without '
-                        'the assignment, the main program\'s position stays (0,0) and every leg after the '
-                        'first is planned from the wrong place.'},
-
         {'kind': 'bullets', 'title': 'Only the first leg is printed before the button',
          'bullets': [
              'Lesson 4-6\'s habit, plan, print, button, drive, with one limit',
              'The main program prints the path for **leg 1** before the button',
              'It can\'t print legs 2, 3 and 4 yet: each is planned from wherever the previous leg **actually** finished',
              'Instead, each leg is printed as it\'s planned, just before the robot drives it',
+             'The heading carries over too: leg 1 ends facing East, so leg 2 starts facing East',
          ],
          'callout': 'In Module 5, where obstacles can appear mid-run, this becomes the only way it could work',
          'tone': 'teal'},
@@ -133,28 +112,6 @@ DECK = {
          'answer': 1,
          'explanation': 'Each leg is planned from the robot\'s current position. Leg 1 is the only one whose '
                         'starting position is known before the robot moves.'},
-
-        {'kind': 'bullets', 'title': 'The heading carries over',
-         'bullets': [
-             '`heading` is **not** reset between legs',
-             'Finished leg 1 facing East? It starts leg 2 facing East',
-             'That\'s what `drive_path` returned, and that\'s the truth on the floor',
-             'It\'s exactly why `turn_to()` works from the real current heading rather than assuming North',
-         ],
-         'split': 0.52,
-         'figure': '/img/lesson-m4-07/delivery-run-xy.svg',
-         'crop': (0.0, 0.1, 0.52, 1.0),
-         'notes': 'The grid half of the delivery-run figure: the small circled arrows are the heading each '
-                  'leg ends with. Leg 2 starts facing East because leg 1 ended that way.'},
-
-        {'kind': 'check',
-         'question': 'At the start of leg 2, what is the robot\'s heading?',
-         'options': ['Always reset to 0 (North)',
-                     'Whatever heading drive_path returned at the end of leg 1',
-                     'Always 2 (South)', 'Random'],
-         'answer': 1,
-         'explanation': 'The main program keeps heading from one leg to the next by assigning it from '
-                        'drive_path\'s return. The robot begins each leg facing however it finished the last.'},
 
         {'kind': 'steps', 'title': 'Activity · Test in three levels',
          'lead': 'Do **not** jump straight to the full run. If something breaks, you won\'t know which piece. '
@@ -201,7 +158,6 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'If you finish early',
          'bullets': [
-             'Add a "return home" leg',
              'A round trip: destinations forward, then reversed',
              'Let the user type the destinations',
              'Count total intersections driven and turns made across the whole journey',
@@ -210,15 +166,6 @@ DECK = {
          'notes': 'Class-track students drive with navigator.drive_path(path) and read navigator.position; '
                   'there is no return value to drop, which is the point of the Lesson 4-6 side-by-side. '
                   'It is the first time the encapsulation pays off in a whole program.'},
-
-        {'kind': 'check',
-         'question': 'You want the robot to end where it began. What\'s the simplest change?',
-         'options': ['Reset position to (0, 0) at the end',
-                     'Add (0, 0) as the final destination in the list',
-                     'Reverse the motors', 'Restart the program'],
-         'answer': 1,
-         'explanation': 'The loop already computes and drives a path to each destination. Just append home '
-                        '(0,0) to the list and the last leg drives the robot back.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [

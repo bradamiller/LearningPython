@@ -26,8 +26,6 @@ By the end of this project you will be able to:
 - Integrate the planner and the driving functions into one program, written as the last test function in `robot.py`
 - Write a main loop that computes and drives a path to each destination in a list
 - Carry the robot's pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`'s return
-- Print the first leg's path before the button, and say why only the first
-- Test incrementally — planner alone, then one leg, then the full sequence
 - Demonstrate a working multi-destination run on the XRP robot
 
 </Objectives>
@@ -36,22 +34,15 @@ By the end of this project you will be able to:
 
 ## The mission
 
-Four destinations, visited in order, starting and (optionally) ending at home base
-(0,0). The two halves do the heavy lifting: `compute_manhattan_path(position, dest)`
+Four destinations, visited in order, starting and ending at home base (0,0). The two halves do the heavy lifting: `compute_manhattan_path(position, dest)`
 returns the list of intersections, and `drive_path(path, position, heading)` drives it
 and hands back the new pose. Your job is the **main program** that connects them — about ten lines, and
 like every program in this course it is a test function at the bottom of `robot.py`.
 
 <Figure
-  src="/img/lesson-m4-07/delivery-run-xy.svg"
-  alt="A 4 by 4 grid. The robot starts at home, (0, 0), the bottom-left corner, facing north. Leg 1 goes right 2 steps to (2, 0), ending facing east. Leg 2 goes up 3 steps to (2, 3), ending facing north. Leg 3 goes left 2 steps to (0, 3), ending facing west. Leg 4 goes down 3 steps back home, ending facing south."
-  caption="DESTINATIONS on the floor: 2, 3, 2 and 3 steps. Each small arrow is the heading a leg ends with, and the next leg starts from it."
-/>
-
-<Figure
   src="/img/lesson-m4-07/delivery-drive.svg"
   alt="An animation, seen from above, of the delivery run on a 4 by 4 grid. The robot starts at home, (0, 0), facing North. The four destinations are numbered 1 to 4: (2, 0), (2, 3), (0, 3) and back to (0, 0). For each leg the planned Manhattan path appears as a dotted line from where the robot is, then the robot drives it: before each step it turns clockwise, one sensor-ended right turn at a time, until it faces the next intersection, then tracks to it and drives past. Leg 1 is one right turn and two steps east. Leg 2 needs three right turns to face North, then three steps up. Leg 3, three right turns to face West, two steps left. Leg 4, three right turns to face South, three steps down to home. Beside it, the main loop in plain words with the running line highlighted, and a box naming the leg, the step and the heading."
-  caption="The whole run, driven. Each leg is planned from where the last one ended, and because turn_to() only turns clockwise, most legs start with three right turns."
+  caption="The whole run, driven: 2, 3, 2 and 3 steps. Each leg is planned from where the last one ended, and because turn_to() only turns clockwise, most legs start with three right turns."
 />
 
 ## This lesson's skeleton
@@ -131,11 +122,7 @@ board.wait_for_button()
 test_delivery()
 ```
 
-```python
-position, heading = drive_path(path, position, heading)
-```
-
-That is the line nearly everyone gets half right: they call `drive_path` and throw the
+The marked line is the one nearly everyone gets half right: they call `drive_path` and throw the
 return value away. The failure is instructive rather than obvious — leg one works
 perfectly, and every later leg is planned from (0,0) facing North. If a student's robot
 drives a sensible first route and then wanders, ask what `position` is in their main
@@ -147,17 +134,6 @@ drives with `navigator.drive_path(path)`, and prints `navigator.position` — th
 planner call is `planner.compute_path(...)`.
 
 </TeacherNote>
-
-<KnowledgeCheck
-  question="Why must the main program write position, heading = drive_path(...) rather than just drive_path(...)?"
-  options={[
-    {text: 'Python requires return values to be assigned'},
-    {text: 'drive_path only changes its own copies; the main program learns where the robot ended up only by assigning from the return, and the next path is planned from that', correct: true},
-    {text: 'It resets the robot to (0,0)'},
-    {text: 'It is not necessary'},
-  ]}
-  explanation="position and heading inside drive_path are the function's own variables. Without the assignment, the main program's position stays (0,0) and every leg after the first is planned from the wrong place."
-/>
 
 ## Only the first leg is printed before the button
 
@@ -178,23 +154,8 @@ Module 5, where obstacles can appear mid-run, this becomes the only way it *coul
   explanation="Each leg is planned from the robot's current position. Leg 1 is the only one whose starting position is known before the robot moves."
 />
 
-## The heading carries over
-
-`heading` is not reset between legs. If the robot finished leg 1 facing East, it starts
-leg 2 facing East — that's what `drive_path` returned, and that's the truth on the
-floor. It's exactly why `turn_to()` has to work from the real current heading rather than
-assuming North: the turning loop starts from whatever heading the robot really has.
-
-<KnowledgeCheck
-  question="At the start of leg 2, what is the robot's heading?"
-  options={[
-    {text: 'Always reset to 0 (North)'},
-    {text: 'Whatever heading drive_path returned at the end of leg 1', correct: true},
-    {text: 'Always 2 (South)'},
-    {text: 'Random'},
-  ]}
-  explanation="The main program keeps heading from one leg to the next by assigning it from drive_path's return. The robot begins each leg facing however it finished the last — which is why turn_to() works from the true current heading."
-/>
+The heading carries over the same way: if leg 1 ends facing East, leg 2 starts facing
+East. That's why `turn_to()` works from the robot's real heading, not North.
 
 ## Activity · Test in three levels
 
@@ -240,22 +201,12 @@ def test_delivery_paper():
 
 <TeacherNote title="Project day — short intro, incremental testing, and celebrate">
 
-Keep the intro brief; this is a build-and-test day. The single most common bug is the
-dropped return value from `drive_path` — when leg-2 paths look wrong, check that line
-first; the printed path for leg 2 (planned from (0,0) again) gives it away on screen
-before the robot moves. Push level-by-level testing hard; the students who write
+Keep the intro brief; this is a build-and-test day. Push level-by-level testing hard; the students who write
 everything at once and can't find the break are the ones who skipped planner-only
 testing. Watch battery drain on long multi-turn runs and charge between attempts. When
 a robot finishes the whole sequence, let the class watch — it's the payoff of eight
 lessons. For 50-minute periods, plan two days: planning + desktop testing, then robot
 day.
-
-**Class track:** students who did the extensions run the project on their objects —
-`navigator.drive_path(path)` on the `navigator` created under the class in Lesson 4-6,
-and `planner.compute_path()` if they built `Manhattan` — not on the functions. There is
-no return value to drop, which is the point of the Lesson 4-6 side-by-side, and it is
-the first time the encapsulation pays off in a whole program rather than a snippet.
-Same rubric.
 
 </TeacherNote>
 
@@ -271,21 +222,10 @@ You're graded on the whole system working together:
 | Robot demo | 10 | Physically visits all destinations with correct turns |
 | Planning & docs | 5 | Planning worksheet, a hand-trace of one leg, testing checklist followed |
 
-**If you finish early**, try an extension: add a "return home" leg, do a round trip
-(destinations forward then reversed), let the user type destinations, count total
+**If you finish early**, try an extension: do a round trip (destinations forward then
+reversed), let the user type destinations, count total
 intersections driven and turns made across the whole journey — or the Lesson 4-6 class
 extension, a `Navigator` object so the main loop has nothing to pass back and forth.
-
-<KnowledgeCheck
-  question="You want the robot to end where it began. What's the simplest change?"
-  options={[
-    {text: 'Reset position to (0, 0) at the end'},
-    {text: 'Add (0, 0) as the final destination in the list', correct: true},
-    {text: 'Reverse the motors'},
-    {text: 'Restart the program'},
-  ]}
-  explanation="The loop already computes and drives a path to each destination. Just append home (0,0) to the list and the last leg drives the robot back."
-/>
 
 ## Real-world connections
 
