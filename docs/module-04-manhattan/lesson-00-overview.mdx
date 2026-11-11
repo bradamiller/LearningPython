@@ -62,6 +62,17 @@ By the end of this overview you will be able to:
 ## Breaking down a complex problem
 
 Now you know how to find the route. Getting the robot to do it is the next problem.
+
+Street and avenue names are hard to use in a robot program, so we number each
+intersection instead: a column number, **x**, and a row number, **y**. The taxi's trip
+becomes (1, 1) to (3, 4).
+
+<Figure
+  src="/img/lesson-m4-00/manhattan-xy.svg"
+  alt="The same cartoon map of midtown Manhattan, with every intersection labeled by a pair of numbers (x, y). x is the column: the avenues are numbered from the west, 9th Ave is x = 0, 8th Ave x = 1, up to Madison, x = 5. y is the row: the streets are numbered from the south, 53rd St is y = 0, 54th St y = 1, up to 58th St, y = 5. The taxi starts at A, (1, 1), the corner of 8th Avenue and 54th Street, and follows the blue route to B, (3, 4), the corner of 6th Avenue and 57th Street."
+  caption="Each intersection gets a column number x and a row number y, written (x, y)."
+/>
+
 "Drive over there" sounds like one job, but it's too much to get right in one go. One way to tackle a complex problem is to **break it into simpler
 sub-problems** and solve each one. That's called **problem decomposition** (or **top-down design**).
 
@@ -110,8 +121,8 @@ route first, then **drive** it.
    drives it**, then reports where the robot ended up. It decides nothing; the plan
    already did.
 
-Each intersection is a pair of numbers, its `(x, y)` coordinates. So the plan is a
-**list of coordinates**, the one thing the two functions share.
+Each intersection is an `(x, y)` pair, so the plan is a **list of coordinates**, the one
+thing the two functions share.
 
 One job each is called **separation of concerns**, and it makes bugs easy to find: a
 wrong route is a planner problem; a wrong turn is a driver problem.
