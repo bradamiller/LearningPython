@@ -11,13 +11,13 @@ DECK = {
              'Keep the robot\'s pose (`position` and `heading`) up to date by assigning from what `drive_path()` returns',
              'Plan, **print the path**, wait for the button, then drive',
          ],
-         'notes': '60 minutes, Python plus robot. The two paper designs from Lesson 4-5 become real '
-                  'code, built on the Module 2 line-tracking functions with no motor code rewritten. '
+         'notes': '60 minutes, Python plus robot. The turn_to() paper design from Lesson 4-5 and '
+                  'drive_path(), which pulls planning and turning together, become real code, built on the Module 2 line-tracking functions with no motor code rewritten. '
                   'Testing goes on screen first, then one leg, then a path.'},
 
         {'kind': 'bullets', 'title': 'Time to make the robot move',
          'bullets': [
-             'The two functions you designed on paper join `desired_heading()` in the NAVIGATOR section',
+             '`turn_to()`, designed on paper in Lesson 4-5, and `drive_path()` join `desired_heading()` in the NAVIGATOR section',
              'Together they drive **any** Manhattan path on the grid',
              'They call the **line-tracking functions you built in Module 2**: no motor code to rewrite',
              'One wrinkle the paper design didn\'t care about: **where** the robot actually turns',
@@ -103,8 +103,8 @@ DECK = {
                  '    # return heading\n'
                  '    pass',
          'code_size': 16,
-         'notes': 'The two outlines are the Lesson 4-5 designs. The skeleton continues on the next '
-                  'slide with drive_path(), whose step 3 has grown the wrinkle.'},
+         'notes': 'turn_to() is the Lesson 4-5 design. The skeleton continues on the next '
+                  'slide with drive_path(), the loop that uses it; its step 3 handles the wrinkle.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: drive_path()',
          'lead': 'Right under `turn_to()`. Step 3 has grown the wrinkle: arrive with the pair.',

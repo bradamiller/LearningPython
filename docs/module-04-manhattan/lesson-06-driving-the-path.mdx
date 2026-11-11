@@ -14,8 +14,9 @@ sidebar_position: 6
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Time to make the robot move. The two functions you designed on paper in Lesson 4-5
-join `desired_heading()` in the NAVIGATOR section, and together they drive any
+Time to make the robot move. `turn_to()`, the turn you designed on paper in Lesson 4-5,
+and `drive_path()`, which pulls the planning and turning together, join
+`desired_heading()` in the NAVIGATOR section, and together they drive any
 Manhattan path on the grid — by calling the **line-tracking functions you built in
 Module 2**, no motor code to rewrite. That's the payoff of building a toolkit. There is
 one wrinkle the paper design didn't have to care about: where the robot actually turns.
@@ -105,8 +106,8 @@ makes a sensor-ended turn land on the new line reliably.
 ## This lesson's skeleton
 
 Paste this into `robot.py` at the end of the NAVIGATOR section, under
-`desired_heading()`. The two outlines are the Lesson 4-5 designs; `drive_path()`'s step
-3 has grown the wrinkle.
+`desired_heading()`. `turn_to()` is the Lesson 4-5 design; `drive_path()` is the loop
+that uses it, and its step 3 handles the wrinkle.
 
 ```python
 # --- Lesson 4-6: turn to a heading, drive a path ---

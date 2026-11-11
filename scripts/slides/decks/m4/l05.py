@@ -9,11 +9,10 @@ DECK = {
              'Write `desired_heading(position, next_pos)`: coordinate change to heading 0 to 3',
              'Raise an error when a function cannot answer, and say why',
              'Design a turn: clockwise quarter turns, `(heading + 1) % 4`',
-             'Describe how `drive_path` uses both to drive a whole path',
          ],
-         'notes': '35 minutes, design on paper. Only one function is written today, '
-                  'desired_heading(), and it runs on the desk. turn_to() and drive_path() are '
-                  'designed here and written in Lesson 4-6. Resist jumping to the driving code.'},
+         'notes': '30 minutes, design on paper. Only one function is written today, '
+                  'desired_heading(), and it runs on the desk. turn_to() is designed here; '
+                  'Lesson 4-6 writes it and drive_path(). Resist jumping to the driving code.'},
 
         {'kind': 'figure', 'title': 'Decompose further, like 4-0',
          'figure': './decks/m4/fig/l05-decomp-1.svg',
@@ -38,8 +37,8 @@ DECK = {
         {'kind': 'figure', 'title': 'Decompose further, like 4-0',
          'figure': './decks/m4/fig/l05-decomp-4.svg',
          'caption': 'And turning breaks into two: work out which way to face, then turn until facing it.',
-         'notes': 'Today: write desired_heading() and test it on screen; design turn_to() and '
-                  'drive_path() on paper. Lesson 4-6 writes them.'},
+         'notes': 'Today: write desired_heading() and test it on screen; design turn_to() on paper. '
+                  'Lesson 4-6 writes it and drive_path().'},
 
         {'kind': 'table', 'title': 'One change, four directions',
          'lead': 'Between **adjacent** intersections, either x changes by one **or** y changes by one. '
@@ -249,39 +248,13 @@ DECK = {
          'explanation': '3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from '
                         'West faces North, and the heading never becomes 4.'},
 
-        {'kind': 'code', 'title': 'Preview · drive_path, next lesson',
-         'lead': 'For each intersection: work out the heading, turn to it, drive one, update position.',
-         'lead_h': 0.7,
-         'code': 'def drive_path(path, position, heading):\n'
-                 '    """Turn and drive through every intersection in path, from\n'
-                 '    position facing heading; return the final (position, heading)."""\n'
-                 '    # for each next_pos in path:\n'
-                 '    #     1. needed = desired_heading(position, next_pos)\n'
-                 '    #     2. heading = turn_to(heading, needed)\n'
-                 '    #     3. drive to the next intersection (LINE TRACKING)\n'
-                 '    #     4. position = next_pos -- the robot is there now\n'
-                 '    # return position, heading\n'
-                 '    pass',
-         'code_size': 19,
-         'callout': '`position` and `heading` update every step. Otherwise the next `desired_heading` '
-                    'compares against the wrong spot.',
-         'tone': 'teal',
-         'notes': 'A preview, not an activity: students trace and write it in Lesson 4-6. '
-                  'Step 3 is track_to_intersection(), the Module 2 function that follows the line '
-                  'until both sensors hit a crossing: the robot drives exactly one intersection '
-                  'without measuring distance. It returns position and heading because the caller '
-                  'will plan the next path from wherever the robot ended up. Lesson 4-6 adds one '
-                  'real-world wrinkle to step 3.'},
-
-        {'kind': 'check',
-         'question': 'Why must `drive_path` update `position` after each step?',
-         'options': ['To make the robot faster',
-                     'So the next desired_heading() compares against the correct current position',
-                     'To reset the heading to North',
-                     'It doesn\'t matter: position is never used again'],
-         'answer': 1,
-         'explanation': 'desired_heading works from the difference between current and next. If '
-                        'position isn\'t updated, every step after the first computes the wrong direction.'},
+        {'kind': 'bullets', 'title': 'Next: the whole problem',
+         'bullets': [
+             'You have the planner, a way to pick a heading, and a design for the turn',
+             'Next lesson pulls the turning and planning code together',
+             'Result: drive from the start to a destination, on its own',
+         ],
+         'tone': 'teal'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [

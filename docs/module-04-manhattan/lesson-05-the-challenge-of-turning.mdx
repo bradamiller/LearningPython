@@ -7,7 +7,7 @@ sidebar_position: 5
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-5 · The Challenge of Turning"
-  meta={['35 min', 'Design on paper', 'Headings as numbers']}
+  meta={['30 min', 'Design on paper', 'Headings as numbers']}
 />
 
 <TeacherBanner>
@@ -27,7 +27,7 @@ broken down into two steps at each intersection, **turn** to face the next one, 
 
 The robot has a **heading**, the direction it faces, and only drives forward. This lesson
 opens the last section of `robot.py`, the NAVIGATOR: you write `desired_heading` and test it
-on screen, and design `turn_to` and `drive_path` on paper for next lesson.
+on screen, and design `turn_to` on paper for next lesson.
 
 <Objectives>
 
@@ -37,7 +37,6 @@ By the end of this lesson you will be able to:
 - Write `desired_heading(position, next_pos)`, which turns a one-step coordinate change into a heading (0 = N, 1 = E, 2 = S, 3 = W), and test it on screen
 - Raise an error when a function is asked something it cannot answer, and say why that makes a bug easier to find
 - Design a turn as a loop: one clockwise quarter turn at a time, `(heading + 1) % 4`, until the heading matches
-- Describe how `drive_path` uses both to drive a whole path and hand back where the robot ended up
 
 </Objectives>
 
@@ -348,46 +347,11 @@ Python), which surprises nearly everyone; the loop only ever needs `(heading + 1
 
 </TeacherNote>
 
-## Preview · Putting it together: `drive_path`
+## Next: the whole problem
 
-With those two helpers, driving the whole path is short — for each intersection, figure
-out the heading, turn to it, drive forward one, update position. Here is the design as
-you'll meet it in next lesson's skeleton:
-
-```python
-def drive_path(path, position, heading):
-    """Turn and drive through every intersection in path, from
-    position facing heading; return the final (position, heading)."""
-    # for each next_pos in path:
-    #     1. needed = desired_heading(position, next_pos)
-    #     2. heading = turn_to(heading, needed)
-    #     3. drive to the next intersection (LINE TRACKING)
-    #     4. position = next_pos -- the robot is there now
-    # return position, heading
-    pass
-```
-
-Step 3 is `track_to_intersection()`, the Module 2 function that follows the line until
-both sensors hit a crossing — that's how the robot drives exactly one intersection
-without measuring any distance. The function returns `position` and `heading` at the
-end, because the caller will want to plan the *next* path from
-wherever the robot ended up. You write it next lesson, which also adds one real-world
-wrinkle to step 3.
-
-Notice `position` gets updated every step — otherwise the *next* `desired_heading`
-would compare against the wrong current spot. And `heading` is updated from `turn_to`'s
-return value for the same reason.
-
-<KnowledgeCheck
-  question="Why must drive_path update position after each step?"
-  options={[
-    {text: 'To make the robot faster'},
-    {text: 'So the next desired_heading() compares the next intersection against the correct current position', correct: true},
-    {text: 'To reset the heading to North'},
-    {text: 'It doesn\'t matter — position is never used again'},
-  ]}
-  explanation="desired_heading works from the difference between current and next. If position isn't updated, every step after the first computes the wrong direction."
-/>
+You now have the planner, a way to pick a heading, and a design for the turn. Next lesson
+pulls the turning and planning code together to solve the whole problem: drive from the
+start to a destination, on its own.
 
 ## Real-world connections
 
@@ -414,7 +378,7 @@ Tracking heading and turning to a target direction is core to real navigation:
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** map a coordinate change to a heading, step the turning loop through a
-wrap from 3 to 0, and say why `drive_path` updates `position` each step. **Exit ticket:** "Heading 3 (W), desired
+wrap from 3 to 0. **Exit ticket:** "Heading 3 (W), desired
 1 (E) — which headings does the turning loop step through, and how many turns?" (W, N,
 E: two clockwise turns, i.e. turn around.) **Preview:** next lesson this paper design
 becomes real driving functions, built on your Module 2 line-tracking functions — plus
