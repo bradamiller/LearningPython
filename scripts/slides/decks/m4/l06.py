@@ -26,7 +26,7 @@ DECK = {
                   'it drives. Today: write desired_heading() and test it on screen; design turn_to() and '
                   'drive_path() on paper. Lesson 4-7 writes them.'},
 
-        {'kind': 'table', 'title': 'One change at a time: four directions',
+        {'kind': 'table', 'title': 'One change, four directions',
          'lead': 'Between **adjacent** intersections, either x changes by one **or** y changes by one. '
                  'Never both: that would be a diagonal.',
          'headers': ['Coordinate change', 'Direction', 'Heading number'],
@@ -38,13 +38,14 @@ DECK = {
              ['x −1 (left)', 'West', '3'],
          ],
          'size': 22,
-         'callout': 'x comes first in the tuple, but North and South change the **second** number. '
-                    'North is away from you, so moving North makes y bigger.',
+         'callout': 'x increases by one, so the robot moves **East**: desired heading **1**. '
+                    'Four `if` statements find which value changed and set the heading.',
          'tone': 'teal',
          'notes': 'The grid orientation (x first in the tuple, but North is +y, away from you) is the '
-                  'number one confusion of this lesson. Draw it, point at it, quiz it.'},
+                  'number one confusion of this lesson. Draw it, point at it, quiz it. Read the callout as '
+                  'the bridge to desired_heading(): one if per row of this table.'},
 
-        {'kind': 'figure', 'title': 'The four neighbors of an intersection',
+        {'kind': 'figure', 'title': 'Four neighbors, four headings',
          'figure': './decks/m4/fig/l06-headings-xy.svg',
          'caption': 'The coordinate change that reaches each neighbor, and its heading number. '
                     'Clockwise adds 1.',

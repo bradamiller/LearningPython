@@ -60,6 +60,10 @@ which the robot can't do). That's exactly four cases, one per compass direction:
 | y −1 (down, toward you) | South | 2 |
 | x −1 (left) | West | 3 |
 
+For example, if x increases by one, the robot needs to move East, so its desired heading
+is 1, because East is represented by 1. So we can determine the robot's desired heading
+with four `if` statements that find out which value changed, and set the heading accordingly.
+
 The part to keep straight: x comes first in the tuple, but North and South change the
 *second* number. **North is away from you**, so moving North makes y *bigger*, and
 moving South makes it smaller.
