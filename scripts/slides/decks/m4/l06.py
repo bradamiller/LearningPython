@@ -11,7 +11,7 @@ DECK = {
              'Design a turn: clockwise quarter turns, `(heading + 1) % 4`',
              'Describe how `drive_path` uses both to drive a whole path',
          ],
-         'notes': '45 minutes, design on paper. Only one function is written today, '
+         'notes': '35 minutes, design on paper. Only one function is written today, '
                   'desired_heading(), and it runs on the desk. turn_to() and drive_path() are '
                   'designed here and written in Lesson 4-7. Resist jumping to the driving code.'},
 
@@ -249,10 +249,9 @@ DECK = {
          'explanation': '3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from '
                         'West faces North, and the heading never becomes 4.'},
 
-        {'kind': 'code', 'title': 'Activity · Putting it together: drive_path on paper',
-         'lead': 'For each intersection: figure out the heading, turn to it, drive forward one, '
-                 'update position. The design as you\'ll meet it in next lesson\'s skeleton:',
-         'lead_h': 1.2,
+        {'kind': 'code', 'title': 'Preview · drive_path, next lesson',
+         'lead': 'For each intersection: work out the heading, turn to it, drive one, update position.',
+         'lead_h': 0.7,
          'code': 'def drive_path(path, position, heading):\n'
                  '    """Turn and drive through every intersection in path, from\n'
                  '    position facing heading; return the final (position, heading)."""\n'
@@ -264,24 +263,15 @@ DECK = {
                  '    # return position, heading\n'
                  '    pass',
          'code_size': 19,
-         'notes': 'Step 3 is track_to_intersection(), the Module 2 function that follows the line '
+         'callout': '`position` and `heading` update every step. Otherwise the next `desired_heading` '
+                    'compares against the wrong spot.',
+         'tone': 'teal',
+         'notes': 'A preview, not an activity: students trace and write it in Lesson 4-7. '
+                  'Step 3 is track_to_intersection(), the Module 2 function that follows the line '
                   'until both sensors hit a crossing: the robot drives exactly one intersection '
                   'without measuring distance. It returns position and heading because the caller '
                   'will plan the next path from wherever the robot ended up. Lesson 4-7 adds one '
                   'real-world wrinkle to step 3.'},
-
-        {'kind': 'steps', 'title': 'Activity · Trace a path, one line per step',
-         'lead': 'Trace `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N). For each step write:',
-         'steps': [
-             'The next intersection, and the heading needed',
-             'The headings the turning loop steps through',
-             'What the robot does',
-         ],
-         'callout': '`position` and `heading` update every step. Otherwise the next `desired_heading` '
-                    'compares against the wrong spot.',
-         'tone': 'teal',
-         'notes': 'The answer is a closed reveal on the lesson page: all four lines on paper first. '
-                  'Watch for the corner where the path turns from East to North.'},
 
         {'kind': 'check',
          'question': 'Why must `drive_path` update `position` after each step?',

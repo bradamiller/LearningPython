@@ -7,7 +7,7 @@ sidebar_position: 6
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-6 · The Challenge of Turning"
-  meta={['45 min', 'Design on paper', 'Headings as numbers']}
+  meta={['35 min', 'Design on paper', 'Headings as numbers']}
 />
 
 <TeacherBanner>
@@ -348,7 +348,7 @@ Python), which surprises nearly everyone; the loop only ever needs `(heading + 1
 
 </TeacherNote>
 
-## Activity · Putting it together: `drive_path` on paper
+## Preview · Putting it together: `drive_path`
 
 With those two helpers, driving the whole path is short — for each intersection, figure
 out the heading, turn to it, drive forward one, update position. Here is the design as
@@ -371,22 +371,8 @@ Step 3 is `track_to_intersection()`, the Module 2 function that follows the line
 both sensors hit a crossing — that's how the robot drives exactly one intersection
 without measuring any distance. The function returns `position` and `heading` at the
 end, because the caller will want to plan the *next* path from
-wherever the robot ended up. This is the paper version; Lesson 4-7 adds one real-world wrinkle to step 3.
-
-Trace the path `[(1,0), (2,0), (2,1), (2,2)]` starting at (0,0) heading 0 (N), one
-line per step — next intersection, heading needed, the headings the turning loop steps
-through, what the robot does:
-
-<Reveal title="Check your trace" hint="all four lines first">
-
-```
-At (0,0) N, next (1,0): x+1 -> want E(1). N, E: one clockwise.          drive to (1,0).
-At (1,0) E, next (2,0): x+1 -> want E(1). already E: no turn.           drive to (2,0).
-At (2,0) E, next (2,1): y+1 -> want N(0). E, S, W, N: three clockwise.  drive to (2,1).
-At (2,1) N, next (2,2): y+1 -> want N(0). already N: no turn.           drive to (2,2).
-```
-
-</Reveal>
+wherever the robot ended up. You write it next lesson, which also adds one real-world
+wrinkle to step 3.
 
 Notice `position` gets updated every step — otherwise the *next* `desired_heading`
 would compare against the wrong current spot. And `heading` is updated from `turn_to`'s
@@ -428,7 +414,7 @@ Tracking heading and turning to a target direction is core to real navigation:
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** map a coordinate change to a heading, step the turning loop through a
-wrap from 3 to 0, and trace a multi-step path. **Exit ticket:** "Heading 3 (W), desired
+wrap from 3 to 0, and say why `drive_path` updates `position` each step. **Exit ticket:** "Heading 3 (W), desired
 1 (E) — which headings does the turning loop step through, and how many turns?" (W, N,
 E: two clockwise turns, i.e. turn around.) **Preview:** next lesson this paper design
 becomes real driving functions, built on your Module 2 line-tracking functions — plus
