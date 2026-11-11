@@ -50,7 +50,7 @@ DECK = {'module': 4,
                          '**Module 5** adds obstacles; **Module 6** (optional) adds slow streets'],
              'size': 28},
             {'kind': 'bullets',
-             'title': 'Harder than it sounds',
+             'title': 'Breaking down a complex problem',
              'bullets': ['Knowing the route is only part of it',
                          '"Drive over there" sounds like one job, but it is a **somewhat complex '
                          'problem**',
