@@ -16,7 +16,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Until now the blocked list has been filled in by hand — by you, in a test. Now the
 robot fills it in itself, using the **ultrasonic rangefinder**. The planner was tested
-on paper in Lesson 5-6; nothing about it changes today. The only new thing is
+on screen in Lesson 5-6; nothing about it changes today. The only new thing is
 *detection*: look before you drive, and if something is there, call `add_blocked()`
 — the exact call your tests made — and ask for a new path. It opens the last section
 of `robot.py`: OBSTACLES.
@@ -194,7 +194,7 @@ Three things to notice.
 
 **`add_blocked(next_pos)` is the same call your Lesson 5-6 harness made.** The planner
 can't tell whether an obstacle came from a test script or a sensor. That's why
-passing the paper tests means the robot will re-plan correctly: it's the same code,
+passing the Lesson 5-6 tests means the robot will re-plan correctly: it's the same code,
 fed the same way.
 
 **Re-planning is one line, from where the robot is.** `compute_bfs_path(position,
@@ -249,7 +249,7 @@ path before the robot moves.
     board.wait_for_button()
 ```
 
-Read it before you press the button. Is it what you expected? This is the Lesson 5-6
+Read it before you press the button. Is it what you expected? Printing the plan before you drive is a
 paper test built into every run, and it's your first diagnostic when something goes
 wrong: if the printed path is right and the robot still goes wrong, the bug is in the
 driving, not the planner. As in Module 4, that makes two presses per driving test:

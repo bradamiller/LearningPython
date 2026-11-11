@@ -203,12 +203,12 @@ show a fast finisher.
 
 ## Activity · Write it, then ask it the four questions
 
-Write the body of `desired_heading()` from the outline. Then a paper test —
-`test_headings()` — that prints the heading from `(1, 1)` to each of its four
-neighbors: `(0, 1)`, `(1, 2)`, `(2, 1)` and `(1, 0)`. Work out the four answers from the
-table before you run it, and print `HEADING_NAMES[...]` of each result next to the
-number so you can read it. Set the run line to `test_headings()`; the robot stays on
-the desk.
+Write the body of `desired_heading()` from the outline. Then write a paper test,
+`test_headings()`. It calls `desired_heading()` from `(1, 1)` to each of its four
+neighbors, `(0, 1)`, `(1, 2)`, `(2, 1)` and `(1, 0)`, and prints one line for each: the
+neighbor, the heading number, and its name from `HEADING_NAMES`. Work out the four
+answers from the table first. Set the run line to `test_headings()` and run it with the
+robot on the desk. Correct output is four lines that match your four answers.
 
 Then add one more call at the *end* of the test: `(1, 1)` to `(2, 2)`, a diagonal.
 Run it again. The four answers print as before, and then the program stops with your

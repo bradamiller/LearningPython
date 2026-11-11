@@ -48,7 +48,8 @@ like every program in this course it is a test function at the bottom of `robot.
 ## This lesson's skeleton
 
 Paste this above `RUN`, at the end of the NAVIGATOR section. No new function is
-defined: one setting, a paper test, and the project itself.
+defined: one setting, a paper test that prints every leg's path without moving the
+robot, and the project itself.
 
 ```python
 # --- Lesson 4-7: final project, the delivery run ---
@@ -163,9 +164,11 @@ Do **not** jump straight to the full run on the robot. If something breaks, you 
 which piece. Build up, one test on the run line at a time:
 
 1. **Planner alone (no robot).** Write `test_delivery_paper()` from its outline and set
-   the run line to it: loop the destinations, print each path, set `position = dest`
-   between them. Confirm every path looks right on screen — this is the Lesson 4-4
-   habit, run on today's destinations. Count the steps: 2, 3, 2, 3.
+   the run line to it: loop the destinations, print each path and its step count, and
+   set `position = dest` between them. The robot stays on the desk. Correct output is
+   four paths, of 2, 3, 2 and 3 steps:
+   `[(1, 0), (2, 0)]`, `[(2, 1), (2, 2), (2, 3)]`, `[(1, 3), (0, 3)]`,
+   `[(0, 2), (0, 1), (0, 0)]`.
 2. **One leg on the robot.** Set the run line to Lesson 4-6's `test_drive_path()` with
    `DESTINATIONS[0]` as its destination. Place the robot at (0,0) facing North, both
    presses. Correct turns? Wheels on the right intersection at the end?
@@ -184,7 +187,7 @@ def test_delivery_paper():
 ```
 
 `position = dest` is the paper stand-in for the line the real program gets from
-`drive_path()`'s return — on paper the robot always arrives.
+`drive_path()`'s return — in a paper test the robot always arrives.
 
 </Reveal>
 

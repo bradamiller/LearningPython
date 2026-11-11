@@ -18,7 +18,7 @@ to preview the student view.
 This is the heart of Module 5: turning the hand trace from Lesson 5-3 into working
 Python. The function is about twenty lines, and there isn't a line in it you
 haven't already done with a pencil. You'll build it in three stages, run a paper test
-after each, and finish by making the program draw its grid of ring numbers so you can
+(a test that prints paths and step counts; the robot stays on the desk) after each, and finish by making the program draw its grid of ring numbers so you can
 compare it with your own.
 
 <Objectives>
@@ -143,7 +143,8 @@ finished before the next one starts.
 
 The toolkit from Lesson 5-4 is already in the file; `compute_bfs_path()` is the part
 to fill in. Build it in the three stages below and run after each one. The tests are
-paper tests: the robot stays on the desk.
+paper tests: they print each path and its step count, the robot stays on the desk, and
+you check each line against your Lesson 5-3 trace.
 
 ### Step 1 · Setup and the guard
 
@@ -699,7 +700,7 @@ names, because that is what every student has; yours are the same names with
 breakages explained, not just observed. **Preview:** next lesson we test this
 properly. On an open grid there are many shortest paths, so instead of one expected
 list the harness checks what must be true of any correct answer — and then the same
-harness runs against Manhattan, which fails the wall tests on paper.
+harness runs against Manhattan, which fails the wall tests on screen.
 
 </TeacherNote>
 

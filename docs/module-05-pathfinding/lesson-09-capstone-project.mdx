@@ -39,7 +39,7 @@ By the end of this project you will be able to:
 Your robot is an autonomous delivery vehicle. It must visit four or more grid destinations
 in sequence, and for each leg: plan a path, drive it while watching for obstacles, and
 reroute whenever the rangefinder finds one. Everything you need already exists in
-`robot.py` — the planner (Lessons 5-4 and 5-5) and its paper tests (5-6), detection
+`robot.py` — the planner (Lessons 5-4 and 5-5) and its tests (5-6), detection
 (5-7), the drive-until-you-arrive function and carrying knowledge between runs (5-8).
 Today you connect them.
 
@@ -62,7 +62,8 @@ learning.
 ## This lesson's skeleton
 
 Paste this at the end of the OBSTACLES section, above `RUN`. No new function is
-defined: one setting, a paper test, and the project itself — the outline is the
+defined: one setting, a paper test that prints every leg's path without moving the
+robot, and the project itself — the outline is the
 whole program's shape, and like every program in this course it is a test function.
 
 ```python
@@ -210,7 +211,7 @@ def test_capstone_paper():
 ```
 
 `position = dest` is the paper stand-in for the position `navigate_with_detection()`
-hands back — on paper the robot always arrives. With nothing blocked the four legs
+hands back — in a paper test the robot always arrives. With nothing blocked the four legs
 are 4, 2, 3 and 3 steps.
 
 </Reveal>
