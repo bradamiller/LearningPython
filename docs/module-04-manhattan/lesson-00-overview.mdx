@@ -156,7 +156,13 @@ It's short **because the functions do all the work**.
   caption="The seven-line program, on the floor: three destinations, three legs, each planned from where the last one ended."
 />
 
-## What's next
+## The module at a glance
+
+<TreeFigure
+  src="/img/lesson-m4-05/decomposition.svg"
+  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) tuples runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face it, Lessons 4-5 and 4-6; 2, drive to it, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6."
+  caption="Module 4, broken into parts. Each box names the lesson that builds it."
+/>
 
 Lessons 4-1 and 4-2 give you the background: coordinates, tuples and lists. Then you
 write and test the planner (4-3 and 4-4), write and test the driver (4-5 and 4-6), and
