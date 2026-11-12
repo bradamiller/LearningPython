@@ -15,7 +15,8 @@ from lxml import etree
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATIC = os.path.join(HERE, '..', '..', '..', '..', '..', 'static')
-FIGS = ['lesson-m4-00/manhattan-grid', 'lesson-m4-01/coordinates-xy',
+FIGS = ['lesson-m4-00/manhattan-grid', 'lesson-m4-00/manhattan-xy',
+        'lesson-m4-01/coordinates-xy',
         'lesson-m4-01/naming-intersections', 'lesson-m4-01/tuple-on-grid',
         'lesson-m4-02/build-path']
 

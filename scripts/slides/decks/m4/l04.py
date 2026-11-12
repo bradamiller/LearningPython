@@ -1,52 +1,30 @@
 DECK = {
     'module': 4, 'lesson': 4,
     'doc': 'module-04-manhattan/lesson-04-naming-and-testing-the-planner',
-    'title': 'Naming and Testing the Planner',
+    'title': 'Testing the Planner',
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Say why the planner\'s name says which algorithm it uses',
-             'State the function\'s **three promises** and record them in a **docstring**',
+             'State the function\'s three promises and record them in a docstring',
              'Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)',
              'Hand-calculate an expected path, then compare it to the actual output',
-             'Add a reusable `run_test()` helper and a test that runs six cases through it',
+             'Add a reusable `run_test()` helper to the MANHATTAN PLANNER section, and a test '
+             'that runs a suite of six cases through it',
              'Debug a failing test with print statements',
          ],
-         'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets a name for its '
-                  'algorithm and its promises written down, and unit tests prove them on screen. Two '
+         'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets its promises '
+                  'written down, and unit tests prove them on screen. Two '
                   'non-negotiables: expected paths are calculated by hand before anything runs, and '
                   'the suite covers every direction and edge case.'},
 
-        {'kind': 'bullets', 'title': 'Same function, a name for its algorithm',
+        {'kind': 'bullets', 'title': 'Same function, written promises',
          'bullets': [
-             'Last lesson you wrote `compute_path()` and it worked',
-             'Today it gets a name for its algorithm and its promises written down, and unit tests prove them',
+             'Last lesson you wrote `compute_manhattan_path()` and it worked',
+             'Today you write down what it promises and prove those promises with **unit tests**, '
+             'before the robot ever moves',
          ],
          'callout': '**Test on screen before you test on the floor.**',
          'tone': 'teal'},
-
-        {'kind': 'bullets', 'title': 'Why name the planner?',
-         'bullets': [
-             'There are many ways to plan a route. Each method is an **algorithm**',
-             'Manhattan: fast and easy to write, but fails if a road is blocked',
-             'Later you\'ll build more robust planners',
-             'Same promises (the **interface**) means planners can be swapped as the need changes',
-         ],
-         'callout': 'That\'s why the Manhattan planner gets a unique name that reflects its algorithm',
-         'tone': 'teal',
-         'notes': 'Module 5 adds compute_bfs_path() beside this one, with the same parameters.'},
-
-        {'kind': 'check',
-         'question': 'Why does the function\'s name include \'manhattan\' when it is the only planner '
-                     'in the course so far?',
-         'options': ['Python requires function names to have three parts',
-                     'Module 5 adds `compute_bfs_path()`, and both must exist in one program without colliding',
-                     'Because it is faster to type',
-                     'It is a convention for while loops'],
-         'answer': 1,
-         'explanation': 'A name that says which algorithm it is costs nothing now and saves a rename '
-                        'later. compute_manhattan_path() and compute_bfs_path() will sit side by '
-                        'side in Module 5.'},
 
         {'kind': 'code', 'title': 'What the function promises: a docstring',
          'lead': 'A function is a contract: give me these inputs, and I guarantee this output. Write '
@@ -81,7 +59,7 @@ DECK = {
          'tone': 'teal',
          'notes': 'Promise 1 matters because each element is a place to drive to, and the robot '
                   'already stands on the start. It bites in Lesson 4-6: a path that includes the start '
-                  'makes the first desired_heading() call see a zero move and return None.'},
+                  'makes the first get_desired_heading() call see a zero move and return None.'},
 
         {'kind': 'check',
          'question': 'A classmate\'s version returns `[(0, 0), (1, 0), (2, 0)]` for start (0, 0), '
@@ -97,7 +75,6 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'In robot.py',
          'bullets': [
-             'Change `compute_path` to `compute_manhattan_path` everywhere it appears',
              'Replace the one-line docstring with the full one',
              'Run `test_paper_paths()`: same output as last lesson',
          ]},
@@ -303,14 +280,13 @@ DECK = {
 
         {'kind': 'wrapup',
          'questions': [
-             'Why `compute_manhattan_path` and not `compute_path`?',
              'What are the three promises?',
              'Why test on screen before the robot?',
              'Where does the expected path come from?',
              'What makes a good test suite?',
          ],
          'next': 'turning, so the robot faces the right way at each step',
-         'notes': 'Answers: Module 5 adds compute_bfs_path, and the name says which. No start in the path; ends at the destination; [] when already there. Faster, and it points to the exact broken input. Hand-calculation, before '
+         'notes': 'Answers: No start in the path; ends at the destination; [] when already there. Faster, and it points to the exact broken input. Hand-calculation, before '
                   'you run the code. Every direction and edge case, not just one happy path. Exit '
                   'ticket: "Write a test for start (1,1), destination (3,2): what\'s the expected '
                   'path?" ([(2,1),(3,1),(3,2)]). The algorithm is proven correct; next lesson tackles '

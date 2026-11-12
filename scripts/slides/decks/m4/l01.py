@@ -7,8 +7,8 @@ DECK = {
          'objectives': [
              'Name any intersection with an `(x, y)` pair, and tell x (across) from y (away from you)',
              'Create a tuple to hold an `(x, y)` coordinate',
-             'Read its parts: the x coordinate is `position[0]`, the y coordinate is '
-             '`position[1]`; or unpack both at once',
+             'Read its parts: the x coordinate of the tuple is `position[0]`, and the y '
+             'coordinate is `position[1]`; or unpack both at once',
              'Explain **immutability** and why it suits coordinates',
              'Compare positions with `==`',
          ],
@@ -19,9 +19,10 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'A name for every spot',
          'bullets': [
-             'To tell the robot **where to go**, you need a way to name every spot on the grid',
-             'Today: that system, **(x, y) coordinates**',
-             'On paper first, then stored in Python as a **tuple**',
+             'In Lesson 4-0, every intersection was a pair of numbers in parentheses, like '
+             '`(1, 1)` or `(3, 4)`',
+             'That notation is built into Python, and it\'s called a **tuple**',
+             'Today: what the two numbers mean, on paper first, then tuples at work in code',
          ],
          'callout': 'A solid mental model here makes tuples, lists and the Manhattan algorithm '
                     'click later',
@@ -91,8 +92,8 @@ DECK = {
 
         {'kind': 'code', 'title': 'One value, two numbers',
          'lead': 'You **could** use two variables, `x = 2` and `y = 3`, but ten positions would '
-                 'need twenty variables. A **tuple** packs both into one value, written with '
-                 'parentheses:',
+                 'need twenty variables. A **tuple** packs both into one value, written just '
+                 'as on the map in 4-0:',
          'lead_h': 1.25,
          'code': 'position = (2, 3)\n'
                  'start = (0, 0)\n'

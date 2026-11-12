@@ -89,11 +89,23 @@ DECK = {
          'callout_size': 21,
          'tone': 'teal'},
 
-        {'kind': 'code', 'title': 'Loop through it with `for`',
+        {'kind': 'code', 'title': 'Loop through it by index',
+         'lead': 'To visit every step, you could count through the indexes with `range()` and '
+                 'look each one up:',
+         'code': 'for i in range(len(path)):\n'
+                 '    step = path[i]\n'
+                 '    print("Visit:", step, " x:", step[0], " y:", step[1])',
+         'code_size': 22},
+
+        {'kind': 'code', 'title': 'The shortcut: `for step in path`',
+         'lead': 'That\'s so common that Python has a shortcut. In `for step in path:`, each '
+                 'element of the list is assigned in turn, first to last, to the variable on the '
+                 'left of `in`. No index needed:',
+         'lead_h': 1.25,
          'code': 'for step in path:\n'
                  '    print("Visit:", step, " x:", step[0], " y:", step[1])',
          'code_size': 22,
-         'callout': 'Each pass, `step` is one tuple from the list, in order',
+         'callout': 'Both loops print the same three lines',
          'tone': 'teal'},
 
         {'kind': 'check',

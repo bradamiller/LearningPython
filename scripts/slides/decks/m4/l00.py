@@ -8,7 +8,7 @@ DECK = {'module': 4,
                             'Split a complex problem into simpler parts: plan the route first, '
                             'test it with no robot, then drive it',
                             'Name the **planner** (`compute_manhattan_path`), the **driver** '
-                            '(`drive_path`), and the list of tuples between them'],
+                            '(`drive_path`), and the list of (x, y) coordinates between them'],
              'notes': '20 to 25 minutes, problem decomposition, a class discussion, no coding yet. '
                       'The lesson opens with the whole problem, leads a class discussion to the '
                       'split this module uses: plan first, test the plan with no robot, then drive '
@@ -20,15 +20,15 @@ DECK = {'module': 4,
             {'kind': 'figure',
              'title': 'The problem',
              'figure': './decks/m4/fig/manhattan-grid.svg',
-             'caption': "A taxi can't cut through the buildings: 2 blocks across, then 3 up. The "
-                        'robot is the same: it can only drive along the tape.',
+             'caption': "A taxi can't cut through the buildings: 2 blocks east, then 3 blocks "
+                        'north. The robot is the same: it can only drive along the tape.',
              'notes': 'The problem: get the robot from where it starts to a destination on the '
                       'grid, all by itself. A taxi in Manhattan has the same problem: buildings '
                       'fill every block, so it can only drive along the streets. The robot can '
                       'only drive along the tape, and nobody steers it at the corners. One '
                       'destination for now; several in a row comes at the end of the module. New '
-                      'Yorkers give directions this way: "two blocks east, then three up." Lesson '
-                      '4-3 builds the algorithm properly. For the curious: the grid comes from the '
+                      'Yorkers give directions this way: "two blocks east, then three north." '
+                      'Lesson 4-3 builds the algorithm properly. For the curious: the grid comes from the '
                       "Commissioners' Plan of 1811; it is turned roughly 29 degrees from true "
                       'north, so "Manhattan north" is a local convention; and the same distance is '
                       'called taxicab distance in mathematics. The map is a hook, not a lesson. '
@@ -37,7 +37,8 @@ DECK = {'module': 4,
                       'for the slide renderer.)'},
             {'kind': 'bullets',
              'title': 'How to find the route',
-             'bullets': ['**Go across until x is right. Then go up or down until y is right.**',
+             'bullets': ['**Go east or west until we are at the destination avenue, then north '
+                         "or south until we're at the destination street.**",
                          "That's the whole algorithm"],
              'callout': "It's called the **Manhattan algorithm**",
              'tone': 'teal',
@@ -52,7 +53,25 @@ DECK = {'module': 4,
              'title': 'Breaking down a complex problem',
              'bullets': ['Now you know how to find the route. Getting the **robot** to do it is '
                          'the next problem',
-                         '"Drive over there" sounds like one job, but it is too much to get right '
+                         'Street and avenue names are hard to use in a robot program, so we '
+                         '**number each intersection** instead: a column number, **x**, and a '
+                         'row number, **y**',
+                         "The taxi's trip becomes **(1, 1) to (3, 4)**"],
+             'size': 28},
+            {'kind': 'figure',
+             'title': 'Numbering the intersections',
+             'figure': './decks/m4/fig/manhattan-xy.svg',
+             'caption': 'Each intersection gets a column number x and a row number y, written '
+                        '(x, y).',
+             'notes': 'x is the column: the avenues are numbered from the west, 9th Ave is x = 0, '
+                      '8th Ave x = 1, up to Madison, x = 5. y is the row: the streets are '
+                      'numbered from the south, 53rd St is y = 0, up to 58th St, y = 5. The taxi '
+                      'starts at A, (1, 1), 8th Avenue and 54th Street, and drives to B, (3, 4), '
+                      '6th Avenue and 57th Street. (This slide uses a copy of the lesson figure '
+                      'with its text halos redrawn for the slide renderer.)'},
+            {'kind': 'bullets',
+             'title': 'Breaking down a complex problem',
+             'bullets': ['"Drive over there" sounds like one job, but it is too much to get right '
                          'in one go',
                          'One way to tackle it: **break it into simpler sub-problems**, and solve '
                          'each one'],
@@ -92,33 +111,32 @@ DECK = {'module': 4,
              'title': 'Breaking it down',
              'figure': './decks/m4/fig/l05-decomp-3.svg',
              'caption': 'Driving breaks into two steps at each intersection: turn to face the next '
-                        'one, then drive to it.',
+                        'intersection, then drive to the next intersection.',
              'notes': 'Driving is Module 2 line tracking, already built.'},
             {'kind': 'figure',
              'title': 'Breaking it down',
              'figure': './decks/m4/fig/l05-decomp-4.svg',
              'caption': 'And turning breaks into two: which way to face, then turn until facing '
-                        'it.',
+                        'the next intersection.',
              'notes': 'Each box names the lesson that builds it. Lesson 4-5 opens with this same '
                       'tree.'},
             {'kind': 'figure',
              'title': 'Plan first, then drive',
              'figure': '/img/lesson-m4-00/plan-then-drive.svg',
-             'caption': 'The plan is a list of (x, y) tuples. One function makes it; another '
+             'caption': 'The plan is a list of (x, y) coordinates. One function makes it; another '
                         'drives it.',
              'notes': 'That is one way to split the problem, and the one this module uses. The '
                       'planning function never moves the robot, so it can be tested with no robot: '
                       'print the route and check it against the grid. Once the plan is right, a '
-                      'second function takes the plan and drives it; it decides nothing. Each '
-                      'intersection is an (x, y) pair, stored as a tuple, so the plan is a list of '
-                      'tuples, the one thing the two functions share. Tuples come properly in '
-                      'Lesson 4-1 and lists in Lesson 4-2.'},
+                      'second function takes the plan and drives it, then reports where the robot '
+                      'ended up. Each intersection is an (x, y) pair, so the plan is a list of '
+                      'coordinates, the one thing the two functions share.'},
             {'kind': 'bullets',
              'title': 'Planner and driver',
-             'bullets': ['**Planner:** `compute_manhattan_path` returns the list of tuples. Never '
+             'bullets': ['**Planner:** `compute_manhattan_path` works out the whole route. Never '
                          'moves the robot.',
-                         '**Driver:** `drive_path` drives the list, then reports where the robot '
-                         'ended up. Never decides the route.',
+                         '**Driver:** `drive_path` takes the plan and drives it, then reports '
+                         'where the robot ended up.',
                          'One job each is called **separation of concerns**',
                          ['A wrong **route** is a planner problem',
                           'A wrong **turn** is a driver problem']],
@@ -133,34 +151,25 @@ DECK = {'module': 4,
                          'Because the driving function has to be written last in the file'],
              'answer': 1,
              'explanation': 'The planning function never moves the robot, so you can test it on '
-                            'screen and check its list of tuples on paper. Once you trust the '
+                            'screen and check its list of coordinates on paper. Once you trust the '
                             'plan, a wrong move on the floor can only be a driving problem.'},
-            {'kind': 'code',
+            {'kind': 'bullets',
              'title': 'From one destination to several',
-             'lead': 'Several destinations is just a loop: plan, drive, repeat. The whole program, '
-                     'seven lines:',
-             'code': 'position = (0, 0)\n'
-                     'heading = 0                      # facing North\n'
-                     'destinations = [(2, 0), (2, 3), (0, 3)]\n'
-                     '\n'
-                     'for dest in destinations:\n'
-                     '    path = compute_manhattan_path(position, dest)\n'
-                     '    print("Path:", path)\n'
-                     '    position, heading = drive_path(path, position, heading)',
-             'code_size': 20,
-             'callout': 'It is short **because the functions do all the work**',
-             'tone': 'teal',
-             'notes': 'In plain English: start at corner (0, 0) facing North; for each '
-                      'destination, compute the path from where we are, print it, drive it, and '
-                      'remember where we ended up. Students do not need to understand '
-                      'compute_manhattan_path or drive_path yet. Consider printing these seven '
-                      'lines on a card students keep and revisit at the start of each lesson, '
-                      'highlighting the piece they build that day.'},
+             'bullets': ['Picture a **delivery driver** with packages for several houses, each '
+                         'with its own address',
+                         'The driver plans a route to the first house and drives it, then plans '
+                         'from there to the next, until every package is delivered',
+                         'The robot does the same. Once it can reach one destination, several is '
+                         '**just a loop**: plan from where it is, drive, repeat'],
+             'size': 28},
             {'kind': 'figure',
-             'title': 'The seven lines, on the floor',
+             'title': 'Three deliveries, on the floor',
              'figure': '/img/lesson-m4-00/delivery-overview-xy.svg',
-             'caption': 'Three destinations, three legs, each planned from where the last one '
-                        'ended.'},
+             'caption': 'Three deliveries, three legs, each planned from where the last one '
+                        'ended.',
+             'notes': 'The robot starts at home, (0, 0), facing north. Leg 1 goes right to '
+                      'delivery 1 at (2, 0); leg 2 goes up to delivery 2 at (2, 3); leg 3 goes '
+                      'left to delivery 3 at (0, 3).'},
             {'kind': 'bullets',
              'title': "What's next",
              'bullets': ['**4-1 and 4-2:** the background: coordinates, tuples and lists',
@@ -174,8 +183,7 @@ DECK = {'module': 4,
                            "What are the two halves, and what is each one's job?"],
              'next': 'coordinates: a name for every spot on the grid',
              'notes': 'Answers: drive from where it starts to a destination on its own, then to '
-                      'several in a row. The planner never moves the robot, so its list of tuples '
+                      'several in a row. The planner never moves the robot, so its list of coordinates '
                       'can be printed and checked with no robot; then the driver only follows a '
                       'plan you trust. compute_manhattan_path plans; drive_path drives. Open each '
-                      'lesson with "remember the big picture? Today we build this piece." Return '
-                      'to the seven-line program in Lesson 4-7.'}]}
+                      'lesson with "remember the big picture? Today we build this piece."'}]}

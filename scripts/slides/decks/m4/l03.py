@@ -7,14 +7,17 @@ DECK = {
          'objectives': [
              'Count steps across plus steps up or down to check a path\'s length',
              'Describe the "across first, then up or down" strategy and hand-trace a path on paper',
-             'Read each row of your trace table as one trip around a loop, and match the given east loop to it',
-             'Write north by copying east, then west and south by copying and flipping: four loops, no `if/else`',
-             'Test it on screen against your paper traces, edge cases included',
+             'Read each row of your trace table as one trip around a while loop, and match the given '
+             'east loop in `compute_manhattan_path(start, destination)` to it',
+             'Write the north loop by copying the east loop, then west and south by copying and '
+             'flipping — four loops, no `if/else`',
+             'Test it on screen against your paper traces, including the edge cases: same row, same '
+             'column, and same position',
          ],
          'notes': '60 minutes. Coordinates and tuples (4-1) and lists (4-2) come together: '
                   'a function that computes a whole path from a start and a destination. Paper '
                   'first for 8 to 10 minutes, then the bulk of the lesson is writing and testing '
-                  'compute_path().'},
+                  'compute_manhattan_path().'},
 
         {'kind': 'bullets', 'title': 'Coordinates, tuples, lists: together',
          'bullets': [
@@ -30,7 +33,7 @@ DECK = {
          'figure': './decks/m4/fig/destinations-hops.svg',
          'caption': 'Handed one destination, possibly many intersections away. Hands back a list of '
                     'adjacent intersections, one hop each, ending at the destination.',
-         'notes': 'The main program supplies the destinations list from Lesson 4-0. The function you '
+         'notes': 'The main program supplies the destinations, like the three deliveries in Lesson 4-0. The function you '
                   'write today handles one destination at a time: the main loop calls it once per '
                   'destination. Every entry in the list it returns is one block from the entry before '
                   'it, and the first is one block from the start.'},
@@ -129,10 +132,18 @@ DECK = {
                   'stopped writing x + 1 rows once they reached x = 2. The inner parentheses in '
                   'path.append((x, y)) make the tuple; the outer pair is the call to append().'},
 
+        {'kind': 'bullets', 'title': 'A name that says the algorithm',
+         'bullets': [
+             'This planner uses the **Manhattan algorithm**',
+             'Later you\'ll write other kinds of planners, so this one is called '
+             '`compute_manhattan_path()`',
+             'The name says which algorithm it uses',
+         ]},
+
         {'kind': 'code', 'title': 'Add to robot.py: MANHATTAN PLANNER',
          'code': '# ===== MANHATTAN PLANNER =====\n'
                  '\n'
-                 'def compute_path(start, destination):\n'
+                 'def compute_manhattan_path(start, destination):\n'
                  '    """Return the (x, y) steps from start to destination, across\n'
                  '    first, then up or down. The start itself is not in the list."""\n'
                  '    path = []\n'
@@ -158,22 +169,31 @@ DECK = {
 
         {'kind': 'code', 'title': 'The two tests come with it',
          'code': 'def test_paper_paths():\n'
-                 '    print(compute_path((0, 0), (2, 3)))   # your trace table\n'
-                 '    print(compute_path((0, 1), (3, 3)))\n'
-                 '    print(compute_path((3, 3), (1, 0)))   # left and down\n'
+                 '    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table\n'
+                 '    print(compute_manhattan_path((0, 1), (3, 3)))\n'
+                 '    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down\n'
                  '\n'
                  'def test_edge_cases():\n'
-                 '    print(compute_path((2, 0), (2, 3)))   # same column\n'
-                 '    print(compute_path((0, 2), (3, 2)))   # same row\n'
-                 '    print(compute_path((1, 1), (1, 1)))   # same spot',
+                 '    print(compute_manhattan_path((2, 0), (2, 3)))   # same column\n'
+                 '    print(compute_manhattan_path((0, 2), (3, 2)))   # same row\n'
+                 '    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot',
          'code_size': 18,
-         'callout': 'Paper tests: they print a path, you compare it with your answer key, nothing moves',
+         'callout': 'The tests are **paper tests**',
          'tone': 'teal',
          'notes': 'More hints than usual, on purpose: this is the first while loop that builds a '
                   'list and the first section with no robot in it. The step down to writing tests '
                   'themselves comes in Lesson 4-4, once the algorithm is theirs. Students who stall '
                   'on a loop can be pointed at their own trace table: each row is one trip around a '
                   'loop.'},
+
+        {'kind': 'bullets', 'title': 'What a paper test is',
+         'bullets': [
+             'A **paper test** is a test function that **only prints**',
+             'Set the run line to it and run it with the robot on the desk: **nothing moves**',
+             'Then check every printed line against the answer you worked out by hand, on paper',
+         ],
+         'callout': 'Every line matches: the code is right',
+         'tone': 'teal'},
 
         {'kind': 'bullets', 'title': 'Plan first: the planner on its own',
          'bullets': [
@@ -297,11 +317,11 @@ DECK = {
          'callout': 'They are paths 4 to 6 in your answer key. Set the run line to `test_edge_cases()` '
                     'and check all three lines against it',
          'tone': 'teal',
-         'notes': 'A finished compute_path() is in a reveal on the lesson page. Nothing special is written for these cases: the loops just don\'t run when '
+         'notes': 'A finished compute_manhattan_path() is in a reveal on the lesson page. Nothing special is written for these cases: the loops just don\'t run when '
                   'there is no distance to cover.'},
 
         {'kind': 'check',
-         'question': 'What does `compute_path((2, 2), (2, 2))` return, and why?',
+         'question': 'What does `compute_manhattan_path((2, 2), (2, 2))` return, and why?',
          'options': ['`[(2, 2)]`: the current position',
                      '`[]`: all four loop conditions are False, so nothing is appended',
                      'An error', '`0`'],
@@ -327,13 +347,16 @@ DECK = {
              'What does "across first, then up or down" produce?',
              'Why four while loops instead of `if/else`?',
              'Why isn\'t the starting position in the path?',
+             'Why is it called `compute_manhattan_path`?',
          ],
-         'next': 'the same function gets a name for its algorithm, a written promise and unit tests',
+         'next': 'the same function gets a written promise and unit tests',
          'notes': 'Answers: an L-shaped path, predictable and always valid. Only the relevant loops '
                   'run; a False condition just skips. The robot is already there, so len(path) is the '
-                  'number of steps. Exit ticket: "What does compute_path((0,0),(2,3)) return, and how '
-                  'many steps is that?" ([(1,0),(2,0),(2,1),(2,2),(2,3)], 5). Next lesson the '
-                  'function becomes compute_manhattan_path(position, destination), with a docstring; '
+                  'number of steps. It uses the Manhattan algorithm; the planners students write '
+                  'later get their own names. Exit ticket: "What does '
+                  'compute_manhattan_path((0,0),(2,3)) return, and how many steps is that?" '
+                  '([(1,0),(2,0),(2,1),(2,2),(2,3)], 5). Next lesson this exact function gets a '
+                  'docstring that writes down what it promises, and is checked with unit tests; '
                   'the algorithm does not change at all.'},
     ],
 }
