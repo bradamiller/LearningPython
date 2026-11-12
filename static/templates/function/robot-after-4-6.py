@@ -109,14 +109,16 @@ def test_sweep():
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     # until is_at_cross():
     #     correction = get_error() * KP
     #     steer with arcade(BASE_EFFORT, correction)
     # then stop the motors
+    # then drive straight 8.75 cm: the robot's center onto
+    # the cross
     pass
 
 def test_cross_moving():
@@ -134,26 +136,20 @@ def test_track():
     print("Done!")
 
 def test_reverse():
-    # follow to the cross, turn around, follow back to it
+    # follow to the cross, turn around on it, follow back
     track_to_intersection()
     drivetrain.turn(180)
     track_to_intersection()
     print("Done!")
 
-# --- Lesson 2-9: park on the cross, turn to the next line ---
+# --- Lesson 2-9: turn to the next line ---
 # Completes the driving toolkit begun in Lesson 2-5.
-# track_to_intersection() stops with the SENSORS on the cross;
-# drive_past_intersection() moves the WHEELS onto it. The two
-# turns spin until a LINE SENSOR function sees the next line,
-# so no turn depends on a timer. With these four, every
-# program from here to Module 5 is a list of calls to this
-# section.
+# track_to_intersection() stops with the robot's center on
+# the cross. The two turns spin there until a LINE SENSOR
+# function sees the next line, so no turn depends on a
+# timer. With these three, every program from here to
+# Module 5 is a list of calls to this section.
 TURN_EFFORT = 0.25       # spin speed during a turn
-
-def drive_past_intersection():
-    # drive straight forward by exactly the sensor-to-axle
-    # distance
-    pass
 
 def turn_clockwise():
     # 1. blind turn, about 60 deg: get BOTH sensors off this line
@@ -166,23 +162,16 @@ def turn_counterclockwise():
     # the mirror image: same four moves, opposite direction
     pass
 
-def test_park():
-    # follow to the cross, then put the wheels on it
-    track_to_intersection()
-    drive_past_intersection()
-
 def test_turn():
-    # park on the cross, then turn until a sensor finds a
+    # follow to the cross, then turn until a sensor finds a
     # line: on the circle, that is all the way around
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
 
 def test_course():
-    # follow, park, turn around, follow the circle back to
-    # the cross: the whole lesson in four calls
+    # follow, turn around, follow the circle back to the
+    # cross: the whole lesson in three calls
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
     track_to_intersection()
     print("Done!")
@@ -190,17 +179,17 @@ def test_course():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (one clockwise turn
+    # follow to the cross, turn around (one clockwise turn
     # does it here), then follow back to the cross
     pass
 
 def test_final_project():
-    # the mission: follow to the cross, park on it, reverse,
+    # the mission: follow to the cross, reverse,
     # four times in all; then stop and print "Done!"
     # write your plan here as comments first, then the code
     pass
@@ -210,8 +199,9 @@ def test_final_project():
 # Drives the taped grid one intersection at a time, using only
 # the LINE TRACKING functions: a grid intersection is the
 # cross from Module 2. To ARRIVE at an intersection is
-# track_to_intersection() then drive_past_intersection(); a
-# turn happens parked on one. Nothing here touches a sensor.
+# track_to_intersection(), which stops with the robot's
+# center on it; a turn happens parked there. Nothing here
+# touches a sensor.
 
 def test_first_intersection():
     # from a line, arrive at the next intersection and say so
@@ -223,7 +213,8 @@ def test_arrive_and_turn():
     pass
 
 # --- Lesson 3-2: a run of intersections ---
-# drive_intersections(count) is the arrival pair in a loop.
+# drive_intersections(count) is track_to_intersection() in a
+# loop.
 # It ends parked on the count-th intersection, so Lessons 3-3
 # and 3-4 build every path out of it and the two turns.
 
@@ -234,8 +225,8 @@ def drive_intersections(count):
     pass
 
 def test_two_by_hand():
-    # the arrival pair written out twice, no loop: the robot
-    # should end parked on the SECOND intersection
+    # track_to_intersection() written out twice, no loop: the
+    # robot should end parked on the SECOND intersection
     pass
 
 def test_drive_run():
@@ -281,14 +272,8 @@ def test_square():
 # in this section runs on screen with the robot sitting still.
 
 def compute_manhattan_path(start, destination):
-    """Compute a Manhattan path from start to destination.
-
-    start:       an (x, y) tuple -- where the robot is now
-    destination: an (x, y) tuple -- where it needs to go
-
-    Returns a list of (x, y) tuples the robot should move to,
-    not including the start itself.
-    """
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
     path = []
     x, y = start              # where the robot is now
     dest_x, dest_y = destination   # where it is going
@@ -335,40 +320,41 @@ def run_test(test_name, start, destination, expected):
 # the robot's position and heading, and it hands both back.
 HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
-def desired_heading(position, next_pos):
+def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
-    next_pos, which must be one step away; raise if it is not."""
+    next_pos, which must be one step away."""
     # 1. x_diff and y_diff: next_pos minus position
     # 2. one if per direction, from the table above; each
     #    checks BOTH differences, because the other one is 0
-    # 3. none matched: raise ValueError, naming both positions
+    # 3. (optional) none matched: raise ValueError, naming
+    #    both positions -- see "Catching mistakes early"
     pass
 
 # --- Lesson 4-6: turn to a heading, drive a path ---
 # turn_to() turns a quarter turn at a time, with the LINE
 # TRACKING turns, until the robot faces the heading it
 # needs. drive_path() is the loop: for each
-# intersection, face it, arrive with the track-then-drive-past
-# pair, and record the new position. Both hand back what they
+# intersection, face it, arrive with track_to_intersection(),
+# and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
-def turn_to(heading, desired):
-    """Turn clockwise a quarter turn at a time until heading
-    is desired; return the new heading."""
-    # while heading is not desired:
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new
+    heading."""
+    # while current_heading is not desired_heading:
     #     one turn_clockwise()
-    #     heading goes up by 1, wrapping 3 back to 0
-    # return heading
+    #     current_heading goes up by 1, wrapping 3 back to 0
+    # return current_heading
     pass
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
     position facing heading; return the final (position, heading)."""
     # for each next_pos in path:
-    #     1. needed = desired_heading(position, next_pos)
-    #     2. heading = turn_to(heading, needed)
-    #     3. arrive: track_to_intersection(), then
-    #        drive_past_intersection()
+    #     1. desired_heading = get_desired_heading(position, next_pos)
+    #     2. heading = turn_to(heading, desired_heading)
+    #     3. arrive: track_to_intersection()
     #     4. position = next_pos -- the robot is there now
     # return position, heading
     pass

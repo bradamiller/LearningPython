@@ -109,14 +109,16 @@ def test_sweep():
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     # until is_at_cross():
     #     correction = get_error() * KP
     #     steer with arcade(BASE_EFFORT, correction)
     # then stop the motors
+    # then drive straight 8.75 cm: the robot's center onto
+    # the cross
     pass
 
 def test_cross_moving():
@@ -134,26 +136,20 @@ def test_track():
     print("Done!")
 
 def test_reverse():
-    # follow to the cross, turn around, follow back to it
+    # follow to the cross, turn around on it, follow back
     track_to_intersection()
     drivetrain.turn(180)
     track_to_intersection()
     print("Done!")
 
-# --- Lesson 2-9: park on the cross, turn to the next line ---
+# --- Lesson 2-9: turn to the next line ---
 # Completes the driving toolkit begun in Lesson 2-5.
-# track_to_intersection() stops with the SENSORS on the cross;
-# drive_past_intersection() moves the WHEELS onto it. The two
-# turns spin until a LINE SENSOR function sees the next line,
-# so no turn depends on a timer. With these four, every
-# program from here to Module 5 is a list of calls to this
-# section.
+# track_to_intersection() stops with the robot's center on
+# the cross. The two turns spin there until a LINE SENSOR
+# function sees the next line, so no turn depends on a
+# timer. With these three, every program from here to
+# Module 5 is a list of calls to this section.
 TURN_EFFORT = 0.25       # spin speed during a turn
-
-def drive_past_intersection():
-    # drive straight forward by exactly the sensor-to-axle
-    # distance
-    pass
 
 def turn_clockwise():
     # 1. blind turn, about 60 deg: get BOTH sensors off this line
@@ -166,23 +162,16 @@ def turn_counterclockwise():
     # the mirror image: same four moves, opposite direction
     pass
 
-def test_park():
-    # follow to the cross, then put the wheels on it
-    track_to_intersection()
-    drive_past_intersection()
-
 def test_turn():
-    # park on the cross, then turn until a sensor finds a
+    # follow to the cross, then turn until a sensor finds a
     # line: on the circle, that is all the way around
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
 
 def test_course():
-    # follow, park, turn around, follow the circle back to
-    # the cross: the whole lesson in four calls
+    # follow, turn around, follow the circle back to the
+    # cross: the whole lesson in three calls
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
     track_to_intersection()
     print("Done!")
@@ -190,17 +179,17 @@ def test_course():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (one clockwise turn
+    # follow to the cross, turn around (one clockwise turn
     # does it here), then follow back to the cross
     pass
 
 def test_final_project():
-    # the mission: follow to the cross, park on it, reverse,
+    # the mission: follow to the cross, reverse,
     # four times in all; then stop and print "Done!"
     # write your plan here as comments first, then the code
     pass

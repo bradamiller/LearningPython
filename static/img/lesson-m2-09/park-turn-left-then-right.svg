@@ -4,7 +4,7 @@
     with its line sensors (under the rangefinder at the front) on a taped cross and its center of rotation
     8.75 cm behind them. Left: the robot turns right straight away; it swings about a point short of the
     intersection and its sensors end up beside the cross street, off the tape. Right: the robot first
-    drives forward 8.75 cm with drive_past_intersection(), putting its center of rotation on the cross,
+    drives forward 8.75 cm at the end of track_to_intersection(), putting its center of rotation on the cross,
     then turns right; its sensors land on the cross street. The animation repeats.</desc>
   <style>
     .t  { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }

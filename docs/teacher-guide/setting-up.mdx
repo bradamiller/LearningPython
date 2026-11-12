@@ -175,7 +175,7 @@ author.
 | The same program gives different results on different days | Battery level, surface, wheel slip | Expected with timed or effort-based driving; it is the lesson in 1-6, and why later modules stop on sensors |
 | The line follower can't see the line, or sees it everywhere | Threshold from another surface; dirty sensors; glossy tape | Recalibrate on this surface (2-1); clean the sensors; re-tape with matte tape |
 | The robot stops the instant it starts on the grid | It started on an intersection | Start on a segment, facing the next intersection |
-| It misses or overshoots turns on the grid | Turning before the wheels reach the cross; turn settings | Check that every `track_to_intersection()` is followed by `drive_past_intersection()`; then tune the turn settings |
+| It misses or overshoots turns on the grid | Turning before the wheels reach the cross; turn settings | Check that `track_to_intersection()` ends with the 8.75 cm drive onto the cross; then tune the turn settings |
 | The rangefinder gives odd distances | Soft or angled obstacle; threshold not measured for your grid | Use flat, firm boxes; re-measure the threshold |
 
 Module 5's driving is Module 4's, unchanged. If a robot misbehaves on the grid in

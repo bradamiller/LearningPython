@@ -17,7 +17,7 @@
 | 2-6 · Two-Sensor Line Following |  | `get_error()` changed, `test_follow()` changed, `SETPOINT` removed |  |
 | 2-7 · Finishing the Sensor Toolkit | `is_at_cross()`, `set_threshold()` | `test_sensors()` changed |  |
 | 2-8 · Detecting Intersections | `track_to_intersection()` |  | `test_cross_moving()`, `test_track()`, `test_reverse()`, `test_count()` |
-| 2-9 · Line-Tracking Functions | `TURN_EFFORT`, `drive_past_intersection()`, `turn_clockwise()`, `turn_counterclockwise()`, `turn_around()` | `BASE_EFFORT` changed | `test_park()`, `test_turn()`, `test_course()`, `test_turn_around()` |
+| 2-9 · Line-Tracking Functions | `TURN_EFFORT`, `turn_clockwise()`, `turn_counterclockwise()`, `turn_around()` | `BASE_EFFORT` changed | `test_turn()`, `test_course()`, `test_turn_around()` |
 | 2-10 · Final Project |  |  | `test_reversal()`, `test_final_project()` |
 
 A lesson's tests stay in the file after the lesson, so this one file runs any of
@@ -137,14 +137,15 @@ def test_sweep():
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     while not is_at_cross():
         correction = get_error() * KP
         drivetrain.arcade(BASE_EFFORT, correction)
     drivetrain.stop()
+    drivetrain.straight(8.75, 0.5)
 
 def test_cross_moving():
     while not is_at_cross():
@@ -169,18 +170,14 @@ def test_count():
         drivetrain.turn(180)
     print("Done!")
 
-# --- Lesson 2-9: park on the cross, turn to the next line ---
+# --- Lesson 2-9: turn to the next line ---
 # Completes the driving toolkit begun in Lesson 2-5.
-# track_to_intersection() stops with the SENSORS on the cross;
-# drive_past_intersection() moves the WHEELS onto it. The two
-# turns spin until a LINE SENSOR function sees the next line,
-# so no turn depends on a timer. With these four, every
-# program from here to Module 5 is a list of calls to this
-# section.
+# track_to_intersection() stops with the robot's center on
+# the cross. The two turns spin there until a LINE SENSOR
+# function sees the next line, so no turn depends on a
+# timer. With these three, every program from here to
+# Module 5 is a list of calls to this section.
 TURN_EFFORT = 0.25       # spin speed during a turn
-
-def drive_past_intersection():
-    drivetrain.straight(8.75, 0.5)
 
 def turn_clockwise():
     drivetrain.turn(-60, TURN_EFFORT)
@@ -201,25 +198,18 @@ def turn_around():
     # so one turn ends facing back the way it came
     turn_clockwise()
 
-def test_park():
-    track_to_intersection()
-    drive_past_intersection()
-
 def test_turn():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
 
 def test_course():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
     track_to_intersection()
     print("Done!")
 
 def test_turn_around():
     track_to_intersection()
-    drive_past_intersection()
     turn_around()
     track_to_intersection()
     print("Done!")
@@ -227,13 +217,12 @@ def test_turn_around():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()      # one sensor-ended turn = 180 deg here
     track_to_intersection()
     print("Done!")
@@ -244,8 +233,6 @@ def test_final_project():
         # follow the line to the cross
         print("Leg", leg + 1, "-- following to the cross...")
         track_to_intersection()
-        # park the wheels on the cross
-        drive_past_intersection()
         # turn around: one sensor-ended turn finds the circle behind
         print("Cross detected! Reversing...")
         turn_clockwise()
@@ -272,7 +259,7 @@ board.wait_for_button()
 | 2-6 · Two-Sensor Line Following |  | `get_error()` changed, `test_follow()` changed, `SETPOINT` removed |  |
 | 2-7 · Finishing the Sensor Toolkit | `LineSensor` class | `test_sensors()` changed, `test_drive_to_line()` changed, `test_bounce()` changed, `test_random_bounce()` changed, `test_follow()` changed, `test_sweep()` changed, `THRESHOLD` removed, `get_left()` removed, `get_right()` removed, `get_error()` removed, `is_either_on_line()` removed |  |
 | 2-8 · Detecting Intersections | `track_to_intersection()` |  | `test_cross_moving()`, `test_track()`, `test_reverse()`, `test_count()` |
-| 2-9 · Line-Tracking Functions | `LineTrack` class, `turn_around()` | `test_follow()` changed, `test_sweep()` changed, `test_track()` changed, `test_reverse()` changed, `test_count()` changed, `BASE_EFFORT` removed, `KP` removed, `track_to_intersection()` removed | `test_park()`, `test_turn()`, `test_course()`, `test_turn_around()` |
+| 2-9 · Line-Tracking Functions | `LineTrack` class, `turn_around()` | `test_follow()` changed, `test_sweep()` changed, `test_track()` changed, `test_reverse()` changed, `test_count()` changed, `BASE_EFFORT` removed, `KP` removed, `track_to_intersection()` removed | `test_turn()`, `test_course()`, `test_turn_around()` |
 | 2-10 · Final Project |  |  | `test_reversal()`, `test_final_project()` |
 
 A lesson's tests stay in the file after the lesson, so this one file runs any of
@@ -370,7 +357,7 @@ def test_random_bounce():
 # One LineTrack object drives the robot along the line. It HAS
 # A LineSensor (built in __init__, so you never make one
 # separately) and asks it the questions; it HAS the drivetrain
-# and gives it the orders. Same four methods as the function
+# and gives it the orders. Same three methods as the function
 # version, same names, with tracker. in front.
 
 class LineTrack:
@@ -387,8 +374,6 @@ class LineTrack:
             correction = error * self.kp
             self.drivetrain.arcade(self.base_effort, correction)
         self.drivetrain.stop()
-
-    def drive_past_intersection(self):
         self.drivetrain.straight(8.75, 0.5)
 
     def turn_clockwise(self):
@@ -450,25 +435,18 @@ def turn_around():
     # so one turn ends facing back the way it came
     tracker.turn_clockwise()
 
-def test_park():
-    tracker.track_to_intersection()
-    tracker.drive_past_intersection()
-
 def test_turn():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
 
 def test_course():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
     tracker.track_to_intersection()
     print("Done!")
 
 def test_turn_around():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     turn_around()
     tracker.track_to_intersection()
     print("Done!")
@@ -476,13 +454,12 @@ def test_turn_around():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()      # one sensor-ended turn = 180 deg here
     tracker.track_to_intersection()
     print("Done!")
@@ -493,8 +470,6 @@ def test_final_project():
         # follow the line to the cross
         print("Leg", leg + 1, "-- following to the cross...")
         tracker.track_to_intersection()
-        # park the wheels on the cross
-        tracker.drive_past_intersection()
         # turn around: one sensor-ended turn finds the circle behind
         print("Cross detected! Reversing...")
         tracker.turn_clockwise()

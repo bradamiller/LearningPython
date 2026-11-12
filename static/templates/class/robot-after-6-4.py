@@ -79,7 +79,7 @@ def test_random_bounce():
 # One LineTrack object drives the robot along the line. It HAS
 # A LineSensor (built in __init__, so you never make one
 # separately) and asks it the questions; it HAS the drivetrain
-# and gives it the orders. Same four methods as the function
+# and gives it the orders. Same three methods as the function
 # version, same names, with tracker. in front.
 
 class LineTrack:
@@ -93,9 +93,6 @@ class LineTrack:
     def track_to_intersection(self):
         # your function, with self. in front of the sensor,
         # the drivetrain and the settings
-        pass
-
-    def drive_past_intersection(self):
         pass
 
     def turn_clockwise(self):
@@ -141,29 +138,22 @@ def test_track():
     print("Done!")
 
 def test_reverse():
-    # follow to the cross, turn around, follow back to it
+    # follow to the cross, turn around on it, follow back
     tracker.track_to_intersection()
     drivetrain.turn(180)
     tracker.track_to_intersection()
     print("Done!")
 
-def test_park():
-    # follow to the cross, then put the wheels on it
-    tracker.track_to_intersection()
-    tracker.drive_past_intersection()
-
 def test_turn():
-    # park on the cross, then turn until a sensor finds a
+    # follow to the cross, then turn until a sensor finds a
     # line: on the circle, that is all the way around
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
 
 def test_course():
-    # follow, park, turn around, follow the circle back to
-    # the cross: the whole lesson in four calls
+    # follow, turn around, follow the circle back to the
+    # cross: the whole lesson in three calls
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
     tracker.track_to_intersection()
     print("Done!")
@@ -171,17 +161,17 @@ def test_course():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (one clockwise turn
+    # follow to the cross, turn around (one clockwise turn
     # does it here), then follow back to the cross
     pass
 
 def test_final_project():
-    # the mission: follow to the cross, park on it, reverse,
+    # the mission: follow to the cross, reverse,
     # four times in all; then stop and print "Done!"
     # write your plan here as comments first, then the code
     pass
@@ -191,8 +181,9 @@ def test_final_project():
 # Drives the taped grid one intersection at a time, using only
 # the LINE TRACKING functions: a grid intersection is the
 # cross from Module 2. To ARRIVE at an intersection is
-# track_to_intersection() then drive_past_intersection(); a
-# turn happens parked on one. Nothing here touches a sensor.
+# track_to_intersection(), which stops with the robot's
+# center on it; a turn happens parked there. Nothing here
+# touches a sensor.
 
 def test_first_intersection():
     # from a line, arrive at the next intersection and say so
@@ -204,7 +195,8 @@ def test_arrive_and_turn():
     pass
 
 # --- Lesson 3-2: a run of intersections ---
-# drive_intersections(count) is the arrival pair in a loop.
+# drive_intersections(count) is track_to_intersection() in a
+# loop.
 # It ends parked on the count-th intersection, so Lessons 3-3
 # and 3-4 build every path out of it and the two turns.
 
@@ -215,8 +207,8 @@ def drive_intersections(count):
     pass
 
 def test_two_by_hand():
-    # the arrival pair written out twice, no loop: the robot
-    # should end parked on the SECOND intersection
+    # tracker.track_to_intersection() written out twice, no loop: the
+    # robot should end parked on the SECOND intersection
     pass
 
 def test_drive_run():
@@ -321,12 +313,12 @@ class Navigator:
         self.heading = heading
         self.line_track = LineTrack()        # has-a LineTrack
 
-    def desired_heading(self, next_pos):
+    def get_desired_heading(self, next_pos):
         # your function; position is self.position now, so
         # it is no longer a parameter
         pass
 
-    def turn_to(self, desired):
+    def turn_to(self, desired_heading):
         # your function, with self.heading in place of the
         # parameter and self.line_track. in front of each
         # turn; it STORES the new heading, not returns it
@@ -344,7 +336,7 @@ class Navigator:
         rangefinder finds; return (step_count, reroute_count)."""
         # the 5-8 function as a method: self.position and
         # self.heading replace the parameters; the driving
-        # goes through self.line_track, self.desired_heading()
+        # goes through self.line_track, self.get_desired_heading()
         # and self.turn_to(); planner calls stay on planner
         # step_count = 0 ; reroute_count = 0
         # arrived = False
@@ -381,13 +373,20 @@ def test_drive_path():
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work.
+# defined; the two sections did the work. Built in three
+# tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_delivery_paper():
-    # no robot: from (0, 0), plan the path to each destination
-    # in turn, print it with its step count, and move
-    # position on to that destination for the next leg
+def test_one_leg():
+    # start at (0, 0) facing North; plan the path to (2, 0),
+    # print it, wait for the button, drive it, and print
+    # where the robot arrived
+    pass
+
+def test_two_legs():
+    # the same first leg, then a second one to (2, 3),
+    # planned from wherever the first ended: plan it, print
+    # it, drive it, print where the robot arrived
     pass
 
 def test_delivery():
@@ -591,7 +590,7 @@ def test_detect_once():
     # the navigator at (0, 0) facing North; destination (3, 3)
     # plan the path, print it, wait for the button
     # for each next_pos in path:
-    #     face it: navigator.desired_heading(), then
+    #     face it: navigator.get_desired_heading(), then
     #         navigator.turn_to()
     #     NEW: look ahead -- distance = simulate_rangefinder(
     #          next_pos) for now; rangefinder.distance() later
@@ -603,8 +602,7 @@ def test_detect_once():
     #             then break
     #     else:
     #         arrive: navigator.line_track.
-    #             track_to_intersection(), then
-    #             drive_past_intersection()
+    #             track_to_intersection();
     #         navigator.position = next_pos
     # print the blocked list, planner.blocked
     pass

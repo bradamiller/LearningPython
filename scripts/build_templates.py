@@ -864,21 +864,16 @@ def test_drive_path():
     navigator.drive_path(path)
     print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 '''),
-    "test_one_leg": dict(frm="4-6", outline=None, body='''
-def test_one_leg():
-    navigator.drive_path([(1, 0)])
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-'''),
-    # 4-6: desired_heading(self, next_pos) "has lost its position
+    # 4-6: get_desired_heading(self, next_pos) "has lost its position
     # parameter ... the object already knows both"; the 4-5 test
     # asks from (1, 1), so it builds a navigator standing there.
     "test_headings": dict(frm="4-6", outline=None, body='''
 def test_headings():
     nav = Navigator((1, 1), 0)
     for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
-        heading = nav.desired_heading(next_pos)
+        heading = nav.get_desired_heading(next_pos)
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
-    # nav.desired_heading((2, 2))   # diagonal: stops here
+    # nav.get_desired_heading((2, 2))   # diagonal: stops here
 '''),
     # 4-7 teacher copy: "test_delivery() is handed navigator.position
     # by the planner call, drives with navigator.drive_path(path),
@@ -906,6 +901,31 @@ def test_delivery():
         print("Path:", path)
         navigator.drive_path(path)
         print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+'''),
+    # 4-7 teacher copy: "The step tests change the same way" as
+    # test_delivery(): the planner call is handed
+    # navigator.position, navigator.drive_path(path) drives, and
+    # the print reads navigator.position.
+    "test_one_leg": dict(frm="4-7", outline=None, body='''
+def test_one_leg():
+    path = planner.compute_path(navigator.position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+'''),
+    "test_two_legs": dict(frm="4-7", outline=None, body='''
+def test_two_legs():
+    path = planner.compute_path(navigator.position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+
+    path = planner.compute_path(navigator.position, (2, 3))
+    print("Path:", path)
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 '''),
     # 5-5 extension: "one more test -- test_two_planners() -- that
     # runs the wall case against both objects: create a Manhattan()
@@ -950,7 +970,7 @@ def test_detect_once():
     # the navigator at (0, 0) facing North; destination (3, 3)
     # plan the path, print it, wait for the button
     # for each next_pos in path:
-    #     face it: navigator.desired_heading(), then
+    #     face it: navigator.get_desired_heading(), then
     #         navigator.turn_to()
     #     NEW: look ahead -- distance = simulate_rangefinder(
     #          next_pos) for now; rangefinder.distance() later
@@ -962,8 +982,7 @@ def test_detect_once():
     #             then break
     #     else:
     #         arrive: navigator.line_track.
-    #             track_to_intersection(), then
-    #             drive_past_intersection()
+    #             track_to_intersection();
     #         navigator.position = next_pos
     # print the blocked list, planner.blocked
     pass
@@ -976,8 +995,8 @@ def test_detect_once():
     board.wait_for_button()
 
     for next_pos in path:
-        needed = navigator.desired_heading(next_pos)
-        navigator.turn_to(needed)
+        desired_heading = navigator.get_desired_heading(next_pos)
+        navigator.turn_to(desired_heading)
 
         distance = simulate_rangefinder(next_pos)     # rangefinder.distance() on the robot
         print("At", navigator.position, "facing", HEADING_NAMES[navigator.heading],
@@ -991,7 +1010,6 @@ def test_detect_once():
             break      # Lesson 5-8 keeps going instead
         else:
             navigator.line_track.track_to_intersection()
-            navigator.line_track.drive_past_intersection()
             navigator.position = next_pos
             print("Drove to", navigator.position)
     print("All known obstacles:", planner.blocked)
@@ -1107,8 +1125,8 @@ def test_drive_slow_grid():
 # 5-8: "If you built the Navigator class in Lesson 4-6, this
 # function wants to be a method of it: position and heading become
 # self.position and self.heading and drop out of the parameter list
-# and the return, the four driving calls go through self.line_track.
-# and self.desired_heading() / self.turn_to(), and the planner calls
+# and the return, the driving calls go through self.line_track.
+# and self.get_desired_heading() / self.turn_to(), and the planner calls
 # are planner.add_blocked() and planner.compute_path(). It returns
 # only the two counts".
 NAVIGATE_METHOD_OUTLINE = '''
@@ -1118,7 +1136,7 @@ def navigate_with_detection(self, destination, rangefinder, obstacle_cm):
     rangefinder finds; return (step_count, reroute_count)."""
     # the 5-8 function as a method: self.position and
     # self.heading replace the parameters; the driving
-    # goes through self.line_track, self.desired_heading()
+    # goes through self.line_track, self.get_desired_heading()
     # and self.turn_to(); planner calls stay on planner
     # step_count = 0 ; reroute_count = 0
     # arrived = False
@@ -1157,8 +1175,8 @@ def navigate_with_detection(self, destination, rangefinder, obstacle_cm):
 
         rerouted = False
         for next_pos in path:
-            needed = self.desired_heading(next_pos)
-            self.turn_to(needed)
+            desired_heading = self.get_desired_heading(next_pos)
+            self.turn_to(desired_heading)
 
             distance = rangefinder.distance()          # look before driving
             if distance < obstacle_cm:
@@ -1169,7 +1187,6 @@ def navigate_with_detection(self, destination, rangefinder, obstacle_cm):
                 break
             else:
                 self.line_track.track_to_intersection()
-                self.line_track.drive_past_intersection()
                 self.position = next_pos
                 step_count = step_count + 1
 
@@ -1195,7 +1212,7 @@ CLASS_RULES = [
     ("2-7", None, NOT_ATTR + r"THRESHOLD\b", "sensor.threshold"),
     # 2-9: "each call in them gets tracker. in front"; "the settings
     # moved from file-level capitals into self. attributes"
-    ("2-9", None, NOT_ATTR + r"(track_to_intersection|drive_past_intersection|"
+    ("2-9", None, NOT_ATTR + r"(track_to_intersection|"
      r"turn_clockwise|turn_counterclockwise)\(", r"tracker.\1("),
     ("2-9", None, NOT_ATTR + r"KP\b", "tracker.kp"),
     ("2-9", None, NOT_ATTR + r"BASE_EFFORT\b", "tracker.base_effort"),
@@ -1244,12 +1261,10 @@ GIVEN_IN_FULL = {
     "test_cross_moving": ("2-8: Module 2 test, given in full in the skeleton", None),
     "test_track": ("2-8: Module 2 test, given in full in the skeleton", None),
     "test_reverse": ("2-8: Module 2 test, given in full in the skeleton", None),
-    "test_park": ("2-9: Module 2 test, given in full in the skeleton", None),
     "test_turn": ("2-9: Module 2 test, given in full in the skeleton", None),
     "test_course": ("2-9: Module 2 test, given in full in the skeleton", None),
     "set_threshold": ("2-7: the global-keyword demo; its body is the lesson text", None),
-    "compute_path": ("4-3: the skeleton gives the east loop finished", None),
-    "compute_manhattan_path": ("4-4: the 4-3 east loop, renamed, still in the file", None),
+    "compute_manhattan_path": ("4-3: the skeleton gives the east loop finished", None),
     "test_paper_paths": ("4-3: given in full in the skeleton", None),
     "test_edge_cases": ("4-3: given in full in the skeleton", None),
     "test_drive_path": ("4-6: the plan, print, button, drive shape, given in full", None),
@@ -1336,11 +1351,9 @@ RECIPE = [
     ("2-9", [
         Banner("L2-9", "2-9", "--- Lesson 2-9:"),
         Setting("TURN_EFFORT", "2-9"),
-        Func("drive_past_intersection", "2-9"),
         Func("turn_clockwise", "2-9"),
         Func("turn_counterclockwise", "2-9"),
         Invent("turn_around", "2-9"),
-        Func("test_park", "2-9", full=True),
         Func("test_turn", "2-9", full=True),
         Func("test_course", "2-9", full=True),
         Invent("test_turn_around", "2-9"),
@@ -1351,11 +1364,10 @@ RECIPE = [
         Delete("BASE_EFFORT", tracks=C), Delete("KP", tracks=C),
         Delete("banner:L2-8", tracks=C), Delete("track_to_intersection", tracks=C),
         Delete("banner:L2-9", tracks=C), Delete("TURN_EFFORT", tracks=C),
-        Delete("drive_past_intersection", tracks=C),
         Delete("turn_clockwise", tracks=C), Delete("turn_counterclockwise", tracks=C),
         Banner("LINE TRACKING", "2-9", "LINE TRACKING (class version)",
                before="test_follow", tracks=C),
-        Class("LineTrack", "2-9", ["track_to_intersection", "drive_past_intersection",
+        Class("LineTrack", "2-9", ["track_to_intersection",
                                    "turn_clockwise", "turn_counterclockwise"],
               after="banner:LINE TRACKING", tracks=C),
         Object("tracker", "2-9", after="LineTrack", tracks=C),
@@ -1391,15 +1403,11 @@ RECIPE = [
         Banner("MANHATTAN PLANNER", "4-3", "===== MANHATTAN PLANNER ====="),
         # 4-3 gives the east loop finished and both tests in full
         # (Brad, 2026-11-05: soften 4-3); students write the rest
-        Func("compute_path", "4-3", full=True),
+        Func("compute_manhattan_path", "4-3", full=True),
         Func("test_paper_paths", "4-3", full=True),
         Func("test_edge_cases", "4-3", full=True),
     ]),
     ("4-4", [
-        Rename("compute_path", "compute_manhattan_path", "4-4"),
-        # "Update both tests": the 4-3 tests with the new name
-        Refresh("test_paper_paths", "4-4"),
-        Refresh("test_edge_cases", "4-4"),
         # class track: "Paste it in place of the
         # compute_manhattan_path() function (keep your tests)"
         Delete("banner:MANHATTAN PLANNER", tracks=C),
@@ -1415,30 +1423,30 @@ RECIPE = [
     ("4-5", [
         Banner("NAVIGATOR", "4-5", "===== NAVIGATOR ====="),
         Setting("HEADING_NAMES", "4-5"),
-        Func("desired_heading", "4-5"),
+        Func("get_desired_heading", "4-5"),
         Invent("test_headings", "4-5"),
     ]),
     ("4-6", [
         Banner("L4-6", "4-6", "--- Lesson 4-6:"),
         Func("turn_to", "4-6"),
         Func("drive_path", "4-6"),
-        Invent("test_one_leg", "4-6"),
         Func("test_drive_path", "4-6", full=True),
         # class track: "paste it in place of the three functions
         # (keep HEADING_NAMES and your tests)"
         Delete("banner:NAVIGATOR", tracks=C),
-        Delete("desired_heading", tracks=C),
+        Delete("get_desired_heading", tracks=C),
         Delete("banner:L4-6", tracks=C),
         Delete("turn_to", tracks=C), Delete("drive_path", tracks=C),
         Banner("NAVIGATOR", "4-6", "NAVIGATOR (class version)", before="HEADING_NAMES", tracks=C),
-        Class("Navigator", "4-6", ["desired_heading", "turn_to", "drive_path"],
+        Class("Navigator", "4-6", ["get_desired_heading", "turn_to", "drive_path"],
               after="HEADING_NAMES", tracks=C),
         Object("navigator", "4-6", after="Navigator", tracks=C),
     ]),
     ("4-7", [
         Banner("L4-7", "4-7", "--- Lesson 4-7:"),
         Setting("DESTINATIONS", "4-7"),
-        Func("test_delivery_paper", "4-7"),
+        Func("test_one_leg", "4-7"),
+        Func("test_two_legs", "4-7"),
         Func("test_delivery", "4-7"),
     ]),
     ("5-2", [
@@ -2041,13 +2049,13 @@ for name in sys.argv[1:]:
 # all.
 SMOKE = {
     2: ["test_drive_to_line", "test_cross_moving", "test_track", "test_reverse",
-        "test_count", "test_park", "test_turn", "test_course", "test_turn_around",
+        "test_count", "test_turn", "test_course", "test_turn_around",
         "test_reversal", "test_final_project"],
     3: ["test_first_intersection", "test_arrive_and_turn", "test_two_by_hand",
         "test_drive_run", "test_l_shape", "test_my_path", "test_one_side", "test_square"],
     4: ["test_paper_paths", "test_edge_cases", "test_planner",
-        "test_headings", "test_one_leg", "test_drive_path",
-        "test_delivery_paper", "test_delivery"],
+        "test_headings", "test_drive_path", "test_one_leg", "test_two_legs",
+        "test_delivery"],
     5: ["test_grid_graph", "test_blocked_graph", "test_bfs_open", "test_bfs_walls",
         "test_rings", "test_harness", "test_swap", "test_detect_once", "test_navigate",
         "test_capstone_paper", "test_capstone"],

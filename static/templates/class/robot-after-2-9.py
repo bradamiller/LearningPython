@@ -77,7 +77,7 @@ def test_random_bounce():
 # One LineTrack object drives the robot along the line. It HAS
 # A LineSensor (built in __init__, so you never make one
 # separately) and asks it the questions; it HAS the drivetrain
-# and gives it the orders. Same four methods as the function
+# and gives it the orders. Same three methods as the function
 # version, same names, with tracker. in front.
 
 class LineTrack:
@@ -91,9 +91,6 @@ class LineTrack:
     def track_to_intersection(self):
         # your function, with self. in front of the sensor,
         # the drivetrain and the settings
-        pass
-
-    def drive_past_intersection(self):
         pass
 
     def turn_clockwise(self):
@@ -139,29 +136,22 @@ def test_track():
     print("Done!")
 
 def test_reverse():
-    # follow to the cross, turn around, follow back to it
+    # follow to the cross, turn around on it, follow back
     tracker.track_to_intersection()
     drivetrain.turn(180)
     tracker.track_to_intersection()
     print("Done!")
 
-def test_park():
-    # follow to the cross, then put the wheels on it
-    tracker.track_to_intersection()
-    tracker.drive_past_intersection()
-
 def test_turn():
-    # park on the cross, then turn until a sensor finds a
+    # follow to the cross, then turn until a sensor finds a
     # line: on the circle, that is all the way around
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
 
 def test_course():
-    # follow, park, turn around, follow the circle back to
-    # the cross: the whole lesson in four calls
+    # follow, turn around, follow the circle back to the
+    # cross: the whole lesson in three calls
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
     tracker.track_to_intersection()
     print("Done!")

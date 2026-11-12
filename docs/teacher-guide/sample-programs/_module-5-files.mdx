@@ -138,14 +138,15 @@ def test_sweep():
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     while not is_at_cross():
         correction = get_error() * KP
         drivetrain.arcade(BASE_EFFORT, correction)
     drivetrain.stop()
+    drivetrain.straight(8.75, 0.5)
 
 def test_cross_moving():
     while not is_at_cross():
@@ -170,18 +171,14 @@ def test_count():
         drivetrain.turn(180)
     print("Done!")
 
-# --- Lesson 2-9: park on the cross, turn to the next line ---
+# --- Lesson 2-9: turn to the next line ---
 # Completes the driving toolkit begun in Lesson 2-5.
-# track_to_intersection() stops with the SENSORS on the cross;
-# drive_past_intersection() moves the WHEELS onto it. The two
-# turns spin until a LINE SENSOR function sees the next line,
-# so no turn depends on a timer. With these four, every
-# program from here to Module 5 is a list of calls to this
-# section.
+# track_to_intersection() stops with the robot's center on
+# the cross. The two turns spin there until a LINE SENSOR
+# function sees the next line, so no turn depends on a
+# timer. With these three, every program from here to
+# Module 5 is a list of calls to this section.
 TURN_EFFORT = 0.25       # spin speed during a turn
-
-def drive_past_intersection():
-    drivetrain.straight(8.75, 0.5)
 
 def turn_clockwise():
     drivetrain.turn(-60, TURN_EFFORT)
@@ -202,25 +199,18 @@ def turn_around():
     # so one turn ends facing back the way it came
     turn_clockwise()
 
-def test_park():
-    track_to_intersection()
-    drive_past_intersection()
-
 def test_turn():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
 
 def test_course():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
     track_to_intersection()
     print("Done!")
 
 def test_turn_around():
     track_to_intersection()
-    drive_past_intersection()
     turn_around()
     track_to_intersection()
     print("Done!")
@@ -228,13 +218,12 @@ def test_turn_around():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()      # one sensor-ended turn = 180 deg here
     track_to_intersection()
     print("Done!")
@@ -245,8 +234,6 @@ def test_final_project():
         # follow the line to the cross
         print("Leg", leg + 1, "-- following to the cross...")
         track_to_intersection()
-        # park the wheels on the cross
-        drive_past_intersection()
         # turn around: one sensor-ended turn finds the circle behind
         print("Cross detected! Reversing...")
         turn_clockwise()
@@ -257,24 +244,24 @@ def test_final_project():
 # Drives the taped grid one intersection at a time, using only
 # the LINE TRACKING functions: a grid intersection is the
 # cross from Module 2. To ARRIVE at an intersection is
-# track_to_intersection() then drive_past_intersection(); a
-# turn happens parked on one. Nothing here touches a sensor.
+# track_to_intersection(), which stops with the robot's
+# center on it; a turn happens parked there. Nothing here
+# touches a sensor.
 
 def test_first_intersection():
     print("Driving to the first intersection...")
     track_to_intersection()
-    drive_past_intersection()
     print("Intersection reached!")
 
 def test_arrive_and_turn():
     track_to_intersection()
-    drive_past_intersection()
     print("Turning right...")
     turn_clockwise()
     print("Now facing a new direction!")
 
 # --- Lesson 3-2: a run of intersections ---
-# drive_intersections(count) is the arrival pair in a loop.
+# drive_intersections(count) is track_to_intersection() in a
+# loop.
 # It ends parked on the count-th intersection, so Lessons 3-3
 # and 3-4 build every path out of it and the two turns.
 
@@ -285,13 +272,10 @@ def drive_intersections(count):
     for i in range(count):
         print("  Intersection", i + 1, "of", count)
         track_to_intersection()
-        drive_past_intersection()
 
 def test_two_by_hand():
     track_to_intersection()
-    drive_past_intersection()
     track_to_intersection()
-    drive_past_intersection()
     print("Parked on the second intersection")
 
 def test_drive_run():
@@ -421,53 +405,50 @@ def test_planner():
 # the robot's position and heading, and it hands both back.
 HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
-def desired_heading(position, next_pos):
+def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
-    next_pos, which must be one step away; raise if it is not."""
+    next_pos, which must be one step away."""
     x_diff = next_pos[0] - position[0]
     y_diff = next_pos[1] - position[1]
     if x_diff == 0 and y_diff ==  1: return 0   # North
     if y_diff == 0 and x_diff ==  1: return 1   # East
     if x_diff == 0 and y_diff == -1: return 2   # South
     if y_diff == 0 and x_diff == -1: return 3   # West
+    # optional (Catching mistakes early):
     raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
 
 def test_headings():
     for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
-        heading = desired_heading((1, 1), next_pos)
+        heading = get_desired_heading((1, 1), next_pos)
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
-    # desired_heading((1, 1), (2, 2))   # diagonal: stops here
+    # get_desired_heading((1, 1), (2, 2))   # diagonal: stops here
 
 # --- Lesson 4-6: turn to a heading, drive a path ---
 # turn_to() turns a quarter turn at a time, with the LINE
 # TRACKING turns, until the robot faces the heading it
 # needs. drive_path() is the loop: for each
-# intersection, face it, arrive with the track-then-drive-past
-# pair, and record the new position. Both hand back what they
+# intersection, face it, arrive with track_to_intersection(),
+# and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
-def turn_to(heading, desired):
-    """Turn clockwise a quarter turn at a time until heading
-    is desired; return the new heading."""
-    while heading != desired:
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new
+    heading."""
+    while current_heading != desired_heading:
         turn_clockwise()
-        heading = (heading + 1) % 4
-    return heading
+        current_heading = (current_heading + 1) % 4
+    return current_heading
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
     position facing heading; return the final (position, heading)."""
     for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
+        desired_heading = get_desired_heading(position, next_pos)
+        heading = turn_to(heading, desired_heading)
         track_to_intersection()
-        drive_past_intersection()
         position = next_pos
     return position, heading
-
-def test_one_leg():
-    position, heading = drive_path([(1, 0)], (0, 0), 0)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 
 def test_drive_path():
     position = (0, 0)
@@ -486,15 +467,32 @@ def test_drive_path():
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work.
+# defined; the two sections did the work. Built in three
+# tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_delivery_paper():
+def test_one_leg():
     position = (0, 0)
-    for dest in DESTINATIONS:
-        path = compute_manhattan_path(position, dest)
-        print("To", dest, ":", path, " steps:", len(path))
-        position = dest
+    heading = 0                   # start facing North
+    path = compute_manhattan_path(position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+def test_two_legs():
+    position = (0, 0)
+    heading = 0
+    path = compute_manhattan_path(position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+    path = compute_manhattan_path(position, (2, 3))
+    print("Path:", path)
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 
 def test_delivery():
     position = (0, 0)
@@ -818,8 +816,8 @@ def test_detect_once():
     board.wait_for_button()
 
     for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
+        desired_heading = get_desired_heading(position, next_pos)
+        heading = turn_to(heading, desired_heading)
 
         distance = simulate_rangefinder(next_pos)     # rangefinder.distance() on the robot
         print("At", position, "facing", HEADING_NAMES[heading], "- ahead:", distance, "cm")
@@ -832,7 +830,6 @@ def test_detect_once():
             break      # Lesson 5-8 keeps going instead
         else:
             track_to_intersection()
-            drive_past_intersection()
             position = next_pos
             print("Drove to", position)
     print("All known obstacles:", BLOCKED)
@@ -864,8 +861,8 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
 
         rerouted = False
         for next_pos in path:
-            needed = desired_heading(position, next_pos)
-            heading = turn_to(heading, needed)
+            desired_heading = get_desired_heading(position, next_pos)
+            heading = turn_to(heading, desired_heading)
 
             distance = rangefinder.distance()          # look before driving
             if distance < obstacle_cm:
@@ -876,7 +873,6 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
                 break
             else:
                 track_to_intersection()
-                drive_past_intersection()
                 position = next_pos
                 step_count = step_count + 1
 
@@ -1068,7 +1064,7 @@ def test_random_bounce():
 # One LineTrack object drives the robot along the line. It HAS
 # A LineSensor (built in __init__, so you never make one
 # separately) and asks it the questions; it HAS the drivetrain
-# and gives it the orders. Same four methods as the function
+# and gives it the orders. Same three methods as the function
 # version, same names, with tracker. in front.
 
 class LineTrack:
@@ -1085,8 +1081,6 @@ class LineTrack:
             correction = error * self.kp
             self.drivetrain.arcade(self.base_effort, correction)
         self.drivetrain.stop()
-
-    def drive_past_intersection(self):
         self.drivetrain.straight(8.75, 0.5)
 
     def turn_clockwise(self):
@@ -1148,25 +1142,18 @@ def turn_around():
     # so one turn ends facing back the way it came
     tracker.turn_clockwise()
 
-def test_park():
-    tracker.track_to_intersection()
-    tracker.drive_past_intersection()
-
 def test_turn():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
 
 def test_course():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()
     tracker.track_to_intersection()
     print("Done!")
 
 def test_turn_around():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     turn_around()
     tracker.track_to_intersection()
     print("Done!")
@@ -1174,13 +1161,12 @@ def test_turn_around():
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.turn_clockwise()      # one sensor-ended turn = 180 deg here
     tracker.track_to_intersection()
     print("Done!")
@@ -1191,8 +1177,6 @@ def test_final_project():
         # follow the line to the cross
         print("Leg", leg + 1, "-- following to the cross...")
         tracker.track_to_intersection()
-        # park the wheels on the cross
-        tracker.drive_past_intersection()
         # turn around: one sensor-ended turn finds the circle behind
         print("Cross detected! Reversing...")
         tracker.turn_clockwise()
@@ -1203,24 +1187,24 @@ def test_final_project():
 # Drives the taped grid one intersection at a time, using only
 # the LINE TRACKING functions: a grid intersection is the
 # cross from Module 2. To ARRIVE at an intersection is
-# track_to_intersection() then drive_past_intersection(); a
-# turn happens parked on one. Nothing here touches a sensor.
+# track_to_intersection(), which stops with the robot's
+# center on it; a turn happens parked there. Nothing here
+# touches a sensor.
 
 def test_first_intersection():
     print("Driving to the first intersection...")
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     print("Intersection reached!")
 
 def test_arrive_and_turn():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     print("Turning right...")
     tracker.turn_clockwise()
     print("Now facing a new direction!")
 
 # --- Lesson 3-2: a run of intersections ---
-# drive_intersections(count) is the arrival pair in a loop.
+# drive_intersections(count) is track_to_intersection() in a
+# loop.
 # It ends parked on the count-th intersection, so Lessons 3-3
 # and 3-4 build every path out of it and the two turns.
 
@@ -1231,13 +1215,10 @@ def drive_intersections(count):
     for i in range(count):
         print("  Intersection", i + 1, "of", count)
         tracker.track_to_intersection()
-        tracker.drive_past_intersection()
 
 def test_two_by_hand():
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     tracker.track_to_intersection()
-    tracker.drive_past_intersection()
     print("Parked on the second intersection")
 
 def test_drive_run():
@@ -1385,7 +1366,7 @@ class Navigator:
         self.heading = heading
         self.line_track = LineTrack()        # has-a LineTrack
 
-    def desired_heading(self, next_pos):
+    def get_desired_heading(self, next_pos):
         x_diff = next_pos[0] - self.position[0]
         y_diff = next_pos[1] - self.position[1]
         if x_diff == 0 and y_diff ==  1: return 0   # North
@@ -1394,17 +1375,16 @@ class Navigator:
         if y_diff == 0 and x_diff == -1: return 3   # West
         raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
 
-    def turn_to(self, desired):
-        while self.heading != desired:
+    def turn_to(self, desired_heading):
+        while self.heading != desired_heading:
             self.line_track.turn_clockwise()
             self.heading = (self.heading + 1) % 4
 
     def drive_path(self, path):
         for next_pos in path:
-            needed = self.desired_heading(next_pos)
-            self.turn_to(needed)
+            desired_heading = self.get_desired_heading(next_pos)
+            self.turn_to(desired_heading)
             self.line_track.track_to_intersection()
-            self.line_track.drive_past_intersection()
             self.position = next_pos
 
     def navigate_with_detection(self, destination, rangefinder, obstacle_cm):
@@ -1425,8 +1405,8 @@ class Navigator:
 
             rerouted = False
             for next_pos in path:
-                needed = self.desired_heading(next_pos)
-                self.turn_to(needed)
+                desired_heading = self.get_desired_heading(next_pos)
+                self.turn_to(desired_heading)
 
                 distance = rangefinder.distance()          # look before driving
                 if distance < obstacle_cm:
@@ -1437,7 +1417,6 @@ class Navigator:
                     break
                 else:
                     self.line_track.track_to_intersection()
-                    self.line_track.drive_past_intersection()
                     self.position = next_pos
                     step_count = step_count + 1
 
@@ -1451,13 +1430,9 @@ navigator = Navigator((0, 0), 0)
 def test_headings():
     nav = Navigator((1, 1), 0)
     for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
-        heading = nav.desired_heading(next_pos)
+        heading = nav.get_desired_heading(next_pos)
         print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
-    # nav.desired_heading((2, 2))   # diagonal: stops here
-
-def test_one_leg():
-    navigator.drive_path([(1, 0)])
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+    # nav.get_desired_heading((2, 2))   # diagonal: stops here
 
 def test_drive_path():
     destination = (2, 3)
@@ -1474,15 +1449,28 @@ def test_drive_path():
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work.
+# defined; the two sections did the work. Built in three
+# tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_delivery_paper():
-    position = (0, 0)
-    for dest in DESTINATIONS:
-        path = planner.compute_path(position, dest)
-        print("To", dest, ":", path, " steps:", len(path))
-        position = dest
+def test_one_leg():
+    path = planner.compute_path(navigator.position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+
+def test_two_legs():
+    path = planner.compute_path(navigator.position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+
+    path = planner.compute_path(navigator.position, (2, 3))
+    print("Path:", path)
+    navigator.drive_path(path)
+    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 
 def test_delivery():
     print("Planned path for leg 1:",
@@ -1818,8 +1806,8 @@ def test_detect_once():
     board.wait_for_button()
 
     for next_pos in path:
-        needed = navigator.desired_heading(next_pos)
-        navigator.turn_to(needed)
+        desired_heading = navigator.get_desired_heading(next_pos)
+        navigator.turn_to(desired_heading)
 
         distance = simulate_rangefinder(next_pos)     # rangefinder.distance() on the robot
         print("At", navigator.position, "facing", HEADING_NAMES[navigator.heading],
@@ -1833,7 +1821,6 @@ def test_detect_once():
             break      # Lesson 5-8 keeps going instead
         else:
             navigator.line_track.track_to_intersection()
-            navigator.line_track.drive_past_intersection()
             navigator.position = next_pos
             print("Drove to", navigator.position)
     print("All known obstacles:", planner.blocked)

@@ -139,9 +139,9 @@ planner.add_blocked(intersection)
 
 ## D4. The navigator owns position and heading
 
-In the function track, `turn_to(heading, desired)` returns the new heading, and
+In the function track, `turn_to(current_heading, desired_heading)` returns the new heading, and
 `drive_path(path, position, heading)` returns the new position and heading, the
-robot's **pose** (named in Lesson 4-6); the main program keeps it. In the extension, the `Navigator` holds both. Nothing else
+robot's **pose** (named in Lesson 4-5); the main program keeps it. In the extension, the `Navigator` holds both. Nothing else
 in the program tracks where the robot is. The planner is told the position when
 asked for a path (D3.1).
 
@@ -240,8 +240,7 @@ reference robot code:
 
 | Function | What it does |
 |---|---|
-| `track_to_intersection()` | Follow the line until both sensors see a cross |
-| `drive_past_intersection()` | Drive the 8.75 cm from the sensors to the axle, so the wheels sit on the cross |
+| `track_to_intersection()` | Follow the line until both sensors see a cross, then drive the 8.75 cm from the sensors to the axle, so the wheels sit on the cross |
 | `turn_clockwise()` / `turn_counterclockwise()` | Turn onto the crossing line; clear whichever way the robot faces, unlike "left" and "right" |
 | `is_either_on_line()` | The test a turn needs; every true-or-false function starts with `is_` |
 | `is_at_cross()`, `get_left()`, `get_right()`, `get_error()` | The sensor toolkit |
@@ -251,14 +250,14 @@ both sensors off the line it was following, then rotates until a sensor finds th
 crossing line. A timed turn depends on battery, floor and tape, and is never right
 twice.
 
-**`drive_past_intersection()` runs after every `track_to_intersection()`, not inside
-the turn.** The sensors stop on the cross 8.75 cm ahead of the axle; driving that
-far puts the wheels on it, so a turn pivots on the intersection and the next track
-doesn't see the same cross again. Doing it right after the track is what makes
+**`track_to_intersection()` ends with the wheels on the cross, not the sensors.** The
+sensors stop on the cross 8.75 cm ahead of the axle; driving that far, as the last
+line of the track, puts the wheels on it, so a turn pivots on the intersection and the
+next track doesn't see the same cross again. Parking inside the track is what makes
 rerouting safe: when Module 5 finds an obstacle and re-plans, the robot is already
 parked on the intersection.
 
-**`turn_to(heading, desired)` turns clockwise, a quarter at a time, until the heading
+**`turn_to(current_heading, desired_heading)` turns clockwise, a quarter at a time, until the heading
 matches.** It reuses Module 2's loop-until-a-condition shape. It sometimes takes
 three turns where one counterclockwise turn would do, and that is accepted on
 purpose; turning the short way round is an optional challenge in Lesson 4-6.

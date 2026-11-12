@@ -109,14 +109,16 @@ def test_sweep():
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     # until is_at_cross():
     #     correction = get_error() * KP
     #     steer with arcade(BASE_EFFORT, correction)
     # then stop the motors
+    # then drive straight 8.75 cm: the robot's center onto
+    # the cross
     pass
 
 def test_cross_moving():
@@ -134,7 +136,7 @@ def test_track():
     print("Done!")
 
 def test_reverse():
-    # follow to the cross, turn around, follow back to it
+    # follow to the cross, turn around on it, follow back
     track_to_intersection()
     drivetrain.turn(180)
     track_to_intersection()
