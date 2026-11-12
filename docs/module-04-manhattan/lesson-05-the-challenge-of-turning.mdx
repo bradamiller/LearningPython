@@ -29,8 +29,7 @@ broken down into two steps at each intersection, **turn** to face the next one, 
   caption="The tree from Lesson 4-0: at each intersection, turn, then drive."
 />
 
-The robot has a **heading**, the direction it faces, and only drives forward. This lesson
-opens the last section of `robot.py`, the NAVIGATOR: you write `desired_heading` and test it
+This lesson opens the last section of `robot.py`, the NAVIGATOR: you write `desired_heading` and test it
 on screen, and design `turn_to` on paper for next lesson.
 
 <Objectives>
@@ -45,6 +44,14 @@ By the end of this lesson you will be able to:
 </Objectives>
 
 <QuizLink id="module-04-manhattan/lesson-05-the-challenge-of-turning" />
+
+## Where we are
+
+- The robot's state is an `(x, y)` position and a direction, its **heading**: 0 = North,
+  1 = East, 2 = South, 3 = West. Together, the position and heading are the robot's **pose**.
+- The robot only moves in the direction it is facing, and only one intersection at a time.
+- Every clockwise turn adds one to the heading, and every counterclockwise turn subtracts
+  one. If the heading hits 4, it wraps around to 0; if it goes below 0, it wraps around to 3.
 
 ## One change at a time → four directions
 
