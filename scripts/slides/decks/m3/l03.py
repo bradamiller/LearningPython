@@ -76,10 +76,10 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Why the turn lands on the new line',
          'bullets': [
-             '`drive_intersections()` leaves the robot parked with its **wheels over** the last '
+             '`drive_intersections()` leaves the robot parked with its **center over** the last '
              'intersection, sensors just past it',
              'That is exactly the position a turn needs',
-             'The robot pivots about its center of rotation (Lesson 3-1), so it spins **on** the '
+             'The robot pivots about its center of rotation (Lesson 2-8), so it spins **on** the '
              'intersection',
              'The blind 60° plus the sensor-ended finish from Lesson 2-9 bring the sensors down on '
              'the crossing line',
@@ -92,7 +92,7 @@ DECK = {
         {'kind': 'check',
          'question': 'After `turn_clockwise()`, what has to happen before the next '
                      '`drive_intersections()`?',
-         'options': ['A `drive_past_intersection()` to clear the cross',
+         'options': ['A short drive forward to clear the cross',
                      'Nothing: the turn ends with a sensor on the new line, and the next track '
                      'follows it',
                      'A short `time.sleep()`',
@@ -100,25 +100,10 @@ DECK = {
          'answer': 1,
          'explanation': 'The turn finishes when `is_either_on_line()` sees the crossing line. The '
                         'robot is on the intersection, facing the new direction, with a sensor on '
-                        'tape: ready to track.'},
-
-        {'kind': 'check',
-         'question': 'A student calls `turn_clockwise()` right after `track_to_intersection()`, '
-                     'skipping `drive_past_intersection()`. What goes wrong?',
-         'options': ['Nothing: the turn works the same',
-                     'The wheels are short of the intersection, so it pivots in front of it and the '
-                     'sensors miss the new line',
-                     'The robot turns the wrong way',
-                     'The turn takes twice as long'],
-         'answer': 1,
-         'explanation': 'The sensors reach the cross before the wheels do. Turning before the '
-                        'drive-past spins the robot around a point short of the intersection; the '
-                        'sensor-ended turn then hunts for a line that is not where it expects.',
-         'notes': 'Answer: B. Two rules trip students up. The robot must be parked on an '
-                  'intersection to turn: you cannot turn mid-segment, and drive_intersections() '
-                  'always leaves it parked. And the arrival pair is track then drive past, every '
-                  'time. Students who hand-write the pair sometimes drop the second half; '
-                  'drive_intersections() exists partly so they can\'t.'},
+                        'tape: ready to track.',
+         'notes': 'Answer: B. The rule that trips students up: the robot must be parked on an '
+                  'intersection to turn. You cannot turn mid-segment, and drive_intersections() '
+                  'always leaves it parked.'},
 
         {'kind': 'frames', 'title': 'Activity · The L, then a path of your own',
          'tag': 'Activity',
@@ -192,10 +177,10 @@ DECK = {
              'What comes after a turn?',
          ],
          'next': 'the final project: four drive-and-turn legs in a loop, a complete square',
-         'notes': 'Answers: a sequence of drives and turns. The arrival pair: the robot parked on the '
+         'notes': 'Answers: a sequence of drives and turns. An arrival: the robot parked on the '
                   'intersection. The next drive: a sensor is already on the new line. Formative: '
                   'sequence drives and turns for a described path, and explain why the turn must '
-                  'wait for the drive-past. Exit ticket: "Write the calls for drive 2, turn left, '
+                  'wait until the robot is parked on the intersection. Exit ticket: "Write the calls for drive 2, turn left, '
                   'drive 1."'},
     ],
 }

@@ -72,12 +72,12 @@ DECK = {
          'lead': 'Paste it above `RUN`, at the end of LINE TRACKING. Two tests, and the second one **is** the project.',
          'lead_h': 0.75,
          'code': 'def test_reversal():\n'
-                 '    # park on the cross, turn around (one clockwise turn\n'
+                 '    # follow to the cross, turn around (one clockwise turn\n'
                  '    # does it here), then follow back to the cross\n'
                  '    pass\n'
                  '\n'
                  'def test_final_project():\n'
-                 '    # the mission: follow to the cross, park on it, reverse,\n'
+                 '    # the mission: follow to the cross, reverse,\n'
                  '    # four times in all; then stop and print "Done!"\n'
                  '    # write your plan here as comments first, then the code\n'
                  '    pass',
@@ -87,7 +87,7 @@ DECK = {
          'tone': 'orange',
          'notes': 'There are no new driving functions in this lesson. The skeleton on the lesson page opens with a section comment: the module project '
                   'laps the circle, reversing at the cross, four times, then stops; nothing new is '
-                  'defined for it; it is a list of calls to the four driving functions, because the '
+                  'defined for it; it is a list of calls to the three driving functions, because the '
                   'sections did the work and the project assembles them. The slide leaves that '
                   'comment out to fit.'},
 
@@ -117,14 +117,15 @@ DECK = {
         {'kind': 'steps', 'title': 'Build it in pieces',
          'lead': 'You have every part already. Build in this order, and don\'t go on until each step works:',
          'steps': [
-             '**Park on the cross.** Run `test_park()` from Lesson 2-9 once more. Wheels on the cross?',
+             '**Stop on the cross.** Run `test_track()` from Lesson 2-8 once more. Does the robot stop with its center on the cross?',
              '**One turn.** Run `test_turn()`. Does the turn find the line again?',
-             '**One full reversal.** Write the body of `test_reversal()` and run it: park, one clockwise turn, follow back to the same cross',
+             '**One full reversal.** Write the body of `test_reversal()` and run it: track, one clockwise turn, follow back to the same cross',
              '**The loop.** Write `test_final_project()` under your plan comments and set the run line to it',
          ],
          'size': 20,
          'tag': 'Activity',
-         'notes': 'Insist on incremental testing. If a student did the Lesson 2-9 challenge, '
+         'notes': 'Insist on incremental testing: test_track(), then test_turn(), then '
+                  'test_reversal(), then the four-rep loop. If a student did the Lesson 2-9 challenge, '
                   'test_turn_around() is test_reversal() already. The teacher copy of the solution '
                   'is for unsticking a team, not a handout: the assembly and tuning is the graded '
                   'work, and there is no student reveal for it.'},
@@ -132,7 +133,7 @@ DECK = {
         {'kind': 'steps', 'title': 'Activity · Test, tune, present',
          'lead': 'Work up in stages, and keep a note of what you tuned:',
          'steps': [
-             'Does `test_park()` follow and stop at the cross, with the wheels left on it?',
+             'Does `test_track()` follow and stop with the robot\'s center on the cross?',
              'Does one turn in `test_turn()` find the line again?',
              'Does `test_reversal()` work end to end?',
              'Do all four reversals in `test_final_project()` run and stop?',
@@ -177,7 +178,8 @@ DECK = {
          'notes': 'The final project is the summative assessment: a 50-point rubric across code '
                   'organization, functionality, testing and debugging, and presentation works well. '
                   'Reward process and tuning, not just a flawless demo. Module 3 adds a GRID DRIVING '
-                  'section to robot.py: track_to_intersection() and drive_past_intersection() become '
-                  'the way the robot drives from one intersection to the next.'},
+                  'section to robot.py: track_to_intersection() becomes the way the robot drives from '
+                  'one intersection to the next, the foundation for the navigation and pathfinding in '
+                  'Modules 4 and 5.'},
     ],
 }

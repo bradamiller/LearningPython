@@ -123,20 +123,21 @@ DECK = {
                   'incremental testing: one side, then two, then four.'},
 
         {'kind': 'check',
-         'question': 'A student wrote `for leg in range(3):` and added a second '
-                     '`drive_past_intersection()` just before the turn. What are the two bugs?',
+         'question': 'A student wrote `for leg in range(3):` and added '
+                     '`drivetrain.straight(8.75, 0.5)` right before `turn_clockwise()`. What are the '
+                     'two bugs?',
          'options': ['Nothing is wrong',
-                     '`range(3)` makes only 3 sides (needs 4), and the extra drive-past carries the '
-                     'wheels 8.75 cm past the corner',
+                     '`range(3)` makes only 3 sides (needs 4), and the extra drive moves the center '
+                     'of rotation 8.75 cm past the corner',
                      '`turn_clockwise()` should be `turn_counterclockwise()`, and sides should be 4',
                      'The loop should be a while loop, and print is missing'],
          'answer': 1,
          'explanation': 'A square needs `range(4)`. And `drive_intersections()` already ends with the '
-                        'wheels on the corner; a second drive-past moves them off it, so the turn '
+                        'robot\'s center on the corner; an extra 8.75 cm moves it off, so the turn '
                         'pivots in the wrong place.',
          'notes': 'Answer: B. The common fixes are all tuning: turns that aren\'t quite 90° (the '
                   'blind part of the turn too long, or TURN_EFFORT too high, so the sensor-ended '
-                  'finish spins past the line), a drive_past_intersection() distance that doesn\'t '
+                  'finish spins past the line), an 8.75 cm distance in track_to_intersection() that doesn\'t '
                   'match the robot\'s sensor-to-axle gap, or too much BASE_EFFORT. Frame that as real '
                   'engineering. Returning approximately to start is success; a perfectly closed '
                   'square on real tape is a bonus. Two clean sides already show mastery.'},

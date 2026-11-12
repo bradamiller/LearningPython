@@ -7,7 +7,7 @@ DECK = {
          'objectives': [
              'Describe how a grid is built from lines and **intersections**',
              'Explain how a grid intersection is just the "cross" from Module 2',
-             'Use `track_to_intersection()` and `drive_past_intersection()` to arrive at the next intersection',
+             'Use `track_to_intersection()` to arrive at the next intersection',
              'Start the GRID DRIVING section of `robot.py`, and write its first two tests from a description',
              'Place the robot on the grid and reach the first intersection',
          ],
@@ -34,12 +34,11 @@ DECK = {
                   'from one intersection to the next.'},
 
         {'kind': 'bullets', 'title': 'You already built the whole toolkit',
-         'lead': 'The LINE TRACKING section you finished in Lesson 2-9 has the four functions that '
+         'lead': 'The LINE TRACKING section you finished in Lesson 2-9 has the three functions that '
                  'drive a grid:',
          'lead_h': 1.0,
          'bullets': [
-             '`track_to_intersection()`: follow the line to the next intersection and stop',
-             '`drive_past_intersection()`: put the wheels on the intersection, sensors past it',
+             '`track_to_intersection()`: follow the line to the next intersection and stop with the robot\'s center on it',
              '`turn_clockwise()`: turn onto the perpendicular line to the right',
              '`turn_counterclockwise()`: turn onto the perpendicular line to the left',
          ],
@@ -59,8 +58,7 @@ DECK = {
          ],
          'size': 22,
          'split': 0.56,
-         'code': 'tracker.track_to_intersection()\n'
-                 'tracker.drive_past_intersection()',
+         'code': 'tracker.track_to_intersection()',
          'code_size': 16,
          'callout': 'The tracker brought its sensor and its settings with it. That is what the class '
                     'bought you.',
@@ -89,8 +87,9 @@ DECK = {
                  '# Drives the taped grid one intersection at a time, using only\n'
                  '# the LINE TRACKING functions: a grid intersection is the\n'
                  '# cross from Module 2. To ARRIVE at an intersection is\n'
-                 '# track_to_intersection() then drive_past_intersection(); a\n'
-                 '# turn happens parked on one. Nothing here touches a sensor.\n'
+                 '# track_to_intersection(), which stops with the robot\'s\n'
+                 '# center on it; a turn happens parked there. Nothing here\n'
+                 '# touches a sensor.\n'
                  '\n'
                  'def test_first_intersection():\n'
                  '    # from a line, arrive at the next intersection and say so\n'
@@ -120,69 +119,24 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Drive to the first intersection',
          'lead': 'Place the robot centered on a line, facing toward the next intersection. The '
-                 'first test is two calls:',
+                 'first test is one call:',
          'lead_h': 1.0,
          'bullets': [
-             '`track_to_intersection()` follows the line right up to the cross',
-             '`drive_past_intersection()` rolls forward so the wheels are over the intersection',
-             'Exactly as `test_park()` did in Lesson 2-9',
+             '`track_to_intersection()` follows the line to the intersection and stops with the robot\'s **center on it**',
+             'Just as it did on your circle',
+             'Parked there, a turn spins the robot **in place** on the cross, and the sensors come down on the crossing line',
          ],
-         'callout': 'Those two calls together are the **arrival pair**: what "arrive at an '
-                    'intersection" means for the rest of the course',
-         'tone': 'teal'},
-
-        {'kind': 'bullets', 'title': 'Where the robot turns',
-         'bullets': [
-             'When `track_to_intersection()` stops, the **sensors** are on the cross',
-             'But the sensors sit at the very front of the robot',
-             'The robot turns about its **center of rotation**: the pen hole between the drive '
-             'wheels, **8.75 cm** further back',
-             'Turn from where the track stopped, and the robot swings around a point short of the '
-             'intersection',
-         ],
-         'callout': 'On the grid, the second call of the pair matters more than it did on the circle',
-         'tone': 'orange'},
-
-        {'kind': 'figure', 'title': 'Turn now, or drive past first?',
-         'figure': '/img/lesson-m2-09/park-turn-left-then-right.svg',
-         'frame': 0.8,
-         'caption': 'Left: turns right away, and its sensors miss the cross street. Right: drives '
-                    'past first, spins on the intersection, and lands on the new line.',
-         'notes': 'Both robots start where track_to_intersection() left them. On the lesson page '
-                  'this is an animation; the slide shows the end state.'},
-
-        {'kind': 'bullets', 'title': 'Why every arrival is the pair',
-         'bullets': [
-             '`drive_past_intersection()` drives forward exactly that **8.75 cm**',
-             'The center of rotation ends up where the sensors were: right on the intersection',
-             'Any turn from there spins the robot **in place** on the cross',
-             'The sensors come down on the crossing line',
-         ],
-         'callout': 'Every arrival is the pair, never the track alone, even when the robot is about '
-                    'to go straight on',
+         'callout': 'That one call is what "arrive at an intersection" means for the rest of the course',
          'tone': 'teal'},
 
         {'kind': 'check',
          'question': 'Which function drives the robot from where it is to the next intersection?',
          'options': ['`turn_clockwise()`', '`track_to_intersection()`',
-                     '`drive_past_intersection()`', '`get_error()`'],
+                     '`turn_counterclockwise()`', '`get_error()`'],
          'answer': 1,
-         'explanation': '`track_to_intersection()` follows the line and stops when both sensors hit '
-                        'the intersection: one grid segment per call. `drive_past_intersection()` '
-                        'then parks the wheels on it.'},
-
-        {'kind': 'check',
-         'question': 'Why drive past the intersection before turning, instead of turning where '
-                     '`track_to_intersection()` stops?',
-         'options': ['To save battery',
-                     'The robot turns about its center of rotation, 8.75 cm behind the sensors, so '
-                     'turning early pivots short of the intersection and the sensors miss the new line',
-                     'Because `turn_clockwise()` only works while the robot is moving',
-                     'It does not matter; both land on the new line'],
-         'answer': 1,
-         'explanation': 'The sensors arrive first. Driving the 8.75 cm puts the center of rotation on '
-                        'the cross, so the turn spins on the intersection and the sensors come down '
-                        'on the crossing line.'},
+         'explanation': '`track_to_intersection()` follows the line until both sensors hit the '
+                        'intersection, then drives 8.75 cm so the robot\'s center is on it: one grid '
+                        'segment per call.'},
 
         {'kind': 'frames', 'title': 'Activity · Reach it, then turn',
          'tag': 'Activity',
@@ -190,19 +144,19 @@ DECK = {
          'crop': (0.02, 0.09, 0.565, 1.0),
          'frames': [(0.35, '**Step 1:** parked on the intersection'),
                     (0.95, '**Step 2:** turned onto the crossing line')],
-         'callout': 'The arrival pair parks the wheels on the intersection, and from there one turn '
-                    'lands on the crossing line',
+         'callout': '`track_to_intersection()` parks the robot on the intersection, and from there '
+                    'one turn lands on the crossing line',
          'tone': 'teal',
          'notes': 'On the lesson page this is one animation of both tests, with the step running '
                   'highlighted beside the grid. These are the end of each step.'},
 
         {'kind': 'steps', 'title': 'Step 1 · test_first_intersection()',
          'steps': [
-             'Write the body: a print saying what it\'s about to do, the arrival pair, and a print '
-             'saying it got there',
+             'Write the body: a print saying what it\'s about to do, `track_to_intersection()`, and '
+             'a print saying it got there',
              'Set the run line to `test_first_intersection()`. Put the robot on a line segment facing '
              'the next intersection, and run',
-             'It should stop with its wheels on the intersection. Try a few starting spots. Don\'t go '
+             'It should stop with its center on the intersection. Try a few starting spots. Don\'t go '
              'on until it does',
          ],
          'notes': 'More support: have students get test_first_intersection() reliable before writing '
@@ -210,7 +164,7 @@ DECK = {
 
         {'kind': 'steps', 'title': 'Step 2 · test_arrive_and_turn()',
          'steps': [
-             'Write the body: the arrival pair, then `turn_clockwise()`, with a print before the turn '
+             'Write the body: `track_to_intersection()`, then `turn_clockwise()`, with a print before the turn '
              'and one after',
              'Set the run line to `test_arrive_and_turn()` and run',
              'It should arrive, pivot on the intersection, and stop facing along the crossing line '
@@ -255,7 +209,7 @@ DECK = {
          ],
          'next': 'drive through intersections, with a loop and counting',
          'notes': 'Answers: the same both-sensors-high cross from Module 2. track_to_intersection(), '
-                  'then drive_past_intersection() to park on it. LINE TRACKING already handles lines '
+                  'which stops with the robot\'s center on it. LINE TRACKING already handles lines '
                   'and crosses: reuse, and only the tests are new. Formative: explain why LINE '
                   'TRACKING works unchanged, and drive to the first intersection reliably. Exit '
                   'ticket: "Which function turns the robot onto the crossing line?" '

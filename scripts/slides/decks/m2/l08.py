@@ -6,7 +6,8 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Test `is_at_cross()` on a **moving** robot, with no line following in the program',
-             'Write `track_to_intersection()`: follow the line **until** `is_at_cross()` says stop',
+             'Write `track_to_intersection()`: follow the line **until** `is_at_cross()` says stop, then drive the robot\'s center onto the cross',
+             'Explain why the robot drives **8.75 cm** after the sensors reach the cross',
              'Explain why the cross is detected in the **loop condition**, not inside the loop body',
              'Program a response to the cross (stop, turn around, follow back)',
          ],
@@ -25,22 +26,24 @@ DECK = {
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'Add to robot.py: this lesson\'s skeleton',
-         'lead': 'Paste it above `RUN`, at the end of LINE TRACKING. The outline\'s body is the body '
-                 'of `test_follow()`: the difference is all in the `while` line.',
+         'lead': 'Paste it above `RUN`, at the end of LINE TRACKING. The loop\'s body is the body '
+                 'of `test_follow()`: what\'s new is the `while` line and the drive after the loop.',
          'lead_h': 1.15,
          'code': '# --- Lesson 2-8: follow to a cross ---\n'
                  '# track_to_intersection() is the follower from test_follow()\n'
                  '# with a reason to stop: it follows until is_at_cross() says\n'
-                 '# the robot is on a crossing line. Lesson 2-9 adds the\n'
-                 '# functions that park on the cross and turn to the next line.\n'
+                 '# the sensors are on a crossing line, then drives on until\n'
+                 '# the robot\'s center is on it. Lesson 2-9 adds the turns.\n'
                  '\n'
                  'def track_to_intersection():\n'
                  '    # until is_at_cross():\n'
                  '    #     correction = get_error() * KP\n'
                  '    #     steer with arcade(BASE_EFFORT, correction)\n'
                  '    # then stop the motors\n'
+                 '    # then drive straight 8.75 cm: the robot\'s center onto\n'
+                 '    # the cross\n'
                  '    pass',
-         'code_size': 17,
+         'code_size': 15,
          'notes': 'The same paste also holds three test functions: test_cross_moving(), test_track() '
                   'and test_reverse(). The next slides show each one where it is used. This is the '
                   'first real driving function, placed next to the test that has been doing the job '
@@ -112,12 +115,14 @@ DECK = {
 
         {'kind': 'figure', 'title': 'test_track() from above: the cross',
          'figure': '/img/lesson-m2-08/track-to-cross.svg',
-         'frame': 0.7,
+         'frame': 0.8,
          'crop': (0.0, 0.08, 1.0, 1.0),
-         'caption': 'Both sensors reach the cross strip and read high. `is_at_cross()` becomes `True`, '
-                    'the loop ends, and the robot stops with its sensors on the cross.',
-         'notes': 'On tight curves both sensors can briefly go high (a false positive); a wide, crisp '
-                  'taped cross and a little tuning handle it.'},
+         'caption': 'Both sensors reach the cross strip and read high: `is_at_cross()` becomes `True`, '
+                    'the loop ends, the robot stops. Then it drives 8.75 cm, center on the cross.',
+         'notes': 'The robot stops with its sensors on the cross, then drives straight 8.75 cm and '
+                  'stops with its center on the cross; the next section explains that drive. On tight '
+                  'curves both sensors can briefly go high (a false positive); a wide, crisp taped '
+                  'cross and a little tuning handle it.'},
 
         {'kind': 'check',
          'question': 'What makes `track_to_intersection()` stop?',
@@ -139,6 +144,59 @@ DECK = {
          'explanation': 'The loop condition asks `is_at_cross()` every pass. The body reads, computes, '
                         'steers. Each part has one job, which makes each one testable.'},
 
+        {'kind': 'bullets', 'title': 'Arriving: the center on the cross',
+         'bullets': [
+             'When the loop ends, the **sensors** are on the cross',
+             'They sit at the very **front** of the robot',
+             'The robot turns about its **center of rotation**: the hole between the drive wheels where a pen goes, **8.75 cm** further back',
+             'So `track_to_intersection()` ends with one more move: drive straight **8.75 cm**. Now the robot\'s center is on the cross',
+         ],
+         'split': 0.55,
+         'figure': '/img/lesson-m2-09/park-turn-left-then-right.svg',
+         'frame': 0.0,
+         'crop': (0.0, 0.0, 0.5, 0.9),
+         'notes': 'The figure is the left panel of the animation two slides on, at its first moment: '
+                  'the robot stopped with its sensors on the cross. The 8.75 cm drive is built into '
+                  'track_to_intersection() so it is taught once. From here to Module 6, "track to the '
+                  'next intersection" means the robot is there, center on the cross, ready to turn, '
+                  'and no later lesson repeats it. The 8.75 cm is sensor-to-axle on an XRP; measure '
+                  'it if the robot\'s mounting differs.'},
+
+        {'kind': 'bullets', 'title': 'One move, two jobs',
+         'bullets': [
+             '**Turns spin on the cross.** Turn from where the sensors stopped and the robot swings about a point short of the cross. Turn from the center and the sensors come down on the new line',
+             '**The next track starts clean.** The sensors end up past the tape, so the next `track_to_intersection()` has a line to follow instead of stopping at once',
+         ]},
+
+        {'kind': 'figure', 'title': 'Turn now, or drive 8.75 cm first?',
+         'figure': '/img/lesson-m2-09/park-turn-left-then-right.svg',
+         'frame': 0.75,
+         'caption': 'Both stopped with their sensors on the cross. Left: turns right away and swings '
+                    'about a point short of it. Right: drives 8.75 cm first, spins on the cross, and '
+                    'its sensors find the new line.',
+         'notes': 'On the lesson page both robots animate side by side from the same start. This is '
+                  'the end state: the left robot\'s sensors land beside the new line, the right '
+                  'robot\'s land on it.'},
+
+        {'kind': 'bullets', 'title': 'A distance, not a time',
+         'bullets': [
+             'It\'s a **distance**, not a `time.sleep()`, on purpose',
+             'Eight and three-quarter centimeters is the same with a full battery or a flat one; half a second is not',
+         ],
+         'callout': 'You know the drivetrain call that drives a distance: you\'ve used it since Lesson 1-8.',
+         'tone': 'orange'},
+
+        {'kind': 'check',
+         'question': 'Why does `track_to_intersection()` end by driving 8.75 cm rather than driving for '
+                     'half a second?',
+         'options': ['`straight()` is easier to spell',
+                     'A distance is the same with a full or flat battery and on any floor; a time needs re-tuning',
+                     '`time.sleep()` cannot be used with motors',
+                     'Because 8.75 is a magic number'],
+         'answer': 1,
+         'explanation': 'The course avoids timing-based movement everywhere. Distances and sensor '
+                        'readings describe the world; a duration describes a guess about the motors.'},
+
         {'kind': 'code', 'title': 'The two tests that drive it',
          'lead': 'Both are in the skeleton. The run block still waits for the button before every test.',
          'code': 'def test_track():\n'
@@ -148,7 +206,7 @@ DECK = {
                  '    print("Done!")\n'
                  '\n'
                  'def test_reverse():\n'
-                 '    # follow to the cross, turn around, follow back to it\n'
+                 '    # follow to the cross, turn around on it, follow back\n'
                  '    track_to_intersection()\n'
                  '    drivetrain.turn(180)\n'
                  '    track_to_intersection()\n'
@@ -168,7 +226,7 @@ DECK = {
          'steps': [
              'Write the body: start by copying the loop out of `test_follow()`',
              'Set the run call to `test_track()`. Put the robot on the circle, pointed along it',
-             'It should follow the line around and **stop at the cross**',
+             'It should follow the line around and stop with its **center on the cross**: put a finger on the tape beside the robot, and the pen hole between the wheels should sit over it',
          ],
          'callout': 'Weaves? Same gain you tuned in Lesson 2-6. Stops somewhere else? Step 1 already '
                     'cleared the cross check, so look at where the follower put the sensors.',
@@ -183,14 +241,8 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 3 · Follow, reverse, follow',
          'steps': [
              'Set the run call to `test_reverse()`',
-             'The robot follows to the cross, turns around, and follows back the other way to the same cross',
-             'Where are the sensors after the turn? **Watch closely**: it matters next lesson',
-         ],
-         'notes': 'When track_to_intersection() stops, the sensors are on the cross and the wheels '
-                  'are about 9 cm short of it. That is why the reverse works with no extra move: '
-                  'turn(180) pivots on the wheels and swings the sensors back onto the circle behind, '
-                  'clear of the cross, so the next track does not fire at once. Lesson 2-9 makes the '
-                  'gap explicit with drive_past_intersection(); do not pre-teach it here.'},
+             'The robot follows to the cross, **turns around on it**, and follows the circle back the other way to the same cross',
+         ]},
 
         {'kind': 'steps', 'title': 'Step 4 · Challenge: count the crossings',
          'steps': [
@@ -204,8 +256,8 @@ DECK = {
                   'More support: have the straight-drive test print get_left() and get_right() each '
                   'pass, so students see both readings climb as the tape arrives. More challenge: '
                   'turn 90 degrees to take the perpendicular path; give different crossings different '
-                  'behaviors (beep on 1, blink on 2); or write track_for_crosses(n), which needs the '
-                  'robot to get past each cross first, the problem Lesson 2-9 solves.'},
+                  'behaviors (beep on 1, blink on 2); or write track_for_crosses(n) that follows '
+                  'through n crossings before stopping.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
@@ -223,13 +275,15 @@ DECK = {
          'questions': [
              'Why test `is_at_cross()` with a straight drive first?',
              'Where does `track_to_intersection()` look for the cross?',
-             'What ends `track_to_intersection()`?',
+             'What ends `track_to_intersection()`\'s loop?',
+             'Why drive 8.75 cm after the loop?',
          ],
-         'next': 'park on the cross and turn to the next line',
+         'next': 'two turns that spin on the cross until a sensor finds the next line',
          'notes': 'Answers: so a failure can only be the cross check. In the while condition; the '
-                  'body only steers. Both sensors on the cross, not a timer, not a count. Exit '
-                  'ticket: "Write track_to_intersection() from memory using the toolkit functions." '
-                  'Lesson 2-9 adds the three driving functions that park the wheels on the cross and '
-                  'turn until a sensor finds the next line.'},
+                  'body only steers. Both sensors on the cross, not a timer, not a count. The sensors '
+                  'reach the cross first; the robot\'s center, which it turns about, is 8.75 cm behind '
+                  'them. Exit ticket: "Write track_to_intersection() from memory using the toolkit '
+                  'functions." Lesson 2-9 adds the two turns, which spin on the cross until a sensor '
+                  'finds the next line: the toolkit the rest of the course drives on.'},
     ],
 }
