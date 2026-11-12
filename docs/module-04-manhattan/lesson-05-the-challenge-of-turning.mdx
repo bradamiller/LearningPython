@@ -47,8 +47,8 @@ By the end of this lesson you will be able to:
 
 ## Where we are
 
-- The robot's state is an `(x, y)` position and a direction, its **heading**: 0 = North,
-  1 = East, 2 = South, 3 = West. Together, the position and heading are the robot's **pose**.
+- The robot has an `(x, y)` position and a **heading** (0 = North, 1 = East, 2 = South,
+  3 = West). Together they are the robot's **pose**.
 - The robot only moves in the direction it is facing, and only one intersection at a time.
 - Every clockwise turn adds one to the heading, and every counterclockwise turn subtracts
   one. If the heading hits 4, it wraps around to 0; if it goes below 0, it wraps around to 3.
