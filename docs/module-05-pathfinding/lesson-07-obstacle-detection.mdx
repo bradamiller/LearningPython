@@ -125,13 +125,13 @@ one that is, without any new code. Look at Module 4's `drive_path()` loop:
 
 ```python
 for next_pos in path:
-    needed = desired_heading(position, next_pos)
-    heading = turn_to(heading, needed)
+    desired_heading = get_desired_heading(position, next_pos)
+    heading = turn_to(heading, desired_heading)
     track_to_intersection()
     position = next_pos
 ```
 
-After `turn_to()`, the robot is facing `next_pos` — that's what turning to the needed
+After `turn_to()`, the robot is facing `next_pos` — that's what turning to the desired
 heading *means*. So if the rangefinder sees something right then, the blocked
 intersection is `next_pos`. The path already told you.
 
@@ -149,7 +149,7 @@ intersection is `next_pos`. The path already told you.
     {text: '(3,1)'},
     {text: 'It depends on the heading number'},
   ]}
-  explanation="turn_to(heading, needed) pointed the robot at next_pos. Whatever the sensor sees now is at next_pos. The robot sits on a clear intersection; the obstacle is the one it faces."
+  explanation="turn_to(heading, desired_heading) pointed the robot at next_pos. Whatever the sensor sees now is at next_pos. The robot sits on a clear intersection; the obstacle is the one it faces."
 />
 
 ## The loop: Module 4's, plus one check
@@ -163,7 +163,7 @@ def test_detect_once():
     # robot at (0, 0) facing North; destination (3, 3)
     # plan the path, print it, wait for the button
     # for each next_pos in path:
-    #     face it: desired_heading(), then turn_to()
+    #     face it: get_desired_heading(), then turn_to()
     #     NEW: look ahead -- distance = simulate_rangefinder(
     #          next_pos) for now; rangefinder.distance() later
     #     print position, HEADING_NAMES[heading], the distance
@@ -304,8 +304,8 @@ def test_detect_once():
     board.wait_for_button()
 
     for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
+        desired_heading = get_desired_heading(position, next_pos)
+        heading = turn_to(heading, desired_heading)
 
         distance = simulate_rangefinder(next_pos)     # rangefinder.distance() on the robot
         print("At", position, "facing", HEADING_NAMES[heading], "- ahead:", distance, "cm")
@@ -378,8 +378,8 @@ def test_detect_once():
     board.wait_for_button()
 
     for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
+        desired_heading = get_desired_heading(position, next_pos)
+        heading = turn_to(heading, desired_heading)
 
         distance = simulate_rangefinder(next_pos)     # rangefinder.distance() on the robot
         print("At", position, "facing", HEADING_NAMES[heading], "- ahead:", distance, "cm")

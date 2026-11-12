@@ -113,7 +113,7 @@ W4, G4, Y4, H4 = 200, 12, 376, 92
 tc = xs[0] + W3 / 2
 x4 = [tc - W4 - G4 / 2, tc + G4 / 2]
 under("turn", elbow(tc, Y3 + H3, [x + W4/2 for x in x4], Y4, Y3 + H3 + 22))
-box(x4[0], Y4, W4, H4, "Which way to face?", "desired_heading()", "Lesson 4-5", RED, "#FFFFFF",
+box(x4[0], Y4, W4, H4, "Which way to face?", "get_desired_heading()", "Lesson 4-5", RED, "#FFFFFF",
     hcls="nb", parent="turn")
 box(x4[1], Y4, W4, H4, ("Turn until facing", "the next intersection"), "turn_to()", "Lesson 4-6", RED, "#FFFFFF",
     hcls="nb", parent="turn")
@@ -123,7 +123,7 @@ DESC = ('A tree with four levels. At the top, the whole problem: drive from the 
         'built in Lessons 4-3 and 4-4, is small enough to build and test in one go. The driver, '
         'drive_path(), built in Lessons 4-5 and 4-6, splits into two steps at each intersection: '
         '1, turn to face the next intersection; 2, drive to the next intersection, with the LINE TRACKING functions built in Module 2. '
-        'Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn '
+        'Turning splits once more: which way to face, get_desired_heading(), Lesson 4-5, and turn '
         'until facing the next intersection, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled '
         '"list of (x, y) coordinates, the one thing they share".')
 

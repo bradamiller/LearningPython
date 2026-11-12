@@ -16,7 +16,7 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 
 Time to make the robot move. `turn_to()`, the turn you designed on paper in Lesson 4-5,
 and `drive_path()`, which pulls the planning and turning together, join
-`desired_heading()` in the NAVIGATOR section, and together they drive any
+`get_desired_heading()` in the NAVIGATOR section, and together they drive any
 Manhattan path on the grid — by calling the **line-tracking functions you built in
 Module 2**, no motor code to rewrite. That's the payoff of building a toolkit.
 
@@ -53,7 +53,7 @@ functions don't know what a path is. Today's three functions sit between them.
 ## This lesson's skeleton
 
 Paste this into `robot.py` at the end of the NAVIGATOR section, under
-`desired_heading()`. `turn_to()` is the Lesson 4-5 design; `drive_path()` is the loop
+`get_desired_heading()`. `turn_to()` is the Lesson 4-5 design; `drive_path()` is the loop
 that uses it.
 
 ```python
@@ -65,28 +65,29 @@ that uses it.
 # and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
-def turn_to(heading, desired):
-    """Turn clockwise a quarter turn at a time until heading
-    is desired; return the new heading."""
-    # while heading is not desired:
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new
+    heading."""
+    # while current_heading is not desired_heading:
     #     one turn_clockwise()
-    #     heading goes up by 1, wrapping 3 back to 0
-    # return heading
+    #     current_heading goes up by 1, wrapping 3 back to 0
+    # return current_heading
     pass
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
     position facing heading; return the final (position, heading)."""
     # for each next_pos in path:
-    #     1. needed = desired_heading(position, next_pos)
-    #     2. heading = turn_to(heading, needed)
+    #     1. desired_heading = get_desired_heading(position, next_pos)
+    #     2. heading = turn_to(heading, desired_heading)
     #     3. arrive: track_to_intersection()
     #     4. position = next_pos -- the robot is there now
     # return position, heading
     pass
 ```
 
-`drive_path()` keeps two things up to date: `heading = turn_to(heading, needed)` keeps
+`drive_path()` keeps two things up to date: `heading = turn_to(heading, desired_heading)` keeps
 the new heading, and `position = next_pos` records the intersection it just reached. It
 returns both as one tuple, the robot's **pose**, and the caller unpacks it just like
 `x, y = position` in Lesson 4-1:
@@ -152,7 +153,7 @@ the test is *go*. A test that drives is the only kind that waits twice.
   question="The printed path is correct, but the robot turns left at the second intersection when it should go straight. Where is the bug?"
   options={[
     {text: 'In compute_manhattan_path'},
-    {text: 'In the driving: desired_heading, turn_to, drive_path or the Module 2 functions — the planner has been shown to be right', correct: true},
+    {text: 'In the driving: get_desired_heading, turn_to, drive_path or the Module 2 functions — the planner has been shown to be right', correct: true},
     {text: 'In the print statement'},
     {text: 'In the destination tuple'},
   ]}
@@ -168,9 +169,9 @@ loop steps through, and what the robot does.
 <Reveal title="Check your trace" hint="paper first">
 
 ```
-Step 1: next (1,0). needed = 1 (E). heading 0, 1: one clockwise turn.
+Step 1: next (1,0). desired_heading = 1 (E). heading 0, 1: one clockwise turn.
         track_to_intersection -> at (1,0) facing E.
-Step 2: next (1,1). needed = 0 (N). heading 1, 2, 3, 0: three clockwise turns.
+Step 2: next (1,1). desired_heading = 0 (N). heading 1, 2, 3, 0: three clockwise turns.
         track_to_intersection -> at (1,1) facing N.
 ```
 
@@ -206,20 +207,21 @@ turns.
 <Reveal title="Check your turn_to() and drive_path()" hint="write and test both first">
 
 ```python
-def turn_to(heading, desired):
-    """Turn clockwise a quarter turn at a time until heading
-    is desired; return the new heading."""
-    while heading != desired:
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new
+    heading."""
+    while current_heading != desired_heading:
         turn_clockwise()
-        heading = (heading + 1) % 4
-    return heading
+        current_heading = (current_heading + 1) % 4
+    return current_heading
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
     position facing heading; return the final (position, heading)."""
     for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
+        desired_heading = get_desired_heading(position, next_pos)
+        heading = turn_to(heading, desired_heading)
         track_to_intersection()
         position = next_pos
     return position, heading
@@ -247,20 +249,21 @@ extension below, the section is replaced wholesale.
 # and record the new position. Both hand back what they
 # changed, because the caller keeps the only record.
 
-def turn_to(heading, desired):
-    """Turn clockwise a quarter turn at a time until heading
-    is desired; return the new heading."""
-    while heading != desired:
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new
+    heading."""
+    while current_heading != desired_heading:
         turn_clockwise()
-        heading = (heading + 1) % 4
-    return heading
+        current_heading = (current_heading + 1) % 4
+    return current_heading
 
 def drive_path(path, position, heading):
     """Turn and drive through every intersection in path, from
     position facing heading; return the final (position, heading)."""
     for next_pos in path:
-        needed = desired_heading(position, next_pos)
-        heading = turn_to(heading, needed)
+        desired_heading = get_desired_heading(position, next_pos)
+        heading = turn_to(heading, desired_heading)
         track_to_intersection()
         position = next_pos
     return position, heading
@@ -303,43 +306,43 @@ where one would do. Make `turn_to()` turn whichever way takes **fewer** turns.
 
 Work out first, on paper, when counterclockwise is actually shorter: try every pair of
 headings, or just the four starting from North. Then change `turn_to()` so it turns
-counterclockwise in exactly those cases and clockwise in the rest, keeps `heading` up to
+counterclockwise in exactly those cases and clockwise in the rest, keeps `current_heading` up to
 date either way, and still returns it. Run `test_drive_path()` again and count the turns
 at the corner. Nothing else in the file has to change, because nothing else knows how
 `turn_to()` does its job.
 
 <TeacherNote title="Challenge answer (teacher copy)">
 
-With four headings, counterclockwise wins in exactly one case: when `desired` is one
+With four headings, counterclockwise wins in exactly one case: when `desired_heading` is one
 step to the left, which is three clockwise steps around, `(heading + 3) % 4`. Turning
 around (two either way) is a tie, so clockwise is fine. The neat version checks that
 case first and lets the existing loop finish the job, because after the left turn the
 loop's condition is already false:
 
 ```python
-def turn_to(heading, desired):
-    """Turn until heading is desired, the short way round;
-    return the new heading."""
-    if desired == (heading + 3) % 4:     # one turn to the left
+def turn_to(current_heading, desired_heading):
+    """Turn until current_heading is desired_heading, the
+    short way round; return the new heading."""
+    if desired_heading == (current_heading + 3) % 4:   # left
         turn_counterclockwise()
-        heading = desired
-    while heading != desired:
+        current_heading = desired_heading
+    while current_heading != desired_heading:
         turn_clockwise()
-        heading = (heading + 1) % 4
-    return heading
+        current_heading = (current_heading + 1) % 4
+    return current_heading
 ```
 
-Students who count both directions with two loops, or compute `(desired - heading) % 4`
+Students who count both directions with two loops, or compute `(desired_heading - current_heading) % 4`
 and compare it with 2, are also right; the latter needs `%` on a negative number
 (`-1 % 4` is 3), which is worth showing in the REPL if it comes up. Watch for a version
-that turns left and then *also* loops because it forgot to update `heading`.
+that turns left and then *also* loops because it forgot to update `current_heading`.
 
 </TeacherNote>
 
 <TeacherNote title="Usual bugs and hardware">
 
 Usual bugs, in order of frequency: not assigning `position, heading` from `drive_path`'s
-return; the start sneaking into the path (Lesson 4-4's promise 1 — `desired_heading`
+return; the start sneaking into the path (Lesson 4-4's promise 1 — `get_desired_heading`
 raises if the student did the optional check in 4-5, and otherwise the robot spins in place); and a `turn_to` that forgets to
 `return heading`.
 
@@ -376,7 +379,7 @@ Building on a well-tested lower layer is how real systems scale:
 **Formative:** name the three Module 2 functions and their end conditions; trace
 `drive_path` predicting each turn and the two assignments.
 **Exit ticket:** "At (1,2) heading 1 (E), next is (1,1) — what heading is needed, which
-headings does `turn_to()` step through, and what does the robot do?" (needed 2 (S), since
+headings does `turn_to()` step through, and what does the robot do?" (desired heading 2 (S), since
 y goes down by 1; E, S: one clockwise turn, then track.) **Preview:** the final project — chain the
 planner and `drive_path` to visit several destinations in a row.
 
@@ -437,12 +440,12 @@ class Navigator:
         self.heading = heading
         self.line_track = LineTrack()        # has-a LineTrack
 
-    def desired_heading(self, next_pos):
+    def get_desired_heading(self, next_pos):
         # your function; position is self.position now, so
         # it is no longer a parameter
         pass
 
-    def turn_to(self, desired):
+    def turn_to(self, desired_heading):
         # your function, with self.heading in place of the
         # parameter and self.line_track. in front of each
         # turn; it STORES the new heading, not returns it
@@ -460,8 +463,8 @@ navigator = Navigator((0, 0), 0)
 `__init__` is the new idea, so it's given, and it's worth reading twice: the two
 parameters land in `self.position` and `self.heading`, and from then on every method
 reads and updates *those* instead of being handed them. That is why the signatures
-shrank — `desired_heading(self, next_pos)` has lost its `position` parameter and
-`turn_to(self, desired)` its `heading`, because the object already knows both. And
+shrank — `get_desired_heading(self, next_pos)` has lost its `position` parameter and
+`turn_to(self, desired_heading)` its `current_heading`, because the object already knows both. And
 nothing is returned, because the record lives at the object's address: the caller
 reads `navigator.position` whenever it wants to know.
 
@@ -474,7 +477,7 @@ the difference.
 <Reveal title="Check your Navigator" hint="translate all three methods first">
 
 ```python
-    def desired_heading(self, next_pos):
+    def get_desired_heading(self, next_pos):
         x_diff = next_pos[0] - self.position[0]
         y_diff = next_pos[1] - self.position[1]
         if x_diff == 0 and y_diff ==  1: return 0   # North
@@ -483,15 +486,15 @@ the difference.
         if y_diff == 0 and x_diff == -1: return 3   # West
         raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
 
-    def turn_to(self, desired):
-        while self.heading != desired:
+    def turn_to(self, desired_heading):
+        while self.heading != desired_heading:
             self.line_track.turn_clockwise()
             self.heading = (self.heading + 1) % 4
 
     def drive_path(self, path):
         for next_pos in path:
-            needed = self.desired_heading(next_pos)
-            self.turn_to(needed)
+            desired_heading = self.get_desired_heading(next_pos)
+            self.turn_to(desired_heading)
             self.line_track.track_to_intersection()
             self.position = next_pos
 ```
