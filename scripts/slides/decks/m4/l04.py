@@ -6,22 +6,24 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'State the function\'s three promises and record them in a docstring',
-             'Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)',
+             '(Optional) Say what a **unit test** is, and how separation of concerns lets you test the planner on its own',
              'Hand-calculate an expected path, then compare it to the actual output',
              'Add a reusable `run_test()` helper to the MANHATTAN PLANNER section, and a test '
              'that runs a suite of six cases through it',
              'Debug a failing test with print statements',
          ],
          'notes': '55 to 70 minutes. Not a line inside the planner changes: it gets its promises '
-                  'written down, and unit tests prove them on screen. Two '
+                  'written down, and tests prove them on screen. Two '
                   'non-negotiables: expected paths are calculated by hand before anything runs, and '
-                  'the suite covers every direction and edge case.'},
+                  'the suite covers every direction and edge case. The Unit testing section is an '
+                  'optional box, closed by default; nothing later depends on it.'},
 
         {'kind': 'bullets', 'title': 'Same function, written promises',
          'bullets': [
              'Last lesson you wrote `compute_manhattan_path()` and it worked',
-             'Today you write down what it promises and prove those promises with **unit tests**, '
+             'Today you write down what it promises and prove those promises with tests, '
              'before the robot ever moves',
+             'A robot driving into a wall says **something** is wrong; a failing test shows the **exact input**',
          ],
          'callout': '**Test on screen before you test on the floor.**',
          'tone': 'teal'},
@@ -79,17 +81,20 @@ DECK = {
              'Run `test_paper_paths()`: same output as last lesson',
          ]},
 
-        {'kind': 'bullets', 'title': 'Unit testing',
+        {'kind': 'bullets', 'title': 'Optional: unit testing',
+         'tag': 'Optional extension',
          'bullets': [
              'A **unit test** checks one function on its own: inputs you chose, an answer you worked out',
              'Professional software runs thousands on every change, catching a mistake minutes after it is made',
-             'A robot driving into a wall says **something** is wrong; a failing test shows the **exact input**',
          ],
          'callout': 'Your planner is an ideal unit: tuples in, list out',
          'tone': 'teal',
-         'notes': 'Five minutes of testing saves thirty minutes chasing a robot.'},
+         'notes': 'Optional: open it if you have time. Nothing later depends on it. On the page it '
+                  'is a box that starts closed. Five minutes of testing saves thirty minutes '
+                  'chasing a robot.'},
 
-        {'kind': 'table', 'title': 'Separation of concerns',
+        {'kind': 'table', 'title': 'Optional: separation of concerns',
+         'tag': 'Optional extension',
          'lead': '`compute_manhattan_path()` only **computes** a path; the driving functions (Lesson 4-6) '
                  '**drive** it. Each can be checked on its own.',
          'headers': ['Problem', 'Where it runs', 'What you test'],
@@ -103,7 +108,7 @@ DECK = {
                     'to set up before a test: tuples in, list out',
          'tone': 'teal'},
 
-        {'kind': 'check',
+        {'kind': 'check', 'tag': 'Optional extension',
          'question': 'What does \'separation of concerns\' let you do here?',
          'options': ['Run the robot faster',
                      'Test the path-planning math on its own, separately from the driving',

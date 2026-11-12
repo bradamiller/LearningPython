@@ -15,15 +15,17 @@ Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
 Last lesson you wrote `compute_manhattan_path()` and it worked. This lesson writes down
-what it promises and proves those promises with **unit tests**,
-before the robot ever moves: **test on screen before you test on the floor.**
+what it promises and proves those promises with tests, before the robot ever moves:
+**test on screen before you test on the floor.** A robot driving into a wall tells you
+*something* is wrong, but not *what* or *where*. A failing test on screen tells you the
+exact input that produced the wrong output.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
 - State the function's three promises and record them in a docstring
-- Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)
+- (Optional) Say what a **unit test** is, and how separation of concerns lets you test the planner on its own
 - Hand-calculate an expected path, then compare it to the actual output
 - Add a reusable `run_test()` helper to the MANHATTAN PLANNER section, and a test that runs a suite of six cases through it
 - Debug a failing test with print statements
@@ -141,16 +143,13 @@ test_paper_paths()
 
 </TeacherNote>
 
-## Unit testing
+<OptionalExtension title="Unit testing" gate="Optional: open it if you have time. Nothing later depends on it.">
 
 A **unit test** checks one small piece of a program, usually one function, on its own: give it
 inputs you chose and compare what it returns with the answer you worked out. Professional
 software runs thousands of them every time the code changes, so a mistake is caught minutes
 after it is made, by a test, not weeks later by a user. Your planner is an ideal unit:
 tuples in, list out.
-
-A robot driving into a wall tells you *something* is wrong, but not *what* or *where*.
-A failing test on screen tells you the exact input that produced the wrong output.
 
 This works because of **separation of concerns**: `compute_manhattan_path()` only
 *computes* a path, and the driving functions (Lesson 4-6) *drive* it. The planner is
@@ -172,6 +171,8 @@ test: tuples in, list out. Each part can be checked on its own:
   ]}
   explanation="Because the planner only computes paths and the driving functions only drive them, you can verify the algorithm on any computer before hardware is ever involved."
 />
+
+</OptionalExtension>
 
 ## Expected vs. actual
 
@@ -216,7 +217,7 @@ you have only assumed the code is right.
 That compare-and-report pattern repeats for every case, so it becomes a function.
 Paste this into `robot.py` at the end of the MANHATTAN PLANNER section — it is a
 *harness*: a function whose only job is to test another one. Each `run_test()` call is one
-unit test.
+test.
 
 ```python
 # --- Lesson 4-4: the test harness ---
