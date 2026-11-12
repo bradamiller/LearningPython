@@ -110,7 +110,7 @@ route first, then **drive** it.
 
 <Figure
   src="/img/lesson-m4-00/plan-then-drive.svg"
-  alt="Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with its coordinates. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow carries the list [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], a list of (x, y) coordinates, down to step 2, Drive: take the list and drive it, one intersection at a time."
+  alt="Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with its coordinates. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow carries the points (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), a list of (x, y) coordinates, down to step 2, Drive: take the list and drive it, one intersection at a time."
   caption="The plan is a list of (x, y) coordinates. One function makes it; another drives it."
 />
 
@@ -118,8 +118,7 @@ route first, then **drive** it.
    moves the robot, so you can test it **without a robot**: print the route and check it
    against the grid.
 2. **Drive.** Once the plan is right, the driver, `drive_path`, **takes the plan and
-   drives it**, then reports where the robot ended up. It decides nothing; the plan
-   already did.
+   drives it**, then reports where the robot ended up.
 
 Each intersection is an `(x, y)` pair, so the plan is a **list of coordinates**, the one
 thing the two functions share.

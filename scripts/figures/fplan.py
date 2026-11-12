@@ -34,7 +34,7 @@ b.append(f'<text class="nb" x="{X+16}" y="106">No robot needed.</text>')
 
 b.append(f'<line x1="{X+W/2}" y1="120" x2="{X+W/2}" y2="147" stroke="#495057" stroke-width="2.2"/>')
 b.append(f'<line x1="{X+W/2}" y1="169" x2="{X+W/2}" y2="196" stroke="#495057" stroke-width="2.2" marker-end="url(#aG)"/>')
-b.append(tag(X + W/2, 158, "[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]", fill="#FFFFFF", stroke="#ADB5BD", cls="ms", w=300))
+b.append(tag(X + W/2, 158, "(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)", fill="#FFFFFF", stroke="#ADB5BD", cls="ms", w=300))
 b.append(f'<text class="sm" x="{X+W/2+12}" y="188">a list of (x, y) coordinates</text>')
 
 b.append(f'<rect x="{X}" y="200" width="{W}" height="78" rx="10" fill="{RED_BG}" stroke="{RED}" stroke-width="2"/>')
@@ -47,6 +47,6 @@ open(OUTDIR + 'plan-then-drive.svg', 'w').write(svg(
     'Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes '
     'right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with '
     'its coordinates. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow '
-    'carries the list [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)], a list of (x, y) coordinates, down to '
+    'carries the points (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), a list of (x, y) coordinates, down to '
     'step 2, Drive: take the list and drive it, one intersection at a time.',
     b, H=330))
