@@ -295,11 +295,7 @@ test_headings()
 
 Now we know both the current heading and the desired heading. So to reach the desired
 heading, the robot can simply turn clockwise, adding one to the heading for each turn,
-while it isn't facing the desired heading.
-
-That works like every sensor loop in Module 2: keep doing something until a condition
-is true. Here the something is one clockwise quarter turn, and the condition is "facing
-the heading I want":
+while it isn't facing the desired heading:
 
 ```python
 # while heading is not desired:
