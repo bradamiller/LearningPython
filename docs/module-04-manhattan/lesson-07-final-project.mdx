@@ -24,7 +24,7 @@ each leg and driving it autonomously. You already built every piece — today yo
 By the end of this project you will be able to:
 
 - Integrate the planner and the driving functions into one program, written as the last test function in `robot.py`
-- Write a main loop that computes and drives a path to each destination in a list
+- Build the program in three tested steps: one leg, two legs, then a loop over a list of destinations
 - Carry the robot's pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`'s return
 - Demonstrate a working multi-destination run on the XRP robot
 
@@ -48,21 +48,27 @@ like every program in this course it is a test function at the bottom of `robot.
 ## This lesson's skeleton
 
 Paste this above `RUN`, at the end of the NAVIGATOR section. No new function is
-defined: one setting, a paper test that prints every leg's path without moving the
-robot, and the project itself.
+defined: one setting and three tests, each one a step toward the project.
 
 ```python
 # --- Lesson 4-7: final project, the delivery run ---
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work.
+# defined; the two sections did the work. Built in three
+# tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_delivery_paper():
-    # no robot: from (0, 0), plan the path to each destination
-    # in turn, print it with its step count, and move
-    # position on to that destination for the next leg
+def test_one_leg():
+    # start at (0, 0) facing North; plan the path to (2, 0),
+    # print it, wait for the button, drive it, and print
+    # where the robot arrived
+    pass
+
+def test_two_legs():
+    # the same first leg, then a second one to (2, 3),
+    # planned from wherever the first ended: plan it, print
+    # it, drive it, print where the robot arrived
     pass
 
 def test_delivery():
@@ -77,31 +83,48 @@ def test_delivery():
     pass
 ```
 
-That second-to-last comment in `test_delivery()` is the one that decides whether the
-second leg works. Think about what the main program knows after `drive_path()`
-finishes, and what it doesn't — unless you ask.
+The second leg is the one that decides whether the project works. Think about what the
+test knows after the first `drive_path()` finishes, and what it doesn't — unless you
+ask.
 
 <TeacherNote title="Solution (teacher copy)">
 
 This lesson's addition to the NAVIGATOR section of `robot.py`, plus the run block; the
 rest of the file is as the Lesson 4-6 teacher copy left it. The whole file is
 in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). `test_delivery()` is the
-graded work, and there is no student reveal for it; the paper test has one.
+graded work, and there is no student reveal for any of the three tests.
 
 ```python
 # --- Lesson 4-7: final project, the delivery run ---
 # The module project: visit DESTINATIONS in order, planning
 # each leg with the MANHATTAN PLANNER from wherever the last
 # leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work.
+# defined; the two sections did the work. Built in three
+# tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_delivery_paper():
+def test_one_leg():
     position = (0, 0)
-    for dest in DESTINATIONS:
-        path = compute_manhattan_path(position, dest)
-        print("To", dest, ":", path, " steps:", len(path))
-        position = dest
+    heading = 0                   # start facing North
+    path = compute_manhattan_path(position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+def test_two_legs():
+    position = (0, 0)
+    heading = 0
+    path = compute_manhattan_path(position, (2, 0))
+    print("Path:", path)
+    board.wait_for_button()
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
+
+    path = compute_manhattan_path(position, (2, 3))
+    print("Path:", path)
+    position, heading = drive_path(path, position, heading)
+    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 
 def test_delivery():
     position = (0, 0)
@@ -158,38 +181,30 @@ Module 5, where obstacles can appear mid-run, this becomes the only way it *coul
 The heading carries over the same way: if leg 1 ends facing East, leg 2 starts facing
 East. That's why `turn_to()` works from the robot's real heading, not North.
 
-## Activity · Test in three levels
+## Activity · Build it in three steps
 
-Do **not** jump straight to the full run on the robot. If something breaks, you won't know
-which piece. Build up, one test on the run line at a time:
+Test each step on the robot before you write the next. Start the robot at (0, 0) facing
+North every time.
 
-1. **Planner alone (no robot).** Write `test_delivery_paper()` from its outline and set
-   the run line to it: loop the destinations, print each path and its step count, and
-   set `position = dest` between them. The robot stays on the desk. Correct output is
-   four paths, of 2, 3, 2 and 3 steps:
-   `[(1, 0), (2, 0)]`, `[(2, 1), (2, 2), (2, 3)]`, `[(1, 3), (0, 3)]`,
-   `[(0, 2), (0, 1), (0, 0)]`.
-2. **One leg on the robot.** Set the run line to Lesson 4-6's `test_drive_path()` with
-   `DESTINATIONS[0]` as its destination. Place the robot at (0,0) facing North, both
-   presses. Correct turns? Wheels on the right intersection at the end?
-3. **Full sequence.** Write `test_delivery()` and run it. Read the leg-1 path before the
-   second press. Watch the straight-through intersections and the turns.
+### Step 1 · One leg
 
-<Reveal title="Check your paper test" hint="write and run it first">
+Write `test_one_leg()` and set the run line to it. It is Lesson 4-6's
+`test_drive_path()` with (2, 0) as the destination. Read the printed path,
+`[(1, 0), (2, 0)]`, then press again. The robot should make one right turn and stop on
+(2, 0) facing East.
 
-```python
-def test_delivery_paper():
-    position = (0, 0)
-    for dest in DESTINATIONS:
-        path = compute_manhattan_path(position, dest)
-        print("To", dest, ":", path, " steps:", len(path))
-        position = dest
-```
+### Step 2 · Two legs, one after the other
 
-`position = dest` is the paper stand-in for the line the real program gets from
-`drive_path()`'s return — in a paper test the robot always arrives.
+Write `test_two_legs()` and run it. The second leg is planned from where the first
+ended, so it works only if `position` and `heading` were assigned from the first
+`drive_path()`. After (2, 0), the robot should make three right turns to face North and
+drive up to (2, 3).
 
-</Reveal>
+### Step 3 · A list and a loop
+
+Write `test_delivery()`: the legs become one loop over `DESTINATIONS`. Run it. The robot
+should visit all four destinations and finish at home, with legs of 2, 3, 2 and 3
+steps.
 
 <KnowledgeCheck
   question="On the second leg the robot drives a clearly wrong path. What's the first thing to check?"
@@ -204,12 +219,11 @@ def test_delivery_paper():
 
 <TeacherNote title="Project day — short intro, incremental testing, and celebrate">
 
-Keep the intro brief; this is a build-and-test day. Push level-by-level testing hard; the students who write
-everything at once and can't find the break are the ones who skipped planner-only
-testing. Watch battery drain on long multi-turn runs and charge between attempts. When
+Keep the intro brief; this is a build-and-test day. Push step-by-step testing hard; the students who write
+everything at once and can't find the break are the ones who skipped the one-leg and
+two-leg tests. Watch battery drain on long multi-turn runs and charge between attempts. When
 a robot finishes the whole sequence, let the class watch — it's the payoff of eight
-lessons. For 50-minute periods, plan two days: planning + desktop testing, then robot
-day.
+lessons. For 50-minute periods, plan two days: steps 1 and 2, then the full run.
 
 </TeacherNote>
 
@@ -254,7 +268,7 @@ The plan-then-execute structure you just built is fundamental to real autonomous
   position, heading = drive_path(path, position, heading)
   ```
 - Why is only leg 1 printed before the button? (Later legs are planned from where the robot actually ends up.)
-- What are the three testing levels? (Planner alone, one leg, full sequence.)
+- What were the three steps? (One leg, two legs, then a loop over a list.)
 - Where did problem decomposition pay off? (Each part was built and tested alone, so the main program that connects them is about ten lines, and a printed path tells you which part to open when a run goes wrong.)
 
 <TeacherNote title="You built a system">
