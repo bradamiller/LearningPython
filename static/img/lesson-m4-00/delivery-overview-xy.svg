@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 350" width="680" height="350" role="img" aria-labelledby="fT fD">
   <title id="fT">Module 4: visit three destinations in order</title>
-  <desc id="fD">A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3). Beside it: destinations = [(2, 0), (2, 3), (0, 3)]. For each destination the robot plans a path from where it is, drives it, and remembers where it ended up.</desc>
+  <desc id="fD">A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3). Beside it: three deliveries, in order, one leg each. For each destination the robot plans a path from where it is, drives it, and remembers where it ended up.</desc>
   <style>
     .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
     .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
@@ -105,7 +105,7 @@
   <circle cx="230" cy="96" r="12" fill="#2E7D32" stroke="#FFFFFF" stroke-width="2"/><text class="nb" x="230" y="100.5" text-anchor="middle" style="fill:#FFFFFF">2</text>
   <circle cx="110" cy="96" r="12" fill="#C77C02" stroke="#FFFFFF" stroke-width="2"/><text class="nb" x="110" y="100.5" text-anchor="middle" style="fill:#FFFFFF">3</text>
   <text class="h" x="380" y="60">Where Module 4 is headed</text>
-  <text class="ms" x="380" y="88">destinations = [(2, 0), (2, 3), (0, 3)]</text>
+  <text class="nb" x="380" y="88">Three deliveries, in order:</text>
   <rect x="380" y="112" width="16" height="16" rx="4" fill="#4C8BF5"/>
   <text class="n" x="404" y="125">leg 1: (0, 0) → (2, 0)</text>
   <rect x="380" y="138" width="16" height="16" rx="4" fill="#2E7D32"/>
