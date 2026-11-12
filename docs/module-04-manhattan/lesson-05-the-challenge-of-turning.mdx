@@ -303,8 +303,8 @@ while it isn't facing the desired heading:
 #     heading goes up by 1, wrapping 3 back to 0
 ```
 
-The wrap is the odometer from the top of the lesson, and `%` (the remainder operator
-from Lesson 2-5) does it in one expression:
+When the robot is facing West (3) and turns clockwise to North (0), the remainder
+operator `%` (from Lesson 2-5) makes it easy:
 
 ```python
 heading = (heading + 1) % 4
