@@ -3,10 +3,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR, ROBOT_SRC, REPO
 import sys, math; from common import *
 S=0.42; SENS=60*S; SPEED=90.0; PAUSE=1.0
-def make(out, title, g, runs, note, desc, H=410, panel_title="What your test does", extra=None):
+def make(out, title, g, runs, note, desc, H=410, panel_title="What your test does", extra=None, step_ops=None):
     """runs: list of dict(start=(a,b), heading=deg, lines=[(indent,text)], steps=[(op,line,label,sub)], name=str)
        op: 'track','past','cw','ccw','hold'"""
-    marks={}
+    marks={}; stepT=[]   # step_ops: ops whose finished frame is a Step stop (StepFigure)
     frames=[]; t=0.0; hls=[]; labels=[]; flashes=[]; trails=[]; fades=[]; panels=[]
     def P(a,b): return g.p(a,b)
     for ri,run in enumerate(runs):
@@ -53,10 +53,12 @@ def make(out, title, g, runs, note, desc, H=410, panel_title="What your test doe
                 marks[lab]=t; continue
             elif op=='hold':
                 t+=hd; frames.append((t,x,y,h))
+            if step_ops and op in step_ops: stepT.append(t-0.05)
             if li is not None: hls.append((ri,t0,t,li))
             if lab: labels.append((t0,t,lab,sub if isinstance(sub,str) else "",run.get('col',"#22527B")))
         done=run.get('done',("Done","",""))
         t0=t; t+=2.2; frames.append((t,x,y,h))
+        if step_ops: stepT.append(t-0.05)
         labels.append((t0,t,done[0],done[1],"#2E7D32"))
         trails.append((run_t0,t,trail))
         panels.append((tr0,t,run))
@@ -132,4 +134,5 @@ def make(out, title, g, runs, note, desc, H=410, panel_title="What your test doe
     H=max(H,LBY+76+len(note)*15)
     o=svg(title,desc,b,H=H)
     o=o.replace('<rect width="680"',style_extra+'\n  <rect width="680"',1)
-    open(out,'w').write(o); print(out,round(T,2),'H',H)
+    if step_ops: o=o.replace('<svg ','<svg data-steps="'+','.join(f'{x:.2f}' for x in stepT)+f'" data-dur="{T:.2f}" ',1)
+    open(out,'w').write(o); print(out,round(T,2),'H',H,'steps',len(stepT))
