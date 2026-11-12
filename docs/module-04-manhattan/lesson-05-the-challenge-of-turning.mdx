@@ -38,7 +38,7 @@ By the end of this lesson you will be able to:
 
 - Break driving a planned path into two steps, turn then drive, as Lesson 4-0 broke down the whole problem
 - Write `desired_heading(position, next_pos)`, which turns a one-step coordinate change into a heading (0 = N, 1 = E, 2 = S, 3 = W), and test it on screen
-- Raise an error when a function is asked something it cannot answer, and say why that makes a bug easier to find
+- (Optional) Catch a mistake early by raising an error when a function is asked something it cannot answer
 - Design a turn as a loop: one clockwise quarter turn at a time, `(heading + 1) % 4`, until the heading matches
 
 </Objectives>
@@ -116,11 +116,12 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
-    next_pos, which must be one step away; raise if it is not."""
+    next_pos, which must be one step away."""
     # 1. x_diff and y_diff: next_pos minus position
     # 2. one if per direction, from the table above; each
     #    checks BOTH differences, because the other one is 0
-    # 3. none matched: raise ValueError, naming both positions
+    # 3. (optional) none matched: raise ValueError, naming
+    #    both positions -- see "Catching mistakes early"
     pass
 ```
 
@@ -141,25 +142,32 @@ all.
   explanation="x is unchanged; y went 3 → 2 (y −1). Decreasing y is moving toward you, which is South — heading 2."
 />
 
-## Say so when you can't answer
+<OptionalExtension title="Catching mistakes early" gate="Optional: open it if you have time. Nothing later depends on it.">
 
-Step 3 of the outline is worth as much as the four lines above it. If none of the four
-conditions matched, the two positions aren't a single step apart on the grid — they're
-diagonal, or identical, or halfway across the map — and there is simply no heading that
-answers the question. `raise` is new, and it does one thing: it stops the program on
-the spot and prints your message.
+A good program catches its own mistakes early. `desired_heading()` only makes sense when
+the next intersection is **adjacent** to the current one, one step away. If none of the
+four `if` lines matched, the two positions aren't neighbors and there is no right answer.
+
+**When would that happen?** Think about it before you open the answer.
+
+<Reveal title="When would the next intersection not be adjacent?" hint="make a guess first">
+
+Only when there's a **bug in the planner**. A correct planner only ever lists adjacent
+steps, so a pair that isn't adjacent means the path itself is wrong.
+
+</Reveal>
+
+Without a check, `desired_heading()` quietly returns `None`, `turn_to` waits forever for a
+heading of `None`, and the robot spins with no message. That's hard to understand, and the
+code that's spinning isn't even the code that's wrong. With a check, the program stops at
+once and says which two positions caused it:
 
 ```python
-raise ValueError("what went wrong, in words")
+raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
 ```
 
-`ValueError` is Python's name for "the values I was given make no sense"; the message
-is yours. Make it name the two positions — `str(position)` turns a tuple into text you
-can add to a string — so the person reading it knows exactly which pair caused it.
-
-Leave the `raise` out and the function silently returns `None`. Then `turn_to` waits
-forever for a heading of `None`, and the robot spins with no message, in code that is
-correct:
+`raise` stops the program on the spot and prints your message. `ValueError` is Python's
+name for "the values I was given make no sense". `str(position)` turns a tuple into text.
 
 <Figure
   src="/img/lesson-m4-05/raise-spin.svg"
@@ -167,19 +175,8 @@ correct:
   caption="Same bad input both times. Without the raise the program never even stops; with it, it stops where the mistake is."
 />
 
-That's the real reason to write checks like this, and it's worth doing everywhere, not
-just here:
-
-> **When a function is asked something it cannot answer, say so immediately and
-> loudly.** Every check like this shortens the distance between where a bug shows up
-> and where it actually is — and that distance is most of what makes debugging hard.
-
-A wrong value that gets returned doesn't stay put. It travels into the next function,
-and the next, and by the time anything visibly breaks you're a long way from the
-mistake. Stopping it at the door is cheaper than chasing it.
-
 <KnowledgeCheck
-  question="Why does desired_heading end with raise, instead of just letting Python return None?"
+  question="Why end desired_heading with raise, instead of just letting Python return None?"
   options={[
     {text: 'Because None uses more memory'},
     {text: 'So the program stops at the line that found the problem, instead of breaking later somewhere that is not the cause', correct: true},
@@ -189,7 +186,14 @@ mistake. Stopping it at the door is cheaper than chasing it.
   explanation="Without it the bad value travels: desired_heading hands back None, turn_to waits forever for a heading of None, and the robot spins in code that is perfectly correct, with nothing printed. Raising reports the problem where it was discovered, with the values that caused it."
 />
 
-<TeacherNote title="This is the debugging lesson, not a Python lesson">
+**Try it:** add step 3 to `desired_heading()`. Then add one more call at the *end* of
+`test_headings()`: `(1, 1)` to `(2, 2)`, a diagonal. Run it. The four answers print as
+before, and then the program stops with your message, naming both positions. The call goes
+last because nothing after it runs.
+
+</OptionalExtension>
+
+<TeacherNote title="The optional mistake check">
 
 `raise` is new here, but nothing about it needs teaching beyond "the program stops and
 prints your message" — students never write `try`/`except` to benefit from it. Don't
@@ -201,12 +205,6 @@ forever, and the first place you'd look is the one piece of code that's right" �
 the point better than any rule. This is the first time the course asks students to write
 a line whose only job is to make a *future* problem easier to find, and that idea pays
 off for the rest of their programming lives.
-
-If someone asks whether the error can actually happen: with `compute_manhattan_path` feeding it,
-no — the planner only ever produces adjacent steps. It becomes reachable the moment they
-call `desired_heading` themselves — the diagonal call at the end of `test_headings()`
-does exactly that, on purpose — or wire it into their own project in Lesson 4-7. That
-is exactly when a good error message is worth the most.
 
 **Why each condition tests both differences.** Earlier drafts of this function checked
 only one — `if y_diff == 1: return 0` — which looks equivalent and isn't. Going from
@@ -226,23 +224,19 @@ neighbor, the heading number, and its name from `HEADING_NAMES`. Work out the fo
 answers from the table first. Set the run line to `test_headings()` and run it with the
 robot on the desk. Correct output is four lines that match your four answers.
 
-Then add one more call at the *end* of the test: `(1, 1)` to `(2, 2)`, a diagonal.
-Run it again. The four answers print as before, and then the program stops with your
-message — read it, and check that it names both positions. That is the `raise` doing
-its job, and the reason the call goes last: nothing after it runs.
-
 <Reveal title="Check your desired_heading()" hint="run test_headings() first">
 
 ```python
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
-    next_pos, which must be one step away; raise if it is not."""
+    next_pos, which must be one step away."""
     x_diff = next_pos[0] - position[0]
     y_diff = next_pos[1] - position[1]
     if x_diff == 0 and y_diff ==  1: return 0   # North
     if y_diff == 0 and x_diff ==  1: return 1   # East
     if x_diff == 0 and y_diff == -1: return 2   # South
     if y_diff == 0 and x_diff == -1: return 3   # West
+    # optional (Catching mistakes early):
     raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
 ```
 
@@ -256,7 +250,7 @@ W, N, E, S. `(0, 1)` is one step left, so it is West.
 The NAVIGATOR section of `robot.py` as this lesson leaves it, plus the run block; the
 rest of the file is as the Lesson 4-4 teacher copy left it. The whole file at
 the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). The diagonal call
-is commented out here so the file runs clean; students leave it in to see the error.
+(from the optional section) is commented out here so the file runs clean.
 
 ```python
 # ===== NAVIGATOR =====
@@ -269,13 +263,14 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
 def desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
-    next_pos, which must be one step away; raise if it is not."""
+    next_pos, which must be one step away."""
     x_diff = next_pos[0] - position[0]
     y_diff = next_pos[1] - position[1]
     if x_diff == 0 and y_diff ==  1: return 0   # North
     if y_diff == 0 and x_diff ==  1: return 1   # East
     if x_diff == 0 and y_diff == -1: return 2   # South
     if y_diff == 0 and x_diff == -1: return 3   # West
+    # optional (Catching mistakes early):
     raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
 
 def test_headings():

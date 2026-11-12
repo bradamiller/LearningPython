@@ -383,7 +383,7 @@ that turns left and then *also* loops because it forgot to update `heading`.
 
 Usual bugs, in order of frequency: not assigning `position, heading` from `drive_path`'s
 return; the start sneaking into the path (Lesson 4-4's promise 1 — `desired_heading`
-raises, which is the lesson working as intended); and a `turn_to` that forgets to
+raises if the student did the optional check in 4-5, and otherwise the robot spins in place); and a `turn_to` that forgets to
 `return heading`.
 
 **Hardware:** turns end when the sensors find the next line, not on a timer, so they
