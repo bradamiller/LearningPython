@@ -39,7 +39,13 @@ items = []   # (parent, svg text)
 def box(x, y, w, h, head, code, sub, stroke, fill, hcls="h", node=None, parent=None):
     mid = y + h / 2
     o = [f'<rect class="bx" x="{x}" y="{y}" width="{w}" height="{h}" rx="10" fill="{fill}" stroke="{stroke}" stroke-width="2"/>']
-    if isinstance(head, tuple):   # a two-line heading, no code line
+    if isinstance(head, tuple) and code:   # a two-line heading, then the code line
+        o += [f'<text class="{hcls}" x="{x+w/2}" y="{mid-26}" text-anchor="middle">{head[0]}</text>',
+              f'<text class="{hcls}" x="{x+w/2}" y="{mid-7}" text-anchor="middle">{head[1]}</text>',
+              f'<text class="ms" x="{x+w/2}" y="{mid+13}" text-anchor="middle">{code}</text>',
+              f'<text class="sm" x="{x+w/2}" y="{mid+31}" text-anchor="middle">{sub}</text>']
+        head = " ".join(head)
+    elif isinstance(head, tuple):   # a two-line heading, no code line
         o += [f'<text class="{hcls}" x="{x+w/2}" y="{mid-18}" text-anchor="middle">{head[0]}</text>',
               f'<text class="{hcls}" x="{x+w/2}" y="{mid+1}" text-anchor="middle">{head[1]}</text>',
               f'<text class="sm" x="{x+w/2}" y="{mid+22}" text-anchor="middle">{sub}</text>']
@@ -93,32 +99,32 @@ under("whole",
       f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+56}" text-anchor="middle">and test in one go</text>')
 
 # Level 3: the driver, two steps at each intersection
-W3, G3, Y3, H3 = 210, 12, 240, 76
+W3, G3, Y3, H3 = 210, 12, 240, 92
 x0 = 680 - 10 - 2 * W3 - G3
 xs = [x0 + i * (W3 + G3) for i in range(2)]
 under("driver", elbow(DX + W2/2, Y2 + H2, [x + W3/2 for x in xs], Y3, Y2 + H2 + 24))
 box(xs[0], Y3, W3, H3, ("1 · Turn to face", "the next intersection"), None, "Lessons 4-5 and 4-6", RED, "#FFFFFF",
     hcls="nb", node="turn", parent="driver")
-box(xs[1], Y3, W3, H3, "2 · Drive to it", "LINE TRACKING", "built in Module 2", RED, "#FFFFFF",
+box(xs[1], Y3, W3, H3, ("2 · Drive to", "the next intersection"), "LINE TRACKING", "built in Module 2", RED, "#FFFFFF",
     hcls="nb", parent="driver")
 
 # Level 4: turning, which way and then the turn
-W4, G4, Y4, H4 = 200, 12, 360, 76
+W4, G4, Y4, H4 = 200, 12, 376, 92
 tc = xs[0] + W3 / 2
 x4 = [tc - W4 - G4 / 2, tc + G4 / 2]
 under("turn", elbow(tc, Y3 + H3, [x + W4/2 for x in x4], Y4, Y3 + H3 + 22))
 box(x4[0], Y4, W4, H4, "Which way to face?", "desired_heading()", "Lesson 4-5", RED, "#FFFFFF",
     hcls="nb", parent="turn")
-box(x4[1], Y4, W4, H4, "Turn until facing it", "turn_to()", "Lesson 4-6", RED, "#FFFFFF",
+box(x4[1], Y4, W4, H4, ("Turn until facing", "the next intersection"), "turn_to()", "Lesson 4-6", RED, "#FFFFFF",
     hcls="nb", parent="turn")
 
 DESC = ('A tree with four levels. At the top, the whole problem: drive from the start to a '
         'destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), '
         'built in Lessons 4-3 and 4-4, is small enough to build and test in one go. The driver, '
         'drive_path(), built in Lessons 4-5 and 4-6, splits into two steps at each intersection: '
-        '1, turn to face the next intersection; 2, drive to it, with the LINE TRACKING functions built in Module 2. '
+        '1, turn to face the next intersection; 2, drive to the next intersection, with the LINE TRACKING functions built in Module 2. '
         'Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn '
-        'until facing it, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled '
+        'until facing the next intersection, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled '
         '"list of (x, y) coordinates, the one thing they share".')
 
 
@@ -131,7 +137,7 @@ def render(levels, opened):
                     'data-expand' in el and LEVEL[el.split('data-node="')[1].split('"')[0]] < levels) else el
             body.append(el)
     # Every level keeps the full canvas, so on slides the boxes stay put as levels appear.
-    return svg('Module 4, broken into parts', DESC, body, H=448)
+    return svg('Module 4, broken into parts', DESC, body, H=480)
 
 
 # Opened boxes show a minus; on the page the component sets which are open.
