@@ -122,7 +122,7 @@ DECK = {'module': 4,
                       'tree.'},
             {'kind': 'figure',
              'title': 'Plan first, then drive',
-             'figure': '/img/lesson-m4-00/plan-then-drive.svg',
+             'figure': '/img/lesson-m4-00/plan-then-drive-points.svg',
              'caption': 'The plan is a list of (x, y) coordinates. One function makes it; another '
                         'drives it.',
              'notes': 'That is one way to split the problem, and the one this module uses. The '

@@ -3,7 +3,8 @@
 Same grid, start and destination as drive-to-destination.svg, now with the route
 and each intersection's coordinates; beside it the two steps and what passes between them.
 
-Output: out/plan-then-drive.svg -> static/img/lesson-m4-00/plan-then-drive.svg
+Output: out/plan-then-drive-points.svg -> static/img/lesson-m4-00/plan-then-drive-points.svg
+(renamed 2026-11-12 so browsers drop the cached version that still had list brackets)
 """
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -42,7 +43,7 @@ b.append(f'<text class="h" x="{X+16}" y="226" style="fill:{RED}">2 · Drive</tex
 b.append(f'<text class="n" x="{X+16}" y="248">Take the list and drive it,</text>')
 b.append(f'<text class="n" x="{X+16}" y="266">one intersection at a time.</text>')
 
-open(OUTDIR + 'plan-then-drive.svg', 'w').write(svg(
+open(OUTDIR + 'plan-then-drive-points.svg', 'w').write(svg(
     'Plan first, then drive: the plan is a list of (x, y) coordinates',
     'Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes '
     'right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with '
