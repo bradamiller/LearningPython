@@ -6,13 +6,27 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Break driving a path into two steps, turn then drive, as in Lesson 4-0',
-             'Write `desired_heading(position, next_pos)`: coordinate change to heading 0 to 3',
-             'Raise an error when a function cannot answer, and say why',
+             'Write `get_desired_heading(position, next_pos)`: coordinate change to heading 0 to 3, '
+             'and test it on screen',
+             '(Optional) Catch a mistake early by raising an error when a function cannot answer',
              'Design a turn: clockwise quarter turns, `(heading + 1) % 4`',
          ],
          'notes': '30 minutes, design on paper. Only one function is written today, '
-                  'desired_heading(), and it runs on the desk. turn_to() is designed here; '
+                  'get_desired_heading(), and it runs on the desk. turn_to() is designed here; '
                   'Lesson 4-6 writes it and drive_path(). Resist jumping to the driving code.'},
+
+        {'kind': 'bullets', 'title': 'Facing the right way',
+         'bullets': [
+             'The robot drives over a list of intersections, one to the next',
+             'Somewhere in that list the path turns: that\'s the corner of the "L"',
+             'So before it drives from one intersection to the next, the robot has to be '
+             '**facing the right way**',
+         ],
+         'callout': 'That\'s what this lesson is about.',
+         'tone': 'teal',
+         'notes': 'The lesson opens here: the planner hands the driver a list of intersections, and '
+                  'the path bends at the corner of the L, so the robot has to face each next '
+                  'intersection before it drives to it.'},
 
         {'kind': 'figure', 'title': 'Decompose further, like 4-0',
          'figure': './decks/m4/fig/l05-decomp-1.svg',
@@ -37,13 +51,34 @@ DECK = {
         {'kind': 'figure', 'title': 'Decompose further, like 4-0',
          'figure': './decks/m4/fig/l05-decomp-4.svg',
          'caption': 'And turning breaks into two: work out which way to face, then turn until facing it.',
-         'notes': 'Today: write desired_heading() and test it on screen; design turn_to() on paper. '
+         'notes': 'Today: write get_desired_heading() and test it on screen; design turn_to() on paper. '
                   'Lesson 4-6 writes it and drive_path().'},
+
+        {'kind': 'bullets', 'title': 'Where we are',
+         'bullets': [
+             'The robot has an `(x, y)` position and a **heading** (0 = North, 1 = East, 2 = South, '
+             '3 = West). Together they are the robot\'s **pose**',
+             'The robot only moves in the direction it is facing, and only one intersection at a time',
+             'Every clockwise turn adds one to the heading, and every counterclockwise turn subtracts '
+             'one. If the heading hits 4, it wraps around to 0; if it goes below 0, it wraps around to 3',
+         ],
+         'notes': 'A recap before the new work: position plus heading is the pose, the robot moves one '
+                  'intersection at a time in the direction it faces, and the heading wraps both ways.'},
+
+        {'kind': 'bullets', 'title': 'One change at a time',
+         'bullets': [
+             'We need a function that gives the **desired heading** to reach the next intersection: '
+             '`get_desired_heading()`. You write it in this lesson',
+             'For every move, the robot has to decide which way to go',
+             'That decision depends on its **current position** and the desired, or **next**, '
+             'position on the path',
+         ],
+         'notes': 'This sets up the function students write today, before the table that defines it.'},
 
         {'kind': 'table', 'title': 'One change, four directions',
          'lead': 'Between **adjacent** intersections, either x changes by one **or** y changes by one. '
                  'Never both: that would be a diagonal.',
-         'headers': ['Coordinate change', 'Direction', 'Heading number'],
+         'headers': ['Coordinate change', 'Desired heading', 'Heading number'],
          'widths': [4, 2.5, 2.5],
          'rows': [
              ['y +1 (up, away from you)', 'North', '0'],
@@ -57,7 +92,7 @@ DECK = {
          'tone': 'teal',
          'notes': 'The grid orientation (x first in the tuple, but North is +y, away from you) is the '
                   'number one confusion of this lesson. Draw it, point at it, quiz it. Read the callout as '
-                  'the bridge to desired_heading(): one if per row of this table.'},
+                  'the bridge to get_desired_heading(): one if per row of this table.'},
 
         {'kind': 'figure', 'title': 'Four neighbors, four headings',
          'figure': './decks/m4/fig/l05-headings-xy.svg',
@@ -66,7 +101,9 @@ DECK = {
          'notes': 'The lesson figure, with its card labels redrawn as plain text: the slide renderer '
                   'overlapped the bold letter and the "= 0" in the original. Get students standing '
                   'and turning clockwise a quarter at a time, calling out 0, 1, 2, 3, 0. The '
-                  'kinesthetic bit cements the wrap. Odometer analogy: "...3, and one more is 0, not 4."'},
+                  'kinesthetic bit cements the wrap. The numbers count clockwise from North, so each '
+                  'clockwise turn adds 1. Adding 1 isn\'t enough from West to North: 3 + 1 is 4, and 4 '
+                  'isn\'t a heading. It has to wrap back to 0.'},
 
         {'kind': 'check',
          'question': 'The robot moves from (2,3) to (3,3). Which direction is that, and what heading number?',
@@ -91,14 +128,15 @@ DECK = {
                   'navigator works out which way to face and drives. The function outline is on the '
                   'next slide; it goes straight under HEADING_NAMES.'},
 
-        {'kind': 'code', 'title': 'Add to robot.py: desired_heading()',
-         'code': 'def desired_heading(position, next_pos):\n'
+        {'kind': 'code', 'title': 'Add to robot.py: get_desired_heading()',
+         'code': 'def get_desired_heading(position, next_pos):\n'
                  '    """Return the heading (0-3) that points from position to\n'
-                 '    next_pos, which must be one step away; raise if it is not."""\n'
+                 '    next_pos, which must be one step away."""\n'
                  '    # 1. x_diff and y_diff: next_pos minus position\n'
                  '    # 2. one if per direction, from the table above; each\n'
                  '    #    checks BOTH differences, because the other one is 0\n'
-                 '    # 3. none matched: raise ValueError, naming both positions\n'
+                 '    # 3. (optional) none matched: raise ValueError, naming\n'
+                 '    #    both positions -- see "Catching mistakes early"\n'
                  '    pass',
          'code_size': 19,
          'callout': 'Step 2 is the table as four `if` lines. North means y went up by one **and** '
@@ -110,102 +148,113 @@ DECK = {
                   'no check. Good thing to show a fast finisher.'},
 
         {'kind': 'check',
-         'question': 'Going from (1,3) to (1,2), what does `desired_heading` return?',
+         'question': 'Going from (1,3) to (1,2), what does `get_desired_heading` return?',
          'options': ['0 (North)', '1 (East)', '2 (South)', '3 (West)'],
          'answer': 2,
          'explanation': 'x is unchanged; y went 3 → 2 (y −1). Decreasing y is moving toward you, '
                         'which is South: heading 2.'},
 
-        {'kind': 'code', 'title': 'Say so when you can\'t answer',
-         'lead': 'None of the four matched? Then the positions aren\'t one step apart (diagonal, '
-                 'identical, or across the map), and no heading answers that. `raise` is new: it '
-                 'stops the program on the spot and prints your message.',
-         'lead_h': 1.6, 'size': 25,
-         'code': 'raise ValueError("what went wrong, in words")',
-         'code_size': 26,
-         'callout': '`ValueError` is Python\'s name for "the values I was given make no sense". The '
-                    'message is yours: name both positions, with `str(position)` to turn a tuple into text.',
+        {'kind': 'bullets', 'title': 'Optional: catching mistakes early',
+         'tag': 'Optional extension',
+         'bullets': [
+             'A good program catches its own mistakes early',
+             '`get_desired_heading()` only makes sense when the next intersection is **adjacent** '
+             'to the current one, one step away',
+             'If none of the four `if` lines matched, the two positions aren\'t neighbors and there '
+             'is no right answer',
+         ],
+         'callout': '**When would that happen?** Make a guess first.',
          'tone': 'teal',
-         'notes': 'This is the debugging lesson, not a Python lesson. raise needs nothing beyond '
-                  '"the program stops and prints your message"; students never write try/except to '
-                  'benefit from it. Don\'t turn this into a detour on exception handling.'},
+         'notes': 'Optional: open it if you have time. Nothing later depends on it. Answer to the '
+                  'question (a closed reveal on the page): only when there\'s a bug in the planner. A '
+                  'correct planner only ever lists adjacent steps, so a pair that isn\'t adjacent means '
+                  'the path itself is wrong.'},
+
+        {'kind': 'code', 'title': 'Optional: stop at once, and say why',
+         'tag': 'Optional extension',
+         'lead': 'Without a check, `get_desired_heading()` quietly returns `None`, `turn_to` waits forever '
+                 'for a heading of `None`, and the robot spins with no message. With a check, the program '
+                 'stops at once and says which two positions caused it:',
+         'lead_h': 1.6, 'size': 23,
+         'code': 'raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")',
+         'code_size': 18,
+         'callout': '`raise` stops the program on the spot and prints your message. `ValueError` is Python\'s '
+                    'name for "the values I was given make no sense". `str(position)` turns a tuple into text.',
+         'callout_size': 19,
+         'tone': 'teal',
+         'notes': 'raise is new here, but nothing about it needs teaching beyond "the program stops and '
+                  'prints your message"; students never write try/except to benefit from it. Don\'t turn '
+                  'this into a detour on exception handling. The code that\'s spinning without the check '
+                  'isn\'t even the code that\'s wrong.'},
 
         {'kind': 'figure', 'title': 'Same bad input, two programs',
+         'tag': 'Optional extension',
          'figure': '/img/lesson-m4-05/raise-spin.svg',
          'caption': 'Without the raise the program never even stops; with it, it stops where the '
                     'mistake is.',
          'notes': 'Top row: no match, the function silently returns None, turn_to waits forever for a '
                   'heading of None, and the robot spins with no message. Bottom row: ValueError at '
-                  'desired_heading, turn_to never runs. Worth a few minutes: ask the class to predict '
-                  'what they would see without the raise, and where they would look first (turn_to, '
-                  'the one piece of code that is right).'},
-
-        {'kind': 'bullets', 'title': 'Stop it at the door',
-         'bullets': [
-             'A wrong value that gets returned doesn\'t stay put',
-             'It travels into the next function, and the next',
-             'By the time anything visibly breaks, you\'re a long way from the mistake',
-             'Every check like this shortens the distance between where a bug **shows up** '
-             'and where it **actually is**',
-         ],
-         'callout': 'When a function is asked something it cannot answer, say so immediately and loudly.',
-         'tone': 'green',
-         'notes': 'First time the course asks students to write a line whose only job is to make a '
-                  'future problem easier to find. Can the error actually happen? With '
-                  'compute_manhattan_path feeding it, no: the planner only produces adjacent steps. '
-                  'It becomes reachable when students call desired_heading themselves (the diagonal '
-                  'call in test_headings does, on purpose) or in their own project in Lesson 4-7.'},
+                  'get_desired_heading, turn_to never runs. Worth ten minutes: ask the class to predict '
+                  'what they would see without the raise, and how they would go about finding the cause '
+                  '("a robot spinning forever, and the first place you\'d look is the one piece of code '
+                  'that\'s right"). This is the first time the course asks students to write a line whose '
+                  'only job is to make a future problem easier to find.'},
 
         {'kind': 'check',
-         'question': 'Why does `desired_heading` end with `raise`, instead of just letting Python return `None`?',
+         'question': 'Why end `get_desired_heading` with `raise`, instead of just letting Python return `None`?',
          'options': ['Because None uses more memory',
                      'To stop at the line that found the problem, not break later somewhere else',
                      'Because every Python function has to end with raise',
                      'To make the robot turn faster'],
          'answer': 1,
-         'explanation': 'Without it, desired_heading hands back None, turn_to waits forever for a '
+         'explanation': 'Without it, get_desired_heading hands back None, turn_to waits forever for a '
                         'heading of None, and the robot spins in correct code with nothing printed. '
                         'Raising reports the problem where it was found.'},
 
-        {'kind': 'steps', 'title': 'Activity · Write it, then ask it the four questions',
+        {'kind': 'steps', 'title': 'Optional · Try it',
+         'tag': 'Optional extension',
          'steps': [
-             'Write the body of `desired_heading()` from the outline',
-             'Write a paper test, `test_headings()`, that prints the heading from `(1, 1)` to each '
-             'neighbor: `(0, 1)`, `(1, 2)`, `(2, 1)` and `(1, 0)`',
-             'Work out the four answers from the table **before** you run it',
-             'Print `HEADING_NAMES[...]` of each result next to the number. Set the run line to '
-             '`test_headings()`: the robot stays on the desk',
+             'Add step 3 to `get_desired_heading()`',
+             'Add one more call at the **end** of `test_headings()`: `(1, 1)` to `(2, 2)`, a diagonal',
+             'Run it. The four answers print as before, then the program **stops** with your message, '
+             'naming both positions',
          ],
-         'size': 20,
-         'notes': 'The check for desired_heading is a closed reveal on the lesson page; students run '
-                  'test_headings() first. Push them to predict all four on paper before running.'},
-
-        {'kind': 'steps', 'title': 'Activity · Then ask it a question it can\'t answer',
-         'start': 5,
-         'steps': [
-             'Add one more call at the **end** of the test: `(1, 1)` to `(2, 2)`, a diagonal',
-             'Run it again. The four answers print, then the program **stops** with your message',
-             'Read the message: does it name **both** positions?',
-         ],
-         'callout': 'Why the diagonal goes last: nothing after the raise runs',
+         'callout': 'Why the diagonal goes last: nothing after it runs',
          'tone': 'teal',
          'notes': 'This is the raise doing its job, on purpose, in a test.'},
 
+        {'kind': 'steps', 'title': 'Activity · Write it, then ask it the four questions',
+         'steps': [
+             'Write the body of `get_desired_heading()` from the outline',
+             'Write a paper test, `test_headings()`. It calls `get_desired_heading()` from `(1, 1)` to '
+             'each neighbor, `(0, 1)`, `(1, 2)`, `(2, 1)` and `(1, 0)`, and prints one line for each: the '
+             'neighbor, the heading number, and its name from `HEADING_NAMES`',
+             'Work out the four answers from the table **first**',
+             'Set the run line to `test_headings()` and run it with the robot on the desk. Correct '
+             'output is four lines that match your four answers',
+         ],
+         'size': 20,
+         'notes': 'The check for get_desired_heading is a closed reveal on the lesson page; students run '
+                  'test_headings() first. Push them to predict all four on paper before running.'},
+
         {'kind': 'code', 'title': 'Turning until you face it',
-         'lead': 'Like every sensor loop in Module 2: keep doing something until a condition is true. '
-                 'One clockwise quarter turn, until you face the heading you want.',
-         'lead_h': 1.2,
-         'code': '# while heading is not desired:\n'
+         'lead': 'Now we know both the current heading and the desired heading. So the robot can simply '
+                 'turn clockwise, adding one to the heading for each turn, while it isn\'t facing the '
+                 'desired heading.',
+         'lead_h': 1.4,
+         'code': '# while current_heading is not desired_heading:\n'
                  '#     one turn_clockwise()\n'
-                 '#     heading goes up by 1, wrapping 3 back to 0\n'
+                 '#     current_heading goes up by 1, wrapping 3 back to 0\n'
                  '\n'
                  'heading = (heading + 1) % 4',
          'code_size': 24, 'width': 10,
-         'callout': '`%` is the remainder (Lesson 2-5). For 1, 2 and 3 the remainder is the number '
-                    'itself; `4 % 4` is 0, so after West comes North, never a heading 4.',
+         'callout': 'West (3) to North (0): the remainder `%` (Lesson 2-5) makes it easy. For 1, 2 and 3 '
+                    'the remainder is the number itself; `4 % 4` is 0, so after West comes North.',
+         'callout_size': 19,
          'tone': 'teal',
-         'notes': 'The top three lines are the loop design; the last line is the wrap, the odometer '
-                  'in one expression.'},
+         'notes': 'The top three lines are the loop design; the last line is the wrap: when the robot '
+                  'is facing West (3) and turns clockwise to North (0), % makes it easy, and the '
+                  'heading is never 4.'},
 
         {'kind': 'table', 'title': 'Trace it: from South (2) to East (1)',
          'headers': ['Pass', 'Heading before', 'Turn', 'Heading after, `(h + 1) % 4`', 'Facing East?'],
@@ -223,18 +272,19 @@ DECK = {
                   'Lesson 4-6 students watch the robot spin 270 degrees, and an optional challenge '
                   'there makes it turn whichever way is fewer turns. If someone spots the problem '
                   'today, agree and point them at that challenge. An earlier version taught '
-                  'turns = (desired - heading) % 4, which leans on % with a negative number '
+                  'turns = (desired_heading - current_heading) % 4, which leans on % with a negative number '
                   '(-1 % 4 is 3) and surprises nearly everyone.'},
 
-        {'kind': 'bullets', 'title': 'The design of turn_to(heading, desired)',
+        {'kind': 'bullets', 'title': 'The design of turn_to()',
          'bullets': [
              'Already facing the right way? The condition is false on the first check, so the loop '
              'does nothing: **no special case**',
              '`turn_clockwise()` is the Module 2 function that turns until the sensors find the next line',
-             'It returns `heading` at the end, which by then equals `desired`',
-             'So the caller writes `heading = turn_to(heading, needed)` and keeps its own record up to date',
+             'It returns `current_heading` at the end, which by then equals `desired_heading`',
+             'So the caller writes `heading = turn_to(heading, desired_heading)` and keeps its own '
+             'record up to date',
          ],
-         'callout': 'You write it next lesson.',
+         'callout': '`turn_to(current_heading, desired_heading)`: you write it next lesson.',
          'tone': 'teal',
          'notes': 'Three sensor-ended turns take three times as long as one and give the line sensors '
                   'three chances to miss. That is the reason the optional challenge in 4-6 is worth '

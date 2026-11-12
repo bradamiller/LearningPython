@@ -5,108 +5,78 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Name the four Module 2 functions the driving code is built on, and what each does',
-             'Explain why the robot must `drive_past_intersection()` after every `track_to_intersection()`',
-             'Write `turn_to()` and `drive_path()` from their outlines, and test them on one leg, then a whole path',
+             'Name the three Module 2 functions the driving code is built on, and what each does',
+             'Write `turn_to()` and `drive_path()` from their outlines, and test them on a whole path',
              'Keep the robot\'s pose (`position` and `heading`) up to date by assigning from what `drive_path()` returns',
-             'Plan, **print the path**, wait for the button, then drive',
+             'Plan, **print the path**, wait for the button, then drive, and use the printed path as the '
+             'first diagnostic',
          ],
          'notes': '50 minutes, Python plus robot. The turn_to() paper design from Lesson 4-5 and '
                   'drive_path(), which pulls planning and turning together, become real code, built on the Module 2 line-tracking functions with no motor code rewritten. '
-                  'Testing goes one leg first, then a whole path.'},
+                  'Students write both, then test them on a whole path.'},
 
         {'kind': 'bullets', 'title': 'Time to make the robot move',
          'bullets': [
-             '`turn_to()`, designed on paper in Lesson 4-5, and `drive_path()` join `desired_heading()` in the NAVIGATOR section',
+             '`turn_to()`, designed on paper in Lesson 4-5, and `drive_path()` join `get_desired_heading()` in the NAVIGATOR section',
              'Together they drive **any** Manhattan path on the grid',
              'They call the **line-tracking functions you built in Module 2**: no motor code to rewrite',
-             'One wrinkle the paper design didn\'t care about: **where** the robot actually turns',
          ],
          'callout': 'That\'s the payoff of building a toolkit',
          'tone': 'teal'},
 
         {'kind': 'table', 'title': 'The toolkit you already have',
-         'lead': 'Module 2 ended with four functions in the LINE TRACKING section. Module 3 drove the '
+         'lead': 'Module 2 ended with three functions in the LINE TRACKING section. Module 3 drove the '
                  'whole grid with them.',
          'headers': ['Function', 'What it does', 'Ends when'],
          'widths': [4.2, 3.2, 3.6],
          'rows': [
-             ['`track_to_intersection()`', 'Follows the line forward', 'both sensors see the cross'],
+             ['`track_to_intersection()`', 'Follows the line forward', 'the robot\'s center is on the cross'],
              ['`turn_clockwise()`', 'Pivots right', 'the sensors find the next line'],
              ['`turn_counterclockwise()`', 'Pivots left', 'the sensors find the next line'],
-             ['`drive_past_intersection()`', 'Drives straight 8.75 cm', 'the distance is done'],
          ],
          'size': 21,
          'callout': 'No coordinates, headings or paths: they follow tape and have no idea where the robot '
                     'is. Today\'s three functions sit between them and the planner.',
+         'callout_size': 20,
          'tone': 'teal',
          'notes': 'The split from Lesson 4-0 again: the planner doesn\'t know how to drive, and the '
                   'driving functions don\'t know what a path is. Class-track students with LineTrack '
                   'write tracker. in front of each.'},
 
-        {'kind': 'code', 'title': 'Arriving: the same pair as Module 3',
-         'lead': '`track_to_intersection()` stops the moment both **sensors** see the cross, but the robot '
-                 'turns about its **center of rotation**, 8.75 cm behind them. You met this in Lesson 3-1, '
-                 'and the fix is the same here.',
-         'lead_h': 1.75, 'size': 27,
-         'code': 'track_to_intersection()        # sensors reach the cross\n'
-                 'drive_past_intersection()      # center of rotation on the cross; sensors past it',
-         'code_size': 18,
-         'callout': '`drive_path()` arrives at **every** intersection with the pair, whichever way it turns '
-                    'next: turns spin on the cross, and the next track starts clean.',
-         'callout_size': 20,
-         'tone': 'teal',
-         'notes': 'The two-robot animation in Lesson 3-1 shows what goes wrong if you turn early. The '
-                  '8.75 cm is the gap between the reflectance sensors and the center of rotation (the '
-                  'pen hole between the drive wheels) on an XRP; if a class has a robot with a '
-                  'different mounting, measure it.'},
-
-        {'kind': 'check',
-         'question': 'Why does the robot call `drive_past_intersection()` after every '
-                     '`track_to_intersection()`, even when it is going straight on?',
-         'options': ['To speed up the run',
-                     'Moves the center of rotation onto the cross: turns pivot there, next track starts clean',
-                     'Only turns need it; going straight it is skipped',
-                     'To recharge the battery'],
-         'answer': 1,
-         'explanation': 'The sensors lead the center of rotation. Parking it on the cross makes every turn '
-                        'pivot on the intersection, and moves the sensors off the tape so the next '
-                        'line-follow starts clean. Doing it every time means no special cases.'},
-
         {'kind': 'code', 'title': 'Add to robot.py: turn_to()',
-         'lead': 'Paste at the end of the NAVIGATOR section, under `desired_heading()`.',
+         'lead': 'Paste at the end of the NAVIGATOR section, under `get_desired_heading()`.',
          'lead_h': 0.7,
          'code': '# --- Lesson 4-6: turn to a heading, drive a path ---\n'
                  '# turn_to() turns a quarter turn at a time, with the LINE\n'
                  '# TRACKING turns, until the robot faces the heading it\n'
                  '# needs. drive_path() is the loop: for each\n'
-                 '# intersection, face it, arrive with the track-then-drive-past\n'
-                 '# pair, and record the new position. Both hand back what they\n'
+                 '# intersection, face it, arrive with track_to_intersection(),\n'
+                 '# and record the new position. Both hand back what they\n'
                  '# changed, because the caller keeps the only record.\n'
                  '\n'
-                 'def turn_to(heading, desired):\n'
-                 '    """Turn clockwise a quarter turn at a time until heading\n'
-                 '    is desired; return the new heading."""\n'
-                 '    # while heading is not desired:\n'
+                 'def turn_to(current_heading, desired_heading):\n'
+                 '    """Turn clockwise a quarter turn at a time until\n'
+                 '    current_heading is desired_heading; return the new\n'
+                 '    heading."""\n'
+                 '    # while current_heading is not desired_heading:\n'
                  '    #     one turn_clockwise()\n'
-                 '    #     heading goes up by 1, wrapping 3 back to 0\n'
-                 '    # return heading\n'
+                 '    #     current_heading goes up by 1, wrapping 3 back to 0\n'
+                 '    # return current_heading\n'
                  '    pass',
-         'code_size': 16,
+         'code_size': 15,
          'notes': 'turn_to() is the Lesson 4-5 design. The skeleton continues on the next '
-                  'slide with drive_path(), the loop that uses it; its step 3 handles the wrinkle.'},
+                  'slide with drive_path(), the loop that uses it.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: drive_path()',
-         'lead': 'Right under `turn_to()`. Step 3 has grown the wrinkle: arrive with the pair.',
+         'lead': 'Right under `turn_to()`: the loop that uses it.',
          'lead_h': 0.7,
          'code': 'def drive_path(path, position, heading):\n'
                  '    """Turn and drive through every intersection in path, from\n'
                  '    position facing heading; return the final (position, heading)."""\n'
                  '    # for each next_pos in path:\n'
-                 '    #     1. needed = desired_heading(position, next_pos)\n'
-                 '    #     2. heading = turn_to(heading, needed)\n'
-                 '    #     3. arrive: track_to_intersection(), then\n'
-                 '    #        drive_past_intersection()\n'
+                 '    #     1. desired_heading = get_desired_heading(position, next_pos)\n'
+                 '    #     2. heading = turn_to(heading, desired_heading)\n'
+                 '    #     3. arrive: track_to_intersection()\n'
                  '    #     4. position = next_pos -- the robot is there now\n'
                  '    # return position, heading\n'
                  '    pass',
@@ -116,7 +86,7 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Keeping the pose',
          'bullets': [
-             '`heading = turn_to(heading, needed)` keeps the new heading',
+             '`heading = turn_to(heading, desired_heading)` keeps the new heading',
              '`position = next_pos` records the intersection the robot just reached',
              'It returns both as one tuple, the robot\'s **pose**, and the caller unpacks it like `x, y = position` in Lesson 4-1',
          ],
@@ -185,9 +155,7 @@ DECK = {
               'The one in the test is **go**'],
          ],
          'callout': 'A test that drives is the only kind that waits twice',
-         'tone': 'teal',
-         'notes': 'The two presses need saying once; after that students like it, because the first '
-                  'press is when they read the path.'},
+         'tone': 'teal'},
 
         {'kind': 'check',
          'question': 'The printed path is correct, but the robot turns left at the second intersection '
@@ -199,52 +167,26 @@ DECK = {
          'answer': 1,
          'explanation': 'Printing the path before the button splits the program in two for debugging. A '
                         'correct printed path clears the planner; whatever went wrong is downstream of it: '
-                        'desired_heading, turn_to, drive_path or the Module 2 functions.'},
+                        'get_desired_heading, turn_to, drive_path or the Module 2 functions.'},
 
-        {'kind': 'steps', 'title': 'Activity · Trace it, then integrate',
-         'lead': 'Before running anything, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N) on paper. '
-                 'For each step write down:',
-         'lead_h': 0.9,
+        {'kind': 'steps', 'title': 'Activity · Write it, then drive it',
          'steps': [
-             'The next intersection, and the heading needed',
-             'The headings the turning loop steps through',
-             'What the robot does',
+             '**Write the code.** Write the bodies of `turn_to()` and `drive_path()` from their outlines',
+             '**Run the test.** Add `test_drive_path()` from above, set the run line to it, and put the '
+             'robot on (0, 0) facing North. Press once and read the printed path, then press again to '
+             'drive to (2, 3). Watch each arrival: the robot\'s center on the cross, turns pivoting on it. '
+             'And watch the corner where the path bends from East to North: **count the turns**',
          ],
-         'callout': 'Then build it in two stages. Don\'t go on until the first works.',
-         'tone': 'orange',
-         'notes': 'The trace and its grid figure are a closed reveal on the lesson page ("paper '
-                  'first"). Point out step 2 when students check: facing East and needing North, '
-                  'the loop goes three quarters of the way round.'},
-
-        {'kind': 'steps', 'title': 'Step 1 · One leg',
-         'steps': [
-             'Write the bodies of `turn_to()` and `drive_path()` from their outlines',
-             'Write `test_one_leg()`: drive the one-element path `[(1, 0)]` from `(0, 0)` heading 0, '
-             'and print where it arrived',
-             'Robot at (0, 0) facing North, run line set to it, both presses',
-             'One clockwise turn, one track, one drive-past. Does the robot stop with its '
-             '**center of rotation** on the intersection?',
-         ],
-         'size': 20,
+         'size': 21,
          'notes': 'The check for turn_to() and drive_path() is a closed reveal on the lesson page. If a '
-                  'leg goes wrong, the first two things to compare are the return heading and the '
+                  'leg goes wrong, the first two things to compare are the return current_heading and the '
                   'position = next_pos. A student version that differs and drives the path parked on '
-                  'every cross is fine.'},
-
-        {'kind': 'steps', 'title': 'Step 2 · A real path',
-         'steps': [
-             'Add `test_drive_path()` and run it: `(0, 0)` to `(2, 3)`',
-             'Read the printed path before the second press',
-             'Watch each arrival: center of rotation on the cross, turns pivoting on it',
-             'Watch the corner where the path bends from East to North: **count the turns**',
-         ],
-         'notes': 'The clockwise-only loop spins 270 degrees at that corner: correct behavior, and the '
-                  'optional challenge is there for students who want to fix it. Usual bugs, most '
-                  'frequent first: not assigning position, heading from drive_path\'s return; the '
-                  'start sneaking into the path (desired_heading raises, which is the lesson working); '
-                  'a turn_to that forgets to return heading. Turns end on the sensors, not a timer, so '
-                  'they tolerate battery and friction; if a turn overshoots, shorten the blind first '
-                  'part of Module 2\'s turn_clockwise().'},
+                  'every cross is fine. Usual bugs, most frequent first: not assigning position, heading '
+                  'from drive_path\'s return; the start sneaking into the path (get_desired_heading '
+                  'raises if the student did the optional check in 4-5, and otherwise the robot spins in '
+                  'place); a turn_to that forgets to return heading. Turns end on the sensors, not a '
+                  'timer, so they tolerate battery and friction; if a turn overshoots, shorten the blind '
+                  'first part of Module 2\'s turn_clockwise().'},
 
         {'kind': 'figure', 'title': 'Challenge (optional): the short way round',
          'tag': 'Optional challenge',
@@ -258,7 +200,7 @@ DECK = {
              'Make `turn_to()` turn whichever way takes **fewer** turns',
              'First, on paper: when is counterclockwise actually shorter? Try every pair of headings, or just the four starting from North',
              'Change `turn_to()` to turn counterclockwise in exactly those cases, clockwise in the rest',
-             'Keep `heading` up to date either way, and still return it',
+             'Keep `current_heading` up to date either way, and still return it',
              'Run `test_drive_path()` again and count the turns at the corner',
          ],
          'callout': 'Nothing else in the file has to change, because nothing else knows how `turn_to()` '
@@ -266,10 +208,10 @@ DECK = {
          'tone': 'green',
          'notes': 'The answer is in the lesson\'s teacher copy, not here. Hints if needed: with four '
                   'headings there is exactly one case where counterclockwise wins; turning around is a '
-                  'tie. Students who compute (desired - heading) % 4 are also right, but it needs % '
+                  'tie. Students who compute (desired_heading - current_heading) % 4 are also right, but it needs % '
                   'on a negative number (-1 % 4 is 3), worth showing in the REPL if it comes up. Watch '
                   'for a version that turns left and then also loops because it forgot to update '
-                  'heading.'},
+                  'current_heading.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
@@ -280,25 +222,21 @@ DECK = {
              ('Cars', 'Drive-by-wire', 'The steering software sets a target; a separate actuator '
                                        'system does the physical turning.'),
          ],
-         'notes': 'Building on a well-tested lower layer is how real systems scale. Hammer the reuse '
-                  'point: the Module 2 functions drove the Module 3 square and now drive grid paths '
-                  'unchanged.'},
+         'notes': 'Building on a well-tested lower layer is how real systems scale.'},
 
         {'kind': 'wrapup',
          'questions': [
-             'What four Module 2 functions does the driving code use?',
-             'Why `drive_past_intersection()` after every track?',
+             'What three Module 2 functions does the driving code use?',
              'What does `drive_path` return, and why?',
              'What do you do before pressing the button?',
          ],
          'next': 'the final project: a delivery run to several destinations',
-         'notes': 'Answers: track_to_intersection, turn_clockwise, turn_counterclockwise, '
-                  'drive_past_intersection. To put the center of rotation on the cross, so turns pivot '
-                  'there and the next track starts clean. The robot\'s pose, so the caller plans '
+         'notes': 'Answers: track_to_intersection, turn_clockwise, turn_counterclockwise. '
+                  'The robot\'s pose, so the caller plans '
                   'the next path from the right place. Read the printed path. Exit ticket: "At (1,2) '
                   'heading 1 (E), next is (1,1): heading needed, headings turn_to() steps through, '
-                  'and what the robot does?" (2 (S), since y goes down by 1; E, S: one clockwise turn, '
-                  'then track and drive past.)'},
+                  'and what the robot does?" (desired heading 2 (S), since y goes down by 1; E, S: one '
+                  'clockwise turn, then track.)'},
 
         {'kind': 'bullets', 'title': 'Optional: what self really is',
          'tag': 'Optional extension',
@@ -329,10 +267,10 @@ DECK = {
                  '        self.heading = heading\n'
                  '        self.line_track = LineTrack()        # has-a LineTrack\n'
                  '\n'
-                 '    def desired_heading(self, next_pos):\n'
+                 '    def get_desired_heading(self, next_pos):\n'
                  '        pass\n'
                  '\n'
-                 '    def turn_to(self, desired):\n'
+                 '    def turn_to(self, desired_heading):\n'
                  '        pass\n'
                  '\n'
                  '    def drive_path(self, path):\n'

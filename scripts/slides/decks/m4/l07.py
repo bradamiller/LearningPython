@@ -6,12 +6,12 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Integrate the planner and the driving functions in one program: the last test function in `robot.py`',
-             'Write a main loop that computes and drives a path to each destination in a list',
+             'Build the program in three tested steps: one leg, two legs, then a loop over a list of destinations',
              'Carry the robot\'s pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`',
              'Demonstrate a working multi-destination run on the XRP',
          ],
          'notes': 'Multi-day project. Keep the intro brief: this is a build-and-test day. For '
-                  '50-minute periods plan two days: planning and desktop testing, then robot day.'},
+                  '50-minute periods plan two days: steps 1 and 2, then the full run.'},
 
         {'kind': 'bullets', 'title': 'The mission: a delivery drone on a city grid',
          'bullets': [
@@ -47,29 +47,42 @@ DECK = {
          'callout': '2, 3, 2 and 3 steps. Each leg is planned from where the last one ended. `turn_to()` only turns clockwise, '
                     'so most legs start with three right turns.',
          'tone': 'teal',
-         'notes': 'On the lesson page this is an animation of the whole run, with the main loop in plain '
+         'notes': 'On the lesson page this is an animation of the whole run, with Back, Step and '
+                  'Play/Pause buttons and the main loop in plain '
                   'words beside it and the running line highlighted; these are three moments from it, '
                   'with the side panel cropped off. Leg 1 is one right turn and two steps east; legs '
                   '2, 3 and 4 each start with three right turns.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: the delivery run',
          'lead': 'Paste above `RUN`, at the end of the NAVIGATOR section. No new function is defined: '
-                 'one setting, a paper test, and the project itself.',
+                 'one setting and three tests, each one a step toward the project.',
          'lead_h': 0.95,
          'code': '# --- Lesson 4-7: final project, the delivery run ---\n'
                  '# The module project: visit DESTINATIONS in order, planning\n'
                  '# each leg with the MANHATTAN PLANNER from wherever the last\n'
                  '# leg ended and driving it with the NAVIGATOR. Nothing new is\n'
-                 '# defined; the two sections did the work.\n'
-                 'DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]\n'
-                 '\n'
-                 'def test_delivery_paper():\n'
-                 '    # no robot: from (0, 0), plan the path to each destination\n'
-                 '    # in turn, print it with its step count, and move\n'
-                 '    # position on to that destination for the next leg\n'
-                 '    pass',
+                 '# defined; the two sections did the work. Built in three\n'
+                 '# tested steps: one leg, two legs, then a loop.\n'
+                 'DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]',
          'code_size': 18,
-         'notes': 'The skeleton continues on the next slide with test_delivery(), the graded work.'},
+         'notes': 'The skeleton continues on the next two slides: the two step tests, then '
+                  'test_delivery(), the graded work.'},
+
+        {'kind': 'code', 'title': 'Add to robot.py: the two step tests',
+         'code': 'def test_one_leg():\n'
+                 '    # start at (0, 0) facing North; plan the path to (2, 0),\n'
+                 '    # print it, wait for the button, drive it, and print\n'
+                 '    # where the robot arrived\n'
+                 '    pass\n'
+                 '\n'
+                 'def test_two_legs():\n'
+                 '    # the same first leg, then a second one to (2, 3),\n'
+                 '    # planned from wherever the first ended: plan it, print\n'
+                 '    # it, drive it, print where the robot arrived\n'
+                 '    pass',
+         'code_size': 19,
+         'notes': 'Right under DESTINATIONS. There is no student reveal for any of the three tests; the '
+                  'solutions are in the teacher copy only.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: test_delivery()',
          'code': 'def test_delivery():\n'
@@ -83,10 +96,11 @@ DECK = {
                  '    #     print where the robot arrived\n'
                  '    pass',
          'code_size': 21,
-         'callout': 'The second-to-last comment decides whether leg 2 works. What does the main program '
-                    'know after `drive_path()` finishes, and what doesn\'t it, unless you ask?',
+         'callout': 'The second leg decides whether the project works. What does the test know after the '
+                    'first `drive_path()` finishes, and what doesn\'t it, unless you ask?',
+         'callout_size': 20,
          'tone': 'orange',
-         'notes': 'There is no student reveal for test_delivery(); the solution is the teacher copy only. '
+         'notes': 'There is no student reveal for any of the three tests; the solution is the teacher copy only. '
                   'The line nearly everyone gets half right: they call drive_path and throw the return '
                   'value away. Leg one works perfectly, and every later leg is planned from (0,0) facing '
                   'North. If a robot drives a sensible first route and then wanders, ask what position is '
@@ -113,23 +127,26 @@ DECK = {
          'explanation': 'Each leg is planned from the robot\'s current position. Leg 1 is the only one whose '
                         'starting position is known before the robot moves.'},
 
-        {'kind': 'steps', 'title': 'Activity · Test in three levels',
-         'lead': 'Do **not** jump straight to the full run. If something breaks, you won\'t know which piece. '
-                 'One test on the run line at a time:',
+        {'kind': 'steps', 'title': 'Activity · Build it in three steps',
+         'lead': 'Test each step on the robot before you write the next. Start the robot at (0, 0) facing '
+                 'North every time.',
          'lead_h': 0.9,
          'steps': [
-             '**Planner alone (no robot).** Write `test_delivery_paper()`: loop the destinations, print each '
-             'path, set `position = dest` between them. Count the steps: 2, 3, 2, 3',
-             '**One leg on the robot.** Run Lesson 4-6\'s `test_drive_path()` with `DESTINATIONS[0]` as its '
-             'destination. Robot at (0,0) facing North, both presses. Correct turns? Right intersection?',
-             '**Full sequence.** Write `test_delivery()` and run it. Read the leg-1 path before the second '
-             'press. Watch the straight-through intersections and the turns',
+             '**One leg.** Write `test_one_leg()` and set the run line to it: Lesson 4-6\'s '
+             '`test_drive_path()` with (2, 0) as the destination. Read the printed path, `[(1, 0), (2, 0)]`, '
+             'then press again. The robot should make one right turn and stop on (2, 0) facing East',
+             '**Two legs, one after the other.** Write `test_two_legs()` and run it. The second leg is planned '
+             'from where the first ended, so it works only if `position` and `heading` were assigned from the '
+             'first `drive_path()`. After (2, 0): three right turns to face North, then up to (2, 3)',
+             '**A list and a loop.** Write `test_delivery()`: the legs become one loop over `DESTINATIONS`. '
+             'Run it. The robot should visit all four destinations and finish at home, with legs of 2, 3, 2 '
+             'and 3 steps',
          ],
          'size': 19,
-         'notes': 'Push level-by-level testing hard: the students who write everything at once and can\'t '
-                  'find the break are the ones who skipped planner-only testing. Level 1 is the Lesson 4-4 '
-                  'habit on today\'s destinations. The paper test has a closed reveal on the lesson page. '
-                  'Watch battery drain on long multi-turn runs and charge between attempts.'},
+         'notes': 'Push step-by-step testing hard: the students who write everything at once and can\'t '
+                  'find the break are the ones who skipped the one-leg and two-leg tests. Watch battery '
+                  'drain on long multi-turn runs and charge between attempts. For 50-minute periods, plan '
+                  'two days: steps 1 and 2, then the full run.'},
 
         {'kind': 'check',
          'question': 'On the second leg the robot drives a clearly wrong path. What\'s the first thing to check?',
@@ -146,7 +163,7 @@ DECK = {
          'widths': [2.4, 1.1, 8.0],
          'rows': [
              ['Planner', '10', '`compute_manhattan_path` correct for any position and destination; Lesson 4-4 tests pass'],
-             ['Driving functions', '15', 'Correct `desired_heading`, `turn_to`, `drive_path`; parked on the cross at every arrival; position and heading returned'],
+             ['Driving functions', '15', 'Correct `get_desired_heading`, `turn_to`, `drive_path`; parked on the cross at every arrival; position and heading returned'],
              ['Main program', '10', '`test_delivery()`: 4+ destinations, prints leg 1 before the button, drives each leg, assigns `position, heading` from `drive_path`'],
              ['Robot demo', '10', 'Physically visits all destinations with correct turns'],
              ['Planning & docs', '5', 'Planning worksheet, a hand-trace of one leg, testing checklist followed'],
@@ -154,7 +171,8 @@ DECK = {
          'size': 20,
          'notes': 'Class track: students who did the '
                   'extensions run the project on their objects, navigator.drive_path(path) and '
-                  'planner.compute_path() if they built Manhattan. Same rubric.'},
+                  'planner.compute_path() if they built Manhattan. The step tests change the same way. '
+                  'Same rubric.'},
 
         {'kind': 'bullets', 'title': 'If you finish early',
          'bullets': [
@@ -184,12 +202,15 @@ DECK = {
          'questions': [
              'What\'s the one line that makes multi-leg journeys work?',
              'Why is only leg 1 printed before the button?',
-             'What are the three testing levels?',
+             'What were the three steps?',
+             'Where did problem decomposition pay off?',
          ],
          'next': 'Module 5: breadth-first search replaces the planner, and drive_path keeps driving',
          'notes': 'Answers: position, heading = drive_path(path, position, heading), for each leg. Later legs '
-                  'are planned from where the robot actually ends up. Planner alone, one leg, full '
-                  'sequence. When a robot finishes the whole sequence, let the class watch: it is the '
+                  'are planned from where the robot actually ends up. One leg, two legs, then a loop over '
+                  'a list. Each part was built and tested alone, so the main program that connects them is '
+                  'about ten lines, and a printed path tells you which part to open when a run goes wrong. '
+                  'When a robot finishes the whole sequence, let the class watch: it is the '
                   'payoff of eight lessons. Name what they built across Module 4: coordinates and tuples, '
                   'lists and iteration, algorithm design, a planner and a driver that know nothing about '
                   'each other, a testing discipline, hardware integration. In Module 5 BFS replaces the '

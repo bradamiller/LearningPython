@@ -106,8 +106,8 @@
   <text class="h" x="385" y="52">Heading as a number</text>
   <text class="n" x="385" y="74">0 = N, 1 = E, 2 = S, 3 = W, counted</text>
   <text class="n" x="385" y="91">clockwise. Each clockwise turn adds 1;</text>
-  <text class="n" x="385" y="108">past 3 it wraps back to 0, like an</text>
-  <text class="n" x="385" y="125">odometer rolling over.</text>
+  <text class="n" x="385" y="108">West (3) to North (0) wraps back</text>
+  <text class="n" x="385" y="125">to 0, since 4 is not a heading.</text>
   <text class="h" x="385" y="170">Which way is the next step?</text>
   <text class="n" x="385" y="192">Between neighbors only x or y</text>
   <text class="n" x="385" y="209">changes, by one. The change</text>
