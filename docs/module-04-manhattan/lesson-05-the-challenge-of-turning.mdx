@@ -75,8 +75,9 @@ For example, if x increases by one, the robot needs to move East, so its desired
 is 1, because East is represented by 1. So we can determine the robot's desired heading
 with four `if` statements that find out which value changed, and set the heading accordingly.
 
-The numbers count clockwise from North, so **each clockwise turn adds 1**, and one more
-than 3 wraps back to 0, like an odometer rolling over.
+The numbers count clockwise from North, so **each clockwise turn adds 1**. Adding 1
+isn't enough when the robot turns from West to North: 3 + 1 is 4, and 4 isn't a
+heading. It has to wrap back to 0.
 
 The part to keep straight: x comes first in the tuple, but North and South change the
 *second* number. **North is away from you**, so moving North makes y *bigger*, and
@@ -343,7 +344,7 @@ Resist jumping to the driving code — `desired_heading()` is the only function 
 today, and it runs on the desk. Get students standing and turning clockwise a quarter at
 a time, calling out 0, 1, 2, 3, 0 — the kinesthetic bit cements the wrap. The grid
 orientation (x first in the tuple, but North is +y, away from you) is the #1 confusion; draw it, point at it,
-quiz it. Odometer analogy for the wrap: "…3, and one more is 0, not 4."
+quiz it.
 
 The loop always turns clockwise, and that is deliberate: it is the simplest turn that
 always works. In Lesson 4-6 students write it, run a path that bends left, and watch the
