@@ -25,7 +25,8 @@ the robot moving. Then it goes in charge of the follower's loop.
 By the end of this lesson you will be able to:
 
 - Test `is_at_cross()` on a moving robot, with no line following in the program
-- Write `track_to_intersection()`: follow the line *until* `is_at_cross()` says stop
+- Write `track_to_intersection()`: follow the line *until* `is_at_cross()` says stop, then drive the robot's center onto the cross
+- Explain why the robot drives 8.75 cm after the sensors reach the cross
 - Explain why the cross is detected in the loop condition, not inside the loop body
 - Program a response to the cross (stop, turn around, follow back)
 
@@ -43,14 +44,16 @@ the test that has been doing the job so far.
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     # until is_at_cross():
     #     correction = get_error() * KP
     #     steer with arcade(BASE_EFFORT, correction)
     # then stop the motors
+    # then drive straight 8.75 cm: the robot's center onto
+    # the cross
     pass
 
 def test_cross_moving():
@@ -68,15 +71,15 @@ def test_track():
     print("Done!")
 
 def test_reverse():
-    # follow to the cross, turn around, follow back to it
+    # follow to the cross, turn around on it, follow back
     track_to_intersection()
     drivetrain.turn(180)
     track_to_intersection()
     print("Done!")
 ```
 
-The outline's body is the body of `test_follow()`. The difference is all in the
-`while` line.
+The loop's body is the body of `test_follow()`. What's new is the `while` line and the
+drive after the loop.
 
 ## One more test, moving this time
 
@@ -114,7 +117,7 @@ steers — that's the body's job. When both sensors reach the cross, `is_at_cros
 returns `True`, the loop ends, and the robot stops.
 
 <Figure src="/img/lesson-m2-08/track-to-cross.svg"
-  alt="An animation, seen from above, of test_track(). A taped circle has a short cross strip near the top right. The robot starts on the circle, pointed along it, waits for the button, then follows the line counterclockwise, weaving slightly. Beside it, the outline of track_to_intersection(): while not at a cross, follow; then stop. A box shows the live left and right readings: while following, at most one is high and is_at_cross() stays False. When both sensors reach the cross strip both read high, is_at_cross() becomes True, the loop ends, and the robot stops with its sensors on the cross."
+  alt="An animation, seen from above, of test_track(). A taped circle has a short cross strip near the top right. The robot starts on the circle, pointed along it, waits for the button, then follows the line counterclockwise, weaving slightly. Beside it, the outline of track_to_intersection(): while not at a cross, follow; then stop; then drive 8.75 cm onto the cross. A box shows the live left and right readings: while following, at most one is high and is_at_cross() stays False. When both sensors reach the cross strip both read high, is_at_cross() becomes True, the loop ends, and the robot stops with its sensors on the cross. Then it drives straight 8.75 cm and stops with its center on the cross."
   caption="test_track() from above. Watch the is_at_cross() line: it stays False the whole way round, because following the line only ever puts one sensor on the tape at a time." />
 
 <KnowledgeCheck
@@ -139,7 +142,42 @@ returns `True`, the loop ends, and the robot stops.
   explanation="The loop condition asks is_at_cross() every pass. The body never mentions the cross: it reads, computes, steers. Each part has one job, which is what makes each one testable."
 />
 
-<TeacherNote title="Sensor-ended loops — and the sensors stop short of the wheels">
+## Arriving: the center on the cross
+
+When the loop ends, the sensors are on the cross. But they sit at the very front of
+the robot, and the robot turns about its **center of rotation**, the hole between the
+drive wheels where a pen goes, 8.75 cm further back. So `track_to_intersection()` ends
+with one more move: drive straight 8.75 cm. Now the robot's center is on the cross.
+That does two jobs:
+
+- **Turns spin on the cross.** Turn from where the sensors stopped and the robot swings
+  about a point short of the cross. Turn from the center and the sensors come down on
+  the new line.
+- **The next track starts clean.** The sensors end up past the tape, so the next
+  `track_to_intersection()` has a line to follow instead of stopping at once.
+
+<Figure
+  src="/img/lesson-m2-09/park-turn-left-then-right.svg"
+  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street, off the tape. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
+  caption="Both robots stopped with their sensors on the cross. The left one turns right away and swings about a point short of it; the right one drives 8.75 cm first, so it spins on the cross and its sensors find the new line."
+/>
+
+It's a distance, not a `time.sleep()`, on purpose. Eight and three-quarter centimeters
+is the same with a full battery or a flat one; half a second is not. You know the
+drivetrain call that drives a distance: you've used it since Lesson 1-8.
+
+<KnowledgeCheck
+  question="Why does track_to_intersection() end by driving 8.75 cm rather than driving for half a second?"
+  options={[
+    {text: 'straight() is easier to spell'},
+    {text: 'A distance is the same with a full or flat battery and on any floor; a time would have to be re-tuned constantly', correct: true},
+    {text: 'time.sleep() cannot be used with motors'},
+    {text: 'Because 8.75 is a magic number'},
+  ]}
+  explanation="The course avoids timing-based movement everywhere. Distances and sensor readings describe the world; a duration describes a guess about the motors."
+/>
+
+<TeacherNote title="Sensor-ended loops, and arriving with the center on the cross">
 
 An earlier version of this lesson did the cross check and the following in one
 `if/else` inside a `while True`, before the sensor functions existed. Students got it
@@ -149,13 +187,12 @@ and `track_to_intersection()` is `test_follow()`'s loop with the condition repla
 Keep that separation visible — every function in Lesson 2-9 follows it, and it's why
 the final project assembles rather than debugs.
 
-When `track_to_intersection()` stops, the *sensors* are on the cross and the wheels
-are about 9 cm short of it. That's why the reverse in the activity works without any
-extra move: `turn(180)` pivots on the wheels and swings the sensors back onto the
-circle behind the robot, clear of the cross, so the next track doesn't fire at once.
-Lesson 2-9 makes the sensor-to-wheel gap explicit with `drive_past_intersection()`;
-don't pre-teach it here. On tight curves both sensors can briefly go high (a false
-positive); a wide, crisp taped cross and a little tuning handle it.
+The 8.75 cm drive is built into `track_to_intersection()` so it is taught once.
+From here to Module 6, "track to the next intersection" means the robot is there,
+center on the cross, ready to turn, and no later lesson repeats it. The 8.75 cm is
+sensor-to-axle on an XRP; measure it if the robot's mounting differs. On tight curves
+both sensors can briefly go high (a false positive); a wide, crisp taped cross and a
+little tuning handle it.
 
 </TeacherNote>
 
@@ -173,16 +210,15 @@ Don't go on until it does.
 ### Step 2 · track_to_intersection()
 
 Write the body — start by copying the loop out of `test_follow()` — and set the run
-call to `test_track()`. Put the robot on the circle, pointed along it. It should follow the line around and stop at the cross. If it
+call to `test_track()`. Put the robot on the circle, pointed along it. It should follow the line around and stop with its center on the cross: put a finger on the tape beside the robot, and the pen hole between the wheels should sit over it. If it
 weaves, this is the same gain you tuned in Lesson 2-6; if it stops somewhere that
 isn't the cross, step 1 already told you the cross check is fine, so look at where the
 follower put the sensors.
 
 ### Step 3 · Follow, reverse, follow
 
-Set the run call to `test_reverse()`. The robot follows to the cross, turns around,
-and follows back the other way to the same cross. Where are the sensors after the
-turn? Watch closely — it matters next lesson.
+Set the run call to `test_reverse()`. The robot follows to the cross, turns around on
+it, and follows the circle back the other way to the same cross.
 
 ### Step 4 · Challenge — count the crossings
 
@@ -199,6 +235,7 @@ def track_to_intersection():
         correction = get_error() * KP
         drivetrain.arcade(BASE_EFFORT, correction)
     drivetrain.stop()
+    drivetrain.straight(8.75, 0.5)
 ```
 
 If yours reads the error a different way and passes the test, keep yours.
@@ -216,14 +253,15 @@ reveal above.
 # --- Lesson 2-8: follow to a cross ---
 # track_to_intersection() is the follower from test_follow()
 # with a reason to stop: it follows until is_at_cross() says
-# the robot is on a crossing line. Lesson 2-9 adds the
-# functions that park on the cross and turn to the next line.
+# the sensors are on a crossing line, then drives on until
+# the robot's center is on it. Lesson 2-9 adds the turns.
 
 def track_to_intersection():
     while not is_at_cross():
         correction = get_error() * KP
         drivetrain.arcade(BASE_EFFORT, correction)
     drivetrain.stop()
+    drivetrain.straight(8.75, 0.5)
 
 def test_cross_moving():
     while not is_at_cross():
@@ -266,8 +304,7 @@ comes in Lesson 2-9's extension, so for this one lesson class-track students wri
 each pass, so students see the two readings climb together as the tape arrives.
 **More challenge:** turn 90° to take the perpendicular path instead of reversing; give
 different crossings different behaviors (beep on #1, blink on #2); or write
-`track_for_crosses(n)` that follows through `n` crossings before stopping — which
-needs the robot to get *past* each cross first, the problem Lesson 2-9 solves.
+`track_for_crosses(n)` that follows through `n` crossings before stopping.
 
 </TeacherNote>
 
@@ -291,15 +328,16 @@ Watching a continuous stream for a specific event is everywhere in automation:
 
 - Why test `is_at_cross()` with a straight drive first? (So a failure can only be the cross check.)
 - Where does `track_to_intersection()` look for the cross? (In the `while` condition; the body only steers.)
-- What ends `track_to_intersection()`? (Both sensors on the cross — not a timer, not a count.)
+- What ends `track_to_intersection()`'s loop? (Both sensors on the cross — not a timer, not a count.)
+- Why drive 8.75 cm after the loop? (The sensors reach the cross first; the robot's center, which it turns about, is 8.75 cm behind them.)
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** explain why the straight-drive test comes first, write the `while`
 line of `track_to_intersection()`, and say what ends it. **Exit ticket:** "Write
 `track_to_intersection()` from memory using the toolkit functions." **Preview:**
-Lesson 2-9 adds the three driving functions that park the wheels on the cross and
-turn until a sensor finds the next line — the toolkit the rest of the course drives on.
+Lesson 2-9 adds the two turns, which spin on the cross until a sensor finds the next
+line — the toolkit the rest of the course drives on.
 
 </TeacherNote>
 

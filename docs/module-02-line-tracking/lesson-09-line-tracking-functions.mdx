@@ -14,11 +14,11 @@ sidebar_position: 9
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Last lesson the robot followed the line to a cross and stopped. This lesson finishes
-the driving toolkit: three more functions that park the wheels on the intersection and
-turn until a sensor finds the next line, built on the five sensor functions from Lesson
-2-7 and written one at a time, each tested before the next. With
-`track_to_intersection()` from Lesson 2-8, that's four driving functions — and they
+Last lesson the robot followed the line to a cross and stopped with its center on it.
+This lesson finishes the driving toolkit: two turns that spin on the cross until a
+sensor finds the next line, built on the five sensor functions from Lesson 2-7 and
+written one at a time, each tested before the next. With `track_to_intersection()`
+from Lesson 2-8, that's three driving functions — and they
 drive every robot program for the rest of the course, so the names you learn today are
 the ones you'll be using in Module 5.
 
@@ -26,10 +26,9 @@ the ones you'll be using in Module 5.
 
 By the end of this lesson you will be able to:
 
-- Say what ends each of the four driving functions, and why none of them is a timer
-- Explain why the robot drives a fixed distance after the sensors reach a cross, and write `drive_past_intersection()`
+- Say what ends each of the three driving functions, and why none of them is a timer
 - Write `turn_clockwise()` and `turn_counterclockwise()` as *sensor-ended* turns: a blind start, then spin until `is_either_on_line()`
-- Drive a follow, turn, follow course with four function calls, from a test function in your one file
+- Drive a follow, turn, follow course with three function calls, from a test function in your one file
 
 </Objectives>
 
@@ -38,23 +37,17 @@ By the end of this lesson you will be able to:
 ## This lesson's skeleton
 
 Paste this into `robot.py` above `RUN`, at the end of the LINE TRACKING section. It
-finishes that section: one setting, three function outlines, and the tests for them.
+finishes that section: one setting, two function outlines, and the tests for them.
 
 ```python
-# --- Lesson 2-9: park on the cross, turn to the next line ---
+# --- Lesson 2-9: turn to the next line ---
 # Completes the driving toolkit begun in Lesson 2-5.
-# track_to_intersection() stops with the SENSORS on the cross;
-# drive_past_intersection() moves the WHEELS onto it. The two
-# turns spin until a LINE SENSOR function sees the next line,
-# so no turn depends on a timer. With these four, every
-# program from here to Module 5 is a list of calls to this
-# section.
+# track_to_intersection() stops with the robot's center on
+# the cross. The two turns spin there until a LINE SENSOR
+# function sees the next line, so no turn depends on a
+# timer. With these three, every program from here to
+# Module 5 is a list of calls to this section.
 TURN_EFFORT = 0.25       # spin speed during a turn
-
-def drive_past_intersection():
-    # drive straight forward by exactly the sensor-to-axle
-    # distance
-    pass
 
 def turn_clockwise():
     # 1. blind turn, about 60 deg: get BOTH sensors off this line
@@ -67,23 +60,16 @@ def turn_counterclockwise():
     # the mirror image: same four moves, opposite direction
     pass
 
-def test_park():
-    # follow to the cross, then put the wheels on it
-    track_to_intersection()
-    drive_past_intersection()
-
 def test_turn():
-    # park on the cross, then turn until a sensor finds a
+    # follow to the cross, then turn until a sensor finds a
     # line: on the circle, that is all the way around
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
 
 def test_course():
-    # follow, park, turn around, follow the circle back to
-    # the cross: the whole lesson in four calls
+    # follow, turn around, follow the circle back to the
+    # cross: the whole lesson in three calls
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
     track_to_intersection()
     print("Done!")
@@ -93,9 +79,9 @@ One more change, in the LINE TRACKING settings: raise `BASE_EFFORT` to **0.4**. 
 steering is tuned the robot can go a little faster; if yours weaves at 0.4, drop it
 back.
 
-## Four functions, and what ends each one
+## Three functions, and what ends each one
 
-The driving toolkit is four functions. You have one; you're going to write three
+The driving toolkit is three functions. You have one; you're going to write two
 more. For each, this page tells you what it does, what makes it *stop*, and the
 skeleton's outline says how — the design is the lesson; the typing is yours.
 
@@ -104,41 +90,9 @@ skeleton's outline says how — the design is the lesson; the typing is yours.
 `track_to_intersection()` is the control loop with `is_at_cross()` as the exit
 condition — *until you're at a cross, steer toward the line; then stop.* All the sensor
 arithmetic is behind `get_error()` and `is_at_cross()`, and nothing in the function
-reads the hardware directly. It ends on a **cross**. Keep that pattern in mind: the
-next three each end on something the robot can *sense*.
-
-### The wrinkle: the sensors get there first
-
-When `track_to_intersection()` stops, both sensors are over the cross. But the
-sensors are under the rangefinder at the very front, and the robot turns about its
-**center of rotation** — the hole between the two drive wheels where a pen goes, 8.75 cm
-further back.
-
-<Figure
-  src="/img/lesson-m2-09/park-turn-left-then-right.svg"
-  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street, off the tape. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
-  caption="Both robots stopped where track_to_intersection() left them. The left one turns right away and swings about a point short of the cross; the right one drives 8.75 cm first, so it spins on the cross and its sensors find the new line."
-/>
-
-So after every track, `drive_past_intersection()` drives forward that 8.75 cm: the
-center of rotation ends up where the sensors were. It does a second job too — it carries the
-sensors past the cross, so the next `track_to_intersection()` doesn't see the same tape
-and stop instantly.
-
-It's a distance, not a `time.sleep()`, on purpose. Eight and three-quarter centimeters
-is the same with a full battery or a flat one; half a second is not. You know the
-drivetrain call that drives a distance — you've used it since Lesson 1-8.
-
-<KnowledgeCheck
-  question="Why does drive_past_intersection() use a distance rather than driving for half a second?"
-  options={[
-    {text: 'straight() is easier to spell'},
-    {text: 'A distance is the same with a full or flat battery and on any floor; a time would have to be re-tuned constantly', correct: true},
-    {text: 'time.sleep() cannot be used with motors'},
-    {text: 'Because 8.75 is a magic number'},
-  ]}
-  explanation="The course avoids timing-based movement everywhere. Distances and sensor readings describe the world; a duration describes a guess about the motors."
-/>
+reads the hardware directly. Its loop ends on a **cross**, and a measured 8.75 cm puts
+the robot's center on it. Keep that pattern in mind: the two turns also end on
+something the robot can *sense*.
 
 ### Turning until a sensor says stop
 
@@ -197,15 +151,14 @@ mirror images: swap the sign on both the blind turn and the spin, and the direct
 <TeacherNote title="Sensors end turns; timers don't">
 
 This is the lesson where the course's rule about timing becomes a habit: nothing
-here stops because a clock ran out. `track_to_intersection()` stops on a cross,
-`drive_past_intersection()` on a distance, and the turns on a sensor. Say the rule out
+here stops because a clock ran out. `track_to_intersection()` stops on a cross and a
+measured distance, and the turns on a sensor. Say the rule out
 loud: *timing is never good for programs like this; sensors always work.*
 
 The build-and-test-in-order sequence is the student activity below, one function
 per step, so expect the class to spread out: some pairs will be tuning a turn while
-others are still watching the first follow. That's fine — nothing in step 3 depends on
-a neighbor's step 2. The 8.75 cm is sensor-to-axle on an XRP; measure it if the
-robot's mounting differs.
+others are still watching the first follow. That's fine — nothing in one pair's step
+depends on a neighbor's.
 
 The cross line must be clearly perpendicular to the circle, or `is_at_cross()` fires
 unreliably. Keep it short, about 10 cm: long enough that both sensors sit on it at
@@ -224,17 +177,11 @@ button.
 ### Step 1 · track_to_intersection(), at the new speed
 
 Nothing to write — but the speed went up, so set the run call to `test_track()` and
-run it once more. It should follow the line and stop with both sensors on the cross.
+run it once more. It should follow the line and stop with its center on the cross.
 If it weaves at the new speed, drop `BASE_EFFORT` back to 0.3. Don't go on until the
 function you're building on works.
 
-### Step 2 · drive_past_intersection()
-
-Write the body — one line — and run `test_park()`. The robot should end with its
-*wheels* on the cross. Put a finger on the tape beside the robot and check: the axle
-should sit over the line, and the sensors should be past it.
-
-### Step 3 · turn_clockwise()
+### Step 2 · turn_clockwise()
 
 Write the four moves, with `TURN_EFFORT` at 0.25 to start, and run `test_turn()`.
 Watch the two halves — the blind part should carry both sensors clear of the circle,
@@ -246,16 +193,16 @@ robot facing back the way it came. Two things to fix if it doesn't:
 - **The turn stops a quarter of the way round, facing along the cross.** The cross is
   too long: the sensors found it during the spin. Trim it to about 10 cm.
 
-### Step 4 · turn_counterclockwise()
+### Step 3 · turn_counterclockwise()
 
-Mirror step 3: same four moves, both signs flipped. Change `test_turn()` to call it
+Mirror step 2: same four moves, both signs flipped. Change `test_turn()` to call it
 instead, run it from the cross, and confirm it also turns all the way around, this
 time the other way.
 
-### Step 5 · Four lines to drive a course
+### Step 4 · Three lines to drive a course
 
-With all four working, run `test_course()`. Look at it: the part of the program that
-actually *drives* is four calls. All the sensor reading and motor control lives in the
+With all three working, run `test_course()`. Look at it: the part of the program that
+actually *drives* is three calls. All the sensor reading and motor control lives in the
 sections above it, so the test reads as a list of intentions. Compare it to the wall of
 code this was back in Lesson 2-6.
 
@@ -265,12 +212,9 @@ way it came. Why write a function for one call? Because the name says what you m
 and because on a grid, where the cross street stops a turn a quarter of the way round,
 turning around takes two calls: `turn_around()` is the one place that would change.
 
-<Reveal title="Check your three new functions" hint="write and test all three first">
+<Reveal title="Check your two new functions" hint="write and test both first">
 
 ```python
-def drive_past_intersection():
-    drivetrain.straight(8.75, 0.5)
-
 def turn_clockwise():
     drivetrain.turn(-60, TURN_EFFORT)      # 1. blind: clear this line
     drivetrain.arcade(0, -TURN_EFFORT)     # 2. keep spinning...
@@ -291,21 +235,10 @@ things to compare are the two signs in each turn.
 
 </Reveal>
 
-<KnowledgeCheck
-  question="In the four-line program, why is drive_past_intersection() called between track_to_intersection() and turn_clockwise()?"
-  options={[
-    {text: 'To give the motors a rest'},
-    {text: 'So the wheels are over the cross when the turn pivots, and the sensors are clear of it', correct: true},
-    {text: 'It is optional; the turn works the same without it'},
-    {text: 'To reset the error to zero'},
-  ]}
-  explanation="The sensors reached the cross first. drive_past_intersection() moves the wheels onto it, so the turn pivots on the intersection and the next track does not start on the same tape."
-/>
-
 <TeacherNote title="Differentiation">
 
 **More support:** give the finished sensor toolkit and have students write only the
-driving functions, starting with `drive_past_intersection()`. **More challenge:** a
+two turns. **More challenge:** a
 timeout so a turn that never finds a line gives up (count loop passes, not seconds), or
 a `track_for_distance()` using the drivetrain's encoders rather than a timer.
 
@@ -316,22 +249,18 @@ a `track_for_distance()` using the drivetrain's encoders rather than a timer.
 This lesson's addition to the LINE TRACKING section of `robot.py`, with the
 challenge; the rest of the file is as the Lesson 2-8 teacher copy left it apart from
 `BASE_EFFORT = 0.4`. The whole file at the end of the module is in the
-[Module 2 sample programs](/teacher-guide/sample-programs/module-2). Students see only the outlines and the three bodies behind the "Check
-your three new functions" reveal, which is closed by default and not printed.
+[Module 2 sample programs](/teacher-guide/sample-programs/module-2). Students see only the outlines and the two bodies behind the "Check
+your two new functions" reveal, which is closed by default and not printed.
 
 ```python
-# --- Lesson 2-9: park on the cross, turn to the next line ---
+# --- Lesson 2-9: turn to the next line ---
 # Completes the driving toolkit begun in Lesson 2-5.
-# track_to_intersection() stops with the SENSORS on the cross;
-# drive_past_intersection() moves the WHEELS onto it. The two
-# turns spin until a LINE SENSOR function sees the next line,
-# so no turn depends on a timer. With these four, every
-# program from here to Module 5 is a list of calls to this
-# section.
+# track_to_intersection() stops with the robot's center on
+# the cross. The two turns spin there until a LINE SENSOR
+# function sees the next line, so no turn depends on a
+# timer. With these three, every program from here to
+# Module 5 is a list of calls to this section.
 TURN_EFFORT = 0.25
-
-def drive_past_intersection():
-    drivetrain.straight(8.75, 0.5)
 
 def turn_clockwise():
     drivetrain.turn(-60, TURN_EFFORT)
@@ -352,25 +281,18 @@ def turn_around():
     # so one turn ends facing back the way it came
     turn_clockwise()
 
-def test_park():
-    track_to_intersection()
-    drive_past_intersection()
-
 def test_turn():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
 
 def test_course():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()
     track_to_intersection()
     print("Done!")
 
 def test_turn_around():
     track_to_intersection()
-    drive_past_intersection()
     turn_around()
     track_to_intersection()
     print("Done!")
@@ -400,15 +322,14 @@ Layered toolkits are how robot software is organized:
 
 ## Wrap-up
 
-- What ends each of the four driving functions? (A cross, a distance, a line, a line.)
-- Why `drive_past_intersection()` after every track? (The sensors reach the cross before the wheels do.)
+- What ends each of the three driving functions? (A cross and then a distance, a line, a line.)
 - Why the blind 60° at the start of a turn? (To get the sensors off the old line so the loop can end on the new one.)
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** trace `track_to_intersection()`; explain the blind turn and `pass`; say
 what ends each function. **Exit ticket:** "Write `track_and_turn_clockwise()` that
-follows to a cross, parks on it, and turns." **Preview:** the final project uses the
+follows to a cross and turns." **Preview:** the final project uses the
 driving toolkit to lap the circle, reversing at the cross, and stop.
 
 </TeacherNote>
@@ -422,15 +343,15 @@ for driving, and coordinates them. One object holding another is called
 **composition**.
 
 This is the class-track skeleton for the whole LINE TRACKING section. Paste it in
-place of the section's settings and four functions (keep the test functions), and
-move your four bodies into the four methods.
+place of the section's settings and three functions (keep the test functions), and
+move your three bodies into the three methods.
 
 ```python
 # ===== LINE TRACKING (class version) =====
 # One LineTrack object drives the robot along the line. It HAS
 # A LineSensor (built in __init__, so you never make one
 # separately) and asks it the questions; it HAS the drivetrain
-# and gives it the orders. Same four methods as the function
+# and gives it the orders. Same three methods as the function
 # version, same names, with tracker. in front.
 class LineTrack:
     def __init__(self):
@@ -445,9 +366,6 @@ class LineTrack:
         # the drivetrain and the settings
         pass
 
-    def drive_past_intersection(self):
-        pass
-
     def turn_clockwise(self):
         pass
 
@@ -458,15 +376,15 @@ tracker = LineTrack()
 ```
 
 `__init__` is the new idea, so it's given: the object builds its own `LineSensor` and
-keeps the three settings as attributes. The four methods are *your* four functions —
+keeps the three settings as attributes. The three methods are *your* three functions —
 move each body in, then put `self.` in front of every sensor call, every drivetrain
 call and every setting. Where a function said `get_error()`, the method says
 `self.sensor.get_error()`; where it said `KP`, the method says `self.kp`. That
-translation, done four times, is the whole extension. Your test functions stay where
+translation, done three times, is the whole extension. Your test functions stay where
 they are; each call in them gets `tracker.` in front, and `test_course()` is the check
 that nothing else changed.
 
-<Reveal title="Check your LineTrack" hint="translate all four methods first">
+<Reveal title="Check your LineTrack" hint="translate all three methods first">
 
 ```python
     def track_to_intersection(self):
@@ -475,8 +393,6 @@ that nothing else changed.
             correction = error * self.kp
             self.drivetrain.arcade(self.base_effort, correction)
         self.drivetrain.stop()
-
-    def drive_past_intersection(self):
         self.drivetrain.straight(8.75, 0.5)
 
     def turn_clockwise(self):
@@ -501,7 +417,6 @@ that nothing else changed.
 
 ```python
 track_to_intersection()
-drive_past_intersection()
 turn_clockwise()
 track_to_intersection()
 ```
@@ -513,7 +428,6 @@ track_to_intersection()
 tracker = LineTrack()
 
 tracker.track_to_intersection()
-tracker.drive_past_intersection()
 tracker.turn_clockwise()
 tracker.track_to_intersection()
 ```
@@ -523,7 +437,7 @@ tracker.track_to_intersection()
 
 When you create a `LineTrack`, it builds its *own* `LineSensor` inside `__init__` —
 you don't make one separately — and asks it questions with `self.sensor.get_error()`
-and `self.sensor.is_at_cross()`. The functions are the same four, with the same names;
+and `self.sensor.is_at_cross()`. The functions are the same three, with the same names;
 the settings moved from file-level capitals into `self.` attributes. One thing to notice
 about your file now: the LINE SENSOR section has a class and no `sensor = LineSensor()`
 line is needed any more — `LineTrack` makes the one it uses. Keep yours for

@@ -41,7 +41,14 @@ while t<20:
     r+=om*dt; a=math.radians(r); x+=V*math.sin(a)*dt; y-=V*math.cos(a)*dt; t+=dt
     if len(samples)%3==0: frames.append((t,x,y,r))
 frames.append((t,x,y,r))
-tstop=t; T=tstop+4.0; frames.append((T,x,y,r))
+tstop=t
+# then drive straight 8.75 cm (the sensor offset SF) so the center of rotation is on the cross
+xs,ys=x,y; a=math.radians(r)
+tpark=tstop+0.6; tdone=tpark+1.2
+frames.append((tpark,x,y,r))
+x,y=xs+SF*math.sin(a),ys-SF*math.cos(a)
+frames.append((tdone,x,y,r))
+T=tdone+3.5; frames.append((T,x,y,r))
 DUR=f'dur="{T:.2f}s" repeatCount="indefinite"'
 def first(b): return f'<animate attributeName="opacity" values="1;0" keyTimes="0;{b/T:.5f}" calcMode="discrete" {DUR}/>'
 def vis(a,b): return f'<animate attributeName="opacity" values="0;1;0" keyTimes="0;{max(a/T,0.0001):.5f};{min(b/T,0.9999):.5f}" calcMode="discrete" {DUR}/>'
@@ -55,21 +62,22 @@ la=CROSS_A-0.10; lx,ly=CX+(R+22)*math.cos(la),CY+(R+16)*math.sin(la)
 b.append(f'<text class="sm" x="{lx:.0f}" y="{ly:.0f}" text-anchor="end" style="font-weight:700">the cross</text>')
 anim=[]
 anim.append(f'<g><animateTransform attributeName="transform" type="translate" values="{trs}" keyTimes="{keys}" {DUR}/><g><animateTransform attributeName="transform" type="rotate" values="{ros}" keyTimes="{keys}" {DUR}/><use href="#pcXRP" transform="scale({S})"/></g></g>')
-# ring on the sensors once stopped
-l,rr=sensors(x,y,r); a=math.radians(r)
-sx,sy=x+SF*math.sin(a),y-SF*math.cos(a)
-anim.append(f'<g opacity="0">{vis(tstop,T)}<circle cx="{sx:.1f}" cy="{sy:.1f}" r="14" fill="none" stroke="#D1182C" stroke-width="3"/></g>')
+# ring on the sensors once stopped, then on the center once parked
+l,rr=sensors(xs,ys,r); a=math.radians(r)
+sx,sy=xs+SF*math.sin(a),ys-SF*math.cos(a)
+anim.append(f'<g opacity="0">{vis(tstop,tpark)}<circle cx="{sx:.1f}" cy="{sy:.1f}" r="14" fill="none" stroke="#D1182C" stroke-width="3"/></g>')
+anim.append(f'<g opacity="0">{vis(tdone,T)}<circle cx="{x:.1f}" cy="{y:.1f}" r="14" fill="none" stroke="#2E7D32" stroke-width="3"/></g>')
 X=436
 b.append(f'<text class="h" x="{X}" y="60">track_to_intersection()</text>')
-LINES=[(0,"while not is_at_cross():"),(1,"follow: steer by the error"),(0,"stop the motors")]
+LINES=[(0,"while not is_at_cross():"),(1,"follow: steer by the error"),(0,"stop the motors"),(0,"drive 8.75 cm onto the cross")]
 LY=lambda i: 86+i*21
 def bar(li,ivs):
     ks=[0.0]; vs=[0]
     for (p,q) in ivs: ks+=[p/T,min(q/T,0.9999)]; vs+=[1,0]
     return f'<rect x="{X-6}" y="{LY(li)-15}" width="236" height="20" rx="4" fill="#FDECEE" stroke="#D1182C" stroke-width="1.2" opacity="0"><animate attributeName="opacity" values="{";".join(map(str,vs))}" keyTimes="{";".join(f"{k:.5f}" for k in ks)}" calcMode="discrete" {DUR}/></rect>'
-b.append('<g class="anim">'+bar(0,[(1.2,tstop)])+bar(1,[(1.2,tstop)])+bar(2,[(tstop,tstop+0.8)])+'</g>')
+b.append('<g class="anim">'+bar(0,[(1.2,tstop)])+bar(1,[(1.2,tstop)])+bar(2,[(tstop,tpark)])+bar(3,[(tpark,tdone)])+'</g>')
 for i,(ind,txt) in enumerate(LINES): b.append(f'<text class="ms" x="{X+4+ind*18}" y="{LY(i)}">{txt}</text>')
-BY=158
+BY=180
 b.append(f'<rect x="{X-6}" y="{BY}" width="236" height="70" rx="8" fill="#F8F9FA" stroke="#ADB5BD"/>')
 # readings box, sampled every ~0.24 s
 step=12; pts=samples[::step]+[samples[-1]]
@@ -82,21 +90,23 @@ for i in range(len(pts)-1):
     t0,l0,r0=pts[i]; t1=pts[i+1][0] if i<len(pts)-2 else tstop
     anim.append(f'<g opacity="0">{vis(t0,t1)}{box(l0,r0,False)}</g>')
 anim.append(f'<g opacity="0">{vis(tstop,T)}{box(l,rr,True)}</g>')
-LB=246
+LB=268
 labs=[(0,1.2,"Waiting for the button","robot on the circle, pointed along it","#6C757D"),
       (1.2,tstop,"Following the circle","one sensor high at a time: keep going","#22527B"),
-      (tstop,T,"Stopped on the cross","both sensors on tape at once","#2E7D32")]
+      (tstop,tpark,"Sensors on the cross","both on tape at once: stop","#D1182C"),
+      (tpark,tdone,"Driving 8.75 cm","the sensors are ahead of the center","#22527B"),
+      (tdone,T,"Parked on the cross","the robot's center is on it","#2E7D32")]
 for (p,q,tx,sub,col) in labs:
     anim.append(f'<g opacity="0">{vis(p,q) if p>0 else first(q)}'
                 f'<rect x="{X-6}" y="{LB}" width="236" height="54" rx="10" fill="#FFFFFF" stroke="{col}" stroke-width="2"/><text class="nb" x="{X+8}" y="{LB+23}" style="fill:{col}">{tx}</text><text class="sm" x="{X+8}" y="{LB+42}">{sub}</text></g>')
-for i,ln in enumerate(["The loop line does the looking; the","body only steers. Nothing inside","the loop mentions the cross."]):
+for i,ln in enumerate(["The loop line does the looking; the","body only steers. After the loop,","8.75 cm more puts the center on it."]):
     b.append(f'<text class="sm" x="{X-6}" y="{LB+76+i*15}">{ln}</text>')
 still=[f'<use href="#pcXRP" transform="translate({x:.1f} {y:.1f}) rotate({r:.1f}) scale({S})"/>',box(l,rr,True)]
 b.append('<g class="anim">'+''.join(anim)+'</g>')
 b.append('<g class="still">'+''.join(still)+'</g>')
 style_extra='<style>.still{display:none} @media (prefers-reduced-motion: reduce){.anim{display:none}.still{display:inline}}</style>'
 out=svg('Follow until the cross',
- 'An animation, seen from above, of test_track() from Lesson 2-8. A taped circle has a short cross strip across it near the top right. The robot starts on the circle near the bottom, pointed along the line, waits for the button, then follows the line counterclockwise, weaving slightly as it steers by the error. Beside it, the outline of track_to_intersection(): while not is_at_cross, follow; then stop the motors. A box shows the live left and right readings and is_at_cross(): while following, at most one sensor reads high and is_at_cross() stays False. When both sensors reach the cross strip both read about 0.8, is_at_cross() becomes True, the loop ends and the robot stops with its sensors on the cross.',b,H=400)
+ 'An animation, seen from above, of test_track() from Lesson 2-8. A taped circle has a short cross strip across it near the top right. The robot starts on the circle near the bottom, pointed along the line, waits for the button, then follows the line counterclockwise, weaving slightly as it steers by the error. Beside it, the outline of track_to_intersection(): while not is_at_cross, follow; then stop the motors; then drive 8.75 cm so the center is on the cross. A box shows the live left and right readings and is_at_cross(): while following, at most one sensor reads high and is_at_cross() stays False. When both sensors reach the cross strip both read about 0.8, is_at_cross() becomes True, the loop ends and the robot stops with its sensors on the cross. Then it drives straight 8.75 cm and stops with its center of rotation on the cross.',b,H=420)
 out=out.replace('<rect width="680"',style_extra+'\n  <rect width="680"',1)
 open(OUTDIR+'track-to-cross.svg','w').write(out)
 print(round(tstop,2),round(T,2),len(frames),[round(v,2) for v in (l,rr)])

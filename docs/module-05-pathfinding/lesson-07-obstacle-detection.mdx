@@ -128,7 +128,6 @@ for next_pos in path:
     needed = desired_heading(position, next_pos)
     heading = turn_to(heading, needed)
     track_to_intersection()
-    drive_past_intersection()
     position = next_pos
 ```
 
@@ -173,8 +172,8 @@ def test_detect_once():
     #         new path from HERE: compute_bfs_path(position,
     #             destination); print it; then break
     #     else:
-    #         arrive: track_to_intersection(), then
-    #         drive_past_intersection(); position = next_pos
+    #         arrive: track_to_intersection();
+    #         position = next_pos
     # print the blocked list
     pass
 ```
@@ -202,9 +201,9 @@ destination)` — Rule 1 from Lesson 5-4. The planner rebuilds its graph from `B
 every call, so the wall it was just told about is already gone from it. There is no
 "rebuild the graph" step to forget.
 
-**The robot is parked when it re-plans.** `drive_past_intersection()` runs after every
-track, so when the loop comes back around to turn toward the new path's first step,
-the wheels are still over the intersection it re-planned from. Nothing moves the
+**The robot is parked when it re-plans.** Every track ends with the robot's center on
+the cross, so when the loop comes back around to turn toward the new path's first step,
+the robot is still on the intersection it re-planned from. Nothing moves the
 robot during a re-plan.
 
 The `break` ends the `for` loop as soon as a new path has been planned, so today the
@@ -319,7 +318,6 @@ def test_detect_once():
             break      # Lesson 5-8 keeps going instead
         else:
             track_to_intersection()
-            drive_past_intersection()
             position = next_pos
             print("Drove to", position)
     print("All known obstacles:", BLOCKED)
@@ -394,7 +392,6 @@ def test_detect_once():
             break      # Lesson 5-8 keeps going instead
         else:
             track_to_intersection()
-            drive_past_intersection()
             position = next_pos
             print("Drove to", position)
     print("All known obstacles:", BLOCKED)
@@ -446,7 +443,7 @@ else. Place real obstacles *on* the printed path so the reroute is visible and
 dramatic.
 
 **Hardware note:** the driving functions are Module 4's, unchanged — turns end on a
-sensor, and `drive_past_intersection()` parks the wheels over each intersection. If
+sensor, and `track_to_intersection()` parks the robot's center on each intersection. If
 the robot overshoots or misses a turn here, it did in Module 4 too; tune there.
 
 </TeacherNote>

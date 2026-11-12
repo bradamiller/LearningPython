@@ -45,7 +45,7 @@ Your robot must:
 
 <Figure
   src="/img/lesson-m2-10/final-project-reverse.svg"
-  alt="An animation seen from above. A taped circle has one short strip of tape across its line on the right-hand side: the cross, about half as long as the robot is wide. The robot starts at the bottom of the circle and follows it to the cross. Its sensors reach the cross first; it parks its wheels on the cross and turns clockwise in place; the cross is too short for the sensors to touch, so the turn carries on until they find the circle behind, facing the other way. It follows the circle all the way round and meets the cross again from the other side, and reverses there the same way: four reversals, and it stops. A panel beside it names each stage."
+  alt="An animation seen from above. A taped circle has one short strip of tape across its line on the right-hand side: the cross, about half as long as the robot is wide. The robot starts at the bottom of the circle and follows it to the cross. Its sensors reach the cross first; it drives on until its center is on the cross and turns clockwise in place; the cross is too short for the sensors to touch, so the turn carries on until they find the circle behind, facing the other way. It follows the circle all the way round and meets the cross again from the other side, and reverses there the same way: four reversals, and it stops. A panel beside it names each stage."
   caption="What the finished project looks like. The cross is one short strip, too short to stop a turn, so one clockwise turn reverses the robot and it meets the cross once a lap."
 />
 
@@ -75,17 +75,17 @@ are no new driving functions — the project is two test functions, and the seco
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
-    # park on the cross, turn around (one clockwise turn
+    # follow to the cross, turn around (one clockwise turn
     # does it here), then follow back to the cross
     pass
 
 def test_final_project():
-    # the mission: follow to the cross, park on it, reverse,
+    # the mission: follow to the cross, reverse,
     # four times in all; then stop and print "Done!"
     # write your plan here as comments first, then the code
     pass
@@ -107,7 +107,6 @@ will have its line of code under it.
 ```text
 repeat 4 times:
     follow the line to the cross
-    drive past it so the wheels are on the cross
     print which leg we're on
     turn around
 
@@ -139,10 +138,10 @@ What's left is assembling them and tuning — which is most of what real robot w
 
 Build in this order, and don't go on until each step works:
 
-1. **Park on the cross.** Set the run line to `test_park()` from Lesson 2-9 and run it
-   once more. Does the robot stop with its *wheels* on the cross?
+1. **Stop on the cross.** Set the run line to `test_track()` from Lesson 2-8 and run it
+   once more. Does the robot stop with its center on the cross?
 2. **One turn.** Set the run line to `test_turn()`. Does the turn find the line again?
-3. **One full reversal.** Write the body of `test_reversal()` and run it: park, one
+3. **One full reversal.** Write the body of `test_reversal()` and run it: track, one
    clockwise turn, follow back the other way to the same cross. (If you did the Lesson
    2-9 challenge, `test_turn_around()` is this test already.)
 4. **The loop.** Write `test_final_project()` under your plan comments and set the run
@@ -163,13 +162,12 @@ reveal for it. Both tracks' whole files are in the
 # --- Lesson 2-10: final project ---
 # The module project: lap the circle, reversing at the cross,
 # four times, then stop. Nothing new is defined for it. It is
-# a list of calls to the four driving functions above, which
+# a list of calls to the three driving functions above, which
 # is the point: the sections did the work, the project
 # assembles them.
 
 def test_reversal():
     track_to_intersection()
-    drive_past_intersection()
     turn_clockwise()      # one sensor-ended turn = 180 deg here
     track_to_intersection()
     print("Done!")
@@ -180,8 +178,6 @@ def test_final_project():
         # follow the line to the cross
         print("Leg", leg + 1, "-- following to the cross...")
         track_to_intersection()
-        # park the wheels on the cross
-        drive_past_intersection()
         # turn around: one sensor-ended turn finds the circle behind
         print("Cross detected! Reversing...")
         turn_clockwise()
@@ -197,7 +193,7 @@ test_final_project()
 <TeacherNote title="Run it as a build, and test in pieces">
 
 Treat this as a multi-day arc: plan → build → test → present. Insist on **incremental
-testing** — `test_park()`, then `test_turn()`, then `test_reversal()`, then the
+testing** — `test_track()`, then `test_turn()`, then `test_reversal()`, then the
 four-rep loop. The common fixes are all *tuning*: `THRESHOLD` (cross not detected),
 the blind part of the turn or `TURN_EFFORT` (the loop ends on the old line, or spins
 past the new one), and `BASE_EFFORT` (overshoots the cross) — frame that tuning as the
@@ -210,7 +206,7 @@ four is the goal.
 
 Work up in stages, and keep a note of what you tuned:
 
-1. Does `test_park()` follow and stop at the cross, with the wheels left on it?
+1. Does `test_track()` follow and stop with the robot's center on the cross?
 2. Does one turn in `test_turn()` find the line again?
 3. Does `test_reversal()` work end to end?
 4. Do all four reversals in `test_final_project()` run and stop?
@@ -245,9 +241,8 @@ have used for this project.)
 The final project is the summative assessment (a 50-point rubric across code
 organization, functionality, testing/debugging, and presentation works well). Reward
 process and tuning, not just a flawless demo. **Coming in Module 3 · Grid Driving:**
-`robot.py` gets a GRID DRIVING section — `track_to_intersection()` and
-`drive_past_intersection()` become the way the robot drives from one intersection to
-the next, the foundation for the navigation and pathfinding in Modules 4 and 5.
+`robot.py` gets a GRID DRIVING section — `track_to_intersection()` becomes the way the
+robot drives from one intersection to the next, the foundation for the navigation and pathfinding in Modules 4 and 5.
 
 </TeacherNote>
 

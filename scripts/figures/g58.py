@@ -39,7 +39,7 @@ def bx(x,y,w,h,t,s,col,fill):
     return [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{fill}" stroke="{col}" stroke-width="1.8"/>',f'<text class="nb" x="{x+w/2}" y="{y+22}" text-anchor="middle">{t}</text>',f'<text class="ms" x="{x+w/2}" y="{y+40}" text-anchor="middle" style="font-size:11px">{s}</text>']
 b+=bx(12,40,214,52,"Plan from here","compute_bfs_path(position, dest)","#22527B","#F1F6FB")
 b.append('<line x1="228" y1="66" x2="242" y2="66" stroke="#495057" stroke-width="2" marker-end="url(#aG)"/>')
-b+=bx(244,40,214,52,"Follow it, looking ahead","turn, look, track, drive past","#22527B","#F1F6FB")
+b+=bx(244,40,214,52,"Follow it, looking ahead","turn, look, track","#22527B","#F1F6FB")
 b.append('<line x1="460" y1="66" x2="478" y2="66" stroke="#495057" stroke-width="2" marker-end="url(#aG)"/>')
 b.append('<path d="M 560 30 L 640 66 L 560 102 L 480 66 Z" fill="#FFFFFF" stroke="#142D50" stroke-width="1.8"/><text class="nb" x="560" y="62" text-anchor="middle">something</text><text class="nb" x="560" y="78" text-anchor="middle">ahead?</text>')
 b.append('<path d="M 560 104 L 560 140" stroke="#D1182C" stroke-width="2" marker-end="url(#aR)"/><text class="sm" x="568" y="126" style="fill:#D1182C;font-weight:700">yes</text>')
@@ -51,4 +51,4 @@ b+=bx(340,212,216,52,"Arrived","return position, heading, ...","#2E7D32","#F2F8F
 b.append('<text class="n" x="20" y="232">The while ends only when a whole path was</text>')
 b.append('<text class="n" x="20" y="249">followed with no reroute: that means arrived.</text>')
 open(OUTDIR+'until-arrive.svg','w').write(svg('Drive until you arrive',
- 'A loop. Plan from here with compute_bfs_path(position, dest). Follow it, looking ahead before each step: turn, look, track, drive past. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns position, heading and the counts. The while ends only when a whole path was followed with no reroute.',b,H=280))
+ 'A loop. Plan from here with compute_bfs_path(position, dest). Follow it, looking ahead before each step: turn, look, track. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns position, heading and the counts. The while ends only when a whole path was followed with no reroute.',b,H=280))

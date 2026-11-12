@@ -26,7 +26,7 @@ By the end of this lesson you will be able to:
 
 - Describe how a grid is built from lines and intersections
 - Explain how a grid intersection is just the "cross" from Module 2
-- Use `track_to_intersection()` and `drive_past_intersection()` to arrive at the next intersection
+- Use `track_to_intersection()` to arrive at the next intersection
 - Start the GRID DRIVING section of `robot.py`, and write its first two tests from a description
 - Place the robot on the grid and reach the first intersection
 
@@ -48,10 +48,9 @@ at once.
 />
 
 That's the whole insight: you already built everything needed to drive a grid. The
-LINE TRACKING section you finished in Lesson 2-9 has the four functions that do it all:
+LINE TRACKING section you finished in Lesson 2-9 has the three functions that do it all:
 
-- `track_to_intersection()` — follow the line to the next intersection and stop.
-- `drive_past_intersection()` — put the wheels on the intersection, sensors past it.
+- `track_to_intersection()` — follow the line to the next intersection and stop with the robot's center on it.
 - `turn_clockwise()` — turn onto the perpendicular line to the right.
 - `turn_counterclockwise()` — turn onto the perpendicular line to the left.
 
@@ -63,11 +62,10 @@ with the function names; yours is the same name on your object:
 
 ```python
 tracker.track_to_intersection()
-tracker.drive_past_intersection()
 ```
 
 So where a test outline in this module says "arrive at the intersection," your body
-says `tracker.track_to_intersection()` and `tracker.drive_past_intersection()`, and
+says `tracker.track_to_intersection()`, and
 the helper you write in Lesson 3-2 calls the tracker the same way. Notice what you
 *don't* have to carry along: no threshold constant at the top of the file, no sensor
 to hand in, nothing shared through `global`. The tracker brought its sensor and its
@@ -116,8 +114,9 @@ own, only tests, because there is nothing new to write yet.
 # Drives the taped grid one intersection at a time, using only
 # the LINE TRACKING functions: a grid intersection is the
 # cross from Module 2. To ARRIVE at an intersection is
-# track_to_intersection() then drive_past_intersection(); a
-# turn happens parked on one. Nothing here touches a sensor.
+# track_to_intersection(), which stops with the robot's
+# center on it; a turn happens parked there. Nothing here
+# touches a sensor.
 
 def test_first_intersection():
     # from a line, arrive at the next intersection and say so
@@ -136,75 +135,43 @@ runs before you've written anything.
 
 ## Drive to the first intersection
 
-Place the robot centered on a line, facing toward the next intersection, and the
-first test is two calls: `track_to_intersection()` follows the line right up to the
-cross, and `drive_past_intersection()` rolls forward so the wheels are over the
-intersection — exactly as `test_park()` did in Lesson 2-9. Those two calls together
-are the **arrival pair**, and they are what "arrive at an intersection" means for the
-rest of the course.
-
-### Where the robot turns
-
-On the grid, the second call matters more than it did on your circle. When
-`track_to_intersection()` stops, the sensors are on the cross, but they sit at the very
-front of the robot, and the robot turns about its **center of rotation**: the pen hole
-between the drive wheels, 8.75 cm further back. Turn from where the track stopped and
-the robot swings around a point short of the intersection.
-
-<Figure
-  src="/img/lesson-m2-09/park-turn-left-then-right.svg"
-  alt="Animation of two XRP robots seen from above, each stopped with its line sensors on a taped cross and its center of rotation 8.75 cm behind them. Left: the robot turns right straight away, swinging about a point short of the intersection, and its sensors end up beside the cross street, off the tape. Right: the robot first drives forward 8.75 cm so its center of rotation is on the cross, then turns right, and its sensors land on the cross street."
-  caption="Both robots stopped where track_to_intersection() left them. The left one turns right away and its sensors miss the cross street; the right one drives past first, spins on the intersection, and lands on the new line."
-/>
-
-`drive_past_intersection()` drives forward exactly that 8.75 cm, so the center of
-rotation ends up where the sensors were: right on the intersection. Any turn from there
-spins the robot in place on the cross, and the sensors come down on the crossing line.
-That is why every arrival on the grid is the pair, never the track alone, even when the
-robot is about to go straight on.
+Place the robot centered on a line, facing toward the next intersection. One call,
+`track_to_intersection()`, follows the line to the intersection and stops with the
+robot's center on it, as it did on your circle. That one call is what "arrive at an
+intersection" means for the rest of the course. Parked there, a turn spins the robot
+in place on the cross, and the sensors come down on the crossing line.
 
 <KnowledgeCheck
   question="Which function drives the robot from where it is to the next intersection?"
   options={[
     {text: 'turn_clockwise()'},
     {text: 'track_to_intersection()', correct: true},
-    {text: 'drive_past_intersection()'},
+    {text: 'turn_counterclockwise()'},
     {text: 'get_error()'},
   ]}
-  explanation="track_to_intersection() follows the line and stops when both sensors hit the intersection — one grid segment per call. drive_past_intersection() then parks the wheels on it."
-/>
-
-<KnowledgeCheck
-  question="Why drive past the intersection before turning, instead of turning where track_to_intersection() stops?"
-  options={[
-    {text: 'To save battery'},
-    {text: 'The robot turns about its center of rotation, 8.75 cm behind the sensors, so turning early pivots short of the intersection and the sensors miss the new line', correct: true},
-    {text: 'Because turn_clockwise() only works while the robot is moving'},
-    {text: 'It does not matter; both land on the new line'},
-  ]}
-  explanation="The sensors arrive first. Driving the 8.75 cm puts the center of rotation on the cross, so the turn spins on the intersection and the sensors come down on the crossing line."
+  explanation="track_to_intersection() follows the line until both sensors hit the intersection, then drives 8.75 cm so the robot's center is on it — one grid segment per call."
 />
 
 ## Activity · Reach it, then turn
 
 <Figure
   src="/img/lesson-m3-01/reach-and-turn.svg"
-  alt="An animation, seen from above, of both tests on a 3 by 3 taped grid. In step 1 the robot starts on a segment of the middle column, facing the next intersection. It follows the line until both sensors reach the intersection, then drives forward until its wheels sit on it, and stops. In step 2 it does the same from the same spot, then turns clockwise in place on the intersection and stops facing along the crossing line to the right. Beside it, the steps of each test in plain words, with the one running highlighted."
-  caption="What both steps should look like: the arrival pair parks the wheels on the intersection, and from there one turn lands on the crossing line."
+  alt="An animation, seen from above, of both tests on a 3 by 3 taped grid. In step 1 the robot starts on a segment of the middle column, facing the next intersection. It follows the line until both sensors reach the intersection, then drives forward until its center sits on it, and stops. In step 2 it does the same from the same spot, then turns clockwise in place on the intersection and stops facing along the crossing line to the right. Beside it, the steps of each test in plain words, with the one running highlighted."
+  caption="What both steps should look like: track_to_intersection() parks the robot on the intersection, and from there one turn lands on the crossing line."
 />
 
 ### Step 1 · test_first_intersection()
 
-Write the body: a print saying what it's about to do, the arrival pair, and a print
-saying it got there. Set the run line to `test_first_intersection()`, put the robot on
-a line segment facing the next intersection, and run. It should stop with its wheels
+Write the body: a print saying what it's about to do, `track_to_intersection()`, and a
+print saying it got there. Set the run line to `test_first_intersection()`, put the robot on
+a line segment facing the next intersection, and run. It should stop with its center
 on the intersection. Try it from a few starting spots. Don't go on until it does.
 
 ### Step 2 · test_arrive_and_turn()
 
 Once you're parked on an intersection you can turn onto the crossing line. Write the
-body: the arrival pair, then `turn_clockwise()`, with a print before the turn and one
-after. Set the run line to it and run. The robot should arrive, pivot on the
+body: `track_to_intersection()`, then `turn_clockwise()`, with a print before the turn
+and one after. Set the run line to it and run. The robot should arrive, pivot on the
 intersection, and stop facing along the crossing line with a sensor on the tape.
 
 One thing to watch in both tests: if the robot detects an intersection *immediately*,
@@ -216,12 +183,10 @@ it started sitting right on one — nudge it back onto the line first.
 def test_first_intersection():
     print("Driving to the first intersection...")
     track_to_intersection()
-    drive_past_intersection()
     print("Intersection reached!")
 
 def test_arrive_and_turn():
     track_to_intersection()
-    drive_past_intersection()
     print("Turning right...")
     turn_clockwise()
     print("Now facing a new direction!")
@@ -243,18 +208,17 @@ students have the same two tests with `tracker.` in front of each driving call.
 # Drives the taped grid one intersection at a time, using only
 # the LINE TRACKING functions: a grid intersection is the
 # cross from Module 2. To ARRIVE at an intersection is
-# track_to_intersection() then drive_past_intersection(); a
-# turn happens parked on one. Nothing here touches a sensor.
+# track_to_intersection(), which stops with the robot's
+# center on it; a turn happens parked there. Nothing here
+# touches a sensor.
 
 def test_first_intersection():
     print("Driving to the first intersection...")
     track_to_intersection()
-    drive_past_intersection()
     print("Intersection reached!")
 
 def test_arrive_and_turn():
     track_to_intersection()
-    drive_past_intersection()
     print("Turning right...")
     turn_clockwise()
     print("Now facing a new direction!")
@@ -306,7 +270,7 @@ Navigating a grid of intersections is how a lot of real automation gets around:
 ## Wrap-up
 
 - What is a grid intersection, to the robot? (The same both-sensors-high "cross" from Module 2.)
-- Which function drives one segment to the next intersection? (`track_to_intersection()`, then `drive_past_intersection()` to park on it.)
+- Which function drives one segment to the next intersection? (`track_to_intersection()`, which stops with the robot's center on it.)
 - Why didn't you have to write any new driving code? (LINE TRACKING already handles lines and crosses — reuse. Only the tests are new.)
 
 <TeacherNote title="Assessment & next lesson">

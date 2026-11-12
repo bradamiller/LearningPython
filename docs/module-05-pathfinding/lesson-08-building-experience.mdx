@@ -131,7 +131,7 @@ declare itself arrived at the wrong intersection.
 
 If you built the `Navigator` class in Lesson 4-6, this function wants to be a method
 of it: `position` and `heading` become `self.position` and `self.heading` and drop
-out of the parameter list and the return, the four driving calls go through
+out of the parameter list and the return, the driving calls go through
 `self.line_track.` and `self.desired_heading()` / `self.turn_to()`, and the planner
 calls are `planner.add_blocked()` and `planner.compute_path()`. It returns only the
 two counts; the caller reads `navigator.position` afterwards, as in Lesson 4-7.
@@ -229,7 +229,6 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
                 break
             else:
                 track_to_intersection()
-                drive_past_intersection()
                 position = next_pos
                 step_count = step_count + 1
 
@@ -361,7 +360,6 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
                 break
             else:
                 track_to_intersection()
-                drive_past_intersection()
                 position = next_pos
                 step_count = step_count + 1
 
