@@ -26,7 +26,7 @@ By the end of this lesson you will be able to:
 
 - Count steps across plus steps up or down to check a path's length
 - Describe the "across first, then up or down" strategy and hand-trace a path on paper
-- Read each row of your trace table as one trip around a while loop, and match the given east loop in `compute_path(start, destination)` to it
+- Read each row of your trace table as one trip around a while loop, and match the given east loop in `compute_manhattan_path(start, destination)` to it
 - Write the north loop by copying the east loop, then west and south by copying and flipping — four loops, no `if/else`
 - Test it on screen against your paper traces, including the edge cases: same row, same column, and same position
 
@@ -148,6 +148,9 @@ Going left or down, the same loops subtract 1 instead; that's Step 3.
 
 ## This lesson's skeleton
 
+This planner uses the Manhattan algorithm. Later you'll write other kinds of planners,
+so this one is called `compute_manhattan_path()`: the name says which algorithm it uses.
+
 A new kind of work gets a new section in `robot.py`; you'll paste it in at Step 1
 below. It is the first section in the file with no driving in it at all: a function that takes two tuples and returns a list.
 
@@ -159,7 +162,7 @@ below. It is the first section in the file with no driving in it at all: a funct
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_path(start, destination):
+def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
     path = []
@@ -180,14 +183,14 @@ def compute_path(start, destination):
     return path
 
 def test_paper_paths():
-    print(compute_path((0, 0), (2, 3)))   # your trace table
-    print(compute_path((0, 1), (3, 3)))
-    print(compute_path((3, 3), (1, 0)))   # left and down
+    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table
+    print(compute_manhattan_path((0, 1), (3, 3)))
+    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down
 
 def test_edge_cases():
-    print(compute_path((2, 0), (2, 3)))   # same column
-    print(compute_path((0, 2), (3, 2)))   # same row
-    print(compute_path((1, 1), (1, 1)))   # same spot
+    print(compute_manhattan_path((2, 0), (2, 3)))   # same column
+    print(compute_manhattan_path((0, 2), (3, 2)))   # same row
+    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 ```
 
 This skeleton gives you more than usual: the whole east loop and both tests are
@@ -320,7 +323,7 @@ East is skipped (3 isn't < 1). **West runs** (3 > 1), moving x only: (2,3),
 
 <Figure
   src="/img/lesson-m4-03/four-loops-run.svg"
-  alt="An animation of compute_path() on a 4 by 4 grid, with the four loops listed beside it. Trip one, (0, 0) to (2, 3): east runs twice, appending (1, 0) and (2, 0); west is skipped; north runs three times, appending (2, 1), (2, 2) and (2, 3); south is skipped; five steps. Trip two, (3, 3) to (1, 0): east is skipped; west runs twice, (2, 3) and (1, 3); north is skipped; south runs three times, (1, 2), (1, 1), (1, 0); five steps. Trip three, (1, 1) to (1, 1): all four loops are skipped and the path is empty. A red dot steps along each move and each appended spot is numbered by its index."
+  alt="An animation of compute_manhattan_path() on a 4 by 4 grid, with the four loops listed beside it. Trip one, (0, 0) to (2, 3): east runs twice, appending (1, 0) and (2, 0); west is skipped; north runs three times, appending (2, 1), (2, 2) and (2, 3); south is skipped; five steps. Trip two, (3, 3) to (1, 0): east is skipped; west runs twice, (2, 3) and (1, 3); north is skipped; south runs three times, (1, 2), (1, 1), (1, 0); five steps. Trip three, (1, 1) to (1, 1): all four loops are skipped and the path is empty. A red dot steps along each move and each appended spot is numbered by its index."
   caption="Three trips through the same four loops. Each loop checks its condition once before it runs; a False on that first check means it never runs at all."
 />
 
@@ -350,10 +353,10 @@ Same column (same x) means the two x loops are skipped; same row (same y) skips 
 y loops; same position skips all four and returns `[]`. Nothing special written — the
 loops just don't run when there's no distance to cover.
 
-<Reveal title="Check your compute_path()" hint="write and test it first">
+<Reveal title="Check your compute_manhattan_path()" hint="write and test it first">
 
 ```python
-def compute_path(start, destination):
+def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
     path = []
@@ -403,7 +406,7 @@ the ones the skeleton gives, unchanged.
 # nothing in here touches a sensor or a motor, so every test
 # in this section runs on screen with the robot sitting still.
 
-def compute_path(start, destination):
+def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
     path = []
@@ -433,14 +436,14 @@ def compute_path(start, destination):
     return path
 
 def test_paper_paths():
-    print(compute_path((0, 0), (2, 3)))   # your trace table
-    print(compute_path((0, 1), (3, 3)))
-    print(compute_path((3, 3), (1, 0)))   # left and down
+    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table
+    print(compute_manhattan_path((0, 1), (3, 3)))
+    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down
 
 def test_edge_cases():
-    print(compute_path((2, 0), (2, 3)))   # same column
-    print(compute_path((0, 2), (3, 2)))   # same row
-    print(compute_path((1, 1), (1, 1)))   # same spot
+    print(compute_manhattan_path((2, 0), (2, 3)))   # same column
+    print(compute_manhattan_path((0, 2), (3, 2)))   # same row
+    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
 
 # ===== RUN =====
 board.wait_for_button()
@@ -450,7 +453,7 @@ test_edge_cases()
 </TeacherNote>
 
 <KnowledgeCheck
-  question="What does compute_path((2, 2), (2, 2)) return, and why?"
+  question="What does compute_manhattan_path((2, 2), (2, 2)) return, and why?"
   options={[
     {text: '[(2, 2)] — the current position'},
     {text: '[] — all four loop conditions are False, so nothing is appended', correct: true},
@@ -481,15 +484,16 @@ test_edge_cases()
 - What does "across first, then up or down" produce? (An L-shaped path — predictable and always valid.)
 - Why four while loops instead of `if/else`? (Only the relevant loops run; a False condition just skips.)
 - Why isn't the starting position in the path? (The robot is already there; `len(path)` = number of steps.)
+- Why is it called `compute_manhattan_path`? (It uses the Manhattan algorithm; the planners you write later get their own names.)
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** trace a path on paper, match the east loop to the trace table, write
 north by copying it, explain why that version fails for left/down, add west and south
-by copying and flipping, and fill in the six-path answer key by hand. **Exit ticket:** "What does `compute_path((0,0),(2,3))` return, and how many
+by copying and flipping, and fill in the six-path answer key by hand. **Exit ticket:** "What does `compute_manhattan_path((0,0),(2,3))` return, and how many
 steps is that?" (`[(1,0),(2,0),(2,1),(2,2),(2,3)]`, 5). **Preview:** next lesson this
-exact function is named after its algorithm, `compute_manhattan_path()`, gets a docstring
-that writes down what it promises, and is checked with unit tests. The algorithm won't change.
+exact function gets a docstring that writes down what it promises, and is checked with
+unit tests. The algorithm won't change.
 
 </TeacherNote>
 

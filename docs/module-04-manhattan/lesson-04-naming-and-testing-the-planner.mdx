@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-4 · Naming and Testing the Planner"
-sidebar_label: "4-4 · Naming and Testing"
+title: "Lesson 4-4 · Testing the Planner"
+sidebar_label: "4-4 · Testing the Planner"
 sidebar_position: 4
 ---
 
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
-  title="Lesson 4-4 · Naming and Testing the Planner"
+  title="Lesson 4-4 · Testing the Planner"
   meta={['55–70 min', 'Functions as contracts', 'Test on screen first']}
 />
 
@@ -14,15 +14,14 @@ sidebar_position: 4
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Last lesson you wrote `compute_path()` and it worked. This lesson names it after its
-algorithm, writes down what it promises, and proves those promises with **unit tests**,
+Last lesson you wrote `compute_manhattan_path()` and it worked. This lesson writes down
+what it promises and proves those promises with **unit tests**,
 before the robot ever moves: **test on screen before you test on the floor.**
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Say why the planner's name says which algorithm it uses
 - State the function's three promises and record them in a docstring
 - Say what a **unit test** is, and why testing on screen beats debugging on the robot (**separation of concerns**)
 - Hand-calculate an expected path, then compare it to the actual output
@@ -32,26 +31,6 @@ By the end of this lesson you will be able to:
 </Objectives>
 
 <QuizLink id="module-04-manhattan/lesson-04-naming-and-testing-the-planner" />
-
-## A name for the algorithm
-
-There are many ways to plan a route between two points. Each method, called an
-**algorithm**, has its own strengths. The Manhattan planner is fast and easy to write, but it
-fails if a road is blocked; later you'll build more robust planners. When every planner makes
-the same promises (its **interface**), a program can swap one for another as the need changes.
-That's why the Manhattan planner gets a unique name that reflects its algorithm:
-`compute_manhattan_path()`.
-
-<KnowledgeCheck
-  question="Why does the function's name include 'manhattan' when it is the only planner in the course so far?"
-  options={[
-    {text: 'Python requires function names to have three parts'},
-    {text: 'Module 5 adds a second planner, compute_bfs_path(), and both need to exist in the same program without colliding', correct: true},
-    {text: 'Because it is faster to type'},
-    {text: 'It is a convention for while loops'},
-  ]}
-  explanation="A name that says which algorithm it is costs nothing now and saves a rename later. compute_manhattan_path() and compute_bfs_path() will sit side by side in Module 5."
-/>
 
 ## What the function promises
 
@@ -93,13 +72,12 @@ three promises.
   explanation="The path is a list of places to drive TO. The robot is already at (0, 0); listing it as a step gives the driving code a zero-length move and a turn it cannot work out."
 />
 
-**In `robot.py`:** change `compute_path` to `compute_manhattan_path` everywhere it appears,
-replace the one-line docstring with the one above, and run `test_paper_paths()`: same
+**In `robot.py`:** replace the one-line docstring with the one above, and run `test_paper_paths()`: same
 output as last lesson.
 
-<TeacherNote title="Solution with the new name and docstring (teacher copy)">
+<TeacherNote title="Solution with the new docstring (teacher copy)">
 
-The MANHATTAN PLANNER section of `robot.py` with the new name and docstring, plus the run block; the rest of the file is as the Lesson 4-3 teacher copy left it. The whole file at
+The MANHATTAN PLANNER section of `robot.py` with the new docstring, plus the run block; the rest of the file is as the Lesson 4-3 teacher copy left it. The whole file at
 the end of the module is in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). The four `while` loops
 are byte-for-byte the Lesson 4-3 ones.
 
@@ -421,7 +399,6 @@ A function with a written promise and a set of tests is how big systems stay cor
 
 ## Wrap-up
 
-- Why `compute_manhattan_path` and not `compute_path`? (Module 5 adds `compute_bfs_path`; the name says which.)
 - What are the three promises? (No start in the path; ends at the destination; `[]` when already there.)
 - Why test on screen before the robot? (Faster, and it points to the exact broken input.)
 - Where does the expected path come from? (Hand-calculation, before you run the code.)
