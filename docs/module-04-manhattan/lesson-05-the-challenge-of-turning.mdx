@@ -14,10 +14,14 @@ sidebar_position: 5
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
+The robot drives over a list of intersections, one to the next. Somewhere in that list
+the path turns: that's the corner of the "L". So before it drives from one intersection to
+the next, the robot has to be **facing the right way**. That's what this lesson is about.
+
 In Lesson 4-0 you split the problem into a planner and a driver, and the planner is now
 built and tested. Just like before, we **decompose further**: driving a planned path can be
 broken down into two steps at each intersection, **turn** to face the next one, then
-**drive** to it. Driving is your Module 2 line tracking, so this lesson is about turning.
+**drive** to it. Driving is your Module 2 line tracking.
 
 <TreeFigure
   src="/img/lesson-m4-05/decomposition.svg"
