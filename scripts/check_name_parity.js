@@ -26,7 +26,8 @@
  *     when the class keeps it as `self.<name>` (Navigator owns position and
  *     heading, so drive_path(path, position, heading) is drive_path(self, path)).
  *     That is the "shared variables move into __init__ as self.x" step of the
- *     side-by-side.
+ *     side-by-side. A function's current_<name> parameter counts as self.<name>
+ *     (turn_to(current_heading, desired_heading) is turn_to(self, desired_heading)).
  *   - The planner swap. Every planner class has compute_path(self, position,
  *     destination), and its function twin is named for the planner:
  *     compute_manhattan_path, compute_bfs_path, compute_dijkstra_path.
@@ -94,7 +95,9 @@ for (const file of files) {
     const want = m.params.slice(1).join(', ');
     const twins = funcs.filter(f => f.name === m.name ||
       (m.name === 'compute_path' && /^compute_\w+_path$/.test(f.name)));
-    const matches = f => f.params.filter(p => !(owned.has(p) && !m.params.includes(p))).join(', ') === want;
+    // current_heading in a function is self.heading in the class
+    const isOwned = p => owned.has(p) || (p.startsWith('current_') && owned.has(p.slice(8)));
+    const matches = f => f.params.filter(p => !(isOwned(p) && !m.params.includes(p))).join(', ') === want;
     const rel = path.relative(path.join(__dirname, '..'), file);
     if (!twins.length) {
       problems.push(`${rel}: method ${m.name}(self${want ? ', ' + want : ''}) has no function ${m.name}(${want}) anywhere in the course`);

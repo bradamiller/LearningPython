@@ -25,7 +25,7 @@ Module 2**, no motor code to rewrite. That's the payoff of building a toolkit.
 By the end of this lesson you will be able to:
 
 - Name the three Module 2 functions the driving code is built on, and what each does
-- Write `turn_to()` and `drive_path()` from their outlines, and test them on one leg, then a whole path
+- Write `turn_to()` and `drive_path()` from their outlines, and test them on a whole path
 - Keep the robot's pose (`position` and `heading`) up to date by assigning from what `drive_path()` returns
 - Plan, **print the path**, wait for the button, then drive — and use the printed path as the first diagnostic
 
@@ -160,49 +160,18 @@ the test is *go*. A test that drives is the only kind that waits twice.
   explanation="Printing the path before the button splits the program in two for debugging. A correct printed path clears the planner; whatever went wrong is downstream of it."
 />
 
-## Activity · Trace it, then integrate
+## Activity · Write it, then drive it
 
-Before running anything, trace `[(1,0), (1,1)]` from (0,0) heading 0 (N) on paper. For
-each step write down: the next intersection, the heading needed, the headings the turning
-loop steps through, and what the robot does.
+### Step 1 · Write the code
 
-<Reveal title="Check your trace" hint="paper first">
+Write the bodies of `turn_to()` and `drive_path()` from their outlines.
 
-```
-Step 1: next (1,0). desired_heading = 1 (E). heading 0, 1: one clockwise turn.
-        track_to_intersection -> at (1,0) facing E.
-Step 2: next (1,1). desired_heading = 0 (N). heading 1, 2, 3, 0: three clockwise turns.
-        track_to_intersection -> at (1,1) facing N.
-```
+### Step 2 · Run the test
 
-<Figure
-  src="/img/lesson-m4-06/drive-path-loop-xy.svg"
-  alt="Three snapshots on a 2 by 2 corner of the grid. Start: the robot at (0, 0), heading 0, north. Step 1, to (1, 0): the heading needed is 1, east; the loop turns clockwise north to east, one turn, then it arrives at (1, 0) facing east. Step 2, to (1, 1): the heading needed is 0, north; the loop turns clockwise east to south to west to north, three turns, 270 degrees, then it arrives at (1, 1) facing north."
-  caption="The same trace, on the grid. The faded robot is where each turn happens."
-/>
-
-Step 2 is the one worth noticing: facing East and needing North is a quarter turn to
-the left, and the loop goes three quarters of the way around to the right. It works;
-the challenge at the end of this lesson is for anyone who wants it to be quicker.
-
-</Reveal>
-
-Then build it in two stages, and don't go on until the first works:
-
-### Step 1 · One leg
-
-Write the bodies of `turn_to()` and `drive_path()` from their outlines, then a test — `test_one_leg()` — that drives the
-one-element path `[(1, 0)]` from `(0, 0)` heading 0 and prints where it arrived. Robot at
-(0, 0) facing North, run line set to it, both presses. One clockwise turn, one track.
-Does the robot stop with its *center of rotation* on the intersection?
-
-### Step 2 · A real path
-
-Add `test_drive_path()` from above and run it: `(0, 0)` to `(2, 3)`. Read the printed
-path before the second press. Watch each arrival: center of rotation on the cross, turns
-pivoting on it. And watch the corner where the path bends from East to North: count the
-turns.
-
+Add `test_drive_path()` from above, set the run line to it, and put the robot on (0, 0)
+facing North. Press once and read the printed path, then press again to drive to
+(2, 3). Watch each arrival: the robot's center on the cross, turns pivoting on it. And
+watch the corner where the path bends from East to North: count the turns.
 
 <Reveal title="Check your turn_to() and drive_path()" hint="write and test both first">
 
@@ -228,7 +197,7 @@ def drive_path(path, position, heading):
 ```
 
 If yours differs and drives the path parked on every cross, keep yours. If a leg goes wrong, the first
-two things to compare are the `return heading` and the `position = next_pos`.
+two things to compare are the `return current_heading` and the `position = next_pos`.
 
 </Reveal>
 
@@ -267,10 +236,6 @@ def drive_path(path, position, heading):
         track_to_intersection()
         position = next_pos
     return position, heading
-
-def test_one_leg():
-    position, heading = drive_path([(1, 0)], (0, 0), 0)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 
 def test_drive_path():
     position = (0, 0)
@@ -468,10 +433,10 @@ shrank — `get_desired_heading(self, next_pos)` has lost its `position` paramet
 nothing is returned, because the record lives at the object's address: the caller
 reads `navigator.position` whenever it wants to know.
 
-Your tests change the same way. `drive_path([(1, 0)], (0, 0), 0)` becomes
-`navigator.drive_path([(1, 0)])`, and the print afterwards reads `navigator.position`
+Your test changes the same way. `drive_path(path, position, heading)` becomes
+`navigator.drive_path(path)`, and the print afterwards reads `navigator.position`
 and `navigator.heading`. The planner call in `test_drive_path()` is handed
-`navigator.position`. Run all three tests again; the robot should not be able to tell
+`navigator.position`. Run the test again; the robot should not be able to tell
 the difference.
 
 <Reveal title="Check your Navigator" hint="translate all three methods first">
