@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 448" width="680" height="448" role="img" aria-labelledby="fT fD">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 480" width="680" height="480" role="img" aria-labelledby="fT fD">
   <title id="fT">Module 4, broken into parts</title>
-  <desc id="fD">A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-3 and 4-4, is small enough to build and test in one go. The driver, drive_path(), built in Lessons 4-5 and 4-6, splits into two steps at each intersection: 1, turn to face it; 2, drive to it, with the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, desired_heading(), Lesson 4-5, and turn until facing it, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled "list of (x, y) tuples, the one thing they share".</desc>
+  <desc id="fD">A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into two parts. The planner, compute_manhattan_path(), built in Lessons 4-3 and 4-4, is small enough to build and test in one go. The driver, drive_path(), built in Lessons 4-5 and 4-6, splits into two steps at each intersection: 1, turn to face the next intersection; 2, drive to the next intersection, with the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, get_desired_heading(), Lesson 4-5, and turn until facing the next intersection, turn_to(), Lesson 4-6. An arrow from planner to driver is labeled "list of (x, y) coordinates, the one thing they share".</desc>
   <style>
     .h   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #22527B; }
     .n   { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 12.5px; fill: #343A40; }
@@ -75,7 +75,7 @@
       <circle cx="6.5"  cy="-60" r="4.5" fill="#FFFFFF" stroke="#D1182C" stroke-width="2.4" stroke-dasharray="none"/>
     </g>
   </defs>
-  <rect width="680" height="448" fill="#FFFFFF"/>
+  <rect width="680" height="480" fill="#FFFFFF"/>
   <style>
     [data-parent] { transition: opacity .3s ease; }
     .hid { opacity: 0; visibility: hidden; }
