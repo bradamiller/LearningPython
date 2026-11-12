@@ -191,7 +191,7 @@ Make the sentences specific. Returning *problems* rather than True/False is
 deliberate. A test that says only FAIL is a test you'll ignore;
 `"drives through blocked intersection (1, 0)"` tells you what to fix. Build each
 sentence with `+` and `str()`: property 1's is `"first step " + str(path[0]) + " is not
-next to the start " + str(position)`, and the others follow the same pattern — name
+next to the start " + str(start)`, and the others follow the same pattern — name
 the step, say what's wrong with it. Property 3 is a loop from the second step to the
 last, comparing each with the one before; property 4 is a loop over every step.
 

@@ -187,7 +187,7 @@ DECK = {
         {'kind': 'code', 'title': 'Make the sentences specific',
          'lead': 'Build each sentence with `+` and `str()`. Property 1\'s:',
          'lead_h': 0.8,
-         'code': '"first step " + str(path[0]) + " is not next to the start " + str(position)',
+         'code': '"first step " + str(path[0]) + " is not next to the start " + str(start)',
          'code_size': 20,
          'callout': 'A test that says only FAIL is a test you\'ll ignore. "drives through blocked '
                     'intersection (1, 0)" tells you what to fix.',
