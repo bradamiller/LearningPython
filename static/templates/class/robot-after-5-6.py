@@ -349,18 +349,6 @@ def test_drive_path():
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_one_leg():
-    # start at (0, 0) facing North; plan the path to (2, 0),
-    # print it, wait for the button, drive it, and print
-    # where the robot arrived
-    pass
-
-def test_two_legs():
-    # the same first leg, then a second one to (2, 3),
-    # planned from wherever the first ended: plan it, print
-    # it, drive it, print where the robot arrived
-    pass
-
 def test_delivery():
     # the navigator starts at home, facing North
     # plan the FIRST leg and print it; wait for the button

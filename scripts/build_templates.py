@@ -902,31 +902,6 @@ def test_delivery():
         navigator.drive_path(path)
         print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 '''),
-    # 4-7 teacher copy: "The step tests change the same way" as
-    # test_delivery(): the planner call is handed
-    # navigator.position, navigator.drive_path(path) drives, and
-    # the print reads navigator.position.
-    "test_one_leg": dict(frm="4-7", outline=None, body='''
-def test_one_leg():
-    path = planner.compute_path(navigator.position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-'''),
-    "test_two_legs": dict(frm="4-7", outline=None, body='''
-def test_two_legs():
-    path = planner.compute_path(navigator.position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-    path = planner.compute_path(navigator.position, (2, 3))
-    print("Path:", path)
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-'''),
     # 5-5 extension: "one more test -- test_two_planners() -- that
     # runs the wall case against both objects: create a Manhattan()
     # and a BFS(), tell each add_blocked((1, 0)) and
@@ -1445,8 +1420,6 @@ RECIPE = [
     ("4-7", [
         Banner("L4-7", "4-7", "--- Lesson 4-7:"),
         Setting("DESTINATIONS", "4-7"),
-        Func("test_one_leg", "4-7"),
-        Func("test_two_legs", "4-7"),
         Func("test_delivery", "4-7"),
     ]),
     ("5-2", [
@@ -2054,7 +2027,7 @@ SMOKE = {
     3: ["test_first_intersection", "test_arrive_and_turn", "test_two_by_hand",
         "test_drive_run", "test_l_shape", "test_my_path", "test_one_side", "test_square"],
     4: ["test_paper_paths", "test_edge_cases", "test_planner",
-        "test_headings", "test_drive_path", "test_one_leg", "test_two_legs",
+        "test_headings", "test_drive_path",
         "test_delivery"],
     5: ["test_grid_graph", "test_blocked_graph", "test_bfs_open", "test_bfs_walls",
         "test_rings", "test_harness", "test_swap", "test_detect_once", "test_navigate",

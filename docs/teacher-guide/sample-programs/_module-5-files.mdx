@@ -471,29 +471,6 @@ def test_drive_path():
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_one_leg():
-    position = (0, 0)
-    heading = 0                   # start facing North
-    path = compute_manhattan_path(position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-def test_two_legs():
-    position = (0, 0)
-    heading = 0
-    path = compute_manhattan_path(position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-    path = compute_manhattan_path(position, (2, 3))
-    print("Path:", path)
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
 def test_delivery():
     position = (0, 0)
     heading = 0                   # start facing North
@@ -1452,25 +1429,6 @@ def test_drive_path():
 # defined; the two sections did the work. Built in three
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
-
-def test_one_leg():
-    path = planner.compute_path(navigator.position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-def test_two_legs():
-    path = planner.compute_path(navigator.position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-    path = planner.compute_path(navigator.position, (2, 3))
-    print("Path:", path)
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 
 def test_delivery():
     print("Planned path for leg 1:",

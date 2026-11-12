@@ -48,7 +48,7 @@ like every program in this course it is a test function at the bottom of `robot.
 ## This lesson's skeleton
 
 Paste this above `RUN`, at the end of the NAVIGATOR section. No new function is
-defined: one setting and three tests, each one a step toward the project.
+defined: one setting and the project's test, which you build in three steps.
 
 ```python
 # --- Lesson 4-7: final project, the delivery run ---
@@ -58,18 +58,6 @@ defined: one setting and three tests, each one a step toward the project.
 # defined; the two sections did the work. Built in three
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
-
-def test_one_leg():
-    # start at (0, 0) facing North; plan the path to (2, 0),
-    # print it, wait for the button, drive it, and print
-    # where the robot arrived
-    pass
-
-def test_two_legs():
-    # the same first leg, then a second one to (2, 3),
-    # planned from wherever the first ended: plan it, print
-    # it, drive it, print where the robot arrived
-    pass
 
 def test_delivery():
     # position and heading start at home, facing North
@@ -92,7 +80,7 @@ ask.
 This lesson's addition to the NAVIGATOR section of `robot.py`, plus the run block; the
 rest of the file is as the Lesson 4-6 teacher copy left it. The whole file is
 in the [Module 4 sample programs](/teacher-guide/sample-programs/module-4). `test_delivery()` is the
-graded work, and there is no student reveal for any of the three tests.
+graded work, and there is no student reveal for it.
 
 ```python
 # --- Lesson 4-7: final project, the delivery run ---
@@ -102,29 +90,6 @@ graded work, and there is no student reveal for any of the three tests.
 # defined; the two sections did the work. Built in three
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
-
-def test_one_leg():
-    position = (0, 0)
-    heading = 0                   # start facing North
-    path = compute_manhattan_path(position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-def test_two_legs():
-    position = (0, 0)
-    heading = 0
-    path = compute_manhattan_path(position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-    path = compute_manhattan_path(position, (2, 3))
-    print("Path:", path)
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
 
 def test_delivery():
     position = (0, 0)
@@ -155,7 +120,7 @@ program after leg 1.
 **Class track:** `test_delivery()` is handed `navigator.position` by the planner call,
 drives with `navigator.drive_path(path)`, and prints `navigator.position` — there is no
 `position, heading = ...` line to get half right. With the `Manhattan` class the
-planner call is `planner.compute_path(...)`. The step tests change the same way.
+planner call is `planner.compute_path(...)`.
 
 </TeacherNote>
 
@@ -183,28 +148,29 @@ East. That's why `turn_to()` works from the robot's real heading, not North.
 
 ## Activity · Build it in three steps
 
-Test each step on the robot before you write the next. Start the robot at (0, 0) facing
-North every time.
+All three steps are in `test_delivery()`. Test each one on the robot before you start the
+next, starting the robot at (0, 0) facing North every time.
 
 ### Step 1 · One leg
 
-Write `test_one_leg()` and set the run line to it. It is Lesson 4-6's
+Write just the first leg: plan the path from (0, 0) to (2, 0), print it, wait for the
+button, drive it, and print where the robot arrived. That's Lesson 4-6's
 `test_drive_path()` with (2, 0) as the destination. Read the printed path,
-`[(1, 0), (2, 0)]`, then press again. The robot should make one right turn and stop on
-(2, 0) facing East.
+`[(1, 0), (2, 0)]`, then press. The robot should make one right turn and stop on (2, 0)
+facing East.
 
-### Step 2 · Two legs, one after the other
+### Step 2 · Add the second leg
 
-Write `test_two_legs()` and run it. The second leg is planned from where the first
-ended, so it works only if `position` and `heading` were assigned from the first
-`drive_path()`. After (2, 0), the robot should make three right turns to face North and
-drive up to (2, 3).
+Add a second leg to the same function: plan the path to (2, 3), print it, drive it, and
+print where the robot arrived. It's planned from where the first leg ended, so it works
+only if `position` and `heading` were assigned from the first `drive_path()`. After
+(2, 0), the robot should make three right turns to face North and drive up to (2, 3).
 
 ### Step 3 · A list and a loop
 
-Write `test_delivery()`: the legs become one loop over `DESTINATIONS`. Run it. The robot
-should visit all four destinations and finish at home, with legs of 2, 3, 2 and 3
-steps.
+The two legs are the same lines twice. Replace them with one loop over `DESTINATIONS`,
+as the outline describes, and run it. The robot should visit all four destinations and
+finish at home, with legs of 2, 3, 2 and 3 steps.
 
 <KnowledgeCheck
   question="On the second leg the robot drives a clearly wrong path. What's the first thing to check?"
@@ -221,7 +187,7 @@ steps.
 
 Keep the intro brief; this is a build-and-test day. Push step-by-step testing hard; the students who write
 everything at once and can't find the break are the ones who skipped the one-leg and
-two-leg tests. Watch battery drain on long multi-turn runs and charge between attempts. When
+two-leg steps. Watch battery drain on long multi-turn runs and charge between attempts. When
 a robot finishes the whole sequence, let the class watch — it's the payoff of eight
 lessons. For 50-minute periods, plan two days: steps 1 and 2, then the full run.
 

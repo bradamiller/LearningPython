@@ -55,7 +55,7 @@ DECK = {
 
         {'kind': 'code', 'title': 'Add to robot.py: the delivery run',
          'lead': 'Paste above `RUN`, at the end of the NAVIGATOR section. No new function is defined: '
-                 'one setting and three tests, each one a step toward the project.',
+                 'one setting and the project\'s test, which you build in three steps.',
          'lead_h': 0.95,
          'code': '# --- Lesson 4-7: final project, the delivery run ---\n'
                  '# The module project: visit DESTINATIONS in order, planning\n'
@@ -65,24 +65,7 @@ DECK = {
                  '# tested steps: one leg, two legs, then a loop.\n'
                  'DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]',
          'code_size': 18,
-         'notes': 'The skeleton continues on the next two slides: the two step tests, then '
-                  'test_delivery(), the graded work.'},
-
-        {'kind': 'code', 'title': 'Add to robot.py: the two step tests',
-         'code': 'def test_one_leg():\n'
-                 '    # start at (0, 0) facing North; plan the path to (2, 0),\n'
-                 '    # print it, wait for the button, drive it, and print\n'
-                 '    # where the robot arrived\n'
-                 '    pass\n'
-                 '\n'
-                 'def test_two_legs():\n'
-                 '    # the same first leg, then a second one to (2, 3),\n'
-                 '    # planned from wherever the first ended: plan it, print\n'
-                 '    # it, drive it, print where the robot arrived\n'
-                 '    pass',
-         'code_size': 19,
-         'notes': 'Right under DESTINATIONS. There is no student reveal for any of the three tests; the '
-                  'solutions are in the teacher copy only.'},
+         'notes': 'The skeleton continues on the next slide with test_delivery(), the graded work.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: test_delivery()',
          'code': 'def test_delivery():\n'
@@ -100,7 +83,7 @@ DECK = {
                     'first `drive_path()` finishes, and what doesn\'t it, unless you ask?',
          'callout_size': 20,
          'tone': 'orange',
-         'notes': 'There is no student reveal for any of the three tests; the solution is the teacher copy only. '
+         'notes': 'There is no student reveal for it; the solution is the teacher copy only. '
                   'The line nearly everyone gets half right: they call drive_path and throw the return '
                   'value away. Leg one works perfectly, and every later leg is planned from (0,0) facing '
                   'North. If a robot drives a sensible first route and then wanders, ask what position is '
@@ -128,23 +111,23 @@ DECK = {
                         'starting position is known before the robot moves.'},
 
         {'kind': 'steps', 'title': 'Activity · Build it in three steps',
-         'lead': 'Test each step on the robot before you write the next. Start the robot at (0, 0) facing '
-                 'North every time.',
+         'lead': 'All three steps are in `test_delivery()`. Test each one on the robot before you start the '
+                 'next, starting the robot at (0, 0) facing North every time.',
          'lead_h': 0.9,
          'steps': [
-             '**One leg.** Write `test_one_leg()` and set the run line to it: Lesson 4-6\'s '
-             '`test_drive_path()` with (2, 0) as the destination. Read the printed path, `[(1, 0), (2, 0)]`, '
-             'then press again. The robot should make one right turn and stop on (2, 0) facing East',
-             '**Two legs, one after the other.** Write `test_two_legs()` and run it. The second leg is planned '
-             'from where the first ended, so it works only if `position` and `heading` were assigned from the '
-             'first `drive_path()`. After (2, 0): three right turns to face North, then up to (2, 3)',
-             '**A list and a loop.** Write `test_delivery()`: the legs become one loop over `DESTINATIONS`. '
-             'Run it. The robot should visit all four destinations and finish at home, with legs of 2, 3, 2 '
-             'and 3 steps',
+             '**One leg.** Plan the path from (0, 0) to (2, 0), print it, wait for the button, drive it, '
+             'print where the robot arrived: Lesson 4-6\'s `test_drive_path()` with (2, 0). Read the printed '
+             'path, `[(1, 0), (2, 0)]`, then press. One right turn; it stops on (2, 0) facing East',
+             '**Add the second leg** to the same function: plan to (2, 3), print, drive, print. It works only '
+             'if `position` and `heading` were assigned from the first `drive_path()`. After (2, 0): three '
+             'right turns to face North, then up to (2, 3)',
+             '**A list and a loop.** The two legs are the same lines twice: replace them with one loop over '
+             '`DESTINATIONS`, as the outline describes. The robot should visit all four destinations and '
+             'finish at home, with legs of 2, 3, 2 and 3 steps',
          ],
          'size': 19,
          'notes': 'Push step-by-step testing hard: the students who write everything at once and can\'t '
-                  'find the break are the ones who skipped the one-leg and two-leg tests. Watch battery '
+                  'find the break are the ones who skipped the one-leg and two-leg steps. Watch battery '
                   'drain on long multi-turn runs and charge between attempts. For 50-minute periods, plan '
                   'two days: steps 1 and 2, then the full run.'},
 

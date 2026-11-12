@@ -15,7 +15,7 @@
 | 4-4 · Testing the Planner | `run_test()` | `compute_manhattan_path()` changed | `test_planner()` |
 | 4-5 · The Challenge of Turning | `HEADING_NAMES`, `get_desired_heading()` |  | `test_headings()` |
 | 4-6 · Driving the Path | `turn_to()`, `drive_path()` |  | `test_drive_path()` |
-| 4-7 · Final Project | `DESTINATIONS` |  | `test_one_leg()`, `test_two_legs()`, `test_delivery()` |
+| 4-7 · Final Project | `DESTINATIONS` |  | `test_delivery()` |
 
 A lesson's tests stay in the file after the lesson, so this one file runs any of
 them: set the call in the `RUN` block to the test you want. A driving test that
@@ -465,29 +465,6 @@ def test_drive_path():
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
 
-def test_one_leg():
-    position = (0, 0)
-    heading = 0                   # start facing North
-    path = compute_manhattan_path(position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-def test_two_legs():
-    position = (0, 0)
-    heading = 0
-    path = compute_manhattan_path(position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-    path = compute_manhattan_path(position, (2, 3))
-    print("Path:", path)
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
 def test_delivery():
     position = (0, 0)
     heading = 0                   # start facing North
@@ -522,7 +499,7 @@ board.wait_for_button()
 | 4-4 · Testing the Planner | `Manhattan` class, `run_test()` | `test_paper_paths()` changed, `test_edge_cases()` changed, `compute_manhattan_path()` removed | `test_planner()` |
 | 4-5 · The Challenge of Turning | `HEADING_NAMES`, `get_desired_heading()` |  | `test_headings()` |
 | 4-6 · Driving the Path | `Navigator` class | `test_headings()` changed, `get_desired_heading()` removed | `test_drive_path()` |
-| 4-7 · Final Project | `DESTINATIONS` |  | `test_one_leg()`, `test_two_legs()`, `test_delivery()` |
+| 4-7 · Final Project | `DESTINATIONS` |  | `test_delivery()` |
 
 A lesson's tests stay in the file after the lesson, so this one file runs any of
 them: set the call in the `RUN` block to the test you want. A driving test that
@@ -962,25 +939,6 @@ def test_drive_path():
 # defined; the two sections did the work. Built in three
 # tested steps: one leg, two legs, then a loop.
 DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
-
-def test_one_leg():
-    path = planner.compute_path(navigator.position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-def test_two_legs():
-    path = planner.compute_path(navigator.position, (2, 0))
-    print("Path:", path)
-    board.wait_for_button()
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-    path = planner.compute_path(navigator.position, (2, 3))
-    print("Path:", path)
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
 
 def test_delivery():
     print("Planned path for leg 1:",
