@@ -94,12 +94,25 @@ print(len(path))   # 3
 That's a robot at `(0,0)` driving three intersections to the right: three places to drive to, so
 `len(path)` is 3 — the number of steps.
 
-Loop through it with a `for` loop:
+To visit every step, you could count through the indexes with `range()` and look each
+one up:
+
+```python
+for i in range(len(path)):
+    step = path[i]
+    print("Visit:", step, " x:", step[0], " y:", step[1])
+```
+
+That's so common that Python has a shortcut. In `for step in path:`, each element of the
+list is assigned in turn, first to last, to the variable on the left of `in`. No index
+needed:
 
 ```python
 for step in path:
     print("Visit:", step, " x:", step[0], " y:", step[1])
 ```
+
+Both loops print the same three lines.
 
 <KnowledgeCheck
   question="Given path = [(1, 0), (2, 0), (3, 0)], what does path[2] return?"
