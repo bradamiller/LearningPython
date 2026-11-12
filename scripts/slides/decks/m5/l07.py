@@ -11,7 +11,7 @@ DECK = {
              'Say which intersection a reading refers to, and why the path already tells you',
              'Write a driving test: Module 4\'s `drive_path()` loop plus **one rangefinder check**',
          ],
-         'notes': '60 minutes, robot required. The planner was tested on paper in Lesson 5-6 and '
+         'notes': '60 minutes, robot required. The planner was tested on screen in Lesson 5-6 and '
                   'nothing about it changes today. The only new thing is detection: look before '
                   'you drive, and if something is there, call add_blocked() and ask for a new '
                   'path. The last objective on the page also says: re-plan when it fires, first '
@@ -118,16 +118,15 @@ DECK = {
                  'is. Look at Module 4\'s `drive_path()` loop:',
          'lead_h': 0.95,
          'code': 'for next_pos in path:\n'
-                 '    needed = desired_heading(position, next_pos)\n'
-                 '    heading = turn_to(heading, needed)\n'
+                 '    desired_heading = get_desired_heading(position, next_pos)\n'
+                 '    heading = turn_to(heading, desired_heading)\n'
                  '    track_to_intersection()\n'
-                 '    drive_past_intersection()\n'
                  '    position = next_pos',
          'code_size': 22,
          'callout': 'After `turn_to()`, the robot is **facing** `next_pos`. A short reading right '
                     'then means `next_pos` is blocked: the path already told you.',
          'tone': 'teal',
-         'notes': 'Facing next_pos is what turning to the needed heading means, so no new code is '
+         'notes': 'Facing next_pos is what turning to the desired heading means, so no new code is '
                   'needed to know which intersection is blocked. "Which intersection is blocked" '
                   'used to confuse students when it was computed from the heading. Demonstrate the '
                   'new reasoning physically: stand on an intersection, turn to face the next one on '
@@ -149,7 +148,7 @@ DECK = {
                      '(3,1)',
                      'It depends on the heading number'],
          'answer': 1,
-         'explanation': '`turn_to(heading, needed)` pointed the robot at `next_pos`. Whatever the '
+         'explanation': '`turn_to(heading, desired_heading)` pointed the robot at `next_pos`. Whatever the '
                         'sensor sees now is at `next_pos`. The robot sits on a clear intersection; '
                         'the obstacle is the one it faces.'},
 
@@ -158,7 +157,7 @@ DECK = {
                  '    # robot at (0, 0) facing North; destination (3, 3)\n'
                  '    # plan the path, print it, wait for the button\n'
                  '    # for each next_pos in path:\n'
-                 '    #     face it: desired_heading(), then turn_to()\n'
+                 '    #     face it: get_desired_heading(), then turn_to()\n'
                  '    #     NEW: look ahead -- distance = simulate_rangefinder(\n'
                  '    #          next_pos) for now; rangefinder.distance() later\n'
                  '    #     print position, HEADING_NAMES[heading], the distance\n'
@@ -167,8 +166,8 @@ DECK = {
                  '    #         new path from HERE: compute_bfs_path(position,\n'
                  '    #             destination); print it; then break\n'
                  '    #     else:\n'
-                 '    #         arrive: track_to_intersection(), then\n'
-                 '    #         drive_past_intersection(); position = next_pos\n'
+                 '    #         arrive: track_to_intersection();\n'
+                 '    #         position = next_pos\n'
                  '    # print the blocked list\n'
                  '    pass',
          'code_size': 16,
@@ -194,11 +193,11 @@ DECK = {
         {'kind': 'bullets', 'title': 'Three things to notice',
          'bullets': [
              '`add_blocked(next_pos)` is **the same call** your Lesson 5-6 harness made',
-             ['The planner can\'t tell a test script from a sensor: passing the paper tests means it will re-plan correctly'],
+             ['The planner can\'t tell a test script from a sensor: passing the Lesson 5-6 tests means it will re-plan correctly'],
              'Re-planning is **one line**, from where the robot is: `compute_bfs_path(position, destination)`',
              ['Rule 1 from Lesson 5-4. The planner rebuilds its graph from `BLOCKED` every call, so there is no "rebuild the graph" step to forget'],
              'The robot is **parked** when it re-plans',
-             ['`drive_past_intersection()` runs after every track, so the wheels are still over the intersection it re-planned from'],
+             ['Every track ends with the robot\'s center on the cross, so the robot is still on the intersection it re-planned from'],
          ],
          'size': 24,
          'notes': 'Nothing moves the robot during a re-plan. Class track: if students built the '
@@ -240,8 +239,8 @@ DECK = {
          'callout': 'Printed path right, but the robot still goes wrong? The bug is in the '
                     '**driving**, not the planner.',
          'tone': 'teal',
-         'notes': 'Read it before pressing the button: is it what you expected? This is the Lesson '
-                  '5-6 paper test built into every run, and the first diagnostic. As in Module 4, '
+         'notes': 'Read it before pressing the button: is it what you expected? Printing the plan '
+                  'before you drive is a paper test built into every run, and the first diagnostic. As in Module 4, '
                   'that makes two presses per driving test: the one in RUN starts the test and '
                   'prints the plan; the one in the test is go.'},
 
@@ -286,7 +285,8 @@ DECK = {
          'callout': 'Taking the new path is next lesson',
          'tone': 'teal',
          'notes': 'Place real obstacles on the printed path so the reroute is visible and dramatic. '
-                  'Hardware note: the driving functions are Module 4\'s, unchanged. If the robot '
+                  'Hardware note: the driving functions are Module 4\'s, unchanged: turns end on a sensor, '
+                  'and track_to_intersection() parks the robot\'s center on each intersection. If the robot '
                   'overshoots or misses a turn here, it did in Module 4 too; tune there. The lesson '
                   'page has a closed reveal with a finished test_detect_once() for students to '
                   'check against after they run it; it is not on the slides.'},

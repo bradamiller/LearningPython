@@ -14,7 +14,7 @@ DECK = {
          ],
          'notes': '50 to 60 minutes. The planner passes five tests; now test it properly. The '
                   'property-versus-exact idea outlasts this course, so say so. Then one small trick '
-                  'points the same tests at Module 4\'s Manhattan planner, which fails on paper for '
+                  'points the same tests at Module 4\'s Manhattan planner, which fails on screen for '
                   'exactly the reason this module exists.'},
 
         {'kind': 'code', 'title': 'Two right answers',
@@ -315,7 +315,7 @@ DECK = {
                     'harness just showed **why this module exists**.',
          'tone': 'green',
          'notes': 'Manhattan is doing exactly what it was built to do in Module 4. The harness shows it '
-                  'on paper, with the path printed.'},
+                  'on screen, with the path printed.'},
 
         {'kind': 'code', 'title': 'The same swap in a main program',
          'lead': '`navigate()` is the skeleton\'s last function, given: it plans with whatever planner it\'s '

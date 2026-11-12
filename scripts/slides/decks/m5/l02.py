@@ -10,7 +10,7 @@ DECK = {
              'Check whether a key exists with the `in` keyword',
              'Represent a grid graph as `{node: [neighbors]}`',
              'Open the GRID GRAPH section of `robot.py` with `build_grid_graph()` and '
-             '`remove_blocked()`, each with a paper test',
+             '`remove_blocked()`, each with a paper test that prints its result',
          ],
          'notes': '50 minutes. You drew the grid graph on paper in Lesson 5-1; today it goes into '
                   'Python. The last objective on the lesson page names the full signatures, '

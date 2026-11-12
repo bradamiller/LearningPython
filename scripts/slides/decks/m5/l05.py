@@ -21,10 +21,10 @@ DECK = {
          'bullets': [
              'The function is about **twenty lines**',
              'There isn\'t a line in it you haven\'t already done with a pencil in Lesson 5-3',
-             'Build it in **three stages**, and run a paper test after each',
+             'Build it in **three stages**, and run a paper test after each: it prints paths and step counts, and the robot stays on the desk',
              'Finish by making the program **draw its grid of ring numbers**, to compare with your own',
          ],
-         'callout': 'The robot stays on the desk all lesson: every test is a paper test',
+         'callout': 'Every test is a paper test: check each printed line against your Lesson 5-3 trace',
          'tone': 'teal',
          'notes': 'Have students get out their Lesson 5-3 traces, the came-from table and the wall grid. '
                   'They compare against both today.'},
@@ -60,7 +60,7 @@ DECK = {
          'code': '    # WALK-BACK\n'
                  '    # 5. if destination never got an entry: return []\n'
                  '    # 6. path = [] ; current = destination\n'
-                 '    #    while current is not position:\n'
+                 '    #    while current is not start:\n'
                  '    #        append current; current = where it came from\n'
                  '    # 7. reverse path and return it\n'
                  '    pass',

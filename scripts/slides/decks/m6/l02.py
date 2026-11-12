@@ -20,7 +20,7 @@ DECK = {
              '`weight()` answers "what does this edge cost?"',
              '`path_cost()` adds a route up',
              'Then **cost** becomes one more thing the Module 5 harness checks',
-             'BFS, unchanged, **fails** that check: on paper, with the path printed, before any robot is involved',
+             'BFS, unchanged, **fails** that check: on screen, with the path printed, before any robot is involved',
          ],
          'callout': 'That failure is the reason the next lesson exists',
          'tone': 'teal'},
@@ -159,7 +159,9 @@ DECK = {
          'tone': 'teal'},
 
         {'kind': 'steps', 'title': 'Activity · Build it, then watch BFS fail',
-         'lead': 'Every test today is a paper test: the robot stays on the desk.',
+         'lead': 'Every test today is a paper test: it prints numbers or paths, the robot stays on the '
+                 'desk, and you check each line against what you predicted.',
+         'lead_h': 0.95,
          'steps': [
              '**The list and** `weight()`**.** Write `add_slow_edge()`, `clear_slow_edges()` and '
              '`weight()`. Then write `test_weights()`: clear the slow list, add your segment from '

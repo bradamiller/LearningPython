@@ -37,7 +37,7 @@ DECK = {
          ],
          'callout': 'Everything you need already exists in `robot.py`. Today you **connect** it.',
          'tone': 'teal',
-         'notes': 'Where each piece came from: the planner (Lessons 5-4 and 5-5) and its paper tests '
+         'notes': 'Where each piece came from: the planner (Lessons 5-4 and 5-5) and its tests '
                   '(5-6), detection (5-7), the drive-until-you-arrive function and carrying '
                   'knowledge between runs (5-8).'},
 
@@ -62,8 +62,9 @@ DECK = {
 
         {'kind': 'code', 'title': 'Add to robot.py: this lesson\'s skeleton',
          'lead': 'At the end of the OBSTACLES section, above `RUN`. No new function is defined: one '
-                 'setting, a paper test, and the project itself.',
-         'lead_h': 0.95,
+                 'setting, a paper test that prints every leg\'s path without moving the robot, and the '
+                 'project itself.',
+         'lead_h': 1.25,
          'code': '# --- Lesson 5-9: capstone, the delivery run ---\n'
                  '# The module project: visit CAPSTONE_DESTINATIONS in order,\n'
                  '# each leg with navigate_with_detection(), starting from what\n'

@@ -180,6 +180,6 @@ DECK = {
                   'from two timings; add up two routes by hand; say which BFS picks. Exit ticket: '
                   '"Weight 4, from (0,0) to (0,3): cost of each route, and which is faster?" '
                   '(A: 6, B: 5; B.) Next lesson the weight goes into the program, the harness '
-                  'learns to add up cost, and BFS fails the new test on paper.'},
+                  'learns to add up cost, and BFS fails the new test on screen.'},
     ],
 }
