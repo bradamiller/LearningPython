@@ -1,0 +1,332 @@
+---
+title: "Lesson 4-7 · On the Robot"
+sidebar_label: "4-7 · On the Robot"
+sidebar_position: 7
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="Lesson 4-7 · On the Robot"
+  meta={['Multi-day', 'Python + robot', 'Multi-destination delivery']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Your program already runs the whole delivery, on screen. Today the last two stubs come
+out, the real Module 2 functions go in, and the robot drives it. The algorithm is already
+tested, so if the robot does something the printout didn't, the problem is on the robot's
+side.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Name the Module 2 functions the driving code is built on, and what each does
+- Swap the two stubs for the real functions and drive the delivery run on the grid
+- Tell an algorithm bug from a robot problem by comparing the robot with the printout
+- Demonstrate a working multi-destination run on the XRP
+
+</Objectives>
+
+## The toolkit you already have
+
+Module 2 ended with these in the LINE TRACKING section of `robot.py`, and Module 3 drove
+the whole grid with them:
+
+| Function | What it does | Ends when |
+|---|---|---|
+| `track_to_intersection()` | Follows the line forward | the robot's center is on the cross |
+| `turn_clockwise()` | Pivots right | the sensors find the next line |
+| `turn_counterclockwise()` | Pivots left | the sensors find the next line |
+
+None of them knows anything about coordinates, headings or paths: they only follow tape.
+That's the split from Lesson 4-0 again. The planner doesn't know how to drive, the Module 2
+functions don't know what a path is, and the NAVIGATOR sits between them.
+
+## Activity · Swap the stubs, drive the run
+
+### Step 1 · Swap two lines
+
+- In `turn_to()`, change `fake_turn_clockwise()` to `turn_clockwise()`.
+- In `drive_path()`, change `fake_track_to_intersection()` to `track_to_intersection()`.
+
+That's all. Leave the two fake functions in the file: nothing calls them now, but they're
+handy for checking a new run on screen first.
+
+If you built the `LineTrack` class in Lesson 2-9, the real calls are
+`tracker.turn_clockwise()` and `tracker.track_to_intersection()`.
+
+### Step 2 · Drive it
+
+Put the robot on (0, 0) facing North. Run `test_delivery()` and press the button.
+
+**What correct looks like:** the robot does exactly what last lesson's printout said, in
+the same order. Count the turns at each corner against the printout: one right turn at the
+start, three at (2, 0). The robot finishes back on (0, 0), facing South, parked on the
+cross. The `move` lines still print as it goes.
+
+<KnowledgeCheck
+  question="Yesterday's printout was right, but today the robot turns one too few times at a corner. Where is the problem?"
+  options={[
+    {text: 'In compute_manhattan_path()'},
+    {text: 'On the robot side: a turn that missed or doubled up a line, the tape, or the battery. The same code printed the right turns', correct: true},
+    {text: 'In the print statements'},
+    {text: 'In DESTINATIONS'},
+  ]}
+  explanation="The planner, get_desired_heading() and turn_to() were tested on screen and didn't change. Only the two real calls are new, so look at what they do on the floor: the turn's blind angle, the tape, the battery."
+/>
+
+<TeacherNote title="Project day: what to watch">
+
+Keep the intro short; this is a run-and-fix day. Most problems now are hardware: turns end
+when the sensors find the next line, not on a timer, so they tolerate battery level and
+floor friction, but if a turn overshoots, the blind first part of the turn in Module 2's
+`turn_clockwise()` is the thing to shorten. Charge between runs: the delivery run has a lot
+of turns.
+
+If a student's robot wanders, ask for the printout first. If the printout is wrong, it was
+wrong yesterday too, and the fix is in the code; if it's right, it's the robot. When a robot
+finishes the whole run, let the class watch. For 50-minute periods, plan two days.
+
+</TeacherNote>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The two changed functions; everything else is as Lessons 4-4 to 4-6 left it.
+
+```python
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new
+    heading."""
+    while current_heading != desired_heading:
+        turn_clockwise()
+        current_heading = (current_heading + 1) % 4
+    return current_heading
+
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        desired_heading = get_desired_heading(current_position, next_pos)
+        print("  move", current_position, "to", next_pos,
+              "- face", HEADING_NAMES[desired_heading])
+        current_heading = turn_to(current_heading, desired_heading)
+        track_to_intersection()
+        current_position = next_pos     # the robot is there now
+    return current_position, current_heading
+```
+
+</TeacherNote>
+
+## Challenge · The short way round (optional)
+
+At (2, 0) the robot turned right three times to face what was a quarter turn to its left.
+Make `turn_to()` turn whichever way takes **fewer** turns.
+
+<Figure
+  src="/img/lesson-m4-06/turn-shortcut-xy.svg"
+  alt="Two drawings of the robot at an intersection facing east, needing to face north. Left, the loop alone, always clockwise: three clockwise quarter turns, 270 degrees. Right, turning the short way: one counterclockwise quarter turn, 90 degrees. Same place, a third of the turning."
+  caption="Three clockwise steps around the compass land where one counterclockwise turn does."
+/>
+
+Work out first, on paper, when counterclockwise is actually shorter: try the four
+headings starting from North. Then change `turn_to()` so it turns counterclockwise in
+exactly those cases, keeps `current_heading` up to date either way, and still returns it.
+Check it on screen first: add a `fake_turn_counterclockwise()` that prints
+`turn counterclockwise`, use the fakes, and count the turns at each corner. Then swap the
+real ones back in and drive. Nothing else in the file changes, because nothing else knows
+how `turn_to()` does its job.
+
+<TeacherNote title="Challenge answer (teacher copy)">
+
+Counterclockwise wins in exactly one case: when `desired_heading` is one step to the left,
+which is three clockwise steps around, `(current_heading + 3) % 4`. Turning around is a tie.
+Check that case first and let the loop finish the job; after the left turn its condition is
+already False:
+
+```python
+def turn_to(current_heading, desired_heading):
+    """Turn until current_heading is desired_heading, the
+    short way round; return the new heading."""
+    if desired_heading == (current_heading + 3) % 4:   # left
+        turn_counterclockwise()
+        current_heading = desired_heading
+    while current_heading != desired_heading:
+        turn_clockwise()
+        current_heading = (current_heading + 1) % 4
+    return current_heading
+```
+
+Watch for a version that turns left and then *also* loops because it forgot to update
+`current_heading`.
+
+</TeacherNote>
+
+## The rubric and extensions
+
+| Category | Points | What it takes |
+|---|---|---|
+| Planner | 10 | `compute_manhattan_path()` correct for any start and destination; `test_planner()` passes |
+| Driving functions | 15 | Correct `get_desired_heading()`, `turn_to()`, `drive_path()`; parked on the cross at every arrival; pose returned |
+| Main program | 10 | `test_delivery()`: 4+ destinations, assigns `position, heading` from `drive_path()` |
+| Screen run | 5 | The full run checked on screen with the stubs before the robot drove |
+| Robot demo | 10 | Physically visits all destinations with the turns the printout predicted |
+
+**If you finish early**, try an extension: a round trip (the destinations forward, then
+reversed); let the user type destinations; count the intersections driven and turns made
+across the whole run; or the class extension below.
+
+<OptionalExtension title="The Navigator class, and what self really is">
+
+If you did the Module 2 class extensions, the driving functions can become a `Navigator`
+class. It is the first class in the course whose constructor takes real parameters, which
+makes it the right moment to say what `self` actually is.
+
+Back in Lesson 2-7, the class was a blueprint and the objects were the houses built from it.
+Here is the same picture with one thing added: every house has an **address**.
+
+<Figure
+  src="/img/lesson-m4-06/house-address.svg"
+  alt="A blueprint labeled 'class House:' listing __init__(self, color) and paint(self). Below it, three houses built from the plan, each with an address plaque: red at 12 Oak, yellow at 48 Elm, blue at 7 Pine, with the code that built each one. At the bottom, the call elm.paint() with an arrow to the yellow house and the note: inside paint(), self is 48 Elm — the one house this call is about."
+  caption="The plan says what painting is. The address says which house. When you call elm.paint(), self is 48 Elm, nothing else."
+/>
+
+The plan says what "paint" means, the same for every house. `elm.paint()` means "paint the
+house at 48 Elm", and inside `paint()`, `self` is that address. Call `oak.paint()` and the
+same code runs with `self` meaning 12 Oak. **`self` is the address of the one object this
+call is about.** `self.position` is "the position of this navigator, not any other".
+
+A method is a **work order written once for every house, with a blank for the address.**
+That's why `self` is the first parameter in the `def`, and why it's absent from the call:
+Python fills the blank in from the object you pointed at. Two errors become easy to read:
+
+- `def paint():` with no `self`: Python says *"takes 0 positional arguments but 1 was
+  given"*. It tried to fill in the blank and found none.
+- `color` instead of `self.color` inside the method: *"NameError: name 'color' is not
+  defined"*. A color with no address attached.
+
+Now the Navigator. Its constructor takes the start position and heading and stores them at
+its own address. Paste this in place of `get_desired_heading()`, `turn_to()` and
+`drive_path()` (keep `HEADING_NAMES` and your tests), and move your bodies into the methods.
+
+```python
+# ===== NAVIGATOR (class version) =====
+# One Navigator object owns the robot's position and heading.
+# It HAS a LineTrack (built in __init__) and gives it the
+# driving orders; it is told where to go and keeps its own
+# record of where it got to.
+class Navigator:
+    def __init__(self, start, heading):
+        self.position = start
+        self.heading = heading
+        self.line_track = LineTrack()        # has-a LineTrack
+
+    def get_desired_heading(self, next_pos):
+        # your function; position is self.position now, so
+        # it is no longer a parameter
+        pass
+
+    def turn_to(self, desired_heading):
+        # your function, with self.heading in place of the
+        # parameter and self.line_track. in front of the
+        # turn; it STORES the new heading, not returns it
+        pass
+
+    def drive_path(self, path):
+        # your function, with self. in front of position,
+        # heading and the two LINE TRACKING calls; it stores
+        # the final position instead of returning it
+        pass
+
+navigator = Navigator((0, 0), 0)
+```
+
+The two parameters land in `self.position` and `self.heading`, and from then on every method
+reads and updates *those*. That's why the signatures shrank, and why nothing is returned:
+the record lives at the object's address, and the main program reads `navigator.position`
+whenever it wants to know.
+
+<Reveal title="Check your Navigator" hint="translate all three methods first">
+
+```python
+    def get_desired_heading(self, next_pos):
+        x_diff = next_pos[0] - self.position[0]
+        y_diff = next_pos[1] - self.position[1]
+        if x_diff == 0 and y_diff ==  1: return 0   # North
+        if y_diff == 0 and x_diff ==  1: return 1   # East
+        if x_diff == 0 and y_diff == -1: return 2   # South
+        if y_diff == 0 and x_diff == -1: return 3   # West
+        raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
+
+    def turn_to(self, desired_heading):
+        while self.heading != desired_heading:
+            self.line_track.turn_clockwise()
+            self.heading = (self.heading + 1) % 4
+
+    def drive_path(self, path):
+        for next_pos in path:
+            desired_heading = self.get_desired_heading(next_pos)
+            self.turn_to(desired_heading)
+            self.line_track.track_to_intersection()
+            self.position = next_pos
+```
+
+</Reveal>
+
+<SideBySide>
+<div>
+
+```python
+position = (0, 0)
+heading = 0
+for destination in DESTINATIONS:
+    path = compute_manhattan_path(position, destination)
+    position, heading = drive_path(path, position, heading)
+```
+
+</div>
+<div>
+
+```python
+navigator = Navigator((0, 0), 0)
+for destination in DESTINATIONS:
+    path = compute_manhattan_path(navigator.position, destination)
+    navigator.drive_path(path)
+```
+
+</div>
+</SideBySide>
+
+On the left, the pose has to be passed into every call and assigned back from every return;
+forget once and the robot plans from the wrong place. On the right, the navigator owns the
+pose, so there is nothing to pass back and nothing to forget.
+
+**From here on, use your class.** Where a later lesson says `drive_path(path, position,
+heading)`, you write `navigator.drive_path(path)`, and where it reads `position` you read
+`navigator.position`.
+
+</OptionalExtension>
+
+## Wrap-up
+
+- What changed today? (Two lines: the fake turn and the fake track became the real Module 2 functions.)
+- If the robot goes wrong but the printout was right, where do you look? (The robot side: turns, tape, battery.)
+- Where did top-down pay off? (The whole run worked on screen before the robot moved, and every step was checked as it was added.)
+
+<TeacherNote title="You built a system">
+
+Name what students did across the module: coordinates and tuples, lists, an algorithm, a
+planner and a driver that know nothing about each other, a test for every step, and the
+hardware last. In Module 5, breadth-first search replaces the Manhattan planner and
+`drive_path()` keeps driving, unchanged.
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
+- [Python classes](https://docs.python.org/3/tutorial/classes.html)

@@ -79,6 +79,21 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'Module 4 test · Top-down (trial)',
+      collapsed: true,
+      items: [
+        'test-module-04/lesson-00-overview',
+        'test-module-04/lesson-01-coordinates-and-tuples',
+        'test-module-04/lesson-02-lists',
+        'test-module-04/lesson-03-the-main-program',
+        'test-module-04/lesson-04-the-planner',
+        'test-module-04/lesson-05-the-driver',
+        'test-module-04/lesson-06-turning',
+        'test-module-04/lesson-07-on-the-robot',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Module 5 · Pathfinding Around Obstacles',
       collapsed: true,
       items: [

@@ -1,0 +1,553 @@
+---
+title: "Lesson 4-4 · The Planner"
+sidebar_label: "4-4 · The Planner"
+sidebar_position: 4
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="Lesson 4-4 · The Planner"
+  meta={['60–70 min', 'Python code', 'Computing a path', 'Robot stays on the desk']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Today the planner stub goes. In its place you write the real
+`compute_manhattan_path()`: give it a start and a destination, and it hands back every
+intersection to drive to. You'll trace paths by hand first, then test the code against
+your traces, and then run the main program to see real paths in the whole delivery run.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Describe the "across first, then up or down" strategy and hand-trace a path on paper
+- Read each row of a trace table as one trip around a while loop
+- Write the planner as four while loops, east, west, north and south, with no `if/else`
+- Test it with `run_test()` against paths you traced by hand, including the edge cases
+- State the planner's three promises
+
+</Objectives>
+
+## The strategy: across first, then up or down
+
+Each step moves the robot to a neighboring intersection, so **exactly one of x or y
+changes, by 1**. Never both: that would be a diagonal, and the robot can't drive one.
+
+<Figure
+  src="/img/lesson-m4-03/one-step.svg"
+  alt="A 3 by 3 grid with the robot's intersection (1, 1) in the middle. Red arrows go right to (2, 1), x + 1, and left to (0, 1), x − 1. Green arrows go up to (1, 2), y + 1, and down to (1, 0), y − 1. A dashed diagonal to (2, 2) is crossed out: x and y both change, so it is not one step."
+  caption="One step changes x or y by 1, never both."
+/>
+
+The strategy is the simplest one that always works: **step across until x is right,
+then step up or down until y is right.** That traces an L-shaped path, or a straight
+line if x or y is already right.
+
+The planner makes three promises, and every planner in this course keeps them:
+
+1. The path **never includes the start.** The robot is already there.
+2. The path **ends at the destination.**
+3. The path is **empty** if the robot is already at the destination.
+
+## Activity · Trace it on paper
+
+Before any code, trace five paths by hand: across first, then up or down, one step at a
+time. This is your **answer key**: the tests you run later compare the code with it.
+
+**1. Leg 1, move by move.** Trace (0, 0) → (2, 3), one row per move. Row 1 is done
+for you.
+
+| Step | Action | New position |
+|---|---|---|
+| 1 | x + 1 | (1, 0) |
+| 2 | | |
+| 3 | | |
+| 4 | | |
+| 5 | | |
+
+**2. Five paths.** Write each expected path. Leg 1 is the one you just traced; Leg 2 is
+the delivery run's second leg.
+
+| Test | From → to | Expected path |
+|---|---|---|
+| Leg 1 | (0, 0) → (2, 3) | |
+| Leg 2 | (2, 3) → (1, 0) | |
+| Same column | (2, 0) → (2, 3) | |
+| Same row | (0, 2) → (3, 2) | |
+| Same spot | (1, 1) → (1, 1) | |
+
+**3. What is different about Leg 2** compared with Leg 1?
+
+<Reveal title="Check your answer key" hint="fill in both tables and the question first">
+
+| Step | Action | New position |
+|---|---|---|
+| 1 | x + 1 | (1, 0) |
+| 2 | x + 1 | (2, 0) |
+| 3 | y + 1 | (2, 1) |
+| 4 | y + 1 | (2, 2) |
+| 5 | y + 1 | (2, 3) |
+
+| Test | Expected path |
+|---|---|
+| Leg 1 | `[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]` |
+| Leg 2 | `[(1, 3), (1, 2), (1, 1), (1, 0)]` |
+| Same column | `[(2, 1), (2, 2), (2, 3)]` |
+| Same row | `[(1, 2), (2, 2), (3, 2)]` |
+| Same spot | `[]` |
+
+Leg 1 goes right and up: x and y both get **bigger**. Leg 2 goes left and down: they both
+get **smaller**. Same spot is empty because the robot is already there.
+
+</Reveal>
+
+<TeacherNote title="One paper activity, then code">
+
+About 15 minutes on a big grid, one marker color for moves across and another for moves
+up and down. Check the sheets before students go on: a wrong key sends them hunting for a
+bug that isn't there. The last question sets up Step 3: the first version only handles x
+and y getting bigger.
+
+</TeacherNote>
+
+## From the trace table to a loop
+
+Write the code the same way you worked out each new position. `x` and `y` are where the
+robot is *during the plan*: they start as the start (`x, y = start`) and change by 1 on
+every move. `dest_x` and `dest_y` are the destination.
+
+In one loop, keep adding 1 to x while x is less than `dest_x`. In a second loop, do the
+same for y. Inside each loop, append the new `(x, y)` to the path.
+
+<Figure
+  src="/img/lesson-m4-03/trace-to-loops.svg"
+  alt="The trace table for (0, 0) to (2, 3). Rows 1 and 2, in red, say x + 1 and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). Rows 3 to 5, in green, say y + 1 and are bracketed to loop 2, the same loop for y."
+  caption="Each row is one trip around a loop."
+/>
+
+## This lesson's skeleton
+
+Replace the planner stub in the MANHATTAN PLANNER section with this. The east loop is
+written for you, and so is `run_test()`, which compares the planner's answer with yours.
+
+```python
+def compute_manhattan_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    path = []
+    x, y = start              # where the plan is now
+    dest_x, dest_y = destination   # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        path.append((x, y))   # record the new spot
+
+    # West: copy east, flip < to > and + to -
+
+    # North: copy east, but step y until it matches dest_y
+
+    # South: copy north, flip < to > and + to -
+
+    return path
+
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    actual = compute_manhattan_path(start, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+
+def test_planner():
+    # expected = your answer key, traced by hand
+    run_test("Leg 1",       (0, 0), (2, 3), [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)])
+    run_test("Leg 2",       (2, 3), (1, 0), [])   # your answer key
+    run_test("Same column", (2, 0), (2, 3), [])   # your answer key
+    run_test("Same row",    (0, 2), (3, 2), [])   # your answer key
+    run_test("Same spot",   (1, 1), (1, 1), [])   # your answer key
+```
+
+The expected lists **must come from your own tracing.** Copy what the code prints and the
+test only checks that the code agrees with itself.
+
+## Activity · Write the planner
+
+### Step 1 · Paste and fill in
+
+Paste the skeleton in place of the stub, and replace each `[]` in `test_planner()` with
+the path from your answer key. (Same spot stays `[]`.)
+
+### Step 2 · Run the east loop alone
+
+Set the run line to `test_planner()` and run it. Only the east loop exists, so expect:
+
+- **Same row** and **Same spot**: PASS. Neither needs to move up or down.
+- **Leg 1**: FAIL, with `Actual: [(1, 0), (2, 0)]`: right two, then it stops.
+- **Leg 2** and **Same column**: FAIL, with `Actual: []`.
+
+### Step 3 · Write north
+
+Under the north comment, copy the east loop, comparing `y` with `dest_y` and stepping `y`
+instead of `x`. Leave `path.append((x, y))` as it is: it always records the whole
+position. Run `test_planner()` again: Leg 1 and Same column now PASS. Leg 2 still fails
+with `Actual: []`.
+
+<Reveal title="Check your north loop" hint="write it and run the test first">
+
+```python
+    # North: copy east, but step y until it matches dest_y
+    while y < dest_y:
+        y = y + 1             # one step up
+        path.append((x, y))
+```
+
+</Reveal>
+
+<KnowledgeCheck
+  question="Why does the east-and-north version return [] for Leg 2, (2, 3) → (1, 0)?"
+  options={[
+    {text: 'append() is broken'},
+    {text: 'Both while conditions are False from the start (2 is not < 1, 3 is not < 0), so neither loop runs', correct: true},
+    {text: 'The start and destination are the same'},
+    {text: 'It runs forever'},
+  ]}
+  explanation="East and north only handle x and y getting bigger. Going left or down needs two flipped loops."
+/>
+
+### Step 4 · West and south: copy and flip
+
+West is the east loop flipped: copy it under the west comment, then flip `<` to `>` and
+`+ 1` to `- 1`. South is the north loop, flipped the same way.
+
+**Why two x loops can sit next to each other:** a while loop checks its condition before
+its first trip. Going left, x is already bigger than `dest_x`, so the east loop's
+`x < dest_x` is False on that first check and the east loop never runs. Only the west
+loop moves x. The two y loops work the same way, so no `if/else` is needed.
+
+<Figure
+  src="/img/lesson-m4-03/one-x-loop-runs.svg"
+  alt="Going left with x = 3 and dest_x = 1. The east loop, while x < dest_x, is grayed out: 3 < 1 is False on the first check, so it never runs. The west loop, while x > dest_x, is highlighted: 3 > 1 is True, so it runs twice and x goes 3, 2, 1."
+  caption="For any trip, at most one of the two x loops runs. The same goes for the two y loops."
+/>
+
+The two x loops come before the two y loops, so the path always goes across first. Run
+`test_planner()`: five PASS lines.
+
+<KnowledgeCheck
+  question="For a trip that goes up and to the right, how many of the four while loops actually run?"
+  options={[
+    {text: 'All four'},
+    {text: 'Two: the east loop and the north loop', correct: true},
+    {text: 'Just one'},
+    {text: 'None: it needs if/else'},
+  ]}
+  explanation="At most one x loop (east OR west) and one y loop (north OR south) run for any trip. The other two find their condition False on the first check."
+/>
+
+<Reveal title="Watch the four loops run" hint="after your tests pass">
+
+<Figure
+  src="/img/lesson-m4-03/four-loops-run.svg"
+  alt="An animation of compute_manhattan_path() on a 4 by 4 grid, with the four loops listed beside it. Trip one, (0, 0) to (2, 3): east runs twice, appending (1, 0) and (2, 0); west is skipped; north runs three times, appending (2, 1), (2, 2) and (2, 3); south is skipped; five steps. Trip two, (3, 3) to (1, 0): east is skipped; west runs twice, (2, 3) and (1, 3); north is skipped; south runs three times, (1, 2), (1, 1), (1, 0); five steps. Trip three, (1, 1) to (1, 1): all four loops are skipped and the path is empty. A red dot steps along each move and each appended spot is numbered by its index."
+  caption="Three trips through the same four loops. A False on the first check means a loop never runs at all."
+/>
+
+</Reveal>
+
+### Step 5 · Run the main program
+
+Set the run line back to `test_delivery()` and run it. The paths are real now.
+
+**What correct looks like:** Leg 1 and Leg 2 match your answer key. In every leg, the path
+starts one step from its `Plan from` spot, goes across first, and ends at the destination.
+The last line still says `Finished at (0, 0) facing N`, because the driver is still a stub.
+
+<Reveal title="Check your output" hint="run it first">
+
+```
+Plan from (0, 0) to (2, 3)
+  path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+Plan from (2, 3) to (1, 0)
+  path: [(1, 3), (1, 2), (1, 1), (1, 0)]
+Plan from (1, 0) to (3, 1)
+  path: [(2, 0), (3, 0), (3, 1)]
+Plan from (3, 1) to (2, 2)
+  path: [(2, 1), (2, 2)]
+Plan from (2, 2) to (0, 0)
+  path: [(1, 2), (0, 2), (0, 1), (0, 0)]
+Finished at (0, 0) facing N
+```
+
+</Reveal>
+
+<TeacherNote title="Redirect anyone reaching for if/else">
+
+The four-loop design is the lesson's big idea: *a while loop whose condition starts False
+simply does nothing.* Students who've seen conditionals will try `if x < dest_x ... elif`.
+Steer them back: the four loops handle every case, including same spot (all four skipped,
+`[]`). Take real time on the double parentheses in `path.append((x, y))`: the outer pair is
+the function call, the inner pair is the tuple.
+
+Promise 1 is the one that bites later: a path that includes the start gives the driver a
+zero-length move in Lesson 4-5. Keep `run_test()` in the file: Module 5 comes back to it.
+
+</TeacherNote>
+
+## When a test fails
+
+Don't guess: add prints inside `compute_manhattan_path()` to watch it run. One at the top,
+and one in each loop right after the `append`:
+
+```python
+    print("Computing from", start, "to", destination)   # first line
+    ...
+        print("  added:", (x, y))                          # in each loop
+```
+
+The output shows which loop ran and what it added. Once the bug is fixed, **remove the
+debug prints** so the output stays clean. Try it: change one `+ 1` to `- 1`, run
+`test_planner()`, watch a test catch it, then change it back.
+
+<KnowledgeCheck
+  question={'A classmate gets [(3, 3), (2, 3), (1, 2), (1, 1), (1, 0)] for (3, 3) → (1, 0). What went wrong?'}
+  options={[
+    {text: 'Nothing: that is a valid Manhattan path'},
+    {text: 'The west loop appends before it subtracts 1 from x, so the start is included and (1, 3) is skipped: promise 1 is broken', correct: true},
+    {text: 'The destination tuple is backwards'},
+    {text: 'The south loop ran before the west loop'},
+  ]}
+  explanation="Swapping the two lines inside a loop (append first, then change x) shifts that leg by one: the start appears and the corner is missed. The first element should never equal the start."
+/>
+
+<Reveal title="Check your compute_manhattan_path()" hint="write it and pass all five tests first">
+
+```python
+def compute_manhattan_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    path = []
+    x, y = start              # where the plan is now
+    dest_x, dest_y = destination   # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        path.append((x, y))   # record the new spot
+
+    # West: copy east, flip < to > and + to -
+    while x > dest_x:
+        x = x - 1
+        path.append((x, y))
+
+    # North: copy east, but step y until it matches dest_y
+    while y < dest_y:
+        y = y + 1             # one step up
+        path.append((x, y))
+
+    # South: copy north, flip < to > and + to -
+    while y > dest_y:
+        y = y - 1
+        path.append((x, y))
+
+    return path
+```
+
+If yours is laid out differently and passes all five tests, keep yours.
+
+</Reveal>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The MANHATTAN PLANNER section as this lesson leaves it, plus the run block. The NAVIGATOR
+section is unchanged from Lesson 4-3.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (x, y) tuples to
+# drive to. Nothing in here touches a sensor or a motor.
+
+def compute_manhattan_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    path = []
+    x, y = start              # where the plan is now
+    dest_x, dest_y = destination   # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        path.append((x, y))   # record the new spot
+
+    # West: copy east, flip < to > and + to -
+    while x > dest_x:
+        x = x - 1
+        path.append((x, y))
+
+    # North: copy east, but step y until it matches dest_y
+    while y < dest_y:
+        y = y + 1             # one step up
+        path.append((x, y))
+
+    # South: copy north, flip < to > and + to -
+    while y > dest_y:
+        y = y - 1
+        path.append((x, y))
+
+    return path
+
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    actual = compute_manhattan_path(start, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+
+def test_planner():
+    # expected = your answer key, traced by hand
+    run_test("Leg 1",       (0, 0), (2, 3), [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)])
+    run_test("Leg 2",       (2, 3), (1, 0), [(1, 3), (1, 2), (1, 1), (1, 0)])
+    run_test("Same column", (2, 0), (2, 3), [(2, 1), (2, 2), (2, 3)])
+    run_test("Same row",    (0, 2), (3, 2), [(1, 2), (2, 2), (3, 2)])
+    run_test("Same spot",   (1, 1), (1, 1), [])
+
+# ===== RUN =====
+board.wait_for_button()
+test_delivery()
+```
+
+Don't hand out the expected values: the hand-tracing *is* the lesson. Watch for the
+student who runs the code first and pastes its output into `expected`.
+
+</TeacherNote>
+
+<OptionalExtension title="Unit testing" gate="Optional: open it if you have time. Nothing later depends on it.">
+
+`test_planner()` is a set of **unit tests**: each one checks one small piece of a program,
+here one function, on its own, against an answer worked out separately. Professional
+software runs thousands of them every time the code changes, so a mistake is caught minutes
+after it's made, not weeks later by a user.
+
+The planner is an ideal unit because of **separation of concerns**: it only *computes* a
+path, and it is handed the robot's position, so there is nothing to set up. Tuples in,
+list out, on any computer.
+
+<KnowledgeCheck
+  question="What does separation of concerns let you do here?"
+  options={[
+    {text: 'Run the robot faster'},
+    {text: 'Test the path planning on its own, separately from the driving', correct: true},
+    {text: 'Skip testing entirely'},
+    {text: 'Combine planning and driving into one function'},
+  ]}
+  explanation="Because the planner only computes paths, you can check it on any computer before the robot is involved."
+/>
+
+</OptionalExtension>
+
+<OptionalExtension title="The Manhattan class">
+
+If you did the class extensions in Module 2, here is the same planner as a class. Read the
+docstring first: it answers the obvious question, which is *why bother*.
+
+Paste it in place of the `compute_manhattan_path()` function (keep your tests), move the
+four loops into the method, and the object is created right under the class, as `sensor`
+and `tracker` were in Module 2.
+
+```python
+# ===== MANHATTAN PLANNER (class version) =====
+# One Manhattan object plans routes on the grid, across
+# first and then up or down. It holds NO state: compute_path()
+# is told the robot's position every call. Pure arithmetic.
+class Manhattan:
+    """The Lesson 4-4 planner as a class.
+
+    It holds NO state: compute_path() is told the robot's position
+    every time. Manhattan is a class only so that it has the same
+    shape as the Module 5 and 6 planners (BFS, Dijkstra) -- then one
+    main program and one test harness work with any of them by
+    changing one name.
+    """
+
+    def __init__(self):
+        pass        # nothing to set up
+
+    def compute_path(self, start, destination):
+        # your compute_manhattan_path(), unchanged: nothing in
+        # it needs self., because the planner holds nothing
+        pass
+
+planner = Manhattan()
+```
+
+Each `compute_manhattan_path(` in your file becomes `planner.compute_path(`, in
+`run_test()` and in `test_delivery()`. Run `test_planner()` again: five PASS lines.
+
+<Reveal title="Check your Manhattan" hint="move the loops in and rerun the tests first">
+
+```python
+    def compute_path(self, start, destination):
+        path = []
+        x, y = start              # where the plan is now
+        dest_x, dest_y = destination   # where it is going
+
+        # East: keep stepping right until x matches dest_x
+        while x < dest_x:
+            x = x + 1             # one step right
+            path.append((x, y))   # record the new spot
+
+        # West: copy east, flip < to > and + to -
+        while x > dest_x:
+            x = x - 1
+            path.append((x, y))
+
+        # North: copy east, but step y until it matches dest_y
+        while y < dest_y:
+            y = y + 1             # one step up
+            path.append((x, y))
+
+        # South: copy north, flip < to > and + to -
+        while y > dest_y:
+            y = y - 1
+            path.append((x, y))
+
+        return path
+```
+
+The method body is the function body, indented one level further, and nothing in it needs
+`self.`. That is the point of the docstring.
+
+</Reveal>
+
+`__init__` takes no start position and there is no `self.position`: the planner is still
+told where the robot is. BFS in Module 5 uses its `__init__` to hold the blocked
+intersections, and that's when the class earns its keep.
+
+**From here on, use your class.** The lessons are written with the function name; where
+one says `compute_manhattan_path(position, destination)`, you write
+`planner.compute_path(position, destination)`.
+
+</OptionalExtension>
+
+## Wrap-up
+
+- What does "across first, then up or down" produce? (An L-shaped path, or a straight line.)
+- Why four while loops instead of `if/else`? (A loop whose condition starts False never runs, so only the right ones do.)
+- What are the planner's three promises? (No start in the path; it ends at the destination; `[]` when already there.)
+- Where does a test's expected path come from? (Your own hand trace, before you run the code.)
+
+## Resources
+
+- [Python while loops](https://docs.python.org/3/reference/compound_stmts.html#while)
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)

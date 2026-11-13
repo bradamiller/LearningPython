@@ -1,0 +1,366 @@
+---
+title: "Lesson 4-5 · The Driver"
+sidebar_label: "4-5 · The Driver"
+sidebar_position: 5
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="Lesson 4-5 · The Driver"
+  meta={['50–60 min', 'Python code', 'Headings as numbers', 'Robot stays on the desk']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+The planner is real. Now the driver stub goes. At each intersection on the path, the
+robot does two things: **turn** to face the next intersection, then **drive** to it. Today
+you write the loop that does that and the function that works out which way to face.
+Turning and driving stay stubs for now, so every move shows up as printed lines.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Break driving a path into two steps at each intersection: turn, then drive
+- Write `get_desired_heading(position, next_pos)`, which turns a one-step move into a heading (0 = N, 1 = E, 2 = S, 3 = W)
+- Write the real `drive_path()` loop, with stubs for turning and driving
+- Check every move of the delivery run on screen
+- (Optional) Catch a mistake early by raising an error when a function is asked something it can't answer
+
+</Objectives>
+
+## Which way to face?
+
+Between two *adjacent* intersections, either x changes by one **or** y changes by one,
+never both. That's four cases, one per compass direction:
+
+| Coordinate change | Direction | Heading |
+|---|---|---|
+| y +1 (up, away from you) | North | 0 |
+| x +1 (right) | East | 1 |
+| y −1 (down, toward you) | South | 2 |
+| x −1 (left) | West | 3 |
+
+The part to keep straight: x comes first in the tuple, but North and South change the
+*second* number. **North is away from you**, so moving North makes y *bigger*.
+
+<Figure
+  src="/img/lesson-m4-05/headings-xy.svg"
+  alt="The robot at an intersection facing north, with a card at each neighbor. North is heading 0, y goes up by 1. East is 1, x goes up by 1. South is 2, y goes down by 1. West is 3, x goes down by 1. Curved arrows between them, each marked +1, show that every clockwise turn adds 1, wrapping from 3 back to 0."
+  caption="The four neighbors of an intersection, the coordinate change that reaches each one, and its heading. Clockwise adds 1."
+/>
+
+<KnowledgeCheck
+  question="The robot moves from (2, 3) to (3, 3). Which direction is that, and what heading?"
+  options={[
+    {text: 'North, heading 0'},
+    {text: 'South, heading 2'},
+    {text: 'East, heading 1', correct: true},
+    {text: 'West, heading 3'},
+  ]}
+  explanation="x went 2 to 3 (x +1) and y stayed 3. Increasing x is moving right, East: heading 1."
+/>
+
+`get_desired_heading(position, next_pos)` works out that table: `x_diff` is next minus now
+for x, `y_diff` the same for y, and four `if` lines return the matching heading. Each `if`
+checks *both* differences: North means y went up by one **and** x didn't move.
+
+## This lesson's skeleton
+
+In the NAVIGATOR section, put these above `drive_path()`: the function you write, a
+quick test for it, and two new stubs.
+
+```python
+def get_desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away."""
+    # 1. x_diff and y_diff: next_pos minus position
+    # 2. one if per direction, from the table above; each
+    #    checks BOTH differences, because the other one is 0
+    # 3. (optional) none matched: raise ValueError, naming
+    #    both positions -- see "Catching mistakes early"
+    pass
+
+def test_headings():
+    for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
+        heading = get_desired_heading((1, 1), next_pos)
+        print("(1, 1) to", next_pos, ":", heading, HEADING_NAMES[heading])
+
+def turn_to(current_heading, desired_heading):
+    """STUB: pretend the robot turned. Lesson 4-6
+    replaces it."""
+    return desired_heading
+
+def fake_track_to_intersection():
+    """STUB for track_to_intersection(): print instead of
+    driving. Lesson 4-7 swaps in the real one."""
+    print("    track to intersection")
+```
+
+Then fill in the `drive_path()` stub you already have. Its loop gets four new steps, and
+the docstring changes:
+
+```python
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        # 1. desired_heading: which way to face next_pos
+        # 2. print("  move", current_position, "to", next_pos,
+        #          "- face", HEADING_NAMES[desired_heading])
+        # 3. turn: current_heading = turn_to(...)
+        # 4. drive there: fake_track_to_intersection()
+        current_position = next_pos     # the robot is there now
+    return current_position, current_heading
+```
+
+`turn_to()` hands back the new heading, so step 3 keeps `current_heading` up to date the
+same way the main program keeps `position` up to date.
+
+## Activity · Write it, test it, run it
+
+### Step 1 · `get_desired_heading()`
+
+Write its body from the outline. Work out the four answers for `test_headings()` from
+the table first: from (1, 1) to (0, 1), (1, 2), (2, 1) and (1, 0). Set the run line to
+`test_headings()` and run it.
+
+**What correct looks like:** four lines whose heading numbers and letters match your four
+answers.
+
+<Reveal title="Check your get_desired_heading()" hint="run test_headings() first">
+
+```python
+def get_desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away."""
+    x_diff = next_pos[0] - position[0]
+    y_diff = next_pos[1] - position[1]
+    if x_diff == 0 and y_diff ==  1: return 0   # North
+    if y_diff == 0 and x_diff ==  1: return 1   # East
+    if x_diff == 0 and y_diff == -1: return 2   # South
+    if y_diff == 0 and x_diff == -1: return 3   # West
+```
+
+The four answers come out 3, 0, 1, 2: W, N, E, S. (0, 1) is one step left, so it's West.
+
+</Reveal>
+
+### Step 2 · The `drive_path()` loop
+
+Fill in steps 1 to 4 of the loop. Set the run line to `test_delivery()` and run it.
+
+**What correct looks like:** under each path, one `move` line per intersection in it, each
+followed by `track to intersection`. Each move starts where the last one ended, and its
+letter matches the table: Leg 1 is E, E, N, N, N. The last line says
+`Finished at (0, 0) facing S`: the last move of the run goes South.
+
+<Reveal title="Check your drive_path() and its output" hint="run it first">
+
+```python
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        desired_heading = get_desired_heading(current_position, next_pos)
+        print("  move", current_position, "to", next_pos,
+              "- face", HEADING_NAMES[desired_heading])
+        current_heading = turn_to(current_heading, desired_heading)
+        fake_track_to_intersection()
+        current_position = next_pos     # the robot is there now
+    return current_position, current_heading
+```
+
+```
+Plan from (0, 0) to (2, 3)
+  path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+  move (0, 0) to (1, 0) - face E
+    track to intersection
+  move (1, 0) to (2, 0) - face E
+    track to intersection
+  move (2, 0) to (2, 1) - face N
+    track to intersection
+  move (2, 1) to (2, 2) - face N
+    track to intersection
+  move (2, 2) to (2, 3) - face N
+    track to intersection
+Plan from (2, 3) to (1, 0)
+  path: [(1, 3), (1, 2), (1, 1), (1, 0)]
+  move (2, 3) to (1, 3) - face W
+    track to intersection
+  move (1, 3) to (1, 2) - face S
+    track to intersection
+  move (1, 2) to (1, 1) - face S
+    track to intersection
+  move (1, 1) to (1, 0) - face S
+    track to intersection
+Plan from (1, 0) to (3, 1)
+  path: [(2, 0), (3, 0), (3, 1)]
+  move (1, 0) to (2, 0) - face E
+    track to intersection
+  move (2, 0) to (3, 0) - face E
+    track to intersection
+  move (3, 0) to (3, 1) - face N
+    track to intersection
+Plan from (3, 1) to (2, 2)
+  path: [(2, 1), (2, 2)]
+  move (3, 1) to (2, 1) - face W
+    track to intersection
+  move (2, 1) to (2, 2) - face N
+    track to intersection
+Plan from (2, 2) to (0, 0)
+  path: [(1, 2), (0, 2), (0, 1), (0, 0)]
+  move (2, 2) to (1, 2) - face W
+    track to intersection
+  move (1, 2) to (0, 2) - face W
+    track to intersection
+  move (0, 2) to (0, 1) - face S
+    track to intersection
+  move (0, 1) to (0, 0) - face S
+    track to intersection
+Finished at (0, 0) facing S
+```
+
+</Reveal>
+
+<KnowledgeCheck
+  question="Going from (1, 3) to (1, 2), what does get_desired_heading() return?"
+  options={[
+    {text: '0 (North)'},
+    {text: '1 (East)'},
+    {text: '2 (South)', correct: true},
+    {text: '3 (West)'},
+  ]}
+  explanation="x is unchanged; y went 3 to 2 (y −1). Decreasing y is moving toward you: South, heading 2."
+/>
+
+<OptionalExtension title="Catching mistakes early" gate="Optional: open it if you have time. Nothing later depends on it.">
+
+`get_desired_heading()` only makes sense when the next intersection is **one step away**.
+If none of the four `if` lines matches, there is no right answer. **When would that
+happen?** Think about it before you open the answer.
+
+<Reveal title="When would the next intersection not be adjacent?" hint="make a guess first">
+
+Only when there's a **bug in the planner**. A correct planner only lists adjacent steps.
+A path that includes the start (promise 1) is one way: the first "move" goes nowhere.
+
+</Reveal>
+
+Without a check, `get_desired_heading()` quietly returns `None`, and the program breaks
+somewhere else: here, at `HEADING_NAMES[None]`; on the robot, in a turn that never ends.
+With a check, the program stops at once and says which two positions caused it:
+
+```python
+raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+```
+
+`raise` stops the program on the spot and prints your message. `ValueError` is Python's
+name for "the values I was given make no sense". `str(position)` turns a tuple into text.
+
+<Figure
+  src="/img/lesson-m4-05/raise-spin.svg"
+  alt="Two rows. Without the raise: get_desired_heading is asked for the heading from (1, 1) to (2, 2), matches none of its cases and silently returns None; turn_to receives None and its loop waits for a heading of None that never comes, so the robot spins forever with no error, while the mistake was back at get_desired_heading. With the raise: get_desired_heading stops immediately with a ValueError naming both positions, and turn_to never runs."
+  caption="Same bad input both times. Without the raise the program never even stops; with it, it stops where the mistake is."
+/>
+
+**Try it:** add step 3 to `get_desired_heading()`. Then add one more call at the *end* of
+`test_headings()`, from (1, 1) to (2, 2), a diagonal. Run it: the four answers print as
+before, then the program stops with your message.
+
+</OptionalExtension>
+
+<TeacherNote title="What to watch">
+
+The grid orientation (x first in the tuple, but North is +y, away from you) is the #1
+confusion; draw it, point at it, quiz it. Check that each `if` tests both differences: a
+version that checks only `y_diff == 1` returns North for (2, 1) to (3, 2), a diagonal.
+
+The turns aren't real yet: the `turn_to()` stub just hands back the heading it was asked
+for, so the printout shows which way the robot must face, not how it gets there. That's
+Lesson 4-6. `raise` needs no more teaching than "the program stops and prints your
+message"; don't detour into `try`/`except`.
+
+</TeacherNote>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The NAVIGATOR section as this lesson leaves it, plus the run block. The planner is
+unchanged from Lesson 4-4. The optional `raise` is included.
+
+```python
+# ===== NAVIGATOR =====
+# Drives a planned path, one intersection at a time, and hands
+# back where the robot ended up and which way it faces.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
+def get_desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away."""
+    x_diff = next_pos[0] - position[0]
+    y_diff = next_pos[1] - position[1]
+    if x_diff == 0 and y_diff ==  1: return 0   # North
+    if y_diff == 0 and x_diff ==  1: return 1   # East
+    if x_diff == 0 and y_diff == -1: return 2   # South
+    if y_diff == 0 and x_diff == -1: return 3   # West
+    raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+
+def test_headings():
+    for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
+        heading = get_desired_heading((1, 1), next_pos)
+        print("(1, 1) to", next_pos, ":", heading, HEADING_NAMES[heading])
+
+def turn_to(current_heading, desired_heading):
+    """STUB: pretend the robot turned. Lesson 4-6
+    replaces it."""
+    return desired_heading
+
+def fake_track_to_intersection():
+    """STUB for track_to_intersection(): print instead of
+    driving. Lesson 4-7 swaps in the real one."""
+    print("    track to intersection")
+
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        desired_heading = get_desired_heading(current_position, next_pos)
+        print("  move", current_position, "to", next_pos,
+              "- face", HEADING_NAMES[desired_heading])
+        current_heading = turn_to(current_heading, desired_heading)
+        fake_track_to_intersection()
+        current_position = next_pos     # the robot is there now
+    return current_position, current_heading
+
+# --- The main program: the delivery run ---
+DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+
+def test_delivery():
+    position = (0, 0)
+    heading = 0                     # facing North
+    for destination in DESTINATIONS:
+        print("Plan from", position, "to", destination)
+        path = compute_manhattan_path(position, destination)
+        print("  path:", path)
+        position, heading = drive_path(path, position, heading)
+    print("Finished at", position, "facing", HEADING_NAMES[heading])
+
+# ===== RUN =====
+board.wait_for_button()
+test_delivery()
+```
+
+</TeacherNote>
+
+## Wrap-up
+
+- What two steps happen at each intersection? (Turn to face the next one, then drive to it.)
+- Between adjacent intersections, what can change? (x *or* y, by one: four cases, four headings.)
+- Why does `drive_path()` write `current_heading = turn_to(...)`? (`turn_to()` hands back the new heading; assigning it is the only way `drive_path()` keeps it.)
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

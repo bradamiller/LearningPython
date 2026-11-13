@@ -1,0 +1,297 @@
+---
+title: "Lesson 4-3 · The Main Program"
+sidebar_label: "4-3 · The Main Program"
+sidebar_position: 3
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="Lesson 4-3 · The Main Program"
+  meta={['45–50 min', 'Python code', 'Top-down: stubs first', 'Robot stays on the desk']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+Today you write the top of the tree from Lesson 4-0: the **main program** that sends
+the robot to every destination on a list. The planner and the driver don't exist yet, so
+they start as **stubs**. The program runs today, and the robot never moves.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Describe the robot's **pose**: its position `(x, y)` and its heading, a number from 0 to 3
+- Write the main program, `test_delivery()`, that plans and drives to each destination in a list
+- Use stubs so a program runs before the functions it calls are written
+- Return two values from a function, and unpack them where it is called
+- Explain why changing a parameter inside a function doesn't change the caller's variable
+
+</Objectives>
+
+## The robot's pose
+
+To plan from the right place, the program has to know two things about the robot: where
+it is, and which way it faces.
+
+- **Position** is an `(x, y)` tuple, as in Lesson 4-1.
+- **Heading** is a number: **0** is North, **1** East, **2** South, **3** West. They count
+  clockwise, so a clockwise turn adds 1.
+
+Together they are the robot's **pose**.
+
+<Figure
+  src="/img/lesson-m4-06/pose.svg"
+  alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose."
+  caption="The pose ((1, 1), 1): at (1, 1), facing East."
+/>
+
+To print a heading as a letter, look it up in a list: `HEADING_NAMES[heading]`.
+
+```python
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+```
+
+<KnowledgeCheck
+  question="The robot is at (2, 1), facing West. What is its pose?"
+  options={[
+    {text: '((1, 2), 3)'},
+    {text: '((2, 1), 3)', correct: true},
+    {text: '((2, 1), 1)'},
+    {text: '((2, 1), "W")'},
+  ]}
+  explanation="Position first, x then y: (2, 1). West is heading 3. The letter W is only for printing; the heading itself is the number."
+/>
+
+## The main program in words
+
+The delivery robot starts at (0, 0) facing North. For each destination on its list:
+
+1. **Plan** the path from where it is now.
+2. **Drive** the path, which leaves it somewhere new, facing a new way.
+
+Then it plans the next leg from *there*. That's the whole main program. The planner is
+`compute_manhattan_path(start, destination)`, and the driver is
+`drive_path(path, current_position, current_heading)`.
+
+## Stubs: run it before the parts exist
+
+A **stub** is a stand-in function: same name, same parameters, same kind of return value,
+but only enough inside to let the program run. These two are today's:
+
+```python
+def compute_manhattan_path(start, destination):
+    """STUB: a pretend path that jumps straight to the
+    destination. Lesson 4-4 replaces it."""
+    return [destination]
+
+def drive_path(path, current_position, current_heading):
+    """STUB: pretend to drive -- just jump to each
+    intersection in path. Lesson 4-5 replaces it."""
+    for next_pos in path:
+        current_position = next_pos
+    return current_position, current_heading
+```
+
+The planner stub's path is wrong (a robot can't jump three blocks), but it's a list of
+`(x, y)` tuples that ends at the destination, and that's all the main program needs today.
+
+## Handing back two values
+
+`drive_path()` ends with `return current_position, current_heading`. A comma between the
+values makes a tuple, so it hands back both at once: the pose. Where it is called, unpack
+it the way you unpacked `x, y = start` in Lesson 4-1:
+
+```python
+position, heading = drive_path(path, position, heading)
+```
+
+**Why it has to hand them back.** When the call runs, `current_position` starts with the
+value of `position`. Inside the function, `current_position = next_pos` changes only
+`drive_path()`'s own variable. As with assigning inside a function in Lesson 2-7, the
+caller's `position` is never touched. So the only way the main program learns where the
+robot ended up is the return value. The different names are a reminder:
+`current_position` belongs to `drive_path()`, and `position` belongs to the main program.
+
+## This lesson's skeleton
+
+Paste this into `robot.py` above `RUN`, after the GRID DRIVING section. It starts two
+new sections, each with a stub, and the main program at the end.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (x, y) tuples to
+# drive to. Nothing in here touches a sensor or a motor.
+
+def compute_manhattan_path(start, destination):
+    """STUB: a pretend path that jumps straight to the
+    destination. Lesson 4-4 replaces it."""
+    return [destination]
+
+# ===== NAVIGATOR =====
+# Drives a planned path, one intersection at a time, and hands
+# back where the robot ended up and which way it faces.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
+def drive_path(path, current_position, current_heading):
+    """STUB: pretend to drive -- just jump to each
+    intersection in path. Lesson 4-5 replaces it."""
+    for next_pos in path:
+        current_position = next_pos
+    return current_position, current_heading
+
+# --- The main program: the delivery run ---
+DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+
+def test_delivery():
+    # 1. position starts at (0, 0); heading starts at 0, North
+    # 2. for each destination in DESTINATIONS:
+    #      print "Plan from", position, "to", destination
+    #      plan the path from position; print "  path:" and it
+    #      drive it, and assign the pose it hands back
+    # 3. after the loop: print "Finished at", position,
+    #    "facing", and the heading's letter
+    pass
+```
+
+## Activity · Write it, run it
+
+### Step 1 · Write `test_delivery()`
+
+Write the body from its outline. Set the run line to `test_delivery()`, run it, and press
+the button. The robot stays on the desk; nothing moves.
+
+**What correct looks like:** two lines per destination, five destinations. Each `Plan from`
+starts at the destination of the line before it, the first one at (0, 0). Each path is just
+`[destination]`, because the planner is a stub. The last line says `Finished at (0, 0)
+facing N`: the driver stub never turns.
+
+<Reveal title="Check your test_delivery() and its output" hint="write it and run it first">
+
+```python
+def test_delivery():
+    position = (0, 0)
+    heading = 0                     # facing North
+    for destination in DESTINATIONS:
+        print("Plan from", position, "to", destination)
+        path = compute_manhattan_path(position, destination)
+        print("  path:", path)
+        position, heading = drive_path(path, position, heading)
+    print("Finished at", position, "facing", HEADING_NAMES[heading])
+```
+
+```
+Plan from (0, 0) to (2, 3)
+  path: [(2, 3)]
+Plan from (2, 3) to (1, 0)
+  path: [(1, 0)]
+Plan from (1, 0) to (3, 1)
+  path: [(3, 1)]
+Plan from (3, 1) to (2, 2)
+  path: [(2, 2)]
+Plan from (2, 2) to (0, 0)
+  path: [(0, 0)]
+Finished at (0, 0) facing N
+```
+
+</Reveal>
+
+### Step 2 · Break it on purpose
+
+Change the driving line to just `drive_path(path, position, heading)`, with nothing on the
+left. Before you run it, predict: what will each `Plan from` line say? Then run it.
+
+<Reveal title="What happened?" hint="predict first">
+
+Every line says `Plan from (0, 0)`. `drive_path()` still worked out where the robot
+ended up, but nobody caught the answer, so the main program's `position` never changed.
+On the floor, that robot would drive leg 1 right and then plan every later leg from home.
+
+</Reveal>
+
+Put `position, heading =` back and run it again.
+
+<KnowledgeCheck
+  question="A student calls drive_path(path, position, heading) on its own line, then plans the next leg with compute_manhattan_path(position, destination). What goes wrong?"
+  options={[
+    {text: 'Nothing: drive_path() updates position for them'},
+    {text: 'position and heading in the main program never changed, so the next leg is planned from the old spot', correct: true},
+    {text: 'Python raises an error about an unused return value'},
+    {text: 'The robot drives the path twice'},
+  ]}
+  explanation="current_position inside drive_path() is the function's own variable. The main program only learns the new pose by assigning from the return: position, heading = drive_path(...)."
+/>
+
+<TeacherNote title="Why stubs first">
+
+Students taught the old order wrote three lessons of parts before anything connected,
+and lost the thread. Here the whole program runs on day one, and every later lesson
+swaps one stub for the real thing and runs the same test. The output is always there to
+check against.
+
+Step 2 is the lesson's point. The dropped return value was the most common Module 4 bug,
+and it used to surface on the floor, on leg 2. Here students cause it on purpose, on
+screen, in two minutes. If someone asks why the stub planner returns a wrong path, that's
+the right question: a stub only has to keep the program running.
+
+</TeacherNote>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The new part of `robot.py` as this lesson leaves it, plus the run block.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (x, y) tuples to
+# drive to. Nothing in here touches a sensor or a motor.
+
+def compute_manhattan_path(start, destination):
+    """STUB: a pretend path that jumps straight to the
+    destination. Lesson 4-4 replaces it."""
+    return [destination]
+
+# ===== NAVIGATOR =====
+# Drives a planned path, one intersection at a time, and hands
+# back where the robot ended up and which way it faces.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
+def drive_path(path, current_position, current_heading):
+    """STUB: pretend to drive -- just jump to each
+    intersection in path. Lesson 4-5 replaces it."""
+    for next_pos in path:
+        current_position = next_pos
+    return current_position, current_heading
+
+# --- The main program: the delivery run ---
+DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+
+def test_delivery():
+    position = (0, 0)
+    heading = 0                     # facing North
+    for destination in DESTINATIONS:
+        print("Plan from", position, "to", destination)
+        path = compute_manhattan_path(position, destination)
+        print("  path:", path)
+        position, heading = drive_path(path, position, heading)
+    print("Finished at", position, "facing", HEADING_NAMES[heading])
+
+# ===== RUN =====
+board.wait_for_button()
+test_delivery()
+```
+
+</TeacherNote>
+
+## Wrap-up
+
+- What is the robot's pose? (Its position, an `(x, y)` tuple, and its heading, 0 to 3.)
+- What is a stub for? (It lets the program run before the real function is written.)
+- Why must the main program write `position, heading = drive_path(...)`? (Assigning to a parameter changes only the function's own variable; the return value is the only way the new pose gets back.)
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)

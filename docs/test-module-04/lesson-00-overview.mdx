@@ -1,0 +1,199 @@
+---
+title: "Module Overview · The Big Picture"
+sidebar_label: "4-0 · The Big Picture"
+sidebar_position: 0
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="The Big Picture"
+  meta={['20–25 min', 'Problem decomposition', 'Class discussion', 'No coding yet']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+Here's the problem this module solves: **get the robot from where it starts to a
+destination on the grid, all by itself.**
+
+<Figure
+  src="/img/lesson-m4-00/manhattan-grid.svg"
+  alt="A cartoon map of midtown Manhattan from above, not to scale. Between the Hudson River on the left and the East River on the right, long avenues run north and south (9th Ave to Madison) and shorter cross streets run east and west (53rd to 59th Street), with Central Park along the top. Every block is filled with buildings. A yellow taxi waits at A, the corner of 8th Avenue and 54th Street. A red dashed straight line from A to B, at 6th Avenue and 57th Street, is crossed out: no cutting through buildings. The taxi route in blue goes 2 blocks east along 54th Street, then 3 blocks north up 6th Avenue, numbered 1 to 5."
+  caption="A taxi can't cut through the buildings, so every trip is blocks across plus blocks up or down."
+/>
+
+A taxi in Manhattan has the same problem. Buildings fill every block, so it can't drive
+straight from A to B; it drives along the streets, 2 blocks east, then 3 blocks north. The robot
+is the same: it can only drive along the tape. So the route comes from one rule:
+
+> **Go east or west until we are at the destination avenue, then north or south until we're at the destination street.**
+
+That's the whole algorithm. It's called the **Manhattan algorithm**.
+
+<Callout kind="note" title="The big assumption: every street is clear">
+
+The algorithm assumes nothing is in the way, so it never needs a detour. **Module 5**
+adds obstacles; **Module 6** (optional) adds slow streets.
+
+</Callout>
+
+<TeacherNote title="Manhattan, for the curious">
+
+The grid dates from 1811 and is turned about 29 degrees from true north; the same
+distance is called **taxicab distance** in math. The map is a hook, not a lesson.
+Lesson 4-4 assumes students have seen it.
+
+</TeacherNote>
+
+<Objectives>
+
+By the end of this overview you will be able to:
+
+- Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
+- Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
+- Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of (x, y) coordinates between them
+- Say what building a program **top-down** means: the main program first, with stand-ins for the parts below it
+
+</Objectives>
+
+## Breaking down a complex problem
+
+Now you know how to find the route. Getting the robot to do it is the next problem.
+
+Street and avenue names are hard to use in a robot program, so we number each
+intersection instead: a column number, **x**, and a row number, **y**. The taxi's trip
+becomes (1, 1) to (3, 4).
+
+<Figure
+  src="/img/lesson-m4-00/manhattan-xy.svg"
+  alt="The same cartoon map of midtown Manhattan, with every intersection labeled by a pair of numbers (x, y). x is the column: the avenues are numbered from the west, 9th Ave is x = 0, 8th Ave x = 1, up to Madison, x = 5. y is the row: the streets are numbered from the south, 53rd St is y = 0, 54th St y = 1, up to 58th St, y = 5. The taxi starts at A, (1, 1), the corner of 8th Avenue and 54th Street, and follows the blue route to B, (3, 4), the corner of 6th Avenue and 57th Street."
+  caption="Each intersection gets a column number x and a row number y, written (x, y)."
+/>
+
+"Drive over there" sounds like one job, but it's too much to get right in one go. One way to tackle a complex problem is to **break it into simpler
+sub-problems** and solve each one. That's called **problem decomposition** (or **top-down design**).
+
+## Discuss · How would you split it?
+
+1. Before the robot moves, could you write down every intersection it will drive through?
+2. How could you check that list is right, without the robot?
+3. Once the list is right, what's left for the robot to do?
+
+<TeacherNote title="Leading the discussion (5–8 min)">
+
+Ask the questions in order and let the class answer; draw the grid on the board.
+
+1. **Yes.** Expect "two right, then three up." Mark each intersection on the board grid in order. If someone says the robot should decide as it goes, ask: "Does it need to? Nothing on the grid changes."
+2. **Trace it on the grid by hand**, or have the computer print it and compare. Steer to: *no robot needed*, so the route can be tested on a laptop.
+3. **Just drive it:** at each intersection on the list, face the next one and follow the tape there. It doesn't have to decide anything.
+
+Then name the split: **plan** the route, **drive** the plan, with the list passed between
+them. Ideas about motors, sensors or turning belong to the driving half; park them there.
+
+</TeacherNote>
+
+Here is that split, one level at a time:
+
+<TreeFigure
+  src="/img/lesson-m4t-00/decomposition-topdown.svg"
+  alt="A tree with four levels. At the top, the main program, Lesson 4-3: for each destination, plan the route, then drive it. It splits into the planner, compute_manhattan_path(), Lesson 4-4, and the driver, drive_path(), Lesson 4-5. An arrow labeled list of (x, y) coordinates runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-5 and 4-6; 2, drive to the next intersection, the LINE TRACKING functions built in Module 2, used on the robot in Lesson 4-7. Turning splits once more: which way to face, get_desired_heading(), Lesson 4-5, and turn until facing the next intersection, turn_to(), Lesson 4-6."
+  caption="The problem, broken into parts. Click a box to open it; each one names the lesson that builds it."
+/>
+
+## Plan first, then drive
+
+That's one way to split the problem, and the one this module uses: **plan** the whole
+route first, then **drive** it.
+
+<Figure
+  src="/img/lesson-m4-00/plan-then-drive-points.svg"
+  alt="Left: a 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at (0, 0). A blue route goes right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3), each intersection labeled with its coordinates. Right: step 1, Plan: work out the route, print it, check it, no robot needed. An arrow carries the points (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), a list of (x, y) coordinates, down to step 2, Drive: take the list and drive it, one intersection at a time."
+  caption="The plan is a list of (x, y) coordinates. One function makes it; another drives it."
+/>
+
+1. **Plan.** The planner, `compute_manhattan_path`, works out the whole route. It never
+   moves the robot, so you can test it **without a robot**: print the route and check it
+   against the grid.
+2. **Drive.** Once the plan is right, the driver, `drive_path`, **takes the plan and
+   drives it**, then reports where the robot ended up.
+
+Each intersection is an `(x, y)` pair, so the plan is a **list of coordinates**, the one
+thing the two functions share.
+
+One job each is called **separation of concerns**, and it makes bugs easy to find: a
+wrong route is a planner problem; a wrong turn is a driver problem.
+
+<KnowledgeCheck
+  question="Why plan the whole route first, as its own function, before writing the code that drives?"
+  options={[
+    {text: 'Because the robot can only run one function at a time'},
+    {text: 'Because the plan can be checked with no robot, and the driver then follows a route you trust', correct: true},
+    {text: 'Because planning makes the robot drive faster'},
+    {text: 'Because the driving function has to be written last in the file'},
+  ]}
+  explanation="The planning function never moves the robot, so you can test it on screen and check its list of coordinates on paper. Once you trust the plan, a wrong move on the floor can only be a driving problem."
+/>
+
+<TeacherNote title="This is an advance organizer — keep it high-level">
+
+Shape, not detail. Deflect "how does it work?" with "that's Lesson 4-4." Tell
+students they're not meant to understand every line yet; by Lesson 4-7 they will.
+
+</TeacherNote>
+
+## From one destination to several
+
+Picture a delivery driver with packages for several houses, each with its own address.
+The driver plans a route to the first house and drives it, then plans from there to the
+next, until every package is delivered.
+
+The robot does the same. Once it can reach one destination, several is just a loop: plan
+from where it is, drive, repeat.
+
+<Figure
+  src="/img/lesson-m4-00/delivery-overview-xy.svg"
+  alt="A 4 by 4 grid. The robot starts at home, (0, 0), the bottom-left corner, facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3)."
+  caption="Three deliveries, three legs, each planned from where the last one ended."
+/>
+
+## Build it from the top down
+
+You'll build this program **top-down**: the top of the tree first, then one level at a
+time. The main program comes first, and it runs on day one, because every part below it
+starts as a **stub**: a stand-in function that does just enough for the program to run,
+and prints what the real one would do.
+
+Then you swap the stubs for real functions, one per lesson, and run the program after
+every change. The output tells you right away whether it still works. The robot only
+drives in the last lesson, so you never have to wonder whether a bug is in your code
+or in the robot.
+
+## The module at a glance
+
+Lessons 4-1 and 4-2 give you the background: coordinates, tuples and lists. Then:
+
+- **4-3:** the main program, with stubs
+- **4-4:** the real planner
+- **4-5:** the real driver
+- **4-6:** turning
+- **4-7:** the stubs out, the robot on the grid
+
+## Wrap-up
+
+- What problem does Module 4 solve? (Drive the robot from where it starts to a destination on its own, then to several destinations in a row.)
+- Why plan first? (The planner never moves the robot, so its list of coordinates can be printed and checked with no robot at all. Then the driver only has to follow a plan you already trust.)
+- What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
+- What is a stub? (A stand-in function that lets the program run before the real function is written.)
+
+<TeacherNote title="Teaching note">
+
+Open each lesson with "remember the big picture? Today we build this piece."
+
+</TeacherNote>
+
+## Resources
+
+- [XRPLib Documentation](https://open-stem.github.io/XRP_MicroPython/)
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
