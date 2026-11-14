@@ -237,8 +237,8 @@ sensor-ended turns take three times as long as one and give the line sensors thr
 chances to miss.
 
 An endless `turning clockwise` printout is the screen version of a robot spinning forever,
-and much easier to stop and read. Usual causes: the heading isn't updated in the loop, or
-`get_desired_heading()` returned `None`.
+and much easier to stop and read. The usual cause: the heading isn't updated in the loop,
+or is updated without the wrap, so it counts past 3 and never matches.
 
 </TeacherNote>
 

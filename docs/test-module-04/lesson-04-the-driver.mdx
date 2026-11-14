@@ -120,9 +120,9 @@ The part to keep straight: x comes first in the tuple, but North and South chang
 />
 
 `get_desired_heading(position, next_pos)` works out that table. It unpacks both
-positions, as the planner did; then `x_diff` is next minus now for x, `y_diff` the same
-for y, and four `if` lines return the matching heading. Each `if`
-checks *both* differences: North means y went up by one **and** x didn't move.
+positions, as the planner did, then finds the one number that changed. Four `if` lines,
+one per row: if `next_y` is bigger than `y`, the move is North; if `next_x` is bigger than
+`x`, it's East; and the same with "smaller" for South and West.
 
 ## This lesson's skeleton
 
@@ -135,10 +135,10 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away."""
-    # 1. unpack position and next_pos into their x and y;
-    #    x_diff and y_diff: next minus now
-    # 2. one if per direction, from the table above; each
-    #    checks BOTH differences, because the other one is 0
+    # 1. unpack position into x, y and next_pos into
+    #    next_x, next_y
+    # 2. one if per row of the table, each returning its
+    #    heading. North is: if next_y > y: return 0
     # 3. (optional) none matched: raise ValueError, naming
     #    both positions -- see "Catching mistakes early"
     pass
@@ -208,12 +208,10 @@ def get_desired_heading(position, next_pos):
     next_pos, which must be one step away."""
     x, y = position
     next_x, next_y = next_pos
-    x_diff = next_x - x
-    y_diff = next_y - y
-    if x_diff == 0 and y_diff ==  1: return 0   # North
-    if y_diff == 0 and x_diff ==  1: return 1   # East
-    if x_diff == 0 and y_diff == -1: return 2   # South
-    if y_diff == 0 and x_diff == -1: return 3   # West
+    if next_y > y: return 0   # North
+    if next_x > x: return 1   # East
+    if next_y < y: return 2   # South
+    if next_x < x: return 3   # West
 ```
 
 The four answers come out 3, 0, 1, 2: W, N, E, S. (0, 1) is one step left, so it's West.
@@ -333,45 +331,52 @@ new position: (0, 0) heading: S
 
 <OptionalExtension title="Catching mistakes early" gate="Optional: open it if you have time. Nothing later depends on it.">
 
-`get_desired_heading()` only makes sense when the next intersection is **one step away**.
-If none of the four `if` lines matches, there is no right answer. **When would that
-happen?** Think about it before you open the answer.
+`get_desired_heading()` expects the next intersection to be **one step away**. What if
+none of the four `if` lines is true? **When would that happen?** Think about it before
+you open the answer.
 
-<Reveal title="When would the next intersection not be adjacent?" hint="make a guess first">
+<Reveal title="When would none of the four be true?" hint="make a guess first">
 
-Only when there's a **bug in the planner**. A correct planner only lists adjacent steps.
-A path that includes the start (promise 1) is one way: the first "move" goes nowhere.
+When `next_pos` is the same spot as `position`: nothing is bigger and nothing is smaller.
+That only happens when there's a **bug in the planner**: a path that includes the start
+(promise 1), so the first "move" goes nowhere.
 
 </Reveal>
 
-Without a check, `get_desired_heading()` quietly returns `None`, and the program breaks
-somewhere else: here, at `HEADING_NAMES[None]`; on the robot, in a turn that never ends.
-With a check, the program stops at once and says which two positions caused it:
+Without a check, `get_desired_heading()` reaches its end and quietly returns `None`. The
+program then stops one line later, in `drive_path()`, with
+`TypeError: list indices must be integers`: an error in the wrong place, about the wrong
+thing. With a check, the program stops where the mistake was noticed and says which two
+positions caused it:
 
 ```python
-raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+raise ValueError(str(next_pos) + " is not one step from " + str(position))
 ```
 
 `raise` stops the program on the spot and prints your message. `ValueError` is Python's
 name for "the values I was given make no sense". `str(position)` turns a tuple into text.
 
-<Figure
-  src="/img/lesson-m4-05/raise-spin.svg"
-  alt="Two rows. Without the raise: get_desired_heading is asked for the heading from (1, 1) to (2, 2), matches none of its cases and silently returns None; turn_to receives None and its loop waits for a heading of None that never comes, so the robot spins forever with no error, while the mistake was back at get_desired_heading. With the raise: get_desired_heading stops immediately with a ValueError naming both positions, and turn_to never runs."
-  caption="Same bad input both times. Without the raise the program never even stops; with it, it stops where the mistake is."
-/>
+**Try it:** add step 3 to `get_desired_heading()`. Then add one more line at the *end* of
+`test_headings()`:
 
-**Try it:** add step 3 to `get_desired_heading()`. Then add one more call at the *end* of
-`test_headings()`, from (1, 1) to (2, 2), a diagonal. Run it: the four answers print as
-before, then the program stops with your message.
+```python
+    get_desired_heading((1, 1), (1, 1))
+```
+
+Run it: the four answers print as before, then the program stops with your message.
+
+This check catches a move that goes nowhere. A jump of two blocks, or a diagonal, still
+gets a heading, because the four `if` lines only ask which number changed. The planner's
+own tests are what rule those out.
 
 </OptionalExtension>
 
 <TeacherNote title="What to watch">
 
 The grid orientation (x first in the tuple, but North is +y, away from you) is the #1
-confusion; draw it, point at it, quiz it. Check that each `if` tests both differences: a
-version that checks only `y_diff == 1` returns North for (2, 1) to (3, 2), a diagonal.
+confusion; draw it, point at it, quiz it. The four `if` lines find the one number that
+changed and nothing more: they trust the planner's promise that every step is to a
+neighbor, which `test_planner()` already checked.
 
 The turns aren't real yet: the `turn_to()` stub just hands back the heading it was asked
 for, so the printout shows which way the robot must face, not how it gets there. That's
@@ -401,13 +406,11 @@ def get_desired_heading(position, next_pos):
     next_pos, which must be one step away."""
     x, y = position
     next_x, next_y = next_pos
-    x_diff = next_x - x
-    y_diff = next_y - y
-    if x_diff == 0 and y_diff ==  1: return 0   # North
-    if y_diff == 0 and x_diff ==  1: return 1   # East
-    if x_diff == 0 and y_diff == -1: return 2   # South
-    if y_diff == 0 and x_diff == -1: return 3   # West
-    raise ValueError(str(position) + " and " + str(next_pos) + " are not neighbors")
+    if next_y > y: return 0   # North
+    if next_x > x: return 1   # East
+    if next_y < y: return 2   # South
+    if next_x < x: return 3   # West
+    raise ValueError(str(next_pos) + " is not one step from " + str(position))
 
 def test_headings():
     for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:

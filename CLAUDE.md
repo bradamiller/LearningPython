@@ -706,8 +706,18 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   - **Positions are unpacked everywhere, driver included** (`x, y = position`,
     `next_x, next_y = next_pos`). Indexing is taught in 4-4 for `HEADING_NAMES` only, with
     a tuple shown once for comparison.
+  - **`get_desired_heading()` uses four plain comparisons (Brad, 2026-11-14):**
+    `if next_y > y: return 0`, `next_x > x` 1, `next_y < y` 2, `next_x < x` 3. No
+    subtraction, no `and`: it finds the one number that changed and trusts the planner's
+    tests for adjacency. This is the trial only; the standard Module 4 still tests both
+    differences (the "FAIL WHERE THE PROBLEM IS" entry below). The optional "Catching
+    mistakes early" extension keeps the `raise`, which now fires only for a move that goes
+    nowhere (a path that includes the start), and says plainly that a diagonal or a
+    two-block jump still gets a heading. Without the raise, the failure is a `TypeError`
+    at `HEADING_NAMES[None]` on `drive_path()`'s print line, not a spinning robot, so
+    `raise-spin.svg` is not used in the trial.
   - **Kept from the module, not his mockup:** the driver is still split into
-    `get_desired_heading()` (both differences tested, optional `raise`) and `turn_to()`
+    `get_desired_heading()` (optional `raise`) and `turn_to()`
     (the `% 4` loop), because the split is what gives 4-4 and 4-5 their stub-then-fill
     steps; `x = x + 1`, not `+=` (no lesson teaches it); comma prints, not f-strings;
     `track_to_intersection`, the Module 2 name, not `track_to_cross`.

@@ -255,13 +255,11 @@ whenever it wants to know.
     def get_desired_heading(self, next_pos):
         x, y = self.position
         next_x, next_y = next_pos
-        x_diff = next_x - x
-        y_diff = next_y - y
-        if x_diff == 0 and y_diff ==  1: return 0   # North
-        if y_diff == 0 and x_diff ==  1: return 1   # East
-        if x_diff == 0 and y_diff == -1: return 2   # South
-        if y_diff == 0 and x_diff == -1: return 3   # West
-        raise ValueError(str(self.position) + " and " + str(next_pos) + " are not neighbors")
+        if next_y > y: return 0   # North
+        if next_x > x: return 1   # East
+        if next_y < y: return 2   # South
+        if next_x < x: return 3   # West
+        raise ValueError(str(next_pos) + " is not one step from " + str(self.position))
 
     def turn_to(self, desired_heading):
         while self.heading != desired_heading:
