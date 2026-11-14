@@ -35,13 +35,13 @@ Every line here is from your own `robot.py`.
 
 | What it does | From your program | Lesson |
 |---|---|---|
-| Make a tuple | `position = (0, 0)` | 4-1 |
-| Make a list | `DESTINATIONS = [(2, 3), (1, 0), ...]` | 4-1 |
-| Loop over a list | `for destination in DESTINATIONS:` | 4-1 |
-| Unpack | `position, heading = drive_path(...)` and `x, y = start` | 4-1, 4-2 |
+| Make a tuple | `robot_position = (0, 0)` | 4-1 |
+| Make a list | `DELIVERY_STOPS = [(2, 3), (1, 0), ...]` | 4-1 |
+| Loop over a list | `for delivery_destination in DELIVERY_STOPS:` | 4-1 |
+| Unpack | `robot_position, robot_heading = drive_path(...)` and `x, y = start` | 4-1, 4-2, 4-4 |
 | Start empty, then grow | `path = []` and `path.append((x, y))` | 4-2 |
 | Compare | `if actual == expected:` | 4-3 |
-| Pick one by index | `next_pos[0]` and `HEADING_NAMES[heading]` | 4-4 |
+| Pick one by index | `HEADING_NAMES[robot_heading]` | 4-4 |
 
 ## Tuple or list?
 
@@ -168,7 +168,7 @@ print(path)               # [(1, 0), (2, 0)]  <- path changed too
 ### Assigning versus changing
 
 In Lesson 4-1, `current_position = next_pos` inside `drive_path()` did **not** change the
-main program's `position`. That still holds, for lists too. The difference is between two
+main program's `robot_position`. That still holds, for lists too. The difference is between two
 things a function can do with a parameter:
 
 ```python

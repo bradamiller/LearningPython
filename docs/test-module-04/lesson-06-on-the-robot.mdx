@@ -65,7 +65,7 @@ Put the robot on (0, 0) facing North. Run `test_delivery()` and press the button
 **What correct looks like:** the robot does exactly what last lesson's printout said, in
 the same order. Count the turns at each corner against the printout: one right turn at the
 start, three at (2, 0). The robot finishes back on (0, 0), facing South, parked on the
-cross. The `move` lines still print as it goes.
+cross. The `moving:` lines still print as it goes.
 
 <KnowledgeCheck
   question="Yesterday's printout was right, but today the robot turns one too few times at a corner. Where is the problem?"
@@ -73,7 +73,7 @@ cross. The `move` lines still print as it goes.
     {text: 'In compute_manhattan_path()'},
     {text: 'On the robot side: a turn that missed or doubled up a line, the tape, or the battery. The same code printed the right turns', correct: true},
     {text: 'In the print statements'},
-    {text: 'In DESTINATIONS'},
+    {text: 'In DELIVERY_STOPS'},
   ]}
   explanation="The planner, get_desired_heading() and turn_to() were tested on screen and didn't change. Only the two real calls are new, so look at what they do on the floor: the turn's blind angle, the tape, the battery."
 />
@@ -111,8 +111,8 @@ def drive_path(path, current_position, current_heading):
     return the final position and heading."""
     for next_pos in path:
         desired_heading = get_desired_heading(current_position, next_pos)
-        print("  move", current_position, "to", next_pos,
-              "- face", HEADING_NAMES[desired_heading])
+        print("moving: from", current_position, "to:", next_pos,
+              "heading:", HEADING_NAMES[desired_heading])
         current_heading = turn_to(current_heading, desired_heading)
         track_to_intersection()
         current_position = next_pos     # the robot is there now
@@ -171,7 +171,7 @@ Watch for a version that turns left and then *also* loops because it forgot to u
 |---|---|---|
 | Planner | 10 | `compute_manhattan_path()` correct for any start and destination; `test_planner()` passes |
 | Driving functions | 15 | Correct `get_desired_heading()`, `turn_to()`, `drive_path()`; parked on the cross at every arrival; pose returned |
-| Main program | 10 | `test_delivery()`: 4+ destinations, assigns `position, heading` from `drive_path()` |
+| Main program | 10 | `test_delivery()`: 4+ destinations, assigns `robot_position, robot_heading` from `drive_path()` |
 | Screen run | 5 | The full run checked on screen with the stubs before the robot drove |
 | Robot demo | 10 | Physically visits all destinations with the turns the printout predicted |
 
@@ -253,8 +253,10 @@ whenever it wants to know.
 
 ```python
     def get_desired_heading(self, next_pos):
-        x_diff = next_pos[0] - self.position[0]
-        y_diff = next_pos[1] - self.position[1]
+        x, y = self.position
+        next_x, next_y = next_pos
+        x_diff = next_x - x
+        y_diff = next_y - y
         if x_diff == 0 and y_diff ==  1: return 0   # North
         if y_diff == 0 and x_diff ==  1: return 1   # East
         if x_diff == 0 and y_diff == -1: return 2   # South
@@ -280,11 +282,13 @@ whenever it wants to know.
 <div>
 
 ```python
-position = (0, 0)
-heading = 0
-for destination in DESTINATIONS:
-    path = compute_manhattan_path(position, destination)
-    position, heading = drive_path(path, position, heading)
+robot_position = (0, 0)
+robot_heading = 0
+for delivery_destination in DELIVERY_STOPS:
+    path = compute_manhattan_path(
+        robot_position, delivery_destination)
+    robot_position, robot_heading = drive_path(
+        path, robot_position, robot_heading)
 ```
 
 </div>
@@ -292,8 +296,9 @@ for destination in DESTINATIONS:
 
 ```python
 navigator = Navigator((0, 0), 0)
-for destination in DESTINATIONS:
-    path = compute_manhattan_path(navigator.position, destination)
+for delivery_destination in DELIVERY_STOPS:
+    path = compute_manhattan_path(
+        navigator.position, delivery_destination)
     navigator.drive_path(path)
 ```
 
@@ -304,8 +309,8 @@ On the left, the pose has to be passed into every call and assigned back from ev
 forget once and the robot plans from the wrong place. On the right, the navigator owns the
 pose, so there is nothing to pass back and nothing to forget.
 
-**From here on, use your class.** Where a later lesson says `drive_path(path, position,
-heading)`, you write `navigator.drive_path(path)`, and where it reads `position` you read
+**From here on, use your class.** Where a later lesson says `drive_path(path, robot_position,
+robot_heading)`, you write `navigator.drive_path(path)`, and where it reads `robot_position` you read
 `navigator.position`.
 
 </OptionalExtension>

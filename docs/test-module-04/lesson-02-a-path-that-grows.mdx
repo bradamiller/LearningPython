@@ -112,12 +112,13 @@ pair belongs to `append()`, the inner pair is the tuple.
 
 ### Step 1 · Leg 1, by hand
 
-In the MANHATTAN PLANNER section, replace the body of the stub with an empty list, five
-`append()` lines, one for each row of your trace, and `return path`. Take the `STUB` print
-out: this is no longer a stub. Run `test_delivery()`.
+In the MANHATTAN PLANNER section, keep the stub's `print` line and replace its `return`
+with an empty list, five `append()` lines, one for each row of your trace, and
+`return path`. Run `test_delivery()`.
 
-**What correct looks like:** Leg 1's `path:` line matches your trace. Every other leg gets
-the same path, which is wrong for all of them.
+**What correct looks like:** Leg 1's path matches your trace, and the driver stub prints
+one move for each step of it. Every other leg gets the same path, which is wrong for all
+of them.
 
 <Reveal title="Why is every leg the same?" hint="run it first">
 
@@ -156,6 +157,7 @@ in Step 3. Add `test_planner()` under it.
 def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
+    print("computing path from:", start, "to:", destination)
     path = []
     x, y = start              # where the plan is now
     dest_x, dest_y = destination   # where it is going
@@ -178,11 +180,15 @@ def test_planner():
 Before you run it, trace the three trips in `test_planner()` on paper. Then set the run
 line to `test_planner()` and run it.
 
-**What correct looks like:** only the east loop exists, so:
+**What correct looks like:** each trip prints what was asked, then the path. Only the east
+loop exists, so:
 
 ```
+computing path from: (0, 0) to: (2, 3)
 [(1, 0), (2, 0)]
+computing path from: (0, 2) to: (3, 2)
 [(1, 2), (2, 2), (3, 2)]
+computing path from: (2, 0) to: (2, 3)
 []
 ```
 
@@ -197,13 +203,16 @@ the first line of output, then run it.
 <Reveal title="What happened?" hint="predict first">
 
 ```
+computing path from: (0, 0) to: (2, 3)
 [(2, 0)]
+computing path from: (0, 2) to: (3, 2)
 [(3, 2)]
+computing path from: (2, 0) to: (2, 3)
 [(2, 0)]
 ```
 
 Indentation decides what's inside the loop. Now the `append()` runs **once, after** the
-loop, so only the last position is recorded. The third line is worse: the loop never ran,
+loop, so only the last position is recorded. The third path is worse: the loop never ran,
 so the function appended the start itself.
 
 </Reveal>
@@ -227,7 +236,7 @@ Under the north comment, copy the east loop, comparing `y` with `dest_y` and ste
 instead of `x`. Leave `path.append((x, y))` as it is: it always records the whole
 position. Run `test_planner()`.
 
-**What correct looks like:** all three lines match your paper traces.
+**What correct looks like:** all three paths match your paper traces.
 
 <Reveal title="Check your north loop and the output" hint="write it and run it first">
 
@@ -239,8 +248,11 @@ position. Run `test_planner()`.
 ```
 
 ```
+computing path from: (0, 0) to: (2, 3)
 [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+computing path from: (0, 2) to: (3, 2)
 [(1, 2), (2, 2), (3, 2)]
+computing path from: (2, 0) to: (2, 3)
 [(2, 1), (2, 2), (2, 3)]
 ```
 
@@ -250,29 +262,34 @@ position. Run `test_planner()`.
 
 Set the run line back to `test_delivery()` and run it.
 
-**What correct looks like:** Leg 1 is right, and the driver stub is handed the real path.
-Leg 2 is not: its path is empty, so the robot never leaves (2, 3), and every leg after it
-goes wrong.
+**What correct looks like:** Leg 1 is right, and the driver stub now moves one step at a
+time. Leg 2 is not: its path is empty, so the robot never leaves (2, 3), and every leg
+after it goes wrong.
 
 <Reveal title="Check your output" hint="run it first">
 
 ```
-Plan from (0, 0) to (2, 3)
-  path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-  STUB drive_path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-Plan from (2, 3) to (1, 0)
-  path: []
-  STUB drive_path: []
-Plan from (2, 3) to (3, 1)
-  path: [(3, 3)]
-  STUB drive_path: [(3, 3)]
-Plan from (3, 3) to (2, 2)
-  path: []
-  STUB drive_path: []
-Plan from (3, 3) to (0, 0)
-  path: []
-  STUB drive_path: []
-Finished at (3, 3) heading 0
+computing path from: (0, 0) to: (2, 3)
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+moving: from (0, 0) to: (1, 0)
+moving: from (1, 0) to: (2, 0)
+moving: from (2, 0) to: (2, 1)
+moving: from (2, 1) to: (2, 2)
+moving: from (2, 2) to: (2, 3)
+new position: (2, 3) heading: 0
+computing path from: (2, 3) to: (1, 0)
+[]
+new position: (2, 3) heading: 0
+computing path from: (2, 3) to: (3, 1)
+[(3, 3)]
+moving: from (2, 3) to: (3, 3)
+new position: (3, 3) heading: 0
+computing path from: (3, 3) to: (2, 2)
+[]
+new position: (3, 3) heading: 0
+computing path from: (3, 3) to: (0, 0)
+[]
+new position: (3, 3) heading: 0
 ```
 
 </Reveal>
@@ -345,6 +362,7 @@ main program are unchanged from Lesson 4-1.
 def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
+    print("computing path from:", start, "to:", destination)
     path = []
     x, y = start              # where the plan is now
     dest_x, dest_y = destination   # where it is going

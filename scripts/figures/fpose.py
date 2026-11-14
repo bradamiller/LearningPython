@@ -48,3 +48,16 @@ open(OUTDIR + 'pose.svg', 'w').write(svg(
     'faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled '
     'heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose.',
     b, W=640, H=320))
+
+# Module 4 test (top-down trial), Lesson 4-1: the same figure with the trial's
+# variable names, robot_position and robot_heading. -> static/img/lesson-m4t-01/pose-robot.svg
+robot = open(OUTDIR + 'pose.svg').read()
+old_code = f'<text class="m" x="{X}" y="278">position, heading = drive_path(...)</text>'
+old_note = f'<text class="sm" x="{X}" y="296">drive_path hands back the pose.</text>'
+assert old_code in robot and old_note in robot
+robot = robot.replace(old_code,
+    f'<text class="m" x="{X}" y="266">robot_position, robot_heading =</text>'
+    f'<text class="m" x="{X + 24}" y="284">drive_path(...)</text>')
+robot = robot.replace(old_note, f'<text class="sm" x="{X}" y="304">drive_path hands back the pose.</text>')
+robot = robot.replace('Below: position, heading = drive_path(...)', 'Below: robot_position, robot_heading = drive_path(...)')
+open(OUTDIR + 'pose-robot.svg', 'w').write(robot)

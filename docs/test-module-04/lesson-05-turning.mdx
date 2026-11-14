@@ -85,7 +85,7 @@ next to `fake_track_to_intersection()`:
 def fake_turn_clockwise():
     """STUB for turn_clockwise(): print instead of
     turning. Lesson 4-6 swaps in the real one."""
-    print("    turn clockwise")
+    print("turning clockwise")
 
 def turn_to(current_heading, desired_heading):
     """Turn clockwise a quarter turn at a time until
@@ -116,10 +116,10 @@ East to North is three: East, South, West, North.
 
 Write `turn_to()` from its outline. Run `test_delivery()`.
 
-**What correct looks like:** the same output as last lesson, with each `STUB turn_to` line
-replaced by zero to three `turn clockwise` lines. Leg 1's turn counts match your
+**What correct looks like:** the same output as last lesson, with each `turning:` line
+replaced by zero to three `turning clockwise` lines. Leg 1's turn counts match your
 prediction. Every turn you count is three or fewer, and the run still ends with
-`Finished at (0, 0) facing S`.
+`new position: (0, 0) heading: S`.
 
 <Reveal title="Check your turn_to() and its output" hint="run it first">
 
@@ -135,85 +135,89 @@ def turn_to(current_heading, desired_heading):
 ```
 
 ```
-Plan from (0, 0) to (2, 3)
-  path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-  move (0, 0) to (1, 0) - face E
-    turn clockwise
-    track to intersection
-  move (1, 0) to (2, 0) - face E
-    track to intersection
-  move (2, 0) to (2, 1) - face N
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (2, 1) to (2, 2) - face N
-    track to intersection
-  move (2, 2) to (2, 3) - face N
-    track to intersection
-Plan from (2, 3) to (1, 0)
-  path: [(1, 3), (1, 2), (1, 1), (1, 0)]
-  move (2, 3) to (1, 3) - face W
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (1, 3) to (1, 2) - face S
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (1, 2) to (1, 1) - face S
-    track to intersection
-  move (1, 1) to (1, 0) - face S
-    track to intersection
-Plan from (1, 0) to (3, 1)
-  path: [(2, 0), (3, 0), (3, 1)]
-  move (1, 0) to (2, 0) - face E
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (2, 0) to (3, 0) - face E
-    track to intersection
-  move (3, 0) to (3, 1) - face N
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-Plan from (3, 1) to (2, 2)
-  path: [(2, 1), (2, 2)]
-  move (3, 1) to (2, 1) - face W
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (2, 1) to (2, 2) - face N
-    turn clockwise
-    track to intersection
-Plan from (2, 2) to (0, 0)
-  path: [(1, 2), (0, 2), (0, 1), (0, 0)]
-  move (2, 2) to (1, 2) - face W
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (1, 2) to (0, 2) - face W
-    track to intersection
-  move (0, 2) to (0, 1) - face S
-    turn clockwise
-    turn clockwise
-    turn clockwise
-    track to intersection
-  move (0, 1) to (0, 0) - face S
-    track to intersection
-Finished at (0, 0) facing S
+computing path from: (0, 0) to: (2, 3)
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+moving: from (0, 0) to: (1, 0) heading: E
+turning clockwise
+tracking to intersection
+moving: from (1, 0) to: (2, 0) heading: E
+tracking to intersection
+moving: from (2, 0) to: (2, 1) heading: N
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (2, 1) to: (2, 2) heading: N
+tracking to intersection
+moving: from (2, 2) to: (2, 3) heading: N
+tracking to intersection
+new position: (2, 3) heading: N
+computing path from: (2, 3) to: (1, 0)
+[(1, 3), (1, 2), (1, 1), (1, 0)]
+moving: from (2, 3) to: (1, 3) heading: W
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (1, 3) to: (1, 2) heading: S
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (1, 2) to: (1, 1) heading: S
+tracking to intersection
+moving: from (1, 1) to: (1, 0) heading: S
+tracking to intersection
+new position: (1, 0) heading: S
+computing path from: (1, 0) to: (3, 1)
+[(2, 0), (3, 0), (3, 1)]
+moving: from (1, 0) to: (2, 0) heading: E
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (2, 0) to: (3, 0) heading: E
+tracking to intersection
+moving: from (3, 0) to: (3, 1) heading: N
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+new position: (3, 1) heading: N
+computing path from: (3, 1) to: (2, 2)
+[(2, 1), (2, 2)]
+moving: from (3, 1) to: (2, 1) heading: W
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (2, 1) to: (2, 2) heading: N
+turning clockwise
+tracking to intersection
+new position: (2, 2) heading: N
+computing path from: (2, 2) to: (0, 0)
+[(1, 2), (0, 2), (0, 1), (0, 0)]
+moving: from (2, 2) to: (1, 2) heading: W
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (1, 2) to: (0, 2) heading: W
+tracking to intersection
+moving: from (0, 2) to: (0, 1) heading: S
+turning clockwise
+turning clockwise
+turning clockwise
+tracking to intersection
+moving: from (0, 1) to: (0, 0) heading: S
+tracking to intersection
+new position: (0, 0) heading: S
 ```
 
 </Reveal>
 
 <KnowledgeCheck
-  question="A student's printout shows turn clockwise forever after the first move. What's the likely bug?"
+  question="A student's printout shows turning clockwise forever after the first move. What's the likely bug?"
   options={[
     {text: 'The planner returned the wrong path'},
     {text: 'turn_to() never changes current_heading inside the loop, so the condition never becomes False', correct: true},
@@ -232,7 +236,7 @@ printout; agree, and point them at the optional challenge in Lesson 4-6. Three
 sensor-ended turns take three times as long as one and give the line sensors three
 chances to miss.
 
-An endless `turn clockwise` printout is the screen version of a robot spinning forever,
+An endless `turning clockwise` printout is the screen version of a robot spinning forever,
 and much easier to stop and read. Usual causes: the heading isn't updated in the loop, or
 `get_desired_heading()` returned `None`.
 
@@ -246,7 +250,7 @@ The changes to the NAVIGATOR section; everything else is as Lesson 4-4 left it.
 def fake_turn_clockwise():
     """STUB for turn_clockwise(): print instead of
     turning. Lesson 4-6 swaps in the real one."""
-    print("    turn clockwise")
+    print("turning clockwise")
 
 def turn_to(current_heading, desired_heading):
     """Turn clockwise a quarter turn at a time until

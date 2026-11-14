@@ -44,8 +44,8 @@ Python can store that pair as **one value**, written just as on the map. It's ca
 **tuple**:
 
 ```python
-position = (0, 0)
-destination = (2, 3)
+robot_position = (0, 0)
+delivery_destination = (2, 3)
 ```
 
 Parentheses, a comma, x first. Order matters: `(2, 3)` and `(3, 2)` are different
@@ -54,10 +54,10 @@ intersections.
 <KnowledgeCheck
   question="The robot is 3 across and 1 up from the corner nearest you. Which line stores that?"
   options={[
-    {text: 'position = (1, 3)'},
-    {text: 'position = (3, 1)', correct: true},
-    {text: 'position = 3, 1, 0'},
-    {text: 'position = [3] + [1]'},
+    {text: 'robot_position = (1, 3)'},
+    {text: 'robot_position = (3, 1)', correct: true},
+    {text: 'robot_position = 3, 1, 0'},
+    {text: 'robot_position = [3] + [1]'},
   ]}
   explanation="x comes first: 3 across, then y: 1 up. Both numbers count from 0, so the corner itself is (0, 0)."
 />
@@ -69,18 +69,19 @@ code. A **list** holds them all, in order, in one variable: square brackets, com
 between the items.
 
 ```python
-DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
 ```
 
 Each item is a tuple, so this is a list of positions. To do something with every item,
 loop over the list:
 
 ```python
-for destination in DESTINATIONS:
-    print("Go to", destination)
+for delivery_destination in DELIVERY_STOPS:
+    print("Go to", delivery_destination)
 ```
 
-Each time around, the next item of the list is assigned to `destination`, first to last.
+Each time around, the next item of the list is assigned to `delivery_destination`, first
+to last.
 It's the `for` loop from Lesson 1-10, with a list in place of `range()`.
 
 <KnowledgeCheck
@@ -103,13 +104,14 @@ The robot starts at (0, 0) facing North. For each destination on its list:
 2. **Drive** the path, which leaves it somewhere new, facing a new way.
 
 Then it plans the next leg from *there*. So the program keeps track of two things: the
-robot's **position**, a tuple, and its **heading**, a number from 0 to 3. Today all you
+robot's **position**, a tuple, in `robot_position`, and its **heading**, a number from 0
+to 3, in `robot_heading`. Today all you
 need is that 0 means North; the rest comes in Lesson 4-4. Together they are the robot's
 **pose**.
 
 <Figure
-  src="/img/lesson-m4-06/pose.svg"
-  alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose."
+  src="/img/lesson-m4t-01/pose-robot.svg"
+  alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: robot_position, robot_heading = drive_path(...), drive_path hands back the pose."
   caption="The pose ((1, 1), 1): at (1, 1), facing East."
 />
 
@@ -119,21 +121,22 @@ The planner will be `compute_manhattan_path(start, destination)`, and the driver
 ## Stubs: run it before the parts exist
 
 A **stub** is a stand-in function: same name, same parameters, same kind of return value,
-but only enough inside to let the program run. Each stub **prints its name and what it
-was given**, so the printout shows that the main program called it, and with what.
+but only enough inside to let the program run. Each stub **prints what the real function
+will print**: the planner says what it is planning, and the driver says each move. So the
+printout shows that the main program called them, and with what.
 
 ```python
 def compute_manhattan_path(start, destination):
     """STUB: a pretend path that jumps straight to the
     destination. Lesson 4-2 replaces it."""
-    print("  STUB compute_manhattan_path:", start, "to", destination)
+    print("computing path from:", start, "to:", destination)
     return [destination]
 
 def drive_path(path, current_position, current_heading):
     """STUB: pretend to drive -- just jump to each
     intersection in path. Lesson 4-4 replaces it."""
-    print("  STUB drive_path:", path)
     for next_pos in path:
+        print("moving: from", current_position, "to:", next_pos)
         current_position = next_pos
     return current_position, current_heading
 ```
@@ -149,16 +152,17 @@ values makes a tuple, so it hands back both at once: the pose. Where it is calle
 each value its own variable:
 
 ```python
-position, heading = drive_path(path, position, heading)
+robot_position, robot_heading = drive_path(
+    path, robot_position, robot_heading)
 ```
 
 That's **unpacking**: the first variable on the left gets the first value, the second
 gets the second.
 
 **Why it has to hand them back.** When the call runs, `current_position` starts with the
-value of `position`. Inside the function, `current_position = next_pos` changes only
+value of `robot_position`. Inside the function, `current_position = next_pos` changes only
 `drive_path()`'s own variable. As with assigning inside a function in Lesson 2-7, the
-caller's `position` is never touched. So the only way the main program learns where the
+caller's `robot_position` is never touched. So the only way the main program learns where the
 robot ended up is the return value.
 
 ## This lesson's skeleton
@@ -175,7 +179,7 @@ new sections, each with a stub, and the main program at the end.
 def compute_manhattan_path(start, destination):
     """STUB: a pretend path that jumps straight to the
     destination. Lesson 4-2 replaces it."""
-    print("  STUB compute_manhattan_path:", start, "to", destination)
+    print("computing path from:", start, "to:", destination)
     return [destination]
 
 # ===== NAVIGATOR =====
@@ -185,22 +189,22 @@ def compute_manhattan_path(start, destination):
 def drive_path(path, current_position, current_heading):
     """STUB: pretend to drive -- just jump to each
     intersection in path. Lesson 4-4 replaces it."""
-    print("  STUB drive_path:", path)
     for next_pos in path:
+        print("moving: from", current_position, "to:", next_pos)
         current_position = next_pos
     return current_position, current_heading
 
 # --- The main program: the delivery run ---
-DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
 
 def test_delivery():
-    # 1. position starts at (0, 0); heading starts at 0, North
-    # 2. for each destination in DESTINATIONS:
-    #      print "Plan from", position, "to", destination
-    #      plan the path from position; print "  path:" and it
+    # 1. robot_position starts at (0, 0); robot_heading
+    #    starts at 0, North
+    # 2. for each delivery_destination in DELIVERY_STOPS:
+    #      plan the path from robot_position, and print it
     #      drive it, and assign the pose it hands back
-    # 3. after the loop: print "Finished at", position,
-    #    "heading", heading
+    #      print "new position:", robot_position,
+    #            "heading:", robot_heading
     pass
 ```
 
@@ -208,86 +212,91 @@ def test_delivery():
 
 ### Step 1 · The loop on its own
 
-Write steps 1 and 2 of `test_delivery()`, but for now put only the first `print` inside
-the loop. Set the run line to `test_delivery()`, run it, and press the button.
+Write step 1 and the `for` line of step 2. For now, put one line inside the loop:
 
-**What correct looks like:** five lines, one per destination, every one starting
-`Plan from (0, 0)`. Nothing has moved the robot yet.
+```python
+        print("next stop:", delivery_destination)
+```
+
+Set the run line to `test_delivery()`, run it, and press the button.
+
+**What correct looks like:** five lines, one per stop, in list order.
 
 ### Step 2 · Plan and drive
 
-Add the rest of the loop, then step 3. Run it. The robot stays on the desk.
+Replace that `print` with the rest of step 2. Run it. The robot stays on the desk.
 
-**What correct looks like:** four lines per destination. The two `STUB` lines show each
-stub was called, and with the right values. Each `Plan from` starts at the destination of
-the leg before it. The last line says `Finished at (0, 0) heading 0`: the driver stub
-never turns.
+**What correct looks like:** four lines per stop: what the planner was asked, the path,
+the move, and where the robot is now. Each `computing path from:` starts at the
+`new position:` of the leg before it. The heading is 0 every time: the driver stub never
+turns.
 
 <Reveal title="Check your test_delivery() and its output" hint="write it and run it first">
 
 ```python
 def test_delivery():
-    position = (0, 0)
-    heading = 0                     # facing North
-    for destination in DESTINATIONS:
-        print("Plan from", position, "to", destination)
-        path = compute_manhattan_path(position, destination)
-        print("  path:", path)
-        position, heading = drive_path(path, position, heading)
-    print("Finished at", position, "heading", heading)
+    robot_position = (0, 0)
+    robot_heading = 0               # facing North
+    for delivery_destination in DELIVERY_STOPS:
+        path = compute_manhattan_path(robot_position, delivery_destination)
+        print(path)
+        robot_position, robot_heading = drive_path(
+            path, robot_position, robot_heading)
+        print("new position:", robot_position, "heading:", robot_heading)
 ```
 
 ```
-Plan from (0, 0) to (2, 3)
-  STUB compute_manhattan_path: (0, 0) to (2, 3)
-  path: [(2, 3)]
-  STUB drive_path: [(2, 3)]
-Plan from (2, 3) to (1, 0)
-  STUB compute_manhattan_path: (2, 3) to (1, 0)
-  path: [(1, 0)]
-  STUB drive_path: [(1, 0)]
-Plan from (1, 0) to (3, 1)
-  STUB compute_manhattan_path: (1, 0) to (3, 1)
-  path: [(3, 1)]
-  STUB drive_path: [(3, 1)]
-Plan from (3, 1) to (2, 2)
-  STUB compute_manhattan_path: (3, 1) to (2, 2)
-  path: [(2, 2)]
-  STUB drive_path: [(2, 2)]
-Plan from (2, 2) to (0, 0)
-  STUB compute_manhattan_path: (2, 2) to (0, 0)
-  path: [(0, 0)]
-  STUB drive_path: [(0, 0)]
-Finished at (0, 0) heading 0
+computing path from: (0, 0) to: (2, 3)
+[(2, 3)]
+moving: from (0, 0) to: (2, 3)
+new position: (2, 3) heading: 0
+computing path from: (2, 3) to: (1, 0)
+[(1, 0)]
+moving: from (2, 3) to: (1, 0)
+new position: (1, 0) heading: 0
+computing path from: (1, 0) to: (3, 1)
+[(3, 1)]
+moving: from (1, 0) to: (3, 1)
+new position: (3, 1) heading: 0
+computing path from: (3, 1) to: (2, 2)
+[(2, 2)]
+moving: from (3, 1) to: (2, 2)
+new position: (2, 2) heading: 0
+computing path from: (2, 2) to: (0, 0)
+[(0, 0)]
+moving: from (2, 2) to: (0, 0)
+new position: (0, 0) heading: 0
 ```
 
 </Reveal>
 
 ### Step 3 · Break it on purpose
 
-Change the driving line to just `drive_path(path, position, heading)`, with nothing on the
-left. Before you run it, predict: what will each `Plan from` line say? Then run it.
+Change the driving call to just `drive_path(path, robot_position, robot_heading)`, with
+nothing on the left. Before you run it, predict: what will each `computing path from:`
+line say? Then run it.
 
 <Reveal title="What happened?" hint="predict first">
 
-Every line says `Plan from (0, 0)`, as in Step 1. `drive_path()` still worked out where
-the robot ended up, but nobody caught the answer, so the main program's `position` never
-changed. On the floor, that robot would drive leg 1 right and then plan every later leg
+Every one says `computing path from: (0, 0)`, and every `new position:` is `(0, 0)`.
+`drive_path()` still worked out where
+the robot ended up, but nobody caught the answer, so the main program's `robot_position`
+never changed. On the floor, that robot would drive leg 1 right and then plan every later leg
 from home.
 
 </Reveal>
 
-Put `position, heading =` back and run it again.
+Put `robot_position, robot_heading =` back and run it again.
 
 <KnowledgeCheck
-  question="A student calls drive_path(path, position, heading) on its own line, then plans the next leg with compute_manhattan_path(position, destination). What goes wrong?"
+  question="A student calls drive_path(path, robot_position, robot_heading) on its own line, with nothing on the left, then plans the next leg. What goes wrong?"
   options={[
-    {text: 'Nothing: drive_path() updates position for them'},
-    {text: 'position and heading in the main program never changed, so the next leg is planned from the old spot', correct: true},
+    {text: 'Nothing: drive_path() updates robot_position for them'},
+    {text: 'robot_position and robot_heading never changed, so the next leg is planned from the old spot', correct: true},
     {text: 'Python raises an error about an unused return value'},
     {text: 'The robot drives the path twice'},
   ]}
-  explanation="current_position inside drive_path() is the function's own variable. The main program only learns the new pose by assigning from the return: position, heading = drive_path(...)."
+  explanation="current_position inside drive_path() is the function's own variable. The main program only learns the new pose by assigning from the return: robot_position, robot_heading = drive_path(...)."
 />
 
 <TeacherNote title="Why the main program comes first">
@@ -321,7 +330,7 @@ The new part of `robot.py` as this lesson leaves it, plus the run block.
 def compute_manhattan_path(start, destination):
     """STUB: a pretend path that jumps straight to the
     destination. Lesson 4-2 replaces it."""
-    print("  STUB compute_manhattan_path:", start, "to", destination)
+    print("computing path from:", start, "to:", destination)
     return [destination]
 
 # ===== NAVIGATOR =====
@@ -331,23 +340,23 @@ def compute_manhattan_path(start, destination):
 def drive_path(path, current_position, current_heading):
     """STUB: pretend to drive -- just jump to each
     intersection in path. Lesson 4-4 replaces it."""
-    print("  STUB drive_path:", path)
     for next_pos in path:
+        print("moving: from", current_position, "to:", next_pos)
         current_position = next_pos
     return current_position, current_heading
 
 # --- The main program: the delivery run ---
-DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
 
 def test_delivery():
-    position = (0, 0)
-    heading = 0                     # facing North
-    for destination in DESTINATIONS:
-        print("Plan from", position, "to", destination)
-        path = compute_manhattan_path(position, destination)
-        print("  path:", path)
-        position, heading = drive_path(path, position, heading)
-    print("Finished at", position, "heading", heading)
+    robot_position = (0, 0)
+    robot_heading = 0               # facing North
+    for delivery_destination in DELIVERY_STOPS:
+        path = compute_manhattan_path(robot_position, delivery_destination)
+        print(path)
+        robot_position, robot_heading = drive_path(
+            path, robot_position, robot_heading)
+        print("new position:", robot_position, "heading:", robot_heading)
 
 # ===== RUN =====
 board.wait_for_button()
@@ -359,9 +368,10 @@ test_delivery()
 ## Wrap-up
 
 - How does Python store a position, and several destinations? (A tuple, `(x, y)`; a list of tuples, in square brackets.)
-- What does `for destination in DESTINATIONS:` do? (Runs the loop body once per item, with `destination` set to each item in turn.)
+- What does `for delivery_destination in DELIVERY_STOPS:` do? (Runs the loop body once per item, with `delivery_destination` set to each item in turn.)
 - What is a stub for, and why does it print? (It lets the program run before the real function is written; the print shows it was called, and with what.)
-- Why must the main program write `position, heading = drive_path(...)`? (Assigning to a parameter changes only the function's own variable; the return value is the only way the new pose gets back.)
+- How many lines does the program print per stop, and what are they? (Four: the plan request, the path, the move, the new position.)
+- Why must the main program write `robot_position, robot_heading = drive_path(...)`? (Assigning to a parameter changes only the function's own variable; the return value is the only way the new pose gets back.)
 
 ## Resources
 

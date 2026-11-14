@@ -678,13 +678,41 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   `get_desired_heading()`, `drive_path()`) · 4-5 Turning · 4-6 On the Robot · 4-7 Tuples
   and Lists: What You Now Know (consolidation, predict-then-run assessment, references
   and "assigning versus changing"; Module 5 relies on the references section).
-  **Rules for this module:** a stub prints `STUB <name>: <what it was given>` so the
-  printout shows the call happened and with what; stub signatures never change (heading
-  rides along from 4-1, explained in 4-4); 4-1's last print shows the heading number and
-  4-4 changes that one line to the letter; a concept is taught in the lesson that first
-  needs it and nowhere earlier (4-0's teacher note has the table). Every printed output
-  block was produced by running the lesson's code. The tree figure is
+  **Rules for this module:** stub signatures never change (heading rides along from 4-1,
+  explained in 4-4); a concept is taught in the lesson that first needs it and nowhere
+  earlier (4-0's teacher note has the table). Every printed output block was produced by
+  running the lesson's code. The tree figure is
   `lesson-m4t-00/decomposition-topdown-v2.svg` from `scripts/figures/fdecomp_topdown.py`.
+  **Aligned to Brad's own mockup the same day** (`manhattan_mockup.py`, his print-only
+  version of the whole program):
+  - **The prints are his, and that set is the right amount (Brad).** "It lets the students
+    see exactly what the robot will do, including each turn ... More print statements
+    would make it too verbose and might not get used. Fewer and it might not be obvious."
+    Per leg: `computing path from: A to: B` (printed by the planner, stub and real), the
+    path, one `moving: from A to: B heading: E` per step, one `turning clockwise` per
+    quarter turn, `tracking to intersection`, then `new position: P heading: H`. Flat, no
+    indentation, no `STUB` prefixes, no end-of-run line. A stub prints what the real
+    function will print (4-1's driver stub prints the `moving:` line without a heading;
+    4-4's `turn_to` stub prints `turning: from N to: E`). The final run is 77 lines, the
+    same count as his mockup. Don't add prints. The heading shows as a letter from 4-4 on
+    (that is what `HEADING_NAMES` and the indexing lesson are for); in 4-1 to 4-3 it is the
+    number 0.
+  - **Main-program names are his:** `robot_position`, `robot_heading`,
+    `delivery_destination`, and `DELIVERY_STOPS` (capitals, the course rule for file-level
+    settings; his was lowercase). Function parameters keep different names on purpose
+    (`start, destination`; `current_position, current_heading`): his mockup reused
+    `robot_position` as both the global and the parameter, which hides 4-1's lesson that
+    assigning inside a function doesn't change the caller's variable.
+  - **Positions are unpacked everywhere, driver included** (`x, y = position`,
+    `next_x, next_y = next_pos`). Indexing is taught in 4-4 for `HEADING_NAMES` only, with
+    a tuple shown once for comparison.
+  - **Kept from the module, not his mockup:** the driver is still split into
+    `get_desired_heading()` (both differences tested, optional `raise`) and `turn_to()`
+    (the `% 4` loop), because the split is what gives 4-4 and 4-5 their stub-then-fill
+    steps; `x = x + 1`, not `+=` (no lesson teaches it); comma prints, not f-strings;
+    `track_to_intersection`, the Module 2 name, not `track_to_cross`.
+  - 4-1's pose figure is `lesson-m4t-01/pose-robot.svg`, written by the end of
+    `scripts/figures/fpose.py` (the standard `pose.svg` is unchanged).
 - **2026-11-10: Module 4 lessons 4-5 and 4-6 merged (Brad: "Fold into 4-6").** The new
   4-5 is "Naming and Testing the Planner" (`lesson-05-naming-and-testing-the-planner`):
   the rename, the docstring and three promises, then run_test() and the six-case suite.

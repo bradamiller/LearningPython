@@ -33,7 +33,7 @@ By the end of this lesson you will be able to:
 
 ## Heading is a number
 
-Since Lesson 4-1 the program has carried a `heading` that never changed. Now it gets
+Since Lesson 4-1 the program has carried a `robot_heading` that never changed. Now it gets
 used. The four directions are numbered clockwise from North:
 
 | Heading | 0 | 1 | 2 | 3 |
@@ -71,7 +71,8 @@ print(next_pos[0])    # 2 -> x
 print(next_pos[1])    # 3 -> y
 ```
 
-Unpacking gets both parts at once; indexing gets one. Asking for an index that isn't
+For a position you'll usually want both numbers, so this program keeps unpacking them,
+as the planner does. Indexing is for picking one item out of many. Asking for an index that isn't
 there, like `HEADING_NAMES[4]`, stops the program with an `IndexError`.
 
 <KnowledgeCheck
@@ -118,8 +119,9 @@ The part to keep straight: x comes first in the tuple, but North and South chang
   explanation="x went 2 to 3 (x +1) and y stayed 3. Increasing x is moving right, East: heading 1."
 />
 
-`get_desired_heading(position, next_pos)` works out that table: `x_diff` is next minus now
-for x, `y_diff` the same for y, and four `if` lines return the matching heading. Each `if`
+`get_desired_heading(position, next_pos)` works out that table. It unpacks both
+positions, as the planner did; then `x_diff` is next minus now for x, `y_diff` the same
+for y, and four `if` lines return the matching heading. Each `if`
 checks *both* differences: North means y went up by one **and** x didn't move.
 
 ## This lesson's skeleton
@@ -133,7 +135,8 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away."""
-    # 1. x_diff and y_diff: next_pos minus position
+    # 1. unpack position and next_pos into their x and y;
+    #    x_diff and y_diff: next minus now
     # 2. one if per direction, from the table above; each
     #    checks BOTH differences, because the other one is 0
     # 3. (optional) none matched: raise ValueError, naming
@@ -148,14 +151,14 @@ def test_headings():
 def turn_to(current_heading, desired_heading):
     """STUB: pretend the robot turned. Lesson 4-5
     replaces it."""
-    print("    STUB turn_to:", HEADING_NAMES[current_heading],
-          "to", HEADING_NAMES[desired_heading])
+    print("turning: from", HEADING_NAMES[current_heading],
+          "to:", HEADING_NAMES[desired_heading])
     return desired_heading
 
 def fake_track_to_intersection():
     """STUB for track_to_intersection(): print instead of
     driving. Lesson 4-6 swaps in the real one."""
-    print("    track to intersection")
+    print("tracking to intersection")
 ```
 
 Then fill in the `drive_path()` stub you already have. Its loop gets four new steps, and
@@ -167,8 +170,8 @@ def drive_path(path, current_position, current_heading):
     return the final position and heading."""
     for next_pos in path:
         # 1. desired_heading: which way to face next_pos
-        # 2. print("  move", current_position, "to", next_pos,
-        #          "- face", HEADING_NAMES[desired_heading])
+        # 2. print("moving: from", current_position, "to:", next_pos,
+        #          "heading:", HEADING_NAMES[desired_heading])
         # 3. turn: current_heading = turn_to(...)
         # 4. drive there: fake_track_to_intersection()
         current_position = next_pos     # the robot is there now
@@ -176,12 +179,14 @@ def drive_path(path, current_position, current_heading):
 ```
 
 `turn_to()` hands back the new heading, so step 3 keeps `current_heading` up to date the
-same way the main program keeps `position` up to date.
+same way the main program keeps `robot_position` up to date.
 
-One more line changes. In `test_delivery()`, make the last `print` show the letter:
+One more line changes. In `test_delivery()`, make the `new position:` print show the
+letter:
 
 ```python
-    print("Finished at", position, "facing", HEADING_NAMES[heading])
+        print("new position:", robot_position,
+              "heading:", HEADING_NAMES[robot_heading])
 ```
 
 ## Activity · Write it, test it, run it
@@ -201,8 +206,10 @@ answers.
 def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away."""
-    x_diff = next_pos[0] - position[0]
-    y_diff = next_pos[1] - position[1]
+    x, y = position
+    next_x, next_y = next_pos
+    x_diff = next_x - x
+    y_diff = next_y - y
     if x_diff == 0 and y_diff ==  1: return 0   # North
     if y_diff == 0 and x_diff ==  1: return 1   # East
     if x_diff == 0 and y_diff == -1: return 2   # South
@@ -217,11 +224,11 @@ The four answers come out 3, 0, 1, 2: W, N, E, S. (0, 1) is one step left, so it
 
 Fill in steps 1 to 4 of the loop. Set the run line to `test_delivery()` and run it.
 
-**What correct looks like:** under each path, one `move` line per intersection in it, each
-followed by a `STUB turn_to` line and `track to intersection`. Each move starts where the
-last one ended, and its letter matches the table: Leg 1 is E, E, N, N, N. Each `turn_to`
-starts from the heading the one before it ended on. The last line says
-`Finished at (0, 0) facing S`: the last move of the run goes South.
+**What correct looks like:** under each path, one `moving:` line per intersection in it,
+each followed by a `turning:` line and `tracking to intersection`. Each move starts where
+the last one ended, and its letter matches the table: Leg 1 is E, E, N, N, N. Each
+`turning:` starts from the heading the one before it ended on. The last line says
+`new position: (0, 0) heading: S`: the last move of the run goes South.
 
 <Reveal title="Check your drive_path() and its output" hint="run it first">
 
@@ -231,8 +238,8 @@ def drive_path(path, current_position, current_heading):
     return the final position and heading."""
     for next_pos in path:
         desired_heading = get_desired_heading(current_position, next_pos)
-        print("  move", current_position, "to", next_pos,
-              "- face", HEADING_NAMES[desired_heading])
+        print("moving: from", current_position, "to:", next_pos,
+              "heading:", HEADING_NAMES[desired_heading])
         current_heading = turn_to(current_heading, desired_heading)
         fake_track_to_intersection()
         current_position = next_pos     # the robot is there now
@@ -240,71 +247,75 @@ def drive_path(path, current_position, current_heading):
 ```
 
 ```
-Plan from (0, 0) to (2, 3)
-  path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
-  move (0, 0) to (1, 0) - face E
-    STUB turn_to: N to E
-    track to intersection
-  move (1, 0) to (2, 0) - face E
-    STUB turn_to: E to E
-    track to intersection
-  move (2, 0) to (2, 1) - face N
-    STUB turn_to: E to N
-    track to intersection
-  move (2, 1) to (2, 2) - face N
-    STUB turn_to: N to N
-    track to intersection
-  move (2, 2) to (2, 3) - face N
-    STUB turn_to: N to N
-    track to intersection
-Plan from (2, 3) to (1, 0)
-  path: [(1, 3), (1, 2), (1, 1), (1, 0)]
-  move (2, 3) to (1, 3) - face W
-    STUB turn_to: N to W
-    track to intersection
-  move (1, 3) to (1, 2) - face S
-    STUB turn_to: W to S
-    track to intersection
-  move (1, 2) to (1, 1) - face S
-    STUB turn_to: S to S
-    track to intersection
-  move (1, 1) to (1, 0) - face S
-    STUB turn_to: S to S
-    track to intersection
-Plan from (1, 0) to (3, 1)
-  path: [(2, 0), (3, 0), (3, 1)]
-  move (1, 0) to (2, 0) - face E
-    STUB turn_to: S to E
-    track to intersection
-  move (2, 0) to (3, 0) - face E
-    STUB turn_to: E to E
-    track to intersection
-  move (3, 0) to (3, 1) - face N
-    STUB turn_to: E to N
-    track to intersection
-Plan from (3, 1) to (2, 2)
-  path: [(2, 1), (2, 2)]
-  move (3, 1) to (2, 1) - face W
-    STUB turn_to: N to W
-    track to intersection
-  move (2, 1) to (2, 2) - face N
-    STUB turn_to: W to N
-    track to intersection
-Plan from (2, 2) to (0, 0)
-  path: [(1, 2), (0, 2), (0, 1), (0, 0)]
-  move (2, 2) to (1, 2) - face W
-    STUB turn_to: N to W
-    track to intersection
-  move (1, 2) to (0, 2) - face W
-    STUB turn_to: W to W
-    track to intersection
-  move (0, 2) to (0, 1) - face S
-    STUB turn_to: W to S
-    track to intersection
-  move (0, 1) to (0, 0) - face S
-    STUB turn_to: S to S
-    track to intersection
-Finished at (0, 0) facing S
+computing path from: (0, 0) to: (2, 3)
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+moving: from (0, 0) to: (1, 0) heading: E
+turning: from N to: E
+tracking to intersection
+moving: from (1, 0) to: (2, 0) heading: E
+turning: from E to: E
+tracking to intersection
+moving: from (2, 0) to: (2, 1) heading: N
+turning: from E to: N
+tracking to intersection
+moving: from (2, 1) to: (2, 2) heading: N
+turning: from N to: N
+tracking to intersection
+moving: from (2, 2) to: (2, 3) heading: N
+turning: from N to: N
+tracking to intersection
+new position: (2, 3) heading: N
+computing path from: (2, 3) to: (1, 0)
+[(1, 3), (1, 2), (1, 1), (1, 0)]
+moving: from (2, 3) to: (1, 3) heading: W
+turning: from N to: W
+tracking to intersection
+moving: from (1, 3) to: (1, 2) heading: S
+turning: from W to: S
+tracking to intersection
+moving: from (1, 2) to: (1, 1) heading: S
+turning: from S to: S
+tracking to intersection
+moving: from (1, 1) to: (1, 0) heading: S
+turning: from S to: S
+tracking to intersection
+new position: (1, 0) heading: S
+computing path from: (1, 0) to: (3, 1)
+[(2, 0), (3, 0), (3, 1)]
+moving: from (1, 0) to: (2, 0) heading: E
+turning: from S to: E
+tracking to intersection
+moving: from (2, 0) to: (3, 0) heading: E
+turning: from E to: E
+tracking to intersection
+moving: from (3, 0) to: (3, 1) heading: N
+turning: from E to: N
+tracking to intersection
+new position: (3, 1) heading: N
+computing path from: (3, 1) to: (2, 2)
+[(2, 1), (2, 2)]
+moving: from (3, 1) to: (2, 1) heading: W
+turning: from N to: W
+tracking to intersection
+moving: from (2, 1) to: (2, 2) heading: N
+turning: from W to: N
+tracking to intersection
+new position: (2, 2) heading: N
+computing path from: (2, 2) to: (0, 0)
+[(1, 2), (0, 2), (0, 1), (0, 0)]
+moving: from (2, 2) to: (1, 2) heading: W
+turning: from N to: W
+tracking to intersection
+moving: from (1, 2) to: (0, 2) heading: W
+turning: from W to: W
+tracking to intersection
+moving: from (0, 2) to: (0, 1) heading: S
+turning: from W to: S
+tracking to intersection
+moving: from (0, 1) to: (0, 0) heading: S
+turning: from S to: S
+tracking to intersection
+new position: (0, 0) heading: S
 ```
 
 </Reveal>
@@ -364,7 +375,7 @@ version that checks only `y_diff == 1` returns North for (2, 1) to (3, 2), a dia
 
 The turns aren't real yet: the `turn_to()` stub just hands back the heading it was asked
 for, so the printout shows which way the robot must face, not how it gets there. That's
-Lesson 4-5. A student whose every `STUB turn_to` line starts from N forgot to assign
+Lesson 4-5. A student whose every `turning:` line starts from N forgot to assign
 `current_heading = turn_to(...)`: the same dropped return as Lesson 4-1, one level down.
 
 Indexing is new here. The heading-is-its-own-index trick is worth saying out loud, and
@@ -388,8 +399,10 @@ HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away."""
-    x_diff = next_pos[0] - position[0]
-    y_diff = next_pos[1] - position[1]
+    x, y = position
+    next_x, next_y = next_pos
+    x_diff = next_x - x
+    y_diff = next_y - y
     if x_diff == 0 and y_diff ==  1: return 0   # North
     if y_diff == 0 and x_diff ==  1: return 1   # East
     if x_diff == 0 and y_diff == -1: return 2   # South
@@ -404,39 +417,40 @@ def test_headings():
 def turn_to(current_heading, desired_heading):
     """STUB: pretend the robot turned. Lesson 4-5
     replaces it."""
-    print("    STUB turn_to:", HEADING_NAMES[current_heading],
-          "to", HEADING_NAMES[desired_heading])
+    print("turning: from", HEADING_NAMES[current_heading],
+          "to:", HEADING_NAMES[desired_heading])
     return desired_heading
 
 def fake_track_to_intersection():
     """STUB for track_to_intersection(): print instead of
     driving. Lesson 4-6 swaps in the real one."""
-    print("    track to intersection")
+    print("tracking to intersection")
 
 def drive_path(path, current_position, current_heading):
     """Turn and drive through every intersection in path;
     return the final position and heading."""
     for next_pos in path:
         desired_heading = get_desired_heading(current_position, next_pos)
-        print("  move", current_position, "to", next_pos,
-              "- face", HEADING_NAMES[desired_heading])
+        print("moving: from", current_position, "to:", next_pos,
+              "heading:", HEADING_NAMES[desired_heading])
         current_heading = turn_to(current_heading, desired_heading)
         fake_track_to_intersection()
         current_position = next_pos     # the robot is there now
     return current_position, current_heading
 
 # --- The main program: the delivery run ---
-DESTINATIONS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
 
 def test_delivery():
-    position = (0, 0)
-    heading = 0                     # facing North
-    for destination in DESTINATIONS:
-        print("Plan from", position, "to", destination)
-        path = compute_manhattan_path(position, destination)
-        print("  path:", path)
-        position, heading = drive_path(path, position, heading)
-    print("Finished at", position, "facing", HEADING_NAMES[heading])
+    robot_position = (0, 0)
+    robot_heading = 0               # facing North
+    for delivery_destination in DELIVERY_STOPS:
+        path = compute_manhattan_path(robot_position, delivery_destination)
+        print(path)
+        robot_position, robot_heading = drive_path(
+            path, robot_position, robot_heading)
+        print("new position:", robot_position,
+              "heading:", HEADING_NAMES[robot_heading])
 
 # ===== RUN =====
 board.wait_for_button()
