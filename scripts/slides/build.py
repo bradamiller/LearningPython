@@ -38,7 +38,9 @@ def main(only):
     manifest = {}
     for path in decks:
         deck = load(path)
-        key = f"{deck['module']}-{deck['lesson']}"
+        # 'key' lets a trial module (the Module 4 test) share lesson numbers with
+        # the standard one without being rebuilt when you ask for, say, 4-1
+        key = deck.get('key', f"{deck['module']}-{deck['lesson']}")
         doc = deck['doc']
         if not os.path.exists(os.path.join(REPO, 'docs', doc + '.mdx')):
             sys.exit(f'{path}: no lesson page docs/{doc}.mdx')

@@ -539,7 +539,8 @@ def s_title(prs, d, deck):
     if os.path.exists(robot):
         p = sl.shapes.add_picture(robot, 0, Inches(0.45), height=Inches(1.5))
         p.left = int((W - p.width) / 2)
-    text(sl, f"MODULE {deck['module']}  ·  LESSON {deck['module']}-{deck['lesson']}",
+    label = deck.get('label', f"MODULE {deck['module']}")
+    text(sl, f"{label}  ·  LESSON {deck['module']}-{deck['lesson']}",
          0, Inches(2.0), W, Inches(0.5), size=22, color=TEAL, align=PP_ALIGN.CENTER)
     text(sl, deck['title'], Inches(0.8), Inches(2.45), W - Inches(1.6), Inches(1.1),
          size=60, font=TITLE_FONT, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)

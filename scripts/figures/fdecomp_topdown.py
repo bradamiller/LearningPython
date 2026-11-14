@@ -8,8 +8,8 @@ carries data-node and data-expand. The page SVG has everything showing, so it
 reads in full where scripts don't run; the component hides levels on load.
 
 Outputs:
-  out/decomposition.svg -> static/img/lesson-m4-05/decomposition.svg (the page)
-  out/decomposition-1.svg .. -4.svg -> scripts/slides/decks/m4/fig/l05-decomp-N.svg
+  out/decomposition-topdown-v2.svg -> static/img/lesson-m4t-00/ (the page)
+  out/topdown-decomp-1.svg .. -4.svg -> scripts/slides/decks/m4t/fig/ (the deck, one level each)
     (the deck: one slide per level, the levels below simply left out)
 (renamed 2026-11-08 when the top box changed, so browsers don't show the cached old one)
 """
@@ -146,3 +146,6 @@ def render(levels, opened):
 # Opened boxes show a minus; on the page the component sets which are open.
 open(OUTDIR + 'decomposition-topdown-v2.svg', 'w').write(render(4, True))
 
+# The deck shows one level per slide, closed boxes, on the same canvas.
+for n in range(1, 5):
+    open(OUTDIR + 'topdown-decomp-%d.svg' % n, 'w').write(render(n, False))

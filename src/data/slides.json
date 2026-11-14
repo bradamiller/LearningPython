@@ -51,5 +51,13 @@
   "module-06-dijkstra/lesson-02-weights-in-the-graph": "/slides/module-06-dijkstra/module-6-lesson-02-weights-in-the-graph.pptx",
   "module-06-dijkstra/lesson-03-from-bfs-to-dijkstra": "/slides/module-06-dijkstra/module-6-lesson-03-from-bfs-to-dijkstra.pptx",
   "module-06-dijkstra/lesson-04-drive-it": "/slides/module-06-dijkstra/module-6-lesson-04-drive-it.pptx",
-  "module-06-dijkstra/lesson-05-three-planners-one-harness": "/slides/module-06-dijkstra/module-6-lesson-05-three-planners-one-harness.pptx"
+  "module-06-dijkstra/lesson-05-three-planners-one-harness": "/slides/module-06-dijkstra/module-6-lesson-05-three-planners-one-harness.pptx",
+  "test-module-04/lesson-00-overview": "/slides/test-module-04/module-4-lesson-00-overview.pptx",
+  "test-module-04/lesson-01-the-main-program": "/slides/test-module-04/module-4-lesson-01-the-main-program.pptx",
+  "test-module-04/lesson-02-a-path-that-grows": "/slides/test-module-04/module-4-lesson-02-a-path-that-grows.pptx",
+  "test-module-04/lesson-03-the-planner-every-direction": "/slides/test-module-04/module-4-lesson-03-the-planner-every-direction.pptx",
+  "test-module-04/lesson-04-the-driver": "/slides/test-module-04/module-4-lesson-04-the-driver.pptx",
+  "test-module-04/lesson-05-turning": "/slides/test-module-04/module-4-lesson-05-turning.pptx",
+  "test-module-04/lesson-06-on-the-robot": "/slides/test-module-04/module-4-lesson-06-on-the-robot.pptx",
+  "test-module-04/lesson-07-tuples-and-lists": "/slides/test-module-04/module-4-lesson-07-tuples-and-lists.pptx"
 }
