@@ -112,9 +112,15 @@ pair belongs to `append()`, the inner pair is the tuple.
 
 ### Step 1 · Leg 1, by hand
 
-In the `compute_manhattan_path()` function, keep the stub's `print` line and replace its
-`return` with an empty list, five `append()` lines, one for each row of your trace, and
-`return path`. Run `test_delivery()`.
+In the `compute_manhattan_path()` function, keep the `print` line. Replace the
+`return [destination]` line with these, in order:
+
+1. Assign an empty list to a variable named `path`.
+2. Append the five positions from your trace to `path`, one line each, in trace order.
+   The first is `path.append((1, 0))`.
+3. Return `path`.
+
+Run `test_delivery()`.
 
 **What correct looks like:** Leg 1's path matches your trace, and the driver stub prints
 one move for each step of it. Every other leg gets the same path, which is wrong for all
