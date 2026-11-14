@@ -1812,8 +1812,31 @@ def render_page(rendered):
             module,
             link("function", "robot-end-of-module-%d.py" % module),
             link("class", "robot-end-of-module-%d.py" % module)))
+    out += test_module_section()
     out.append("")
     return "\n".join(out)
+
+
+def test_module_section():
+    """The Module 4 test (top-down trial) forks from the end of Module 3;
+    scripts/build_test_module_templates.py writes its templates. List what is
+    there, if anything."""
+    base = os.path.join(OUT, "test-module-04")
+    names = sorted(os.path.basename(p) for p in glob.glob(os.path.join(base, "function", "*.py")))
+    if not names:
+        return []
+    out = ["\n## Module 4 test · Top-down (trial)\n",
+           "The trial version of Module 4 picks up from the end of Module 3. Built by "
+           "`scripts/build_test_module_templates.py`.\n",
+           "| After lesson | Function track | Class track |", "|---|---|---|"]
+    for name in names:
+        n = int(re.search(r"4-(\d+)", name).group(1))
+        title = re.search(r'^title: "Lesson 4-\d+ · (.*)"', open(glob.glob(os.path.join(
+            DOCS, "test-module-04", "lesson-%02d-*.mdx" % n))[0]).read(), re.M).group(1)
+        out.append("| 4-%d · %s | [%s](pathname:///templates/test-module-04/function/%s) | "
+                   "[%s](pathname:///templates/test-module-04/class/%s) |"
+                   % (n, title, name, name, name, name))
+    return out
 
 
 def link(track, name):

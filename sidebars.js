@@ -144,6 +144,7 @@ const sidebars = {
         'teacher-guide/sample-programs/module-2',
         'teacher-guide/sample-programs/module-3',
         'teacher-guide/sample-programs/module-4',
+        'teacher-guide/sample-programs/module-4-test',
         'teacher-guide/sample-programs/module-5',
         'teacher-guide/sample-programs/module-6',
       ],

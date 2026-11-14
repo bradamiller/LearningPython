@@ -663,9 +663,10 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
 - **2026-11-14: THE MODULE 4 TEST IS TOP-DOWN ALL THE WAY, PYTHON TAUGHT AS NEEDED (Brad).**
-  `docs/test-module-04` ("Module 4 test · Top-down (trial)" in the sidebar; web pages
-  only, no decks, templates, printable checks or pacing entry) is a trial alongside the
-  standard Module 4, which is unchanged. Brad's goal: students write the highest-level
+  `docs/test-module-04` ("Module 4 test · Top-down (trial)" in the sidebar) is a trial
+  alongside the standard Module 4, which is unchanged. It has its own decks, printable
+  checks, templates and sample program (materials list below); it has no pacing entry,
+  on purpose, since it would double-count Module 4. Brad's goal: students write the highest-level
   code first and as soon as possible, each stub prints enough to verify the program, and
   tuples and lists are explained where the program needs them, with a high-school-level
   understanding by the end. The first cut (2026-11-13) still opened with the two standard
@@ -723,6 +724,28 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     `track_to_intersection`, the Module 2 name, not `track_to_cross`.
   - 4-1's pose figure is `lesson-m4t-01/pose-robot.svg`, written by the end of
     `scripts/figures/fpose.py` (the standard `pose.svg` is unchanged).
+  - **Its materials (added 2026-11-14, Brad: "generate the rest of the materials").**
+    *Decks:* `scripts/slides/decks/m4t/l00.py` to `l07.py`, built to
+    `static/slides/test-module-04/`; `build.py 4t-0 4t-1 ...` builds them (a deck may set
+    `'key'` so it doesn't collide with the standard 4-x, and `'label'` for the title
+    slide, "MODULE 4 TEST"). 4-0 started from the standard 4-0 deck; its tree slides are
+    `decks/m4t/fig/topdown-decomp-1..4.svg`, written by `fdecomp_topdown.py`. Every code
+    line on a trial slide matches its lesson (checked by script). *Printable checks:*
+    `extract_checks.js` includes `test-module-04` (listed after Module 6 on /checks), and
+    each trial lesson has a `QuizLink`. *Templates and sample:*
+    `scripts/build_test_module_templates.py` (run it after `build_templates.py`; it calls
+    that script for the Module 3 sample it builds on) writes
+    `static/templates/test-module-04/<track>/robot-after-4-1..6.py` and
+    `docs/teacher-guide/sample-programs/_module-4-test-files.mdx`; the hand-written page
+    is `module-4-test.mdx`. `build_templates.py`'s templates page lists the trial's files
+    if they exist. Class track = the same functions on the class-track Module 3 file, with
+    4-6's swap calling `tracker.`; the optional Manhattan/Navigator classes are not built
+    in. `--verify --xrplib <stub XRPLib package dir> --scratch <dir>` loads every file and
+    runs the sample (5 PASS, ends `new position: (0, 0) heading: S`). When a trial lesson
+    changes: rebuild its deck, re-run this script, and re-run the deck code check.
+  - Brad's own mockup (`manhattan_mockup.py`) is not in the repo. On 2026-11-14 he asked
+    for it refactored with `get_desired_heading()` and `turn_to()` as their own functions;
+    that version was sent to him, not committed.
 - **2026-11-10: Module 4 lessons 4-5 and 4-6 merged (Brad: "Fold into 4-6").** The new
   4-5 is "Naming and Testing the Planner" (`lesson-05-naming-and-testing-the-planner`):
   the rename, the docstring and three promises, then run_test() and the six-case suite.

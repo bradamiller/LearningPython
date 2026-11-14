@@ -1,0 +1,45 @@
+---
+title: "Sample programs: Module 4 test"
+sidebar_label: "Module 4 test · Top-down (trial)"
+sidebar_position: 7
+---
+
+import ModuleFiles from './_module-4-test-files.mdx';
+
+<LessonHeader
+  eyebrow="Teacher guide · Sample programs"
+  title="Module 4 test · Top-down (trial)"
+  meta={['Teacher mode', 'Function track', 'Class track']}
+/>
+
+<TeacherBanner>
+Teacher mode is on: the programs on this page are yours only.
+</TeacherBanner>
+
+The complete `robot.py` at the end of the [Module 4 test](/test-module-04/lesson-00-overview),
+the top-down trial of Module 4, on both tracks, for teachers. Turn teacher mode on to see
+it. Students: your file is on the [robot.py templates](/templates) page.
+
+<TeacherNote title="Checking a robot against this file">
+
+Everything up to Lesson 4-6 runs with the robot on the desk. These tests only print:
+`test_planner()` (five lines, all `PASS`) and `test_headings()` (W, N, E, S). Until
+Lesson 4-6, `test_delivery()` prints the whole delivery run too: 77 lines ending
+`new position: (0, 0) heading: S`.
+
+In this file the two stubs have been swapped for the real Module 2 calls, as Lesson 4-6
+does, so `test_delivery()` drives the robot. To check the run on screen again, swap
+`turn_clockwise()` and `track_to_intersection()` back to the `fake_` versions, which are
+still in the file.
+
+The class track grows the same functions on the class-track Module 3 file; its only
+difference here is that Lesson 4-6's swap calls `tracker.turn_clockwise()` and
+`tracker.track_to_intersection()`. The optional `Manhattan` and `Navigator` class
+extensions are on the lesson pages, not in this file.
+
+Lesson 4-7 adds nothing to `robot.py`: its predict-then-run activity is a separate file,
+with the answers in the lesson's reveal.
+
+</TeacherNote>
+
+<ModuleFiles />
