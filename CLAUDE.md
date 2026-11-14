@@ -1885,6 +1885,12 @@ The loop:
    `git -c user.name=bradamiller -c user.email=brad@bradhouse.com commit …`
 5. `git push origin HEAD:main`. Tell Brad what was pushed.
 
+**Always push to `main` after every change, without being asked (Brad, 2026-11-14).** He
+reviews the work on the live site, not in the repo or on a branch, so a change that is
+only committed, or only on a branch, is one he can't see. After any edit: build, commit,
+push to `main`, wait for the Pages deploy to succeed, and say it's live. Don't park work
+on a branch and wait for a go-ahead to merge.
+
 **Brad's desktop Mac is always on and is the only local copy he uses (Brad,
 2026-10-25)** — he has stopped editing the repo on his MacBook. So after every push,
 pull on that Mac through the device bridge so it never falls behind. **Brad's Mac then needs a `git pull`** (`/Users/bradmiller/GitHub/LearningPython`).
