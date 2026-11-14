@@ -1,0 +1,382 @@
+---
+title: "Lesson 4-2 · The Planner: A Path That Grows"
+sidebar_label: "4-2 · A Path That Grows"
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="Lesson 4-2 · The Planner: A Path That Grows"
+  meta={['50–60 min', 'Python code', 'Building a list', 'Robot stays on the desk']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+The planner stub hands back `[destination]`: one jump. A real path lists **every**
+intersection on the way. Today the stub starts to go: by the end, the planner builds
+real paths for any trip that goes right and up. Left and down are Lesson 4-3.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Trace a path by hand: across first, then up
+- Start with an empty list and add to it with `append()`
+- Unpack a tuple into `x` and `y`, and make a new tuple from them
+- Build a path inside a `while` loop, one step per trip around
+
+</Objectives>
+
+## One step at a time
+
+Each step moves the robot to a neighboring intersection, so **exactly one of x or y
+changes, by 1**. Never both: that would be a diagonal, and the robot can't drive one.
+
+<Figure
+  src="/img/lesson-m4-03/one-step.svg"
+  alt="A 3 by 3 grid with the robot's intersection (1, 1) in the middle. Red arrows go right to (2, 1), x + 1, and left to (0, 1), x - 1. Green arrows go up to (1, 2), y + 1, and down to (1, 0), y - 1. A dashed diagonal to (2, 2) is crossed out: x and y both change, so it is not one step."
+  caption="One step changes x or y by 1, never both."
+/>
+
+The Manhattan rule from Lesson 4-0: **step across until x is right, then step up or down
+until y is right.**
+
+## Activity · Trace it on paper
+
+Trace Leg 1 of the delivery run, (0, 0) to (2, 3), one row per move. Row 1 is done for
+you. Then write the whole path as a Python list.
+
+| Step | Action | New position |
+|---|---|---|
+| 1 | x + 1 | (1, 0) |
+| 2 | | |
+| 3 | | |
+| 4 | | |
+| 5 | | |
+
+<Reveal title="Check your trace" hint="fill in the table first">
+
+| Step | Action | New position |
+|---|---|---|
+| 1 | x + 1 | (1, 0) |
+| 2 | x + 1 | (2, 0) |
+| 3 | y + 1 | (2, 1) |
+| 4 | y + 1 | (2, 2) |
+| 5 | y + 1 | (2, 3) |
+
+The path: `[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]`.
+
+</Reveal>
+
+Notice what's **not** in the path: the start, (0, 0). A path lists the places the robot
+drives *to*, and it's already standing on the start.
+
+<Figure
+  src="/img/lesson-m4-02/path-list-xy.svg"
+  alt="The 4 by 4 grid with the route from (0, 0) to (2, 3): right two, then up three. The robot sits on (0, 0), marked start. The five intersections it drives to are tagged path[0] (1, 0), path[1] (2, 0), path[2] (2, 1), path[3] (2, 2) and path[4] (2, 3). Beside it the list is drawn as five boxes with indexes 0 to 4: len(path) is 5, the number of steps, and the start is not in the list."
+  caption="One tuple per intersection the robot drives to, in order. The start is not in the list."
+/>
+
+## A list can grow
+
+In Lesson 4-1 you wrote a list out in full. A planner can't: it doesn't know the path
+until it works it out. So it starts with an **empty list** and adds one position at a
+time with `append()`, which puts an item on the **end**:
+
+```python
+path = []
+path.append((1, 0))
+path.append((2, 0))
+print(path)          # [(1, 0), (2, 0)]
+print(len(path))     # 2
+```
+
+`len()` counts the items. Mind the double parentheses in `path.append((1, 0))`: the outer
+pair belongs to `append()`, the inner pair is the tuple.
+
+<KnowledgeCheck
+  question="What does this print?"
+  code={'stops = []\nstops.append((0, 1))\nstops.append((0, 2))\nstops.append((1, 2))\nprint(len(stops), stops)'}
+  options={[
+    {text: '3 [(1, 2), (0, 2), (0, 1)]'},
+    {text: '3 [(0, 1), (0, 2), (1, 2)]', correct: true},
+    {text: '6 [0, 1, 0, 2, 1, 2]'},
+    {text: '1 [(1, 2)]'},
+  ]}
+  explanation="append() adds to the end, so the items stay in the order they were added. Three appends, three tuples, so len() is 3."
+/>
+
+## Activity · Build the planner
+
+### Step 1 · Leg 1, by hand
+
+In the MANHATTAN PLANNER section, replace the body of the stub with an empty list, five
+`append()` lines, one for each row of your trace, and `return path`. Take the `STUB` print
+out: this is no longer a stub. Run `test_delivery()`.
+
+**What correct looks like:** Leg 1's `path:` line matches your trace. Every other leg gets
+the same path, which is wrong for all of them.
+
+<Reveal title="Why is every leg the same?" hint="run it first">
+
+The function never looks at `start` or `destination`: it hands back the path you typed.
+A planner has to **work the path out** from where the robot is and where it's going.
+
+</Reveal>
+
+### Step 2 · Let a loop do the appending
+
+Look at rows 1 and 2 of your trace: add 1 to x, write down the new position, and again,
+until x is right. That's a `while` loop.
+
+<Figure
+  src="/img/lesson-m4-03/trace-to-loops.svg"
+  alt="The trace table for (0, 0) to (2, 3). Rows 1 and 2, in red, say x + 1 and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). Rows 3 to 5, in green, say y + 1 and are bracketed to loop 2, the same loop for y."
+  caption="Each row is one trip around a loop."
+/>
+
+To add 1 to x, the function needs x on its own. **Unpacking**, from Lesson 4-1, takes a
+tuple apart:
+
+```python
+x, y = start                     # start is (0, 0): x is 0, y is 0
+dest_x, dest_y = destination     # (2, 3): dest_x is 2, dest_y is 3
+```
+
+`x` and `y` are where the plan has got to. They start as the start and change by 1 on
+every move. After each move, `(x, y)` puts them back together as a **new tuple** for the
+path.
+
+Replace the whole function with this. The east loop is written for you; north is yours
+in Step 3. Add `test_planner()` under it.
+
+```python
+def compute_manhattan_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    path = []
+    x, y = start              # where the plan is now
+    dest_x, dest_y = destination   # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        path.append((x, y))   # record the new spot
+
+    # North: copy east, but step y until it matches dest_y
+
+    return path
+
+def test_planner():
+    print(compute_manhattan_path((0, 0), (2, 3)))
+    print(compute_manhattan_path((0, 2), (3, 2)))
+    print(compute_manhattan_path((2, 0), (2, 3)))
+```
+
+Before you run it, trace the three trips in `test_planner()` on paper. Then set the run
+line to `test_planner()` and run it.
+
+**What correct looks like:** only the east loop exists, so:
+
+```
+[(1, 0), (2, 0)]
+[(1, 2), (2, 2), (3, 2)]
+[]
+```
+
+The first trip goes right two and stops. The second needs no move up, so it's already
+complete. The third only goes up, so nothing is appended.
+
+### Step 3 · Break it on purpose
+
+Move `path.append((x, y))` one indent to the left, so it lines up with `while`. Predict
+the first line of output, then run it.
+
+<Reveal title="What happened?" hint="predict first">
+
+```
+[(2, 0)]
+[(3, 2)]
+[(2, 0)]
+```
+
+Indentation decides what's inside the loop. Now the `append()` runs **once, after** the
+loop, so only the last position is recorded. The third line is worse: the loop never ran,
+so the function appended the start itself.
+
+</Reveal>
+
+Put the indent back.
+
+<KnowledgeCheck
+  question="A loop is meant to build a path, but the list ends up holding only the last position. What's wrong?"
+  options={[
+    {text: 'append() is broken'},
+    {text: 'The append() line is outside the loop, so it runs only once', correct: true},
+    {text: 'The path should have been a tuple'},
+    {text: 'The loop ran too many times'},
+  ]}
+  explanation="If append() isn't indented inside the loop, it runs a single time after the loop ends and records just the final position."
+/>
+
+### Step 4 · Write north
+
+Under the north comment, copy the east loop, comparing `y` with `dest_y` and stepping `y`
+instead of `x`. Leave `path.append((x, y))` as it is: it always records the whole
+position. Run `test_planner()`.
+
+**What correct looks like:** all three lines match your paper traces.
+
+<Reveal title="Check your north loop and the output" hint="write it and run it first">
+
+```python
+    # North: copy east, but step y until it matches dest_y
+    while y < dest_y:
+        y = y + 1             # one step up
+        path.append((x, y))
+```
+
+```
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+[(1, 2), (2, 2), (3, 2)]
+[(2, 1), (2, 2), (2, 3)]
+```
+
+</Reveal>
+
+### Step 5 · Run the main program
+
+Set the run line back to `test_delivery()` and run it.
+
+**What correct looks like:** Leg 1 is right, and the driver stub is handed the real path.
+Leg 2 is not: its path is empty, so the robot never leaves (2, 3), and every leg after it
+goes wrong.
+
+<Reveal title="Check your output" hint="run it first">
+
+```
+Plan from (0, 0) to (2, 3)
+  path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+  STUB drive_path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+Plan from (2, 3) to (1, 0)
+  path: []
+  STUB drive_path: []
+Plan from (2, 3) to (3, 1)
+  path: [(3, 3)]
+  STUB drive_path: [(3, 3)]
+Plan from (3, 3) to (2, 2)
+  path: []
+  STUB drive_path: []
+Plan from (3, 3) to (0, 0)
+  path: []
+  STUB drive_path: []
+Finished at (3, 3) heading 0
+```
+
+</Reveal>
+
+<KnowledgeCheck
+  question="Why is the path for Leg 2, (2, 3) to (1, 0), empty?"
+  options={[
+    {text: 'append() only works once per program'},
+    {text: 'Both while conditions are False from the start (2 is not < 1, 3 is not < 0), so neither loop runs', correct: true},
+    {text: 'The start and destination are the same'},
+    {text: 'The driver is still a stub'},
+  ]}
+  explanation="East and north only handle x and y getting bigger. A while loop whose condition starts False does nothing. Going left or down needs two more loops: Lesson 4-3."
+/>
+
+## Why a new tuple every step
+
+Could the loop just change the x inside one tuple? Try it in the shell:
+
+```python
+spot = (2, 3)
+spot[0] = 5      # TypeError: 'tuple' object does not support item assignment
+```
+
+A tuple **can't be changed** once it's made. That's right for a position: `(2, 3)` should
+always mean the same intersection, however many lists it's in. A list is the opposite: it
+can grow. So a *position* is a tuple, and a *path* is a list of tuples.
+
+<KnowledgeCheck
+  question="Which is true?"
+  options={[
+    {text: 'A tuple can grow with append(); a list cannot'},
+    {text: 'A list can grow and change; a tuple stays as it was made', correct: true},
+    {text: 'Lists and tuples are the same thing with different brackets'},
+    {text: 'A list can only hold numbers'},
+  ]}
+  explanation="Lists use square brackets and can change, which suits a path that is built step by step. Tuples use parentheses and can't change, which suits a position."
+/>
+
+<TeacherNote title="What to watch">
+
+"Empty list, append inside a loop" is the pattern the rest of the course builds paths
+with. Step 1 is deliberately clumsy: five typed appends make students want the loop, and
+the repeated path shows why a planner must use its parameters. Keep it to five minutes.
+
+Take real time on the double parentheses in `path.append((x, y))`, and on Step 3: the
+indentation bug is the most common list bug there is, and here it costs one keystroke to
+cause and to fix.
+
+The broken delivery run in Step 5 is the hook for Lesson 4-3. Let students say what's
+missing. Check the paper traces before Step 2's run: a wrong trace sends a student
+hunting for a bug that isn't there.
+
+Scope: `[]`, `append()`, `len()`, unpacking. No indexing yet (Lesson 4-4), and no
+`insert`, `pop` or slicing at all.
+
+</TeacherNote>
+
+<TeacherNote title="Solution (teacher copy)">
+
+The MANHATTAN PLANNER section as this lesson leaves it. The NAVIGATOR section and the
+main program are unchanged from Lesson 4-1.
+
+```python
+# ===== MANHATTAN PLANNER =====
+# Plans a route across the grid: given where the robot is and
+# where it should go, returns the list of (x, y) tuples to
+# drive to. Nothing in here touches a sensor or a motor.
+
+def compute_manhattan_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    path = []
+    x, y = start              # where the plan is now
+    dest_x, dest_y = destination   # where it is going
+
+    # East: keep stepping right until x matches dest_x
+    while x < dest_x:
+        x = x + 1             # one step right
+        path.append((x, y))   # record the new spot
+
+    # North: copy east, but step y until it matches dest_y
+    while y < dest_y:
+        y = y + 1             # one step up
+        path.append((x, y))
+
+    return path
+
+def test_planner():
+    print(compute_manhattan_path((0, 0), (2, 3)))
+    print(compute_manhattan_path((0, 2), (3, 2)))
+    print(compute_manhattan_path((2, 0), (2, 3)))
+```
+
+</TeacherNote>
+
+## Wrap-up
+
+- How does the planner build a path? (Start with `[]`, and `append()` one position on every trip around a loop.)
+- What does `x, y = start` do? (Unpacks the tuple: x gets the first number, y the second.)
+- Why isn't the start in the path? (The robot is already there; the path lists where it drives to.)
+- What still doesn't work? (Trips that go left or down: both loops are skipped.)
+
+## Resources
+
+- [Python lists](https://docs.python.org/3/tutorial/datastructures.html)
+- [Python while loops](https://docs.python.org/3/reference/compound_stmts.html#while)

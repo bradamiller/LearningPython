@@ -662,6 +662,29 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
+- **2026-11-14: THE MODULE 4 TEST IS TOP-DOWN ALL THE WAY, PYTHON TAUGHT AS NEEDED (Brad).**
+  `docs/test-module-04` ("Module 4 test · Top-down (trial)" in the sidebar; web pages
+  only, no decks, templates, printable checks or pacing entry) is a trial alongside the
+  standard Module 4, which is unchanged. Brad's goal: students write the highest-level
+  code first and as soon as possible, each stub prints enough to verify the program, and
+  tuples and lists are explained where the program needs them, with a high-school-level
+  understanding by the end. The first cut (2026-11-13) still opened with the two standard
+  data lessons, so the main program arrived on day 4; those two lessons are now dissolved.
+  **Order:** 4-0 Big Picture · 4-1 The Main Program (tuple and list literals, `for item
+  in list`, two-value return and unpacking; `test_delivery()` over two stubs) · 4-2 A
+  Path That Grows (`[]`, `append()`, `len()`, `x, y = start`, tuples can't change; east
+  given, north written) · 4-3 Every Direction (`==`, `run_test()` run BEFORE the fix,
+  west and south, the three promises) · 4-4 The Driver (indexing, `HEADING_NAMES`,
+  `get_desired_heading()`, `drive_path()`) · 4-5 Turning · 4-6 On the Robot · 4-7 Tuples
+  and Lists: What You Now Know (consolidation, predict-then-run assessment, references
+  and "assigning versus changing"; Module 5 relies on the references section).
+  **Rules for this module:** a stub prints `STUB <name>: <what it was given>` so the
+  printout shows the call happened and with what; stub signatures never change (heading
+  rides along from 4-1, explained in 4-4); 4-1's last print shows the heading number and
+  4-4 changes that one line to the letter; a concept is taught in the lesson that first
+  needs it and nowhere earlier (4-0's teacher note has the table). Every printed output
+  block was produced by running the lesson's code. The tree figure is
+  `lesson-m4t-00/decomposition-topdown-v2.svg` from `scripts/figures/fdecomp_topdown.py`.
 - **2026-11-10: Module 4 lessons 4-5 and 4-6 merged (Brad: "Fold into 4-6").** The new
   4-5 is "Naming and Testing the Planner" (`lesson-05-naming-and-testing-the-planner`):
   the rename, the docstring and three promises, then run_test() and the six-case suite.

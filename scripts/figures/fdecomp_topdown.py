@@ -83,31 +83,31 @@ def elbow(x1, y1, xs, y2, ymid):
 
 
 # Level 1: the whole problem
-box(160, 12, 360, 52, "The main program, Lesson 4-3", None,
+box(160, 12, 360, 52, "The main program, Lesson 4-1", None,
     "for each destination: plan the route, then drive it", GRAY, GRAY_BG, node="whole")
 
 # Level 2: the planner and the driver
 PX, DX, W2, Y2, H2 = 16, 428, 236, 112, 76
 under("whole", elbow(340, 64, [PX + W2/2, DX + W2/2], Y2, 88))
-box(PX, Y2, W2, H2, "The planner", "compute_manhattan_path()", "Lesson 4-4", BLUE, BLUE_BG,
+box(PX, Y2, W2, H2, "The planner", "compute_manhattan_path()", "Lessons 4-2 and 4-3", BLUE, BLUE_BG,
     parent="whole")
-box(DX, Y2, W2, H2, "The driver", "drive_path()", "Lesson 4-5", RED, RED_BG,
+box(DX, Y2, W2, H2, "The driver", "drive_path()", "Lesson 4-4", RED, RED_BG,
     node="driver", parent="whole")
 under("whole",
       f'<line x1="{PX+W2+2}" y1="{Y2+50}" x2="{DX-4}" y2="{Y2+50}" stroke="#495057" stroke-width="2.2" marker-end="url(#aG)"/>',
       tag(340, Y2 + 30, "list of (x, y) coordinates", fill="#FFFFFF", stroke="#ADB5BD", cls="nb", w=172),
       f'<text class="sm" x="340" y="{Y2+70}" text-anchor="middle">the one thing they share</text>',
-      f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+40}" text-anchor="middle">small enough to build</text>',
-      f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+56}" text-anchor="middle">and test in one go</text>')
+      f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+40}" text-anchor="middle">built and tested</text>',
+      f'<text class="sm" x="{PX+W2/2}" y="{Y2+H2+56}" text-anchor="middle">with no robot</text>')
 
 # Level 3: the driver, two steps at each intersection
 W3, G3, Y3, H3 = 210, 12, 240, 92
 x0 = 680 - 10 - 2 * W3 - G3
 xs = [x0 + i * (W3 + G3) for i in range(2)]
 under("driver", elbow(DX + W2/2, Y2 + H2, [x + W3/2 for x in xs], Y3, Y2 + H2 + 24))
-box(xs[0], Y3, W3, H3, ("1 · Turn to face", "the next intersection"), None, "Lessons 4-5 and 4-6", RED, "#FFFFFF",
+box(xs[0], Y3, W3, H3, ("1 · Turn to face", "the next intersection"), None, "Lessons 4-4 and 4-5", RED, "#FFFFFF",
     hcls="nb", node="turn", parent="driver")
-box(xs[1], Y3, W3, H3, ("2 · Drive to", "the next intersection"), "LINE TRACKING", "Module 2, used in 4-7", RED, "#FFFFFF",
+box(xs[1], Y3, W3, H3, ("2 · Drive to", "the next intersection"), "LINE TRACKING", "Module 2, used in 4-6", RED, "#FFFFFF",
     hcls="nb", parent="driver")
 
 # Level 4: turning, which way and then the turn
@@ -115,19 +115,19 @@ W4, G4, Y4, H4 = 200, 12, 376, 92
 tc = xs[0] + W3 / 2
 x4 = [tc - W4 - G4 / 2, tc + G4 / 2]
 under("turn", elbow(tc, Y3 + H3, [x + W4/2 for x in x4], Y4, Y3 + H3 + 22))
-box(x4[0], Y4, W4, H4, "Which way to face?", "get_desired_heading()", "Lesson 4-5", RED, "#FFFFFF",
+box(x4[0], Y4, W4, H4, "Which way to face?", "get_desired_heading()", "Lesson 4-4", RED, "#FFFFFF",
     hcls="nb", parent="turn")
-box(x4[1], Y4, W4, H4, ("Turn until facing", "the next intersection"), "turn_to()", "Lesson 4-6", RED, "#FFFFFF",
+box(x4[1], Y4, W4, H4, ("Turn until facing", "the next intersection"), "turn_to()", "Lesson 4-5", RED, "#FFFFFF",
     hcls="nb", parent="turn")
 
-DESC = ('A tree with four levels. At the top, the main program, Lesson 4-3: for each destination, plan '
+DESC = ('A tree with four levels. At the top, the main program, Lesson 4-1: for each destination, plan '
         'the route, then drive it. It splits into two parts. The planner, compute_manhattan_path(), '
-        'Lesson 4-4, is small enough to build and test in one go. The driver, drive_path(), Lesson 4-5, '
-        'splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-5 '
-        'and 4-6; 2, drive to the next intersection, with the LINE TRACKING functions built in Module 2, '
-        'used on the robot in Lesson 4-7. Turning splits once more: which way to face, '
-        'get_desired_heading(), Lesson 4-5, and turn until facing the next intersection, turn_to(), '
-        'Lesson 4-6. An arrow from planner to driver is labeled "list of (x, y) coordinates, the one '
+        'Lessons 4-2 and 4-3, is built and tested on its own. The driver, drive_path(), Lesson 4-4, '
+        'splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-4 '
+        'and 4-5; 2, drive to the next intersection, with the LINE TRACKING functions built in Module 2, '
+        'used on the robot in Lesson 4-6. Turning splits once more: which way to face, '
+        'get_desired_heading(), Lesson 4-4, and turn until facing the next intersection, turn_to(), '
+        'Lesson 4-5. An arrow from planner to driver is labeled "list of (x, y) coordinates, the one '
         'thing they share".')
 
 
@@ -144,5 +144,5 @@ def render(levels, opened):
 
 
 # Opened boxes show a minus; on the page the component sets which are open.
-open(OUTDIR + 'decomposition-topdown.svg', 'w').write(render(4, True))
+open(OUTDIR + 'decomposition-topdown-v2.svg', 'w').write(render(4, True))
 

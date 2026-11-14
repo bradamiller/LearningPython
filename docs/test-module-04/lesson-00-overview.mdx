@@ -43,7 +43,7 @@ adds obstacles; **Module 6** (optional) adds slow streets.
 
 The grid dates from 1811 and is turned about 29 degrees from true north; the same
 distance is called **taxicab distance** in math. The map is a hook, not a lesson.
-Lesson 4-4 assumes students have seen it.
+Lesson 4-2 assumes students have seen it.
 
 </TeacherNote>
 
@@ -97,8 +97,8 @@ them. Ideas about motors, sensors or turning belong to the driving half; park th
 Here is that split, one level at a time:
 
 <TreeFigure
-  src="/img/lesson-m4t-00/decomposition-topdown.svg"
-  alt="A tree with four levels. At the top, the main program, Lesson 4-3: for each destination, plan the route, then drive it. It splits into the planner, compute_manhattan_path(), Lesson 4-4, and the driver, drive_path(), Lesson 4-5. An arrow labeled list of (x, y) coordinates runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-5 and 4-6; 2, drive to the next intersection, the LINE TRACKING functions built in Module 2, used on the robot in Lesson 4-7. Turning splits once more: which way to face, get_desired_heading(), Lesson 4-5, and turn until facing the next intersection, turn_to(), Lesson 4-6."
+  src="/img/lesson-m4t-00/decomposition-topdown-v2.svg"
+  alt="A tree with four levels. At the top, the main program, Lesson 4-1: for each destination, plan the route, then drive it. It splits into the planner, compute_manhattan_path(), Lessons 4-2 and 4-3, and the driver, drive_path(), Lesson 4-4. An arrow labeled list of (x, y) coordinates runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-4 and 4-5; 2, drive to the next intersection, the LINE TRACKING functions built in Module 2, used on the robot in Lesson 4-6. Turning splits once more: which way to face, get_desired_heading(), Lesson 4-4, and turn until facing the next intersection, turn_to(), Lesson 4-5."
   caption="The problem, broken into parts. Click a box to open it; each one names the lesson that builds it."
 />
 
@@ -138,8 +138,8 @@ wrong route is a planner problem; a wrong turn is a driver problem.
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
 
-Shape, not detail. Deflect "how does it work?" with "that's Lesson 4-4." Tell
-students they're not meant to understand every line yet; by Lesson 4-7 they will.
+Shape, not detail. Deflect "how does it work?" with "that's Lesson 4-2." Tell
+students they're not meant to understand every line yet; by Lesson 4-6 they will.
 
 </TeacherNote>
 
@@ -161,24 +161,50 @@ from where it is, drive, repeat.
 ## Build it from the top down
 
 You'll build this program **top-down**: the top of the tree first, then one level at a
-time. The main program comes first, and it runs on day one, because every part below it
-starts as a **stub**: a stand-in function that does just enough for the program to run,
-and prints what the real one would do.
+time. The main program comes first, in the very next lesson, and it runs the day you
+write it, because every part below it starts as a **stub**: a stand-in function that does
+just enough for the program to run, and prints what the real one would do.
 
 Then you swap the stubs for real functions, one per lesson, and run the program after
-every change. The output tells you right away whether it still works. The robot only
-drives in the last lesson, so you never have to wonder whether a bug is in your code
-or in the robot.
+every change. The printout tells you right away whether it still works. The robot only
+drives in Lesson 4-6, so you never have to wonder whether a bug is in your code or in
+the robot.
+
+**The Python arrives the same way.** A position like `(1, 1)` is a Python **tuple**, and a
+route is a Python **list**. You won't study them first: each lesson teaches the piece of
+tuples and lists it needs, right where the program needs it. Lesson 4-7 puts it all
+together.
 
 ## The module at a glance
 
-Lessons 4-1 and 4-2 give you the background: coordinates, tuples and lists. Then:
+- **4-1:** the main program, with stubs
+- **4-2:** the planner, part 1: a path that grows
+- **4-3:** the planner, part 2: every direction, and tests
+- **4-4:** the driver
+- **4-5:** turning
+- **4-6:** the stubs out, the robot on the grid
+- **4-7:** tuples and lists: what you now know
 
-- **4-3:** the main program, with stubs
-- **4-4:** the real planner
-- **4-5:** the real driver
-- **4-6:** turning
-- **4-7:** the stubs out, the robot on the grid
+<TeacherNote title="Why there is no tuples-and-lists lesson up front">
+
+The standard Module 4 teaches tuples and lists for two lessons before any program
+exists. This trial reverses that: students write the main program in Lesson 4-1 and
+meet each piece of Python at the moment the program needs it.
+
+| Python | First needed | Taught in |
+|---|---|---|
+| Tuple `(x, y)`, list `[...]`, `for item in list` | the main program | 4-1 |
+| Returning two values, unpacking | the main program | 4-1 |
+| `[]`, `append()`, `len()`, tuples can't change | building a path | 4-2 |
+| `==` on tuples and lists | testing the planner | 4-3 |
+| Indexing, `position[0]` and `names[2]` | the driver | 4-4 |
+| References: two names, one list | Module 5 | 4-7 |
+
+Lesson 4-7 gathers them and checks them. If a student asks for more than a lesson
+gives ("can a tuple have three numbers?"), answer it and move on; 4-7 is the place for
+the full picture.
+
+</TeacherNote>
 
 ## Wrap-up
 

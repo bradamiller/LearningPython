@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-7 · On the Robot"
-sidebar_label: "4-7 · On the Robot"
-sidebar_position: 7
+title: "Lesson 4-6 · On the Robot"
+sidebar_label: "4-6 · On the Robot"
+sidebar_position: 6
 ---
 
 <LessonHeader
   eyebrow="Module 4 test · Top-down trial"
-  title="Lesson 4-7 · On the Robot"
+  title="Lesson 4-6 · On the Robot"
   meta={['Multi-day', 'Python + robot', 'Multi-destination delivery']}
 />
 
@@ -94,7 +94,7 @@ finishes the whole run, let the class watch. For 50-minute periods, plan two day
 
 <TeacherNote title="Solution (teacher copy)">
 
-The two changed functions; everything else is as Lessons 4-4 to 4-6 left it.
+The two changed functions; everything else is as Lessons 4-3 to 4-5 left it.
 
 ```python
 def turn_to(current_heading, desired_heading):
@@ -316,11 +316,14 @@ heading)`, you write `navigator.drive_path(path)`, and where it reads `position`
 - If the robot goes wrong but the printout was right, where do you look? (The robot side: turns, tape, battery.)
 - Where did top-down pay off? (The whole run worked on screen before the robot moved, and every step was checked as it was added.)
 
+One lesson is left. You picked up tuples and lists a piece at a time, as the program
+needed them. Lesson 4-7 puts the pieces side by side.
+
 <TeacherNote title="You built a system">
 
-Name what students did across the module: coordinates and tuples, lists, an algorithm, a
-planner and a driver that know nothing about each other, a test for every step, and the
-hardware last. In Module 5, breadth-first search replaces the Manhattan planner and
+Name what students did across the module: a main program first, then a planner and a
+driver that know nothing about each other, a test for every step, tuples and lists as
+they were needed, and the hardware last. In Module 5, breadth-first search replaces the Manhattan planner and
 `drive_path()` keeps driving, unchanged.
 
 </TeacherNote>

@@ -1,12 +1,12 @@
 ---
-title: "Lesson 4-6 · Turning"
-sidebar_label: "4-6 · Turning"
-sidebar_position: 6
+title: "Lesson 4-5 · Turning"
+sidebar_label: "4-5 · Turning"
+sidebar_position: 5
 ---
 
 <LessonHeader
   eyebrow="Module 4 test · Top-down trial"
-  title="Lesson 4-6 · Turning"
+  title="Lesson 4-5 · Turning"
   meta={['40–50 min', 'Python code', 'A loop with a wrap-around', 'Robot stays on the desk']}
 />
 
@@ -59,7 +59,7 @@ North. Trace the loop from South (2) to East (1):
 
 Three passes. The loop never asks which way is shorter: it always goes clockwise, so to
 face what's a quarter turn to its left it turns three quarters of the way around. It works,
-and it's simple; Lesson 4-7 has an optional challenge to make it quicker.
+and it's simple; Lesson 4-6 has an optional challenge to make it quicker.
 
 If the robot already faces the right way, the condition is False on the first check and
 the loop does nothing, with no special case. At the end the function returns
@@ -84,7 +84,7 @@ next to `fake_track_to_intersection()`:
 ```python
 def fake_turn_clockwise():
     """STUB for turn_clockwise(): print instead of
-    turning. Lesson 4-7 swaps in the real one."""
+    turning. Lesson 4-6 swaps in the real one."""
     print("    turn clockwise")
 
 def turn_to(current_heading, desired_heading):
@@ -116,8 +116,8 @@ East to North is three: East, South, West, North.
 
 Write `turn_to()` from its outline. Run `test_delivery()`.
 
-**What correct looks like:** the same output as last lesson, plus `turn clockwise` lines
-before some of the `track to intersection` lines. Leg 1's turn counts match your
+**What correct looks like:** the same output as last lesson, with each `STUB turn_to` line
+replaced by zero to three `turn clockwise` lines. Leg 1's turn counts match your
 prediction. Every turn you count is three or fewer, and the run still ends with
 `Finished at (0, 0) facing S`.
 
@@ -228,7 +228,7 @@ Finished at (0, 0) facing S
 Get students standing and turning clockwise a quarter at a time, calling out 0, 1, 2, 3,
 0: the kinesthetic bit cements the wrap. The loop always turns clockwise because it is
 the simplest turn that always works. Students will spot the three-turn corners in the
-printout; agree, and point them at the optional challenge in Lesson 4-7. Three
+printout; agree, and point them at the optional challenge in Lesson 4-6. Three
 sensor-ended turns take three times as long as one and give the line sensors three
 chances to miss.
 
@@ -240,12 +240,12 @@ and much easier to stop and read. Usual causes: the heading isn't updated in the
 
 <TeacherNote title="Solution (teacher copy)">
 
-The changes to the NAVIGATOR section; everything else is as Lesson 4-5 left it.
+The changes to the NAVIGATOR section; everything else is as Lesson 4-4 left it.
 
 ```python
 def fake_turn_clockwise():
     """STUB for turn_clockwise(): print instead of
-    turning. Lesson 4-7 swaps in the real one."""
+    turning. Lesson 4-6 swaps in the real one."""
     print("    turn clockwise")
 
 def turn_to(current_heading, desired_heading):

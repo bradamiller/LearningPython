@@ -1,0 +1,274 @@
+---
+title: "Lesson 4-7 · Tuples and Lists: What You Now Know"
+sidebar_label: "4-7 · Tuples and Lists"
+sidebar_position: 7
+---
+
+<LessonHeader
+  eyebrow="Module 4 test · Top-down trial"
+  title="Lesson 4-7 · Tuples and Lists: What You Now Know"
+  meta={['45–55 min', 'Python data', 'Putting it together', 'No robot needed']}
+/>
+
+<TeacherBanner>
+Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
+</TeacherBanner>
+
+You never had a lesson on tuples or lists. You picked them up a piece at a time, because
+the delivery program needed them. This lesson lays the pieces side by side, checks that
+you can use them away from the robot, and adds one last idea that Module 5 depends on.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Say when to use a tuple and when to use a list
+- Create, unpack, index, compare and loop over them without looking it up
+- Predict what a few lines of tuple and list code print
+- Explain what happens when two variables refer to the same list
+
+</Objectives>
+
+## Where you used each piece
+
+Every line here is from your own `robot.py`.
+
+| What it does | From your program | Lesson |
+|---|---|---|
+| Make a tuple | `position = (0, 0)` | 4-1 |
+| Make a list | `DESTINATIONS = [(2, 3), (1, 0), ...]` | 4-1 |
+| Loop over a list | `for destination in DESTINATIONS:` | 4-1 |
+| Unpack | `position, heading = drive_path(...)` and `x, y = start` | 4-1, 4-2 |
+| Start empty, then grow | `path = []` and `path.append((x, y))` | 4-2 |
+| Compare | `if actual == expected:` | 4-3 |
+| Pick one by index | `next_pos[0]` and `HEADING_NAMES[heading]` | 4-4 |
+
+## Tuple or list?
+
+| | Tuple | List |
+|---|---|---|
+| Written with | `( )` | `[ ]` |
+| Can it change? | No | Yes: it can grow, and items can be replaced |
+| Index, unpack, `==`, `for`, `len()` | Yes | Yes |
+| `append()` | No | Yes |
+| In your program | a position, a pose | a path, the destinations, the heading letters |
+
+The rule of thumb: a **tuple** is one thing made of a fixed number of parts, like a
+position. A **list** is any number of things in order, like the stops on a route.
+
+<KnowledgeCheck
+  question="A program must remember every intersection where the robot found an obstacle, adding to it as the robot drives. What should it use?"
+  options={[
+    {text: 'One tuple, with append()'},
+    {text: 'A list of tuples: each obstacle is an (x, y) tuple, and the list grows', correct: true},
+    {text: 'A tuple of lists'},
+    {text: 'Two separate variables, x and y'},
+  ]}
+  explanation="Each position is a fixed pair, so a tuple. The collection grows as the robot drives, so a list. That is exactly what Module 5 does."
+/>
+
+## Activity · Predict, then run
+
+Open a **new file**, not `robot.py`. For each numbered line, write down what you expect
+it to print. Then type the program in, run it, and compare. One line stops the program
+with an error: say which, and why.
+
+```python
+path = [(1, 0), (2, 0), (2, 1)]
+print(len(path))                               # 1
+print(path[0])                                 # 2
+print(path[2][1])                              # 3
+x, y = path[1]
+print(x + y)                                   # 4
+path.append((2, 2))
+print(len(path), path[3])                      # 5
+print(path == [(1, 0), (2, 0), (2, 1)])        # 6
+path[0] = (0, 1)
+print(path)                                    # 7
+path[0][0] = 5                                 # 8
+```
+
+<Reveal title="Check your predictions" hint="write all eight down and run it first">
+
+1. `3`: three items.
+2. `(1, 0)`: index 0 is the first item.
+3. `1`: `path[2]` is `(2, 1)`, and its index 1 is y.
+4. `2`: `path[1]` is `(2, 0)`, so x is 2 and y is 0.
+5. `4 (2, 2)`: the list grew, and the new item is at the end.
+6. `False`: the list has four items now, so it no longer equals the three-item list.
+7. `[(0, 1), (2, 0), (2, 1), (2, 2)]`: a list item **can** be replaced.
+8. `TypeError: 'tuple' object does not support item assignment`. `path[0]` is a tuple,
+   and a tuple can't be changed. Line 7 worked because it replaced a whole item of the
+   **list**; line 8 tries to change one part of a **tuple**.
+
+</Reveal>
+
+<KnowledgeCheck
+  question="After these lines, what is total?"
+  code={'legs = [(2, 3), (1, 0)]\ntotal = 0\nfor leg in legs:\n    x, y = leg\n    total = total + x + y'}
+  options={[
+    {text: '2'},
+    {text: '6', correct: true},
+    {text: '4'},
+    {text: 'An error: a tuple cannot be unpacked inside a loop'},
+  ]}
+  explanation="First pass: x is 2, y is 3, total becomes 5. Second pass: x is 1, y is 0, total becomes 6."
+/>
+
+<KnowledgeCheck
+  question="Given path = [(1, 0), (2, 0), (3, 0)], which line gives the y of the last position?"
+  options={[
+    {text: 'path[3][1]'},
+    {text: 'path[2][1]', correct: true},
+    {text: 'path[1][2]'},
+    {text: 'path(2, 1)'},
+  ]}
+  explanation="Three items have indexes 0, 1 and 2, so the last is path[2]. Its y is index 1. path[3] would be an IndexError."
+/>
+
+## What the variable actually holds
+
+One idea is still missing, and it explains something you have already seen.
+
+In Lesson 1-9, a variable was a named location in memory, and `=` stored a value
+there. For a number, that's the whole story.
+
+A list grows, but a memory location is a fixed size. So the list lives somewhere else
+in memory, and the variable holds its **address**. An address stored in a variable is
+called a **reference**. It matters when two variables hold the same address:
+
+```python
+a = 5
+b = a                     # copies the VALUE: two 5s
+
+path = [(1, 0)]
+same_path = path          # copies the ADDRESS: still one list
+same_path.append((2, 0))
+print(path)               # [(1, 0), (2, 0)]  <- path changed too
+```
+
+<Figure
+  src="/img/lesson-m4-02/number-vs-list.svg"
+  alt="Left: the memory locations named a and b each hold their own 5. Right: the locations named path and same_path each hold the number 5120, and arrows run from both of them to one list stored at address 5120."
+  caption="b = a makes a second 5. same_path = path makes a second arrow to the same list."
+/>
+
+<KnowledgeCheck
+  question="What does scores hold after these three lines?"
+  code={'scores = [10, 20]\nbackup = scores\nbackup.append(30)'}
+  options={[
+    {text: '[10, 20]  -- backup is a separate copy'},
+    {text: '[10, 20, 30]  -- both variables refer to the same list', correct: true},
+    {text: '[30]'},
+    {text: 'An error: you cannot assign a list to another name'},
+  ]}
+  explanation="backup = scores stores the address that was in scores, not a copy of the list, so both variables lead to one list. Appending through either variable changes what both see."
+/>
+
+### Assigning versus changing
+
+In Lesson 4-1, `current_position = next_pos` inside `drive_path()` did **not** change the
+main program's `position`. That still holds, for lists too. The difference is between two
+things a function can do with a parameter:
+
+```python
+def move(spot):
+    spot = (9, 9)             # ASSIGNS: spot now holds something else
+
+def extend(steps):
+    steps.append((9, 9))      # CHANGES the list steps refers to
+
+here = (1, 1)
+move(here)
+print(here)                   # (1, 1)  -- untouched
+
+route = [(1, 1)]
+extend(route)
+print(route)                  # [(1, 1), (9, 9)]  -- changed
+```
+
+`=` stores a new value in the function's own variable, and the caller never sees it.
+`append()` goes to the list itself, and there is only one list. A tuple can't be changed
+at all, so a function can never alter a position you hand it.
+
+This isn't a trap; the course relies on it. In Module 5 a planner sees each obstacle
+you add to your list because it holds the list's address, not a copy.
+
+<KnowledgeCheck
+  question="A function is handed a list called blocked and runs blocked.append((2, 2)). After it returns, what does the caller's list hold?"
+  options={[
+    {text: 'What it held before: functions cannot change the caller\'s variables'},
+    {text: 'The old items plus (2, 2): the function and the caller refer to the same list', correct: true},
+    {text: 'Only (2, 2)'},
+    {text: 'Nothing: the list is emptied when the function ends'},
+  ]}
+  explanation="The parameter holds the list's address, so append() changes the one list both sides share. Only assigning with = inside the function would leave the caller's list alone."
+/>
+
+<TeacherNote title="Nothing from Lesson 1-9 gets taken back here">
+
+Worth being explicit with students: this section **adds** to Lesson 1-9, it doesn't
+correct it. A variable is still a named memory location, and `=` still works out
+the right side and stores the result there. The only new fact is what the stored
+value *is* for a list: the address that was printed on the location all along.
+
+If a student asks why the address exists at all, the physical reason is the honest
+one: a location is a fixed size, a list can grow, so the list has to live somewhere
+with room to grow and the location keeps the number that says where.
+
+The demo that lands: two students each hold a slip of paper with the same post
+office box number on it. One of them goes and puts something in the box. The other
+one's slip hasn't changed, but what they find when they open the box has. Then ask
+what would have to be different for them to have *separate* boxes.
+
+"Assigning versus changing" ties this to the Lesson 4-1 dropped-return bug. Run `move()`
+and `extend()` live; the two printouts side by side do more than the explanation.
+
+Don't teach `copy()` or slicing: nothing in this course needs an independent copy, and
+the sharing is load-bearing in Module 5.
+
+</TeacherNote>
+
+## Real-world connections
+
+<CardGrid>
+  <InfoCard tag="Navigation" title="GPS & maps">
+    Latitude and longitude are two numbers naming one spot, passed around as a pair. A route is a list of them.
+  </InfoCard>
+  <InfoCard tag="Apps" title="Feeds & playlists">
+    A playlist or a feed is a list you add to and loop through, item by item.
+  </InfoCard>
+  <InfoCard tag="Graphics" title="Points & colors">
+    Screen points (x, y) and colors (r, g, b) are stored exactly like coordinate tuples.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- Tuple or list: which for a position, which for a path, and why? (Tuple: a fixed pair that shouldn't change. List: any number of steps, built up one at a time.)
+- Name three things you can do with both. (Index, unpack, compare with `==`, loop with `for`, count with `len()`.)
+- What can a list do that a tuple can't? (Change: `append()`, or replace an item.)
+- If two variables refer to the same list and you append through one, what does the other see? (The change: there is only one list, and both variables hold its address.)
+
+<TeacherNote title="Assessment & next module">
+
+This is the module's check on the Python, so treat the predict-then-run activity as the
+assessment: collect the written predictions before anyone runs the program. A student
+who gets lines 3, 6 and 8 right has what the standard Module 4's two data lessons teach.
+
+**Exit ticket:** "Write the line that makes an empty list called `seen`, the line that
+adds the position 3 across and 1 up to it, and the line that prints that position's y."
+(`seen = []`, `seen.append((3, 1))`, `print(seen[0][1])`.)
+
+**If time is short**, do the activity and "What the variable actually holds", and skip
+the tables: students have already used everything in them.
+
+**Preview:** Module 5 puts obstacles on the grid. The planner changes; `drive_path()`
+and the main program don't.
+
+</TeacherNote>
+
+## Resources
+
+- [Python tuples](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences)
+- [Python lists](https://docs.python.org/3/tutorial/datastructures.html)

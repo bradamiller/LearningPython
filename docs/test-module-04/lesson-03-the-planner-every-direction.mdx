@@ -1,95 +1,51 @@
 ---
-title: "Lesson 4-4 · The Planner"
-sidebar_label: "4-4 · The Planner"
-sidebar_position: 4
+title: "Lesson 4-3 · The Planner: Every Direction"
+sidebar_label: "4-3 · Every Direction"
+sidebar_position: 3
 ---
 
 <LessonHeader
   eyebrow="Module 4 test · Top-down trial"
-  title="Lesson 4-4 · The Planner"
-  meta={['60–70 min', 'Python code', 'Computing a path', 'Robot stays on the desk']}
+  title="Lesson 4-3 · The Planner: Every Direction"
+  meta={['50–60 min', 'Python code', 'Testing a function', 'Robot stays on the desk']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Today the planner stub goes. In its place you write the real
-`compute_manhattan_path()`: give it a start and a destination, and it hands back every
-intersection to drive to. You'll trace paths by hand first, then test the code against
-your traces, and then run the main program to see real paths in the whole delivery run.
+Last lesson's delivery run fell apart on Leg 2: the planner can only go right and up.
+Today you finish it. First you'll write tests that say exactly what's wrong, then add
+the two missing loops and watch the tests turn to PASS.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Describe the "across first, then up or down" strategy and hand-trace a path on paper
-- Read each row of a trace table as one trip around a while loop
-- Write the planner as four while loops, east, west, north and south, with no `if/else`
-- Test it with `run_test()` against paths you traced by hand, including the edge cases
+- Compare two tuples, or two lists, with `==`
+- Test a function with `run_test()` against paths you traced by hand
+- Write the west and south loops, with no `if/else`
 - State the planner's three promises
 
 </Objectives>
 
-## The strategy: across first, then up or down
+## Activity · Make your answer key
 
-Each step moves the robot to a neighboring intersection, so **exactly one of x or y
-changes, by 1**. Never both: that would be a diagonal, and the robot can't drive one.
+Trace five paths by hand: across first, then up or down. This is your **answer key**:
+the tests compare the code with it. Leg 1 you traced last lesson; Leg 2 is the one that
+came out empty.
 
-<Figure
-  src="/img/lesson-m4-03/one-step.svg"
-  alt="A 3 by 3 grid with the robot's intersection (1, 1) in the middle. Red arrows go right to (2, 1), x + 1, and left to (0, 1), x − 1. Green arrows go up to (1, 2), y + 1, and down to (1, 0), y − 1. A dashed diagonal to (2, 2) is crossed out: x and y both change, so it is not one step."
-  caption="One step changes x or y by 1, never both."
-/>
-
-The strategy is the simplest one that always works: **step across until x is right,
-then step up or down until y is right.** That traces an L-shaped path, or a straight
-line if x or y is already right.
-
-The planner makes three promises, and every planner in this course keeps them:
-
-1. The path **never includes the start.** The robot is already there.
-2. The path **ends at the destination.**
-3. The path is **empty** if the robot is already at the destination.
-
-## Activity · Trace it on paper
-
-Before any code, trace five paths by hand: across first, then up or down, one step at a
-time. This is your **answer key**: the tests you run later compare the code with it.
-
-**1. Leg 1, move by move.** Trace (0, 0) → (2, 3), one row per move. Row 1 is done
-for you.
-
-| Step | Action | New position |
+| Test | From, to | Expected path |
 |---|---|---|
-| 1 | x + 1 | (1, 0) |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| Leg 1 | (0, 0) to (2, 3) | |
+| Leg 2 | (2, 3) to (1, 0) | |
+| Same column | (2, 0) to (2, 3) | |
+| Same row | (0, 2) to (3, 2) | |
+| Same spot | (1, 1) to (1, 1) | |
 
-**2. Five paths.** Write each expected path. Leg 1 is the one you just traced; Leg 2 is
-the delivery run's second leg.
+What is different about Leg 2 compared with Leg 1?
 
-| Test | From → to | Expected path |
-|---|---|---|
-| Leg 1 | (0, 0) → (2, 3) | |
-| Leg 2 | (2, 3) → (1, 0) | |
-| Same column | (2, 0) → (2, 3) | |
-| Same row | (0, 2) → (3, 2) | |
-| Same spot | (1, 1) → (1, 1) | |
-
-**3. What is different about Leg 2** compared with Leg 1?
-
-<Reveal title="Check your answer key" hint="fill in both tables and the question first">
-
-| Step | Action | New position |
-|---|---|---|
-| 1 | x + 1 | (1, 0) |
-| 2 | x + 1 | (2, 0) |
-| 3 | y + 1 | (2, 1) |
-| 4 | y + 1 | (2, 2) |
-| 5 | y + 1 | (2, 3) |
+<Reveal title="Check your answer key" hint="fill in the table and the question first">
 
 | Test | Expected path |
 |---|---|
@@ -104,56 +60,56 @@ get **smaller**. Same spot is empty because the robot is already there.
 
 </Reveal>
 
-<TeacherNote title="One paper activity, then code">
+<TeacherNote title="Check the keys before the code">
 
-About 15 minutes on a big grid, one marker color for moves across and another for moves
-up and down. Check the sheets before students go on: a wrong key sends them hunting for a
-bug that isn't there. The last question sets up Step 3: the first version only handles x
-and y getting bigger.
+About 10 minutes on a big grid. Check the sheets before students go on: a wrong key
+sends them hunting for a bug that isn't there.
 
 </TeacherNote>
 
-## From the trace table to a loop
+## Let the computer compare
 
-Write the code the same way you worked out each new position. `x` and `y` are where the
-robot is *during the plan*: they start as the start (`x, y = start`) and change by 1 on
-every move. `dest_x` and `dest_y` are the destination.
+Last lesson you checked three printed paths against your traces by eye. With five paths,
+and a re-run after every change, that gets slow and easy to get wrong. Python can compare
+for you. `==` works on tuples and on lists:
 
-In one loop, keep adding 1 to x while x is less than `dest_x`. In a second loop, do the
-same for y. Inside each loop, append the new `(x, y)` to the path.
+```python
+print((1, 2) == (1, 2))                      # True
+print((1, 2) == (2, 1))                      # False -- order matters
+print([(1, 0), (2, 0)] == [(1, 0), (2, 0)])  # True
+print([(1, 0), (2, 0)] == [(1, 0)])          # False -- one is shorter
+```
 
-<Figure
-  src="/img/lesson-m4-03/trace-to-loops.svg"
-  alt="The trace table for (0, 0) to (2, 3). Rows 1 and 2, in red, say x + 1 and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). Rows 3 to 5, in green, say y + 1 and are bracketed to loop 2, the same loop for y."
-  caption="Each row is one trip around a loop."
+Two tuples are equal when both parts match, in order. Two lists are equal when they hold
+equal items, in the same order, and the same number of them. So one `==` checks a whole
+path.
+
+<KnowledgeCheck
+  question="Does (1, 3) == (3, 1) evaluate to True?"
+  options={[
+    {text: 'Yes: they contain the same numbers'},
+    {text: 'No: the parts must match in order, and these are swapped', correct: true},
+    {text: 'Yes: tuples ignore order'},
+    {text: 'It causes an error'},
+  ]}
+  explanation="(1, 3) is x = 1, y = 3; (3, 1) is x = 3, y = 1. Different intersections, so False."
 />
 
 ## This lesson's skeleton
 
-Replace the planner stub in the MANHATTAN PLANNER section with this. The east loop is
-written for you, and so is `run_test()`, which compares the planner's answer with yours.
+In the MANHATTAN PLANNER section, add `run_test()` under the planner, and replace last
+lesson's `test_planner()` with this one. Add the two new comments to the planner: west
+goes between east and north, so the path still goes across first.
 
 ```python
-def compute_manhattan_path(start, destination):
-    """Return the (x, y) steps from start to destination, across
-    first, then up or down. The start itself is not in the list."""
-    path = []
-    x, y = start              # where the plan is now
-    dest_x, dest_y = destination   # where it is going
-
-    # East: keep stepping right until x matches dest_x
-    while x < dest_x:
-        x = x + 1             # one step right
-        path.append((x, y))   # record the new spot
-
     # West: copy east, flip < to > and + to -
-
-    # North: copy east, but step y until it matches dest_y
+    # (goes between the east loop and the north loop)
 
     # South: copy north, flip < to > and + to -
+    # (goes after the north loop, before return path)
+```
 
-    return path
-
+```python
 def run_test(test_name, start, destination, expected):
     """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
@@ -177,59 +133,37 @@ def test_planner():
 The expected lists **must come from your own tracing.** Copy what the code prints and the
 test only checks that the code agrees with itself.
 
-## Activity · Write the planner
+## Activity · Finish the planner
 
-### Step 1 · Paste and fill in
+### Step 1 · Run the tests first
 
-Paste the skeleton in place of the stub, and replace each `[]` in `test_planner()` with
-the path from your answer key. (Same spot stays `[]`.)
+Replace each `[]` in `test_planner()` with the path from your answer key. (Same spot
+stays `[]`.) Set the run line to `test_planner()` and run it, before you change the
+planner.
 
-### Step 2 · Run the east loop alone
+**What correct looks like:** four PASS lines and one FAIL. The test names the problem
+exactly:
 
-Set the run line to `test_planner()` and run it. Only the east loop exists, so expect:
-
-- **Same row** and **Same spot**: PASS. Neither needs to move up or down.
-- **Leg 1**: FAIL, with `Actual: [(1, 0), (2, 0)]`: right two, then it stops.
-- **Leg 2** and **Same column**: FAIL, with `Actual: []`.
-
-### Step 3 · Write north
-
-Under the north comment, copy the east loop, comparing `y` with `dest_y` and stepping `y`
-instead of `x`. Leave `path.append((x, y))` as it is: it always records the whole
-position. Run `test_planner()` again: Leg 1 and Same column now PASS. Leg 2 still fails
-with `Actual: []`.
-
-<Reveal title="Check your north loop" hint="write it and run the test first">
-
-```python
-    # North: copy east, but step y until it matches dest_y
-    while y < dest_y:
-        y = y + 1             # one step up
-        path.append((x, y))
+```
+Leg 1 - PASS
+Leg 2 - FAIL
+  Expected: [(1, 3), (1, 2), (1, 1), (1, 0)]
+  Actual:   []
+Same column - PASS
+Same row - PASS
+Same spot - PASS
 ```
 
-</Reveal>
-
-<KnowledgeCheck
-  question="Why does the east-and-north version return [] for Leg 2, (2, 3) → (1, 0)?"
-  options={[
-    {text: 'append() is broken'},
-    {text: 'Both while conditions are False from the start (2 is not < 1, 3 is not < 0), so neither loop runs', correct: true},
-    {text: 'The start and destination are the same'},
-    {text: 'It runs forever'},
-  ]}
-  explanation="East and north only handle x and y getting bigger. Going left or down needs two flipped loops."
-/>
-
-### Step 4 · West and south: copy and flip
+### Step 2 · West: copy and flip
 
 West is the east loop flipped: copy it under the west comment, then flip `<` to `>` and
-`+ 1` to `- 1`. South is the north loop, flipped the same way.
+`+ 1` to `- 1`. Run `test_planner()`: Leg 2 still fails, but `Actual:` is now `[(1, 3)]`.
+The step left is there; the steps down are not.
 
 **Why two x loops can sit next to each other:** a while loop checks its condition before
 its first trip. Going left, x is already bigger than `dest_x`, so the east loop's
 `x < dest_x` is False on that first check and the east loop never runs. Only the west
-loop moves x. The two y loops work the same way, so no `if/else` is needed.
+loop moves x.
 
 <Figure
   src="/img/lesson-m4-03/one-x-loop-runs.svg"
@@ -237,8 +171,9 @@ loop moves x. The two y loops work the same way, so no `if/else` is needed.
   caption="For any trip, at most one of the two x loops runs. The same goes for the two y loops."
 />
 
-The two x loops come before the two y loops, so the path always goes across first. Run
-`test_planner()`: five PASS lines.
+### Step 3 · South
+
+South is the north loop, flipped the same way. Run `test_planner()`: five PASS lines.
 
 <KnowledgeCheck
   question="For a trip that goes up and to the right, how many of the four while loops actually run?"
@@ -261,42 +196,58 @@ The two x loops come before the two y loops, so the path always goes across firs
 
 </Reveal>
 
-### Step 5 · Run the main program
+### Step 4 · Run the main program
 
-Set the run line back to `test_delivery()` and run it. The paths are real now.
+Set the run line back to `test_delivery()` and run it.
 
 **What correct looks like:** Leg 1 and Leg 2 match your answer key. In every leg, the path
 starts one step from its `Plan from` spot, goes across first, and ends at the destination.
-The last line still says `Finished at (0, 0) facing N`, because the driver is still a stub.
+The driver is still a stub, so the last line still says `heading 0`.
 
 <Reveal title="Check your output" hint="run it first">
 
 ```
 Plan from (0, 0) to (2, 3)
   path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+  STUB drive_path: [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
 Plan from (2, 3) to (1, 0)
   path: [(1, 3), (1, 2), (1, 1), (1, 0)]
+  STUB drive_path: [(1, 3), (1, 2), (1, 1), (1, 0)]
 Plan from (1, 0) to (3, 1)
   path: [(2, 0), (3, 0), (3, 1)]
+  STUB drive_path: [(2, 0), (3, 0), (3, 1)]
 Plan from (3, 1) to (2, 2)
   path: [(2, 1), (2, 2)]
+  STUB drive_path: [(2, 1), (2, 2)]
 Plan from (2, 2) to (0, 0)
   path: [(1, 2), (0, 2), (0, 1), (0, 0)]
-Finished at (0, 0) facing N
+  STUB drive_path: [(1, 2), (0, 2), (0, 1), (0, 0)]
+Finished at (0, 0) heading 0
 ```
 
 </Reveal>
+
+## The planner's three promises
+
+The planner is finished, and it makes three promises. Every planner in this course keeps
+them:
+
+1. The path **never includes the start.** The robot is already there.
+2. The path **ends at the destination.**
+3. The path is **empty** if the robot is already at the destination.
 
 <TeacherNote title="Redirect anyone reaching for if/else">
 
 The four-loop design is the lesson's big idea: *a while loop whose condition starts False
 simply does nothing.* Students who've seen conditionals will try `if x < dest_x ... elif`.
 Steer them back: the four loops handle every case, including same spot (all four skipped,
-`[]`). Take real time on the double parentheses in `path.append((x, y))`: the outer pair is
-the function call, the inner pair is the tuple.
+`[]`).
+
+Running the tests before the fix is deliberate: students see a FAIL that tells them what
+to write, then watch it change. That's the habit to build.
 
 Promise 1 is the one that bites later: a path that includes the start gives the driver a
-zero-length move in Lesson 4-5. Keep `run_test()` in the file: Module 5 comes back to it.
+zero-length move in Lesson 4-4. Keep `run_test()` in the file: Module 5 comes back to it.
 
 </TeacherNote>
 
@@ -316,7 +267,7 @@ debug prints** so the output stays clean. Try it: change one `+ 1` to `- 1`, run
 `test_planner()`, watch a test catch it, then change it back.
 
 <KnowledgeCheck
-  question={'A classmate gets [(3, 3), (2, 3), (1, 2), (1, 1), (1, 0)] for (3, 3) → (1, 0). What went wrong?'}
+  question={'A classmate gets [(3, 3), (2, 3), (1, 2), (1, 1), (1, 0)] for (3, 3) to (1, 0). What went wrong?'}
   options={[
     {text: 'Nothing: that is a valid Manhattan path'},
     {text: 'The west loop appends before it subtracts 1 from x, so the start is included and (1, 3) is skipped: promise 1 is broken', correct: true},
@@ -366,7 +317,7 @@ If yours is laid out differently and passes all five tests, keep yours.
 <TeacherNote title="Solution (teacher copy)">
 
 The MANHATTAN PLANNER section as this lesson leaves it, plus the run block. The NAVIGATOR
-section is unchanged from Lesson 4-3.
+section is unchanged from Lesson 4-1.
 
 ```python
 # ===== MANHATTAN PLANNER =====
@@ -471,7 +422,7 @@ and `tracker` were in Module 2.
 # first and then up or down. It holds NO state: compute_path()
 # is told the robot's position every call. Pure arithmetic.
 class Manhattan:
-    """The Lesson 4-4 planner as a class.
+    """The Lesson 4-3 planner as a class.
 
     It holds NO state: compute_path() is told the robot's position
     every time. Manhattan is a class only so that it has the same
@@ -542,8 +493,8 @@ one says `compute_manhattan_path(position, destination)`, you write
 
 ## Wrap-up
 
-- What does "across first, then up or down" produce? (An L-shaped path, or a straight line.)
 - Why four while loops instead of `if/else`? (A loop whose condition starts False never runs, so only the right ones do.)
+- When are two paths equal with `==`? (Same positions, in the same order, and the same number of them.)
 - What are the planner's three promises? (No start in the path; it ends at the destination; `[]` when already there.)
 - Where does a test's expected path come from? (Your own hand trace, before you run the code.)
 
