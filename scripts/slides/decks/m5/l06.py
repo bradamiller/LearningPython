@@ -378,7 +378,8 @@ DECK = {
                   'run_no_path_test() call planner.compute_path(start, destination); run_all_tests() '
                   'calls block(planner, ...) and clear(planner); check_path()\'s property 4 reads '
                   'HARNESS_BLOCKED; test_harness() hands in Manhattan() and BFS(). test_swap() gets the '
-                  'same treatment. Solution file: lesson-06-testing-class-addon.py.'},
+                  'same treatment. The whole class-track file at the end of the module is in the '
+                  'Teacher Guide: learningpython.bradhouse.com/teacher-guide/sample-programs/module-5 (teacher mode).'},
 
         {'kind': 'code', 'title': 'Optional: the harness keeps its own record',
          'tag': 'Optional extension',

@@ -239,8 +239,8 @@ DECK = {
              'Don\'t go on until both tests print what you predicted',
          ],
          'notes': 'The finished bodies and the expected output are behind a reveal on the lesson '
-                  'page, and the full section is in the teacher solution file '
-                  'lesson-02-dictionaries.py in the Module 5 solutions. The reveal uses a list '
+                  'page, and the whole file at the end of the module is in the '
+                  'Teacher Guide: learningpython.bradhouse.com/teacher-guide/sample-programs/module-5 (teacher mode). The reveal uses a list '
                   'comprehension, which is new; students who wrote the loop keep the loop.'},
 
         {'kind': 'check',

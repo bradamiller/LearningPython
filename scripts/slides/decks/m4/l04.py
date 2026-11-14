@@ -344,6 +344,7 @@ DECK = {
                   'Manhattan has nothing to set up; BFS in Module 5 uses its __init__ to hold the '
                   'list of blocked intersections, and that is when the class earns its keep. The '
                   'finished method is behind a reveal on the lesson page and is not shown here. '
-                  'Solution file: lesson-05-manhattan-class-addon.py.'},
+                  'The whole class-track file at the end of the module is in the Teacher Guide: '
+                  'learningpython.bradhouse.com/teacher-guide/sample-programs/module-4 (teacher mode).'},
     ],
 }

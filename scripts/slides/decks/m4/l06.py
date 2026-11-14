@@ -284,8 +284,8 @@ DECK = {
                   'and turn_to and drive_path store instead of return. __init__ is the new idea, so it '
                   'is given. The signatures shrank because the object already knows position and '
                   'heading. From here on class-track students use navigator.drive_path(path) wherever '
-                  'Lesson 4-7 says drive_path(path, position, heading). Full file: '
-                  'lesson-08-navigator-class-addon.py in the Module 4 solutions. The finished methods '
+                  'Lesson 4-7 says drive_path(path, position, heading). The whole '
+                  'class-track file is in the Teacher Guide: learningpython.bradhouse.com/teacher-guide/sample-programs/module-4 (teacher mode). The finished methods '
                   'are behind a reveal on the lesson page and are not shown here.'},
     ],
 }

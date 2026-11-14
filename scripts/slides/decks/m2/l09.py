@@ -262,7 +262,8 @@ DECK = {
                   'are written with the function names; class-track students use the same names with '
                   'tracker. in front. LineTrack makes the LineSensor it uses, so the separate '
                   'sensor = LineSensor() line is no longer needed; keep it for test_sensors() or '
-                  'delete it. Solution file: lesson-09-linetrack-class-addon.py.'},
+                  'delete it. The whole class-track file at the end of the module is in the Teacher '
+                  'Guide: learningpython.bradhouse.com/teacher-guide/sample-programs/module-2 (teacher mode).'},
 
         {'kind': 'code', 'title': 'Optional: move your three bodies in',
          'tag': 'Optional extension',

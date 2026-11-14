@@ -340,7 +340,7 @@ DECK = {
                   'class skeleton in place of the LINE SENSOR functions, translate the five '
                   'bodies, and add sensor. to calls in their tests. Classic slips: missing self '
                   'in a parameter list, missing self. in front of an attribute or method, a '
-                  'method indented out of the class. The file is '
-                  'lesson-07-linesensor-class-addon.py in the Module 2 solutions.'},
+                  'method indented out of the class. The whole class-track file at '
+                  'the end of the module is in the Teacher Guide: learningpython.bradhouse.com/teacher-guide/sample-programs/module-2 (teacher mode).'},
     ],
 }
