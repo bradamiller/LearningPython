@@ -112,8 +112,8 @@ pair belongs to `append()`, the inner pair is the tuple.
 
 ### Step 1 · Leg 1, by hand
 
-In the MANHATTAN PLANNER section, keep the stub's `print` line and replace its `return`
-with an empty list, five `append()` lines, one for each row of your trace, and
+In the `compute_manhattan_path()` function, keep the stub's `print` line and replace its
+`return` with an empty list, five `append()` lines, one for each row of your trace, and
 `return path`. Run `test_delivery()`.
 
 **What correct looks like:** Leg 1's path matches your trace, and the driver stub prints
@@ -150,7 +150,7 @@ dest_x, dest_y = destination     # (2, 3): dest_x is 2, dest_y is 3
 every move. After each move, `(x, y)` puts them back together as a **new tuple** for the
 path.
 
-Replace the whole function with this. The east loop is written for you; north is yours
+Replace the whole `compute_manhattan_path()` function with this. The east loop is written for you; north is yours
 in Step 3. Add `test_planner()` under it.
 
 ```python
