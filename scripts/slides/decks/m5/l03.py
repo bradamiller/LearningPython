@@ -17,21 +17,22 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'From "I just looked" to a method',
          'bullets': [
-             'In Lesson 5-1 you found a path around blocked intersections by looking at the whole grid',
-             'That works for you. It doesn\'t work for a computer',
-             'A computer only ever sees **one intersection and its neighbors**',
-             'Today: a method precise enough to follow with a pencil, and to type in two lessons',
+             'In Lesson 5-1 you found a path by looking at the whole grid',
+             'A computer only sees **one intersection and its neighbors**',
+             'Today: a method you can follow with a pencil',
          ],
-         'callout': 'It\'s called **breadth-first search**, and the whole thing fits in one idea: ripples',
-         'tone': 'teal'},
+         'callout': 'It\'s **breadth-first search**: one idea, ripples',
+         'tone': 'teal',
+         'notes': 'The method is precise enough to follow with a pencil today and to type in two '
+                  'lessons.'},
 
         {'kind': 'steps', 'title': 'Activity · Explain your method to a computer',
-         'lead': 'Take the Lesson 5-1 grid with its blocked intersections and the path you found.',
+         'lead': 'Start from your Lesson 5-1 grid and path.',
          'steps': [
-             'Write down your **rule**, in numbered steps, for someone who can\'t see the whole grid',
-             'They can see one intersection and which of its neighbors are open. That\'s it',
-             'Your rule has to get them to the destination by a shortest path, every time, on any grid',
-             'Give it two minutes. Then test your rule on the next grid',
+             'Write your **rule** in numbered steps for someone who sees only one intersection '
+             'and its open neighbors',
+             'It must find a shortest path, every time, on any grid',
+             'Two minutes, then test it on the next grid',
          ],
          'notes': 'Keep the timer honest: two minutes, then move on to the wall grid.'},
 
@@ -49,18 +50,14 @@ DECK = {
                   'arrives.'},
 
         {'kind': 'bullets', 'title': 'Ripples',
-         'lead': 'A method that never guesses, never looks at the destination, and still always '
-                 'finds a shortest path:',
+         'lead': 'Never guesses, never looks at the destination, always finds a shortest path:',
          'lead_h': 1.2,
          'bullets': [
              'Write **0** on the start',
-             'Every intersection you can reach in one step gets a **1**',
-             'Every intersection one step from a 1 that **doesn\'t have a number yet** gets a **2**',
-             'Keep going, always finishing one ring before you start the next',
-             'Stop when the destination gets a number',
-         ],
-         'callout': 'The number on the destination is its distance from the start, in steps',
-         'tone': 'teal'},
+             'One step away: a **1**',
+             'One step from a 1, with **no number yet**: a **2**',
+             'Finish each ring before the next, until the destination is numbered',
+         ]},
 
         {'kind': 'figure', 'title': 'Ripples spreading out from the start',
          'figure': '/img/lesson-m5-03/bfs-rings-xy.svg',
@@ -71,13 +68,14 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Why it\'s always shortest',
          'bullets': [
-             'Could there be a shorter path you missed? No, and the reason is the rule itself',
-             'Ring 3 was only written after **every** ring-2 intersection was done',
-             'So anything with a 3 on it can\'t be reached in 2 steps',
-             'The first number written on the destination is the smallest one it could ever get',
+             'The destination\'s number is its distance from the start',
+             'Ring 3 is only written after **every** ring-2 intersection is done',
+             'So nothing with a 3 can be reached in 2 steps',
          ],
          'callout': '**Breadth-first**: it goes wide (the whole ring) before it goes deep',
-         'tone': 'orange'},
+         'tone': 'orange',
+         'notes': 'Could a shorter path have been missed? No: the first number written on the '
+                  'destination is the smallest it could ever get.'},
 
         {'kind': 'check',
          'question': 'An intersection already has a 2 on it. Later, while looking around an '
@@ -91,17 +89,15 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Activity · Trace it: 3×3 with (1,1) blocked', 'tag': 'Activity',
          'bullets': [
-             'Start at (0,0), destination (2,2). Put an **X** on the center: it never gets a '
-             'number and it\'s never anyone\'s neighbor',
-             'Keep a **to-visit** list beside the grid',
-             ['when an intersection gets its number, add it to the **end** of the list',
-              'to decide where to look next, take the one at the **front**'],
-             'Check neighbors in the order the code will use: left, right, down, up',
+             'Start (0,0), destination (2,2), center **X**: never numbered',
+             '**To-visit** list: add new numbers at the **end**',
+             'Look around the one at the **front**',
          ],
          'callout': 'Say it out loud: "Take the oldest one I haven\'t looked around yet. Every '
                     'neighbor with no number gets the next number."',
          'tone': 'teal',
-         'notes': 'Keep the to-visit list on the board and always take from the front. Students '
+         'notes': 'The blocked center is never anyone\'s neighbor. Check neighbors in the order '
+                  'the code will use: left, right, down, up. Keep the to-visit list on the board and always take from the front. Students '
                   'who skip ahead get the wall exercise wrong and usually can\'t see why; the list '
                   'makes the error visible.'},
 
@@ -156,12 +152,11 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Where did I come from?',
          'bullets': [
-             'The number tells you **how far**. It doesn\'t tell you **which way**',
-             'So add one thing to the rule: every time you write a number on an intersection, '
-             'also write down which intersection you were looking around at the time',
+             'The number tells you **how far**, not **which way**',
+             'So, whenever you write a number, also write which intersection you were looking around',
              'That is where it **came from**',
          ],
-         'callout': 'The came-from record is how the numbers turn into a path',
+         'callout': 'The came-from record turns the numbers into a path',
          'tone': 'teal'},
 
         {'kind': 'table', 'title': 'The came-from record',
@@ -205,27 +200,24 @@ DECK = {
                         'from (0,0), the start, so stop. Flip it and leave the start out.'},
 
         {'kind': 'code', 'title': 'More than one right answer',
-         'lead': '(2,2) has **two** neighbors with a 3, (2,1) and (1,2). Which one it "came from" '
-                 'depends on which was looked around first. A classmate who checked neighbors in a '
-                 'different order would get',
+         'lead': '(2,2) has **two** neighbors with a 3, (2,1) and (1,2). Whichever was looked '
+                 'around first wins. A classmate with a different neighbor order gets',
          'lead_h': 1.5,
          'code': '[(0, 1), (0, 2), (1, 2), (2, 2)]',
          'code_size': 26, 'width': 8,
-         'callout': 'Four steps. Also shortest. Also right. What\'s unique is the **number of steps**',
+         'callout': 'Four steps: also shortest, also right. What\'s unique is the **number of steps**',
          'tone': 'teal',
          'notes': 'On an open grid there are usually several shortest paths. Plant the seed: in '
                   'Lesson 5-6, when students test their planner, they won\'t compare against one '
                   'expected list. They\'ll check what has to be true of any correct answer.'},
 
         {'kind': 'bullets', 'title': 'Activity · The wall, and the dead end', 'tag': 'Activity',
-         'lead': 'Back to the wall at (1,0) and (1,1). Number every intersection, starting from (0,0).',
+         'lead': 'The wall at (1,0) and (1,1): number every intersection from (0,0).',
          'lead_h': 1.2,
          'bullets': [
-             'Write down the ring number on (3,0), and one shortest path to it',
-             'Your first step goes **away** from the destination. In one sentence: why does this '
-             'method get that right when "head toward the goal" didn\'t?',
-             'Then block the whole column at x = 1 and start again',
-             'What happens to the rings? What number does (3,0) get?',
+             'Ring number on (3,0), and one shortest path to it',
+             'Your first step goes **away** from D: why does this method get that right?',
+             'Then block all of column x = 1: what happens? What does (3,0) get?',
          ],
          'split': 0.56,
          'code': ' 3 |   .  .  .  .\n'
@@ -235,7 +227,9 @@ DECK = {
                  '    -------------\n'
                  '       0  1  2  3',
          'code_size': 22,
-         'notes': 'Numbering the whole grid is fine; it makes the picture clearer. The blocked '
+         'notes': 'The why-question: in one sentence, why does this method get it right when '
+                  '"head toward the goal" didn\'t? Numbering the whole grid is fine; it makes the '
+                  'picture clearer. The blocked '
                   'column is (1,0), (1,1), (1,2), (1,3). The answers are in the "Answers" teacher '
                   'note on the lesson page. For the blocked column, ask what the program should '
                   'return when the destination never gets a number: an empty path. Lesson 5-5 '
@@ -244,9 +238,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'Check your paper against the computer',
          'bullets': [
              'Nothing goes into `robot.py` today: that starts in Lesson 5-4',
-             'Your teacher\'s demonstration program does the 3×3 trace with (1,1) blocked, step by step',
-             'It prints each intersection as it\'s reached, and the to-visit list after every step',
-             'Then it draws the grid of ring numbers',
+             'Your teacher\'s program runs the 3×3 trace step by step, then draws the ring numbers',
              'Same ring numbers as yours? You ran the algorithm',
          ],
          'split': 0.6,
@@ -256,10 +248,12 @@ DECK = {
                  '    ----------\n'
                  '       0  1  2',
          'code_size': 24,
-         'callout': 'A different path with the same number of steps? That\'s "more than one right '
-                    'answer" for real',
+         'callout': 'Different path, same number of steps? Also right',
          'tone': 'teal',
-         'notes': 'The program is on the Teacher Guide\'s Module 5 sample programs page, '
+         'notes': 'The demonstration program does the 3x3 trace with (1,1) blocked, printing each '
+                  'intersection as it is reached and the to-visit list after every step. A '
+                  'different path with the same number of steps is "more than one right answer" '
+                  'for real. The program is on the Teacher Guide\'s Module 5 sample programs page, '
                   'learningpython.bradhouse.com/teacher-guide/sample-programs/module-5 (teacher mode). It is plain '
                   'Python (no robot, no XRPLib), so it runs on any laptop or in XRP Code. Project '
                   'it rather than handing it out: in Lesson 5-5 students write bfs_rings() and '
@@ -284,12 +278,12 @@ DECK = {
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Maps', 'GPS routing', 'Turn-by-turn directions come from search algorithms that '
-                                     'spread out from where you are, exactly like the rings.'),
-             ('Networks', 'Internet packets', 'Routers find the fewest hops to a destination '
-                                              'with breadth-first search over the network graph.'),
-             ('Games', 'Enemy AI', 'Game characters find their way around walls with graph search '
-                                   'like this, many times a second.'),
+             ('Maps', 'GPS routing', 'Turn-by-turn directions come from searches that spread out '
+                                     'from where you are, like the rings.'),
+             ('Networks', 'Internet packets', 'Routers find the fewest hops with breadth-first '
+                                              'search over the network graph.'),
+             ('Games', 'Enemy AI', 'Game characters find their way around walls with graph search, '
+                                   'many times a second.'),
          ]},
 
         {'kind': 'wrapup',

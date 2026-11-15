@@ -16,10 +16,9 @@ to preview the student view.
 </TeacherBanner>
 
 In Lesson 5-1 you found a path around blocked intersections by looking at the whole
-grid. That works for you. It doesn't work for a computer, which only ever sees one
-intersection and its neighbors. This lesson turns your "I just looked" into a method
-precise enough to follow with a pencil, and precise enough to type in two lessons
-from now. It's called **breadth-first search**, and the whole thing fits in one idea:
+grid. A computer can't: it only sees one intersection and its neighbors. This lesson
+turns your "I just looked" into a method precise enough to follow with a pencil, and to
+type in two lessons. It's called **breadth-first search**, and it fits in one idea:
 ripples.
 
 <Objectives>
@@ -38,13 +37,12 @@ By the end of this lesson you will be able to:
 
 ## Activity · Explain your method to a computer
 
-Take the Lesson 5-1 grid with the blocked intersections and the path you found
-around them. Now write down your *rule*, in numbered steps, for someone who can't
-see the whole grid at once. They can see one intersection and which of its
-neighbors are open. That's it. Your rule has to get them to the destination by a
-shortest path, every time, on any grid.
+Take the Lesson 5-1 grid with its blocked intersections and the path you found. Write
+your *rule*, in numbered steps, for someone who can't see the whole grid: they see one
+intersection and which of its neighbors are open. Your rule must get them to the
+destination by a shortest path, every time, on any grid.
 
-Give it two minutes. Then test your rule on this one:
+Give it two minutes, then test your rule on this one:
 
 <Figure
   src="/img/lesson-m5-03/wall-problem-xy.svg"
@@ -52,8 +50,8 @@ Give it two minutes. Then test your rule on this one:
   caption="Your rule can only look at one intersection and its open neighbors at a time."
 />
 
-Start at `S` (0,0), destination `D` (3,0). The destination is straight across the bottom row,
-y = 0, and there's a wall in the way at (1,0) and (1,1).
+Start at `S` (0,0), destination `D` (3,0), straight across the bottom row, with a wall at
+(1,0) and (1,1).
 
 <TeacherNote title="What you're fishing for">
 
@@ -70,13 +68,14 @@ it arrives there.
 
 ## Ripples
 
-Here's a method that never guesses, never looks at the destination, and still
-always finds a shortest path.
+This method never guesses and never looks at the destination, yet always finds a
+shortest path:
 
-Write **0** on the start. Every intersection you can reach in one step gets a
-**1**. Every intersection one step from a 1 that *doesn't have a number yet* gets a
-**2**. Keep going, always finishing one ring before you start the next, until the
-destination gets a number.
+1. Write **0** on the start.
+2. Every intersection one step away gets a **1**.
+3. Every intersection one step from a 1 that *doesn't have a number yet* gets a **2**.
+4. Keep going, finishing each ring before you start the next, until the destination gets
+   a number.
 
 <Figure
   src="/img/lesson-m5-03/bfs-rings-xy.svg"
@@ -84,11 +83,10 @@ destination gets a number.
   caption="Ripples spreading out from the start, around a blocked intersection. Each ring is exactly one step further out. The arrows on the right record where each intersection was reached from — which is how the numbers turn into a path."
 />
 
-The number on the destination is its distance from the start, in steps. Could there
-be a shorter path you missed? No, and the reason is the rule itself: ring 3 was
-only written after *every* ring-2 intersection was done, so anything with a 3 on
-it can't be reached in 2 steps. The first number written on the destination is the
-smallest one it could ever get.
+The destination's number is its distance from the start, in steps. Could a shorter path
+have been missed? No: ring 3 is only written after *every* ring-2 intersection is done,
+so nothing with a 3 can be reached in 2 steps. The first number written on the
+destination is the smallest it could ever get.
 
 That's why it's called **breadth-first**: it goes wide (the whole ring) before it
 goes deep.
@@ -106,16 +104,17 @@ goes deep.
 
 ## Activity · Trace it: 3×3 with (1,1) blocked
 
-Start at (0,0), destination (2,2), and the center intersection is blocked — put an
-**X** on it. It never gets a number and it's never anyone's neighbor.
+Start at (0,0), destination (2,2), with the center blocked: put an **X** on it. It never
+gets a number and is never anyone's neighbor.
 
-Keep a **to-visit** list beside the grid. When an intersection gets its number, add
-it to the *end* of the list. To decide where to look next, take the one at the
-*front*. Say the rule out loud as you go: *"Take the oldest one I haven't looked
-around yet. Every neighbor with no number gets the next number."*
+Keep a **to-visit** list beside the grid:
 
-Here's the trace, with neighbors checked in the order the code will use (left, right,
-down, up):
+- When an intersection gets its number, add it to the *end*.
+- To choose where to look next, take the one at the *front*.
+
+Say the rule out loud as you go: *"Take the oldest one I haven't looked around yet. Every
+neighbor with no number gets the next number."* Here's the trace, checking neighbors in
+the order the code will use (left, right, down, up):
 
 | Step | Looking around | New numbers written | To-visit afterward |
 |---|---|---|---|
@@ -129,8 +128,8 @@ down, up):
 | 7 | (1,2) | nothing new | (2,2) |
 | 8 | (2,2) | destination reached — stop | |
 
-Notice step 7: (1,2) looks around, finds (0,2) and (2,2), and both already have
-numbers. It writes nothing. That's the rule from the knowledge check in action.
+In step 7, (1,2) finds (0,2) and (2,2) already numbered, so it writes nothing: the rule
+from the knowledge check.
 
 <Figure
   src="/img/lesson-m5-03/bfs-ripple-xy.svg"
@@ -151,9 +150,9 @@ numbers. It writes nothing. That's the rule from the knowledge check in action.
 
 ## Where did I come from?
 
-The number tells you *how far*. It doesn't tell you *which way*. So add one thing
-to the rule: every time you write a number on an intersection, also write down
-which intersection you were looking around at the time — where you **came from**.
+The number tells you *how far*, not *which way*. So add one thing to the rule: whenever
+you write a number on an intersection, also write which intersection you were looking
+around, where it **came from**.
 
 | Intersection | Ring | Came from |
 |---|---|---|
@@ -166,20 +165,19 @@ which intersection you were looking around at the time — where you **came from
 | (1,2) | 3 | (0,2) |
 | (2,2) | 4 | (2,1) |
 
-Now start at the destination and follow "came from" backwards:
+Now start at the destination and follow "came from" back:
 
 > (2,2) ← (2,1) ← (2,0) ← (1,0) ← (0,0)
 
-Stop when you reach the start. Written forward, and *without* the start, that's the
-path:
+Stop at the start. Written forward, *without* the start, that's the path:
 
 ```python
 [(1, 0), (2, 0), (2, 1), (2, 2)]
 ```
 
-Those are the intersections the robot drives *to*. The start isn't in the list
-because the robot is already standing on it — the same rule `compute_manhattan_path`
-followed in Module 4, so `len(path)` is the number of steps, here 4.
+Those are the intersections the robot drives *to*. The start is left out because the
+robot is already on it, as in Module 4's `compute_manhattan_path`, so `len(path)` is the
+number of steps: 4.
 
 <KnowledgeCheck
   question="The came-from record is {(0,0): none, (0,1): (0,0), (0,2): (0,1), (1,2): (0,2)}. What is the path from (0,0) to (1,2)?"
@@ -194,25 +192,22 @@ followed in Module 4, so `len(path)` is the number of steps, here 4.
 
 ## More than one right answer
 
-Look at (2,2) again. It has *two* neighbors with a 3 on them, (2,1) and (1,2).
-Which one it "came from" depends only on which was looked around first, and that
-depends on the order neighbors happened to be listed. A classmate who checked
-neighbors in a different order would get
+(2,2) has *two* neighbors with a 3, (2,1) and (1,2). Which one it "came from" depends
+only on which was looked around first, so on the order neighbors are listed. A classmate
+who checked neighbors in a different order would get
 
 ```python
 [(0, 1), (0, 2), (1, 2), (2, 2)]
 ```
 
-Four steps. Also shortest. Also right. On an open grid there are usually several
-shortest paths; what's unique is the *number of steps*. Hold onto that: in Lesson
-5-6, when you test your planner, you won't compare against one expected list.
-You'll check what has to be true of any correct answer.
+Four steps: also shortest, also right. There are often several shortest paths; what's
+unique is the *number of steps*. So in Lesson 5-6 you'll test your planner by checking
+what must be true of any correct answer, not by comparing against one list.
 
 ## Activity · The wall, and the dead end
 
-Back to the grid from the first activity, with the wall at (1,0) and (1,1). Number
-every intersection, starting from (0,0). Numbering the whole grid is fine; it makes
-the picture clearer.
+Back to the first activity's grid, with the wall at (1,0) and (1,1). Number every
+intersection from (0,0); numbering the whole grid is fine.
 
 ```text
  3 |   .  .  .  .
@@ -223,12 +218,13 @@ the picture clearer.
        0  1  2  3
 ```
 
-Then write down the ring number on (3,0), and one shortest path to it. Your first
-step goes *away* from the destination. Explain, in one sentence, why this method
-gets that right when "head toward the goal" didn't.
+Then:
 
-Then block the whole column at x = 1 — (1,0), (1,1), (1,2), (1,3) — and start again. What
-happens to the rings? What number does (3,0) get?
+1. Write the ring number on (3,0) and one shortest path to it. Your first step goes
+   *away* from the destination: in one sentence, why does this method get that right when
+   "head toward the goal" didn't?
+2. Block the whole column at x = 1, (1,0), (1,1), (1,2) and (1,3), and start again. What
+   happens to the rings? What number does (3,0) get?
 
 <TeacherNote title="Answers">
 
@@ -257,11 +253,10 @@ that, and Lesson 5-6 has a test for it.
 
 ## Check your paper against the computer
 
-Nothing goes into `robot.py` today — that starts in Lesson 5-4, and in Lesson 5-5 your
-own file will draw the grid below. For now your teacher has a short demonstration
-program that does the
-3×3-with-(1,1)-blocked trace step by step, printing each intersection as it's reached
-and the to-visit list after every step, then draws the grid of ring numbers:
+Nothing goes into `robot.py` today; that starts in Lesson 5-4, and in Lesson 5-5 your own
+file draws the grid below. For now your teacher has a demonstration program that runs the
+3×3-with-(1,1)-blocked trace step by step, printing each intersection as it's reached and
+the to-visit list after every step, then draws the ring numbers:
 
 ```text
  2 |   2  3  4
@@ -271,9 +266,8 @@ and the to-visit list after every step, then draws the grid of ring numbers:
        0  1  2
 ```
 
-Compare it with your trace. If your ring numbers match, you ran the algorithm. If
-the printed path is different from yours but has the same number of steps, you've
-just seen "more than one right answer" for real.
+If your ring numbers match, you ran the algorithm. If its path differs from yours but has
+the same number of steps, that's "more than one right answer" for real.
 
 <TeacherNote title="Running the program, and the preview">
 
@@ -304,18 +298,17 @@ while len(to_visit) > 0:
 
 ## The ripple on a bigger grid
 
-A 3×3 grid is small enough to trace by hand, which is why you traced it. It is also too
-small to see the *shape* of what breadth-first search does. Here is the same rule,
-unchanged, on a grid of 8 by 6 with a wall across the middle.
+A 3×3 is small enough to trace by hand, but too small to show the *shape* of
+breadth-first search. Here is the same rule on an 8 by 6 grid with a wall across the
+middle.
 
 <PlayFigure
   src="/img/lesson-m5-03/fanout-bfs.svg"
   alt="An animation of breadth-first search on a grid of 8 by 6 intersections with a wall of four blocked intersections at x = 3, from y = 1 to y = 4. S is (0, 4) and D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S when the search first reaches it, so the numbers spread out from S in even rings. The ripple flows around both ends of the wall. When D is taken off the list the search stops, and the walk-back from D is drawn in red: up, along the top past the wall, and down to D, 9 steps."
   caption="Same rule as your trace: every intersection one step out is numbered before any two steps out. On a bigger grid that rule spreads like a ripple in a pond, and bends around whatever is in the way." />
 
-Two things to notice. The search spreads out evenly in every direction, including the
-directions that lead *away* from D: it has no idea where D is until it gets there.
-And it stops as soon as D comes off the list, so a few far corners never get a number.
+The search spreads evenly, even *away* from D: it has no idea where D is until it gets
+there. It stops as soon as D comes off the list, so a few far corners never get a number.
 
 ## Real-world connections
 
@@ -323,13 +316,13 @@ Breadth-first search and its relatives are everywhere shortest paths matter:
 
 <CardGrid>
   <InfoCard tag="Maps" title="GPS routing">
-    Turn-by-turn directions come from search algorithms that spread out from where you are, exactly like the rings.
+    Turn-by-turn directions come from searches that spread out from where you are, like the rings.
   </InfoCard>
   <InfoCard tag="Networks" title="Internet packets">
-    Routers find the fewest hops to a destination with breadth-first search over the network graph.
+    Routers find the fewest hops with breadth-first search over the network graph.
   </InfoCard>
   <InfoCard tag="Games" title="Enemy AI">
-    Game characters find their way around walls with graph search like this, many times a second.
+    Game characters find their way around walls with graph search, many times a second.
   </InfoCard>
 </CardGrid>
 
