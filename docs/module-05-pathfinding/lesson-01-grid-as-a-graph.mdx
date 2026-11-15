@@ -14,10 +14,9 @@ sidebar_position: 1
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Your Manhattan robot always goes across first, then up or down. But what happens when an
-intersection on that route is **blocked**? It has no way around. This module fixes that —
-and it starts by seeing the grid a new way: as a **graph** of nodes and edges. No code
-today, just paper and the physical grid.
+Your Manhattan robot has no way around a **blocked** intersection. This module fixes that,
+starting with a new way to see the grid: as a **graph** of nodes and edges. No code today,
+just paper and the physical grid.
 
 <Objectives>
 
@@ -35,25 +34,18 @@ By the end of this lesson you will be able to:
 
 ## Why Manhattan isn't enough
 
-Your usual route to school is closed for construction. You don't give up — you find a
-detour, and your GPS reroutes you automatically. The robot needs to do the same.
+When your usual route to school is closed, your GPS finds a detour. The robot needs to do
+the same. The Manhattan algorithm from Module 4 knows one strategy, across first, then up
+or down. It has no concept of an obstacle, so it drives right into a blocked intersection.
 
-The Manhattan algorithm from Module 4 only knows one strategy: across first, then up or down.
-It has no concept of an obstacle. If the intersection it wants to drive through is
-blocked, it drives right into it. To route *around* things, we need a smarter way to
-think about the grid.
-
-This isn't only a robot problem. When your phone or your family's car finds the
-fastest way across town, it's solving the same puzzle. A city's streets form a graph,
-a closed road is blocked, and heavy traffic makes some streets slower than others. The
-algorithms you'll build in this module and the next are the ideas those apps are built
-on:
+A maps app solves the same puzzle: the streets form a graph, a closed road is blocked, and
+heavy traffic makes some streets slower. This module and the next build the ideas those
+apps use:
 
 - **This module, breadth-first search**, finds a route around blocked intersections.
 - **Module 6, Dijkstra's algorithm**, finds the *fastest* route when some streets are
-  slow. It's the classic route-finding algorithm. Real navigation apps use faster
-  descendants of it (A\* is the best known) so they can search millions of streets in
-  a fraction of a second, but the core idea is the one you'll write.
+  slow. Real apps use faster descendants of it (A\* is the best known), but the core
+  idea is the one you'll write.
 
 <Figure
   src="/img/lesson-m5-01/phone-route.svg"
@@ -74,14 +66,13 @@ on:
 
 ## Nodes, edges, neighbors
 
-A **graph** is a collection of **nodes** (points) connected by **edges** (links). You
-already know graphs: a road map (intersections + streets), a social network (people +
-friendships), airline routes (airports + flights). A graph captures *what connects to
-what*.
+A **graph** is a set of **nodes** (points) connected by **edges** (links): a road map
+(intersections and streets), a social network (people and friendships), airline routes
+(airports and flights). A graph captures *what connects to what*.
 
 Our grid is a graph. Every intersection is a **node**, named by its coordinate like
-`(1, 2)`. Every line between two adjacent intersections is an **edge**. The nodes an edge
-connects you to are that node's **neighbors**.
+`(1, 2)`. Every line between adjacent intersections is an **edge**. A node's
+**neighbors** are the nodes its edges lead to.
 
 <Figure
   src="/img/lesson-m5-01/graph-3x3-xy.svg"
@@ -89,8 +80,7 @@ connects you to are that node's **neighbors**.
   caption="Every intersection is a node; every line between neighbors is an edge. The shading counts neighbors."
 />
 
-How many neighbors a node has depends on where it sits: a **corner** has 2, an **edge**
-node has 3, an **interior** node has 4.
+A **corner** has 2 neighbors, an **edge** node 3, an **interior** node 4.
 
 <KnowledgeCheck
   question="On a 3×3 grid, how many neighbors does the interior node (1,1) have?"
@@ -105,8 +95,8 @@ node has 3, an **interior** node has 4.
 
 ## Blocking a node
 
-When an intersection is blocked, we **remove it from the graph entirely** — the node
-*and* all its edges. Block (1,1) on the 3×3 grid:
+When an intersection is blocked, we **remove it from the graph**: the node *and* all its
+edges. Block (1,1) on the 3×3 grid:
 
 <Figure
   src="/img/lesson-m5-01/graph-blocked-xy.svg"
@@ -114,8 +104,8 @@ When an intersection is blocked, we **remove it from the graph entirely** — th
   caption="Blocking (1, 1) removes the node and its four edges."
 />
 
-(1,1) is gone, and every node that used to touch it — (0,1), (1,0), (1,2), (2,1) — has
-lost a neighbor. Blocking one node changes its neighbors too.
+Blocking one node changes its neighbors too: (0,1), (1,0), (1,2) and (2,1) have each lost
+one.
 
 <KnowledgeCheck
   question="After (1,1) is blocked, how many neighbors does (0,1) have?"
@@ -130,7 +120,7 @@ lost a neighbor. Blocking one node changes its neighbors too.
 
 ## Activity · Finding a path around
 
-Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
+Now block **(1,0)** instead and find the shortest path from (0,0) to (2,0):
 
 <Figure
   src="/img/lesson-m5-01/detour-xy.svg"
@@ -138,24 +128,22 @@ Now block **(1,0)** instead, and find the shortest path from (0,0) to (2,0):
   caption="Straight across is closed. Find the way around before you open the answer."
 />
 
-Manhattan would try (0,0) → (1,0) → (2,0) — but (1,0) is blocked, so it fails.
-Trace a way around with your finger and count the steps before reading on.
+Manhattan's straight line goes through (1,0), so it fails. Trace a way around with your
+finger and count the steps.
 
 <Reveal title="Check your route" hint="find one by hand first">
 
-One shortest detour is (0,0) → (0,1) → (1,1) → (2,1) → (2,0) — **4 steps**. Any
-other 4-step route avoiding (1,0) is equally correct; there's usually more than one
-shortest path.
+One shortest detour is (0,0) → (0,1) → (1,1) → (2,1) → (2,0): **4 steps**. Any other
+4-step route around (1,0) is just as correct; there's usually more than one shortest path.
 
 </Reveal>
 
-Without the obstacle, the path is only 2 steps: the steps across plus the steps up or
-down. That count is called the **Manhattan distance**. **Obstacles make paths longer**,
-and the Manhattan distance becomes just a lower bound, not the real answer.
+Without the obstacle the path is 2 steps: the steps across plus the steps up or down.
+That count is the **Manhattan distance**. **Obstacles make paths longer**, so the
+Manhattan distance is only a lower bound.
 
-One more idea for later: our grid is **unweighted** — every edge costs 1 step. (In a
-*weighted* graph, a highway edge might cost less than a side-street edge.) This module
-uses the unweighted case; the optional Module 6 is about what changes when edges have
+Our grid is **unweighted**: every edge costs 1 step. (In a *weighted* graph, a highway
+edge might cost less than a side street.) The optional Module 6 handles edges with
 different costs.
 
 <KnowledgeCheck
@@ -175,13 +163,13 @@ Graphs run a huge amount of the technology you use:
 
 <CardGrid>
   <InfoCard tag="Navigation" title="GPS & Waze">
-    Roads are edges, intersections are nodes. Rerouting around a closure is exactly this graph problem.
+    Roads are edges, intersections are nodes. Rerouting around a closure is this graph problem.
   </InfoCard>
   <InfoCard tag="Social" title="Friend networks">
     People are nodes, friendships are edges — "friends of friends" is a graph search.
   </InfoCard>
   <InfoCard tag="Internet" title="Network routing">
-    Data hops between routers (nodes) over links (edges), picking a shortest path each time.
+    Data hops between routers (nodes) over links (edges), by a shortest path.
   </InfoCard>
 </CardGrid>
 

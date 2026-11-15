@@ -17,32 +17,29 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'What if the road is closed?',
          'bullets': [
-             'Your usual route to school is closed for construction',
-             'You don\'t give up: you find a detour, and your GPS reroutes you automatically',
-             'The robot needs to do the same',
-             'Manhattan only knows one strategy: **across first, then up or down**',
-             'It has no idea of an obstacle, so it drives right into a blocked intersection',
+             'Your usual route is closed? Your GPS finds a detour',
+             'Manhattan knows one strategy: **across, then up or down**',
+             'It drives right into a blocked intersection',
          ],
-         'callout': 'To route **around** things, we need a smarter way to think about the grid',
+         'callout': 'The robot needs to detour too: first, a new way to see the grid',
          'tone': 'teal',
          'notes': 'Show a blocked intersection sitting on Manhattan\'s route and let students '
                   'feel that the old algorithm is stuck before you offer anything new.'},
 
         {'kind': 'bullets', 'title': 'The same puzzle your phone solves',
-         'lead': 'A city\'s streets form a graph. A closed road is blocked, heavy traffic makes '
-                 'some streets slower.',
+         'lead': 'Streets form a graph: a closed road is blocked, heavy traffic is slow.',
          'lead_h': 1.25,
          'bullets': [
              '**This module, breadth-first search**: a route around blocked intersections',
              '**Module 6, Dijkstra\'s algorithm**: the **fastest** route when some streets are slow',
-             'Real apps use faster descendants of Dijkstra (A* is the best known), but the core '
-             'idea is the one you\'ll write',
          ],
          'split': 0.5,
          'figure': '/img/lesson-m5-01/phone-route.svg',
          'crop': (0.22, 0.0, 0.94, 1.0),
          'notes': 'The figure: a maps app going around a closed road (this module\'s problem) and '
-                  'avoiding a slow street (the next module\'s).'},
+                  'avoiding a slow street (the next module\'s). Real apps use faster descendants '
+                  'of Dijkstra (A* is the best known), but the core idea is the one students '
+                  'write.'},
 
         {'kind': 'check',
          'question': 'Why can\'t the Manhattan algorithm route around a blocked intersection?',
@@ -57,25 +54,24 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Nodes, edges, neighbors',
          'bullets': [
-             'A **graph** is a collection of **nodes** (points) connected by **edges** (links)',
-             'You already know graphs:',
+             'A **graph** is a set of **nodes** (points) connected by **edges** (links)',
+             'For example:',
              ['a road map: intersections and streets',
               'a social network: people and friendships',
               'airline routes: airports and flights'],
-             'A graph captures **what connects to what**',
          ],
-         'callout': 'In computer science a graph is a network of nodes and edges, not a bar chart',
+         'callout': 'A graph captures **what connects to what**',
          'tone': 'orange',
          'notes': 'Clear up the word "graph" immediately: in CS it is a network of nodes and '
                   'edges, not a bar chart.'},
 
         {'kind': 'bullets', 'title': 'Our grid is a graph',
          'bullets': [
-             'Every intersection is a **node**, named by its coordinate, like `(1, 2)`',
-             'Every line between two adjacent intersections is an **edge**',
-             'The nodes an edge connects you to are that node\'s **neighbors**',
-             'How many depends on where it sits:',
-             ['a **corner** has 2', 'an **edge** node has 3', 'an **interior** node has 4'],
+             'Each intersection is a **node**, like `(1, 2)`',
+             'Every line between adjacent intersections is an **edge**',
+             'A node\'s **neighbors** are the nodes its edges lead to',
+             'Neighbors by position:',
+             ['a **corner** has 2', 'an **edge** node 3', 'an **interior** node 4'],
          ],
          'split': 0.52,
          'figure': '/img/lesson-m5-01/graph-3x3-xy.svg',
@@ -92,10 +88,9 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Blocking a node',
          'bullets': [
-             'When an intersection is blocked, we **remove it from the graph entirely**',
+             'A blocked intersection is **removed from the graph**',
              'The node **and** all its edges',
-             'Block (1,1): every node that used to touch it, (0,1), (1,0), (1,2) and (2,1), '
-             'has lost a neighbor',
+             'Block (1,1): (0,1), (1,0), (1,2) and (2,1) each lose a neighbor',
          ],
          'split': 0.52,
          'figure': '/img/lesson-m5-01/graph-blocked-xy.svg',
@@ -124,15 +119,15 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Obstacles make paths longer',
          'bullets': [
-             'Without the obstacle, (0,0) to (2,0) is only 2 steps: steps across plus steps up or down, the **Manhattan distance**',
-             'With obstacles, Manhattan distance is just a **lower bound**, not the real answer',
-             'There\'s usually more than one shortest path',
+             'Without the obstacle, (0,0) to (2,0) is 2 steps: the **Manhattan distance**',
+             'With obstacles, it is only a **lower bound**',
              'Our grid is **unweighted**: every edge costs 1 step',
-             'In a **weighted** graph, a highway edge might cost less than a side street',
          ],
-         'callout': 'This module: the unweighted case. The optional Module 6: edges with different costs',
+         'callout': 'Edges with different costs (**weighted**): the optional Module 6',
          'tone': 'teal',
-         'notes': 'Ask for the length of the detour students found before this slide. If two '
+         'notes': 'Manhattan distance is the steps across plus the steps up or down. There is '
+                  'usually more than one shortest path. In a weighted graph, a highway edge might '
+                  'cost less than a side street. Ask for the length of the detour students found before this slide. If two '
                   'students found different routes of the same length, both are right.'},
 
         {'kind': 'check',
@@ -149,11 +144,11 @@ DECK = {
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
              ('Navigation', 'GPS & Waze', 'Roads are edges, intersections are nodes. Rerouting '
-                                          'around a closure is exactly this graph problem.'),
+                                          'around a closure is this graph problem.'),
              ('Social', 'Friend networks', 'People are nodes, friendships are edges. "Friends of '
                                            'friends" is a graph search.'),
              ('Internet', 'Network routing', 'Data hops between routers (nodes) over links '
-                                             '(edges), picking a shortest path each time.'),
+                                             '(edges), by a shortest path.'),
          ]},
 
         {'kind': 'wrapup',
