@@ -9,7 +9,7 @@ import ModuleFiles from './_module-5-files.mdx';
 <LessonHeader
   eyebrow="Teacher guide · Sample programs"
   title="Module 5 · Pathfinding Around Obstacles"
-  meta={['Teacher mode', 'Function track', 'Class track', 'Lesson 5-3 demonstration']}
+  meta={['Teacher mode', 'Function track', 'Class track', 'Lesson 5-2 demonstration']}
 />
 
 <TeacherBanner>
@@ -36,9 +36,9 @@ your rangefinder and obstacle.
 
 </TeacherNote>
 
-## Lesson 5-3 · The BFS Concept
+## Lesson 5-2 · The Walk Back
 
-<TeacherNote title="5-3 demonstration program (project it, don't hand it out)">
+<TeacherNote title="5-2 demonstration program (project it, don't hand it out)">
 
 The program the lesson promises: it runs the 3×3 trace with (1, 1) blocked, prints
 each number as it is written and the to-visit list after every step, then the
@@ -57,8 +57,8 @@ lesson's trace table line for line, it ends with the path
 The two calls at the bottom, commented out, run the 4×4 wall (ring 7 on (3, 0),
 as in the lesson's answers) and the blocked column (no path).
 
-```python title="lesson_5_3_bfs_concept.py"
-# Lesson 5-3 demonstration: breadth-first search on the 3x3 grid
+```python title="lesson_5_2_walk_back.py"
+# Lesson 5-2 demonstration: breadth-first search on the 3x3 grid
 # with (1, 1) blocked, from (0, 0) to (2, 2), step by step.
 # Plain Python: no robot, no XRPLib. Project it; don't hand it
 # out (students write bfs_rings() and print_grid() in 5-5).
@@ -156,9 +156,11 @@ trace(3, 3, [(1, 1)], (0, 0), (2, 2))
 
 </TeacherNote>
 
-<TeacherNote title="Lesson 5-1">
+<TeacherNote title="Lessons 5-1 and 5-3">
 
-Lesson 5-1 is paper only, and its route is in the student reveal.
+Lesson 5-1 is paper only, and its route is in the student reveal. Lesson 5-3's
+`build_grid_graph()` is in its own teacher copy; Lesson 5-4 rewrites it as
+`build_graph()`, which is what the files below hold.
 
 </TeacherNote>
 

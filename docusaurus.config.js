@@ -138,7 +138,7 @@ const config = {
               {label: 'Module 2: Line Tracking', to: '/module-02-line-tracking/lesson-01-reflectance-sensor'},
               {label: 'Module 3: Grid Driving', to: '/module-03-grid-driving/lesson-01-introduction-to-the-grid'},
               {label: 'Module 4: Manhattan Navigation', to: '/module-04-manhattan/lesson-00-overview'},
-              {label: 'Module 5: Pathfinding Around Obstacles', to: '/module-05-pathfinding/lesson-01-grid-as-a-graph'},
+              {label: 'Module 5: Pathfinding Around Obstacles', to: '/module-05-pathfinding/lesson-01-finding-a-way-around'},
               {label: "Module 6: Dijkstra's Algorithm (optional)", to: '/module-06-dijkstra/lesson-00-overview'},
             ],
           },

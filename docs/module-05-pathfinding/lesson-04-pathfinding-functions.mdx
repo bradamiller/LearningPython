@@ -85,7 +85,7 @@ returns `[(0, 1), (0, 2)]`, two steps, no start.
 ## This lesson's skeleton
 
 Two pastes and one rewrite. Paste the first at the end of GRID GRAPH, under your
-Lesson 5-2 tests:
+Lesson 5-3 test:
 
 ```python
 # --- Lesson 5-4: the blocked list ---
@@ -167,11 +167,11 @@ Write both bodies. Step 2 gives you the test.
   explanation="`global` is needed only to reassign a module-level name. Appending to a list changes the list that BLOCKED already names; the name itself is untouched."
 />
 
-### Step 2 · `build_graph()` — Lesson 5-2's two functions become one
+### Step 2 · `build_graph()` — the graph learns about blocked intersections
 
-In Lesson 5-2, `build_grid_graph()` built the graph and `remove_blocked()` took
-blocked intersections out. Now one function does both: skip anything blocked while
-building. In GRID GRAPH, change the `def` line to
+In Lesson 5-3, `build_grid_graph()` built the open grid. Now it has to leave the
+blocked intersections out, both halves of blocking a node: not a key, and not anyone's
+neighbor. In GRID GRAPH, change the `def` line to
 
 ```python
 def build_graph(rows, cols, blocked):
@@ -186,14 +186,13 @@ and make two changes to the body:
    keeps a blocked intersection out of every *other* intersection's neighbor list. Miss
    it and the graph still has edges into the wall.
 
-Keep the directions in the order left, right, down, up: the order Lesson 5-3's trace
+Keep the directions in the order left, right, down, up: the order Lesson 5-1's trace
 checked neighbors, which is why its printed path matched the table.
 
-Then delete `remove_blocked()` and its test; the new function absorbed them, the way
-`SETPOINT` disappeared in Lesson 2-6. Fix `test_grid_graph()` to build with
-`build_graph(ROWS, COLS, BLOCKED)` and set the run line to it. With nothing blocked,
-the output matches Lesson 5-2: 16, four neighbors, two neighbors. Don't go on until
-it does.
+The old name is gone, the way `SETPOINT` disappeared in Lesson 2-6, so fix
+`test_grid_graph()` to build with `build_graph(ROWS, COLS, BLOCKED)` and set the run
+line to it. With nothing blocked, the output matches Lesson 5-3: 16, four neighbors,
+two neighbors. Don't go on until it does.
 
 <KnowledgeCheck
   question="(1,1) is blocked. Someone wrote build_graph with the first `in blocked` check but forgot the second. What is wrong with the result?"
@@ -274,7 +273,7 @@ def clear_blocked():
         BLOCKED.pop()
 ```
 
-This version differs from Lesson 5-2's: one loop over a list of `(dx, dy)` changes
+This version differs from Lesson 5-3's: one loop over a list of `(dx, dy)` changes
 does the four checks, and `continue` skips a blocked intersection. The `for dx, dy
 in` line unpacks as it loops (Lesson 4-7): each item in the list is a two-number tuple,
 and every pass splits it into `dx` and `dy`. The line under it assigns two at once the
@@ -287,9 +286,8 @@ the output.
 <TeacherNote title="Solution (teacher copy)">
 
 The GRID GRAPH section as this lesson leaves it (rewritten in place: `build_graph()`
-where `build_grid_graph()` was, `remove_blocked()` and its test gone), the new BFS
-PLANNER section, and the run block. The rest of the file is as the Lesson 5-2 teacher
-copy left it. The whole file at the end of the module is in the
+where `build_grid_graph()` was), the new BFS PLANNER section, and the run block. The
+rest of the file is as the Lesson 5-3 teacher copy left it. The whole file at the end of the module is in the
 [Module 5 sample programs](/teacher-guide/sample-programs/module-5).
 
 ```python
@@ -424,7 +422,7 @@ early, which is fine.
 **Formative:** the two rules from memory; the second-`in blocked` bug caught; the
 `global` explanation. **Exit ticket:** "Why doesn't `add_blocked()` need `global`?"
 **Preview:** next lesson the placeholder becomes real — `previous`, `to_visit`, and
-the walk-back from Lesson 5-3, in about twenty lines.
+the walk-back from Lesson 5-2, in about twenty lines.
 
 </TeacherNote>
 

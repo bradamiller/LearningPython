@@ -1,0 +1,216 @@
+---
+title: "Lesson 5-2 · The Walk Back"
+sidebar_label: "5-2 · The Walk Back"
+sidebar_position: 2
+---
+
+<LessonHeader
+  eyebrow="Module 5 · Pathfinding Around Obstacles"
+  title="Lesson 5-2 · The Walk Back"
+  meta={['45–50 min', 'No coding', 'Hand-trace on paper']}
+/>
+
+<TeacherBanner>
+Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-right)
+to preview the student view.
+</TeacherBanner>
+
+In Lesson 5-1 the ripples told you *how far* the destination is: 4 steps. They don't say
+*which* 4 steps. This lesson adds one more mark to the pencil method, where each
+intersection **came from**, and walks it back from the destination to get the path the
+robot will drive.
+
+<Objectives>
+
+By the end of this lesson you will be able to:
+
+- Record which intersection each one was reached *from*, and walk that record back to get the path
+- Explain why the path leaves the start out
+- Recognize that more than one path can be shortest, and that any of them is right
+- Trace the method on a grid where the first step goes *away* from the destination, and on one with no path at all
+
+</Objectives>
+
+<QuizLink id="module-05-pathfinding/lesson-02-the-walk-back" />
+
+## Where did I come from?
+
+Add one thing to the rule: whenever you write a number on an intersection, also write
+which intersection you were looking around, where it **came from**. Here is Lesson 5-1's
+trace, 3×3 with (1,1) blocked, with that column added:
+
+| Intersection | Ring | Came from |
+|---|---|---|
+| (0,0) | 0 | none |
+| (1,0) | 1 | (0,0) |
+| (0,1) | 1 | (0,0) |
+| (2,0) | 2 | (1,0) |
+| (0,2) | 2 | (0,1) |
+| (2,1) | 3 | (2,0) |
+| (1,2) | 3 | (0,2) |
+| (2,2) | 4 | (2,1) |
+
+Now start at the destination and follow "came from" back:
+
+> (2,2) ← (2,1) ← (2,0) ← (1,0) ← (0,0)
+
+Stop at the start. Written forward, *without* the start, that's the path:
+
+```python
+[(1, 0), (2, 0), (2, 1), (2, 2)]
+```
+
+Those are the intersections the robot drives *to*. The start is left out because the
+robot is already on it, as in Module 4's `compute_manhattan_path`, so `len(path)` is the
+number of steps: 4.
+
+Here is the whole method, numbers, came-from arrows and walk back, one step at a time.
+Press **Step** to see what the search does next and why; the to-visit list on the right
+changes with it. **Play** runs it all.
+
+<StepFigure
+  src="/img/lesson-m5-03/bfs-steps-xy.svg"
+  alt="A step-by-step animation of breadth-first search on the 3 by 3 grid with the center blocked, from S at (0, 0) to D at (2, 2), with a sentence for each step. Each step takes the oldest intersection from the front of the to-visit list; every open neighbor without a number gets the next number, an arrow showing where it came from, and a place at the back of the list. (1, 0) and (0, 1) get 1, (2, 0) and (0, 2) get 2, (2, 1) and (1, 2) get 3, and D gets 4. When D is taken the search stops, and walking back along the arrows gives the path [(1, 0), (2, 0), (2, 1), (2, 2)]. The last step explains why it is the shortest: every 1 was written before any 2 and every 2 before any 3, so the first number D gets is the fewest steps."
+  caption="Lesson 5-1's trace, now with came-from arrows, then the walk back along them."
+/>
+
+<KnowledgeCheck
+  question="The came-from record is (0,1) from (0,0), (0,2) from (0,1), and (1,2) from (0,2). What is the path from (0,0) to (1,2)?"
+  options={[
+    {text: '[(0,1), (0,2), (1,2)]', correct: true},
+    {text: '[(0,0), (0,1), (0,2), (1,2)]'},
+    {text: '[(1,2), (0,2), (0,1)]'},
+    {text: '[(1,2), (0,2), (0,1), (0,0)]'},
+  ]}
+  explanation="Walk back from (1,2): came from (0,2), which came from (0,1), which came from (0,0) — the start, so stop. Flip it and leave the start out."
+/>
+
+## More than one right answer
+
+(2,2) has *two* neighbors with a 3, (2,1) and (1,2). Which one it "came from" depends
+only on which was looked around first, so on the order neighbors are listed. A classmate
+who checked neighbors in a different order would get
+
+```python
+[(0, 1), (0, 2), (1, 2), (2, 2)]
+```
+
+Four steps: also shortest, also right. There are often several shortest paths; what's
+unique is the *number of steps*. So in Lesson 5-6 you'll test your planner by checking
+what must be true of any correct answer, not by comparing against one list.
+
+## Activity · The wall, and the dead end
+
+Back to Lesson 5-1's wall problem: (1,0) and (1,1) blocked, from (0,0) to (3,0). Number
+every intersection from (0,0), and write where each came from; numbering the whole grid
+is fine.
+
+```text
+ 3 |   .  .  .  .
+ 2 |   .  .  .  .
+ 1 |   .  X  .  .
+ 0 |   0  X  .  .
+    -------------
+       0  1  2  3
+```
+
+Then:
+
+1. Write the ring number on (3,0), and walk back to get one shortest path. Your first
+   step goes *away* from the destination: in one sentence, why does this method get that
+   right when "head toward the goal" didn't?
+2. Block the whole column at x = 1, (1,0), (1,1), (1,2) and (1,3), and start again. What
+   happens to the rings? What number does (3,0) get, and what path can you walk back?
+
+<TeacherNote title="Answers">
+
+**Wall at (1,0), (1,1):**
+
+```text
+ 3 |   3  4  5  6
+ 2 |   2  3  4  5
+ 1 |   1  X  5  6
+ 0 |   0  X  6  7
+    -------------
+       0  1  2  3
+```
+
+(3,0) is ring **7**. One path: `[(0,1), (0,2), (1,2), (2,2), (3,2), (3,1), (3,0)]`;
+another, equally good: `[(0,1), (0,2), (1,2), (2,2), (2,1), (2,0), (3,0)]`. The
+reason BFS gets it right: it never looks at the destination, so a step "away" from
+it is just another step in the next ring.
+
+**Column x = 1 all blocked:** the rings fill the left column, x = 0 (0, 1, 2, 3), and
+stop. Nothing in columns x = 2 and x = 3 is ever reached; (3,0) never gets a number or a
+came-from, so there is nothing to walk back. Ask what the program should return in that
+case — an empty path — and note that Lesson 5-5 makes it do exactly that, and Lesson 5-6
+has a test for it.
+
+</TeacherNote>
+
+## Check your paper against the computer
+
+Nothing goes into `robot.py` yet. Next lesson works out how a program would hold
+everything you've been writing in pencil, and by Lesson 5-5 your own file draws the grid
+below. For now your teacher has a demonstration program that runs the 3×3-with-(1,1)-
+blocked trace step by step, printing each intersection as it's reached and the to-visit
+list after every step, then draws the ring numbers:
+
+```text
+ 2 |   2  3  4
+ 1 |   1  X  3
+ 0 |   0  1  2
+    ----------
+       0  1  2
+```
+
+If your ring numbers match, you ran the algorithm. If its path differs from yours but has
+the same number of steps, that's "more than one right answer" for real.
+
+<TeacherNote title="Running the program">
+
+The program is in the [Module 5 sample programs](/teacher-guide/sample-programs/module-5).
+It is plain Python — no robot, no XRPLib — so it runs on any laptop or in XRP Code with
+the robot connected; project it rather than handing it out, since Lesson 5-5 has students
+write `bfs_rings()` and `print_grid()` themselves. The last ten minutes with it matter:
+seeing the computer produce *their* numbers is what convinces students the paper method
+is the real algorithm. Don't walk through its code: Lesson 5-3 builds up what the program
+needs one piece at a time, starting from the pencil steps.
+
+</TeacherNote>
+
+## Real-world connections
+
+<CardGrid>
+  <InfoCard tag="Maps" title="Turn-by-turn directions">
+    A maps app finds how far first, then reads the route back from the destination, the same walk back you just did.
+  </InfoCard>
+  <InfoCard tag="Networks" title="Internet packets">
+    Routers find the fewest hops with breadth-first search over the network, and remember the next hop for each destination.
+  </InfoCard>
+  <InfoCard tag="Puzzles" title="Maze solvers">
+    A maze solver floods the maze from the start and follows its came-from marks back from the exit.
+  </InfoCard>
+</CardGrid>
+
+## Wrap-up
+
+- What does "came from" let you do that the number alone doesn't? (Walk back from the destination and read off the path.)
+- Does the path include the start? (No — the robot is already there.)
+- Two classmates get different paths with the same number of steps. Who is right? (Both.)
+- What happens when the destination is walled off? (It never gets a number, so there is no path to walk back.)
+
+<TeacherNote title="Assessment & next lesson">
+
+**Formative:** a correct came-from column and walk-back on the wall grid, and the
+sentence about why a step away from the goal is fine. **Exit ticket:** the came-from
+knowledge check above. **Preview:** next lesson writes the method as a list of steps and
+asks, step by step, what a program has to keep track of to do it. That is where the grid
+becomes a **graph** and Python's **dictionary** comes in.
+
+</TeacherNote>
+
+## Resources
+
+- [XRP Robot User Guide](https://xrpusersguide.readthedocs.io/)
+- [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search)

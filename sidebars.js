@@ -83,9 +83,9 @@ const sidebars = {
       collapsed: true,
       items: [
         'module-05-pathfinding/lesson-00-overview',
-        'module-05-pathfinding/lesson-01-grid-as-a-graph',
-        'module-05-pathfinding/lesson-02-dictionaries',
-        'module-05-pathfinding/lesson-03-bfs-concept',
+        'module-05-pathfinding/lesson-01-finding-a-way-around',
+        'module-05-pathfinding/lesson-02-the-walk-back',
+        'module-05-pathfinding/lesson-03-pencil-to-program',
         'module-05-pathfinding/lesson-04-pathfinding-functions',
         'module-05-pathfinding/lesson-05-compute-bfs-path',
         'module-05-pathfinding/lesson-06-testing-and-swapping',

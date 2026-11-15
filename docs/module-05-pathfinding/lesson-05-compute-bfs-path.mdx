@@ -15,7 +15,7 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-This is the heart of Module 5: your Lesson 5-3 hand trace becomes about twenty lines
+This is the heart of Module 5: the step list from Lesson 5-3 becomes about twenty lines
 of Python, each one a step you've done with a pencil. Build it in three stages, with a
 paper test after each (it prints paths and step counts; the robot stays on the desk).
 Then have the program draw its ring numbers to compare with yours.
@@ -38,7 +38,7 @@ By the end of this lesson you will be able to:
 ## This lesson's skeleton
 
 In the BFS PLANNER section, replace the placeholder `compute_bfs_path()` with this
-outline: the Lesson 5-3 method, with the pencil steps as comments. Under it, paste the
+outline: Lesson 5-3's step list, with the pencil steps as comments. Under it, paste the
 two functions for the picture at the end of the lesson.
 
 ```python
@@ -105,14 +105,14 @@ front of you. `"{:>3}".format(cell)` is "this value, right-aligned in three spac
 
 ## Every line is a pencil step
 
-Read the SEARCH outline against Lesson 5-3. The loop is the rule you said out loud:
+Read the SEARCH outline against Lesson 5-1. The loop is the rule you said out loud:
 *take the oldest one; every neighbor with no number gets the next number*, except you
 write where it came from instead of a number. `previous` starts with one row: the start
 came from nowhere.
 
 <Figure
   src="/img/lesson-m5-05/code-pencil.svg"
-  alt="Seven lines of compute_bfs_path matched to the pencil method from Lesson 5-3. previous = {start: None} is the came-from table. to_visit = [start] is the to-visit list. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in previous means it has no number yet. previous[neighbor] = current writes where it came from. to_visit.append(neighbor) adds it to the end. while current != start walks back along came-from and stops at the start."
+  alt="Seven lines of compute_bfs_path matched to the pencil method from Lessons 5-1 and 5-2. previous = {start: None} is the came-from table. to_visit = [start] is the to-visit list. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in previous means it has no number yet. previous[neighbor] = current writes where it came from. to_visit.append(neighbor) adds it to the end. while current != start walks back along came-from and stops at the start."
   caption="Nothing in the function is new: each line is a step you already did with a pencil."
 />
 
@@ -137,7 +137,7 @@ The list is a **queue**: `append()` adds to the end and `pop(0)` takes from the 
 ## Activity · Build it in three stages
 
 Build `compute_bfs_path()` in three stages, running after each. Check every printed
-path and step count against your Lesson 5-3 trace.
+path and step count against your traces from Lessons 5-1 and 5-2.
 
 ### Step 1 · Setup and the guard
 
@@ -156,7 +156,7 @@ three wrong step counts, no errors.
 Add step 4, the loop. Put a temporary `print(previous)` right after it, and write a
 throwaway `test_came_from()`: clear the blocked list, block `(1, 1)`, and call
 `compute_bfs_path((0, 0), (2, 2))`. Set `ROWS` and `COLS` to 3 for a moment and run
-it. The dictionary should match your Lesson 5-3 came-from table exactly, keys in the
+it. The dictionary should match your Lesson 5-2 came-from table exactly, keys in the
 same order. Put the settings back to 4 and remove the print; the test can stay.
 
 If the destination is walled off, `to_visit` empties, the `while` ends, and
@@ -313,7 +313,7 @@ Write the body, then `test_rings()`: block `(1, 0)` and `(1, 1)` and call
        0  1  2  3
 ```
 
-That's your Lesson 5-3 wall grid; Test 4's path is one route down these numbers,
+That's your Lesson 5-2 wall grid; Test 4's path is one route down these numbers,
 1, 2, 3 … to the 7.
 
 <Reveal title="Check your bfs_rings()" hint="draw the wall grid first">

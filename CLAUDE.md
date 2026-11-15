@@ -662,6 +662,26 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
+- **2026-11-15: MODULE 5 IS CONCEPT FIRST, DATA STRUCTURES AS NEEDED (Brad: "BFS concept
+  first, then the implementation"; no trial, done in place).** New order: **5-1 Finding a
+  Way Around** (`lesson-01-finding-a-way-around`: Manhattan fails, detour by eye and the
+  Manhattan-distance lower bound, "explain your method to a computer", ripples, the trace with
+  the to-visit list, the 8 by 6 fan-out) · **5-2 The Walk Back** (`lesson-02-the-walk-back`:
+  came-from table, the step-through `bfs-steps-xy.svg`, more than one right answer, the wall and
+  dead end, the demonstration program) · **5-3 From Pencil to Program**
+  (`lesson-03-pencil-to-program`: the method as a plain-English step list with no ring numbers,
+  a table of what each step must remember and where it lives in code, then the graph (nodes,
+  edges, neighbors, blocking removes node AND edges), then dictionaries, motivated by "looked up
+  by intersection", with `previous` shown as the second dictionary, then `build_grid_graph()`).
+  5-4 to 5-9 are unchanged apart from cross-references. **`remove_blocked()` is gone:** 5-4
+  turns `build_grid_graph()` into `build_graph(rows, cols, blocked)` directly, so blocking was
+  never built twice. No graph or dictionary vocabulary before 5-3 ("intersection" and
+  "neighbor" are enough on paper). Image folders `lesson-m5-01/02/03` keep their names.
+  **Materials NOT updated yet (Brad: website only until the changes settle):** the 5-1 to 5-5
+  slide decks (5-1 to 5-3 have no deck link now, since their page ids changed; `slides.json`
+  still has the old ids), `build_templates.py`'s Module 5 recipe (it still adds
+  `remove_blocked()` at 5-2), the generated `_module-5-files.mdx` and `templates.mdx` rows,
+  and the printable PDFs. Regenerate all of them once Brad says Module 5 is settled.
 - **2026-11-15: THE TOP-DOWN TRIAL IS NOW MODULE 4 (Brad: "Replace module 4 with the trial
   version").** It lives at `docs/module-04-manhattan`; the old bottom-up Module 4 is only in
   git history (last on main at `ca490e9`). Old lesson URLs 404 (no redirects plugin).

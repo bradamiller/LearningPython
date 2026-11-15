@@ -85,9 +85,10 @@ is short of one of these, slow down there; every module after it builds on it.
 
 **Module 5 · Pathfinding Around Obstacles**
 
-- The grid as a graph, built with a dictionary (5-1, 5-2)
-- Breadth-first search traced by hand, then implemented as `compute_bfs_path()`
-  (5-3 to 5-5)
+- Breadth-first search traced by hand: the ripples, then the walk back (5-1, 5-2)
+- From pencil steps to the data a program needs: the grid as a graph, in a
+  dictionary (5-3)
+- The blocked list, then `compute_bfs_path()` line by line (5-4, 5-5)
 - A test harness that checks what must be true of a path, run against both
   planners (5-6)
 - Obstacles detected with the rangefinder and routed around (5-7)
