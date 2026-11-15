@@ -6,10 +6,10 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Explain why an exact-match test is wrong for BFS and right for Manhattan',
-             'Name the **five properties** every correct path has, and write each as one `if`',
+             'Name the **five properties** of a correct path, and write each as one `if`',
              'Explain why the walled-off case needs its own test',
-             'Hand a function to another function, and explain what `planner(position, destination)` does in the harness',
-             'Run one harness against Manhattan and BFS and explain every FAIL line',
+             'Hand a function to a function; explain `planner(position, destination)` in the harness',
+             'Run one harness on Manhattan and BFS; explain every FAIL line',
              'Write a main program that works with either planner by changing **one name**',
          ],
          'notes': '50 to 60 minutes. The planner passes five tests; now test it properly. The '
@@ -18,8 +18,8 @@ DECK = {
                   'exactly the reason this module exists.'},
 
         {'kind': 'code', 'title': 'Two right answers',
-         'lead': 'Compare your Lesson 5-5 Test 1 path with a classmate\'s. Different? Good. If not, here\'s '
-                 'another correct one:',
+         'lead': 'Compare your Lesson 5-5 Test 1 path with a classmate\'s. Same? Here\'s another '
+                 'correct one:',
          'lead_h': 1.2,
          'code': '[(1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3)]   # yours, maybe\n'
                  '[(0, 1), (0, 2), (0, 3), (1, 3), (2, 3), (3, 3)]   # also six steps, also right',
@@ -42,19 +42,19 @@ DECK = {
                   'parameter list would silently replace it and break test_planner().'},
 
         {'kind': 'bullets', 'title': 'Test what must be true',
-         'lead': 'Forget the exact list. What has to be true of **any** correct path from `(0, 0)` to `(3, 3)`?',
+         'lead': 'What must be true of **any** correct path from `(0, 0)` to `(3, 3)`?',
          'lead_h': 0.85,
          'bullets': [
              '**1.** The first step is next to the start',
              '**2.** The last step is the destination',
              '**3.** Every step is next to the one before it',
              '**4.** No step is a blocked intersection',
-             '**5.** With nothing blocked, the number of steps is the Manhattan distance',
+             '**5.** With nothing blocked, steps = the Manhattan distance',
          ],
          'size': 26,
-         'callout': 'A **property test**: check what must be true, not what you happened to expect',
+         'callout': 'A **property test**: check what must be true, not what you expected',
          'tone': 'teal',
-         'notes': 'Five one-line checks. Together they are stricter than an exact match: an exact match '
+         'notes': 'Forget the exact list. Five one-line checks. Together they are stricter than an exact match: an exact match '
                   'cannot tell you a path is valid, only that it is the one you expected. And they allow '
                   'every correct answer.'},
 
@@ -168,7 +168,7 @@ DECK = {
 
         {'kind': 'steps', 'title': 'Step 1 · Two helpers',
          'steps': [
-             '`manhattan_distance()` is the Lesson 5-1 count: the x difference plus the y difference, each made positive with `abs()`',
+             '`manhattan_distance()`: the Lesson 5-1 count, x difference plus y difference, each made positive with `abs()`',
              '`is_neighbor()` asks whether that distance is **exactly 1**',
          ],
          'size': 24,
@@ -177,31 +177,33 @@ DECK = {
 
         {'kind': 'steps', 'title': 'Step 2 · check_path() returns a list of problems',
          'steps': [
-             'One `if` per property, each appending a sentence to `problems` when it fails. An empty list means the path is good',
-             'First the special case: an empty path is correct when `position == destination` and a problem otherwise. Either way there are no steps to check, so return at once',
-             'Property 3 is a loop from the second step to the last, comparing each with the one before. Property 4 is a loop over every step',
+             'One `if` per property; each failure appends a sentence to `problems`. Empty list: good path',
+             'Empty path? Correct only if already there. Return at once either way',
+             'Property 3: loop from the second step, comparing each with the one before. Property 4: loop over every step',
          ],
          'size': 21,
-         'notes': 'Returning problems rather than True or False is deliberate: see the next slide.'},
+         'notes': 'The special case: an empty path is correct when position == destination and a problem '
+                  'otherwise. Either way there are no steps to check, so return at once. Returning '
+                  'problems rather than True or False is deliberate: see the next slide.'},
 
         {'kind': 'code', 'title': 'Make the sentences specific',
          'lead': 'Build each sentence with `+` and `str()`. Property 1\'s:',
          'lead_h': 0.8,
          'code': '"first step " + str(path[0]) + " is not next to the start " + str(start)',
          'code_size': 20,
-         'callout': 'A test that says only FAIL is a test you\'ll ignore. "drives through blocked '
-                    'intersection (1, 0)" tells you what to fix.',
+         'callout': 'A bare FAIL gets ignored. "drives through blocked intersection (1, 0)" tells you '
+                    'what to fix.',
          'tone': 'orange',
          'notes': 'The others follow the same pattern: name the step, say what is wrong with it.'},
 
         {'kind': 'bullets', 'title': 'One case check_path() can\'t judge',
          'notes': 'This is the third wrap-up question.',
          'bullets': [
-             'An empty path when the destination is walled off is **correct**',
+             'Walled off? An empty path is **correct**',
              'But `check_path` can\'t tell "walled off" from "forgot to look"',
-             'So the walled-off case gets its own small test, `run_no_path_test()`, where the only right answer is `[]`',
+             'So `run_no_path_test()` handles it: the only right answer is `[]`',
          ],
-         'callout': 'Lesson 5-5\'s Tests 3 and 5 both returned `[]`. Now the harness tells them apart.',
+         'callout': 'Lesson 5-5\'s Tests 3 and 5 both returned `[]`. Now they are told apart.',
          'tone': 'teal'},
 
         {'kind': 'check',
@@ -218,7 +220,7 @@ DECK = {
 
         {'kind': 'code', 'title': 'Step 3 · Hand the harness its planner',
          'notes': 'Read the last two lines aloud: the name of the function, with no parentheses, goes in like any other value.',
-         'lead': 'The one new Python idea in the lesson. Look at the last two lines:',
+         'lead': 'The one new Python idea: handing a function to a function.',
          'lead_h': 0.8,
          'code': 'def run_path_test(test_name, planner, start, destination, expected_steps):\n'
                  '    path = planner(start, destination)\n'
@@ -227,16 +229,16 @@ DECK = {
                  'run_all_tests("Manhattan", compute_manhattan_path)\n'
                  'run_all_tests("BFS", compute_bfs_path)',
          'code_size': 20,
-         'callout': '`compute_bfs_path` with **no parentheses** is the function itself, handed over the '
-                    'way you\'d hand over a number or a list',
+         'callout': '`compute_bfs_path`, **no parentheses**, is the function itself, handed over like a '
+                    'number or a list',
          'tone': 'teal'},
 
         {'kind': 'bullets', 'title': 'A function in a parameter',
          'bullets': [
-             '`run_all_tests` passes the function straight on to `run_path_test`',
-             'There, `planner` holds that function, and `planner(position, destination)` calls **whichever one was handed in**',
-             'Both planners have the same shape, so the harness never needs to know which one it has',
-             'Try it at the prompt first: `f = compute_bfs_path`, then `f((0, 0), (3, 3))`',
+             '`run_all_tests` passes it on to `run_path_test`',
+             '`planner(position, destination)` calls **whichever one was handed in**',
+             'Same shape, so the harness never needs to know which',
+             'Try it: `f = compute_bfs_path`, then `f((0, 0), (3, 3))`',
          ],
          'size': 24,
          'notes': 'The prompt demo prevents most of the parentheses slips. Do it on the projector.'},
@@ -251,7 +253,7 @@ DECK = {
         {'kind': 'bullets', 'title': 'No parentheses when you hand it over',
          'bullets': [
              '`run_all_tests("BFS", compute_bfs_path)` passes the function',
-             '`run_all_tests("BFS", compute_bfs_path())` **calls** it first, with no arguments, and passes the result: an error',
+             '`run_all_tests("BFS", compute_bfs_path())` **calls** it first, with no arguments: an error',
          ],
          'size': 26,
          'callout': 'The parentheses are the difference between "here is the planner" and "here is what '
@@ -262,8 +264,8 @@ DECK = {
 
         {'kind': 'code', 'title': 'Write run_path_test() and run_no_path_test()',
          'notes': 'The second line is a FAIL with two problems, each on its own line with the dash in front. The wording of the problems can differ; what matters is that each names the step that broke the property.',
-         'lead': 'Each returns `True` on a pass, so `run_all_tests()` can count. A PASS line and a FAIL line '
-                 'should look like this:',
+         'lead': 'Each returns `True` on a pass, so `run_all_tests()` can count. PASS and FAIL lines look '
+                 'like this:',
          'lead_h': 1.2,
          'code': '  PASS  open (0, 0) to (0, 3)  [(0, 1), (0, 2), (0, 3)]\n'
                  '  FAIL  wall at (1,0),(1,1): (0,0) to (3,0)  [(1, 0), (2, 0), (3, 0)]\n'
@@ -311,16 +313,16 @@ DECK = {
                  '          - there is no way through, so the path should be empty\n'
                  'Manhattan: 4 of 6 passed',
          'code_size': 18,
-         'callout': 'Manhattan isn\'t broken: across, then up or down, with no idea what a wall is. The '
-                    'harness just showed **why this module exists**.',
+         'callout': 'Manhattan isn\'t broken: it has no idea what a wall is. The harness just showed '
+                    '**why this module exists**.',
          'tone': 'green',
-         'notes': 'Manhattan is doing exactly what it was built to do in Module 4. The harness shows it '
-                  'on screen, with the path printed. On screen, each result also follows a '
-                  '"computing path from:" line printed by Module 4\'s planner; the slide leaves them out.'},
+         'notes': 'Manhattan is doing exactly what it was built to do in Module 4: across, then up or '
+                  'down. The harness shows it '
+                  'on screen, with the path printed.'},
 
         {'kind': 'code', 'title': 'The same swap in a main program',
-         'lead': '`navigate()` is the skeleton\'s last function, given: it plans with whatever planner it\'s '
-                 'handed, prints the path, and returns where the robot **would** be.',
+         'lead': 'Given: plans with the planner it\'s handed, prints the path, and returns where the '
+                 'robot **would** be.',
          'lead_h': 1.2,
          'code': 'def navigate(planner, position, destination):\n'
                  '    """Plan with planner and print the path; return\n'
@@ -334,8 +336,8 @@ DECK = {
 
         {'kind': 'code', 'title': 'test_swap(): change one name',
          'notes': 'test_swap() runs each planner there and back: (0, 0) to (3, 3), then from position back to (0, 0). Manhattan drives through the wall at (2, 0); BFS goes around it.',
-         'lead': 'Block `(2, 0)`, then run two trips, `(0, 0)` to `(3, 3)` and back, with each planner. '
-                 'Only the planner\'s name changes:',
+         'lead': 'Block `(2, 0)`; run `(0, 0)` to `(3, 3)` and back with each planner. Only the name '
+                 'changes:',
          'lead_h': 1.2,
          'code': 'position = navigate(compute_manhattan_path, (0, 0), (3, 3))   # through the wall\n'
                  'position = navigate(compute_bfs_path, (0, 0), (3, 3))         # around it',
@@ -344,7 +346,7 @@ DECK = {
          'tone': 'teal'},
 
         {'kind': 'steps', 'title': 'Break a property on purpose',
-         'lead': 'Watch the harness catch it. Put each back before the next.',
+         'lead': 'Watch the harness catch it. Undo each before the next.',
          'lead_h': 0.65,
          'steps': [
              'Make `compute_bfs_path` return `path[1:]`: it drops the first step',
@@ -361,9 +363,9 @@ DECK = {
         {'kind': 'bullets', 'title': 'Optional: the harness with planner objects',
          'tag': 'Optional extension',
          'bullets': [
-             'With Lesson 5-5\'s classes, the harness is handed an **object** and calls its methods',
-             'Both classes have `add_blocked()`, `clear_blocked()` and `compute_path()`, so the harness never needs to know which it holds',
-             '`Manhattan.add_blocked()` does nothing, so `Manhattan()` fails the same two tests for the same reason: the correct result',
+             'With Lesson 5-5\'s classes, the harness gets an **object** and calls its methods',
+             'Both have the same three methods, so it never needs to know which',
+             '`Manhattan()` correctly fails the same two tests',
          ],
          'size': 20,
          'split': 0.45,
@@ -375,7 +377,10 @@ DECK = {
                  'block(planner, (1, 0))\n'
                  'clear(planner)',
          'code_size': 16,
-         'notes': 'Optional extension for the class track. The four edits: run_path_test() and '
+         'notes': 'Optional extension for the class track. Both classes have add_blocked(), '
+                  'clear_blocked() and compute_path(). Manhattan.add_blocked() does nothing, so '
+                  'Manhattan() fails the same two tests for the same reason, which is the correct result. '
+                  'The four edits: run_path_test() and '
                   'run_no_path_test() call planner.compute_path(start, destination); run_all_tests() '
                   'calls block(planner, ...) and clear(planner); check_path()\'s property 4 reads '
                   'HARNESS_BLOCKED; test_harness() hands in Manhattan() and BFS(). test_swap() gets the '
@@ -384,8 +389,8 @@ DECK = {
 
         {'kind': 'code', 'title': 'Optional: the harness keeps its own record',
          'tag': 'Optional extension',
-         'lead': 'Property 4 needs to know what\'s blocked, but the list now lives **inside** the planner. '
-                 'Paste above `manhattan_distance()`:',
+         'lead': 'Property 4 needs what\'s blocked, which now lives **inside** the planner. Paste above '
+                 '`manhattan_distance()`:',
          'lead_h': 1.2,
          'code': '# class track: the harness\'s own record of what it blocked\n'
                  'HARNESS_BLOCKED = []\n'
@@ -406,16 +411,17 @@ DECK = {
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Software', 'Property-based testing', 'Professional test tools generate thousands of random '
-                                                    'inputs and check properties, because most real programs '
-                                                    'have no single expected answer.'),
-             ('Design', 'Plug-in parts', 'Handing a function or object to code that doesn\'t know which one '
-                                         'it got is how programs are built from swappable parts.'),
-             ('Robotics', 'Test before you drive', 'Teams test the planner on a laptop: it\'s faster, and it '
-                                                   'separates "the algorithm is wrong" from "the robot drove wrong".'),
+             ('Software', 'Property-based testing', 'Test tools check properties on thousands of random '
+                                                    'inputs: most programs have no single expected answer.'),
+             ('Design', 'Plug-in parts', 'Code that takes any function or object that fits is built '
+                                         'from swappable parts.'),
+             ('Robotics', 'Test before you drive', 'Teams test planners on a laptop: faster, and it '
+                                                   'separates "algorithm wrong" from "robot drove wrong".'),
          ],
          'height': 4.2,
-         'notes': 'Sort orders, file formats and planners are all examples of swappable parts.'},
+         'notes': 'Professional test tools generate thousands of random inputs and check properties, '
+                  'exactly as this harness checks paths. Sort orders, file formats and planners are all '
+                  'examples of swappable parts. Everything this harness checks is checked without a robot.'},
 
         {'kind': 'wrapup',
          'questions': [
