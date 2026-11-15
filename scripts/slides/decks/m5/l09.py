@@ -9,33 +9,33 @@ DECK = {
              'Visit four or more destinations while detecting and avoiding obstacles',
              'Start a run from the obstacles a previous run discovered, and report what this one found',
              'Demonstrate learning: Run 2 outperforms Run 1, **with numbers** to prove it',
-             'Debug integration issues where individually-working parts don\'t cooperate',
+             'Debug integration issues: parts that work alone but not together',
          ],
          'notes': 'Multi-day: for 50-minute periods this spans 2 to 3 days (assembly and simulation, '
                   'robot testing, demos). This is the module\'s graduation project.'},
 
         {'kind': 'bullets', 'title': 'Every piece, one system',
          'bullets': [
-             'The robot visits **several destinations**, plans with BFS, senses obstacles with the '
-             'rangefinder, and reroutes on the fly',
+             'The robot visits **several destinations**, plans with BFS, senses obstacles, and '
+             'reroutes on the fly',
              'It starts the next run knowing what this one found',
-             'You won\'t write much new code. The challenge is **integration**: making working parts '
-             'work together',
+             'You won\'t write much new code',
          ],
-         'callout': 'That\'s exactly what real software engineers do',
+         'callout': 'The challenge is **integration**: making working parts work together',
          'tone': 'teal',
-         'notes': 'Students underestimate how hard connecting working parts is. Say so up front.'},
+         'notes': 'That is exactly what real software engineers do. Students underestimate how hard '
+                  'connecting working parts is. Say so up front.'},
 
         {'kind': 'bullets', 'title': 'The mission',
-         'lead': 'Your robot is an **autonomous delivery vehicle**. It visits four or more grid '
-                 'destinations in sequence. For each leg:',
+         'lead': 'Your robot is an **autonomous delivery vehicle**. It visits four or more '
+                 'destinations in order. For each leg:',
          'lead_h': 1.05,
          'bullets': [
              'plan a path',
              'drive it while watching for obstacles',
              'reroute whenever the rangefinder finds one',
          ],
-         'callout': 'Everything you need already exists in `robot.py`. Today you **connect** it.',
+         'callout': 'Everything you need is in `robot.py`. Today you **connect** it.',
          'tone': 'teal',
          'notes': 'Where each piece came from: the planner (Lessons 5-4 and 5-5) and its tests '
                   '(5-6), detection (5-7), the drive-until-you-arrive function and carrying '
@@ -43,11 +43,10 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Two runs',
          'bullets': [
-             '**Run 1** starts with an empty blocked list, discovers obstacles the hard way, and '
-             'prints what it found',
-             '**Run 2** starts with that list typed in, so it plans around them and reroutes less',
+             '**Run 1**: empty blocked list. Discovers obstacles the hard way and prints what it found',
+             '**Run 2**: that list typed in. Plans around them and reroutes less',
          ],
-         'callout': 'The drop in step count between runs **is** the learning',
+         'callout': 'The drop in steps between runs **is** the learning',
          'tone': 'green'},
 
         {'kind': 'check',
@@ -61,9 +60,8 @@ DECK = {
                         'capstone is about connecting them correctly: integration, not new algorithms.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: this lesson\'s skeleton',
-         'lead': 'At the end of the OBSTACLES section, above `RUN`. No new function is defined: one '
-                 'setting, a paper test that prints every leg\'s path without moving the robot, and the '
-                 'project itself.',
+         'lead': 'At the end of OBSTACLES, above `RUN`. Nothing new is defined: one setting, a '
+                 'paper test, and the project itself.',
          'lead_h': 1.25,
          'code': '# --- Lesson 5-9: capstone, the delivery run ---\n'
                  '# The module project: visit CAPSTONE_DESTINATIONS in order,\n'
@@ -80,13 +78,14 @@ DECK = {
                  '    # destination for the next leg\n'
                  '    pass',
          'code_size': 16,
-         'notes': 'The name is CAPSTONE_DESTINATIONS because Module 4\'s test_delivery() still '
-                  'reads DELIVERY_STOPS, and a finished section is not edited '
-                  'from another one. test_capstone() is the rest of the skeleton, on the next slide.'},
+         'notes': 'The name is CAPSTONE_DESTINATIONS because DESTINATIONS is already in the file: '
+                  'Lesson 4-7\'s delivery run still reads it, and a finished section is not edited '
+                  'from another one. test_capstone() is the rest of the skeleton, on the next slide. '
+                  'The paper test prints every leg\'s path without moving the robot.'},
 
         {'kind': 'code', 'title': 'The project is a test: test_capstone()',
-         'lead': 'Like every program in this course, it is a test function. The outline is the whole '
-                 'program\'s shape:',
+         'lead': 'Like every program in this course, a test function. The outline is the whole '
+                 'program:',
          'lead_h': 0.95,
          'code': 'def test_capstone():\n'
                  '    # 1. hand KNOWN_OBSTACLES to add_blocked()\n'
@@ -110,7 +109,7 @@ DECK = {
              'Detection **adds** to it',
              'Step 5 **hands** it to the next run',
          ],
-         'callout': 'Every one of those goes through `add_blocked()`. The planner never knows which.',
+         'callout': 'Every addition goes through `add_blocked()`: the planner never knows the source.',
          'tone': 'teal'},
 
         {'kind': 'figure', 'title': 'One list, leg by leg',
@@ -135,29 +134,27 @@ DECK = {
                         'If it doesn\'t flow correctly, the whole system breaks.'},
 
         {'kind': 'code', 'title': 'The destination loop',
-         'lead': '`navigate_with_detection()` already handles one trip. The new code is the loop that '
-                 'calls it **once per destination**, feeding each trip\'s end position and heading '
-                 'into the next:',
+         'lead': '`navigate_with_detection()` handles one trip. The new loop calls it **once per '
+                 'destination**, feeding each trip\'s end pose into the next:',
          'lead_h': 1.25,
          'code': '        position, heading, steps, reroutes = navigate_with_detection(\n'
                  '            position, heading, dest, rangefinder, OBSTACLE_CM\n'
                  '        )',
          'code_size': 20,
-         'callout': 'The call from your Lesson 5-8 test, with the leg\'s destination `dest` in place '
-                    'of a fixed one',
+         'callout': 'The call from your Lesson 5-8 test, with the leg\'s `dest`',
          'tone': 'teal'},
 
         {'kind': 'bullets', 'title': 'Two details that are easy to get wrong',
          'bullets': [
-             'The pose, `position` and `heading`, must be **assigned from the return value**',
-             ['Forget the `position, heading, ... =` part and leg 2 plans from (0, 0) while the robot '
-              'sits somewhere else'],
-             'Only the **first** leg is printed before the button',
-             ['Later legs are planned from wherever the robot actually ends up, including around '
-              'obstacles it hasn\'t found yet'],
+             '**Assign the pose** (`position`, `heading`) from the return value',
+             ['Forget it, and leg 2 plans from (0, 0)'],
+             'Print only the **first** leg before the button',
+             ['Later legs start wherever the robot actually ends up'],
          ],
          'size': 26,
-         'notes': 'Class track: with the Navigator class there is no position, heading line to get '
+         'notes': 'Forget the position, heading, ... = part and leg 2 plans from (0, 0) while the '
+                  'robot sits somewhere else. Later legs are also planned around obstacles it '
+                  'hasn\'t found yet. Class track: with the Navigator class there is no position, heading line to get '
                   'wrong. navigate_with_detection() is a method that updates navigator.position '
                   'and navigator.heading itself and returns the two counts. With the BFS class, the '
                   'planner calls are planner.compute_path() and planner.add_blocked(), and the list '
@@ -172,8 +169,8 @@ DECK = {
                      'The button only allows one print'],
          'answer': 1,
          'explanation': 'Each leg is planned when it starts, from the robot\'s real position and the '
-                        'current `BLOCKED` list. Leg 1 is the only one whose inputs are known before '
-                        'the robot moves.'},
+                        'current `BLOCKED` list. Only leg 1\'s inputs are known before the robot '
+                        'moves.'},
 
         {'kind': 'check',
          'question': 'A team\'s robot drives leg 1 correctly, then on leg 2 turns the wrong way and '
@@ -183,21 +180,20 @@ DECK = {
                      'BFS found a non-shortest path',
                      'The destinations list is too long'],
          'answer': 1,
-         'explanation': 'If `position` and `heading` are not updated from the return value, the '
-                        'planner thinks the robot is still at (0, 0) facing north. The path it '
-                        'produces is right for that spot and wrong for where the robot is.'},
+         'explanation': 'If `position` and `heading` aren\'t updated from the return value, the '
+                        'planner thinks the robot is still at (0, 0) facing north. Its path is right '
+                        'for that spot and wrong for where the robot is.'},
 
         {'kind': 'steps', 'title': 'Activity · Test in three levels',
-         'lead': 'Do **not** jump straight to the full run on the robot. One test on the run line at a time:',
+         'lead': 'Do **not** jump straight to the full run. One test on the run line at a time:',
          'lead_h': 0.65,
          'steps': [
-             '**Planner alone (no robot).** Write `test_capstone_paper()`: the four paths on screen, with '
-             'their step counts. Then type a pretend `KNOWN_OBSTACLES` list and watch the legs bend around it',
-             '**Dry run on the grid.** Write `test_capstone()` with the simulated sensor and '
-             '`SIMULATED_OBSTACLES = [(1, 0), (2, 2), (3, 1)]`. No boxes. Does the blocked list grow '
-             'across all four legs?',
-             '**The real thing.** Back to `rangefinder.distance()`, boxes on the grid. Run 1 with '
-             '`KNOWN_OBSTACLES = []`, then Run 2 with the printed list typed in',
+             '**Planner alone.** `test_capstone_paper()`: four paths and step counts. Then try a '
+             'pretend `KNOWN_OBSTACLES`',
+             '**Dry run.** `test_capstone()`, simulated sensor, `SIMULATED_OBSTACLES = [(1, 0), (2, 2), '
+             '(3, 1)]`, no boxes. Does the list grow?',
+             '**The real thing.** Real sensor, boxes. Run 1 with `KNOWN_OBSTACLES = []`, then Run 2 '
+             'with the printed list',
          ],
          'size': 20,
          'notes': 'If something breaks in the full run, you won\'t know which piece. Level 1 is Module '
@@ -207,19 +203,21 @@ DECK = {
                   'look-ahead line (Lesson 5-8, step 1); verify paths compute, pretend obstacles '
                   'register, and the list printed at the end is the one to start the next run with. '
                   'Insist everyone gets the dry run working before a box touches the grid: logic '
-                  'first, hardware second.'},
+                  'first, hardware second. Level 1 runs with no robot; in level 2 the blocked list '
+                  'should grow across all four legs; level 3 puts rangefinder.distance() back.'},
 
         {'kind': 'bullets', 'title': 'Watch for the classic integration bugs',
          'bullets': [
-             'The blocked list **reset** between destinations',
-             ['One `BLOCKED` for the whole run: never call `clear_blocked()` between legs'],
+             'The blocked list **reset** between legs',
+             ['Never call `clear_blocked()` between legs'],
              '`position` and `heading` **not assigned** from the return value',
-             'A destination that is itself in `KNOWN_OBSTACLES`',
-             ['The planner returns `[]` and the leg is skipped with "No path"'],
+             'A destination that is in `KNOWN_OBSTACLES`',
+             ['`[]` comes back: the leg is skipped with "No path"'],
          ],
          'size': 26,
-         'callout': 'Check these first when parts that worked on their own don\'t cooperate',
-         'tone': 'orange'},
+         'callout': 'Check these first when working parts don\'t cooperate',
+         'tone': 'orange',
+         'notes': 'One BLOCKED serves the whole run.'},
 
         {'kind': 'check',
          'question': 'Which is a classic capstone integration bug to watch for?',
@@ -228,7 +226,7 @@ DECK = {
                      'Naming the robot',
                      'Printing the path'],
          'answer': 1,
-         'explanation': '`BLOCKED` must persist across all destinations in a run. Clearing it for each '
+         'explanation': '`BLOCKED` must persist across all destinations in a run. Clearing it each '
                         'leg throws away everything learned so far. (Also common: not assigning '
                         '`position` and `heading` from the return value.)',
          'notes': 'Answer: B. test_capstone() is the graded work, and there is no student reveal '
@@ -260,12 +258,14 @@ DECK = {
              '"Run 1 took X steps with Y reroutes; Run 2 took A steps with B reroutes."',
              '**Finished early?** Try an extension:',
              ['visit the nearest destination next',
-              'obstacle expiration: re-check old obstacles after a few runs',
-              'a `print_grid()` map of the rings after each leg',
-              'a `Navigator` object that owns `position` and `heading` (if you did the class extensions)'],
+              'obstacle expiration',
+              'a `print_grid()` map after each leg',
+              'a `Navigator` object that owns the pose (class track)'],
          ],
          'size': 24,
-         'notes': 'At the demo, ask why Run 2 is better and listen for "better data," not "the robot '
+         'notes': 'Extensions in full: obstacle expiration re-checks old obstacles after a few runs; '
+                  'the print_grid() map shows the rings; the Navigator object owns position and '
+                  'heading, for students who did the class extensions. At the demo, ask why Run 2 is better and listen for "better data," not "the robot '
                   'is smarter." With a Navigator object the destination loop has nothing to pass '
                   'back and forth.'},
 
@@ -276,12 +276,12 @@ DECK = {
                      'It makes a sound at each intersection',
                      'Run 2 visits fewer destinations'],
          'answer': 1,
-         'explanation': 'The measurable improvement from Run 1 to Run 2 (fewer reroutes and steps) is '
+         'explanation': 'The measured improvement from Run 1 to Run 2 (fewer reroutes and steps) is '
                         'the evidence. Same algorithm, better data to start from.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Robotics', 'SLAM', 'Real robots build and reuse maps of their environment: the '
+             ('Robotics', 'SLAM', 'Real robots build and reuse maps of their surroundings: the '
                                   'grown-up version of your obstacle memory.'),
              ('Vehicles', 'Self-driving', 'Sense, plan, act, and learn from fleet data: the same '
                                           'loop at massive scale.'),
