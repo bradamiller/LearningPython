@@ -5,36 +5,37 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Add the XRP **rangefinder** to the start of `robot.py` and read a distance',
+             'Add the **rangefinder** to the start of `robot.py` and read a distance',
              'Explain how an ultrasonic rangefinder measures distance',
              'Use a **threshold** to decide whether the intersection ahead is blocked',
              'Say which intersection a reading refers to, and why the path already tells you',
-             'Write a driving test: Module 4\'s `drive_path()` loop plus **one rangefinder check**',
+             'Write a driving test: Module 4\'s `drive_path()` loop plus **one rangefinder check** that re-plans',
          ],
          'notes': '60 minutes, robot required. The planner was tested on screen in Lesson 5-6 and '
                   'nothing about it changes today. The only new thing is detection: look before '
                   'you drive, and if something is there, call add_blocked() and ask for a new '
-                  'path. The last objective on the page also says: re-plan when it fires, first '
-                  'with a simulated sensor, then the real one.'},
+                  'path. The last objective on the page adds: first with a simulated sensor, then '
+                  'the real one.'},
 
         {'kind': 'bullets', 'title': 'The robot fills in the blocked list',
          'bullets': [
-             'Until now the blocked list was filled in **by hand**: by you, in a test',
-             'Today the robot fills it in itself, with the **ultrasonic rangefinder**',
-             'The planner does not change. The only new thing is **detection**: look before you drive',
-             'If something is there, call `add_blocked()` (the exact call your tests made) and ask for a new path',
+             'Until now you filled it in **by hand**, in a test',
+             'Today the robot does it, with the **ultrasonic rangefinder**',
+             'Look before you drive. Something there? Call `add_blocked()` and re-plan',
+             'The planner doesn\'t change',
          ],
-         'callout': 'This opens the last section of `robot.py`: **OBSTACLES**',
-         'tone': 'teal'},
+         'callout': 'New, last section of `robot.py`: **OBSTACLES**',
+         'tone': 'teal',
+         'notes': 'add_blocked() is the same call the students\' tests made. The only new thing '
+                  'today is detection.'},
 
         {'kind': 'bullets', 'title': 'The robot gets eyes',
          'bullets': [
-             'The rangefinder sends out a **sound pulse**, too high for us to hear',
-             'It times the **echo** bouncing back',
-             'The round-trip time tells it how far away an object is',
-             'It returns that distance in **centimeters**',
+             'Sends a **sound pulse**, too high for us to hear',
+             'Times the **echo**',
+             'Round-trip time gives the distance, in **centimeters**',
          ],
-         'callout': 'The sensor does the physics internally. You just read a number.',
+         'callout': 'The sensor does the physics. You just read a number.',
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'Reading it takes three lines',
@@ -46,9 +47,9 @@ DECK = {
          'callout': 'The first two lines go in the **start block**: the import under the other '
                     '`XRPLib` imports, the object under `board = ...`',
          'tone': 'teal',
-         'notes': 'Putting rangefinder in the start block means every function below can use it '
-                  'the way they use drivetrain. It is the first new object in the start block '
-                  'since Lesson 2-1 (the only other change was import random in 2-4).'},
+         'notes': 'Putting rangefinder in the start block means every function can use it the way '
+                  'it uses drivetrain. It is the first new object in the start block since Lesson '
+                  '2-1 (the only other change was import random in 2-4).'},
 
         {'kind': 'check',
          'question': 'How does an ultrasonic rangefinder measure distance?',
@@ -62,9 +63,8 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Choosing a threshold',
          'bullets': [
-             'Readings have **noise**: they vary a little each time',
-             'So don\'t check for an exact distance: use a **threshold**',
-             'Measure with the next intersection **blocked** (say ~12 cm) and **clear** (say ~50 cm)',
+             'Readings are **noisy**, so use a **threshold**, not an exact distance',
+             'Measure **blocked** (~12 cm) and **clear** (~50 cm)',
              'Pick a cutoff **between** them',
          ],
          'split': 0.52,
@@ -73,10 +73,8 @@ DECK = {
                  'else:\n'
                  '    print("Path is clear")',
          'code_size': 20,
-         'callout': 'Why `OBSTACLE_CM` and not `THRESHOLD`? The file already has a `THRESHOLD` '
-                    '(the reflectance one from Lesson 2-2). Two settings with one name is a bug '
-                    'waiting to happen.',
-         'notes': 'Calibrate the threshold ahead of class and have a value ready: it depends on grid '
+         'callout': 'Not `THRESHOLD`: the file already has the reflectance one (Lesson 2-2)',
+         'notes': 'Two settings with one name is a bug waiting to happen. Calibrate the threshold ahead of class and have a value ready: it depends on grid '
                   'spacing, obstacle material and the sensor. Soft or angled surfaces read '
                   'inconsistently, which is a good real-world-sensor talking point.'},
 
@@ -87,13 +85,12 @@ DECK = {
                      'To make the robot slower',
                      'Thresholds use less memory'],
          'answer': 1,
-         'explanation': 'Ultrasonic readings fluctuate with angle, surface, and noise. A threshold '
-                        '("closer than 15 cm = blocked") absorbs that variation; an exact-match '
-                        'check would fail constantly.'},
+         'explanation': 'Readings vary with angle, surface and noise. A threshold ("closer than '
+                        '15 cm = blocked") absorbs that; an exact match would fail constantly.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: the OBSTACLES section',
-         'lead': 'Paste it above `RUN`, after the BFS PLANNER section. Like the NAVIGATOR, it '
-                 'drives, so its tests wait for the button **twice**.',
+         'lead': 'Above `RUN`, after the BFS PLANNER section. It drives, so its tests wait for '
+                 'the button **twice**.',
          'lead_h': 0.95,
          'code': '# ===== OBSTACLES =====\n'
                  '# The robot fills BLOCKED itself. Before each step of a path\n'
@@ -109,13 +106,12 @@ DECK = {
                  '    in SIMULATED_OBSTACLES, otherwise 50.0."""\n'
                  '    pass',
          'code_size': 17,
-         'notes': 'It is the file\'s last section. Two tests go under it, both the students\' to '
+         'notes': 'It is the file\'s last section. Like the NAVIGATOR, it drives. Two tests go under it, both the students\' to '
                   'write: test_rangefinder() in Step 1, and test_detect_once(), whose outline is '
                   'two slides on.'},
 
         {'kind': 'code', 'title': 'Which intersection is blocked?',
-         'lead': 'The one **directly in front** of the robot, and you already know which one that '
-                 'is. Look at Module 4\'s `drive_path()` loop:',
+         'lead': 'The one **directly in front** of the robot, and the loop already knows it:',
          'lead_h': 0.95,
          'code': 'for next_pos in path:\n'
                  '    desired_heading = get_desired_heading(position, next_pos)\n'
@@ -123,11 +119,12 @@ DECK = {
                  '    track_to_intersection()\n'
                  '    position = next_pos',
          'code_size': 22,
-         'callout': 'After `turn_to()`, the robot is **facing** `next_pos`. A short reading right '
-                    'then means `next_pos` is blocked: the path already told you.',
+         'callout': 'After `turn_to()`, the robot **faces** `next_pos`. A short reading then means '
+                    '`next_pos` is blocked.',
          'tone': 'teal',
-         'notes': 'Facing next_pos is what turning to the desired heading means, so no new code is '
-                  'needed to know which intersection is blocked. "Which intersection is blocked" '
+         'notes': 'This is Module 4\'s drive_path() loop. The path already told you which '
+                  'intersection is blocked. Facing next_pos is what turning to the desired heading '
+                  'means, so no new code is needed to know which intersection is blocked. "Which intersection is blocked" '
                   'used to confuse students when it was computed from the heading. Demonstrate the '
                   'new reasoning physically: stand on an intersection, turn to face the next one on '
                   'the path, point at it.'},
@@ -184,23 +181,25 @@ DECK = {
                  '            print("New path:", path)\n'
                  '            break      # Lesson 5-8 keeps going instead',
          'code_size': 20,
-         'callout': 'The `break` ends the `for` loop as soon as a new path is planned: today the '
-                    'robot re-plans **once** and stops',
+         'callout': 'The `break` ends the loop: today the robot re-plans **once** and stops',
          'tone': 'teal',
          'notes': 'Lesson 5-8 replaces that break with "follow the new path, and keep going until '
                   'you arrive."'},
 
         {'kind': 'bullets', 'title': 'Three things to notice',
          'bullets': [
-             '`add_blocked(next_pos)` is **the same call** your Lesson 5-6 harness made',
-             ['The planner can\'t tell a test script from a sensor: passing the Lesson 5-6 tests means it will re-plan correctly'],
-             'Re-planning is **one line**, from where the robot is: `compute_bfs_path(position, destination)`',
-             ['Rule 1 from Lesson 5-4. The planner rebuilds its graph from `BLOCKED` every call, so there is no "rebuild the graph" step to forget'],
+             '`add_blocked(next_pos)` is **the same call** as the Lesson 5-6 harness',
+             ['Pass those tests, and it re-plans correctly'],
+             'Re-planning is **one line**, from where the robot is',
+             ['The planner rebuilds its graph from `BLOCKED` every call'],
              'The robot is **parked** when it re-plans',
-             ['Every track ends with the robot\'s center on the cross, so the robot is still on the intersection it re-planned from'],
          ],
          'size': 24,
-         'notes': 'Nothing moves the robot during a re-plan. Class track: if students built the '
+         'notes': 'The planner can\'t tell a test script from a sensor. The re-plan is '
+                  'compute_bfs_path(position, destination), Rule 1 from Lesson 5-4, and there is no '
+                  '"rebuild the graph" step to forget. Every track ends with the robot\'s center on '
+                  'the cross, so the robot is still on the intersection it re-planned from. '
+                  'Nothing moves the robot during a re-plan. Class track: if students built the '
                   'LineTrack or Navigator class, the driving calls are tracker. or '
                   'navigator.line_track. calls, as in Lesson 4-6, and the planner calls are '
                   'planner.add_blocked() and planner.compute_path().'},
@@ -236,8 +235,7 @@ DECK = {
                  '\n'
                  '    board.wait_for_button()',
          'code_size': 22,
-         'callout': 'Printed path right, but the robot still goes wrong? The bug is in the '
-                    '**driving**, not the planner.',
+         'callout': 'Path right, robot wrong? The bug is in the **driving**.',
          'tone': 'teal',
          'notes': 'Read it before pressing the button: is it what you expected? Printing the plan '
                   'before you drive is a paper test built into every run, and the first diagnostic. '
@@ -247,30 +245,28 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 1 · The sensor',
          'steps': [
              'Add the import and the object to the **start block**',
-             'Write `test_rangefinder()`: print `rangefinder.distance()` fifty times, a tenth of a '
-             'second apart, the way `test_sensors()` did in Lesson 2-1',
-             'Set the run line to it. Hold a box in front of the robot at the distance of the next '
-             'intersection, then take it away',
-             'Write both readings down. Check that `OBSTACLE_CM` sits **between** them; change it if not',
+             'Write `test_rangefinder()`: print `rangefinder.distance()` 50 times, 0.1 s apart',
+             'Run it. Hold a box at the next intersection\'s distance, then remove it',
+             'Check `OBSTACLE_CM` sits **between** the readings',
          ],
          'size': 20,
-         'notes': 'Have your own calibrated value ready to compare against.'},
+         'notes': 'test_rangefinder() works the way test_sensors() did in Lesson 2-1. Students '
+                  'write both readings down and change OBSTACLE_CM if it is not between them. Have '
+                  'your own calibrated value ready to compare against.'},
 
         {'kind': 'steps', 'title': 'Step 2 · Simulate the sensor',
          'steps': [
-             'Write `simulate_rangefinder()`: one line, `8.0` if `next_pos` is in '
-             '`SIMULATED_OBSTACLES`, otherwise `50.0`',
-             'Write `test_detect_once()` from the outline, with the **simulated** sensor in the '
-             'look-ahead line',
-             'Robot at `(0, 0)` facing North on an **empty** grid, run line set to it. Read the planned '
-             'path before the second press: `(2, 0)` is on it',
-             'It should face East, drive to `(1, 0)`, face `(2, 0)`, "see" the pretend box, print the new '
-             'path, and stop',
+             'Write `simulate_rangefinder()`: `8.0` if `next_pos` is in `SIMULATED_OBSTACLES`, else `50.0`',
+             'Write `test_detect_once()`, with the **simulated** sensor',
+             'Robot at `(0, 0)` facing North, **empty** grid',
+             'It should drive to `(1, 0)`, "see" `(2, 0)`, re-plan, and stop',
          ],
          'size': 20,
-         'callout': 'Confirm on screen: the blocked list has **grown**, and the new path goes **around**',
+         'callout': 'Check: the blocked list **grew**; the new path goes **around**',
          'tone': 'teal',
-         'notes': 'Only the sensor is simulated. The planner needs no simulation: it was tested in '
+         'notes': 'Before the second press, check that (2, 0) is on the planned path. The robot '
+                  'faces East, drives to (1, 0), faces (2, 0), sees the pretend box, prints the new '
+                  'path, and stops. Only the sensor is simulated. The planner needs no simulation: it was tested in '
                   'Lesson 5-6. Have everyone run this before touching a box: the robot still '
                   'drives, but the obstacle is pretend, so a wrong reroute is a logic bug and '
                   'nothing else. Separating software bugs from hardware bugs saves enormous '
@@ -279,8 +275,8 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 3 · The real sensor',
          'steps': [
              'Change the look-ahead line to `rangefinder.distance()`',
-             'Put a box on one intersection of the printed path: `(2, 0)` again is a good choice',
-             'Press the button. Watch the robot stop, print "Rerouting...", print the new path, and stop',
+             'Put a box on the printed path: `(2, 0)` again works',
+             'Press the button. It should stop, print "Rerouting..." and the new path',
          ],
          'callout': 'Taking the new path is next lesson',
          'tone': 'teal',
@@ -298,18 +294,16 @@ DECK = {
                      'Simulation is required by Python',
                      'To avoid writing the loop'],
          'answer': 1,
-         'explanation': 'A simulated sensor lets you confirm the detection logic on screen. Once '
-                        'that\'s solid, real-sensor problems are clearly hardware, not logic, and '
-                        'the planner itself was already proven in Lesson 5-6.'},
+         'explanation': 'A simulated sensor proves the detection logic on screen. After that, '
+                        'real-sensor problems are hardware, not logic. The planner was already '
+                        'proven in Lesson 5-6.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
              ('Cars', 'Self-driving', 'Radar and LIDAR detect obstacles; the planner reroutes in '
-                                      'real time, just like this loop.'),
-             ('Warehouses', 'Fulfillment robots', 'Robots sense blocked aisles and replan paths '
-                                                  'on the fly to keep goods moving.'),
-             ('Space', 'Mars rovers', 'Rovers scan the terrain ahead and reroute around rocks they '
-                                      'can\'t cross.'),
+                                      'real time.'),
+             ('Warehouses', 'Fulfillment robots', 'Robots sense blocked aisles and replan on the fly.'),
+             ('Space', 'Mars rovers', 'Rovers scan the terrain ahead and reroute around rocks.'),
          ],
          'notes': 'Sense, decide, act is the loop behind every autonomous machine.'},
 

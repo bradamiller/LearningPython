@@ -14,22 +14,20 @@ sidebar_position: 7
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-Until now the blocked list has been filled in by hand — by you, in a test. Now the
-robot fills it in itself, using the **ultrasonic rangefinder**. The planner was tested
-on screen in Lesson 5-6; nothing about it changes today. The only new thing is
-*detection*: look before you drive, and if something is there, call `add_blocked()`
-— the exact call your tests made — and ask for a new path. It opens the last section
-of `robot.py`: OBSTACLES.
+Until now you filled in the blocked list by hand, in a test. Today the robot fills it
+in itself with the **ultrasonic rangefinder**: look before you drive, and if something is
+there, call `add_blocked()` (the call your tests made) and re-plan. The planner doesn't
+change. This opens the last section of `robot.py`: OBSTACLES.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Add the XRP rangefinder to the start of `robot.py` and read a distance
+- Add the rangefinder to the start of `robot.py` and read a distance
 - Explain how an ultrasonic rangefinder measures distance
 - Use a threshold to decide whether the intersection ahead is blocked
 - Say which intersection a reading refers to, and why the path already tells you
-- Write a driving test that is Module 4's `drive_path()` loop plus one rangefinder check, and re-plan when it fires — first with a simulated sensor, then the real one
+- Write a driving test: Module 4's `drive_path()` loop plus one rangefinder check that re-plans, first with a simulated sensor, then the real one
 
 </Objectives>
 
@@ -37,9 +35,9 @@ By the end of this lesson you will be able to:
 
 ## The robot gets eyes
 
-The ultrasonic rangefinder sends out a sound pulse — too high for us to hear — and times
-the echo bouncing back. The round-trip time tells it how far away an object is, returned in
-centimeters. Reading it takes three lines:
+The rangefinder sends out a sound pulse, too high for us to hear, and times the echo.
+The round-trip time gives the distance to an object, in centimeters. Reading it takes
+three lines:
 
 ```python
 from XRPLib.rangefinder import Rangefinder
@@ -48,11 +46,9 @@ rangefinder = Rangefinder.get_default_rangefinder()
 distance = rangefinder.distance()      # float, in cm
 ```
 
-The sensor does the physics internally; you just read a number. The first two lines
-go in the **start block** at the top of `robot.py` — the import under the other
-`XRPLib` imports, the object under `board = ...` — so that every function below can
-use `rangefinder` the way they use `drivetrain`. It is the first new object in the
-start block since Lesson 2-1 (the only other change was `import random` in 2-4).
+The first two lines go in the **start block** at the top of `robot.py`: the import
+under the other `XRPLib` imports, the object under `board = ...`. Then every function
+can use `rangefinder` the way it uses `drivetrain`.
 
 <KnowledgeCheck
   question="How does an ultrasonic rangefinder measure distance?"
@@ -67,9 +63,9 @@ start block since Lesson 2-1 (the only other change was `import random` in 2-4).
 
 ## Choosing a threshold
 
-Sensor readings have noise and vary a little each time, so you don't check for an exact
-distance — you use a **threshold**. Measure with the next intersection blocked (say ~12
-cm) and clear (say ~50 cm), then pick a cutoff between them:
+Readings are noisy: they vary a little each time. So don't check for an exact distance;
+use a **threshold**. Measure with the next intersection blocked (say ~12 cm) and clear
+(say ~50 cm), then pick a cutoff between them:
 
 ```python
 if distance < OBSTACLE_CM:
@@ -78,9 +74,8 @@ else:
     print("Path is clear")
 ```
 
-It's named `OBSTACLE_CM`, not `THRESHOLD`, because the file already has a
-`THRESHOLD` — the reflectance one from Lesson 2-2 — and two settings with the same
-name is a bug waiting to happen.
+It's `OBSTACLE_CM`, not `THRESHOLD`, because the file already has a reflectance
+`THRESHOLD` from Lesson 2-2. Two settings with one name is a bug waiting to happen.
 
 <KnowledgeCheck
   question="Why use a threshold instead of checking for an exact distance?"
@@ -90,14 +85,13 @@ name is a bug waiting to happen.
     {text: 'To make the robot slower'},
     {text: 'Thresholds use less memory'},
   ]}
-  explanation="Ultrasonic readings fluctuate with angle, surface, and noise. A threshold ('closer than 15 cm = blocked') absorbs that variation; an exact-match check would fail constantly."
+  explanation="Readings vary with angle, surface and noise. A threshold ('closer than 15 cm = blocked') absorbs that; an exact match would fail constantly."
 />
 
 ## This lesson's skeleton
 
-Paste this into `robot.py` above `RUN`, after the BFS PLANNER section. It is the
-file's last section, and like the NAVIGATOR it drives — so its tests wait for the
-button twice.
+Paste this into `robot.py` above `RUN`, after the BFS PLANNER section. Like the
+NAVIGATOR, it drives, so its tests wait for the button twice.
 
 ```python
 # ===== OBSTACLES =====
@@ -115,13 +109,13 @@ def simulate_rangefinder(next_pos):
     pass
 ```
 
-Two tests go under it, both yours to write; the second one's outline is below.
+Two tests go under it, both yours to write. The second one's outline is below.
 
 ## Which intersection is blocked?
 
-The rangefinder says something is ahead — but *which* intersection? It's the one
-directly in front of the robot. And here's the nice part: you already know which
-one that is, without any new code. Look at Module 4's `drive_path()` loop:
+A short reading means something is ahead, but *which* intersection? The one directly in
+front of the robot, and the loop already knows it. Look at Module 4's `drive_path()`
+loop:
 
 ```python
 for next_pos in path:
@@ -131,9 +125,8 @@ for next_pos in path:
     current_position = next_pos
 ```
 
-After `turn_to()`, the robot is facing `next_pos` — that's what turning to the desired
-heading *means*. So if the rangefinder sees something right then, the blocked
-intersection is `next_pos`. The path already told you.
+After `turn_to()`, the robot is facing `next_pos`. So a short reading right then means
+`next_pos` is blocked. The path already told you.
 
 <Figure
   src="/img/lesson-m5-07/rangefinder-ahead-xy.svg"
@@ -154,9 +147,8 @@ intersection is `next_pos`. The path already told you.
 
 ## The loop: Module 4's, plus one check
 
-Today's driving test is `drive_path()`'s loop with exactly one step added, between
-turning and driving: look ahead. Here is its outline — write it as `test_detect_once()`
-under the skeleton:
+Today's driving test is `drive_path()`'s loop with one step added between turning and
+driving: look ahead. Write it as `test_detect_once()` under the skeleton:
 
 ```python
 def test_detect_once():
@@ -191,24 +183,17 @@ And the new branch, the one piece that isn't Module 4's `drive_path()`:
 
 Three things to notice.
 
-**`add_blocked(next_pos)` is the same call your Lesson 5-6 harness made.** The planner
-can't tell whether an obstacle came from a test script or a sensor. That's why
-passing the Lesson 5-6 tests means the robot will re-plan correctly: it's the same code,
-fed the same way.
+- **`add_blocked(next_pos)` is the same call your Lesson 5-6 harness made.** The
+  planner can't tell a sensor from a test script, so passing those tests means the robot
+  will re-plan correctly.
+- **Re-planning is one line, from where the robot is:** `compute_bfs_path(position,
+  destination)`, Rule 1 from Lesson 5-4. The planner rebuilds its graph from `BLOCKED`
+  every call, so there is no "rebuild the graph" step to forget.
+- **The robot is parked when it re-plans.** Every track ends with its center on the
+  cross, so it is still on the intersection it re-planned from.
 
-**Re-planning is one line, from where the robot is.** `compute_bfs_path(position,
-destination)` — Rule 1 from Lesson 5-4. The planner rebuilds its graph from `BLOCKED`
-every call, so the wall it was just told about is already gone from it. There is no
-"rebuild the graph" step to forget.
-
-**The robot is parked when it re-plans.** Every track ends with the robot's center on
-the cross, so when the loop comes back around to turn toward the new path's first step,
-the robot is still on the intersection it re-planned from. Nothing moves the
-robot during a re-plan.
-
-The `break` ends the `for` loop as soon as a new path has been planned, so today the
-robot re-plans once and stops. Lesson 5-8 replaces that `break` with "follow the new
-path, and keep going until you arrive."
+The `break` ends the loop once a new path is planned: today the robot re-plans once and
+stops. Lesson 5-8 replaces it with "follow the new path until you arrive."
 
 If you built the `LineTrack` or `Navigator` class, the driving calls in the outline
 are `tracker.` or `navigator.line_track.` calls, as in Lesson 4-6, and the planner
@@ -248,43 +233,40 @@ before the robot moves.
     board.wait_for_button()
 ```
 
-Read it before you press the button. Is it what you expected? Printing the plan before you drive is a
-paper test built into every run, and it's your first diagnostic when something goes
-wrong: if the printed path is right and the robot still goes wrong, the bug is in the
-driving, not the planner. That makes two presses per driving test:
-the one in `RUN` starts the test and prints the plan; the one in the test is *go*.
+Read the path before you press. If it's right and the robot still goes wrong, the bug
+is in the driving, not the planner. That makes two presses per driving test: the one in
+`RUN` prints the plan, the one in the test is *go*.
 
 ## Activity · Read, simulate, then drive
 
 ### Step 1 · The sensor
 
-Add the import and the object to the start block. Then write a test —
-`test_rangefinder()` — that prints `rangefinder.distance()` fifty times, a tenth of
-a second apart, the way `test_sensors()` did in Lesson 2-1. Set the run line to it
-and hold a box in front of the robot at the distance of the next intersection, then
-take it away. Write both readings down and check that `OBSTACLE_CM` sits between
-them; change it if not.
+1. Add the import and the object to the start block.
+2. Write `test_rangefinder()`: print `rangefinder.distance()` fifty times, a tenth of a
+   second apart, as `test_sensors()` did in Lesson 2-1. Set the run line to it.
+3. Hold a box in front of the robot at the distance of the next intersection, then take
+   it away. Write both readings down.
+4. Check that `OBSTACLE_CM` sits between them; change it if not.
 
 ### Step 2 · Simulate the sensor
 
-Write `simulate_rangefinder()` — one line: `8.0` if `next_pos` is in
-`SIMULATED_OBSTACLES`, otherwise `50.0`. Then write `test_detect_once()` from the
-outline with the simulated sensor in the look-ahead line. Put the robot at `(0, 0)`
-facing North on an *empty* grid, set the run line to it, and read the planned path
-before the second press: `(2, 0)` is on it. The robot should turn to face East, drive
-to `(1, 0)`, face `(2, 0)`, "see" the pretend box, print the new path, and stop. Confirm two
-things on screen: the blocked list has grown, and the new path goes around.
+1. Write `simulate_rangefinder()`, one line: `8.0` if `next_pos` is in
+   `SIMULATED_OBSTACLES`, otherwise `50.0`.
+2. Write `test_detect_once()` from the outline, with the simulated sensor in the
+   look-ahead line.
+3. Put the robot at `(0, 0)` facing North on an *empty* grid and set the run line to it.
+   Before the second press, check that `(2, 0)` is on the planned path.
+4. It should face East, drive to `(1, 0)`, face `(2, 0)`, "see" the pretend box, print the
+   new path, and stop. Check that the blocked list has grown and the new path goes around.
 
-What's being simulated is only the sensor. The planner needs no simulation, because
-it was already tested in Lesson 5-6. Separating software bugs from hardware bugs
-saves enormous frustration.
+Only the sensor is simulated; the planner was already tested in Lesson 5-6. So a wrong
+reroute here is a code bug, not a hardware bug.
 
 ### Step 3 · The real sensor
 
-Change the look-ahead line to `rangefinder.distance()`. Put a box on one intersection
-of the printed path — `(2, 0)` again is a good choice — and press the button. Watch the
-robot stop, print "Rerouting...", print the new path, and stop. (Taking it is next
-lesson.)
+Change the look-ahead line to `rangefinder.distance()`. Put a box on the printed path
+(`(2, 0)` again works) and press the button. The robot should stop, print
+"Rerouting..." and the new path, and stop. Taking the new path is next lesson.
 
 <Reveal title="Check your test" hint="run it with the simulated sensor first">
 
@@ -323,8 +305,8 @@ def test_detect_once():
     print("All known obstacles:", BLOCKED)
 ```
 
-`8.0 if ... else 50.0` is a one-line `if` — an expression that picks one of two
-values. A four-line `if`/`else` with two `return`s is the same function.
+`8.0 if ... else 50.0` is a one-line `if` that picks one of two values. A four-line
+`if`/`else` with two `return`s works the same.
 
 </Reveal>
 
@@ -336,7 +318,7 @@ values. A four-line `if`/`else` with two `return`s is the same function.
     {text: 'Simulation is required by Python'},
     {text: 'To avoid writing the loop'},
   ]}
-  explanation="A simulated sensor lets you confirm the detection logic on screen. Once that's solid, real-sensor problems are clearly hardware, not logic — and the planner itself was already proven in Lesson 5-6."
+  explanation="A simulated sensor proves the detection logic on screen. After that, real-sensor problems are hardware, not logic. The planner was already proven in Lesson 5-6."
 />
 
 <TeacherNote title="Solution (teacher copy)">
@@ -425,8 +407,8 @@ Sense → decide → act is the loop behind every autonomous machine:
 ## Wrap-up
 
 - What three lines read the rangefinder? (Import, `get_default_rangefinder()`, `.distance()`.)
-- Which intersection does an obstacle reading refer to? (`next_pos` — the robot just turned to face it.)
-- What is the one line that tells the planner? (`add_blocked(next_pos)` — the same one the tests used.)
+- Which intersection does an obstacle reading refer to? (`next_pos`: the robot just turned to face it.)
+- What is the one line that tells the planner? (`add_blocked(next_pos)`, the same one the tests used.)
 - Why no "rebuild the graph" step? (The planner rebuilds from `BLOCKED` on every call.)
 
 <TeacherNote title="Calibrate the threshold ahead of class; simulate before hardware">
