@@ -6,9 +6,9 @@ DECK = {
         {'kind': 'title',
          'objectives': [
              'Match each line of `compute_bfs_path()` to a step of the paper method',
-             'Explain why `to_visit.pop(0)` (oldest first) matters, and what `pop()` would do instead',
-             'Explain why `if neighbor not in previous` is the whole "numbered once" rule',
-             'Write the walk-back so the path leaves the start out, and say why "already there" gives `[]`',
+             'Explain why `to_visit.pop(0)` (oldest first) matters, and what `pop()` would do',
+             'Explain why `if neighbor not in previous` is the "numbered once" rule',
+             'Write the walk-back so the path leaves the start out; say why "already there" gives `[]`',
              'Return `[]` when the destination is walled off',
              'Write `bfs_rings()` and use `print_grid()` to draw what the search found',
          ],
@@ -19,15 +19,15 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'From pencil to Python',
          'bullets': [
-             'The function is about **twenty lines**',
-             'There isn\'t a line in it you haven\'t already done with a pencil in Lesson 5-3',
-             'Build it in **three stages**, and run a paper test after each: it prints paths and step counts, and the robot stays on the desk',
-             'Finish by making the program **draw its grid of ring numbers**, to compare with your own',
+             'About **twenty lines**, each a step you did with a pencil in Lesson 5-3',
+             'Build it in **three stages**, with a paper test after each',
+             'Then the program **draws its ring numbers**, to compare with yours',
          ],
-         'callout': 'Every test is a paper test: check each printed line against your Lesson 5-3 trace',
+         'callout': 'Check each printed line against your Lesson 5-3 trace',
          'tone': 'teal',
-         'notes': 'Have students get out their Lesson 5-3 traces, the came-from table and the wall grid. '
-                  'They compare against both today.'},
+         'notes': 'A paper test prints paths and step counts; the robot stays on the desk. Have students '
+                  'get out their Lesson 5-3 traces, the came-from table and the wall grid. They compare '
+                  'against both today.'},
 
         {'kind': 'code', 'title': 'Skeleton, part 1: setup and search',
          'code': 'def compute_bfs_path(start, destination):\n'
@@ -69,8 +69,8 @@ DECK = {
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'Skeleton, part 3: bfs_rings()',
-         'lead': 'Under `compute_bfs_path()`, paste the two functions that draw the picture at the end '
-                 'of the lesson. The first is an outline:',
+         'lead': 'Under `compute_bfs_path()`, paste the two functions for the picture. The first is an '
+                 'outline:',
          'lead_h': 1.2,
          'code': 'def bfs_rings(start):\n'
                  '    """Ring number of every intersection reachable from\n'
@@ -84,9 +84,9 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Skeleton, part 4: print_grid() is given',
          'bullets': [
-             '`print_grid(rows, cols, blocked, numbers)` is formatting, not pathfinding: it is given, and **Module 6 uses it unchanged**',
-             'It prints the **far row first**, so `y` counts down the page and the picture lies the way the grid does in front of you',
-             '`"{:>3}".format(cell)` is "this value, right-aligned in three spaces"',
+             'Formatting, not pathfinding: given, and **Module 6 uses it unchanged**',
+             '**Far row first**, so the picture lies like the grid in front of you',
+             '`"{:>3}".format(cell)`: right-aligned in three spaces',
              'Blocked shows `X`; no entry shows `.`',
          ],
          'size': 20,
@@ -104,23 +104,26 @@ DECK = {
                  '                cell = "."\n'
                  '            line = line + "{:>3}".format(cell)\n'
                  '        print(line)',
-         'notes': 'The slide shows the loop that draws the rows. On the lesson page it sits under '
+         'notes': 'print_grid(rows, cols, blocked, numbers). It prints the far row first, so y counts '
+                  'down the page. The slide shows the loop that draws the rows. On the lesson page it sits under '
                   'the def line and a docstring (top line is the far row, y = 0 is the bottom line, X '
                   'for blocked, . for no entry), and five more lines after it print the dashed line and '
                   'the x numbers along the bottom. Students paste the whole function from the lesson page.'},
 
         {'kind': 'bullets', 'title': 'Every line is a pencil step',
          'bullets': [
-             '`previous` is the **came-from table**, first row already filled in: the start came from nowhere',
-             '`to_visit` is the **list beside the grid**, with the start on it',
-             'The loop is the rule you said out loud: **take the oldest one I haven\'t looked around yet; every neighbor with no number gets the next number**',
-             'Except: instead of writing a number, you write **where it came from**',
+             '`previous`: the **came-from table**; the start came from nowhere',
+             '`to_visit`: the **list beside the grid**',
+             'The loop: **take the oldest one; every neighbor with no number gets the next number**',
+             'But you write **where it came from**, not a number',
          ],
          'size': 24,
-         'callout': 'Have your Lesson 5-3 trace beside you: the came-from table and the list',
+         'callout': 'Keep your Lesson 5-3 trace beside you',
          'tone': 'teal',
-         'notes': 'Read the SEARCH part of the outline against the Lesson 5-3 trace, one comment at a '
-                  'time, before anyone types.'},
+         'notes': 'previous starts with its first row filled in: the start came from nowhere. to_visit '
+                  'starts with the start on it. The loop is the rule students said out loud in Lesson '
+                  '5-3: take the oldest one I haven\'t looked around yet. Read the SEARCH part of the '
+                  'outline against the trace, one comment at a time, before anyone types.'},
 
         {'kind': 'figure', 'title': 'Code on the left, pencil on the right',
          'figure': '/img/lesson-m5-05/code-pencil.svg',
@@ -129,15 +132,16 @@ DECK = {
                   'appear on the lesson page in the open, outside the reveal.'},
 
         {'kind': 'bullets', 'title': 'Two things to notice before you type',
-         'notes': 'Both points come straight back in the break-it activity: pop() instead of pop(0), and deleting the not-in-previous line.',
+         'notes': 'An intersection only gets an entry in previous when it is reached, so being a key '
+                  'means having a number. The 0 in pop(0) is the index of the front. Both points come '
+                  'straight back in the break-it activity: pop() instead of pop(0), and deleting the not-in-previous line.',
          'bullets': [
              '`previous` does **double duty**',
-             ['It records where each intersection came from',
-              'An intersection only gets an entry when it is reached, so "is a key in `previous`" means "has a number"',
-              'That is why `if neighbor not in previous` is the whole **numbered-once rule**'],
-             'The list is used as a **queue**',
-             ['On at the end with `append()`, off the front with `pop(0)`: the `0` is the index of the front',
-              'So a ring is always finished before the next one starts'],
+             ['A key in `previous` = **has a number**',
+              'So `if neighbor not in previous` is the **numbered-once rule**'],
+             'The list is a **queue**',
+             ['`append()` onto the end, `pop(0)` off the front',
+              'Each ring finishes before the next starts'],
          ],
          'size': 26},
 
@@ -153,28 +157,31 @@ DECK = {
                         'all: they aren\'t in the graph.'},
 
         {'kind': 'steps', 'title': 'Step 1 · Setup and the guard',
-         'notes': 'Run after every stage. Empty paths are right for now: the function ends with return [] until Step 3.',
+         'notes': 'The three cases: (0, 0) to (3, 3), (0, 0) to (0, 3), (2, 2) to (2, 2). clear_blocked() '
+                  'first, so the test means the same thing whatever ran before it. Run after every stage. '
+                  'Empty paths are right for now: the function ends with return [] until Step 3.',
          'steps': [
-             'Write steps 1 to 3 of the outline, and for now end the function with `return []`',
-             'The guard: a blocked start or destination isn\'t in the graph, so there is nothing to search. Return `[]` at once',
-             'Write `test_bfs_open()` for three open-grid cases: `(0, 0)` to `(3, 3)`, `(0, 0)` to `(0, 3)`, `(2, 2)` to `(2, 2)`. Print each path and `len(path)` next to the step count you expect',
-             'Start the test with `clear_blocked()`, so it means the same thing whatever ran before it. Set the run line to it',
+             'Steps 1 to 3 of the outline; end with `return []` for now',
+             'The guard: blocked start or destination? Not in the graph: return `[]`',
+             '`test_bfs_open()`: Tests 1 to 3, open grid; print each path and `len(path)` beside the expected count',
+             'Start it with `clear_blocked()`. Run it',
          ],
          'size': 20,
-         'callout': 'Three empty paths, three wrong step counts, no errors: the scaffold is standing',
+         'callout': 'Three empty paths, three wrong counts, no errors',
          'tone': 'green'},
 
         {'kind': 'steps', 'title': 'Step 2 · The search',
-         'notes': 'The 3 by 3 grid with (1, 1) blocked is the Lesson 5-3 trace, so the printed dictionary can be checked line by line against the table students wrote.',
+         'notes': 'test_came_from() clears the blocked list first. The dictionary should match keys in '
+                  'the same order. The test can stay. Step 3 uses the walled-off fact. '
+                  'The 3 by 3 grid with (1, 1) blocked is the Lesson 5-3 trace, so the printed dictionary can be checked line by line against the table students wrote.',
          'steps': [
-             'Add step 4, the loop. Temporarily, put `print(previous)` right after it',
-             'Write `test_came_from()`: clear the blocked list, block `(1, 1)`, and call `compute_bfs_path((0, 0), (2, 2))`',
-             'Set `ROWS` and `COLS` to 3 for a moment and run it. The dictionary should match your Lesson 5-3 came-from table **exactly, keys in the same order**',
-             'Put the settings back to 4 and take the print out. The test can stay',
+             'Add step 4, the loop, and a temporary `print(previous)` after it',
+             '`test_came_from()`: block only `(1, 1)`; plan `(0, 0)` to `(2, 2)`',
+             'Set `ROWS` and `COLS` to 3 and run: does it match your came-from table **exactly**?',
+             'Set them back to 4; remove the print',
          ],
          'size': 20,
-         'callout': 'Destination walled off? `to_visit` empties, the `while` ends, and `destination` never '
-                    'appears in `previous`. Keep that in mind for Step 3.',
+         'callout': 'Walled off? `to_visit` empties and `destination` never gets into `previous`',
          'tone': 'teal'},
 
         {'kind': 'steps', 'title': 'Step 3 · The walk-back',
@@ -182,22 +189,24 @@ DECK = {
          'lead': 'Steps 5 to 7 of the outline.',
          'lead_h': 0.65,
          'steps': [
-             'Start at the destination and follow `previous` back until you reach the start, appending as you go',
-             'Then **reverse**, because you collected the path backwards. Lists have a `reverse()` method that does it in place',
-             'Run `test_bfs_open()` again. Now the step counts should match',
+             'From the destination, follow `previous` back to the start, appending as you go',
+             'Then **reverse**: you collected it backwards. `reverse()` works in place',
+             'Run `test_bfs_open()` again: the step counts should match',
          ]},
 
         {'kind': 'bullets', 'title': 'Why stop at `start`, and not at `None`?',
-         'notes': 'The check on the next slide is the exit ticket.',
-         'lead': '`while current != start` or `while current is not None`: both would end the loop.',
-         'lead_h': 1.3,
+         'notes': 'Both conditions would end the loop. Stopping at the start means the start is never '
+                  'appended, which is Rule 2 from Lesson 5-4 with no trimming afterwards. When position '
+                  '== destination the loop never runs and the path is []. The check on the next slide '
+                  'is the exit ticket.',
+         'lead': '`while current != start`, not `while current is not None`:',
+         'lead_h': 1.0,
          'bullets': [
-             'Stopping **at** the start means the start is never appended',
-             'That is **Rule 2** from Lesson 5-4, with no trimming needed afterwards',
-             'And "already there" comes for free: when `position == destination`, the loop never runs and the path is `[]`',
+             'The start is never appended: **Rule 2**, no trimming',
+             '"Already there" is free: the loop never runs, so the path is `[]`',
          ],
          'size': 26,
-         'callout': 'The robot is already on the start. The path is the intersections to drive **to**.',
+         'callout': 'The robot is already on the start',
          'tone': 'teal'},
 
         {'kind': 'check',
@@ -224,7 +233,7 @@ DECK = {
              ['4 · wall across the grid', '`(0,0)` to `(3,0)`', '`(1, 0)`, `(1, 1)`', '7'],
              ['5 · destination walled off', '`(0,0)` to `(3,0)`', 'the whole column at x = 1', '0'],
          ],
-         'callout': 'The step counts have to match. The exact path may differ from yours and still be right.',
+         'callout': 'Step counts must match; the exact path may differ and still be right',
          'tone': 'orange',
          'notes': 'All five are grids students traced by hand in Lesson 5-3. test_bfs_walls() '
                   'add_blocked()s the two wall intersections and plans (0, 0) to (3, 0), then blocks the '
@@ -241,20 +250,20 @@ DECK = {
                  'Path: []\n'
                  'Steps: 0 (expect 0 -- no way through)',
          'code_size': 20,
-         'callout': 'Tests 3 and 5 both return `[]`, for different reasons: the walk-back never ran, or '
-                    'the destination was never reached',
+         'callout': 'Tests 3 and 5 both return `[]`: the walk-back never ran, or the destination was '
+                    'never reached',
          'tone': 'teal',
          'notes': 'Next lesson the test harness tells those two apart. The lesson page also shows the '
                   'expected output for Tests 1 to 3; the step counts are in the table on the previous '
                   'slide.'},
 
         {'kind': 'steps', 'title': 'Activity · Break it on purpose',
-         'lead': 'Once all five pass, break the function two ways. Put each back before the next.',
+         'lead': 'Once all five pass, break it two ways. Undo each before the next.',
          'lead_h': 0.65,
          'steps': [
              'Change `pop(0)` to `pop()`. Run **Test 4** and count the steps',
-             'Delete `if neighbor not in previous:` (keep the two lines under it, one indent level out). '
-             'Run **Test 1** again. If it hangs, stop it with Ctrl-C',
+             'Delete `if neighbor not in previous:` (keep the two lines under it, one level out). '
+             'Run **Test 1**. Hangs? Ctrl-C',
          ],
          'size': 22,
          'callout': 'Watch what happens, then explain it',
@@ -284,13 +293,14 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'The picture: bfs_rings()',
          'bullets': [
-             'The same search, but **no early stop**: no `break`, so it keeps going until every reachable intersection has a ring number',
-             'Instead of where each one came from, it records the **number itself**',
-             ['The start gets 0', 'Every intersection reached from `current` gets `current`\'s number plus one'],
-             'The dictionary it returns is the grid of numbers you wrote in Lesson 5-3, and `print_grid()` draws it',
+             'The same search with **no `break`**: it runs until every reachable intersection has a number',
+             'It records the **ring number**, not came-from',
+             ['Start: 0', 'Each new neighbor: `current`\'s number + 1'],
+             '`print_grid()` draws the result',
          ],
          'size': 24,
-         'notes': 'Students write the body from the outline: the SETUP and SEARCH of compute_bfs_path() '
+         'notes': 'The dictionary it returns is the grid of numbers students wrote in Lesson 5-3. '
+                  'Students write the body from the outline: the SETUP and SEARCH of compute_bfs_path() '
                   'with a rings dictionary in place of previous.'},
 
         {'kind': 'code', 'title': 'test_rings(): your wall grid, drawn by the program',
@@ -303,8 +313,8 @@ DECK = {
                  '    -------------\n'
                  '       0  1  2  3',
          'code_size': 24, 'width': 6.5,
-         'callout': 'That\'s your Lesson 5-3 wall grid. The path Test 4 printed is one route down these '
-                    'numbers, 1, 2, 3 ... to the 7.',
+         'callout': 'Your Lesson 5-3 wall grid. Test 4\'s path is one route down these numbers, 1, 2, '
+                    '3 ... to the 7.',
          'tone': 'green',
          'notes': 'Write the body of bfs_rings() first, then test_rings(). Ask students to trace Test 4\'s '
                   'path on the printed grid with a finger.'},
@@ -312,16 +322,16 @@ DECK = {
         {'kind': 'bullets', 'title': 'Optional: the BFS class',
          'tag': 'Optional extension',
          'bullets': [
-             '`BFS` is a class because it has setup to hold: the grid size and the blocked list',
+             '`BFS` has setup to hold: grid size and blocked list',
              '`Manhattan` got a class in Lesson 4-3 **only** to have the same shape, so one main program and one test harness work with either: that is **the swap**',
-             'Neither class remembers where the robot is: Rule 1 holds for classes too',
-             '**From here on, use your class**: `compute_bfs_path(...)` becomes `planner.compute_path(...)`',
+             'Neither remembers the robot\'s position (Rule 1)',
+             '**From here on, use your class**',
          ],
          'size': 24,
-         'callout': '`planner = BFS()`, then `planner.add_blocked((1, 1))`\n'
-                    '`path = planner.compute_path((0, 0), (3, 3))`',
+         'callout': '`compute_bfs_path(...)` becomes `planner.compute_path(...)`',
          'tone': 'teal',
-         'notes': 'Optional extension. The same four changes as every extension so far: functions move '
+         'notes': 'Optional extension. In code: planner = BFS(), then planner.add_blocked((1, 1)), then '
+                  'path = planner.compute_path((0, 0), (3, 3)). The same four changes as every extension so far: functions move '
                   'inside class BFS and gain self; shared variables move into __init__ as self.rows, '
                   'self.cols, self.blocked; inside methods they gain self.; outside, calls go through the '
                   'object. Manhattan also gets add_blocked() and clear_blocked() methods that deliberately '
