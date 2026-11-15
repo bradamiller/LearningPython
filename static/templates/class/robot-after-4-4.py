@@ -250,7 +250,7 @@ def test_square():
 # is told the robot's position every call. Pure arithmetic.
 
 class Manhattan:
-    """The Lesson 4-4 planner as a class.
+    """The Lesson 4-3 planner as a class.
 
     It holds NO state: compute_path() is told the robot's position
     every time. Manhattan is a class only so that it has the same
@@ -269,24 +269,82 @@ class Manhattan:
 
 planner = Manhattan()
 
-def test_paper_paths():
-    print(planner.compute_path((0, 0), (2, 3)))   # your trace table
-    print(planner.compute_path((0, 1), (3, 3)))
-    print(planner.compute_path((3, 3), (1, 0)))   # left and down
-
-def test_edge_cases():
-    print(planner.compute_path((2, 0), (2, 3)))   # same column
-    print(planner.compute_path((0, 2), (3, 2)))   # same row
-    print(planner.compute_path((1, 1), (1, 1)))   # same spot
-
-# --- Lesson 4-4: the test harness ---
-# run_test() asks the planner for a path and compares it
-# with one you traced by hand, printing PASS or FAIL. A
-# planner test from here on is a list of run_test() calls.
-
 def run_test(test_name, start, destination, expected):
     """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
+    actual = planner.compute_path(start, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+
+def test_planner():
+    # expected = your answer key, traced by hand
+    run_test("Leg 1",       (0, 0), (2, 3), [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)])
+    run_test("Leg 2",       (2, 3), (1, 0), [])   # your answer key
+    run_test("Same column", (2, 0), (2, 3), [])   # your answer key
+    run_test("Same row",    (0, 2), (3, 2), [])   # your answer key
+    run_test("Same spot",   (1, 1), (1, 1), [])   # your answer key
+
+
+# ===== NAVIGATOR =====
+# Drives a planned path, one intersection at a time, and hands
+# back where the robot ended up and which way it faces.
+HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
+
+def get_desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away."""
+    # 1. unpack position into x, y and next_pos into
+    #    next_x, next_y
+    # 2. one if per row of the table, each returning its
+    #    heading. North is: if next_y > y: return 0
+    # 3. (optional) none matched: raise ValueError, naming
+    #    both positions -- see "Catching mistakes early"
+    pass
+
+def test_headings():
+    for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
+        heading = get_desired_heading((1, 1), next_pos)
+        print("(1, 1) to", next_pos, ":", heading, HEADING_NAMES[heading])
+
+def turn_to(current_heading, desired_heading):
+    """STUB: pretend the robot turned. Lesson 4-5
+    replaces it."""
+    print("turning: from", HEADING_NAMES[current_heading],
+          "to:", HEADING_NAMES[desired_heading])
+    return desired_heading
+
+def fake_track_to_intersection():
+    """STUB for tracker.track_to_intersection(): print instead of
+    driving. Lesson 4-6 swaps in the real one."""
+    print("tracking to intersection")
+
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        # 1. desired_heading: which way to face next_pos
+        # 2. print("moving: from", current_position, "to:", next_pos,
+        #          "heading:", HEADING_NAMES[desired_heading])
+        # 3. turn: current_heading = turn_to(...)
+        # 4. drive there: fake_track_to_intersection()
+        current_position = next_pos     # the robot is there now
+    return current_position, current_heading
+
+# --- The main program: the delivery run ---
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+
+def test_delivery():
+    # 1. robot_position starts at (0, 0); robot_heading
+    #    starts at 0, North
+    # 2. for each delivery_destination in DELIVERY_STOPS:
+    #      plan the path from robot_position, and print it
+    #      drive it, and assign the pose it hands back
+    #      print "new position:", robot_position,
+    #            "heading:", HEADING_NAMES[robot_heading]
     pass
 
 # ===== RUN =====

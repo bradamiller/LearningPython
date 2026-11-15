@@ -71,17 +71,17 @@ is short of one of these, slow down there; every module after it builds on it.
 
 **Module 4 · Manhattan Navigation**
 
-- Problem decomposition: a class discussion splits "drive to a destination" into planning
-  and driving, with a list of tuples passed between them (4-0, with a callout at 4-3, 4-5
-  and 4-6)
-- Coordinates on the grid, and tuples and lists in Python (4-1, 4-2)
-- The Manhattan algorithm traced on paper, then coded as
-  `compute_manhattan_path()` (4-3)
-- A suite of tests that runs with no robot, and a failing test debugged (4-4)
-- `get_desired_heading()`, `turn_to()` and `drive_path()`, tested on screen and then
-  on the robot (4-5, 4-6)
-- The final project: four or more destinations, each planned, printed and driven
-  (4-7)
+- Problem decomposition: the program drawn as a tree and built from the top down, each
+  part a printing stub first (4-0)
+- The main program first, with tuples, a list of destinations, a `for` loop and two
+  values returned and unpacked (4-1)
+- A path built in a loop with `[]` and `append()` (4-2)
+- The Manhattan algorithm in every direction, with tests that compare against an answer
+  key traced on paper (4-3)
+- Indexing, `get_desired_heading()` and `drive_path()` (4-4), and `turn_to()` (4-5), all
+  checked on screen
+- The final project: the whole run on the robot, four or more destinations (4-6)
+- Tuples and lists side by side, and what a list variable really holds (4-7)
 
 **Module 5 · Pathfinding Around Obstacles**
 
@@ -109,7 +109,7 @@ The module projects are the natural places to stop, assess and regroup:
 | Module 1 | 1-12 | 5 | A Python project of the student's choice, planned, built, tested and presented |
 | Module 2 | 2-10 | 9 | Four reversals on the taped circle, built from the sensor and line-tracking sections |
 | Module 3 | 3-4 | 11 | A square on the grid that closes |
-| Module 4 | 4-7 | 14 | Navigation to four or more destinations |
+| Module 4 | 4-6 | 14 | Navigation to four or more destinations |
 | Capstone | 5-9 | 18 | Navigation around discovered obstacles, and a better second run |
 
 The [assessment page](/teacher-guide/assessment) has the rubrics for each one.

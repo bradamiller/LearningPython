@@ -27,20 +27,43 @@ def legend(X,Y,stops,start=(0,0),extra=None):
         b.append(f'<text class="n" x="{X+24}" y="{y+1}">leg {i+1}: {pos} → {d}' + (f'  <tspan class="sm">{n} steps</tspan>' if extra=='steps' else '') + '</text>')
         pos=d
     return b
-# --- 4-0 overview map ---
-g=G(110,96,sp=60,pad=30)
-stops=[(2,0),(2,3),(0,3)]
-b=legs_map(g,stops)
-X=380
+# --- 4-0 overview map: the five DELIVERY_STOPS of Lesson 4-1 ---
+# Five legs share roads, so each leg is nudged a few pixels off the road's
+# centre line (OFF) to keep every leg visible.
+COL5=["#4C8BF5","#2E7D32","#C77C02","#8E44AD","#D1182C"]
+OFF=[-8,-4,0,4,8]
+g=G(110,96,sp=70,pad=30)
+stops=[(2,3),(1,0),(3,1),(2,2),(0,0)]
+b=g.base()
+pos=(0,0)
+for i,d in enumerate(stops):
+    corner=(d[0],pos[1])
+    pts=[pos,corner,d] if corner not in (pos,d) else [pos,d]
+    o=OFF[i]
+    dd='M '+' L '.join(f'{x+o} {y+o}' for x,y in (g.p(*q) for q in pts))
+    b.append(f'<path d="{dd}" fill="none" stroke="{COL5[i]}" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>')
+    pos=d
+x,y=g.p(0,0)
+b.append(f'<use href="#pcXRP" transform="translate({x} {y}) rotate(0) scale(0.36)"/>')
+for i,d in enumerate(stops):
+    px,py=g.p(*d)
+    if d==(0,0): px,py=px+24,py-24
+    b.append(f'<circle cx="{px}" cy="{py}" r="12" fill="{COL5[i]}" stroke="#FFFFFF" stroke-width="2"/><text class="nb" x="{px}" y="{py+4.5}" text-anchor="middle" style="fill:#FFFFFF">{i+1}</text>')
+X=400
 b+=[f'<text class="h" x="{X}" y="60">Where Module 4 is headed</text>',
-    f'<text class="nb" x="{X}" y="88">Three deliveries, in order:</text>']
-b+=legend(X,124,stops)
-b+=[f'<text class="nb" x="{X}" y="210">Start: home, (0, 0), facing North.</text>',f'<text class="n" x="{X}" y="236">For each destination the robot plans</text>',
-    f'<text class="n" x="{X}" y="253">a path from where it is, drives it,</text>',
-    f'<text class="n" x="{X}" y="270">and remembers where it ended up.</text>',
-    f'<text class="n" x="{X}" y="287">No remote control, no steering.</text>']
-open(OUTDIR+'delivery-overview.svg','w').write(svg('Module 4: visit three destinations in order',
- 'A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3). Beside it: three deliveries, in order, one leg each. For each destination the robot plans a path from where it is, drives it, and remembers where it ended up.',b,H=350))
+    f'<text class="nb" x="{X}" y="88">Five deliveries, in order:</text>']
+pos=(0,0)
+for i,d in enumerate(stops):
+    yy=124+i*26
+    b.append(f'<rect x="{X}" y="{yy-12}" width="16" height="16" rx="4" fill="{COL5[i]}"/>')
+    b.append(f'<text class="n" x="{X+24}" y="{yy+1}">leg {i+1}: {pos} → {d}</text>')
+    pos=d
+b+=[f'<text class="nb" x="{X}" y="264">Start: home, (0, 0), facing North.</text>',
+    f'<text class="n" x="{X}" y="290">For each destination the robot plans</text>',
+    f'<text class="n" x="{X}" y="307">a path from where it is, drives it,</text>',
+    f'<text class="n" x="{X}" y="324">and remembers where it ended up.</text>']
+open(OUTDIR+'delivery-overview.svg','w').write(svg('Module 4: visit five destinations in order',
+ 'A 4 by 4 grid with (0, 0) at the bottom-left. The robot starts at home, (0, 0), facing north. Each leg goes across first, then up or down. Leg 1 goes to (2, 3), leg 2 to (1, 0), leg 3 to (3, 1), leg 4 to (2, 2), and leg 5 back home to (0, 0). For each destination the robot plans a path from where it is, drives it, and remembers where it ended up.',b,H=370))
 # --- 4-7 project map ---
 g=G(110,96,sp=60,pad=30)
 stops=[(2,0),(2,3),(0,3),(0,0)]

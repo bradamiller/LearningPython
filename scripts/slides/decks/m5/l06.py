@@ -29,7 +29,7 @@ DECK = {
          'notes': 'Have pairs actually compare paths on screen before showing the slide.'},
 
         {'kind': 'code', 'title': '...and one test',
-         'lead': 'Module 4\'s test from Lesson 4-4, still in your file as `run_test()`:',
+         'lead': 'Module 4\'s test from Lesson 4-3, still in your file as `run_test()`:',
          'lead_h': 0.8,
          'code': 'if actual == expected:\n'
                  '    print(test_name, "- PASS")',
@@ -315,7 +315,8 @@ DECK = {
                     'harness just showed **why this module exists**.',
          'tone': 'green',
          'notes': 'Manhattan is doing exactly what it was built to do in Module 4. The harness shows it '
-                  'on screen, with the path printed.'},
+                  'on screen, with the path printed. On screen, each result also follows a '
+                  '"computing path from:" line printed by Module 4\'s planner; the slide leaves them out.'},
 
         {'kind': 'code', 'title': 'The same swap in a main program',
          'lead': '`navigate()` is the skeleton\'s last function, given: it plans with whatever planner it\'s '

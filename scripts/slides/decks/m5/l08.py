@@ -108,7 +108,7 @@ DECK = {
                   'self.heading and drop out of the parameters and the return; the driving calls go '
                   'through self.line_track. and self.get_desired_heading() / self.turn_to(); the planner '
                   'calls are planner.add_blocked() and planner.compute_path(). It returns only the '
-                  'two counts, and the caller reads navigator.position afterwards, as in Lesson 4-7.'},
+                  'two counts, and the caller reads navigator.position afterwards, as in Lesson 4-6.'},
 
         {'kind': 'bullets', 'title': 'Two parameters that look odd',
          'bullets': [

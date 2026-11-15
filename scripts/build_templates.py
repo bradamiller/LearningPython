@@ -848,59 +848,38 @@ C = ("class",)   # class-track-only ops
 # lesson that specify it. Comment lines stay <= 62 characters.
 
 CLASS_OVERRIDES = {
-    # 4-6 extension: "drive_path([(1, 0)], (0, 0), 0) becomes
-    # navigator.drive_path([(1, 0)]), and the print afterwards reads
-    # navigator.position and navigator.heading. The planner call in
-    # test_drive_path() is handed navigator.position."
-    "test_drive_path": dict(frm="4-6", outline='''
-def test_drive_path():
-    destination = (2, 3)
-
-    path = planner.compute_path(navigator.position, destination)
-    print("Path:", path)
-
-    board.wait_for_button()       # read the path, THEN press
-
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-'''),
-    # 4-6: get_desired_heading(self, next_pos) "has lost its position
-    # parameter ... the object already knows both"; the 4-5 test
-    # asks from (1, 1), so it builds a navigator standing there.
-    "test_headings": dict(frm="4-6", outline=None, body='''
+    # 4-6 extension: get_desired_heading(self, next_pos) has lost
+    # its position parameter ("position is self.position now"), so
+    # the 4-4 test asks from (1, 1) with a navigator standing there.
+    "test_headings": dict(frm="4-6", outline='''
 def test_headings():
     nav = Navigator((1, 1), 0)
     for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
         heading = nav.get_desired_heading(next_pos)
-        print("(1, 1) ->", next_pos, ":", heading, HEADING_NAMES[heading])
-    # nav.get_desired_heading((2, 2))   # diagonal: stops here
+        print("(1, 1) to", next_pos, ":", heading, HEADING_NAMES[heading])
 '''),
-    # 4-7 teacher copy: "test_delivery() is handed navigator.position
-    # by the planner call, drives with navigator.drive_path(path),
-    # and prints navigator.position -- there is no
-    # position, heading = ... line to get half right."
-    "test_delivery": dict(frm="4-7", outline='''
+    # 4-6 extension: "Where a later lesson says drive_path(path,
+    # robot_position, robot_heading), you write
+    # navigator.drive_path(path), and where it reads robot_position
+    # you read navigator.position" (and the side-by-side loop).
+    "test_delivery": dict(frm="4-6", outline='''
 def test_delivery():
-    # the navigator starts at home, facing North
-    # plan the FIRST leg and print it; wait for the button
-    # for each destination:
-    #     compute the path from navigator.position
-    #     print it
+    # the navigator starts at (0, 0) facing North: it is
+    #    navigator = Navigator((0, 0), 0), under the class
+    # for each delivery_destination in DELIVERY_STOPS:
+    #     plan the path from navigator.position, and print it
     #     navigator.drive_path(path) -- it keeps the record
-    #     print where the navigator arrived
+    #     print "new position:", navigator.position,
+    #           "heading:", HEADING_NAMES[navigator.heading]
     pass
 ''', body='''
 def test_delivery():
-    print("Planned path for leg 1:",
-          planner.compute_path(navigator.position, DESTINATIONS[0]))
-    board.wait_for_button()
-
-    for dest in DESTINATIONS:
-        print("--- Navigating to", dest, "---")
-        path = planner.compute_path(navigator.position, dest)
-        print("Path:", path)
+    for delivery_destination in DELIVERY_STOPS:
+        path = planner.compute_path(navigator.position, delivery_destination)
+        print(path)
         navigator.drive_path(path)
-        print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
+        print("new position:", navigator.position,
+              "heading:", HEADING_NAMES[navigator.heading])
 '''),
     # 5-5 extension: "one more test -- test_two_planners() -- that
     # runs the wall case against both objects: create a Manhattan()
@@ -991,7 +970,7 @@ def test_detect_once():
 '''),
     # 5-8: the function "wants to be a method of [Navigator] ... It
     # returns only the two counts; the caller reads
-    # navigator.position afterwards, as in Lesson 4-7."
+    # navigator.position afterwards, as in Lesson 4-6."
     "test_navigate": dict(frm="5-8", outline=None, body='''
 def test_navigate():
     for intersection in KNOWN_OBSTACLES:
@@ -1192,9 +1171,9 @@ CLASS_RULES = [
     ("2-9", None, NOT_ATTR + r"KP\b", "tracker.kp"),
     ("2-9", None, NOT_ATTR + r"BASE_EFFORT\b", "tracker.base_effort"),
     ("2-9", None, NOT_ATTR + r"TURN_EFFORT\b", "tracker.turn_effort"),
-    # 4-4: "each compute_manhattan_path( in them becomes
-    # planner.compute_path("
-    ("4-4", None, NOT_ATTR + r"compute_manhattan_path\(", "planner.compute_path("),
+    # 4-3: "Each compute_manhattan_path( in your file becomes
+    # planner.compute_path(, in run_test() and in test_delivery()"
+    ("4-3", None, NOT_ATTR + r"compute_manhattan_path\(", "planner.compute_path("),
     # 5-5: "in Lesson 4-4's run_test() change planner.compute_path(...)
     # to Manhattan().compute_path(...)"
     ("5-5", {"run_test"}, r"planner\.compute_path\(", "Manhattan().compute_path("),
@@ -1239,10 +1218,14 @@ GIVEN_IN_FULL = {
     "test_turn": ("2-9: Module 2 test, given in full in the skeleton", None),
     "test_course": ("2-9: Module 2 test, given in full in the skeleton", None),
     "set_threshold": ("2-7: the global-keyword demo; its body is the lesson text", None),
-    "compute_manhattan_path": ("4-3: the skeleton gives the east loop finished", None),
-    "test_paper_paths": ("4-3: given in full in the skeleton", None),
-    "test_edge_cases": ("4-3: given in full in the skeleton", None),
-    "test_drive_path": ("4-6: the plan, print, button, drive shape, given in full", None),
+    "compute_manhattan_path": ("4-1: a printing stub; 4-2: the skeleton gives the east loop", None),
+    "drive_path": ("4-1: a printing stub; 4-4 gives the loop's last two lines with the steps as comments", None),
+    "turn_to": ("4-4: a printing stub, given in full until 4-5 outlines the loop", ("4-4", "4-4")),
+    "fake_track_to_intersection": ("4-4: a printing stub, given in full", None),
+    "fake_turn_clockwise": ("4-5: a printing stub, given in full", None),
+    "test_planner": ("4-2: given in full; 4-3: given with blanks for the answer key", None),
+    "run_test": ("4-3: given in full in the skeleton", None),
+    "test_headings": ("4-4: given in full in the skeleton", None),
     "compute_bfs_path": ("5-4: the placeholder body is given ('it isn't the function yet')", ("5-4", "5-4")),
     "print_grid": ("5-5: 'print_grid() is given -- it's formatting, not pathfinding'", None),
     "run_all_tests": ("5-6: the suite is given ('the same program'); 6-3/6-5 edit it", None),
@@ -1374,53 +1357,75 @@ RECIPE = [
         Func("test_one_side", "3-4"),
         Func("test_square", "3-4"),
     ]),
-    ("4-3", [
-        Banner("MANHATTAN PLANNER", "4-3", "===== MANHATTAN PLANNER ====="),
-        # 4-3 gives the east loop finished and both tests in full
-        # (Brad, 2026-11-05: soften 4-3); students write the rest
-        Func("compute_manhattan_path", "4-3", full=True),
-        Func("test_paper_paths", "4-3", full=True),
-        Func("test_edge_cases", "4-3", full=True),
+    ("4-1", [
+        # the main program first, over two stubs given in full
+        # (Brad, 2026-11-14: Module 4 is top down)
+        Banner("MANHATTAN PLANNER", "4-1", "===== MANHATTAN PLANNER ====="),
+        Func("compute_manhattan_path", "4-1", full=True, pick=1),
+        Banner("NAVIGATOR", "4-1", "===== NAVIGATOR ====="),
+        Func("drive_path", "4-1", full=True, pick=1),
+        Banner("MAIN", "4-1", "--- The main program"),
+        Setting("DELIVERY_STOPS", "4-1"),
+        Func("test_delivery", "4-1"),
     ]),
-    ("4-4", [
+    ("4-2", [
+        # the planner: east given, north to write
+        Func("compute_manhattan_path", "4-2", full=True, replace=True),
+        Func("test_planner", "4-2", full=True, after="compute_manhattan_path"),
+    ]),
+    ("4-3", [
+        # "Add the two new comments inside compute_manhattan_path()"
+        EditOutline("compute_manhattan_path", "4-3", "    # North: copy east",
+                    "    # West: copy east, flip < to > and + to -\n\n    # North: copy east",
+                    r"# West: copy east, flip < to > and \+ to -"),
+        EditOutline("compute_manhattan_path", "4-3", "    return path",
+                    "    # South: copy north, flip < to > and + to -\n\n    return path",
+                    r"# South: copy north, flip < to > and \+ to -"),
+        Func("run_test", "4-3", full=True, after="compute_manhattan_path"),
+        Func("test_planner", "4-3", full=True, replace=True),
         # class track: "Paste it in place of the
         # compute_manhattan_path() function (keep your tests)"
         Delete("banner:MANHATTAN PLANNER", tracks=C),
         Delete("compute_manhattan_path", tracks=C),
-        Banner("MANHATTAN PLANNER", "4-4", "MANHATTAN PLANNER (class version)",
-               before="test_paper_paths", tracks=C),
-        Class("Manhattan", "4-4", ["compute_path"], after="banner:MANHATTAN PLANNER", tracks=C),
-        Object("planner", "4-4", after="Manhattan", tracks=C),
-        Banner("L4-4", "4-4", "--- Lesson 4-4:"),
-        Func("run_test", "4-4"),
-        Invent("test_planner", "4-4"),
+        Banner("MANHATTAN PLANNER", "4-3", "MANHATTAN PLANNER (class version)",
+               before="run_test", tracks=C),
+        Class("Manhattan", "4-3", ["compute_path"], after="banner:MANHATTAN PLANNER", tracks=C),
+        Object("planner", "4-3", after="Manhattan", tracks=C),
+    ]),
+    ("4-4", [
+        # "Put these above the drive_path() function"
+        Setting("HEADING_NAMES", "4-4", before="drive_path"),
+        Func("get_desired_heading", "4-4", before="drive_path"),
+        Func("test_headings", "4-4", full=True, before="drive_path"),
+        Func("turn_to", "4-4", full=True, before="drive_path"),
+        Func("fake_track_to_intersection", "4-4", full=True, before="drive_path"),
+        Func("drive_path", "4-4", full=True, replace=True),
+        EditOutline("test_delivery", "4-4", '"heading:", robot_heading',
+                    '"heading:", HEADING_NAMES[robot_heading]',
+                    r"HEADING_NAMES\[robot_heading\]\)"),
     ]),
     ("4-5", [
-        Banner("NAVIGATOR", "4-5", "===== NAVIGATOR ====="),
-        Setting("HEADING_NAMES", "4-5"),
-        Func("get_desired_heading", "4-5"),
-        Invent("test_headings", "4-5"),
+        Func("fake_turn_clockwise", "4-5", full=True, after="fake_track_to_intersection"),
+        Func("turn_to", "4-5", replace=True),
     ]),
     ("4-6", [
-        Banner("L4-6", "4-6", "--- Lesson 4-6:"),
-        Func("turn_to", "4-6"),
-        Func("drive_path", "4-6"),
-        Func("test_drive_path", "4-6", full=True),
-        # class track: "paste it in place of the three functions
-        # (keep HEADING_NAMES and your tests)"
+        # "change fake_turn_clockwise() to turn_clockwise()" and
+        # "change fake_track_to_intersection() to
+        # track_to_intersection()"
+        EditOutline("turn_to", "4-6", "fake_turn_clockwise()", "turn_clockwise()",
+                    r"change `fake_turn_clockwise\(\)` to `turn_clockwise\(\)`"),
+        EditOutline("drive_path", "4-6", "fake_track_to_intersection()", "track_to_intersection()",
+                    r"change `fake_track_to_intersection\(\)` to `track_to_intersection\(\)`"),
+        # class track: "Paste this in place of get_desired_heading(),
+        # turn_to() and drive_path() (keep HEADING_NAMES and your
+        # tests)"
         Delete("banner:NAVIGATOR", tracks=C),
         Delete("get_desired_heading", tracks=C),
-        Delete("banner:L4-6", tracks=C),
         Delete("turn_to", tracks=C), Delete("drive_path", tracks=C),
         Banner("NAVIGATOR", "4-6", "NAVIGATOR (class version)", before="HEADING_NAMES", tracks=C),
         Class("Navigator", "4-6", ["get_desired_heading", "turn_to", "drive_path"],
               after="HEADING_NAMES", tracks=C),
         Object("navigator", "4-6", after="Navigator", tracks=C),
-    ]),
-    ("4-7", [
-        Banner("L4-7", "4-7", "--- Lesson 4-7:"),
-        Setting("DESTINATIONS", "4-7"),
-        Func("test_delivery", "4-7"),
     ]),
     ("5-2", [
         Banner("GRID GRAPH", "5-2", "===== GRID GRAPH ====="),
@@ -1758,7 +1763,7 @@ file is the same as the module's last lesson.
 Two tracks, because the course has two. The **function track** is the course
 everyone does: each section is plain functions and settings. The **class track**
 is for students who take every *optional extension* — `LineSensor` (2-7),
-`LineTrack` (2-9), `Manhattan` (4-4), `Navigator` (4-6), `BFS` (5-5), the class
+`LineTrack` (2-9), `Manhattan` (4-3), `Navigator` (4-6), `BFS` (5-5), the class
 harness (5-6) and `Dijkstra` (6-5). On that track a class skeleton replaces the
 function section, the object is created right under its class, and the tests
 call the object (`tracker.track_to_intersection()`,
@@ -1812,31 +1817,8 @@ def render_page(rendered):
             module,
             link("function", "robot-end-of-module-%d.py" % module),
             link("class", "robot-end-of-module-%d.py" % module)))
-    out += test_module_section()
     out.append("")
     return "\n".join(out)
-
-
-def test_module_section():
-    """The Module 4 test (top-down trial) forks from the end of Module 3;
-    scripts/build_test_module_templates.py writes its templates. List what is
-    there, if anything."""
-    base = os.path.join(OUT, "test-module-04")
-    names = sorted(os.path.basename(p) for p in glob.glob(os.path.join(base, "function", "*.py")))
-    if not names:
-        return []
-    out = ["\n## Module 4 test · Top-down (trial)\n",
-           "The trial version of Module 4 picks up from the end of Module 3. Built by "
-           "`scripts/build_test_module_templates.py`.\n",
-           "| After lesson | Function track | Class track |", "|---|---|---|"]
-    for name in names:
-        n = int(re.search(r"4-(\d+)", name).group(1))
-        title = re.search(r'^title: "Lesson 4-\d+ · (.*)"', open(glob.glob(os.path.join(
-            DOCS, "test-module-04", "lesson-%02d-*.mdx" % n))[0]).read(), re.M).group(1)
-        out.append("| 4-%d · %s | [%s](pathname:///templates/test-module-04/function/%s) | "
-                   "[%s](pathname:///templates/test-module-04/class/%s) |"
-                   % (n, title, name, name, name, name))
-    return out
 
 
 def link(track, name):
@@ -2049,9 +2031,7 @@ SMOKE = {
         "test_reversal", "test_final_project"],
     3: ["test_first_intersection", "test_arrive_and_turn", "test_two_by_hand",
         "test_drive_run", "test_l_shape", "test_my_path", "test_one_side", "test_square"],
-    4: ["test_paper_paths", "test_edge_cases", "test_planner",
-        "test_headings", "test_drive_path",
-        "test_delivery"],
+    4: ["test_planner", "test_headings", "test_delivery"],
     5: ["test_grid_graph", "test_blocked_graph", "test_bfs_open", "test_bfs_walls",
         "test_rings", "test_harness", "test_swap", "test_detect_once", "test_navigate",
         "test_capstone_paper", "test_capstone"],
@@ -2061,8 +2041,8 @@ SMOKE = {
 SMOKE_CLASS_EXTRA = {5: ["test_two_planners"]}
 
 PAPER = {
-    4: ("test_planner", ["Forward right - PASS", "Backward left - PASS", "Same row - PASS",
-                         "Same column - PASS", "Same spot - PASS", "One step - PASS"], ["FAIL"]),
+    4: ("test_planner", ["Leg 1 - PASS", "Leg 2 - PASS", "Same column - PASS",
+                         "Same row - PASS", "Same spot - PASS"], ["FAIL"]),
     5: ("test_harness", ["Manhattan: 4 of 6 passed", "BFS: 6 of 6 passed"], []),
     6: ("test_three_planners", ["Manhattan: 4 of 7 passed", "BFS: 6 of 7 passed",
                                 "Dijkstra: 7 of 7 passed"], []),

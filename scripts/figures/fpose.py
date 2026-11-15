@@ -49,7 +49,7 @@ open(OUTDIR + 'pose.svg', 'w').write(svg(
     'heading, 1 = East. Below: position, heading = drive_path(...), drive_path hands back the pose.',
     b, W=640, H=320))
 
-# Module 4 test (top-down trial), Lesson 4-1: the same figure with the trial's
+# Module 4, Lesson 4-1: the same figure with the main program's
 # variable names, robot_position and robot_heading. -> static/img/lesson-m4t-01/pose-robot.svg
 robot = open(OUTDIR + 'pose.svg').read()
 old_code = f'<text class="m" x="{X}" y="278">position, heading = drive_path(...)</text>'

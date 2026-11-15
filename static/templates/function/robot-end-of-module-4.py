@@ -1,5 +1,5 @@
-# robot.py after Lesson 4-7 (function track): every skeleton
-# through Lesson 4-7 pasted in, nothing written yet.
+# robot.py after Lesson 4-6 (function track): every skeleton
+# through Lesson 4-6 pasted in, nothing written yet.
 
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
@@ -267,15 +267,14 @@ def test_square():
 # ===== MANHATTAN PLANNER =====
 # Plans a route across the grid: given where the robot is and
 # where it should go, returns the list of (x, y) tuples to
-# drive to, across first and then up or down. Pure arithmetic --
-# nothing in here touches a sensor or a motor, so every test
-# in this section runs on screen with the robot sitting still.
+# drive to. Nothing in here touches a sensor or a motor.
 
 def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
+    print("computing path from:", start, "to:", destination)
     path = []
-    x, y = start              # where the robot is now
+    x, y = start              # where the plan is now
     dest_x, dest_y = destination   # where it is going
 
     # East: keep stepping right until x matches dest_x
@@ -291,104 +290,90 @@ def compute_manhattan_path(start, destination):
 
     return path
 
-def test_paper_paths():
-    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table
-    print(compute_manhattan_path((0, 1), (3, 3)))
-    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down
-
-def test_edge_cases():
-    print(compute_manhattan_path((2, 0), (2, 3)))   # same column
-    print(compute_manhattan_path((0, 2), (3, 2)))   # same row
-    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
-
-# --- Lesson 4-4: the test harness ---
-# run_test() asks the planner for a path and compares it
-# with one you traced by hand, printing PASS or FAIL. A
-# planner test from here on is a list of run_test() calls.
-
 def run_test(test_name, start, destination, expected):
     """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    pass
+    actual = compute_manhattan_path(start, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+
+def test_planner():
+    # expected = your answer key, traced by hand
+    run_test("Leg 1",       (0, 0), (2, 3), [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)])
+    run_test("Leg 2",       (2, 3), (1, 0), [])   # your answer key
+    run_test("Same column", (2, 0), (2, 3), [])   # your answer key
+    run_test("Same row",    (0, 2), (3, 2), [])   # your answer key
+    run_test("Same spot",   (1, 1), (1, 1), [])   # your answer key
 
 
 # ===== NAVIGATOR =====
-# Drives a planned path. The MANHATTAN PLANNER section says
-# WHERE to go (a list of intersections); this section works
-# out which way to face at each one and does the driving with
-# the LINE TRACKING functions. It is the only code that knows
-# the robot's position and heading, and it hands both back.
+# Drives a planned path, one intersection at a time, and hands
+# back where the robot ended up and which way it faces.
 HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
 def get_desired_heading(position, next_pos):
     """Return the heading (0-3) that points from position to
     next_pos, which must be one step away."""
-    # 1. x_diff and y_diff: next_pos minus position
-    # 2. one if per direction, from the table above; each
-    #    checks BOTH differences, because the other one is 0
+    # 1. unpack position into x, y and next_pos into
+    #    next_x, next_y
+    # 2. one if per row of the table, each returning its
+    #    heading. North is: if next_y > y: return 0
     # 3. (optional) none matched: raise ValueError, naming
     #    both positions -- see "Catching mistakes early"
     pass
 
-# --- Lesson 4-6: turn to a heading, drive a path ---
-# turn_to() turns a quarter turn at a time, with the LINE
-# TRACKING turns, until the robot faces the heading it
-# needs. drive_path() is the loop: for each
-# intersection, face it, arrive with track_to_intersection(),
-# and record the new position. Both hand back what they
-# changed, because the caller keeps the only record.
+def test_headings():
+    for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
+        heading = get_desired_heading((1, 1), next_pos)
+        print("(1, 1) to", next_pos, ":", heading, HEADING_NAMES[heading])
 
 def turn_to(current_heading, desired_heading):
     """Turn clockwise a quarter turn at a time until
     current_heading is desired_heading; return the new
     heading."""
     # while current_heading is not desired_heading:
-    #     one turn_clockwise()
+    #     turn_clockwise()
     #     current_heading goes up by 1, wrapping 3 back to 0
     # return current_heading
     pass
 
-def drive_path(path, position, heading):
-    """Turn and drive through every intersection in path, from
-    position facing heading; return the final (position, heading)."""
-    # for each next_pos in path:
-    #     1. desired_heading = get_desired_heading(position, next_pos)
-    #     2. heading = turn_to(heading, desired_heading)
-    #     3. arrive: track_to_intersection()
-    #     4. position = next_pos -- the robot is there now
-    # return position, heading
-    pass
+def fake_track_to_intersection():
+    """STUB for track_to_intersection(): print instead of
+    driving. Lesson 4-6 swaps in the real one."""
+    print("tracking to intersection")
 
-def test_drive_path():
-    position = (0, 0)
-    heading = 0                   # facing North
-    destination = (2, 3)
+def fake_turn_clockwise():
+    """STUB for turn_clockwise(): print instead of
+    turning. Lesson 4-6 swaps in the real one."""
+    print("turning clockwise")
 
-    path = compute_manhattan_path(position, destination)
-    print("Path:", path)
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        # 1. desired_heading: which way to face next_pos
+        # 2. print("moving: from", current_position, "to:", next_pos,
+        #          "heading:", HEADING_NAMES[desired_heading])
+        # 3. turn: current_heading = turn_to(...)
+        # 4. drive there: track_to_intersection()
+        current_position = next_pos     # the robot is there now
+    return current_position, current_heading
 
-    board.wait_for_button()       # read the path, THEN press
-
-    position, heading = drive_path(path, position, heading)
-    print("Arrived at:", position, "facing", HEADING_NAMES[heading])
-
-# --- Lesson 4-7: final project, the delivery run ---
-# The module project: visit DESTINATIONS in order, planning
-# each leg with the MANHATTAN PLANNER from wherever the last
-# leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work. Built in three
-# tested steps: one leg, two legs, then a loop.
-DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
+# --- The main program: the delivery run ---
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
 
 def test_delivery():
-    # position and heading start at home, facing North
-    # plan the FIRST leg and print it; wait for the button
-    # for each destination:
-    #     compute the path from where the robot is
-    #     print it
-    #     drive it
-    #     ... and keep position and heading up to date
-    #     print where the robot arrived
+    # 1. robot_position starts at (0, 0); robot_heading
+    #    starts at 0, North
+    # 2. for each delivery_destination in DELIVERY_STOPS:
+    #      plan the path from robot_position, and print it
+    #      drive it, and assign the pose it hands back
+    #      print "new position:", robot_position,
+    #            "heading:", HEADING_NAMES[robot_heading]
     pass
 
 # ===== RUN =====

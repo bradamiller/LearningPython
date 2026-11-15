@@ -72,7 +72,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | f47.py | short-way.svg | — |
 | fharness.py | test-harness.svg | — |
 | first.py | first-drive.svg | /img/lesson-08/first-drive.svg |
-| fmap.py | delivery-overview.svg | /img/lesson-m4-00/delivery-overview-xy.svg |
+| fmap.py | delivery-overview.svg | /img/lesson-m4-00/delivery-stops-xy.svg (five DELIVERY_STOPS, 2026-11-15) |
 | fmap.py | delivery-run.svg | /img/lesson-m4-07/delivery-run-xy.svg |
 | fmap.py | told-not-remembered.svg | no longer used (was /img/lesson-m4-04/told-not-remembered-xy.svg, dropped 2026-11-10) |
 | fdecomp.py | decomposition.svg, decomposition-1..4.svg | /img/lesson-m4-05/decomposition.svg (page, a `<TreeFigure>` that opens a level per click); scripts/slides/decks/m4/fig/l05-decomp-1..4.svg (deck, one slide per level) |

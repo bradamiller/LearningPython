@@ -80,8 +80,8 @@ DECK = {
                  '    # destination for the next leg\n'
                  '    pass',
          'code_size': 16,
-         'notes': 'The name is CAPSTONE_DESTINATIONS because DESTINATIONS is already in the file: '
-                  'Lesson 4-7\'s delivery run still reads it, and a finished section is not edited '
+         'notes': 'The name is CAPSTONE_DESTINATIONS because Module 4\'s test_delivery() still '
+                  'reads DELIVERY_STOPS, and a finished section is not edited '
                   'from another one. test_capstone() is the rest of the skeleton, on the next slide.'},
 
         {'kind': 'code', 'title': 'The project is a test: test_capstone()',
@@ -200,8 +200,8 @@ DECK = {
              '`KNOWN_OBSTACLES = []`, then Run 2 with the printed list typed in',
          ],
          'size': 20,
-         'notes': 'If something breaks in the full run, you won\'t know which piece. Level 1 is Lesson '
-                  '4-7\'s paper test on today\'s destinations with the BFS planner; with nothing '
+         'notes': 'If something breaks in the full run, you won\'t know which piece. Level 1 is Module '
+                  '4\'s on-screen run on today\'s destinations with the BFS planner; with nothing '
                   'blocked the four legs are 4, 2, 3 and 3 steps (the page has that in a closed '
                   'reveal). Level 2: the simulated sensor goes in navigate_with_detection()\'s '
                   'look-ahead line (Lesson 5-8, step 1); verify paths compute, pretend obstacles '

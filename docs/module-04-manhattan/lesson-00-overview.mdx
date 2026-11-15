@@ -43,7 +43,7 @@ adds obstacles; **Module 6** (optional) adds slow streets.
 
 The grid dates from 1811 and is turned about 29 degrees from true north; the same
 distance is called **taxicab distance** in math. The map is a hook, not a lesson.
-Lesson 4-3 opens with "Why Manhattan?" and assumes students have seen it.
+Lesson 4-2 assumes students have seen it.
 
 </TeacherNote>
 
@@ -54,6 +54,7 @@ By the end of this overview you will be able to:
 - Describe the problem Module 4 solves: drive to a destination on its own, then to several in a row
 - Split a complex problem into simpler parts: plan the route first, test it with no robot, then drive it
 - Name the **planner** (`compute_manhattan_path`), the **driver** (`drive_path`), and the list of (x, y) coordinates between them
+- Say what building a program **top-down** means: the main program first, with stand-ins for the parts below it
 
 </Objectives>
 
@@ -98,8 +99,8 @@ them. Ideas about motors, sensors or turning belong to the driving half; park th
 Here is that split, one level at a time:
 
 <TreeFigure
-  src="/img/lesson-m4-05/decomposition.svg"
-  alt="A tree with four levels. At the top, the whole problem: drive from the start to a destination, on its own. It splits into the planner, compute_manhattan_path(), Lessons 4-3 and 4-4, and the driver, drive_path(), Lessons 4-5 and 4-6. An arrow labeled list of (x, y) coordinates runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-5 and 4-6; 2, drive to the next intersection, the LINE TRACKING functions built in Module 2. Turning splits once more: which way to face, get_desired_heading(), Lesson 4-5, and turn until facing the next intersection, turn_to(), Lesson 4-6."
+  src="/img/lesson-m4t-00/decomposition-topdown-v2.svg"
+  alt="A tree with four levels. At the top, the main program, Lesson 4-1: for each destination, plan the route, then drive it. It splits into the planner, compute_manhattan_path(), Lessons 4-2 and 4-3, and the driver, drive_path(), Lesson 4-4. An arrow labeled list of (x, y) coordinates runs from planner to driver. The driver splits into two steps at each intersection: 1, turn to face the next intersection, Lessons 4-4 and 4-5; 2, drive to the next intersection, the LINE TRACKING functions built in Module 2, used on the robot in Lesson 4-6. Turning splits once more: which way to face, get_desired_heading(), Lesson 4-4, and turn until facing the next intersection, turn_to(), Lesson 4-5."
   caption="The problem, broken into parts. Click a box to open it; each one names the lesson that builds it."
 />
 
@@ -139,8 +140,8 @@ wrong route is a planner problem; a wrong turn is a driver problem.
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
 
-Shape, not detail. Deflect "how does it work?" with "that's Lessons 4-3 and 4-4." Tell
-students they're not meant to understand every line yet; by Lesson 4-7 they will.
+Shape, not detail. Deflect "how does it work?" with "that's Lesson 4-2." Tell
+students they're not meant to understand every line yet; by Lesson 4-6 they will.
 
 </TeacherNote>
 
@@ -154,22 +155,65 @@ The robot does the same. Once it can reach one destination, several is just a lo
 from where it is, drive, repeat.
 
 <Figure
-  src="/img/lesson-m4-00/delivery-overview-xy.svg"
-  alt="A 4 by 4 grid. The robot starts at home, (0, 0), the bottom-left corner, facing north. Leg 1 goes right to destination 1 at (2, 0); leg 2 goes up to destination 2 at (2, 3); leg 3 goes left to destination 3 at (0, 3)."
-  caption="Three deliveries, three legs, each planned from where the last one ended."
+  src="/img/lesson-m4-00/delivery-stops-xy.svg"
+  alt="A 4 by 4 grid. The robot starts at home, (0, 0), the bottom-left corner, facing north. Each leg goes across first, then up or down: leg 1 to (2, 3), leg 2 to (1, 0), leg 3 to (3, 1), leg 4 to (2, 2), and leg 5 back home to (0, 0)."
+  caption="Five deliveries, five legs, each planned from where the last one ended."
 />
+
+## Build it from the top down
+
+You'll build this program **top-down**: the top of the tree first, then one level at a
+time. The main program comes first, in the very next lesson, and it runs the day you
+write it, because every part below it starts as a **stub**: a stand-in function that does
+just enough for the program to run, and prints what the real one would do.
+
+Then you swap the stubs for real functions, one per lesson, and run the program after
+every change. The printout tells you right away whether it still works. The robot only
+drives in Lesson 4-6, so you never have to wonder whether a bug is in your code or in
+the robot.
+
+**The Python arrives the same way.** A position like `(1, 1)` is a Python **tuple**, and a
+route is a Python **list**. You won't study them first: each lesson teaches the piece of
+tuples and lists it needs, right where the program needs it. Lesson 4-7 puts it all
+together.
 
 ## The module at a glance
 
-Lessons 4-1 and 4-2 give you the background: coordinates, tuples and lists. Then you
-write and test the planner (4-3 and 4-4), write and test the driver (4-5 and 4-6), and
-put them together (4-7).
+- **4-1:** the main program, with stubs
+- **4-2:** the planner, part 1: a path that grows
+- **4-3:** the planner, part 2: every direction, and tests
+- **4-4:** the driver
+- **4-5:** turning
+- **4-6:** the stubs out, the robot on the grid
+- **4-7:** tuples and lists: what you now know
+
+<TeacherNote title="Why there is no tuples-and-lists lesson up front">
+
+Tuples and lists don't get lessons of their own before the program exists. Students
+write the main program in Lesson 4-1 and meet each piece of Python at the moment the
+program needs it.
+
+| Python | First needed | Taught in |
+|---|---|---|
+| Tuple `(x, y)`, list `[...]`, `for item in list` | the main program | 4-1 |
+| Returning two values, unpacking | the main program | 4-1 |
+| `[]`, `append()`, `len()`, tuples can't change | building a path | 4-2 |
+| `==` on tuples and lists | testing the planner | 4-3 |
+| Indexing, `names[2]` | the driver | 4-4 |
+| References: two names, one list | Module 5 | 4-7 |
+
+Lesson 4-7 gathers them and checks them. If a student asks for more than a lesson
+gives ("can a tuple have three numbers?"), answer it and move on; 4-7 is the place for
+the full picture.
+
+</TeacherNote>
 
 ## Wrap-up
 
 - What problem does Module 4 solve? (Drive the robot from where it starts to a destination on its own, then to several destinations in a row.)
 - Why plan first? (The planner never moves the robot, so its list of coordinates can be printed and checked with no robot at all. Then the driver only has to follow a plan you already trust.)
 - What are the two halves and their jobs? (`compute_manhattan_path` plans; `drive_path` drives.)
+- What is a stub? (A stand-in function that lets the program run before the real function is written.)
 
 <TeacherNote title="Teaching note">
 

@@ -172,10 +172,10 @@ DECK = {
                  '    pass',
          'code_size': 16,
          'notes': 'Students write it as test_detect_once() under the skeleton. Today\'s driving test is drive_path()\'s loop with exactly one step added, '
-                  'between turning and driving: look ahead. Everything else is Lesson 4-6.'},
+                  'between turning and driving: look ahead. Everything else is Module 4\'s drive_path().'},
 
         {'kind': 'code', 'title': 'The new branch',
-         'lead': 'The one piece that isn\'t Lesson 4-6:',
+         'lead': 'The one piece that isn\'t Module 4\'s `drive_path()`:',
          'lead_h': 0.65,
          'code': '        if distance < OBSTACLE_CM:\n'
                  '            add_blocked(next_pos)\n'
@@ -228,8 +228,8 @@ DECK = {
                         'found at step 3 is already missing from the graph used at step 4.'},
 
         {'kind': 'code', 'title': 'Print the plan before the button',
-         'lead': 'The first two lines of the outline are the Lesson 4-6 habit: plan and **print** '
-                 'the path before the robot moves.',
+         'lead': 'A new habit: plan and **print** the path, then wait for the button before the '
+                 'robot moves.',
          'lead_h': 0.95,
          'code': '    path = compute_bfs_path(position, destination)\n'
                  '    print("Planned path:", path)\n'
@@ -240,8 +240,8 @@ DECK = {
                     '**driving**, not the planner.',
          'tone': 'teal',
          'notes': 'Read it before pressing the button: is it what you expected? Printing the plan '
-                  'before you drive is a paper test built into every run, and the first diagnostic. As in Module 4, '
-                  'that makes two presses per driving test: the one in RUN starts the test and '
+                  'before you drive is a paper test built into every run, and the first diagnostic. '
+                  'That makes two presses per driving test: the one in RUN starts the test and '
                   'prints the plan; the one in the test is go.'},
 
         {'kind': 'steps', 'title': 'Step 1 · The sensor',

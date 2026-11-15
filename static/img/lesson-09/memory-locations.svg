@@ -80,7 +80,7 @@
 
   <!-- annotations -->
   <text class="cap" x="24" y="230"><tspan class="capb">The number</tspan> on every location is its
-    address. The hardware puts it there; you will not need it until Lesson 4-3.</text>
+    address. The hardware puts it there; you will not need it until Lesson 4-7.</text>
   <text class="cap" x="24" y="252"><tspan class="capb" fill="#D1182C">The name card</tspan> is yours. You
     put it on by writing <tspan font-family="ui-monospace, Menlo, Consolas, monospace"
     font-weight="700" fill="#343A40">side_length = 30</tspan>, and you use the name from then on.</text>

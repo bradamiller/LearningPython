@@ -1,5 +1,5 @@
-# robot.py after Lesson 4-7 (class track): every skeleton
-# through Lesson 4-7 pasted in, nothing written yet.
+# robot.py after Lesson 4-6 (class track): every skeleton
+# through Lesson 4-6 pasted in, nothing written yet.
 
 from XRPLib.reflectance import Reflectance
 from XRPLib.differential_drive import DifferentialDrive
@@ -250,7 +250,7 @@ def test_square():
 # is told the robot's position every call. Pure arithmetic.
 
 class Manhattan:
-    """The Lesson 4-4 planner as a class.
+    """The Lesson 4-3 planner as a class.
 
     It holds NO state: compute_path() is told the robot's position
     every time. Manhattan is a class only so that it has the same
@@ -269,33 +269,31 @@ class Manhattan:
 
 planner = Manhattan()
 
-def test_paper_paths():
-    print(planner.compute_path((0, 0), (2, 3)))   # your trace table
-    print(planner.compute_path((0, 1), (3, 3)))
-    print(planner.compute_path((3, 3), (1, 0)))   # left and down
-
-def test_edge_cases():
-    print(planner.compute_path((2, 0), (2, 3)))   # same column
-    print(planner.compute_path((0, 2), (3, 2)))   # same row
-    print(planner.compute_path((1, 1), (1, 1)))   # same spot
-
-# --- Lesson 4-4: the test harness ---
-# run_test() asks the planner for a path and compares it
-# with one you traced by hand, printing PASS or FAIL. A
-# planner test from here on is a list of run_test() calls.
-
 def run_test(test_name, start, destination, expected):
     """Plan start -> destination and compare the result
     with expected; print test_name with PASS or FAIL."""
-    pass
+    actual = planner.compute_path(start, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
+
+def test_planner():
+    # expected = your answer key, traced by hand
+    run_test("Leg 1",       (0, 0), (2, 3), [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)])
+    run_test("Leg 2",       (2, 3), (1, 0), [])   # your answer key
+    run_test("Same column", (2, 0), (2, 3), [])   # your answer key
+    run_test("Same row",    (0, 2), (3, 2), [])   # your answer key
+    run_test("Same spot",   (1, 1), (1, 1), [])   # your answer key
 
 
 # ===== NAVIGATOR (class version) =====
 # One Navigator object owns the robot's position and heading.
 # It HAS a LineTrack (built in __init__) and gives it the
 # driving orders; it is told where to go and keeps its own
-# record of where it got to. Same three methods as the
-# function version, same names, with navigator. in front.
+# record of where it got to.
 HEADING_NAMES = ["N", "E", "S", "W"]    # HEADING_NAMES[2] -> "S"
 
 class Navigator:
@@ -311,7 +309,7 @@ class Navigator:
 
     def turn_to(self, desired_heading):
         # your function, with self.heading in place of the
-        # parameter and self.line_track. in front of each
+        # parameter and self.line_track. in front of the
         # turn; it STORES the new heading, not returns it
         pass
 
@@ -323,33 +321,33 @@ class Navigator:
 
 navigator = Navigator((0, 0), 0)
 
-def test_drive_path():
-    destination = (2, 3)
+def test_headings():
+    nav = Navigator((1, 1), 0)
+    for next_pos in [(0, 1), (1, 2), (2, 1), (1, 0)]:
+        heading = nav.get_desired_heading(next_pos)
+        print("(1, 1) to", next_pos, ":", heading, HEADING_NAMES[heading])
 
-    path = planner.compute_path(navigator.position, destination)
-    print("Path:", path)
+def fake_track_to_intersection():
+    """STUB for tracker.track_to_intersection(): print instead of
+    driving. Lesson 4-6 swaps in the real one."""
+    print("tracking to intersection")
 
-    board.wait_for_button()       # read the path, THEN press
+def fake_turn_clockwise():
+    """STUB for tracker.turn_clockwise(): print instead of
+    turning. Lesson 4-6 swaps in the real one."""
+    print("turning clockwise")
 
-    navigator.drive_path(path)
-    print("Arrived at:", navigator.position, "facing", HEADING_NAMES[navigator.heading])
-
-# --- Lesson 4-7: final project, the delivery run ---
-# The module project: visit DESTINATIONS in order, planning
-# each leg with the MANHATTAN PLANNER from wherever the last
-# leg ended and driving it with the NAVIGATOR. Nothing new is
-# defined; the two sections did the work. Built in three
-# tested steps: one leg, two legs, then a loop.
-DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]
+# --- The main program: the delivery run ---
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
 
 def test_delivery():
-    # the navigator starts at home, facing North
-    # plan the FIRST leg and print it; wait for the button
-    # for each destination:
-    #     compute the path from navigator.position
-    #     print it
+    # the navigator starts at (0, 0) facing North: it is
+    #    navigator = Navigator((0, 0), 0), under the class
+    # for each delivery_destination in DELIVERY_STOPS:
+    #     plan the path from navigator.position, and print it
     #     navigator.drive_path(path) -- it keeps the record
-    #     print where the navigator arrived
+    #     print "new position:", navigator.position,
+    #           "heading:", HEADING_NAMES[navigator.heading]
     pass
 
 # ===== RUN =====

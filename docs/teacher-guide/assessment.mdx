@@ -114,20 +114,20 @@ each corner, and ends where it started. 50 points:
 Reward the tuning process; a square that closes on the third try, with the reason
 written down, is a good result.
 
-### Module 4 · Final project (Lesson 4-7)
+### Module 4 · Final project (Lesson 4-6)
 
-The robot visits four or more destinations: for each leg it computes the path,
-prints it, waits for the button, and drives it. Built in three steps, each tested on
-the robot: one leg, two legs one after the other, then a loop over the destinations. 50 points, as shown to students on
-the lesson page:
+The robot visits four or more destinations: `test_delivery()` plans each leg from where
+the last one ended, prints it, and drives it. The whole run is checked on screen with the
+fake stubs first; then two lines change and the robot drives the same run. 50 points, as
+shown to students on the lesson page:
 
 | Category | Points | What it takes |
 |---|---|---|
-| Planner | 10 | `compute_manhattan_path()` correct for any position and destination; the Lesson 4-4 tests pass |
-| Driving functions | 15 | Correct `get_desired_heading()`, `turn_to()` and `drive_path()`; parked on the cross at every arrival; position and heading returned |
-| Main program | 10 | Four or more destinations; prints the first leg before the button; drives each leg; keeps `position` and `heading` up to date from `drive_path()` |
-| Robot demo | 10 | Physically visits every destination with correct turns |
-| Planning and documentation | 5 | Planning worksheet, a hand-trace of one leg, the testing checklist followed |
+| Planner | 10 | `compute_manhattan_path()` correct for any start and destination; `test_planner()` passes |
+| Driving functions | 15 | Correct `get_desired_heading()`, `turn_to()`, `drive_path()`; parked on the cross at every arrival; pose returned |
+| Main program | 10 | `test_delivery()`: 4+ destinations, assigns `robot_position, robot_heading` from `drive_path()` |
+| Screen run | 5 | The full run checked on screen with the stubs before the robot drove |
+| Robot demo | 10 | Physically visits all destinations with the turns the printout predicted |
 
 ### Module 5 · Capstone (Lesson 5-9)
 

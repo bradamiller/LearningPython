@@ -267,15 +267,14 @@ def test_square():
 # ===== MANHATTAN PLANNER =====
 # Plans a route across the grid: given where the robot is and
 # where it should go, returns the list of (x, y) tuples to
-# drive to, across first and then up or down. Pure arithmetic --
-# nothing in here touches a sensor or a motor, so every test
-# in this section runs on screen with the robot sitting still.
+# drive to. Nothing in here touches a sensor or a motor.
 
 def compute_manhattan_path(start, destination):
     """Return the (x, y) steps from start to destination, across
     first, then up or down. The start itself is not in the list."""
+    print("computing path from:", start, "to:", destination)
     path = []
-    x, y = start              # where the robot is now
+    x, y = start              # where the plan is now
     dest_x, dest_y = destination   # where it is going
 
     # East: keep stepping right until x matches dest_x
@@ -291,15 +290,50 @@ def compute_manhattan_path(start, destination):
 
     return path
 
-def test_paper_paths():
-    print(compute_manhattan_path((0, 0), (2, 3)))   # your trace table
-    print(compute_manhattan_path((0, 1), (3, 3)))
-    print(compute_manhattan_path((3, 3), (1, 0)))   # left and down
+def run_test(test_name, start, destination, expected):
+    """Plan start -> destination and compare the result
+    with expected; print test_name with PASS or FAIL."""
+    actual = compute_manhattan_path(start, destination)
+    if actual == expected:
+        print(test_name, "- PASS")
+    else:
+        print(test_name, "- FAIL")
+        print("  Expected:", expected)
+        print("  Actual:  ", actual)
 
-def test_edge_cases():
-    print(compute_manhattan_path((2, 0), (2, 3)))   # same column
-    print(compute_manhattan_path((0, 2), (3, 2)))   # same row
-    print(compute_manhattan_path((1, 1), (1, 1)))   # same spot
+def test_planner():
+    # expected = your answer key, traced by hand
+    run_test("Leg 1",       (0, 0), (2, 3), [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)])
+    run_test("Leg 2",       (2, 3), (1, 0), [])   # your answer key
+    run_test("Same column", (2, 0), (2, 3), [])   # your answer key
+    run_test("Same row",    (0, 2), (3, 2), [])   # your answer key
+    run_test("Same spot",   (1, 1), (1, 1), [])   # your answer key
+
+
+# ===== NAVIGATOR =====
+# Drives a planned path, one intersection at a time, and hands
+# back where the robot ended up and which way it faces.
+
+def drive_path(path, current_position, current_heading):
+    """STUB: pretend to drive -- just jump to each
+    intersection in path. Lesson 4-4 replaces it."""
+    for next_pos in path:
+        print("moving: from", current_position, "to:", next_pos)
+        current_position = next_pos
+    return current_position, current_heading
+
+# --- The main program: the delivery run ---
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+
+def test_delivery():
+    # 1. robot_position starts at (0, 0); robot_heading
+    #    starts at 0, North
+    # 2. for each delivery_destination in DELIVERY_STOPS:
+    #      plan the path from robot_position, and print it
+    #      drive it, and assign the pose it hands back
+    #      print "new position:", robot_position,
+    #            "heading:", robot_heading
+    pass
 
 # ===== RUN =====
 board.wait_for_button()

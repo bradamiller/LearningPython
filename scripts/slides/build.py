@@ -7,7 +7,7 @@
 Each deck is scripts/slides/decks/m<module>/l<lesson>.py defining DECK (see
 sketchdeck.py). Output goes to static/slides/<module folder>/module-<N>-<lesson
 page>.pptx, for example
-static/slides/module-04-manhattan/module-4-lesson-03-the-manhattan-algorithm.pptx,
+static/slides/module-04-manhattan/module-4-lesson-03-the-planner-every-direction.pptx,
 and src/data/slides.json maps each lesson's doc id to its deck so the lesson
 page can link it.
 """
@@ -38,7 +38,7 @@ def main(only):
     manifest = {}
     for path in decks:
         deck = load(path)
-        # 'key' lets a trial module (the Module 4 test) share lesson numbers with
+        # 'key' lets a second version of a module share lesson numbers with
         # the standard one without being rebuilt when you ask for, say, 4-1
         key = deck.get('key', f"{deck['module']}-{deck['lesson']}")
         doc = deck['doc']

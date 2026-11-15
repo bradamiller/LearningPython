@@ -1,4 +1,4 @@
-"""Module 4 test (top-down trial), Lesson 4-0: the same tree as fdecomp.py with the trial's lesson numbers.
+"""Module 4, Lesson 4-0: the top-down tree, labelled with the lessons that build each part.
 
 Original: Lesson 4-5 opening: Module 4's problem broken down into parts (problem decomposition).
 
@@ -9,7 +9,7 @@ reads in full where scripts don't run; the component hides levels on load.
 
 Outputs:
   out/decomposition-topdown-v2.svg -> static/img/lesson-m4t-00/ (the page)
-  out/topdown-decomp-1.svg .. -4.svg -> scripts/slides/decks/m4t/fig/ (the deck, one level each)
+  out/topdown-decomp-1.svg .. -4.svg -> scripts/slides/decks/m4/fig/ (the deck, one level each)
     (the deck: one slide per level, the levels below simply left out)
 (renamed 2026-11-08 when the top box changed, so browsers don't show the cached old one)
 """

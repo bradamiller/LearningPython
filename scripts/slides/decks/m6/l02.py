@@ -109,7 +109,7 @@ DECK = {
              'the next, and so on',
              '`path_cost()` keeps a running total and a `here` that starts at the robot\'s position '
              'and moves forward one step each pass',
-             'Same shape as `drive_path()`\'s `position = next_pos`',
+             'Same shape as `drive_path()`\'s `current_position = next_pos`',
          ],
          'callout': 'For `[(0, 1), (0, 2), (0, 3)]` from (0, 0), with the slow edge at 5: 1 + 5 + 1 = 7',
          'tone': 'teal'},
@@ -124,7 +124,7 @@ DECK = {
         {'kind': 'check',
          'question': 'Why does `path_cost()` need the `position` parameter, when the path is right there?',
          'options': ['It does not; position is unused',
-                     'The path excludes the start (Lesson 4-4\'s promise 1), so the first segment runs from '
+                     'The path excludes the start (Lesson 4-3\'s promise 1), so the first segment runs from '
                      'position to path[0], and only the caller knows position',
                      'To check the path is not empty',
                      'Because `weight()` requires three arguments'],
@@ -173,7 +173,7 @@ DECK = {
              '`position`.',
          ],
          'notes': 'Make students write the expected cost by hand before they run the check; if they '
-                  'let the program tell them what to expect, the test tests nothing (Lesson 4-4\'s '
+                  'let the program tell them what to expect, the test tests nothing (Lesson 4-3\'s '
                   'point).'},
 
         {'kind': 'bullets', 'title': 'Step 3 · `check_cost()`, against BFS',

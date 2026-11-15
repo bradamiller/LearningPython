@@ -45,7 +45,7 @@ If not, here's another correct one:
 [(0, 1), (0, 2), (0, 3), (1, 3), (2, 3), (3, 3)]   # also six steps, also right
 ```
 
-Now here's the test from Module 4's Lesson 4-4, still in your file as `run_test()`:
+Now here's the test from Module 4's Lesson 4-3, still in your file as `run_test()`:
 
 ```python
 if actual == expected:
@@ -279,17 +279,26 @@ set the run line to it. BFS should pass 6 of 6. Then read Manhattan's lines care
 
 ```text
 ========== Manhattan ==========
+computing path from: (0, 0) to: (3, 3)
   PASS  open (0, 0) to (3, 3)  [(1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3)]
+computing path from: (0, 0) to: (0, 3)
   PASS  open (0, 0) to (0, 3)  [(0, 1), (0, 2), (0, 3)]
+computing path from: (2, 1) to: (0, 3)
   PASS  open (2, 1) to (0, 3)  [(1, 1), (0, 1), (0, 2), (0, 3)]
+computing path from: (1, 1) to: (1, 1)
   PASS  open (1, 1) to (1, 1)  []
+computing path from: (0, 0) to: (3, 0)
   FAIL  wall at (1,0),(1,1): (0,0) to (3,0)  [(1, 0), (2, 0), (3, 0)]
           - drives through blocked intersection (1, 0)
           - expected 7 steps, got 3
+computing path from: (0, 0) to: (3, 0)
   FAIL  walled off: (0,0) to (3,0)  [(1, 0), (2, 0), (3, 0)]
           - there is no way through, so the path should be empty
 Manhattan: 4 of 6 passed
 ```
+
+The `computing path from:` lines are Module 4's planner announcing itself, as it always
+has. BFS doesn't print one.
 
 Manhattan isn't broken. It's doing exactly what it was built to do in Module 4 —
 across, then up or down — and it has no idea what a wall is. The harness just showed,
@@ -383,7 +392,7 @@ the end of the module is in the [Module 5 sample programs](/teacher-guide/sample
 
 **Why the harness is `run_path_test()` and not `run_test()`:** Module 4's
 `run_test(test_name, start, destination, expected)` is still in the file, with
-`test_planner()` calling it six times, and it calls `compute_manhattan_path()` by
+`test_planner()` calling it five times, and it calls `compute_manhattan_path()` by
 name with an exact-match compare. Reusing the name with a different parameter list
 would silently replace it and break `test_planner()`; renaming Module 4's would
 reach back into a finished section. Two kinds of test, two names — and the lesson

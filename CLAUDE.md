@@ -78,7 +78,7 @@ LearningPython/                            # repo root — the site itself
 │   │   └── lesson-01-meet-the-xrp.mdx    # THE TEMPLATE lesson — copy its structure
 │   ├── module-02-line-tracking/          # lesson-00-overview + 10 lessons (all Python) — DONE
 │   ├── module-03-grid-driving/           # lesson-00-overview + 4 lessons — DONE
-│   ├── module-04-manhattan/              # lesson-00-overview + lessons 1–9 — DONE
+│   ├── module-04-manhattan/              # lesson-00-overview + lessons 1–7 (top-down, 2026-11-15)
 │   ├── module-05-pathfinding/            # lesson-00-overview + lessons 1–9 — BFS as the required planner — DONE
 │   └── module-06-dijkstra/               # OPTIONAL — lesson-00-overview + lessons 1–5 — DONE
 ├── src/
@@ -662,11 +662,16 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
+- **2026-11-15: THE TOP-DOWN TRIAL IS NOW MODULE 4 (Brad: "Replace module 4 with the trial
+  version").** It lives at `docs/module-04-manhattan`; the old bottom-up Module 4 is only in
+  git history (last on main at `ca490e9`). Old lesson URLs 404 (no redirects plugin).
+  Explanations the old module had and the new one needed were carried over (paper test
+  named in 4-2, the caller passes `start` in 4-2, path length and "edge cases need no code"
+  in 4-3, `ValueError` on a count mismatch in 4-1, index loops and `for x, y in` in 4-7,
+  `-1 % 4` in 4-6's challenge note). Everything below written about "the trial" or "the
+  standard Module 4" predates the swap: the trial's rules now ARE Module 4's.
 - **2026-11-14: THE MODULE 4 TEST IS TOP-DOWN ALL THE WAY, PYTHON TAUGHT AS NEEDED (Brad).**
-  `docs/test-module-04` ("Module 4 test · Top-down (trial)" in the sidebar) is a trial
-  alongside the standard Module 4, which is unchanged. It has its own decks, printable
-  checks, templates and sample program (materials list below); it has no pacing entry,
-  on purpose, since it would double-count Module 4. Brad's goal: students write the highest-level
+  Written while it was a trial at `docs/test-module-04`. Brad's goal: students write the highest-level
   code first and as soon as possible, each stub prints enough to verify the program, and
   tuples and lists are explained where the program needs them, with a high-school-level
   understanding by the end. The first cut (2026-11-13) still opened with the two standard
@@ -710,13 +715,13 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   - **`get_desired_heading()` uses four plain comparisons (Brad, 2026-11-14):**
     `if next_y > y: return 0`, `next_x > x` 1, `next_y < y` 2, `next_x < x` 3. No
     subtraction, no `and`: it finds the one number that changed and trusts the planner's
-    tests for adjacency. This is the trial only; the standard Module 4 still tests both
-    differences (the "FAIL WHERE THE PROBLEM IS" entry below). The optional "Catching
+    tests for adjacency. (The old module tested both differences; the "FAIL WHERE THE
+    PROBLEM IS" entry below describes that version.) The optional "Catching
     mistakes early" extension keeps the `raise`, which now fires only for a move that goes
     nowhere (a path that includes the start), and says plainly that a diagonal or a
     two-block jump still gets a heading. Without the raise, the failure is a `TypeError`
     at `HEADING_NAMES[None]` on `drive_path()`'s print line, not a spinning robot, so
-    `raise-spin.svg` is not used in the trial.
+    `raise-spin.svg` is not used.
   - **Kept from the module, not his mockup:** the driver is still split into
     `get_desired_heading()` (optional `raise`) and `turn_to()`
     (the `% 4` loop), because the split is what gives 4-4 and 4-5 their stub-then-fill
@@ -724,25 +729,17 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
     `track_to_intersection`, the Module 2 name, not `track_to_cross`.
   - 4-1's pose figure is `lesson-m4t-01/pose-robot.svg`, written by the end of
     `scripts/figures/fpose.py` (the standard `pose.svg` is unchanged).
-  - **Its materials (added 2026-11-14, Brad: "generate the rest of the materials").**
-    *Decks:* `scripts/slides/decks/m4t/l00.py` to `l07.py`, built to
-    `static/slides/test-module-04/`; `build.py 4t-0 4t-1 ...` builds them (a deck may set
-    `'key'` so it doesn't collide with the standard 4-x, and `'label'` for the title
-    slide, "MODULE 4 TEST"). 4-0 started from the standard 4-0 deck; its tree slides are
-    `decks/m4t/fig/topdown-decomp-1..4.svg`, written by `fdecomp_topdown.py`. Every code
-    line on a trial slide matches its lesson (checked by script). *Printable checks:*
-    `extract_checks.js` includes `test-module-04` (listed after Module 6 on /checks), and
-    each trial lesson has a `QuizLink`. *Templates and sample:*
-    `scripts/build_test_module_templates.py` (run it after `build_templates.py`; it calls
-    that script for the Module 3 sample it builds on) writes
-    `static/templates/test-module-04/<track>/robot-after-4-1..6.py` and
-    `docs/teacher-guide/sample-programs/_module-4-test-files.mdx`; the hand-written page
-    is `module-4-test.mdx`. `build_templates.py`'s templates page lists the trial's files
-    if they exist. Class track = the same functions on the class-track Module 3 file, with
-    4-6's swap calling `tracker.`; the optional Manhattan/Navigator classes are not built
-    in. `--verify --xrplib <stub XRPLib package dir> --scratch <dir>` loads every file and
-    runs the sample (5 PASS, ends `new position: (0, 0) heading: S`). When a trial lesson
-    changes: rebuild its deck, re-run this script, and re-run the deck code check.
+  - **Its materials (since the 2026-11-15 swap).** *Decks:* `scripts/slides/decks/m4/l00.py`
+    to `l07.py` (4-0's tree slides are `decks/m4/fig/topdown-decomp-1..4.svg`, from
+    `fdecomp_topdown.py`); every code line on a slide matches its lesson. Image folders
+    `lesson-m4t-00/01` keep their names; `lesson-m4-0N` folder numbers no longer match lesson
+    numbers. *Templates and sample:* `build_templates.py`'s Module 4 recipe builds 4-1 to 4-6
+    (4-7 adds nothing to `robot.py`). Function track = Brad's lessons exactly. Class track
+    builds the `Manhattan` class at 4-3 and the `Navigator` class at 4-6 (with `planner` and
+    `navigator` objects), because Modules 5 and 6 need both; the fake stubs stay in the
+    file. `--verify` runs `test_planner` (5 PASS), `test_headings` and `test_delivery`
+    (ends `new position: (0, 0) heading: S`). When a Module 4 lesson changes: rebuild its
+    deck, re-run `build_templates.py --verify`, and re-run the deck code check.
   - Brad's own mockup (`manhattan_mockup.py`) is not in the repo. On 2026-11-14 he asked
     for it refactored with `get_desired_heading()` and `turn_to()` as their own functions;
     that version was sent to him, not committed.

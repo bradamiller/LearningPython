@@ -125,10 +125,10 @@ one that is, without any new code. Look at Module 4's `drive_path()` loop:
 
 ```python
 for next_pos in path:
-    desired_heading = get_desired_heading(position, next_pos)
-    heading = turn_to(heading, desired_heading)
+    desired_heading = get_desired_heading(current_position, next_pos)
+    current_heading = turn_to(current_heading, desired_heading)
     track_to_intersection()
-    position = next_pos
+    current_position = next_pos
 ```
 
 After `turn_to()`, the robot is facing `next_pos` — that's what turning to the desired
@@ -178,7 +178,7 @@ def test_detect_once():
     pass
 ```
 
-And the new branch, the one piece that isn't Lesson 4-6:
+And the new branch, the one piece that isn't Module 4's `drive_path()`:
 
 ```python
         if distance < OBSTACLE_CM:
@@ -238,8 +238,8 @@ calls are `planner.add_blocked()` and `planner.compute_path()`.
 
 ## Print the plan before the button
 
-The first two lines of the outline are the Lesson 4-6 habit: plan and *print* the
-path before the robot moves.
+The outline starts with a new habit: plan and *print* the path, then wait for the button
+before the robot moves.
 
 ```python
     path = compute_bfs_path(position, destination)
@@ -251,7 +251,7 @@ path before the robot moves.
 Read it before you press the button. Is it what you expected? Printing the plan before you drive is a
 paper test built into every run, and it's your first diagnostic when something goes
 wrong: if the printed path is right and the robot still goes wrong, the bug is in the
-driving, not the planner. As in Module 4, that makes two presses per driving test:
+driving, not the planner. That makes two presses per driving test:
 the one in `RUN` starts the test and prints the plan; the one in the test is *go*.
 
 ## Activity · Read, simulate, then drive

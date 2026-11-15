@@ -1,203 +1,203 @@
+"""Module 4, Lesson 4-7 · Tuples and Lists: What You Now Know."""
+
 DECK = {
     'module': 4, 'lesson': 7,
-    'doc': 'module-04-manhattan/lesson-07-final-project',
-    'title': 'Final Project',
+    'doc': 'module-04-manhattan/lesson-07-tuples-and-lists',
+    'title': 'Tuples and Lists: What You Now Know',
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Integrate the planner and the driving functions in one program: the last test function in `robot.py`',
-             'Build the program in three tested steps: one leg, two legs, then a loop over a list of destinations',
-             'Carry the robot\'s pose (`position` and `heading`) from one leg into the next by assigning from `drive_path()`',
-             'Demonstrate a working multi-destination run on the XRP',
+             'Say when to use a tuple and when to use a list',
+             'Create, unpack, index, compare and loop over them without looking it up',
+             'Predict what a few lines of tuple and list code print',
+             'Explain what happens when two variables refer to the same list',
          ],
-         'notes': 'Multi-day project. Keep the intro brief: this is a build-and-test day. For '
-                  '50-minute periods plan two days: steps 1 and 2, then the full run.'},
+         'notes': '45 to 55 minutes, no robot. Students never had a lesson on tuples or lists: they '
+                  'picked them up a piece at a time, because the delivery program needed them. This '
+                  'lesson lays the pieces side by side, checks them away from the robot, and adds '
+                  'references, which Module 5 depends on. If time is short, do the activity and '
+                  '"What the variable actually holds", and skip the tables.'},
 
-        {'kind': 'bullets', 'title': 'The mission: a delivery drone on a city grid',
-         'bullets': [
-             'Start at home base, **(0,0)**, visit four destinations **in order**, and end back home',
-             'Compute a fresh path for each leg, and drive it autonomously',
-             '`compute_manhattan_path(position, dest)` returns the list of intersections',
-             '`drive_path(path, position, heading)` turns and drives it',
-         ],
-         'callout': 'Your job: the **main program** that connects them. About ten lines, and like every '
-                    'program in this course it is a test function at the bottom of `robot.py`.',
+        {'kind': 'table', 'title': 'Where you used each piece',
+         'lead': 'Every line is from your own `robot.py`:',
+         'headers': ['What it does', 'From your program', 'Lesson'],
+         'widths': [2.6, 6.4, 1.4],
+         'rows': [['Make a tuple', '`robot_position = (0, 0)`', '4-1'],
+                  ['Make a list', '`DELIVERY_STOPS = [(2, 3), (1, 0), ...]`', '4-1'],
+                  ['Loop over a list', '`for delivery_destination in DELIVERY_STOPS:`', '4-1'],
+                  ['Unpack', '`x, y = start`', '4-1, 4-2'],
+                  ['Start empty, grow', '`path = []` and `path.append((x, y))`', '4-2'],
+                  ['Compare', '`if actual == expected:`', '4-3'],
+                  ['Pick one by index', '`HEADING_NAMES[robot_heading]`', '4-4']],
+         'size': 18, 'row_h': 0.5},
+
+        {'kind': 'code', 'title': 'Looping by index',
+         'code': 'for i in range(len(path)):\n'
+                 '    print("step", i, "is", path[i])',
+         'code_size': 22,
+         'callout': '`len(path)` is how many items; `range()` counts 0 up to one less: exactly '
+                    'the indexes',
          'tone': 'teal',
-         'notes': 'Everything comes together: students already built every piece.'},
+         'notes': '`for next_pos in path:` hands you each item. Loop over the indexes when you '
+                  'also need the item\'s place in the list. Module 5 uses this to number the '
+                  'legs of a run.'},
 
-        {'kind': 'bullets', 'title': 'Four destinations, four lists of single hops',
-         'bullets': [
-             '`DESTINATIONS` is the supplied list: four stops, each **several intersections** from the last',
-             'The main program sends **one destination at a time** to `compute_manhattan_path()`',
-             'Each call returns a list of **adjacent** intersections: 2, 3, 2 and 3 hops here',
-             '`drive_path()` drives that list one hop at a time, then the next destination is planned '
-             'from where it stopped',
-         ],
-         'callout': 'Destinations say where to go; each path says every intersection on the way',
-         'tone': 'teal',
-         'notes': 'Ask students to say the first path out loud before running: from (0, 0) to (2, 0) it '
-                  'is [(1, 0), (2, 0)].'},
+        {'kind': 'code', 'title': 'Unpacking in a for line',
+         'code': 'for x, y in path:\n'
+                 '    print("x is", x, "and y is", y)',
+         'code_size': 22,
+         'callout': 'Each pass splits the tuple: the same as `for next_pos in path:` then '
+                    '`x, y = next_pos`',
+         'tone': 'teal'},
 
-        {'kind': 'frames', 'title': 'The whole run, driven',
-         'figure': '/img/lesson-m4-07/delivery-drive.svg',
-         'crop': (0.0, 0.07, 0.6, 1.0),
-         'frames': [(0.2, 'Leg 2 is planned from (2, 0), where leg 1 ended'),
-                    (0.3, 'Three right turns to face North'),
-                    (0.9, 'Leg 4 drives home')],
-         'callout': '2, 3, 2 and 3 steps. Each leg is planned from where the last one ended. `turn_to()` only turns clockwise, '
-                    'so most legs start with three right turns.',
-         'tone': 'teal',
-         'notes': 'On the lesson page this is an animation of the whole run, with Back, Step and '
-                  'Play/Pause buttons and the main loop in plain '
-                  'words beside it and the running line highlighted; these are three moments from it, '
-                  'with the side panel cropped off. Leg 1 is one right turn and two steps east; legs '
-                  '2, 3 and 4 each start with three right turns.'},
-
-        {'kind': 'code', 'title': 'Add to robot.py: the delivery run',
-         'lead': 'Paste above `RUN`, at the end of the NAVIGATOR section. No new function is defined: '
-                 'one setting and the project\'s test, which you build in three steps.',
-         'lead_h': 0.95,
-         'code': '# --- Lesson 4-7: final project, the delivery run ---\n'
-                 '# The module project: visit DESTINATIONS in order, planning\n'
-                 '# each leg with the MANHATTAN PLANNER from wherever the last\n'
-                 '# leg ended and driving it with the NAVIGATOR. Nothing new is\n'
-                 '# defined; the two sections did the work. Built in three\n'
-                 '# tested steps: one leg, two legs, then a loop.\n'
-                 'DESTINATIONS = [(2, 0), (2, 3), (0, 3), (0, 0)]',
-         'code_size': 18,
-         'notes': 'The skeleton continues on the next slide with test_delivery(), the graded work.'},
-
-        {'kind': 'code', 'title': 'Add to robot.py: test_delivery()',
-         'code': 'def test_delivery():\n'
-                 '    # position and heading start at home, facing North\n'
-                 '    # plan the FIRST leg and print it; wait for the button\n'
-                 '    # for each destination:\n'
-                 '    #     compute the path from where the robot is\n'
-                 '    #     print it\n'
-                 '    #     drive it\n'
-                 '    #     ... and keep position and heading up to date\n'
-                 '    #     print where the robot arrived\n'
-                 '    pass',
-         'code_size': 21,
-         'callout': 'The second leg decides whether the project works. What does the test know after the '
-                    'first `drive_path()` finishes, and what doesn\'t it, unless you ask?',
-         'callout_size': 20,
-         'tone': 'orange',
-         'notes': 'There is no student reveal for it; the solution is the teacher copy only. '
-                  'The line nearly everyone gets half right: they call drive_path and throw the return '
-                  'value away. Leg one works perfectly, and every later leg is planned from (0,0) facing '
-                  'North. If a robot drives a sensible first route and then wanders, ask what position is '
-                  'in their main program after leg 1.'},
-
-        {'kind': 'bullets', 'title': 'Only the first leg is printed before the button',
-         'bullets': [
-             'Lesson 4-6\'s habit, plan, print, button, drive, with one limit',
-             'The main program prints the path for **leg 1** before the button',
-             'It can\'t print legs 2, 3 and 4 yet: each is planned from wherever the previous leg **actually** finished',
-             'Instead, each leg is printed as it\'s planned, just before the robot drives it',
-             'The heading carries over too: leg 1 ends facing East, so leg 2 starts facing East',
-         ],
-         'callout': 'In Module 5, where obstacles can appear mid-run, this becomes the only way it could work',
+        {'kind': 'table', 'title': 'Tuple or list?',
+         'headers': ['', 'Tuple', 'List'],
+         'widths': [3.6, 3.2, 3.6],
+         'rows': [['Written with', '`( )`', '`[ ]`'],
+                  ['Can it change?', 'No', 'Yes: grow, or replace an item'],
+                  ['Index, unpack, `==`, `for`, `len()`', 'Yes', 'Yes'],
+                  ['`append()`', 'No', 'Yes'],
+                  ['In your program', 'a position, a pose', 'a path, the stops, the letters']],
+         'size': 20, 'row_h': 0.55,
+         'callout': 'A **tuple** is one thing with a fixed number of parts. A **list** is any '
+                    'number of things in order.',
          'tone': 'teal'},
 
         {'kind': 'check',
-         'question': 'Why does the program print the plan for leg 1 before the button, but not for legs 2 to 4?',
-         'options': ['print() can only be called once before wait_for_button()',
-                     'Later legs start where the previous leg ends, known only once the robot gets there',
-                     'Leg 1 is the only one that uses compute_manhattan_path',
-                     'To save battery'],
+         'question': 'A program must remember every intersection where the robot found an obstacle, '
+                     'adding to it as the robot drives. What should it use?',
+         'options': ['One tuple, with `append()`',
+                     'A list of tuples: each obstacle is an (x, y) tuple, and the list grows',
+                     'A tuple of lists',
+                     'Two separate variables, x and y'],
          'answer': 1,
-         'explanation': 'Each leg is planned from the robot\'s current position. Leg 1 is the only one whose '
-                        'starting position is known before the robot moves.'},
+         'explanation': 'Each position is a fixed pair, so a tuple. The collection grows as the '
+                        'robot drives, so a list. That is exactly what Module 5 does.'},
 
-        {'kind': 'steps', 'title': 'Activity · Build it in three steps',
-         'lead': 'All three steps are in `test_delivery()`. Test each one on the robot before you start the '
-                 'next, starting the robot at (0, 0) facing North every time.',
-         'lead_h': 0.9,
-         'steps': [
-             '**One leg.** Plan the path from (0, 0) to (2, 0), print it, wait for the button, drive it, '
-             'print where the robot arrived: Lesson 4-6\'s `test_drive_path()` with (2, 0). Read the printed '
-             'path, `[(1, 0), (2, 0)]`, then press. One right turn; it stops on (2, 0) facing East',
-             '**Add the second leg** to the same function: plan to (2, 3), print, drive, print. It works only '
-             'if `position` and `heading` were assigned from the first `drive_path()`. After (2, 0): three '
-             'right turns to face North, then up to (2, 3)',
-             '**A list and a loop.** The two legs are the same lines twice: replace them with one loop over '
-             '`DESTINATIONS`, as the outline describes. The robot should visit all four destinations and '
-             'finish at home, with legs of 2, 3, 2 and 3 steps',
-         ],
-         'size': 19,
-         'notes': 'Push step-by-step testing hard: the students who write everything at once and can\'t '
-                  'find the break are the ones who skipped the one-leg and two-leg steps. Watch battery '
-                  'drain on long multi-turn runs and charge between attempts. For 50-minute periods, plan '
-                  'two days: steps 1 and 2, then the full run.'},
+        {'kind': 'code', 'title': 'Activity · Predict, then run',
+         'tag': 'Activity',
+         'code': 'path = [(1, 0), (2, 0), (2, 1)]\n'
+                 'print(len(path))                               # 1\n'
+                 'print(path[0])                                 # 2\n'
+                 'print(path[2][1])                              # 3\n'
+                 'x, y = path[1]\n'
+                 'print(x + y)                                   # 4\n'
+                 'path.append((2, 2))\n'
+                 'print(len(path), path[3])                      # 5\n'
+                 'print(path == [(1, 0), (2, 0), (2, 1)])        # 6\n'
+                 'path[0] = (0, 1)\n'
+                 'print(path)                                    # 7\n'
+                 'path[0][0] = 5                                 # 8',
+         'code_size': 15,
+         'callout': 'In a **new file**. Write all eight predictions, then run it. One line is an '
+                    'error: which, and why?',
+         'tone': 'orange',
+         'notes': 'This is the module\'s check on the Python: collect the written predictions '
+                  'before anyone runs it. Answers: 3; (1, 0); 1; 2; 4 (2, 2); False, the list has '
+                  'four items now; [(0, 1), (2, 0), (2, 1), (2, 2)], a list item can be replaced; '
+                  'line 8 is a TypeError, because path[0] is a tuple and a tuple can\'t change. A '
+                  'student who gets lines 3, 6 and 8 right has the tuples and '
+                  'lists that Module 5 builds on.'},
 
         {'kind': 'check',
-         'question': 'On the second leg the robot drives a clearly wrong path. What\'s the first thing to check?',
-         'options': ['The battery voltage',
-                     'Whether position and heading were assigned from drive_path after leg 1',
-                     'The color of the grid lines', 'The HEADING_NAMES list'],
+         'question': 'After these lines, what is `total`? `legs = [(2, 3), (1, 0)]`, `total = 0`, '
+                     'then `for leg in legs:` `x, y = leg` and `total = total + x + y`',
+         'options': ['2', '6', '4', 'An error: a tuple cannot be unpacked inside a loop'],
          'answer': 1,
-         'explanation': 'A wrong path on leg 2 or later almost always means the return value was dropped, so '
-                        'leg 2 was planned from (0,0) facing North. The printed path for leg 2 confirms it.'},
+         'explanation': 'First pass: x is 2, y is 3, total becomes 5. Second pass: x is 1, y is 0, '
+                        'total becomes 6.'},
 
-        {'kind': 'table', 'title': 'The rubric',
-         'lead': 'You\'re graded on the whole system working together.',
-         'headers': ['Category', 'Points', 'What it takes'],
-         'widths': [2.4, 1.1, 8.0],
-         'rows': [
-             ['Planner', '10', '`compute_manhattan_path` correct for any position and destination; Lesson 4-4 tests pass'],
-             ['Driving functions', '15', 'Correct `get_desired_heading`, `turn_to`, `drive_path`; parked on the cross at every arrival; position and heading returned'],
-             ['Main program', '10', '`test_delivery()`: 4+ destinations, prints leg 1 before the button, drives each leg, assigns `position, heading` from `drive_path`'],
-             ['Robot demo', '10', 'Physically visits all destinations with correct turns'],
-             ['Planning & docs', '5', 'Planning worksheet, a hand-trace of one leg, testing checklist followed'],
-         ],
-         'size': 20,
-         'notes': 'Class track: students who did the '
-                  'extensions run the project on their objects, navigator.drive_path(path) and '
-                  'planner.compute_path() if they built Manhattan. The step tests change the same way. '
-                  'Same rubric.'},
+        {'kind': 'check',
+         'question': 'Given `path = [(1, 0), (2, 0), (3, 0)]`, which gives the y of the last '
+                     'position?',
+         'options': ['`path[3][1]`', '`path[2][1]`', '`path[1][2]`', '`path(2, 1)`'],
+         'answer': 1,
+         'explanation': 'Three items have indexes 0, 1 and 2, so the last is path[2]. Its y is index '
+                        '1. path[3] would be an IndexError.'},
 
-        {'kind': 'bullets', 'title': 'If you finish early',
-         'bullets': [
-             'A round trip: destinations forward, then reversed',
-             'Let the user type the destinations',
-             'Count total intersections driven and turns made across the whole journey',
-             'Or the Lesson 4-6 class extension: a `Navigator` object, so the main loop has nothing to pass back and forth',
-         ],
-         'notes': 'Class-track students drive with navigator.drive_path(path) and read navigator.position; '
-                  'there is no return value to drop, which is the point of the Lesson 4-6 side-by-side. '
-                  'It is the first time the encapsulation pays off in a whole program.'},
+        {'kind': 'code', 'title': 'What the variable actually holds',
+         'code': 'a = 5\n'
+                 'b = a                     # copies the VALUE: two 5s\n'
+                 '\n'
+                 'path = [(1, 0)]\n'
+                 'same_path = path          # copies the ADDRESS: still one list\n'
+                 'same_path.append((2, 0))\n'
+                 'print(path)               # [(1, 0), (2, 0)]  <- path changed too',
+         'code_size': 18,
+         'callout': 'A list lives elsewhere in memory; the variable holds its **address**, a '
+                    '**reference**',
+         'tone': 'teal',
+         'notes': 'This adds to Lesson 1-9, it doesn\'t correct it: a variable is still a named '
+                  'memory location. The only new fact is what the stored value is for a list. Why: a '
+                  'location is a fixed size and a list can grow, so the list lives somewhere with '
+                  'room and the location keeps the number that says where. Demo: two students hold '
+                  'slips with the same post office box number; one puts something in the box; the '
+                  'other\'s slip hasn\'t changed, but what they find in the box has.'},
 
-        {'kind': 'cards', 'title': 'Real-world connections',
-         'cards': [
-             ('Logistics', 'Delivery routing', 'Warehouse and delivery robots compute a route to each stop, '
-                                               'drive it, then re-plan from the new location: exactly this loop.'),
-             ('Rideshare', 'Multi-stop trips', 'Navigation apps chain legs together, recomputing from your '
-                                               'current position at each waypoint.'),
-             ('Space', 'Rover missions', 'Planetary rovers plan a path to a target, execute carefully, and '
-                                         're-plan, with the same separation of planning and driving.'),
-         ],
-         'height': 3.9,
-         'notes': 'The plan-then-execute structure students just built is fundamental to real autonomous '
-                  'systems.'},
+        {'kind': 'figure', 'title': 'Two names, one list',
+         'figure': '/img/lesson-m4-02/number-vs-list.svg',
+         'caption': '`b = a` makes a second 5. `same_path = path` makes a second arrow to the same '
+                    'list.'},
+
+        {'kind': 'check',
+         'question': 'What does `scores` hold after `scores = [10, 20]`, `backup = scores`, '
+                     '`backup.append(30)`?',
+         'options': ['`[10, 20]`: backup is a separate copy',
+                     '`[10, 20, 30]`: both variables refer to the same list',
+                     '`[30]`',
+                     'An error: you cannot assign a list to another name'],
+         'answer': 1,
+         'explanation': 'backup = scores stores the address that was in scores, not a copy, so both '
+                        'variables lead to one list.'},
+
+        {'kind': 'code', 'title': 'Assigning versus changing',
+         'code': 'def move(spot):\n'
+                 '    spot = (9, 9)             # ASSIGNS: spot now holds something else\n'
+                 '\n'
+                 'def extend(steps):\n'
+                 '    steps.append((9, 9))      # CHANGES the list steps refers to\n'
+                 '\n'
+                 'here = (1, 1)\n'
+                 'move(here)\n'
+                 'print(here)                   # (1, 1)  -- untouched\n'
+                 '\n'
+                 'route = [(1, 1)]\n'
+                 'extend(route)\n'
+                 'print(route)                  # [(1, 1), (9, 9)]  -- changed',
+         'code_size': 15,
+         'callout': '`=` stays in the function (Lesson 4-1). `append()` goes to the one list both '
+                    'sides share.',
+         'tone': 'teal',
+         'notes': 'Run move() and extend() live: the two printouts side by side do more than the '
+                  'explanation. A tuple can\'t be changed at all, so a function can never alter a '
+                  'position you hand it. This isn\'t a trap; the course relies on it: in Module 5 '
+                  'a planner sees each obstacle you add because it holds the list\'s address. Don\'t '
+                  'teach copy() or slicing.'},
+
+        {'kind': 'check',
+         'question': 'A function is handed a list called `blocked` and runs '
+                     '`blocked.append((2, 2))`. After it returns, what does the caller\'s list hold?',
+         'options': ['What it held before: functions cannot change the caller\'s variables',
+                     'The old items plus (2, 2): the function and the caller refer to the same list',
+                     'Only (2, 2)',
+                     'Nothing: the list is emptied when the function ends'],
+         'answer': 1,
+         'explanation': 'The parameter holds the list\'s address, so append() changes the one list '
+                        'both sides share. Only assigning with = inside the function would leave the '
+                        'caller\'s list alone.'},
 
         {'kind': 'wrapup',
          'questions': [
-             'What\'s the one line that makes multi-leg journeys work?',
-             'Why is only leg 1 printed before the button?',
-             'What were the three steps?',
-             'Where did problem decomposition pay off?',
+             'Tuple or list: which for a position, which for a path, and why?',
+             'Name three things you can do with both',
+             'What can a list do that a tuple can\'t?',
+             'Two variables refer to the same list and you append through one. What does the other '
+             'see?',
          ],
-         'next': 'Module 5: breadth-first search replaces the planner, and drive_path keeps driving',
-         'notes': 'Answers: position, heading = drive_path(path, position, heading), for each leg. Later legs '
-                  'are planned from where the robot actually ends up. One leg, two legs, then a loop over '
-                  'a list. Each part was built and tested alone, so the main program that connects them is '
-                  'about ten lines, and a printed path tells you which part to open when a run goes wrong. '
-                  'When a robot finishes the whole sequence, let the class watch: it is the '
-                  'payoff of eight lessons. Name what they built across Module 4: coordinates and tuples, '
-                  'lists and iteration, algorithm design, a planner and a driver that know nothing about '
-                  'each other, a testing discipline, hardware integration. In Module 5 BFS replaces the '
-                  'Manhattan planner and drive_path keeps driving unchanged: the reward for keeping the '
-                  'two concerns separate.'},
+         'next': 'Module 5: obstacles on the grid',
+         'notes': 'Exit ticket: write the line that makes an empty list called seen, the line that '
+                  'adds the position 3 across and 1 up, and the line that prints its y. (seen = [], '
+                  'seen.append((3, 1)), print(seen[0][1]).) Module 5 puts obstacles on the grid: the '
+                  'planner changes; drive_path() and the main program don\'t.'},
     ],
 }

@@ -24,7 +24,6 @@ const MODULE_TITLES = {
   'module-04-manhattan': "Module 4 · Manhattan Navigation",
   'module-05-pathfinding': 'Module 5 · Pathfinding Around Obstacles',
   'module-06-dijkstra': "Module 6 · Dijkstra's Algorithm (optional)",
-  'test-module-04': 'Module 4 test · Top-down (trial)',
 };
 
 /** Front matter value, e.g. title: "Lesson 1 · Meet the XRP" */
@@ -125,8 +124,7 @@ function main() {
   let total = 0;
   const problems = [];
 
-  // The Module 4 test (top-down trial) is a module folder too; it sorts after Module 6.
-  for (const moduleDir of fs.readdirSync(DOCS).filter((d) => d in MODULE_TITLES).sort()) {
+  for (const moduleDir of fs.readdirSync(DOCS).filter((d) => d.startsWith('module-')).sort()) {
     const files = fs
       .readdirSync(path.join(DOCS, moduleDir))
       .filter((f) => f.endsWith('.mdx'))

@@ -22,24 +22,26 @@ templates](/templates) page.
 
 <TeacherNote title="Checking a robot against this file">
 
-Most of Module 4 runs with the robot sitting still. These tests only print, so
-you can check a student's planner from their file without a grid:
-`test_paper_paths()`, `test_edge_cases()`,
-`test_planner()` (six lines, all `PASS`) and `test_headings()`. The ones that drive
-need the grid: `test_drive_path()` and the graded `test_delivery()`, which students
-build in Lesson 4-7 one leg at a time before the loop.
+Everything up to Lesson 4-6 runs with the robot on the desk. These tests only print:
+`test_planner()` (five lines, all `PASS`) and `test_headings()` (W, N, E, S). Until
+Lesson 4-6, `test_delivery()` prints the whole delivery run too: 77 lines ending
+`new position: (0, 0) heading: S`.
 
-`turn_to()` turns clockwise one quarter at a time until the heading is right, as
-the lesson has it, so a left turn comes out as three right turns. That is the
-lesson's design, not a bug.
+In this file the two stubs have been swapped for the real Module 2 calls, as Lesson 4-6
+does, so `test_delivery()` drives the robot. To check the run on screen again, swap
+`turn_clockwise()` and `track_to_intersection()` back to the `fake_` versions, which are
+still in the file.
 
-</TeacherNote>
+`turn_to()` turns clockwise one quarter at a time until the heading is right, as the
+lesson has it, so a left turn comes out as three right turns. That is the lesson's
+design, not a bug.
 
-<TeacherNote title="Lessons 4-1 and 4-2">
+The class track builds the two optional class extensions in: the `Manhattan` planner from
+Lesson 4-3 (one object, `planner`) and the `Navigator` from Lesson 4-6 (one object,
+`navigator`, which keeps the pose), because Modules 5 and 6 build on both.
 
-Lesson 4-1's grid activity is on paper, and its three answers are in the student
-reveal. Both lessons give their code in the lesson to try and change; there is no
-exercise to answer.
+Lesson 4-7 adds nothing to `robot.py`: its predict-then-run activity is a separate file,
+with the answers in the lesson's reveal.
 
 </TeacherNote>
 

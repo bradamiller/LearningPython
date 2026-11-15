@@ -1,3 +1,8 @@
+"""Module 4, Lesson 4-0 · The Big Picture.
+
+The tree slides are topdown-decomp-N.svg from scripts/figures/fdecomp_topdown.py.
+"""
+
 DECK = {'module': 4,
  'lesson': 0,
  'doc': 'module-04-manhattan/lesson-00-overview',
@@ -8,15 +13,19 @@ DECK = {'module': 4,
                             'Split a complex problem into simpler parts: plan the route first, '
                             'test it with no robot, then drive it',
                             'Name the **planner** (`compute_manhattan_path`), the **driver** '
-                            '(`drive_path`), and the list of (x, y) coordinates between them'],
+                            '(`drive_path`), and the list of (x, y) coordinates between them',
+                            'Say what building a program **top-down** means: the main program '
+                            'first, with stand-ins for the parts below it'],
              'notes': '20 to 25 minutes, problem decomposition, a class discussion, no coding yet. '
                       'The lesson opens with the whole problem, leads a class discussion to the '
                       'split this module uses: plan first, test the plan with no robot, then drive '
                       'it. After that it is an advance organizer: the point is the shape, not the '
                       'detail. If students ask how compute_manhattan_path works, the answer is '
-                      '"that is exactly Lessons 4-3 and 4-4". Tell them plainly they are not meant '
-                      'to understand every line yet: by Lesson 4-7 they will, because they will '
-                      'have built each piece.'},
+                      '"that is exactly Lessons 4-2 and 4-3". Tell them plainly they are not meant '
+                      'to understand every line yet: by Lesson 4-6 they will, because they will '
+                      'have built each piece. Module 4 is built top down: students '
+                      'write the main program next lesson, with stubs, and meet tuples and lists '
+                      'as the program needs them.'},
             {'kind': 'figure',
              'title': 'The problem',
              'figure': './decks/m4/fig/manhattan-grid.svg',
@@ -28,17 +37,16 @@ DECK = {'module': 4,
                       'only drive along the tape, and nobody steers it at the corners. One '
                       'destination for now; several in a row comes at the end of the module. New '
                       'Yorkers give directions this way: "two blocks east, then three north." '
-                      'Lesson 4-3 builds the algorithm properly. For the curious: the grid comes from the '
-                      "Commissioners' Plan of 1811; it is turned roughly 29 degrees from true "
-                      'north, so "Manhattan north" is a local convention; and the same distance is '
-                      'called taxicab distance in mathematics. The map is a hook, not a lesson. '
-                      'Lesson 4-3 opens with "Why Manhattan?" and assumes students have seen this. '
-                      '(This slide uses a copy of the lesson figure with its text halos redrawn '
-                      'for the slide renderer.)'},
+                      'Lesson 4-2 builds the algorithm properly. For the curious: the grid comes '
+                      "from the Commissioners' Plan of 1811; it is turned roughly 29 degrees from "
+                      'true north, so "Manhattan north" is a local convention; and the same '
+                      'distance is called taxicab distance in mathematics. The map is a hook, not '
+                      'a lesson. Lesson 4-2 assumes students have seen it. (This slide uses a copy '
+                      'of the lesson figure with its text halos redrawn for the slide renderer.)'},
             {'kind': 'bullets',
              'title': 'How to find the route',
-             'bullets': ['**Go east or west until we are at the destination avenue, then north '
-                         "or south until we're at the destination street.**",
+             'bullets': ['**Go east or west until we are at the destination avenue, then north or '
+                         "south until we're at the destination street.**",
                          "That's the whole algorithm"],
              'callout': "It's called the **Manhattan algorithm**",
              'tone': 'teal',
@@ -54,21 +62,21 @@ DECK = {'module': 4,
              'bullets': ['Now you know how to find the route. Getting the **robot** to do it is '
                          'the next problem',
                          'Street and avenue names are hard to use in a robot program, so we '
-                         '**number each intersection** instead: a column number, **x**, and a '
-                         'row number, **y**',
+                         '**number each intersection** instead: a column number, **x**, and a row '
+                         'number, **y**',
                          "The taxi's trip becomes **(1, 1) to (3, 4)**"],
              'size': 28},
             {'kind': 'figure',
              'title': 'Numbering the intersections',
              'figure': './decks/m4/fig/manhattan-xy.svg',
-             'caption': 'Each intersection gets a column number x and a row number y, written '
-                        '(x, y).',
+             'caption': 'Each intersection gets a column number x and a row number y, written (x, '
+                        'y).',
              'notes': 'x is the column: the avenues are numbered from the west, 9th Ave is x = 0, '
-                      '8th Ave x = 1, up to Madison, x = 5. y is the row: the streets are '
-                      'numbered from the south, 53rd St is y = 0, up to 58th St, y = 5. The taxi '
-                      'starts at A, (1, 1), 8th Avenue and 54th Street, and drives to B, (3, 4), '
-                      '6th Avenue and 57th Street. (This slide uses a copy of the lesson figure '
-                      'with its text halos redrawn for the slide renderer.)'},
+                      '8th Ave x = 1, up to Madison, x = 5. y is the row: the streets are numbered '
+                      'from the south, 53rd St is y = 0, up to 58th St, y = 5. The taxi starts at '
+                      'A, (1, 1), 8th Avenue and 54th Street, and drives to B, (3, 4), 6th Avenue '
+                      'and 57th Street. (This slide uses a copy of the lesson figure with its text '
+                      'halos redrawn for the slide renderer.)'},
             {'kind': 'bullets',
              'title': 'Breaking down a complex problem',
              'bullets': ['"Drive over there" sounds like one job, but it is too much to get right '
@@ -97,29 +105,31 @@ DECK = {'module': 4,
                       'them. Ideas about motors, sensors or turning belong to the driving half.'},
             {'kind': 'figure',
              'title': 'Breaking it down',
-             'figure': './decks/m4/fig/l05-decomp-1.svg',
-             'caption': 'The whole problem. What are its parts?',
-             'notes': 'Four slides, one level each, as in Lesson 4-5. Click through as the class '
-                      'answers.'},
+             'figure': './decks/m4/fig/topdown-decomp-1.svg',
+             'caption': 'The main program: for each destination, plan the route, then drive it. '
+                        'What are its parts?',
+             'notes': 'Four slides, one level each, the same tree as the lesson page. Click '
+                      'through as the class answers. The top box is the main program, Lesson 4-1.'},
             {'kind': 'figure',
              'title': 'Breaking it down',
-             'figure': './decks/m4/fig/l05-decomp-2.svg',
+             'figure': './decks/m4/fig/topdown-decomp-2.svg',
              'caption': 'Plan, then drive: the split you just made.',
-             'notes': 'The planner is small enough to build and test in one go (4-3, 4-4); the '
-                      'driver needs breaking down.'},
+             'notes': 'The planner is built and tested on its own in Lessons 4-2 and 4-3; the '
+                      'driver (4-4) needs breaking down.'},
             {'kind': 'figure',
              'title': 'Breaking it down',
-             'figure': './decks/m4/fig/l05-decomp-3.svg',
+             'figure': './decks/m4/fig/topdown-decomp-3.svg',
              'caption': 'Driving breaks into two steps at each intersection: turn to face the next '
                         'intersection, then drive to the next intersection.',
-             'notes': 'Driving is Module 2 line tracking, already built.'},
+             'notes': 'Driving is Module 2 line tracking, already built; it goes on the robot in '
+                      'Lesson 4-6.'},
             {'kind': 'figure',
              'title': 'Breaking it down',
-             'figure': './decks/m4/fig/l05-decomp-4.svg',
+             'figure': './decks/m4/fig/topdown-decomp-4.svg',
              'caption': 'And turning breaks into two: which way to face, then turn until facing '
                         'the next intersection.',
-             'notes': 'Each box names the lesson that builds it. Lesson 4-5 opens with this same '
-                      'tree.'},
+             'notes': 'Each box names the lesson that builds it: which way to face in 4-4, turning '
+                      'in 4-5.'},
             {'kind': 'figure',
              'title': 'Plan first, then drive',
              'figure': '/img/lesson-m4-00/plan-then-drive-points.svg',
@@ -163,27 +173,63 @@ DECK = {'module': 4,
                          '**just a loop**: plan from where it is, drive, repeat'],
              'size': 28},
             {'kind': 'figure',
-             'title': 'Three deliveries, on the floor',
-             'figure': '/img/lesson-m4-00/delivery-overview-xy.svg',
-             'caption': 'Three deliveries, three legs, each planned from where the last one '
-                        'ended.',
-             'notes': 'The robot starts at home, (0, 0), facing north. Leg 1 goes right to '
-                      'delivery 1 at (2, 0); leg 2 goes up to delivery 2 at (2, 3); leg 3 goes '
-                      'left to delivery 3 at (0, 3).'},
+             'title': 'Five deliveries, on the floor',
+             'figure': '/img/lesson-m4-00/delivery-stops-xy.svg',
+             'caption': 'Five deliveries, five legs, each planned from where the last one ended.',
+             'notes': 'The robot starts at home, (0, 0), facing north. Each leg goes across first, '
+                      'then up or down: to (2, 3), (1, 0), (3, 1), (2, 2), then back home to '
+                      '(0, 0). These are the DELIVERY_STOPS students type in Lesson 4-1.'},
             {'kind': 'bullets',
-             'title': "What's next",
-             'bullets': ['**4-1 and 4-2:** the background: coordinates, tuples and lists',
-                         '**4-3 and 4-4:** write and test the planner',
-                         '**4-5 and 4-6:** write and test the driver',
-                         '**4-7:** put them together'],
-             'size': 30},
+             'title': 'Build it from the top down',
+             'bullets': ['**Top-down:** the top of the tree first, then one level at a time',
+                         'The main program comes first, next lesson, and it **runs the day you '
+                         'write it**',
+                         'Every part below it starts as a **stub**: a stand-in function that does '
+                         'just enough for the program to run, and prints what the real one would '
+                         'do',
+                         'Then swap the stubs for real functions, one per lesson, and run the '
+                         'program after every change',
+                         'The robot only drives in Lesson 4-6'],
+             'callout': 'If the printout is wrong, the bug is in your code, not the robot',
+             'tone': 'teal',
+             'size': 24,
+             'notes': 'The printout tells students right away whether the program still works. '
+                      'Because the robot only drives at the end, a wrong move on the floor in 4-6 '
+                      'can only be a robot problem: everything else was checked on screen first.'},
+            {'kind': 'bullets',
+             'title': 'The Python arrives the same way',
+             'bullets': ['A position like `(1, 1)` is a Python **tuple**',
+                         'A route is a Python **list**',
+                         "You won't study them first: each lesson teaches the piece it needs, "
+                         'right where the program needs it',
+                         'Lesson 4-7 puts it all together'],
+             'size': 28,
+             'notes': 'Where each piece is taught: tuple and list literals, for over a list, '
+                      'returning two values and unpacking in 4-1; empty list, append(), len(), '
+                      "tuples can't change in 4-2; == on tuples and lists in 4-3; indexing in 4-4; "
+                      'references (two names, one list) in 4-7. If a student asks for more than a '
+                      'lesson gives, answer it and move on: 4-7 is the place for the full '
+                      'picture.'},
+            {'kind': 'bullets',
+             'title': 'The module at a glance',
+             'bullets': ['**4-1:** the main program, with stubs',
+                         '**4-2:** the planner, part 1: a path that grows',
+                         '**4-3:** the planner, part 2: every direction, and tests',
+                         '**4-4:** the driver',
+                         '**4-5:** turning',
+                         '**4-6:** the stubs out, the robot on the grid',
+                         '**4-7:** tuples and lists: what you now know'],
+             'size': 26},
             {'kind': 'wrapup',
              'questions': ['What problem does Module 4 solve?',
                            'Why plan the route first, before writing the code that drives?',
-                           "What are the two halves, and what is each one's job?"],
-             'next': 'coordinates: a name for every spot on the grid',
+                           "What are the two halves, and what is each one's job?",
+                           'What is a stub?'],
+             'next': 'the main program, with stubs',
              'notes': 'Answers: drive from where it starts to a destination on its own, then to '
-                      'several in a row. The planner never moves the robot, so its list of coordinates '
-                      'can be printed and checked with no robot; then the driver only follows a '
-                      'plan you trust. compute_manhattan_path plans; drive_path drives. Open each '
-                      'lesson with "remember the big picture? Today we build this piece."'}]}
+                      'several in a row. The planner never moves the robot, so its list of '
+                      'coordinates can be printed and checked with no robot; then the driver only '
+                      'follows a plan you trust. compute_manhattan_path plans; drive_path drives. '
+                      'A stub is a stand-in function that lets the program run before the real one '
+                      'is written. Open each lesson with "remember the big picture? Today we build '
+                      'this piece."'}]}

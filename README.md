@@ -6,7 +6,7 @@ from — the teacher lesson plans, student worksheets, starter/solution code and
 slide decks — lives in a separate repo, `IntroToPython`. This repo is the website
 only. **All five modules are built — 46 lessons:**
 Module 1 · Learning to Drive (kickoff lesson 0 + 12), Module 2 · Line Tracking (overview + 10), Module 3 · Grid
-Driving (overview + 4), Module 4 · Manhattan Navigation (overview + 9), and Module 5 ·
+Driving (overview + 4), Module 4 · Manhattan Navigation (overview + 7), and Module 5 ·
 Dijkstra's Algorithm (overview + 9). See `CLAUDE.md` for the full project spec, conventions,
 and open items.
 

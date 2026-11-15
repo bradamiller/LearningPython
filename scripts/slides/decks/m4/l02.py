@@ -1,277 +1,242 @@
+"""Module 4, Lesson 4-2 · The Planner: A Path That Grows."""
+
 DECK = {
     'module': 4, 'lesson': 2,
-    'doc': 'module-04-manhattan/lesson-02-lists',
-    'title': 'Lists',
+    'doc': 'module-04-manhattan/lesson-02-a-path-that-grows',
+    'title': 'The Planner: A Path That Grows',
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Create a list with `[]` and see how it differs from a tuple',
-             'Add items with `append()` and count them with `len()`',
-             'Loop through a list with a `for` loop',
-             'Build a list step by step inside a loop, and store a path as a list of tuples',
-             'Explain what a variable holds when the value is a list, and what happens when two '
-             'variables refer to the same one',
+             'Trace a path by hand: across first, then up',
+             'Start with an empty list and add to it with `append()`',
+             'Unpack a tuple into `x` and `y`, and make a new tuple from them',
+             'Build a path inside a `while` loop, one step per trip around',
          ],
-         'notes': '50 minutes. Practice code goes in a new file, not robot.py. The '
-                  'build-in-a-loop pattern practiced here is what next lesson\'s planner '
-                  'function is made of.'},
+         'notes': '50 to 60 minutes, robot on the desk. The planner stub hands back one jump; '
+                  'today it starts to build real paths, for any trip that goes right and up. Left '
+                  'and down are Lesson 4-3. Scope: [], append(), len(), unpacking. No indexing yet '
+                  '(4-4), and no insert, pop or slicing at all.'},
 
-        {'kind': 'bullets', 'title': 'A path is many positions',
+        {'kind': 'bullets', 'title': 'The stub hands back one jump',
          'bullets': [
-             'A tuple stores **one** position',
-             'A **path** is many positions in order, and for that you need a **list**',
-             'By the end you\'ll represent a route as a list of coordinate tuples, like '
-             '`[(1,0), (2,0), (2,1), (2,2), (2,3)]`',
-             'And build one up step by step: exactly what the Manhattan algorithm does next '
-             'lesson',
+             'Right now `compute_manhattan_path()` returns `[destination]`',
+             'A real path lists **every** intersection on the way',
+             'Today the stub starts to go: by the end, real paths for trips that go **right and up**',
          ],
-         'callout': 'Try this lesson\'s code in a new file, not `robot.py`',
-         'tone': 'teal'},
+         'callout': 'Left and down come in Lesson 4-3',
+         'tone': 'teal', 'size': 28},
 
-        {'kind': 'bullets', 'title': 'The start is not in the path',
-         'bullets': [
-             'That example is the route from `(0,0)` to `(2,3)`',
-             'The robot\'s own starting intersection **isn\'t in it**',
-             'A path lists the places the robot **drives to**',
-             'It\'s already standing on the start: putting it in the list would mean "drive to '
-             'where you already are"',
-         ],
-         'callout': 'Every path in this module and the next works that way',
-         'tone': 'orange'},
+        {'kind': 'figure', 'title': 'One step at a time',
+         'figure': '/img/lesson-m4-03/one-step.svg',
+         'caption': 'One step changes x or y by 1, never both. Both would be a diagonal, and the '
+                    'robot can\'t drive one.',
+         'notes': 'The Manhattan rule from Lesson 4-0: step across until x is right, then step up '
+                  'or down until y is right.'},
 
-        {'kind': 'figure', 'title': 'One tuple per intersection it drives to',
+        {'kind': 'table', 'title': 'Activity · Trace it on paper',
+         'tag': 'Activity',
+         'lead': 'Trace **Leg 1**, (0, 0) → (2, 3), one row per move. Then write the whole path as '
+                 'a Python list.',
+         'headers': ['Step', 'Action', 'New position'],
+         'widths': [1, 1.6, 2.2],
+         'rows': [['1', 'x + 1', '(1, 0)'], ['2', '', ''], ['3', '', ''], ['4', '', ''],
+                  ['5', '', '']],
+         'row_h': 0.5,
+         'notes': 'The filled-in trace is behind a reveal on the lesson page. Check traces before '
+                  'Step 2\'s run: a wrong trace sends a student hunting for a bug that isn\'t there. '
+                  'Answer: x + 1 to (2, 0), then y + 1 three times to (2, 1), (2, 2), (2, 3).'},
+
+        {'kind': 'figure', 'title': 'The start is not in the path',
          'figure': '/img/lesson-m4-02/path-list-xy.svg',
-         'caption': 'In order. The start is where it already is, so it is not in the list, and '
-                    '`len(path)` is the number of steps.'},
+         'caption': 'One tuple per intersection the robot drives to, in order. The robot is already '
+                    'standing on the start.'},
 
-        {'kind': 'code', 'title': 'List vs. tuple',
-         'lead': 'A **list** is an ordered collection written with square brackets, and unlike '
-                 'a tuple it\'s **mutable**: it can grow and change.',
-         'lead_h': 1.2,
-         'code': 'numbers = [1, 2, 3, 4, 5]\n'
-                 'print(numbers[0])     # 1   -- indexing works like tuples\n'
-                 'print(len(numbers))   # 5   -- how many items',
-         'code_size': 22},
-
-        {'kind': 'table', 'title': 'Which one, when?',
-         'headers': ['', 'Tuple', 'List'],
-         'widths': [2, 2, 2],
-         'rows': [
-             ['Brackets', '`( )`', '`[ ]`'],
-             ['Can change?', 'No (immutable)', 'Yes (mutable)'],
-             ['Best for', 'a fixed position', 'a growing path'],
-         ],
-         'size': 24,
-         'callout': 'So a **coordinate** is a tuple; a **path** is a list of tuples',
-         'tone': 'teal'},
-
-        {'kind': 'check',
-         'question': 'Which is true about lists compared to tuples?',
-         'options': ['Lists use () and cannot change',
-                     'Lists use [] and CAN change (they are mutable)',
-                     'Lists and tuples are identical',
-                     'Lists can only hold numbers'],
-         'answer': 1,
-         'explanation': 'Lists use square brackets and are mutable, so they can grow: perfect for '
-                        'a path that\'s built up step by step.'},
-
-        {'kind': 'code', 'title': 'Growing a list with `append()`',
-         'lead': '`append()` adds an item to the **end** of a list. Start empty and build up:',
+        {'kind': 'code', 'title': 'A list can grow',
+         'lead': 'A planner doesn\'t know the path until it works it out. So it starts **empty** '
+                 'and adds to the **end**:',
          'code': 'path = []\n'
                  'path.append((1, 0))\n'
                  'path.append((2, 0))\n'
-                 'path.append((3, 0))\n'
-                 'print(path)        # [(1, 0), (2, 0), (3, 0)]\n'
-                 'print(len(path))   # 3',
+                 'print(path)          # [(1, 0), (2, 0)]\n'
+                 'print(len(path))     # 2',
          'code_size': 22,
-         'callout': 'A robot at `(0,0)` driving three intersections to the right: three places to '
-                    'drive to, so `len(path)` is 3, the number of steps',
-         'callout_size': 21,
-         'tone': 'teal'},
-
-        {'kind': 'code', 'title': 'Loop through it by index',
-         'lead': 'To visit every step, you could count through the indexes with `range()` and '
-                 'look each one up:',
-         'code': 'for i in range(len(path)):\n'
-                 '    step = path[i]\n'
-                 '    print("Visit:", step, " x:", step[0], " y:", step[1])',
-         'code_size': 22},
-
-        {'kind': 'code', 'title': 'The shortcut: `for step in path`',
-         'lead': 'That\'s so common that Python has a shortcut. In `for step in path:`, each '
-                 'element of the list is assigned in turn, first to last, to the variable on the '
-                 'left of `in`. No index needed:',
-         'lead_h': 1.25,
-         'code': 'for step in path:\n'
-                 '    print("Visit:", step, " x:", step[0], " y:", step[1])',
-         'code_size': 22,
-         'callout': 'Both loops print the same three lines',
-         'tone': 'teal'},
+         'callout': 'Double parentheses: the outer pair is `append()`, the inner pair is the tuple',
+         'tone': 'teal',
+         'notes': 'len() counts the items. Take real time on the double parentheses.'},
 
         {'kind': 'check',
-         'question': 'Given path = [(1, 0), (2, 0), (3, 0)], what does path[2] return?',
-         'options': ['(2, 0)', '(3, 0)', '2', 'An IndexError'],
+         'question': 'What does this print? `stops = []`, then `stops.append((0, 1))`, '
+                     '`stops.append((0, 2))`, `stops.append((1, 2))`, then '
+                     '`print(len(stops), stops)`',
+         'options': ['`3 [(1, 2), (0, 2), (0, 1)]`',
+                     '`3 [(0, 1), (0, 2), (1, 2)]`',
+                     '`6 [0, 1, 0, 2, 1, 2]`',
+                     '`1 [(1, 2)]`'],
          'answer': 1,
-         'explanation': 'Indexing starts at 0, so path[2] is the third item: the tuple (3, 0).'},
+         'explanation': 'append() adds to the end, so the items stay in the order they were added. '
+                        'Three appends, three tuples, so len() is 3.'},
 
-        {'kind': 'check',
-         'question': 'For that same path, what does path[2][1] return?',
-         'options': ['3', '0', '(3, 0)', 'An error'],
-         'answer': 1,
-         'explanation': 'path[2] is (3, 0); then [1] takes its y, 0. Two indexes: which step, '
-                        'then which part of that step.'},
-
-        {'kind': 'code', 'title': 'Activity · Build a path in a loop', 'tag': 'Activity',
-         'lead': 'The pattern the whole module depends on: **start empty, append inside a '
-                 'loop.**',
-         'code': 'path = []\n'
-                 'for x in range(1, 4):            # start at 1, not 0 -- the robot is already '
-                 'at x = 0\n'
-                 '    path.append((x, 0))\n'
-                 'print(path)        # [(1, 0), (2, 0), (3, 0)]',
-         'code_size': 20,
-         'callout': '`range(1, 4)` counts 1, 2, 3: it starts where you tell it to, so the '
-                    'first intersection you append is the first one the robot drives to',
-         'callout_size': 21,
-         'tone': 'teal'},
-
-        {'kind': 'steps', 'title': 'Trace it, then change it',
+        {'kind': 'steps', 'title': 'Step 1 · Leg 1, by hand',
+         'tag': 'Activity',
+         'lead': 'In `compute_manhattan_path()`, keep the `print` line. Replace `return [destination]` '
+                 'with:',
          'steps': [
-             'Trace the loop: the list grows by **one** each pass',
-             'Change the loop to vary **y** instead, and you build a vertical path',
-             'Combine a "go right" loop and a "go up" loop, and you\'ve basically written the '
-             'Manhattan algorithm',
+             'Assign an empty list to a variable named `path`',
+             'Append the five positions from your trace to `path`, one line each. The first is '
+             '`path.append((1, 0))`',
+             'Return `path`. Then run `test_delivery()`',
          ],
-         'notes': 'This is make-or-break: Lesson 4-3\'s algorithm relies entirely on "empty '
-                  'list, append inside a loop." Spend real time here with a trace table. Demo '
-                  'the classic bug live: put append() outside the loop (wrong indentation) so '
-                  'only the last item lands, then fix the indentation. Keep scope tight: [], '
-                  'append(), len(), indexing and for. No insert, pop, slicing or comprehensions '
-                  'yet.'},
+         'callout': 'Correct: Leg 1 matches your trace, and every other leg gets the same path',
+         'tone': 'green',
+         'notes': 'Deliberately clumsy, about five minutes: five typed appends make students want '
+                  'the loop. Every leg is the same because the function never looks at start or '
+                  'destination: it hands back the path they typed. A planner has to work the path '
+                  'out.'},
 
-        {'kind': 'figure', 'title': 'The pattern, traced',
-         'figure': './decks/m4/fig/build-path.svg', 'frame': 0.35,
-         'caption': 'One append per pass, so the list grows by one each time. Drawn on a 4 by 4 '
-                    'grid, so the loop stops at x = 3.',
-         'notes': 'The lesson figure is an animation: the loop appends (1, 0), (2, 0), (3, 0) one '
-                  'pass at a time, and the start (0, 0) is never added. This is the end of that '
-                  'part. (The slides use a copy of the figure with its text halos redrawn for '
-                  'the slide renderer.)'},
+        {'kind': 'figure', 'title': 'Step 2 · Let a loop do the appending',
+         'tag': 'Activity',
+         'figure': '/img/lesson-m4-03/trace-to-loops.svg',
+         'caption': 'Each row is one trip around a loop: add 1 to x, record the spot, until x is '
+                    'right.'},
 
-        {'kind': 'figure', 'title': 'Then a go-right loop and a go-up loop',
-         'figure': './decks/m4/fig/build-path.svg', 'frame': 0.88,
-         'caption': 'Two loops, one after the other: the path from (0, 0) to (2, 3), five steps.',
-         'notes': 'The second half of the same animation. Students do not write the general '
-                  'version yet: that is next lesson.'},
+        {'kind': 'code', 'title': 'Take the tuples apart',
+         'lead': 'To add 1 to x, the function needs x on its own. **Unpacking** (Lesson 4-1):',
+         'code': 'x, y = start                     # start is (0, 0): x is 0, y is 0\n'
+                 'dest_x, dest_y = destination     # (2, 3): dest_x is 2, dest_y is 3',
+         'code_size': 20,
+         'callout': 'After each move, `(x, y)` makes a **new tuple** for the path',
+         'tone': 'teal',
+         'notes': 'x and y are where the plan has got to. They start as the start and change by 1 '
+                  'on every move.'},
 
-        {'kind': 'bullets', 'title': 'What the variable actually holds',
-         'bullets': [
-             'Lesson 1-9: a variable is a **named location in memory**. For a number, that\'s '
-             'the whole story',
-             'A list grows, but a location is a **fixed size**, so the list lives somewhere else',
-             'The variable holds the list\'s **address**',
-         ],
-         'callout': 'An address stored in a variable is called a **reference**',
-         'tone': 'teal'},
-
-        {'kind': 'code', 'title': 'Two variables, one address',
-         'code': 'a = 5\n'
-                 'b = a                     # copies the VALUE: two 5s\n'
+        {'kind': 'code', 'title': 'Replace the function with this',
+         'tag': 'Activity',
+         'code': 'def compute_manhattan_path(start, destination):\n'
+                 '    print("computing path from:", start, "to:", destination)\n'
+                 '    path = []\n'
+                 '    x, y = start              # where the plan is now\n'
+                 '    dest_x, dest_y = destination   # where it is going\n'
                  '\n'
-                 'path = [(1, 0)]\n'
-                 'same_path = path          # copies the ADDRESS: still one list\n'
-                 'same_path.append((2, 0))\n'
-                 'print(path)               # [(1, 0), (2, 0)]  <- path changed too',
-         'code_size': 21},
+                 '    # East: keep stepping right until x matches dest_x\n'
+                 '    while x < dest_x:\n'
+                 '        x = x + 1             # one step right\n'
+                 '        path.append((x, y))   # record the new spot\n'
+                 '\n'
+                 '    # North: copy east, but step y until it matches dest_y\n'
+                 '\n'
+                 '    return path',
+         'code_size': 15,
+         'notes': 'The slide leaves out the docstring to fit. The lesson page has the whole block '
+                  'plus test_planner(), which prints three trips: (0, 0) to (2, 3), (0, 2) to '
+                  '(3, 2), and (2, 0) to (2, 3). Students paste it from the page.'},
 
-        {'kind': 'figure', 'title': 'A number is copied, a list is shared',
-         'figure': '/img/lesson-m4-02/number-vs-list.svg',
-         'caption': 'b = a makes a second 5. same_path = path makes a second arrow to the same '
-                    'list.'},
+        {'kind': 'steps', 'title': 'Run the east loop',
+         'tag': 'Activity',
+         'steps': [
+             'Trace the three trips in `test_planner()` on paper first: a **paper test**, the right answer worked out by hand',
+             'Set the run line to `test_planner()` and run it',
+             'Only the east loop exists: the first trip goes right two and stops; the second is '
+             'already complete; the third comes back `[]`',
+         ],
+         'tone': 'green',
+         'notes': 'Expected: [(1, 0), (2, 0)], then [(1, 2), (2, 2), (3, 2)], then [], each under '
+                  'its computing path from: line. The second trip needs no move up; the third only '
+                  'goes up.'},
+
+        {'kind': 'steps', 'title': 'Step 3 · Break it on purpose',
+         'tag': 'Activity',
+         'steps': [
+             'Move `path.append((x, y))` one indent to the left, so it lines up with `while`',
+             '**Predict** the first path, then run it',
+             'Put the indent back',
+         ],
+         'callout': 'Indentation decides what is inside the loop',
+         'tone': 'orange',
+         'notes': 'The append runs once, after the loop: [(2, 0)], [(3, 2)], and [(2, 0)] for the '
+                  'third trip, where the loop never ran and the start itself was appended. The '
+                  'indentation bug is the most common list bug there is; here it costs one keystroke '
+                  'to cause and to fix.'},
 
         {'kind': 'check',
-         'question': 'After scores = [10, 20], then backup = scores, then backup.append(30), '
-                     'what does scores hold?',
-         'options': ['[10, 20]: backup is a separate copy',
-                     '[10, 20, 30]: both variables refer to the same list',
-                     '[30]',
-                     'An error: you cannot assign a list to another name'],
-         'answer': 1,
-         'explanation': 'backup = scores stores the address that was in scores, not a copy of '
-                        'the list, so both variables lead to one list. Appending through either variable '
-                        'changes what both see. To get an independent copy you would have to make '
-                        'a new list.'},
-
-        {'kind': 'bullets', 'title': 'Not a trap: a mechanism',
-         'bullets': [
-             'The course relies on this',
-             'In **Module 5** a planner sees each obstacle you add to your list because it holds '
-             'the list\'s address, not a copy',
-         ],
-         'notes': 'Be explicit: this section adds to Lesson 1-9, it does not correct it. A '
-                  'variable is still a named memory location, and = still works out the right '
-                  'side and stores the result. The only new fact is what the stored value is '
-                  'for a list: the address that was printed on the location all along. If asked '
-                  'why the address exists, the physical reason is the honest one: a location is '
-                  'a fixed size, a list can grow. A demo that lands: two students each hold a '
-                  'slip with the same post office box number. One puts something in the box. '
-                  'The other one\'s slip has not changed, but what they find in the box has. Then '
-                  'ask what would have to be different for them to have separate boxes. Don\'t '
-                  'teach copy() or slicing: nothing in the course needs an independent copy, and '
-                  'the aliasing is load-bearing in Module 5.'},
-
-        {'kind': 'code', 'title': 'The most common list bug',
-         'lead': 'Indentation decides what\'s inside the loop. Get it wrong and only the last '
-                 'item is added:',
-         'code': '# WRONG -- append is outside the loop\n'
-                 'path = []\n'
-                 'for x in range(1, 4):\n'
-                 '    position = (x, 0)\n'
-                 'path.append(position)     # only runs once -> [(3, 0)]\n'
-                 '\n'
-                 '# CORRECT -- append is inside the loop\n'
-                 'path = []\n'
-                 'for x in range(1, 4):\n'
-                 '    position = (x, 0)\n'
-                 '    path.append(position)  # runs each pass -> [(1, 0), (2, 0), (3, 0)]',
-         'code_size': 18},
-
-        {'kind': 'check',
-         'question': 'A student\'s loop ends with a list holding only the LAST coordinate '
-                     'instead of all of them. What\'s wrong?',
-         'options': ['append() is broken',
-                     'append() is outside the loop (wrong indentation), so it runs only once',
-                     'They used a tuple instead of a list',
-                     'range() is the wrong size'],
+         'question': 'A loop is meant to build a path, but the list ends up holding only the last '
+                     'position. What\'s wrong?',
+         'options': ['`append()` is broken',
+                     'The `append()` line is outside the loop, so it runs only once',
+                     'The path should have been a tuple',
+                     'The loop ran too many times'],
          'answer': 1,
          'explanation': 'If append() isn\'t indented inside the loop, it runs a single time after '
-                        'the loop ends, capturing just the final value.'},
+                        'the loop ends and records just the final position.'},
 
-        {'kind': 'cards', 'title': 'Real-world connections',
-         'cards': [
-             ('Apps', 'Feeds & playlists',
-              'A playlist or a feed is a list you add to and iterate through, item by item.'),
-             ('Navigation', 'Route waypoints',
-              'A GPS route is a list of waypoints the app walks through in order.'),
-             ('Data', 'Records & logs',
-              'Programs collect results into a list, then loop over them to summarize or '
-              'display.'),
-         ]},
+        {'kind': 'steps', 'title': 'Step 4 · Write north',
+         'tag': 'Activity',
+         'steps': [
+             'Under the north comment, **copy the east loop**',
+             'Compare `y` with `dest_y`, and step `y` instead of `x`',
+             'Leave `path.append((x, y))` as it is: it records the whole position',
+             'Run `test_planner()`',
+         ],
+         'callout': 'Correct: all three paths match your paper traces',
+         'tone': 'green',
+         'notes': 'The north loop is behind a reveal on the lesson page.'},
+
+        {'kind': 'steps', 'title': 'Step 5 · Run the main program',
+         'tag': 'Activity',
+         'steps': [
+             'Set the run line back to `test_delivery()` and run it',
+             'Leg 1 is right, and the driver stub now moves **one step at a time**',
+             'Leg 2 is not: its path is **empty**, so the robot never leaves (2, 3)',
+         ],
+         'tone': 'orange',
+         'callout': 'What is missing?',
+         'notes': 'The broken run is the hook for Lesson 4-3. Let students say what\'s missing: '
+                  'loops for going left and down. The full expected printout is behind a reveal on '
+                  'the lesson page.'},
+
+        {'kind': 'check',
+         'question': 'Why is the path for Leg 2, (2, 3) to (1, 0), empty?',
+         'options': ['`append()` only works once per program',
+                     'Both while conditions are False from the start (2 is not < 1, 3 is not < 0), '
+                     'so neither loop runs',
+                     'The start and destination are the same',
+                     'The driver is still a stub'],
+         'answer': 1,
+         'explanation': 'East and north only handle x and y getting bigger. A while loop whose '
+                        'condition starts False does nothing. Going left or down needs two more '
+                        'loops: Lesson 4-3.'},
+
+        {'kind': 'code', 'title': 'Why a new tuple every step',
+         'lead': 'Could the loop just change the x inside one tuple? Try it in the shell:',
+         'code': 'spot = (2, 3)\n'
+                 'spot[0] = 5      # TypeError: \'tuple\' object does not support item assignment',
+         'code_size': 20,
+         'callout': 'A tuple **can\'t change**: right for a position. A list can grow: right for a '
+                    'path.',
+         'tone': 'teal',
+         'notes': '(2, 3) should always mean the same intersection, however many lists it is in. So '
+                  'a position is a tuple, and a path is a list of tuples.'},
+
+        {'kind': 'check',
+         'question': 'Which is true?',
+         'options': ['A tuple can grow with `append()`; a list cannot',
+                     'A list can grow and change; a tuple stays as it was made',
+                     'Lists and tuples are the same thing with different brackets',
+                     'A list can only hold numbers'],
+         'answer': 1,
+         'explanation': 'Lists use square brackets and can change, which suits a path built step by '
+                        'step. Tuples use parentheses and can\'t change, which suits a position.'},
 
         {'kind': 'wrapup',
          'questions': [
-             'Tuple vs list: which is for a position, which for a path?',
-             'What does `append()` do?',
-             'What\'s the pattern for building a path?',
-             'Two variables refer to the same list and you append through one. What does the other '
-             'see?',
+             'How does the planner build a path?',
+             'What does `x, y = start` do?',
+             'Why isn\'t the start in the path?',
+             'What still doesn\'t work?',
          ],
-         'next': 'computing a path automatically: the Manhattan algorithm',
-         'notes': 'Answers: tuple = position, list = path. Adds an item to the end. Start with '
-                  '[], append() inside a loop. The change: there\'s only one list, and both variables '
-                  'hold its address. Formative: create a list, append() in a loop, index into a '
-                  'list of tuples (path[3][1]), and spot the indentation bug. Exit ticket: '
-                  '"Given path = [(1,0),(2,0),(3,0)], what is path[2][1]?" (0). Next lesson '
-                  'starts on paper.'},
+         'next': 'the planner, part 2: every direction, and tests',
+         'notes': 'Answers: start with [] and append() one position on every trip around a loop. It '
+                  'unpacks the tuple: x gets the first number, y the second. The robot is already '
+                  'there; the path lists where it drives to. Trips that go left or down: both loops '
+                  'are skipped.'},
     ],
 }
