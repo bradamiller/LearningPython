@@ -17,22 +17,18 @@ DECK = {
                   'is the lesson, the typing is theirs.'},
 
         {'kind': 'bullets', 'title': 'Two things are missing',
-         'lead': 'In Lesson 5-7 the robot found one obstacle, re-planned once, and the loop stopped '
-                 'with a `break`.',
+         'lead': 'In Lesson 5-7 the robot re-planned once, then a `break` stopped the loop.',
          'lead_h': 1.05,
          'bullets': [
-             'The robot should **keep going**: follow the new path, and if it finds another wall, '
-             're-plan again, until it arrives',
-             'It rediscovers every obstacle **from scratch** each run, like being surprised by the '
-             'same construction zone every morning',
+             'The robot should **keep going**: re-plan at each new wall until it arrives',
+             'Each run, it rediscovers every obstacle **from scratch**',
          ],
-         'callout': 'Today: a function that re-plans until arrival, and a way to start Run 2 '
-                    'knowing what Run 1 found out',
+         'callout': 'Today: re-plan until arrival; start Run 2 knowing what Run 1 found',
          'tone': 'teal'},
 
         {'kind': 'code', 'title': 'Add to robot.py: this lesson\'s skeleton',
-         'lead': 'At the end of the OBSTACLES section, under `test_detect_once()`. One setting, and '
-                 'the one function the capstone is built from.',
+         'lead': 'At the end of OBSTACLES, under `test_detect_once()`: one setting, and the '
+                 'function the capstone is built from.',
          'lead_h': 0.95,
          'code': '# --- Lesson 5-8: re-plan until you arrive ---\n'
                  '# navigate_with_detection() is the 5-7 loop inside a while:\n'
@@ -75,15 +71,14 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'From break to "until you arrive"',
          'bullets': [
-             'Put Lesson 5-7\'s whole `for` loop inside a `while`',
-             'The `while` ends only when the `for` ran **all the way through** without a reroute',
-             'The inner `for` is Lesson 5-7 unchanged, except that the re-plan happens at the **top** '
-             'of the `while`, not inside the `if`',
-             'So the `break` only has to get out of the `for`',
+             'Wrap Lesson 5-7\'s `for` in a `while`',
+             'It ends when the `for` runs **all the way** with no reroute',
+             'Re-plan at the **top** of the `while`; `break` only leaves the `for`',
          ],
-         'callout': 'Read the shape, not the lines: **plan, follow, and if something got in the '
-                    'way, plan again from here**',
-         'tone': 'teal'},
+         'callout': '**Plan, follow, and if something got in the way, plan again from here**',
+         'tone': 'teal',
+         'notes': 'Read the shape, not the lines. The inner for is Lesson 5-7\'s, except that the '
+                  're-plan happens at the top of the while instead of inside the if.'},
 
         {'kind': 'figure', 'title': 'Plan, follow, plan again',
          'figure': '/img/lesson-m5-08/until-arrive.svg',
@@ -95,12 +90,11 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'The rerouted flag, and what comes back',
          'bullets': [
-             'The `rerouted` flag is how the `while` finds out whether the `for` **finished** or '
-             '**broke out** early',
-             ['Set it `False` before the `for`', 'Set it `True` in the obstacle branch',
-              'After the `for`, "not rerouted" means "drove the whole path": **arrived**'],
-             'The function returns the robot\'s new pose (`position` and `heading`)',
-             ['The caller needs them to plan the **next** trip: Lesson 5-9 strings several of these together'],
+             '`rerouted` tells the `while` whether the `for` **finished** or **broke out**',
+             ['`False` before the `for`', '`True` in the obstacle branch',
+              'Still `False` after it: **arrived**'],
+             'Return the new pose (`position`, `heading`)',
+             ['The **next** trip is planned from there (Lesson 5-9)'],
          ],
          'size': 24,
          'notes': 'Class track: if students built the Navigator class in Lesson 4-6, this function '
@@ -112,23 +106,23 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Two parameters that look odd',
          'bullets': [
-             '`rangefinder` and `obstacle_cm` are already in the file, as a global and a setting',
-             'Passing them in means the function **says** what it depends on: read the `def` line '
-             'and you know it needs a sensor and a cutoff',
-             'And a test can hand in a different cutoff **without editing** the function',
+             '`rangefinder` and `obstacle_cm` are already in the file',
+             'Passing them in makes the `def` line **say** what the function needs',
+             'And a test can hand in a different cutoff',
          ],
-         'callout': 'The simulated sensor is a function of `next_pos`, not an object with a '
-                    '`distance()` method: for the dry run, swap the one look-ahead line, as in Lesson 5-7',
-         'tone': 'orange'},
+         'callout': 'Dry run: swap the one look-ahead line, as in Lesson 5-7',
+         'tone': 'orange',
+         'notes': 'They are a global and a setting. The simulated sensor is a function of '
+                  'next_pos, not an object with a distance() method, so the dry run swaps the '
+                  'look-ahead line instead of passing it in.'},
 
         {'kind': 'bullets', 'title': 'Why check for an empty path?',
          'bullets': [
-             'It matters now in a way it didn\'t on paper',
-             'If the robot gets **boxed in**, `compute_bfs_path()` returns `[]` (Lesson 5-5)',
-             'Without the check, the `for` loop runs **zero times**',
-             '`rerouted` stays `False`, and the robot declares itself **arrived** at the wrong intersection',
+             '**Boxed in?** `compute_bfs_path()` returns `[]` (Lesson 5-5)',
+             'Without the check, the `for` runs **zero times**',
+             '`rerouted` stays `False`: "**arrived**" at the wrong intersection',
          ],
-         'callout': 'So: if the path is empty, say "No path" and return the four values',
+         'callout': 'Empty path? Say "No path" and return the four values',
          'tone': 'teal'},
 
         {'kind': 'check',
@@ -138,9 +132,9 @@ DECK = {
                      'The rangefinder returns 0',
                      '`compute_bfs_path` returns the same path twice'],
          'answer': 1,
-         'explanation': 'Each pass plans a path and tries to follow it. If a wall turns up, the `for` '
-                        'loop breaks with `rerouted = True` and the `while` plans again from the new '
-                        'position. Only a complete, uninterrupted pass sets `arrived`.'},
+         'explanation': 'Each pass plans a path and tries to follow it. A wall breaks the `for` '
+                        'loop with `rerouted = True`, and the `while` plans again from the new '
+                        'position. Only a complete pass sets `arrived`.'},
 
         {'kind': 'check',
          'question': 'Why does the function return the pose (`position` and `heading`), not just the step counts?',
@@ -149,13 +143,12 @@ DECK = {
                      'To reset them to (0, 0) and 0',
                      'For the print statement only'],
          'answer': 1,
-         'explanation': 'The pose, `position` and `heading`, is local to the function. The caller '
-                        'only learns the new pose if the function hands it back, and Lesson 5-9 '
-                        'needs them to chain several destinations.'},
+         'explanation': 'The pose (`position` and `heading`) is local to the function. The caller '
+                        'learns the new pose only if the function hands it back, and Lesson 5-9 '
+                        'needs it to chain destinations.'},
 
         {'kind': 'table', 'title': 'Why memory matters',
-         'lead': 'The BFS planner doesn\'t change between runs. The driving functions don\'t change. '
-                 'Only the **input** changes:',
+         'lead': 'Between runs, only the **input** changes:',
          'headers': ['Run', 'Blocked list at the start', 'What happens', 'Result'],
          'widths': [1.3, 3.2, 3.8, 2.4],
          'rows': [
@@ -163,10 +156,10 @@ DECK = {
              ['Run 2', 'pre-loaded', 'plan around known obstacles', 'few or no reroutes'],
          ],
          'size': 22,
-         'callout': '**Better data leads to better performance.** Run 2 runs the **same** algorithm '
-                    'on better information.',
+         'callout': '**Better data, better performance:** the **same** algorithm on better '
+                    'information',
          'tone': 'teal',
-         'notes': 'Frame memory with Waze: students get it instantly. "What if Waze forgot every '
+         'notes': 'The planner and the driving functions stay the same. Frame memory with Waze: students get it instantly. "What if Waze forgot every '
                   'traffic report when you closed the app?"'},
 
         {'kind': 'figure', 'title': 'Run 1 and Run 2',
@@ -184,43 +177,42 @@ DECK = {
                      'Its motors get faster',
                      'It skips destinations'],
          'answer': 1,
-         'explanation': 'Same BFS, better data. Pre-loading Run 1\'s discoveries means Run 2 plans '
-                        'around those obstacles immediately instead of rediscovering them.'},
+         'explanation': 'Same BFS, better data. With Run 1\'s discoveries pre-loaded, Run 2 plans '
+                        'around them at once instead of rediscovering them.'},
 
         {'kind': 'steps', 'title': 'Activity · Step 1 · Dry run',
          'steps': [
-             'Write the body from the outline, with `simulate_rangefinder(next_pos)` in the '
-             'look-ahead line for now',
-             'Write `test_navigate()`: hand every entry of `KNOWN_OBSTACLES` to `add_blocked()` (a '
-             '`for` loop, two lines). Position `(0, 0)`, heading `0`, destination `(3, 3)`',
-             'Plan the path and print it; wait for the button',
-             'Call the function, **assign all four return values**, then print where it arrived, the '
-             'step and reroute counts, and on its own line `"All known obstacles:"` and `BLOCKED`',
+             'Write the body, with `simulate_rangefinder(next_pos)` for now',
+             '`test_navigate()`: hand each `KNOWN_OBSTACLES` entry to `add_blocked()`',
+             'From `(0, 0)`, heading `0`, to `(3, 3)`: plan, print, wait for the button',
+             'Call it, **assign all four return values**, print the results',
          ],
          'size': 20,
-         'notes': 'The dry run proves the loop with Lesson 5-7\'s simulate_rangefinder() before any '
+         'notes': 'The KNOWN_OBSTACLES loop is two lines. At the end, print where the robot '
+                  'arrived, the step and reroute counts, and on its own line "All known '
+                  'obstacles:" and BLOCKED. The dry run proves the loop with Lesson 5-7\'s simulate_rangefinder() before any '
                   'box goes on the grid.'},
 
         {'kind': 'code', 'title': 'Assign all four return values',
-         'lead': 'In `test_navigate()`, the call hands back **four** values. Catch every one:',
+         'lead': 'The call hands back **four** values. Catch every one:',
          'lead_h': 0.8,
          'code': '    position, heading, steps, reroutes = navigate_with_detection(\n'
                  '        position, heading, destination, rangefinder, OBSTACLE_CM\n'
                  '    )',
          'code_size': 20,
-         'callout': 'With `SIMULATED_OBSTACLES` still `[(2, 0), (2, 2)]`: reaches `(1, 0)`, "sees" '
-                    '`(2, 0)`, prints a new path, **takes it**, and arrives at `(3, 3)` with one reroute',
+         'callout': 'Dry run: "sees" `(2, 0)`, **takes** the new path, arrives at `(3, 3)` with '
+                    'one reroute',
          'tone': 'green',
-         'notes': 'Robot at (0, 0) facing North on an empty grid, run line set to test_navigate(), '
+         'notes': 'With SIMULATED_OBSTACLES still [(2, 0), (2, 2)], the robot reaches (1, 0), sees '
+                  '(2, 0), prints a new path, takes it, and arrives. Robot at (0, 0) facing North on an empty grid, run line set to test_navigate(), '
                   'both presses. Compare with Lesson 5-7, which stopped at the reroute.'},
 
         {'kind': 'steps', 'title': 'Step 2 · The real sensor',
          'steps': [
              'Change the look-ahead line to `rangefinder.distance()`',
-             'Put two boxes on the grid, on intersections the printed path crosses, and run again',
-             'It should reroute around the first, reroute again if the new path meets the second, '
-             'and arrive',
-             'Write down the last line it prints: the **blocked list**',
+             'Put two boxes on the printed path; run again',
+             'It should reroute around each box it meets, and arrive',
+             'Write down the last line: the **blocked list**',
          ],
          'notes': 'Set up the grid so Run 1 has 2 to 3 reroutes; the contrast with a zero-reroute '
                   'Run 2 is the "aha." The lesson page has a closed reveal with a finished '
@@ -231,37 +223,34 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Carry it into the next run',
          'bullets': [
-             'Within one program run, `BLOCKED` persists between function calls: that\'s why the '
-             '`while` loop works',
-             'But close the program and it\'s **gone**: Python variables don\'t survive a restart',
-             'So how does Run 2 begin already knowing what Run 1 found out?',
+             '`BLOCKED` lasts between function calls: that\'s why the `while` works',
+             'But variables are **gone** when the program ends',
+             'So how does Run 2 start out knowing what Run 1 found?',
          ],
          'callout': '**You tell it.**',
          'tone': 'orange',
          'tag': 'Activity'},
 
         {'kind': 'code', 'title': 'Type Run 1\'s list into KNOWN_OBSTACLES',
-         'lead': 'Your test already prints `All known obstacles: [(1, 2), (2, 2), (3, 0)]` at the '
-                 'end of the run. Type that list in at the top of the Lesson 5-8 part of the file:',
+         'lead': 'Your test prints `All known obstacles: [(1, 2), (2, 2), (3, 0)]`. Type that '
+                 'list in:',
          'lead_h': 1.2,
          'code': 'KNOWN_OBSTACLES = [(1, 2), (2, 2), (3, 0)]      # what Run 1 discovered',
          'code_size': 20,
-         'callout': 'Run it again: it plans around all three from its very first path. Find a fourth, '
-                    'and the printed list has four, ready for Run 3.',
+         'callout': 'Run again: it plans around all three from the first path. A fourth goes on '
+                    'the list for Run 3.',
          'tone': 'teal',
          'notes': 'The first two lines of test_navigate() hand each intersection to the planner the '
                   'same way everything else reaches it.'},
 
         {'kind': 'bullets', 'title': 'You are the memory',
          'bullets': [
-             'The robot found the obstacles, **you** carried them from one run to the next, and the '
-             'algorithm never changed',
-             'The planner has now been told about walls three ways:',
-             ['by a test in 5-6', 'by the rangefinder in 5-7', 'by you, here'],
-             'Every one of them was a call to `add_blocked()`',
+             'The robot found the obstacles, **you** carried them, the algorithm never changed',
+             'The planner has heard about walls three ways:',
+             ['a test in 5-6', 'the rangefinder in 5-7', 'you, here'],
+             'Each was a call to `add_blocked()`',
          ],
-         'callout': 'A real system writes the list somewhere and reads it back itself. **What** gets '
-                    'carried across, and what it\'s worth, is exactly what you just did by hand.',
+         'callout': 'A real system saves the list itself. **What** it carries is the same.',
          'tone': 'teal',
          'notes': 'Carrying the list by hand is the point, not a shortcut: it makes "same algorithm, '
                   'better data" something students do with their own fingers, and keeps the lesson '
@@ -277,13 +266,12 @@ DECK = {
                      'Run 2 has to drive the same route as Run 1',
                      '`compute_bfs_path` has to be rewritten'],
          'answer': 1,
-         'explanation': 'A list lives only while the program runs. Run 2 starts out knowing exactly '
-                        'what it is handed, which is why you print the list at the end of one run '
-                        'and type it into `KNOWN_OBSTACLES` at the start of the next.'},
+         'explanation': 'A list lives only while the program runs, and Run 2 knows only what it is '
+                        'handed. So you print the list at the end of one run and type it into '
+                        '`KNOWN_OBSTACLES` at the start of the next.'},
 
         {'kind': 'table', 'title': 'Activity · Measure the improvement',
-         'lead': '"It seemed faster" isn\'t evidence: **measure**. Your test prints the steps and '
-                 'reroutes; write them down for each run.',
+         'lead': '"It seemed faster" isn\'t evidence: **measure**. Write down each run\'s numbers.',
          'headers': ['Metric', 'Run 1', 'Run 2'],
          'widths': [4, 3, 3],
          'rows': [
@@ -292,8 +280,7 @@ DECK = {
              ['Total steps', '____', '____'],
          ],
          'size': 24,
-         'callout': 'Fill it in from your own two runs: the numbers are the evidence, and they\'ll '
-                    'differ with your grid and where the obstacles sit',
+         'callout': 'Your numbers depend on your grid and where the obstacles sit',
          'tone': 'teal',
          'notes': 'Insist on recorded numbers: the quantitative comparison convinces far more than '
                   '"it felt faster."'},
@@ -306,15 +293,15 @@ DECK = {
                      'The grid got smaller',
                      'Random luck'],
          'answer': 1,
-         'explanation': 'With obstacles pre-loaded, Run 2\'s initial paths already avoid them: no '
-                        'mid-run surprises, so zero reroutes and fewer steps.'},
+         'explanation': 'With obstacles pre-loaded, Run 2\'s first path already avoids them: no '
+                        'surprises, so zero reroutes and fewer steps.'},
 
         {'kind': 'bullets', 'title': 'Could Run 2 still find new obstacles?',
          'bullets': [
-             '**Yes.** Run 2 avoids everything it **already** knows',
-             'But its smarter route may pass intersections Run 1 never visited, and one of those could be blocked',
-             'So Run 3 would start with even more knowledge',
-             'Eventually the robot knows every relevant obstacle, and its paths are right from the start',
+             '**Yes.** Run 2 avoids what it **already** knows',
+             'But its new route may pass intersections Run 1 never visited',
+             'Then Run 3 starts knowing even more',
+             'Eventually its paths are right from the start',
          ],
          'callout': 'That is **convergence**',
          'tone': 'teal',
@@ -329,18 +316,17 @@ DECK = {
                      'Only if the grid grows'],
          'answer': 1,
          'explanation': 'The robot only discovers obstacles it drives toward. A new route can reach '
-                        'intersections Run 1 skipped, so Run 2 can still find something new, feeding '
-                        'Run 3 even better data.'},
+                        'intersections Run 1 skipped, so Run 2 can still find something new, and '
+                        'Run 3 gets even better data.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
              ('Maps', 'Waze traffic', 'One driver hits traffic; the app warns everyone behind them. '
                                       'Shared, remembered data.'),
-             ('AI', 'Learning from data', 'Machine-learning systems improve as they accumulate '
-                                          'examples: the same "better data, better results" idea.'),
-             ('Apps', 'Saved state', 'Games, editors and browsers store your progress before '
-                                     'closing: the automatic version of carrying your blocked list '
-                                     'across by hand.'),
+             ('AI', 'Learning from data', 'Machine-learning systems improve as they collect '
+                                          'examples: better data, better results.'),
+             ('Apps', 'Saved state', 'Games, editors and browsers save your progress before '
+                                     'closing: the automatic version of carrying your list by hand.'),
          ],
          'height': 3.9,
          'notes': 'Connect lightly to machine learning: accumulate data, make better decisions.'},
@@ -365,8 +351,8 @@ DECK = {
                      'Two robots meeting at an intersection',
                      'The grid shrinking over time'],
          'answer': 1,
-         'explanation': 'Each run can add knowledge until there\'s nothing new to learn. At that '
-                        'point paths are right immediately: the robot\'s map has converged.',
+         'explanation': 'Each run can add knowledge until there\'s nothing new to learn. Then '
+                        'paths are right immediately: the robot\'s map has converged.',
          'notes': 'The lesson\'s wrap-up quiz. Answer: B. Formative: trace the while loop through '
                   'one reroute; pre-load a blocked list; articulate the Waze analogy. Exit ticket: '
                   '"Run 1 took 12 steps and 3 reroutes; Run 2 took 8 steps and 0 reroutes. Explain '

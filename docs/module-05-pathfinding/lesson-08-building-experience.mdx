@@ -14,12 +14,15 @@ sidebar_position: 8
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-In Lesson 5-7 the robot detected one obstacle and re-planned once, then the loop
-stopped with a `break`. Two things are missing. First, the robot should *keep going*:
-follow the new path, and if it finds another wall, re-plan again, until it arrives.
-Second, it rediscovers every obstacle from scratch each run — like being surprised
-by the same construction zone every morning. This lesson fixes both: a function that
-re-plans until arrival, and a way to start Run 2 knowing what Run 1 found out.
+In Lesson 5-7 the robot re-planned once, then a `break` stopped the loop. Two things
+are missing:
+
+- The robot should *keep going*: follow the new path, re-plan at each new wall, and
+  arrive.
+- Each run, it rediscovers every obstacle from scratch.
+
+This lesson fixes both: a function that re-plans until arrival, and a way to start Run 2
+knowing what Run 1 found.
 
 <Objectives>
 
@@ -37,8 +40,8 @@ By the end of this lesson you will be able to:
 
 ## This lesson's skeleton
 
-Paste this into `robot.py` at the end of the OBSTACLES section, under
-`test_detect_once()`. One setting, and the one function the capstone is built from.
+Paste this at the end of the OBSTACLES section, under `test_detect_once()`: one
+setting, and the function the capstone is built from.
 
 ```python
 # --- Lesson 5-8: re-plan until you arrive ---
@@ -75,19 +78,17 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
 
 ## From `break` to "until you arrive"
 
-Lesson 5-7's loop broke out as soon as it re-planned. Put that whole `for` loop inside a
-`while`, and have the `while` end only when the `for` loop ran all the way through
-without a reroute. That is the outline above.
+Lesson 5-7's loop broke out as soon as it re-planned. Now put that `for` loop inside a
+`while` that ends only when the `for` runs all the way through without a reroute:
+**plan, follow, and if something got in the way, plan again from here.**
 
-Read the shape, not the lines: **plan, follow, and if something got in the way, plan
-again from here.** The inner `for` is Lesson 5-7 unchanged, except that the re-plan
-happens at the top of the `while` instead of inside the `if` — the `break` only has
-to get out of the `for`. The `rerouted` flag is how the `while` finds out whether the
-`for` finished or broke out early: set it `False` before the `for`, set it `True` in
-the obstacle branch, and after the `for`, "not rerouted" means "drove the whole path"
-— which means arrived. And the function returns the robot's new `position` and
-`heading`, because the caller will need them to plan the *next* trip — Lesson 5-9
-strings several of these together.
+- The inner `for` is Lesson 5-7's, except the re-plan moves to the top of the `while`.
+  The `break` only has to get out of the `for`.
+- The `rerouted` flag tells the `while` how the `for` ended. It is `False` before the
+  `for` and set `True` in the obstacle branch. After the `for`, "not rerouted" means the
+  whole path was driven: arrived.
+- The function returns the new `position` and `heading`, because the *next* trip is
+  planned from there. Lesson 5-9 chains several trips.
 
 <Figure
   src="/img/lesson-m5-08/until-arrive.svg"
@@ -95,17 +96,13 @@ strings several of these together.
   caption="Plan, follow, and if something got in the way, plan again from here."
 />
 
-Two of the parameters look odd: `rangefinder` and `obstacle_cm` are already in the
-file as a global and a setting. Passing them in means the function *says* what it
-depends on — read the `def` line and you know it needs a sensor and a cutoff — and a
-test can hand in a different cutoff without editing the function. (The simulated
-sensor is a function of `next_pos`, not an object with a `distance()` method, so for
-the dry run you swap the one look-ahead line, as in Lesson 5-7.)
+`rangefinder` and `obstacle_cm` are already in the file, but passing them in makes the
+`def` line say what the function needs, and lets a test hand in a different cutoff. For
+the dry run, swap the one look-ahead line, as in Lesson 5-7.
 
-The empty-path check matters now in a way it didn't on paper. If the robot gets
-boxed in, `compute_bfs_path()` returns `[]` (Lesson 5-5). Without the check, the
-`for` loop would run zero times, `rerouted` would stay `False`, and the robot would
-declare itself arrived at the wrong intersection.
+The empty-path check matters now. A boxed-in robot gets `[]` from `compute_bfs_path()`
+(Lesson 5-5). Without the check, the `for` runs zero times, `rerouted` stays `False`, and
+the robot declares itself arrived at the wrong intersection.
 
 <KnowledgeCheck
   question="In navigate_with_detection(), what makes the while loop finally stop?"
@@ -115,7 +112,7 @@ declare itself arrived at the wrong intersection.
     {text: 'The rangefinder returns 0'},
     {text: 'compute_bfs_path returns the same path twice'},
   ]}
-  explanation="Each pass plans a path and tries to follow it. If a wall turns up, the for loop breaks with rerouted = True and the while plans again from the new position. Only a complete, uninterrupted pass sets arrived."
+  explanation="Each pass plans a path and tries to follow it. A wall breaks the for loop with rerouted = True, and the while plans again from the new position. Only a complete pass sets arrived."
 />
 
 <KnowledgeCheck
@@ -126,7 +123,7 @@ declare itself arrived at the wrong intersection.
     {text: 'To reset them to (0, 0) and 0'},
     {text: 'For the print statement only'},
   ]}
-  explanation="The pose, position and heading, is local to the function. The caller only learns the new pose if the function hands it back — and Lesson 5-9 needs them to chain several destinations."
+  explanation="The pose (position and heading) is local to the function. The caller learns the new pose only if the function hands it back, and Lesson 5-9 needs it to chain destinations."
 />
 
 If you built the `Navigator` class in Lesson 4-6, this function wants to be a method
@@ -138,16 +135,16 @@ two counts; the caller reads `navigator.position` afterwards, as in Lesson 4-6.
 
 ## Why memory matters
 
-The BFS planner doesn't change between runs. The driving functions don't change. Only
-the **input** changes — the blocked list starts with more information:
+Between runs, the planner and the driving functions stay the same. Only the **input**
+changes: the blocked list starts with more information.
 
 ```
 Run 1: empty blocked list  -> discover obstacles the hard way -> many reroutes
 Run 2: pre-loaded list     -> plan around known obstacles      -> few or no reroutes
 ```
 
-**Better data leads to better performance.** The robot isn't running a smarter algorithm on
-Run 2 — it's running the *same* algorithm on better information.
+**Better data, better performance:** Run 2 runs the *same* algorithm on better
+information.
 
 <Figure
   src="/img/lesson-m5-08/run1-run2-xy.svg"
@@ -163,7 +160,7 @@ Run 2 — it's running the *same* algorithm on better information.
     {text: 'Its motors get faster'},
     {text: 'It skips destinations'},
   ]}
-  explanation="Same BFS, better data. Pre-loading Run 1's discoveries means Run 2 plans around those obstacles immediately instead of rediscovering them."
+  explanation="Same BFS, better data. With Run 1's discoveries pre-loaded, Run 2 plans around them at once instead of rediscovering them."
 />
 
 ## Activity · Drive until you arrive
@@ -171,12 +168,14 @@ Run 2 — it's running the *same* algorithm on better information.
 ### Step 1 · Dry run
 
 Write the body from the outline, with `simulate_rangefinder(next_pos)` in the
-look-ahead line for now. Then write the test — `test_navigate()` — that the rest of
-the lesson uses: hand every entry of `KNOWN_OBSTACLES` to `add_blocked()` (a `for`
-loop, two lines); set position `(0, 0)`, heading `0`, destination `(3, 3)`; plan the
-path and print it; wait for the button; call the function — and **assign all four
-return values** — then print where the robot arrived, the step and reroute counts,
-and, on its own line, `"All known obstacles:"` and `BLOCKED`.
+look-ahead line for now. Then write `test_navigate()`, which the rest of the lesson uses:
+
+1. Hand each entry of `KNOWN_OBSTACLES` to `add_blocked()` (a two-line `for` loop).
+2. Set position `(0, 0)`, heading `0`, destination `(3, 3)`. Plan the path, print it,
+   and wait for the button.
+3. Call the function and **assign all four return values** (below).
+4. Print where the robot arrived and the step and reroute counts, then, on its own line,
+   `"All known obstacles:"` and `BLOCKED`.
 
 ```python
     position, heading, steps, reroutes = navigate_with_detection(
@@ -185,16 +184,15 @@ and, on its own line, `"All known obstacles:"` and `BLOCKED`.
 ```
 
 Robot at `(0, 0)` facing North on an empty grid, run line set to it, both presses.
-With `SIMULATED_OBSTACLES` still `[(2, 0), (2, 2)]`, you should see the robot reach
-`(1, 0)`, "see" `(2, 0)`, print a new path, *take it*, and arrive at `(3, 3)` with one
-reroute. Compare with Lesson 5-7, which stopped at the reroute.
+With `SIMULATED_OBSTACLES` still `[(2, 0), (2, 2)]`, the robot should reach `(1, 0)`,
+"see" `(2, 0)`, print a new path, *take it*, and arrive at `(3, 3)` with one reroute.
+(Lesson 5-7 stopped at the reroute.)
 
 ### Step 2 · The real sensor
 
-Change the look-ahead line to `rangefinder.distance()`. Put two boxes on the grid, on
-intersections the printed path crosses, and run again. The robot should reroute
-around the first, and if the new path meets the second, reroute again, and arrive.
-Write down the last line it prints — the blocked list.
+Change the look-ahead line to `rangefinder.distance()`. Put two boxes on intersections
+the printed path crosses, and run again. The robot should reroute around each box it
+meets, and arrive. Write down the last line it prints: the blocked list.
 
 <Reveal title="Check your navigate_with_detection()" hint="dry run first, then boxes">
 
@@ -238,43 +236,38 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
     return position, heading, step_count, reroute_count
 ```
 
-If yours re-plans at the bottom of the `for` instead of the top of the `while` and
-still arrives, keep yours — but check that a boxed-in robot prints "No path" rather
-than claiming to have arrived.
+If yours re-plans at the bottom of the `for` and still arrives, keep it. But check
+that a boxed-in robot prints "No path" instead of claiming to have arrived.
 
 </Reveal>
 
 ## Activity · Carry what you learned into the next run
 
-Within one program run, `BLOCKED` persists between function calls — that's why the
-`while` loop above works. But close the program and it's gone; Python variables don't
-survive a restart. So how does Run 2 begin already knowing what Run 1 found out?
+`BLOCKED` lasts between function calls, which is why the `while` loop works. But
+variables don't survive the program ending. So how does Run 2 start out knowing what
+Run 1 found?
 
-You tell it. Your test already prints the list at the end of the run:
+You tell it. Your test prints the list at the end of the run:
 
 ```text
 All known obstacles: [(1, 2), (2, 2), (3, 0)]
 ```
 
-Type that list into `KNOWN_OBSTACLES` at the top of the Lesson 5-8 part of the file,
-and the first two lines of your test hand each intersection to the planner the same
-way everything else reaches it:
+Type that list into `KNOWN_OBSTACLES`, and the first two lines of your test hand each
+intersection to the planner:
 
 ```python
 KNOWN_OBSTACLES = [(1, 2), (2, 2), (3, 0)]      # what Run 1 discovered
 ```
 
-Run it again. The robot plans around all three from its very first path and never
-reroutes for them — and if it finds a fourth, the printed list at the end has four
-entries, ready to carry across to Run 3.
+Run it again. The robot plans around all three from its first path. If it finds a
+fourth, the printed list has four entries, ready for Run 3.
 
-That's the whole lesson in two lines of typing: **you are the memory.** The robot
-found the obstacles, you carried them from one run to the next, and the algorithm
-never changed. Notice too that the planner has now been told about walls three
-different ways — by a test in 5-6, by the rangefinder in 5-7, and by you here —
-and every one of them was a call to `add_blocked()`. A real system would write the
-list somewhere and read it back itself rather than waiting for a person, but *what*
-gets carried across, and what it's worth, is exactly what you just did by hand.
+**You are the memory.** The robot found the obstacles, you carried them to the next
+run, and the algorithm never changed. The planner has now heard about walls three
+ways (a test in 5-6, the rangefinder in 5-7, you here), and each was a call to
+`add_blocked()`. A real system would save and reload the list itself, but *what* it
+carries is exactly what you just did by hand.
 
 <KnowledgeCheck
   question="Run 1 finishes and prints [(1,2), (2,2)]. What has to happen for Run 2 to start out knowing about those two obstacles?"
@@ -284,13 +277,13 @@ gets carried across, and what it's worth, is exactly what you just did by hand.
     {text: 'Run 2 has to drive the same route as Run 1'},
     {text: 'compute_bfs_path has to be rewritten'},
   ]}
-  explanation="A list lives only while the program runs. Run 2 starts out knowing exactly what it is handed — which is why you print the list at the end of one run and type it into KNOWN_OBSTACLES at the start of the next."
+  explanation="A list lives only while the program runs, and Run 2 knows only what it is handed. So you print the list at the end of one run and type it into KNOWN_OBSTACLES at the start of the next."
 />
 
 ## Activity · Measure the improvement
 
-"It seemed faster" isn't evidence — **measure**. The function already counts steps and
-reroutes and your test prints them; write them down for each run:
+"It seemed faster" isn't evidence: **measure**. Your test prints steps and reroutes.
+Write them down for each run:
 
 ```
 Metric              Run 1    Run 2
@@ -299,8 +292,7 @@ Reroutes            ____     ____
 Total steps         ____     ____
 ```
 
-Fill it in from your own two runs — the numbers are the evidence, and they'll
-differ with your grid and where the obstacles sit.
+Your numbers will depend on your grid and where the obstacles sit.
 
 <KnowledgeCheck
   question="Run 1 took 12 steps with 3 reroutes; Run 2 took 8 steps with 0 reroutes. Why the change?"
@@ -310,7 +302,7 @@ differ with your grid and where the obstacles sit.
     {text: 'The grid got smaller'},
     {text: 'Random luck'},
   ]}
-  explanation="With obstacles pre-loaded, Run 2's initial paths already avoid them — no mid-run surprises, so zero reroutes and fewer steps."
+  explanation="With obstacles pre-loaded, Run 2's first path already avoids them: no surprises, so zero reroutes and fewer steps."
 />
 
 <TeacherNote title="Solution (teacher copy)">
@@ -394,11 +386,10 @@ test_navigate()
 
 ## Could Run 2 still find new obstacles?
 
-Yes. Run 2 avoids everything it *already* knows, but its smarter route may pass
-intersections Run 1 never visited — and one of those could be blocked. So Run 2 can
-still discover something new, and Run 3 would start with even more knowledge.
-Eventually the robot knows every relevant obstacle and its paths are right from the
-start — that's **convergence**.
+Yes. Run 2 avoids everything it *already* knows, but its new route may pass
+intersections Run 1 never visited, and one could be blocked. Then Run 3 starts knowing
+even more. Eventually the robot knows every relevant obstacle and its paths are right
+from the start: that's **convergence**.
 
 <KnowledgeCheck
   question="Can Run 2 discover an obstacle Run 1 never found?"
@@ -408,7 +399,7 @@ start — that's **convergence**.
     {text: 'No — obstacles never change'},
     {text: 'Only if the grid grows'},
   ]}
-  explanation="The robot only discovers obstacles it drives toward. A new route can reach intersections Run 1 skipped, so Run 2 can still find something new — feeding Run 3 even better data."
+  explanation="The robot only discovers obstacles it drives toward. A new route can reach intersections Run 1 skipped, so Run 2 can still find something new, and Run 3 gets even better data."
 />
 
 ## Real-world connections
@@ -420,19 +411,19 @@ Systems that accumulate and reuse experience are everywhere:
     One driver hits traffic; the app warns everyone behind them. Shared, remembered data.
   </InfoCard>
   <InfoCard tag="AI" title="Learning from data">
-    Machine-learning systems improve as they accumulate examples — the same "better data, better results" idea.
+    Machine-learning systems improve as they collect examples: better data, better results.
   </InfoCard>
   <InfoCard tag="Apps" title="Saved state">
-    Games, editors and browsers store your progress before closing — the automatic version of carrying your blocked list across by hand.
+    Games, editors and browsers save your progress before closing: the automatic version of carrying your list by hand.
   </InfoCard>
 </CardGrid>
 
 ## Wrap-up
 
 - What turns Lesson 5-7's single reroute into "drive until you arrive"? (A `while not arrived` loop around the `for`, with a `rerouted` flag.)
-- What actually changes between Run 1 and Run 2? (The data — the blocked list — not the algorithm.)
+- What actually changes between Run 1 and Run 2? (The data, the blocked list, not the algorithm.)
 - How do you show Run 2 is better? (Measure steps and reroutes.)
-- What has to happen between runs for the robot to keep what it learned? (The list has to be handed back to `add_blocked()` — a variable doesn't survive the program ending.)
+- What has to happen between runs for the robot to keep what it learned? (The list has to be handed back to `add_blocked()`: a variable doesn't survive the program ending.)
 
 <TeacherNote title="The Waze analogy lands; make Run 1 vs Run 2 dramatic">
 
@@ -470,7 +461,7 @@ Connect lightly to machine learning: accumulate data, make better decisions.
     {text: 'Two robots meeting at an intersection'},
     {text: 'The grid shrinking over time'},
   ]}
-  explanation="Each run can add knowledge until there's nothing new to learn. At that point paths are right immediately — the robot's map has converged."
+  explanation="Each run can add knowledge until there's nothing new to learn. Then paths are right immediately: the robot's map has converged."
 />
 
 <TeacherNote title="Assessment & next lesson">
