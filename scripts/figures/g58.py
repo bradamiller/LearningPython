@@ -27,12 +27,12 @@ def mp(x0,title,route,col,known,sub,rr=()):
     x,y=g.p(3,3); o.append(f'<circle cx="{x}" cy="{y}" r="10" fill="#2E7D32"/><text class="sm" x="{x}" y="{y+4}" text-anchor="middle" style="fill:#FFFFFF;font-weight:700">D</text>')
     return o
 b=[]
-b+=mp(12,"Run 1: KNOWN_OBSTACLES = []",run1,"#C77C02",[],"finds each box when it faces it",rr=[((1,0),(2,0)),((2,1),(3,1)),((2,1),(2,2))])
+b+=mp(12,"Run 1: KNOWN_OBSTACLES = []",run1,"#C77C02",[],"finds each obstacle when it faces it",rr=[((1,0),(2,0)),((2,1),(3,1)),((2,1),(2,2))])
 b+=mp(352,"Run 2: the list typed in",run2,"#2E7D32",BOX,"plans around all three from the start")
 b+=['<text class="nb" x="12" y="328" style="fill:#C77C02">8 steps, 3 reroutes (backs up once)</text>','<text class="nb" x="352" y="328" style="fill:#2E7D32">6 steps, 0 reroutes</text>',
     '<text class="n" x="340" y="358" text-anchor="middle">Same planner, same driving code. Only the blocked list it started with changed.</text>']
 open(OUTDIR+'run1-run2.svg','w').write(svg('Run 1 and Run 2',
- 'Two runs from S at (0, 0), the bottom-left, to D at (3, 3), the far top-right, with boxes at (2, 0), (2, 2) and (3, 1). Run 1 starts with an empty list and finds each box only when it faces it: it reroutes at (1, 0) on seeing (2, 0), then twice at (2, 1) on seeing (3, 1) and (2, 2), backs up to (1, 1), and goes up the column at x = 1 and right along the top row: 8 steps and 3 reroutes. Run 2 starts with the three boxes typed in and plans around them from the start, up the column at x = 1 and right along the top row: 6 steps and 0 reroutes. Same planner, same driving code; only the blocked list it started with changed.',b,H=370))
+ 'Two runs from S at (0, 0), the bottom-left, to D at (3, 3), the far top-right, with obstacles at (2, 0), (2, 2) and (3, 1). Run 1 starts with an empty list and finds each obstacle only when it faces it: it reroutes at (1, 0) on seeing (2, 0), then twice at (2, 1) on seeing (3, 1) and (2, 2), backs up to (1, 1), and goes up the column at x = 1 and right along the top row: 8 steps and 3 reroutes. Run 2 starts with the three obstacles typed in and plans around them from the start, up the column at x = 1 and right along the top row: 6 steps and 0 reroutes. Same planner, same driving code; only the blocked list it started with changed.',b,H=370))
 # loop flow
 b=[]
 def bx(x,y,w,h,t,s,col,fill):

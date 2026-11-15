@@ -105,8 +105,8 @@ addition goes through `add_blocked()`, so the planner never knows which source i
 from.
 
 <Figure
-  src="/img/lesson-m5-09/capstone-thread-xy.svg"
-  alt="Left: the 4 by 4 grid with the robot at home, the four capstone destinations numbered in order, (1, 3), (3, 3), (3, 0) and (0, 0), and three pretend boxes at (1, 0), (2, 2) and (3, 1). Right: Run 1 starts with an empty blocked list; leg 1 adds (1, 0), leg 3 adds (3, 1) and (2, 2). Run 1 totals 20 steps and 3 reroutes and prints the list, which you type into KNOWN_OBSTACLES; Run 2 starts with all three and takes 18 steps with 0 reroutes."
+  src="/img/lesson-m5-09/capstone-thread-xy-v2.svg"
+  alt="Left: the 4 by 4 grid with the robot at home, the four capstone destinations numbered in order, (1, 3), (3, 3), (3, 0) and (0, 0), and three pretend obstacles at (1, 0), (2, 2) and (3, 1). Right: Run 1 starts with an empty blocked list; leg 1 adds (1, 0), leg 3 adds (3, 1) and (2, 2). Run 1 totals 20 steps and 3 reroutes and prints the list, which you type into KNOWN_OBSTACLES; Run 2 starts with all three and takes 18 steps with 0 reroutes."
   caption="The dry run with SIMULATED_OBSTACLES = [(1, 0), (2, 2), (3, 1)], leg by leg. One list grows across the run and starts the next."
 />
 
@@ -181,11 +181,11 @@ piece. Build up, one test on the run line at a time:
 2. **Dry run on the grid.** Write `test_capstone()` from its outline. Put the simulated
    sensor in `navigate_with_detection()`'s look-ahead line (Lesson 5-8, step 1) and
    set `SIMULATED_OBSTACLES = [(1, 0), (2, 2), (3, 1)]`, three intersections the paper
-   paths cross. No boxes on the grid. Check that paths compute, pretend obstacles
+   paths cross. No obstacles on the grid. Check that paths compute, pretend obstacles
    register, the blocked list grows across all four legs, and the final list is the one
    to start the next run with.
 3. **The real thing.** Put the look-ahead line back to `rangefinder.distance()`, put
-   boxes on the grid, and run twice: Run 1 with `KNOWN_OBSTACLES = []`, then Run 2
+   obstacles on the grid, and run twice: Run 1 with `KNOWN_OBSTACLES = []`, then Run 2
    with the printed list typed in.
 
 Watch for the classic integration bugs:
@@ -359,7 +359,7 @@ You've built, in miniature, what real autonomous systems do:
 Students underestimate how hard connecting working parts is. The recurring bugs: not
 assigning `position, heading` from the return value, clearing `BLOCKED` between legs, and
 a destination that sits on a known obstacle. Insist everyone gets the dry-run version
-working before a box touches the grid — logic first, hardware second. Use the rubric as a
+working before an obstacle touches the grid — logic first, hardware second. Use the rubric as a
 self-assessment checklist; each row maps to a lesson. At the demo, ask *why* Run 2 is
 better and listen for "better data," not "the robot is smarter." For 50-minute periods
 this spans 2–3 days (assembly/simulation, robot testing, demos). Finally: take a moment

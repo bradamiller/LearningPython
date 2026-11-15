@@ -85,7 +85,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | fshort.py | turn-shortcut.svg | /img/lesson-m4-06/turn-shortcut-xy.svg |
 | ftrace.py | drive-path-trace.svg | — |
 | ftrace2.py | drive-path-loop.svg | /img/lesson-m4-06/drive-path-loop-xy.svg |
-| g50.py | blocked-route.svg | /img/lesson-m5-00/blocked-route-xy.svg |
+| g50.py | blocked-route.svg | /img/lesson-m5-00/blocked-route-xy-v2.svg |
 | g51.py | detour.svg | /img/lesson-m5-01/detour-xy.svg |
 | g51.py | graph-3x3.svg | /img/lesson-m5-01/graph-3x3-xy.svg |
 | g51.py | graph-blocked.svg | /img/lesson-m5-01/graph-blocked-xy.svg |
@@ -100,10 +100,10 @@ they match the generator byte for byte. **Known stale:** the deployed
 | g55.py | code-pencil.svg | — |
 | g56.py | path-properties.svg | /img/lesson-m5-06/path-properties-xy.svg |
 | g56.py | planner-slot.svg | — |
-| g57.py | rangefinder-ahead.svg | /img/lesson-m5-07/rangefinder-ahead-xy.svg |
-| g58.py | run1-run2.svg | /img/lesson-m5-08/run1-run2-xy.svg |
+| g57.py | rangefinder-ahead.svg | /img/lesson-m5-07/rangefinder-ahead-xy-v2.svg |
+| g58.py | run1-run2.svg | /img/lesson-m5-08/run1-run2-xy-v2.svg |
 | g58.py | until-arrive.svg | — |
-| g59.py | capstone-thread.svg | /img/lesson-m5-09/capstone-thread-xy.svg |
+| g59.py | capstone-thread.svg | /img/lesson-m5-09/capstone-thread-xy-v2.svg |
 | g6.py | break-even.svg | /img/lesson-m6-01/break-even-xy.svg |
 | g6.py | closest-vs-oldest.svg | /img/lesson-m6-03/closest-vs-oldest-xy.svg |
 | g6.py | cost-grid.svg | /img/lesson-m6-03/cost-grid-xy.svg |

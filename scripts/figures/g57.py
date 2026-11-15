@@ -24,10 +24,10 @@ for cm in (0,30,45,60):
 b.append(f'<rect x="{X0}" y="{Y-34}" width="{scale(15)-X0}" height="24" fill="#FBE3E6" stroke="#D1182C" stroke-width="1.2"/><text class="sm" x="{(X0+scale(15))/2}" y="{Y-18}" text-anchor="middle" style="fill:#D1182C;font-weight:700">blocked</text>')
 b.append(f'<rect x="{scale(15)}" y="{Y-34}" width="{X1-scale(15)}" height="24" fill="#E1F0E3" stroke="#2E7D32" stroke-width="1.2"/><text class="sm" x="{(scale(15)+X1)/2}" y="{Y-18}" text-anchor="middle" style="fill:#2E7D32;font-weight:700">clear</text>')
 b.append(f'<line x1="{scale(15)}" y1="{Y-44}" x2="{scale(15)}" y2="{Y+30}" stroke="#142D50" stroke-width="2.4" stroke-dasharray="5 3"/><text class="ms" x="{scale(15)}" y="{Y+46}" text-anchor="middle">OBSTACLE_CM = 15</text>')
-for cm,lab,col in ((12,"box at the next intersection: ~12","#D1182C"),(50,"nothing there: ~50","#2E7D32")):
+for cm,lab,col in ((12,"obstacle at the next intersection: ~12","#D1182C"),(50,"nothing there: ~50","#2E7D32")):
     b.append(f'<circle cx="{scale(cm)}" cy="{Y}" r="6" fill="{col}"/>')
-b.append(f'<text class="sm" x="{X0}" y="{Y+76}" style="fill:#D1182C">● ~12 cm: a box on the next intersection</text>')
+b.append(f'<text class="sm" x="{X0}" y="{Y+76}" style="fill:#D1182C">● ~12 cm: an obstacle on the next intersection</text>')
 b.append(f'<text class="sm" x="{X0}" y="{Y+94}" style="fill:#2E7D32">● ~50 cm: nothing there</text>')
 b.append(f'<text class="sm" x="{X0}" y="{Y+120}">Measure yours; set the cutoff between them.</text>')
 open(OUTDIR+'rangefinder-ahead.svg','w').write(svg('Reading the intersection ahead',
- 'Left: the XRP parked on intersection (1, 0), its position, turned to face east toward (2, 0), next_pos, the intersection to its right, where a box sits; sound waves go from the rangefinder toward the box. After turn_to(), the robot faces next_pos, so a reading under OBSTACLE_CM means next_pos is blocked. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15: below it is blocked, above it clear. A box on the next intersection reads about 12 cm; nothing there reads about 50 cm. Measure yours and set the cutoff between them.',b,H=434))
+ 'Left: the XRP parked on intersection (1, 0), its position, turned to face east toward (2, 0), next_pos, the intersection to its right, where an obstacle sits; sound waves go from the rangefinder toward the obstacle. After turn_to(), the robot faces next_pos, so a reading under OBSTACLE_CM means next_pos is blocked. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15: below it is blocked, above it clear. An obstacle on the next intersection reads about 12 cm; nothing there reads about 50 cm. Measure yours and set the cutoff between them.',b,H=434))

@@ -16,7 +16,10 @@ to preview the student view.
 </TeacherBanner>
 
 Module 4's robot plans its own routes, but always the same way, across and then up, and
-it assumes nothing is in the way. Put a box on its route and it drives straight at it.
+it assumes nothing is in the way. Put an obstacle on its route and it drives straight at it.
+
+We'll use small boxes on the grid to represent **obstacles**. An intersection with a box
+on it is **blocked**: the robot can't stop there or drive through it.
 
 By the end of this module your robot will **visit several destinations on a grid with
 obstacles, plan around the ones it knows about, spot new ones with its rangefinder and
@@ -24,9 +27,9 @@ re-plan, and do better on its second run**. It's the last required module: every
 you've built works together.
 
 <Figure
-  src="/img/lesson-m5-00/blocked-route-xy.svg"
-  alt="A 4 by 4 grid of tape with (0, 0) at the bottom-left. A box blocks the intersection (2, 0). From S at (0, 0) to D at (3, 2), the Manhattan route goes across first and runs into the box at (2, 0), where it is crossed out; the rest of its route is faded. The breadth-first search route goes around: right to (1, 0), up to (1, 1), right to (3, 1), and up to D, 5 steps. A note: if a box turns up while the robot drives, the rangefinder sees it and the robot plans again."
-  caption="One box on the grid. Module 4's planner has one route and it's blocked; this module's planner finds a way around."
+  src="/img/lesson-m5-00/blocked-route-xy-v2.svg"
+  alt="A 4 by 4 grid of tape with (0, 0) at the bottom-left. An obstacle blocks the intersection (2, 0). From S at (0, 0) to D at (3, 2), the Manhattan route goes across first and runs into the obstacle at (2, 0), where it is crossed out; the rest of its route is faded. The breadth-first search route goes around: right to (1, 0), up to (1, 1), right to (3, 1), and up to D, 5 steps. A note: if an obstacle turns up while the robot drives, the rangefinder sees it and the robot plans again."
+  caption="One obstacle on the grid. Module 4's planner has one route and it's blocked; this module's planner finds a way around."
 />
 
 <Objectives>
@@ -67,7 +70,7 @@ Each piece gets its own section of `robot.py`: **GRID GRAPH**, **BFS PLANNER** a
 The Manhattan planner and the new one answer **the same request**: where the robot is and
 where it should go in, a list of intersections out. The navigator doesn't care which
 planner made the list. So once the new planner passes its tests, you swap it in by
-**changing one name**, and the route that ran into the box goes around it.
+**changing one name**, and the route that ran into the obstacle goes around it.
 
 That's the payoff of the decomposition in Lesson 4-0. You fixed what passes between
 planner and driver before writing either, so either side can be replaced without touching
@@ -86,9 +89,9 @@ the other.
 
 ## A robot that learns
 
-Planning around known boxes is half the job; the other half is finding new ones. The
-robot looks ahead before every block. When it finds a box, it marks that intersection
-blocked, re-plans from where it stands, and carries on. At the end it reports every box it
+Planning around known obstacles is half the job; the other half is finding new ones. The
+robot looks ahead before every block. When it finds an obstacle, it marks that intersection
+blocked, re-plans from where it stands, and carries on. At the end it reports every obstacle it
 found, so the next run starts knowing them: your **Run 2** should beat your **Run 1**.
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
@@ -131,13 +134,13 @@ versions.)
 ## Wrap-up
 
 - What will the robot do by the end of the module? (Visit several destinations, plan around known obstacles, find new ones while driving, and improve on its second run.)
-- Why can't the Module 4 planner handle a box on its route? (It always plans across then up, and has no idea anything is blocked.)
+- Why can't the Module 4 planner handle an obstacle on its route? (It always plans across then up, and has no idea anything is blocked.)
 - What are the three new pieces? (A map of the grid, a planner that searches it, and detection with the rangefinder.)
 
 <TeacherNote title="Teaching note">
 
 Come back to the figure in Lesson 5-6, when the swap happens: the same test, one name
-changed, and the route that ran into the box goes around it. That moment is the payoff
+changed, and the route that ran into the obstacle goes around it. That moment is the payoff
 of four modules of reusable code, and from Lesson 5-7 the robot drives it for real. Both
 tracks get there the same way.
 

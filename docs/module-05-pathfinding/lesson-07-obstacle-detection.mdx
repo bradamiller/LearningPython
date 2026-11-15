@@ -101,7 +101,7 @@ NAVIGATOR, it drives, so its tests wait for the button twice.
 # 5-6 harness made) and a new path is planned from where the
 # robot stands. Facing and driving are the NAVIGATOR's job.
 OBSTACLE_CM = 15                         # closer than this = blocked
-SIMULATED_OBSTACLES = [(2, 0), (2, 2)]   # pretend boxes, for a dry run
+SIMULATED_OBSTACLES = [(2, 0), (2, 2)]   # pretend obstacles, for a dry run
 
 def simulate_rangefinder(next_pos):
     """Stand-in for rangefinder.distance(): 8.0 if next_pos is
@@ -129,8 +129,8 @@ After `turn_to()`, the robot is facing `next_pos`. So a short reading right then
 `next_pos` is blocked. The path already told you.
 
 <Figure
-  src="/img/lesson-m5-07/rangefinder-ahead-xy.svg"
-  alt="Left: the XRP parked on intersection (1, 0), turned to face east toward (2, 0), next_pos, where a box sits; sound waves go from the rangefinder toward the box. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15; a box on the next intersection reads about 12 cm, nothing there about 50 cm."
+  src="/img/lesson-m5-07/rangefinder-ahead-xy-v2.svg"
+  alt="Left: the XRP parked on intersection (1, 0), turned to face east toward (2, 0), next_pos, where an obstacle sits; sound waves go from the rangefinder toward the obstacle. Right: a distance scale from 0 to 60 cm with a dashed cutoff at OBSTACLE_CM = 15; an obstacle on the next intersection reads about 12 cm, nothing there about 50 cm."
   caption="The robot is parked and facing next_pos, so a short reading can only mean next_pos."
 />
 
@@ -244,7 +244,7 @@ is in the driving, not the planner. That makes two presses per driving test: the
 1. Add the import and the object to the start block.
 2. Write `test_rangefinder()`: print `rangefinder.distance()` fifty times, a tenth of a
    second apart, as `test_sensors()` did in Lesson 2-1. Set the run line to it.
-3. Hold a box in front of the robot at the distance of the next intersection, then take
+3. Hold an obstacle in front of the robot at the distance of the next intersection, then take
    it away. Write both readings down.
 4. Check that `OBSTACLE_CM` sits between them; change it if not.
 
@@ -256,7 +256,7 @@ is in the driving, not the planner. That makes two presses per driving test: the
    look-ahead line.
 3. Put the robot at `(0, 0)` facing North on an *empty* grid and set the run line to it.
    Before the second press, check that `(2, 0)` is on the planned path.
-4. It should face East, drive to `(1, 0)`, face `(2, 0)`, "see" the pretend box, print the
+4. It should face East, drive to `(1, 0)`, face `(2, 0)`, "see" the pretend obstacle, print the
    new path, and stop. Check that the blocked list has grown and the new path goes around.
 
 Only the sensor is simulated; the planner was already tested in Lesson 5-6. So a wrong
@@ -264,7 +264,7 @@ reroute here is a code bug, not a hardware bug.
 
 ### Step 3 · The real sensor
 
-Change the look-ahead line to `rangefinder.distance()`. Put a box on the printed path
+Change the look-ahead line to `rangefinder.distance()`. Put an obstacle on the printed path
 (`(2, 0)` again works) and press the button. The robot should stop, print
 "Rerouting..." and the new path, and stop. Taking the new path is next lesson.
 
@@ -338,7 +338,7 @@ rangefinder = Rangefinder.get_default_rangefinder()   # start block, under board
 # 5-6 harness made) and a new path is planned from where the
 # robot stands. Facing and driving are the NAVIGATOR's job.
 OBSTACLE_CM = 15                         # closer than this = blocked
-SIMULATED_OBSTACLES = [(2, 0), (2, 2)]   # pretend boxes, for a dry run
+SIMULATED_OBSTACLES = [(2, 0), (2, 2)]   # pretend obstacles, for a dry run
 
 def simulate_rangefinder(next_pos):
     """Stand-in for rangefinder.distance(): 8.0 if next_pos is
@@ -419,7 +419,7 @@ inconsistently, which is a good real-world-sensor talking point. "Which intersec
 is blocked" used to confuse students when it was computed from the heading;
 demonstrate the new reasoning physically — stand on an intersection, turn to face the
 next one on the path, point at it. Have everyone run the simulated-rangefinder
-version of `test_detect_once()` (step 2) before touching a box: the robot still
+version of `test_detect_once()` (step 2) before touching an obstacle: the robot still
 drives, but the obstacle is pretend, so a wrong reroute is a logic bug and nothing
 else. Place real obstacles *on* the printed path so the reroute is visible and
 dramatic.

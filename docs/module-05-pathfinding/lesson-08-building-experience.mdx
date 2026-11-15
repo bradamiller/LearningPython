@@ -147,9 +147,9 @@ Run 2: pre-loaded list     -> plan around known obstacles      -> few or no rero
 information.
 
 <Figure
-  src="/img/lesson-m5-08/run1-run2-xy.svg"
-  alt="Two runs from S at (0, 0) to D at (3, 3) with boxes at (2, 0), (2, 2) and (3, 1). Run 1 starts with an empty list and finds each box only when it faces it: 8 steps and 3 reroutes, backing up once. Run 2 starts with the three boxes typed in and plans around them from the start: 6 steps and 0 reroutes."
-  caption="One example with three boxes. Your numbers will depend on your grid; the shape of the difference won't."
+  src="/img/lesson-m5-08/run1-run2-xy-v2.svg"
+  alt="Two runs from S at (0, 0) to D at (3, 3) with obstacles at (2, 0), (2, 2) and (3, 1). Run 1 starts with an empty list and finds each obstacle only when it faces it: 8 steps and 3 reroutes, backing up once. Run 2 starts with the three obstacles typed in and plans around them from the start: 6 steps and 0 reroutes."
+  caption="One example with three obstacles. Your numbers will depend on your grid; the shape of the difference won't."
 />
 
 <KnowledgeCheck
@@ -190,11 +190,11 @@ With `SIMULATED_OBSTACLES` still `[(2, 0), (2, 2)]`, the robot should reach `(1,
 
 ### Step 2 · The real sensor
 
-Change the look-ahead line to `rangefinder.distance()`. Put two boxes on intersections
-the printed path crosses, and run again. The robot should reroute around each box it
+Change the look-ahead line to `rangefinder.distance()`. Put two obstacles on intersections
+the printed path crosses, and run again. The robot should reroute around each obstacle it
 meets, and arrive. Write down the last line it prints: the blocked list.
 
-<Reveal title="Check your navigate_with_detection()" hint="dry run first, then boxes">
+<Reveal title="Check your navigate_with_detection()" hint="dry run first, then obstacles">
 
 ```python
 def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
@@ -436,7 +436,7 @@ is the lesson, the typing is theirs.
 Then frame memory with Waze — students get it instantly ("what if Waze forgot every
 traffic report when you closed the app?"). Set up the grid so Run 1 has 2–3 reroutes;
 the contrast with a zero-reroute Run 2 is the "aha." The dry run in step 1 proves the
-loop with Lesson 5-7's `simulate_rangefinder()` before any box goes on the grid.
+loop with Lesson 5-7's `simulate_rangefinder()` before any obstacle goes on the grid.
 Insist on recorded numbers — steps, reroutes — the quantitative comparison convinces
 far more than "it felt faster."
 
