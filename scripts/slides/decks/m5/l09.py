@@ -78,8 +78,8 @@ DECK = {
                  '    # destination for the next leg\n'
                  '    pass',
          'code_size': 16,
-         'notes': 'The name is CAPSTONE_DESTINATIONS because DESTINATIONS is already in the file: '
-                  'Lesson 4-7\'s delivery run still reads it, and a finished section is not edited '
+         'notes': 'The name is CAPSTONE_DESTINATIONS because Module 4\'s test_delivery() still '
+                  'reads DELIVERY_STOPS, and a finished section is not edited '
                   'from another one. test_capstone() is the rest of the skeleton, on the next slide. '
                   'The paper test prints every leg\'s path without moving the robot.'},
 
