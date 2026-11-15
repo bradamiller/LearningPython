@@ -9,8 +9,8 @@ DECK = {
              'Create a dictionary, add pairs, and look up a value by key',
              'Check whether a key exists with the `in` keyword',
              'Represent a grid graph as `{node: [neighbors]}`',
-             'Open the GRID GRAPH section of `robot.py` with `build_grid_graph()` and '
-             '`remove_blocked()`, each with a paper test that prints its result',
+             'Write `build_grid_graph()` and `remove_blocked()` in a new GRID GRAPH section of '
+             '`robot.py`, each with a paper test that prints its result',
          ],
          'notes': '50 minutes. You drew the grid graph on paper in Lesson 5-1; today it goes into '
                   'Python. The last objective on the lesson page names the full signatures, '
@@ -21,12 +21,10 @@ DECK = {
         {'kind': 'bullets', 'title': 'What is a dictionary?',
          'bullets': [
              'A **dictionary** stores **key-value pairs** in curly braces',
-             'A real dictionary maps words to definitions',
-             'A phone book maps names to numbers',
+             'A printed dictionary maps words to definitions',
              'A Python dictionary maps any key to any value',
          ],
-         'callout': 'Today: store the Lesson 5-1 graph in a dictionary, ready for the search in '
-                    'Lesson 5-3',
+         'callout': 'Today: store the Lesson 5-1 graph in a dictionary',
          'tone': 'teal'},
 
         {'kind': 'figure', 'title': 'The key and the value',
@@ -34,17 +32,17 @@ DECK = {
          'caption': 'The word you look up is the **key**; what\'s printed beside it is the '
                     '**value**. Python\'s dictionary works the same way.'},
 
-        {'kind': 'bullets', 'title': 'Why a dictionary is fast: hashing',
+        {'kind': 'bullets', 'title': 'Optional: why a dictionary is fast',
+         'tag': 'Optional extension',
          'bullets': [
-             'A printed dictionary is in alphabetical order, so you flip straight to the right page',
-             'A Python dictionary is organized for speed too, though not alphabetically',
-             'Storing: Python turns the key into a number that says where to keep it',
-             'Looking up: it does the same arithmetic and goes straight there',
-             'That trick is **hashing**: a lookup is just as fast with four thousand entries as with four',
+             'A printed dictionary is alphabetical, so you flip straight to the page',
+             'Python turns the key into a number: where to keep the value',
+             'Looking up repeats the arithmetic and goes straight there: **hashing**',
          ],
-         'callout': 'So a key must be something that can\'t change, like a number or a tuple',
+         'callout': 'Just as fast with four thousand entries as with four',
          'tone': 'orange',
-         'notes': 'If the key could change, Python would be looking in the wrong place. Tuples '
+         'notes': 'Optional: open it if you have time. Nothing later depends on it. On the page it '
+                  'is a box that starts closed. If the key could change, Python would be looking in the wrong place. Tuples '
                   'can be dictionary keys, lists cannot: keys must be immutable.'},
 
         {'kind': 'code', 'title': 'Dictionaries in code',
@@ -58,7 +56,8 @@ DECK = {
          'callout': 'For our graph, the **keys are node tuples** and the **values are lists of '
                     'neighbor tuples**',
          'tone': 'teal',
-         'notes': 'Why not just a list? Because we look things up by content ("what are the '
+         'notes': 'A key must be something that can\'t change, like a number or a tuple. Why not '
+                  'just a list? Because we look things up by content ("what are the '
                   'neighbors of (1,1)?"), not by position. A dictionary jumps straight to the '
                   'answer.'},
 
@@ -97,12 +96,12 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Missing keys, and deleting one',
          'bullets': [
-             'Accessing a **missing** key, like `graph[(9, 9)]`, raises a `KeyError`',
+             'A **missing** key, like `graph[(9, 9)]`, raises a `KeyError`',
              'So check with `in` first',
-             '`del graph[(1, 1)]` removes the pair whose key is `(1, 1)`',
+             '`del graph[(1, 1)]` removes that key',
              'Afterwards, `(1, 1) in graph` is `False`',
          ],
-         'callout': 'You\'ll need `del` for blocking a node later in this lesson',
+         'callout': 'You\'ll need `del` to block a node',
          'tone': 'orange'},
 
         {'kind': 'check',
@@ -174,16 +173,16 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Activity · Build the graph automatically', 'tag': 'Activity',
          'bullets': [
-             'Typing all 9 nodes of a 3×3 grid by hand is tedious; a 10×10 grid has 100',
-             'So `build_grid_graph()` generates the graph for any size',
-             'For each node, check left, right, down and up, and add only the ones that are on the grid',
-             'That means a **bounds check** before each `append`:',
-             ['left only if you\'re not on the left edge: `x > 0`',
-              'right only if you\'re not on the right edge: `x < cols - 1`',
-              'the same two checks for `y`, against the bottom and top rows'],
+             '`build_grid_graph()` builds the graph for any size',
+             'Add a neighbor only if it is on the grid: a **bounds check** before each `append`',
+             ['left: `x > 0`',
+              'right: `x < cols - 1`',
+              'the same two for `y`'],
          ],
-         'callout': 'The four checks are what give corners 2 neighbors and interior nodes 4',
-         'tone': 'teal'},
+         'notes': 'A 10x10 grid has 100 nodes, too many to type. For each node, check left, right, '
+                  'down and up; the y checks are against the bottom and top rows. The four checks '
+                  'are what give corners 2 neighbors and interior nodes 4: the next slide shows '
+                  'it.'},
 
         {'kind': 'figure', 'title': 'Four bounds checks', 'tag': 'Activity',
          'figure': '/img/lesson-m5-02/bounds-checks-xy.svg',
@@ -193,10 +192,10 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 1 · Test `build_grid_graph()`',
          'steps': [
              'Write the body of `build_grid_graph()` from its outline',
-             'Write a test, say `test_grid_graph()`, that builds the 4×4 graph and prints '
-             '`len(graph)`, the neighbors of `(1, 1)` and the neighbors of `(0, 0)`',
-             'Before you run it, write down what each should be from your Lesson 5-1 drawing',
-             'Set the run line to it. The robot stays on the desk',
+             'Write `test_grid_graph()`: build the 4×4 graph, print `len(graph)` and the '
+             'neighbors of `(1, 1)` and `(0, 0)`',
+             'Predict each from your Lesson 5-1 drawing first',
+             'Run it with the robot on the desk',
          ],
          'notes': 'The expected output is behind a reveal on the lesson page; let students '
                   'predict and run first. The order inside a neighbor list depends on the order '
@@ -216,26 +215,22 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Activity · Removing blocked nodes', 'tag': 'Activity',
          'bullets': [
-             'Blocking a node is a **two-step** job:',
+             'Blocking a node takes the outline\'s **two steps**:',
              ['delete its key', '**and** remove it from every other node\'s neighbor list'],
-             'Forget step 2 and other nodes still think they can reach a blocked intersection',
-             'Step 2, one way: start a new empty list, loop over the old neighbors, append each '
-             'one that is `not in blocked_nodes`',
-             'Then assign the new list back to `graph[node]`',
+             'Skip step 2 and other nodes still "reach" it',
+             'Step 2: keep each old neighbor that is `not in blocked_nodes`',
          ],
-         'callout': 'Those are the outline\'s two numbered steps',
-         'tone': 'orange',
-         'notes': 'Spend extra time here: forgetting to clean the neighbor lists is the number '
+         'notes': 'Step 2, one way: start a new empty list, loop over the old neighbors, append '
+                  'each one that is not in blocked_nodes, then assign the new list back to '
+                  'graph[node]. Spend extra time here: forgetting to clean the neighbor lists is the number '
                   'one bug in later lessons. A plain loop-and-append is the version to expect '
                   'from most students, and it is fine.'},
 
         {'kind': 'steps', 'title': 'Step 2 · Test `remove_blocked()`',
          'steps': [
              'Write the body of `remove_blocked()` from its outline',
-             'Write a test, `test_remove_blocked()`, that builds a **3×3** graph and removes '
-             '`(1, 1)`',
-             'Print how many intersections are left, `(1, 1) in graph`, and the neighbors of '
-             '`(0, 1)`. Predict all three first',
+             'Write `test_remove_blocked()`: build a **3×3** graph and remove `(1, 1)`',
+             'Predict, then print: intersections left, `(1, 1) in graph`, neighbors of `(0, 1)`',
              'Don\'t go on until both tests print what you predicted',
          ],
          'notes': 'The finished bodies and the expected output are behind a reveal on the lesson '
@@ -255,10 +250,10 @@ DECK = {
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Web', 'User profiles', 'A username maps to a profile object: look up any user '
-                                      'instantly by their key.'),
-             ('Games', 'Inventories', 'Item name maps to quantity; the game jumps straight to '
-                                      '"how many potions?" without searching.'),
+             ('Web', 'User profiles', 'A username maps to a profile: any user, found instantly '
+                                      'by key.'),
+             ('Games', 'Inventories', 'Item name maps to quantity: "how many potions?" with no '
+                                      'searching.'),
              ('Data', 'Caches & indexes', 'Databases and caches use key lookups so huge datasets '
                                           'stay fast to search.'),
          ]},
