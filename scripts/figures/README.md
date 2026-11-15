@@ -92,6 +92,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | g52.py | bounds-checks.svg | /img/lesson-m5-02/bounds-checks-xy.svg |
 | g52.py | graph-dict.svg | /img/lesson-m5-02/graph-dict-xy.svg |
 | g53.py | bfs-ripple.svg | /img/lesson-m5-03/bfs-ripple-xy.svg |
+| g53steps.py | bfs-steps.svg | /img/lesson-m5-03/bfs-steps-xy.svg (StepFigure, one sentence per step; the deck still uses bfs-ripple) |
 | g53.py | wall-problem.svg | /img/lesson-m5-03/wall-problem-xy.svg |
 | g54.py | append-vs-assign.svg | — |
 | g54.py | blocked-list.svg | — |

@@ -131,10 +131,14 @@ the order the code will use (left, right, down, up):
 In step 7, (1,2) finds (0,2) and (2,2) already numbered, so it writes nothing: the rule
 from the knowledge check.
 
-<Figure
-  src="/img/lesson-m5-03/bfs-ripple-xy.svg"
-  alt="An animation of breadth-first search on the 3 by 3 grid with the center blocked, from S at (0, 0) to D at (2, 2). Each step takes the oldest intersection from the front of the to-visit list; every open neighbor without a number gets the next number, an arrow showing where it came from, and a place at the back of the list. (1, 0) and (0, 1) get 1, (2, 0) and (0, 2) get 2, (2, 1) and (1, 2) get 3, and (2, 2) gets 4. Walking back along the arrows gives the path [(1, 0), (2, 0), (2, 1), (2, 2)]."
-  caption="The same trace, moving: take from the front, add to the back, and the rings fill in one at a time."
+Check your table against the search itself. Press **Step** to move one step at a time: each
+step says what the search just did and why, and the to-visit list on the right changes with it.
+**Play** runs the whole thing.
+
+<StepFigure
+  src="/img/lesson-m5-03/bfs-steps-xy.svg"
+  alt="A step-by-step animation of breadth-first search on the 3 by 3 grid with the center blocked, from S at (0, 0) to D at (2, 2), with a sentence for each step. Each step takes the oldest intersection from the front of the to-visit list; every open neighbor without a number gets the next number, an arrow showing where it came from, and a place at the back of the list. (1, 0) and (0, 1) get 1, (2, 0) and (0, 2) get 2, (2, 1) and (1, 2) get 3, and D gets 4. When D is taken the search stops, and walking back along the arrows gives the path [(1, 0), (2, 0), (2, 1), (2, 2)]. The last step explains why it is the shortest: every 1 was written before any 2 and every 2 before any 3, so the first number D gets is the fewest steps."
+  caption="Breadth-first search, one step at a time: the same trace as your table, then the walk back along the arrows."
 />
 
 <KnowledgeCheck

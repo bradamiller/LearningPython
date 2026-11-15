@@ -1861,6 +1861,8 @@ The Get-a-feel-for-circles Reveal has a four-button one, `arcade-circles.svg` (T
 right"; fixed. A PlayFigure's parked frame is t = 0, so anything meant to show before a button is
 pressed must be visible AT t = 0 (an opacity animate whose first keyTime is 0 with value 1).
 
+**L5-3's BFS step-through (Brad, 2026-11-15: "something showing how it finds the shortest path so a young student can understand it", one step at a time with an explanation).** `static/img/lesson-m5-03/bfs-steps-xy.svg`, a `<StepFigure>` from `scripts/figures/g53steps.py`: the lesson's own 3×3 trace in 14 steps, each with a headline and one to three plain sentences, the to-visit list as it stands, the walk back along the arrows, and a last step on why the first number D gets is the fewest steps. It replaced the looping `bfs-ripple-xy.svg` in the lesson; the 5-3 deck still uses the looping one. Walk-back highlights are drawn under the circles and the number badges over the rings, or the labels get covered.
+
 **`<TreeFigure>` (Media.js), added 2026-11-11 for L4-6's decomposition tree (Brad's ask):** a tree
 that starts with only its top box and opens one level per click (a + on boxes that break down; click
 again folds). The SVG marks structure with `data-parent` / `data-node` + `data-expand` (see
