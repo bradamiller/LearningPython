@@ -7,8 +7,8 @@ DECK = {
          'objectives': [
              'Describe what the robot will do by the end of Module 5',
              'Explain why the Module 4 planner can\'t get around a blocked intersection',
-             'Name the module\'s three new pieces, a map of the grid, a planner that searches '
-             'it, and obstacle detection, and say what each one does',
+             'Name the module\'s three new pieces (a map of the grid, a planner that searches '
+             'it, obstacle detection) and what each does',
              'Explain what it means to swap one planner for another without changing the rest '
              'of the program',
          ],
@@ -20,10 +20,10 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Module 4\'s one blind spot',
          'bullets': [
-             'Module 4 ended with a robot that plans its own routes and drives them',
-             'It plans every route the same way: **across, then up**',
-             'And it assumes **nothing is ever in the way**',
-             'Put a box on one intersection of its route and it drives straight at it',
+             'Module 4\'s robot plans its own routes',
+             'Always the same way: **across, then up**',
+             'It assumes **nothing is ever in the way**',
+             'A box on its route? It drives straight at it',
          ],
          'callout': 'This module teaches it to go around',
          'tone': 'orange'},
@@ -37,24 +37,27 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'Where this module ends up',
          'bullets': [
-             'Visit **several destinations** on a grid with obstacles on it',
+             'Visit **several destinations** on a grid with obstacles',
              'Plan around the obstacles it knows about',
-             'Spot new ones with the **rangefinder** while it drives, and re-plan on the spot',
-             'Do better on its **second run**, because it remembers what the first run found',
+             'Spot new ones with the **rangefinder**, and re-plan',
+             'Do better on its **second run**',
          ],
          'callout': 'The last required module: everything you\'ve built works together',
-         'tone': 'teal'},
+         'tone': 'teal',
+         'notes': 'The rangefinder spots new boxes while the robot drives, and it re-plans on the '
+                  'spot. The second run does better because it remembers what the first run '
+                  'found.'},
 
         {'kind': 'cards', 'title': 'Three new pieces',
          'height': 3.6,
          'cards': [
              ('Map', 'The grid as a graph',
-              'Every intersection, which ones it connects to, and which are blocked.'),
+              'Every intersection, what it connects to, and what\'s blocked.'),
              ('Planner', 'Breadth-first search',
-              'A shortest route from here to there, around every blocked intersection.'),
+              'A shortest route around every blocked intersection.'),
              ('Senses', 'Obstacle detection',
-              'The rangefinder looks ahead; if something is there, it goes on the map and the '
-              'robot plans again.'),
+              'The rangefinder checks ahead; anything there goes on the map, and the robot '
+              'plans again.'),
          ],
          'notes': 'Each piece gets its own section of robot.py: GRID GRAPH, BFS PLANNER and '
                   'OBSTACLES. The driving does not change: the NAVIGATOR section from Module 4 '
@@ -63,14 +66,15 @@ DECK = {
 
         {'kind': 'bullets', 'title': 'The swap',
          'bullets': [
-             'Manhattan and the new planner answer **the same request**',
-             'Where the robot is and where it should go in; a list of intersections out',
+             'Both planners answer **the same request**',
+             'Start and destination in; a list of intersections out',
              'The navigator doesn\'t care which planner made the list',
-             'So once the new planner passes its tests, you swap it in by **changing one name**',
+             'Swap it in by **changing one name**',
          ],
-         'callout': 'The route that ran into the box now goes around it',
+         'callout': 'The blocked route now goes around the box',
          'tone': 'teal',
-         'notes': 'This is the payoff of four modules of reusable code, and of the decomposition '
+         'notes': 'Once the new planner passes its tests, it replaces Manhattan by changing one '
+                  'name, and the route that ran into the box goes around it. This is the payoff of four modules of reusable code, and of the decomposition '
                   'in Lesson 4-0: what passes between planner and driver was decided before '
                   'either was written, so either side can be replaced without touching the '
                   'other. Come back to the figure '

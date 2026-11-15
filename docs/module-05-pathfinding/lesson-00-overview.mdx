@@ -15,16 +15,13 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-Module 4 ended with a robot that plans its own routes: name a few destinations and it
-works out every turn and drives them, one after another. But it plans every route the
-same way, across and then up, and it assumes nothing is ever in the way. Put a box on
-one intersection of its route and it drives straight at it.
+Module 4's robot plans its own routes, but always the same way, across and then up, and
+it assumes nothing is in the way. Put a box on its route and it drives straight at it.
 
 By the end of this module your robot will **visit several destinations on a grid with
-obstacles on it, plan its way around the ones it knows about, spot new ones with its
-rangefinder while it drives, re-plan on the spot, and do better on its second run**
-because it remembers what the first run found. It's the last required module, and the
-one where everything you've built works together.
+obstacles, plan around the ones it knows about, spot new ones with its rangefinder and
+re-plan, and do better on its second run**. It's the last required module: everything
+you've built works together.
 
 <Figure
   src="/img/lesson-m5-00/blocked-route-xy.svg"
@@ -38,7 +35,7 @@ By the end of this overview you will be able to:
 
 - Describe what the robot will do by the end of Module 5
 - Explain why the Module 4 planner can't get around a blocked intersection
-- Name the module's three new pieces, a map of the grid, a planner that searches it, and obstacle detection, and say what each one does
+- Name the module's three new pieces (a map of the grid, a planner that searches it, obstacle detection) and what each does
 - Explain what it means to swap one planner for another without changing the rest of the program
 
 </Objectives>
@@ -47,39 +44,34 @@ By the end of this overview you will be able to:
 
 ## Three new pieces
 
-The driving doesn't change. The NAVIGATOR section you built in Module 4 already drives
-any list of intersections it's handed, and it comes across untouched, still built on
-your Module 2 line-tracking functions. Everything new in this module is about *which*
-list it gets handed.
+The driving doesn't change: your Module 4 NAVIGATOR drives any list of intersections it's
+handed. What's new is *which* list it gets.
 
 <CardGrid>
   <InfoCard tag="Map" title="The grid as a graph">
-    A way of writing down the grid that a program can search: every intersection, which ones it connects to, and which ones are blocked.
+    The grid written so a program can search it: every intersection, what it connects to, and what's blocked.
   </InfoCard>
   <InfoCard tag="Planner" title="Breadth-first search">
-    A planner that finds a shortest route from where the robot is to where it's going, around every blocked intersection on the map.
+    A planner that finds a shortest route around every blocked intersection on the map.
   </InfoCard>
   <InfoCard tag="Senses" title="Obstacle detection">
-    The rangefinder looks at the next intersection before the robot drives to it. If something is there, it goes on the map and the robot plans again.
+    The rangefinder checks the next intersection before the robot drives there. If something is there, it goes on the map and the robot plans again.
   </InfoCard>
 </CardGrid>
 
 Each piece gets its own section of `robot.py`: **GRID GRAPH**, **BFS PLANNER** and
-**OBSTACLES**. And like the planner in Module 4, the new planner is tested on screen
-before it ever drives anything.
+**OBSTACLES**. Like Module 4's planner, the new one is tested on screen before it drives.
 
 ## The swap
 
-Here's the idea the whole course has been building toward. The Manhattan planner and
-the new one answer **the same request**: you give it where the robot is and where it
-should go, and it hands back a list of intersections to drive through. The navigator
-doesn't care which planner made the list. So once the new planner passes its tests, you
-put it in place of Manhattan by **changing one name**, and the route that ran into the
-box now goes around it.
+The Manhattan planner and the new one answer **the same request**: where the robot is and
+where it should go in, a list of intersections out. The navigator doesn't care which
+planner made the list. So once the new planner passes its tests, you swap it in by
+**changing one name**, and the route that ran into the box goes around it.
 
-That's the payoff of the decomposition in Lesson 4-0. Back then you decided what passes
-between the planner and the driver before writing either one, so now either side can be
-replaced without touching the other.
+That's the payoff of the decomposition in Lesson 4-0. You fixed what passes between
+planner and driver before writing either, so either side can be replaced without touching
+the other.
 
 <KnowledgeCheck
   question="The Manhattan planner and the new planner both take a position and a destination and return a list of intersections. Why does that matter?"
@@ -94,13 +86,10 @@ replaced without touching the other.
 
 ## A robot that learns
 
-Planning around boxes you've told it about is half the job. The other half is finding
-the ones nobody told it about. In the second half of the module the robot looks ahead
-before every block it drives. When it finds a box, it marks that intersection blocked,
-plans a new route from where it's standing, and carries on, again and again, until it
-arrives. At the end of a run it reports every box it found, so the next run can start
-already knowing them. Fewer surprises means fewer detours: your **Run 2** should beat
-your **Run 1**, and you'll have the numbers to prove it.
+Planning around known boxes is half the job; the other half is finding new ones. The
+robot looks ahead before every block. When it finds a box, it marks that intersection
+blocked, re-plans from where it stands, and carries on. At the end it reports every box it
+found, so the next run starts knowing them: your **Run 2** should beat your **Run 1**.
 
 <TeacherNote title="This is an advance organizer — keep it high-level">
 
@@ -135,10 +124,9 @@ The course is complete at the end of this module; Module 6 is optional.
 | **5-8 · Building Experience** | Keep re-planning until the robot arrives, and start the next run knowing what this one found. |
 | **5-9 · Capstone Project** | Several destinations, obstacles found and avoided, and a second run that does better. |
 
-The capstone needs little new code. Almost all of it is calls to sections you've
-already written and tested, the same way the projects in Modules 2, 3 and 4 were. (If
-you took on the class extensions, Lessons 5-5 and 5-6 each have an optional class
-version too.)
+The capstone needs little new code: almost all of it calls sections you've already written
+and tested, as in Modules 2, 3 and 4. (Lessons 5-5 and 5-6 also have optional class
+versions.)
 
 ## Wrap-up
 
@@ -150,8 +138,8 @@ version too.)
 
 Come back to the figure in Lesson 5-6, when the swap happens: the same test, one name
 changed, and the route that ran into the box goes around it. That moment is the payoff
-of four modules of reusable code, and from Lesson 5-7 the robot drives it for real. Students who took the functions track and students
-who took the class track get there the same way.
+of four modules of reusable code, and from Lesson 5-7 the robot drives it for real. Both
+tracks get there the same way.
 
 </TeacherNote>
 
