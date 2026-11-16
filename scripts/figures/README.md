@@ -148,5 +148,5 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m15poly.py | polygon-calls.svg | /img/lesson-05/polygon-calls.svg |
 | m17map.py | course-map.svg | /img/lesson-07/course-map.svg |
 | m13copy.py | copy-paste-vs-function.svg | /img/lesson-03/copy-paste-vs-function.svg |
-| fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs.svg |
+| fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs-steps.svg |
 | fanout.py | fanout-bfs-vs-dijkstra.svg | /img/lesson-m6-03/fanout-bfs-vs-dijkstra.svg |

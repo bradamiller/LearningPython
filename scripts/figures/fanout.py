@@ -2,7 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR, ROBOT_SRC, REPO
 # Module 5 / 6: how the search fans out, on a grid bigger than the floor grid so the shape shows.
-#   fanout-bfs.svg            (Lesson 5-3)  one button: BFS around a wall
+#   fanout-bfs.svg            (Lesson 5-1)  a StepFigure, one step per ring: BFS around a wall
 #   fanout-bfs-vs-dijkstra.svg (Lesson 6-3) two buttons: same grid plus a slow road
 # Both searches follow the course code exactly: neighbors in the order left, right, down, up;
 # BFS numbers a neighbor when it is first reached and stops when the destination is taken off
@@ -120,7 +120,14 @@ def build(out,modes_spec,slow,title,desc,panel):
     b.append('<g>'+''.join(anim)+'</g>')
     modes=[{"label":sg['label'],"start":round(sg['s0'],3),"stop":round(sg['stop'],3)} for sg in segs]
     o=svg(title,desc,b,W=680,H=350)
-    attr=(" data-modes='"+json.dumps(modes)+"'") if len(segs)>1 else f' data-hold="{segs[0]["stop"]:.2f}"'
+    if len(segs)>1:
+        attr=" data-modes='"+json.dumps(modes)+"'"
+    else:
+        # one search: a StepFigure, one step per ring (just before the next ring appears,
+        # so this ring's orange "just reached" circles still show), then the path drawn
+        sg=segs[0]; rings=sorted({v for (_,_,v) in sg['ev']})
+        steps=[sg['s0']+0.3+v*UNIT+0.38 for v in rings]+[sg['te']+0.1]
+        attr=f' data-steps="{",".join(f"{t:.2f}" for t in steps)}" data-dur="{T:.2f}"'
     o=o.replace('<svg xmlns="http://www.w3.org/2000/svg"','<svg xmlns="http://www.w3.org/2000/svg"'+attr,1)
     open(OUTDIR+out,'w').write(o)
     print(out,[(s['label'],s['steps'],s['cost'],s['seen'],round(s['stop'],1)) for s in segs])
