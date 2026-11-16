@@ -15,9 +15,9 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-You can do breadth-first search with a pencil. To write it as a program, two questions
-come first: what are the **steps**, in order, and what does the program have to
-**remember** to do each one? Answering them brings in a new way to see the grid, a
+Lesson 5-2 ended with breadth-first search as fifteen sentences a computer could follow.
+Before any of them can become Python, there's one more question: what does the program
+have to **remember** to do each one? Answering it brings in a new way to see the grid, a
 **graph**, and a new kind of Python data, the **dictionary**. By the end of the lesson
 the grid is in `robot.py`.
 
@@ -25,7 +25,7 @@ the grid is in `robot.py`.
 
 By the end of this lesson you will be able to:
 
-- Write the pencil method as an ordered list of steps, and say what each step needs to know
+- Say, for each sentence of the method, what the program has to remember to do it
 - Describe the grid as a graph: nodes, edges and neighbors, and what blocking a node removes
 - Create a dictionary, look up a value by key, and check for a key with `in`
 - Write `build_grid_graph(rows, cols)` in a new GRID GRAPH section of `robot.py`, with a paper test
@@ -34,59 +34,40 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-05-pathfinding/lesson-03-pencil-to-program" />
 
-## The method, step by step
-
-Here is what you did with a pencil in Lessons 5-1 and 5-2, written as steps in order.
-It's plain English, not Python yet:
-
-```text
-SETUP
-  1. Mark the start as reached (it came from nowhere).
-  2. Put the start on the to-visit list.
-SEARCH
-  3. While the to-visit list is not empty:
-       take the OLDEST intersection off the FRONT
-       if it is the destination: stop looking
-       for each open neighbor of it:
-           if that neighbor has not been reached yet:
-               write where it came from
-               add it to the END of the to-visit list
-WALK BACK
-  4. If the destination was never reached: there is no path.
-  5. Start at the destination and follow came-from back to the start,
-     writing each intersection down (but not the start).
-  6. Turn that list around. That is the path.
-```
-
-One thing is missing on purpose: the ring numbers. You needed them to see *why* the first
-path found is shortest, but the program only needs to know whether an intersection has
-been reached, and the came-from mark already says that. An intersection with a came-from
-entry has a number; one without hasn't been reached.
-
-<KnowledgeCheck
-  question="In the step list, how does the program tell whether a neighbor already has a number?"
-  options={[
-    {text: 'It checks whether the neighbor already has a came-from entry', correct: true},
-    {text: 'It keeps a separate table of ring numbers and checks that'},
-    {text: 'It looks at whether the neighbor is on the to-visit list'},
-    {text: 'It cannot tell, so it numbers every neighbor again'},
-  ]}
-  explanation="An intersection gets a came-from entry at the moment it is reached, which is the same moment it got its number on paper. So 'has a came-from entry' means 'has a number'."
-/>
-
 ## What the program has to remember
 
-Go through the steps and ask what each one needs to know. Every answer is something you
-kept on paper:
+Here are Lesson 5-2's sentences again. Go through them and ask what each one needs to
+know.
 
-| On paper | The question a step asks | In the program |
-|---|---|---|
-| The grid drawing, with X's | "Which open intersections are next to this one?" | A **graph**, this lesson |
-| The X's themselves | "Which intersections are blocked?" | A list, `BLOCKED` (Lesson 5-4) |
-| The came-from column | "Has this one been reached? Where from?" | A **dictionary**, `previous` (Lesson 5-5) |
-| The to-visit list | "Which one is next?" | A list: add to the end, take from the front (Lesson 5-5) |
+```text
+ 1. Write down that the start was reached, from nowhere.
+ 2. Put the start on the to-visit list.
+ 3. While the to-visit list is not empty:
+ 4.     Take the oldest one off the front. Call it current.
+ 5.     If current is the destination, stop looking.
+ 6.     For each open neighbor of current:
+ 7.         If that neighbor has not been reached yet:
+ 8.             Write down that it came from current.
+ 9.             Add it to the end of the to-visit list.
+10. If the destination was never reached, there is no path.
+11. Start with an empty path, standing on the destination.
+12. Until you are back at the start:
+13.     Add where you are standing to the path.
+14.     Step back to where it came from.
+15. Turn the path around. That is the answer.
+```
 
-Two of these are lists, which you know from Module 4. The other two are looked up **by
+Every answer is something you kept on paper:
+
+| Sentences | The question they ask | On paper | In the program |
+|---|---|---|---|
+| 6 | "Which open intersections are next to this one?" | The grid drawing | A **graph**, this lesson |
+| 6 | "Which intersections are blocked?" | The X's | A list, `BLOCKED` (Lesson 5-4) |
+| 1, 7, 8, 10, 14 | "Has this one been reached? Where from?" | The came-from notes | A **dictionary**, `previous` (Lesson 5-5) |
+| 2, 3, 4, 9 | "Which one is next?" | The to-visit list | A list: add to the end, take from the front (Lesson 5-5) |
+| 11, 13, 15 | "What is the route so far?" | The path you wrote down | A list, `path` (Module 4) |
+
+Three of these are lists, which you know from Module 4. The other two are looked up **by
 intersection**: you have `(1, 2)` and want its neighbors, or where it came from. A list
 finds things by *position* (`path[0]`), not by what they are. That needs something new.
 First, though, the program needs the grid written down precisely.
@@ -219,8 +200,8 @@ print((2, 2) in graph)     # False -- not added
 Looking up a *missing* key, like `graph[(9, 9)]`, raises a `KeyError`, so check with `in`
 first.
 
-The came-from record is a dictionary too. Here are the first three rows of Lesson 5-2's
-table: each intersection is a key, and where it came from is the value.
+The came-from record is a dictionary too. Here are the first three came-from notes from
+Lesson 5-2's trace: each intersection is a key, and where it came from is the value.
 
 ```python
 previous = {(0, 0): None, (1, 0): (0, 0), (0, 1): (0, 0)}
@@ -229,7 +210,7 @@ print(previous[(1, 0)])    # (0, 0) -- where (1, 0) came from
 print((2, 0) in previous)  # False -- (2, 0) has not been reached yet
 ```
 
-That last line is the step "if that neighbor has not been reached yet", in one `in`. You
+That last line is sentence 7, "if that neighbor has not been reached yet", in one `in`. You
 will write `previous` in Lesson 5-5; today's job is the graph.
 
 <KnowledgeCheck
@@ -410,8 +391,8 @@ test_grid_graph()
 
 <TeacherNote title="The order is the point">
 
-This lesson exists so that nothing in it arrives unasked for. Read the step list aloud
-with the class and, for each step, have them say what they were *looking at* on paper
+This lesson exists so that nothing in it arrives unasked for. Read the sentences aloud
+with the class and, for each one, have them say what they were *looking at* on paper
 when they did it; the table is the answer. Only then name the graph and the dictionary.
 Students who already know dictionaries can skip to the activity once the table is done.
 

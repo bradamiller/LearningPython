@@ -677,6 +677,20 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   turns `build_grid_graph()` into `build_graph(rows, cols, blocked)` directly, so blocking was
   never built twice. No graph or dictionary vocabulary before 5-3 ("intersection" and
   "neighbor" are enough on paper). Image folders `lesson-m5-01/02/03` keep their names.
+  **Then (2026-11-16, Brad: lead them to the algorithm, and "be mindful of the bridge to the
+  computer") 5-1 and 5-2 became guided discussions.** 5-1's "Discuss · How far away is
+  everything?" (what shortest means; the 1s; the 2s and "how did you find them?" -> "every
+  unnumbered neighbor of a 2 gets a 3"; why the first number on D is shortest so you can stop;
+  the wall needs no new rule), then "What you found: ripples". 5-2 is now **From Rings to Steps**
+  (`lesson-02-rings-to-steps`): "Discuss · Where's the path?" (walk back downhill, ties),
+  "Discuss · Teaching it to a computer" (one at a time -> oldest first -> the to-visit list;
+  came-from so the walk back never searches; the numbers aren't needed), the trace done the
+  computer's way (blank table + Reveal), then **The method in sentences: fifteen numbered English
+  sentences, indented like Python, one per line of code**, then "Be the computer" (pairs run the
+  sentences on a dead end). Those exact sentences are reprinted in 5-3 (mapped to what each must
+  remember) and are 5-5's skeleton comments (sentences 11 and 15 take two lines each; graph build
+  and guard are marked program-only). **If the sentences change, change all three places.**
+  Answers to every discussion question live in teacher notes.
   **Materials NOT updated yet (Brad: website only until the changes settle):** the 5-1 to 5-5
   slide decks (5-1 to 5-3 have no deck link now, since their page ids changed; `slides.json`
   still has the old ids), `build_templates.py`'s Module 5 recipe (it still adds

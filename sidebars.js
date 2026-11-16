@@ -84,7 +84,7 @@ const sidebars = {
       items: [
         'module-05-pathfinding/lesson-00-overview',
         'module-05-pathfinding/lesson-01-finding-a-way-around',
-        'module-05-pathfinding/lesson-02-the-walk-back',
+        'module-05-pathfinding/lesson-02-rings-to-steps',
         'module-05-pathfinding/lesson-03-pencil-to-program',
         'module-05-pathfinding/lesson-04-pathfinding-functions',
         'module-05-pathfinding/lesson-05-compute-bfs-path',
