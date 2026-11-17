@@ -75,7 +75,7 @@ def compute_dijkstra_path(start, destination):
 
 def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
-    dictionary -- the search with no break, like bfs_rings()."""
+    dictionary -- the search with no break, like bfs_distances()."""
     pass
 
 def compare(start, destination):
@@ -163,7 +163,7 @@ only chooses, so the line after it has to `remove()` the chosen one from `to_vis
     {text: 'Dijkstra uses a dictionary and BFS uses a list'},
     {text: 'It can; the change is only for speed'},
   ]}
-  explanation="BFS's rings are rings of steps and rings of cost at once. Weights break that: cost no longer grows in step with order of discovery, so the planner has to look up which waiting intersection is cheapest."
+  explanation="In BFS, the wave front is the same number of steps and the same cost from the start at once. Weights break that: cost no longer grows in step with order of discovery, so the planner has to look up which waiting intersection is cheapest."
 />
 
 ## Change 2 · Add the weight, and keep the cheaper way
@@ -262,7 +262,7 @@ at `(0, 2)`, or on to `(1, 3)` first — and still be right; cost 5 is what matt
 ## The cost grid
 
 Dijkstra's `distance` dictionary is a map of how far everything is, in cost, from the
-start. `dijkstra_distances()` is to `compute_dijkstra_path()` what `bfs_rings()` was
+start. `dijkstra_distances()` is to `compute_dijkstra_path()` what `bfs_distances()` was
 to `compute_bfs_path()` in Lesson 5-5: the setup and the search with no `break` and no
 walk-back, returning `distance` itself. Write it, then add one line to
 `test_cost_grid()`:
@@ -283,11 +283,11 @@ print_grid(ROWS, COLS, BLOCKED, dijkstra_distances((0, 0)))
 Read up the left edge, x = 0: (0, 1) costs 1, then (0, 2) costs **4**, not 2. The slow
 segment would make it 1 + 5 = 6; going over to (1, 1), up to (1, 2) and back left costs
 1 + 1 + 1 + 1 = 4, so 4 is what gets kept. That one cell is change 2 doing its job. Everywhere
-else, the numbers are Module 5's BFS rings.
+else, the numbers are Module 5's BFS distances.
 
-<Figure src="/img/lesson-m6-03/cost-grid-xy.svg"
+<Figure src="/img/lesson-m6-03/cost-grid-xy-v2.svg"
   alt="The cost grid from (0, 0) with the slow edge marked. (0, 2) is 4: the slow road would be 1 + 5 = 6, and right, up and back left is 1 + 1 + 1 + 1 = 4."
-  caption="The one cell that is not a BFS ring, and the two ways of reaching it." />
+  caption="The one cell that is not its BFS distance, and the two ways of reaching it." />
 
 <KnowledgeCheck
   question="In the cost grid above, why is (0, 2) a 4 rather than a 2?"
@@ -297,7 +297,7 @@ else, the numbers are Module 5's BFS rings.
     {text: 'Because (0, 2) is blocked'},
     {text: 'Because the grid is 4 wide'},
   ]}
-  explanation="Every other cell matches the BFS ring numbers. (0, 2) is the one place the slow segment is on the direct route, and the printed 4 is the cheaper way round it."
+  explanation="Every other cell matches the BFS distance numbers. (0, 2) is the one place the slow segment is on the direct route, and the printed 4 is the cheaper way round it."
 />
 
 On the 4×4 floor grid one slow segment changes one number. A bigger grid shows what
@@ -306,15 +306,15 @@ own rule, on the 8 by 6 grid from Lesson 5-1, with a slow road through one of th
 ways past the wall.
 
 <PlayFigure
-  src="/img/lesson-m6-03/fanout-bfs-vs-dijkstra.svg"
-  alt="An animation on a grid of 8 by 6 intersections. A wall of four blocked intersections at x = 3 leaves two ways past it: the top row, where the two blocks either side of the wall are a slow road costing 5 each, and the bottom row. S is (0, 4) and D is (7, 4). Two buttons. BFS numbers each intersection with its step count; the ripple spreads evenly, crosses the slow road as if it were normal, and the path goes over the top: 9 steps, cost 17. Dijkstra numbers each intersection with its cheapest cost as it finishes it; the wave races along the bottom but crawls through the slow road, and reaches D from below: 15 steps, cost 15."
+  src="/img/lesson-m6-03/fanout-bfs-vs-dijkstra-v2.svg"
+  alt="An animation on a grid of 8 by 6 intersections. A wall of four blocked intersections at x = 3 leaves two ways past it: the top row, where the two blocks either side of the wall are a slow road costing 5 each, and the bottom row. S is (0, 4) and D is (7, 4). Two buttons. BFS numbers each intersection with its step count; the wave spreads evenly, crosses the slow road as if it were normal, and the path goes over the top: 9 steps, cost 17. Dijkstra numbers each intersection with its cheapest cost as it finishes it; the wave races along the bottom but crawls through the slow road, and reaches D from below: 15 steps, cost 15."
   caption="Press BFS, then Dijkstra. BFS spreads by steps, so the slow road looks like any other street. Dijkstra spreads by cost, so its wave slows down where the road is slow and gets to D the cheaper way first." />
 
 If you built the `BFS` class in Lesson 5-5, the copy you make is of the *class*: Lesson
 6-5 is this lesson's class-track version, with the same two changes inside
 `compute_path()`, and you can do it now in place of the function version. Your harness
 lines are the object ones from Lesson 5-6's extension, and `dijkstra_distances()`
-stays a function that reads `planner.blocked` and `planner.weight()`, as `bfs_rings()`
+stays a function that reads `planner.blocked` and `planner.weight()`, as `bfs_distances()`
 reads `planner.blocked`.
 
 <Reveal title="Check your Dijkstra" hint="7 of 7 and the cost grid first">
@@ -364,7 +364,7 @@ def compute_dijkstra_path(start, destination):
 
 def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
-    dictionary -- the search with no break, like bfs_rings()."""
+    dictionary -- the search with no break, like bfs_distances()."""
     graph = build_graph(ROWS, COLS, BLOCKED)
     if start not in graph:
         return {}
@@ -480,7 +480,7 @@ def compute_dijkstra_path(start, destination):
 
 def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
-    dictionary -- the search with no break, like bfs_rings()."""
+    dictionary -- the search with no break, like bfs_distances()."""
     graph = build_graph(ROWS, COLS, BLOCKED)
     if start not in graph:
         return {}

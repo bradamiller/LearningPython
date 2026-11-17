@@ -256,7 +256,7 @@ DECK = {
                   'for real. The program is on the Teacher Guide\'s Module 5 sample programs page, '
                   'learningpython.bradhouse.com/teacher-guide/sample-programs/module-5 (teacher mode). It is plain '
                   'Python (no robot, no XRPLib), so it runs on any laptop or in XRP Code. Project '
-                  'it rather than handing it out: in Lesson 5-5 students write bfs_rings() and '
+                  'it rather than handing it out: in Lesson 5-5 students write bfs_distances() and '
                   'print_grid() themselves, and their own file draws this grid. The last ten '
                   'minutes with it matter. If time allows, show (don\'t hand out) the loop from '
                   'the teacher note on the lesson page and have students match each line to '

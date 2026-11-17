@@ -25,7 +25,7 @@ By the end of this lesson you will be able to:
 
 - Explain why the Manhattan algorithm can't handle a blocked intersection
 - Explain why "look at the grid and guess" isn't a method a computer can use
-- Number every intersection with its distance from the start, one ring at a time, around blocked intersections
+- Number every intersection with its distance from the start, one step further out at a time, around blocked intersections
 - Explain why the first number written on the destination is the shortest path length, so you can stop there
 
 </Objectives>
@@ -184,27 +184,36 @@ Their grid for question 5:
 
 </TeacherNote>
 
-## What you found: ripples
+## What you found: a wave
 
 Here is the method the class just worked out:
 
 1. Write **0** on the start.
 2. Every intersection one step away gets a **1**.
 3. Every intersection one step from a 1 that *doesn't have a number yet* gets a **2**.
-4. Keep going, finishing each ring before you start the next, until the destination gets
-   a number.
+4. Keep going, finishing every intersection at one distance before you start the next,
+   until the destination gets a number.
 
 <Figure
-  src="/img/lesson-m5-03/bfs-rings-xy.svg"
+  src="/img/lesson-m5-03/bfs-wave-xy.svg"
   alt="Left: a 3 by 3 grid with the start numbered 0 at the bottom-left, its neighbors 1, the next corners 2, the next two 3, and the top-right destination 4; the center intersection is crossed out with no number. Right: the same grid with a small arrow on each intersection pointing back to the one it was reached from, and the walk-back from 4 down the right side and along the bottom highlighted in red."
-  caption="Ripples spreading out from the start, around a blocked intersection. Each ring is exactly one step further out. The arrows on the right are next lesson's idea: they turn the numbers into a path."
+  caption="The numbers spread out from the start like a wave, around a blocked intersection. Each number is one step further out. The arrows on the right are next lesson's idea: they turn the numbers into a path."
 />
 
-The destination's number is its distance from the start, in steps, and the first number
-written on it is the smallest it could ever get: every shorter distance was finished
-first. That's why it's called **breadth-first search**: it goes wide (the whole ring)
-before it goes deep. It never looks at the destination, which is why a wall that forces
-you away from it is no problem.
+Think of dropping a stone in a pond. A wave spreads out from that single point, the same
+distance in every direction, and flows around anything in its way. The numbering works the
+same way, with the start as the point where the stone lands. The **wave front**, the
+intersections that have just been numbered, moves out one step at a time: every
+intersection 1 step away is reached, then every one 2 steps away, and so on. A number is
+just the moment the wave front reached that intersection. A blocked intersection is a rock
+in the pond: the wave never touches it, and flows around it. That's why this kind of search
+on a grid is also called a **wavefront** algorithm.
+
+So the destination's number is its distance from the start, in steps, and the first
+number written on it is the smallest it could ever get: the wave reaches everything closer
+first. Computer scientists call this **breadth-first search**: it goes wide (everything at
+one distance) before it goes deep. It never looks at the destination, which is why a wall
+that forces you away from it is no problem.
 
 <KnowledgeCheck
   question="An intersection already has a 2 on it. Later, while looking around an intersection with a 3, you find it's a neighbor. What do you write on it?"
@@ -214,7 +223,7 @@ you away from it is no problem.
     {text: '3, the smaller of 3 and 4'},
     {text: 'Cross out the 2 and write 4'},
   ]}
-  explanation="An intersection is numbered once, the first time it's reached. Because rings are finished in order, that first number is already the smallest possible."
+  explanation="An intersection is numbered once, the first time it's reached. Because the wave reaches everything at one distance before anything further out, that first number is already the smallest possible."
 />
 
 <KnowledgeCheck
@@ -225,19 +234,19 @@ you away from it is no problem.
     {text: 'Yes: a path that heads toward the destination might be shorter'},
     {text: 'It depends on how many intersections are blocked'},
   ]}
-  explanation="Rings are finished in order, so the first number written on the destination can't be beaten. You can stop right there."
+  explanation="The wave reaches everything closer first, so the first number written on the destination can't be beaten. You can stop right there."
 />
 
-## The ripple on a bigger grid
+## The wave on a bigger grid
 
 A 3×3 is small enough to trace by hand, but too small to show the *shape* of
 breadth-first search. Here is the same rule on an 8 by 6 grid with a wall across the
 middle.
 
 <StepFigure
-  src="/img/lesson-m5-03/fanout-bfs-steps.svg"
-  alt="An animation of breadth-first search on a grid of 8 by 6 intersections with a wall of four blocked intersections at x = 3, from y = 1 to y = 4. S is (0, 4) and D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S when the search first reaches it, so the numbers spread out from S in even rings. The ripple flows around both ends of the wall. When D is taken off the list the search stops, and the walk-back from D is drawn in red: up, along the top past the wall, and down to D, 9 steps."
-  caption="Same rule as your grid: every intersection one step out is numbered before any two steps out. Press Step to add one ring at a time, or Play to watch it spread like a ripple and bend around the wall." />
+  src="/img/lesson-m5-03/fanout-bfs-wave.svg"
+  alt="An animation of breadth-first search on a grid of 8 by 6 intersections with a wall of four blocked intersections at x = 3, from y = 1 to y = 4. S is (0, 4) and D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S when the search first reaches it, so the numbers spread out from S like a wave. The wave flows around both ends of the wall. When D is taken off the list the search stops, and the walk-back from D is drawn in red: up, along the top past the wall, and down to D, 9 steps."
+  caption="Same rule as your grid: every intersection one step out is numbered before any two steps out. Press Step to move the wave out one step at a time, or Play to watch it spread and bend around the wall." />
 
 The search spreads evenly, even *away* from D: it has no idea where D is until it gets
 there. It stops as soon as D comes off the list, so a few far corners never get a number.
@@ -246,10 +255,10 @@ there. It stops as soon as D comes off the list, so a few far corners never get 
 
 <CardGrid>
   <InfoCard tag="Maps" title="GPS routing">
-    Rerouting around a closed road is this problem. Turn-by-turn directions come from searches that spread out from where you are, like the rings.
+    Rerouting around a closed road is this problem. Turn-by-turn directions come from searches that spread out from where you are, like a wave.
   </InfoCard>
   <InfoCard tag="Social" title="Degrees of separation">
-    "Friends of friends" is ring 2 of a breadth-first search over a friend network.
+    "Friends of friends" are the people two steps out in a breadth-first search over a friend network.
   </InfoCard>
   <InfoCard tag="Games" title="Enemy AI">
     Game characters find their way around walls with graph search, many times a second.
@@ -260,7 +269,7 @@ there. It stops as soon as D comes off the list, so a few far corners never get 
 
 - Why can't Manhattan handle a blocked intersection? (One fixed route, no idea of obstacles.)
 - What does the number on an intersection mean? (Its distance from the start, in steps.)
-- Do blocked intersections need a special rule? (No: they never get a number, and the rings flow around them.)
+- Do blocked intersections need a special rule? (No: they never get a number, and the wave flows around them.)
 - Why can you stop as soon as the destination gets a number? (Everything closer was numbered first.)
 
 <TeacherNote title="Make Manhattan's failure vivid, then let them find the rule">
@@ -269,14 +278,14 @@ This lesson is the *why* for the whole module. Spend real time on the hook: show
 intersection sitting on Manhattan's route and let students feel that the old algorithm is
 stuck. Draw big grids on the board; have students come up, cross out blocked
 intersections, and trace detours with markers. Let them struggle to state a rule; that
-struggle is what makes the ripples worth having.
+struggle is what makes the wave worth having.
 
-The one habit that matters is **finish the ring before starting the next**. Resist
+The one habit that matters is **number everything at one distance before anything further out**. Resist
 introducing a `distances` table or "infinity" here. BFS doesn't need them, and they're
 exactly what Module 6 adds for a reason. If a student asks about slow roads, "good
 question, Module 6."
 
-Don't bring in the to-visit list today. Students number a whole ring at once, by eye,
+Don't bring in the to-visit list today. Students number everything at one distance at once, by eye,
 and that's right for now: Lesson 5-2's bridge to the computer starts from noticing that a
 computer can't do that.
 

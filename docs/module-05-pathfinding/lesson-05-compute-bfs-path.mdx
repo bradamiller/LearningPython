@@ -15,10 +15,10 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-This is the heart of Module 5: the fifteen sentences from Lesson 5-2 become about twenty
-lines of Python, each one a step you've done with a pencil. Build it in three stages, with a
+This is the heart of Module 5: the algorithm you reviewed at the end of Lesson 5-2 becomes about
+twenty lines of Python, each one a step you've done with a pencil. Build it in three stages, with a
 paper test after each (it prints paths and step counts; the robot stays on the desk).
-Then have the program draw its ring numbers to compare with yours.
+Then have the program draw its distance numbers to compare with yours.
 
 <Objectives>
 
@@ -29,7 +29,7 @@ By the end of this lesson you will be able to:
 - Explain why `if neighbor not in previous` is the whole "numbered once" rule
 - Write the walk-back so the path leaves the start out, and say why "already there" gives `[]`
 - Return `[]` when the destination is walled off
-- Write `bfs_rings()` and use `print_grid()` to draw what the search found
+- Write `bfs_distances()` and use `print_grid()` to draw what the search found
 
 </Objectives>
 
@@ -38,18 +38,18 @@ By the end of this lesson you will be able to:
 ## This lesson's skeleton
 
 In the BFS PLANNER section, replace the placeholder `compute_bfs_path()` with this
-outline: Lesson 5-2's sentences, numbered, as comments. Under it, paste the
+outline: the algorithm from Lesson 5-2's review, one numbered step per comment. Under it, paste the
 two functions for the picture at the end of the lesson.
 
 ```python
 def compute_bfs_path(start, destination):
     """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
-    # Program only, not one of the sentences:
+    # Program only, not a step of the algorithm:
     #   build the graph from BLOCKED, and return [] if
     #   start or destination is not in it.
     #
-    # The sentences from Lesson 5-2, one line of code each:
+    # The algorithm from Lesson 5-2, one line of code per step:
     #  1. Write down that the start was reached, from nowhere.
     #  2. Put the start on the to-visit list.
     #  3. While the to-visit list is not empty:
@@ -67,12 +67,12 @@ def compute_bfs_path(start, destination):
     # 15. Turn the path around. That is the answer.
     pass
 
-def bfs_rings(start):
-    """Ring number of every intersection reachable from
-    start, as a dictionary -- the search with no break."""
+def bfs_distances(start):
+    """Distance, in steps, of every intersection reachable
+    from start, as a dictionary -- the search with no break."""
     # the SETUP and SEARCH of compute_bfs_path, with two
     # changes: never stop early, and instead of came-from,
-    # write the ring number: one more than current's
+    # write the distance: one more than current's
     pass
 
 def print_grid(rows, cols, blocked, numbers):
@@ -105,11 +105,11 @@ front of you. `"{:>3}".format(cell)` is "this value, right-aligned in three spac
 
 ## Every line is a pencil step
 
-Under each numbered comment you write one line of Python that does what the sentence
-says. (Two sentences take two lines: 11 makes an empty `path` and sets `current` to the
+Under each numbered comment you write one line of Python that does what the step
+says. (Two steps take two lines: 11 makes an empty `path` and sets `current` to the
 destination; 15 reverses the path and returns it.) Use
 the names from Lesson 5-3: `previous` for the came-from notes, a dictionary, and
-`to_visit` for the list. Sentence 1 makes `previous` with one entry: the start, which came
+`to_visit` for the list. Step 1 makes `previous` with one entry: the start, which came
 from nowhere, `None`.
 
 <Figure
@@ -123,7 +123,7 @@ from nowhere, `None`.
 is the whole numbered-once rule.
 
 The list is a **queue**: `append()` adds to the end and `pop(0)` takes from the front
-(index 0), so each ring is finished before the next one starts.
+(index 0), so the wave front moves out one step at a time.
 
 <KnowledgeCheck
   question="In the search loop, what does `if neighbor not in previous:` mean in pencil terms?"
@@ -143,7 +143,7 @@ path and step count against your traces from Lessons 5-1 and 5-2.
 
 ### Step 1 · Setup and the guard
 
-Write the two program-only lines and sentences 1 and 2, and for now end the function
+Write the two program-only lines and steps 1 and 2, and for now end the function
 with `return []`.
 The guard handles a blocked start or destination: it isn't in the graph, so return
 `[]` at once.
@@ -156,7 +156,7 @@ three wrong step counts, no errors.
 
 ### Step 2 · The search
 
-Add sentences 3 to 9, the loop. Put a temporary `print(previous)` right after it, and write a
+Add steps 3 to 9, the loop. Put a temporary `print(previous)` right after it, and write a
 throwaway `test_came_from()`: clear the blocked list, block `(1, 1)`, and call
 `compute_bfs_path((0, 0), (2, 2))`. Set `ROWS` and `COLS` to 3 for a moment and run
 it. The dictionary should match your Lesson 5-2 came-from table exactly, keys in the
@@ -167,7 +167,7 @@ If the destination is walled off, `to_visit` empties, the `while` ends, and
 
 ### Step 3 · The walk-back
 
-Sentences 10 to 15: start at the destination and follow `previous` back to the start,
+Steps 10 to 15: start at the destination and follow `previous` back to the start,
 appending as you go. Then reverse, because you collected the path backwards; a list's
 `reverse()` method does it in place.
 
@@ -267,7 +267,7 @@ Once all five pass, break the function two ways. Put each back before the next.
 
 1. **Change `pop(0)` to `pop()`.** Run Test 4 and count the steps: more. `pop()` takes
    the *newest* intersection, so the search dives down one path before finishing the
-   ring, and the first route it finds may not be shortest. That is depth-first search:
+   ones closer to the start, and the first route it finds may not be shortest. That is depth-first search:
    fine for other jobs, not this one.
 2. **Delete `if neighbor not in previous:`** (keep the two lines under it, one indent
    level out). Run Test 1. Later, longer routes overwrite "came from" entries, and the
@@ -277,12 +277,12 @@ Once all five pass, break the function two ways. Put each back before the next.
 <KnowledgeCheck
   question="You change pop(0) to pop() and Test 4, the wall test, prints Steps: 9 instead of 7. What changed?"
   options={[
-    {text: 'The search now takes the newest intersection first and dives down one route before finishing the ring', correct: true},
+    {text: 'The search now takes the newest intersection first and dives down one route before finishing the closer ones', correct: true},
     {text: 'The graph lost some neighbors'},
     {text: 'The walk-back went the wrong way'},
     {text: 'Nothing — 9 is also a shortest path'},
   ]}
-  explanation="Oldest-first (a queue) finishes each ring before the next. Newest-first (a stack) is depth-first search: it finds a path, but not necessarily a shortest one."
+  explanation="Oldest-first (a queue) moves the wave front out one step at a time. Newest-first (a stack) is depth-first search: it finds a path, but not necessarily a shortest one."
 />
 
 <Reveal title="What pop() did to Test 4" hint="try it first">
@@ -290,7 +290,7 @@ Once all five pass, break the function two ways. Put each back before the next.
 <Figure
   src="/img/lesson-m5-05/bfs-vs-dfs-xy.svg"
   alt="Test 4 on the 4 by 4 grid, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), breadth-first search finds a 7-step path around the wall. Right, with pop(), the search dives down one route and returns a 9-step path: all the way up the left column, right along the top row, down the column at x = 2, then right to (3, 0)."
-  caption="Oldest first finishes each ring and finds the shortest route. Newest first follows the latest branch as far as it goes."
+  caption="Oldest first spreads out one step at a time and finds the shortest route. Newest first follows the latest branch as far as it goes."
 />
 
 On Test 1's open grid, `pop()` happens to find 6 steps too. A test can pass by luck, which is why you keep more than one case.
@@ -299,13 +299,13 @@ On Test 1's open grid, `pop()` happens to find 6 steps too. A test can pass by l
 
 ## The picture
 
-`bfs_rings(start)` is the same search with no `break`, so it runs until every
-reachable intersection has a number. Instead of came-from it records the ring number:
+`bfs_distances(start)` is the same search with no `break`, so it runs until every
+reachable intersection has a number. Instead of came-from it records the distance:
 0 for the start, and `current`'s number plus one for each new neighbor. `print_grid()`
 draws the result.
 
-Write the body, then `test_rings()`: block `(1, 0)` and `(1, 1)` and call
-`print_grid(ROWS, COLS, BLOCKED, bfs_rings((0, 0)))`:
+Write the body, then `test_distances()`: block `(1, 0)` and `(1, 1)` and call
+`print_grid(ROWS, COLS, BLOCKED, bfs_distances((0, 0)))`:
 
 ```text
  3 |   3  4  5  6
@@ -319,24 +319,24 @@ Write the body, then `test_rings()`: block `(1, 0)` and `(1, 1)` and call
 That's your Lesson 5-2 wall grid; Test 4's path is one route down these numbers,
 1, 2, 3 … to the 7.
 
-<Reveal title="Check your bfs_rings()" hint="draw the wall grid first">
+<Reveal title="Check your bfs_distances()" hint="draw the wall grid first">
 
 ```python
-def bfs_rings(start):
-    """Ring number of every intersection reachable from
-    start, as a dictionary -- the search with no break."""
+def bfs_distances(start):
+    """Distance, in steps, of every intersection reachable
+    from start, as a dictionary -- the search with no break."""
     graph = build_graph(ROWS, COLS, BLOCKED)
     if start not in graph:
         return {}
-    rings = {start: 0}
+    distances = {start: 0}
     to_visit = [start]
     while len(to_visit) > 0:
         current = to_visit.pop(0)
         for neighbor in graph[current]:
-            if neighbor not in rings:
-                rings[neighbor] = rings[current] + 1
+            if neighbor not in distances:
+                distances[neighbor] = distances[current] + 1
                 to_visit.append(neighbor)
-    return rings
+    return distances
 ```
 
 </Reveal>
@@ -352,8 +352,8 @@ the end of the module is in the [Module 5 sample programs](/teacher-guide/sample
 # The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
-# leaves the start out), but it searches the GRID GRAPH ring
-# by ring, so it routes AROUND whatever is in BLOCKED. Pure
+# leaves the start out), but it searches the GRID GRAPH as a
+# wave from the start, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
 def compute_bfs_path(start, destination):
@@ -384,21 +384,21 @@ def compute_bfs_path(start, destination):
     path.reverse()
     return path
 
-def bfs_rings(start):
-    """Ring number of every intersection reachable from
-    start, as a dictionary -- the search with no break."""
+def bfs_distances(start):
+    """Distance, in steps, of every intersection reachable
+    from start, as a dictionary -- the search with no break."""
     graph = build_graph(ROWS, COLS, BLOCKED)
     if start not in graph:
         return {}
-    rings = {start: 0}
+    distances = {start: 0}
     to_visit = [start]
     while len(to_visit) > 0:
         current = to_visit.pop(0)
         for neighbor in graph[current]:
-            if neighbor not in rings:
-                rings[neighbor] = rings[current] + 1
+            if neighbor not in distances:
+                distances[neighbor] = distances[current] + 1
                 to_visit.append(neighbor)
-    return rings
+    return distances
 
 def print_grid(rows, cols, blocked, numbers):
     """Draw the grid the way it lies in front of you: the top
@@ -450,12 +450,12 @@ def test_bfs_walls():
     print("Path:", path)
     print("Steps:", len(path), "(expect 0 -- no way through)")
 
-def test_rings():
+def test_distances():
     clear_blocked()
     add_blocked((1, 0))
     add_blocked((1, 1))
-    print("=== Rings from (0,0) with (1,0) and (1,1) blocked ===")
-    print_grid(ROWS, COLS, BLOCKED, bfs_rings((0, 0)))
+    print("=== Distances from (0,0) with (1,0) and (1,1) blocked ===")
+    print_grid(ROWS, COLS, BLOCKED, bfs_distances((0, 0)))
 
 # ===== RUN =====
 board.wait_for_button()
@@ -472,9 +472,9 @@ good and are what most students will write.
 Three stages, run after each; students who type the whole thing and then debug lose
 the mapping to the paper method, which is the point. The outline in the skeleton is
 deliberately the longest in the module — this is the one place in Module 5 where
-students need the hand-holding, and the comments are Lesson 5-2's fifteen sentences,
-numbered, rather than the code. Have the posted sentences in view; a stuck student should
-be pointed at the sentence, not at the answer. The break-it activity is not optional: seeing `pop()` give a longer path is what
+students need the hand-holding, and the comments are the steps of Lesson 5-2's review,
+numbered, rather than the code. A stuck student should be pointed at the step, not at the
+answer. The break-it activity is not optional: seeing `pop()` give a longer path is what
 makes "oldest first" stick, and seeing the missing `not in previous` hang the program is
 what makes "numbered once" stick. Keep `distances`, `999999` and "closest first" out of
 the room; a student who asks about roads that take longer gets "Module 6 — and it's
@@ -542,7 +542,7 @@ from outside, calls go through the object.
 Paste this class-track skeleton **in place of** the BFS PLANNER banner and
 `compute_bfs_path()`. Delete `BLOCKED`, `add_blocked()` and `clear_blocked()` from the
 Lesson 5-4 part of GRID GRAPH: they live in the object now. `ROWS`, `COLS`,
-`build_graph()`, `bfs_rings()`, `print_grid()` and your tests stay.
+`build_graph()`, `bfs_distances()`, `print_grid()` and your tests stay.
 
 ```python
 # ===== BFS PLANNER (class version) =====
@@ -597,7 +597,7 @@ so that Module 4's exact-match suite keeps testing the planner it was written fo
 
 Your tests change the usual way: `add_blocked(` becomes `planner.add_blocked(`,
 `clear_blocked()` becomes `planner.clear_blocked()`, `compute_bfs_path(` becomes
-`planner.compute_path(`, and where a test or `bfs_rings()` reads `BLOCKED` it reads
+`planner.compute_path(`, and where a test or `bfs_distances()` reads `BLOCKED` it reads
 `planner.blocked`. Run all three tests again — same five paths, same grid.
 
 Why a method that does nothing? Next lesson's harness calls `planner.add_blocked(...)`

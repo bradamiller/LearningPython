@@ -1,12 +1,12 @@
 ---
-title: "Lesson 5-2 · From Rings to Steps"
-sidebar_label: "5-2 · Rings to Steps"
+title: "Lesson 5-2 · Finding the Path"
+sidebar_label: "5-2 · Finding the Path"
 sidebar_position: 2
 ---
 
 <LessonHeader
   eyebrow="Module 5 · Pathfinding Around Obstacles"
-  title="Lesson 5-2 · From Rings to Steps"
+  title="Lesson 5-2 · Finding the Path"
   meta={['55–60 min', 'No coding', 'Hand method to computer method']}
 />
 
@@ -19,8 +19,8 @@ In Lesson 5-1 you labeled every intersection with its distance from the start. T
 you *how far* the destination is, but not the path, and the robot needs a path: a list of
 intersections to drive to, like the one the Manhattan planner hands it. So this lesson
 answers two questions. What's the path? And how would we write a `compute_bfs_path()`
-function that finds it? By the end, the method is a list of plain sentences, and in
-Lesson 5-5 each sentence becomes one line of that function.
+function that finds it? The lesson ends with a review of the whole algorithm in plain
+words, which is what you'll turn into Python in Lesson 5-5.
 
 <Objectives>
 
@@ -28,12 +28,12 @@ By the end of this lesson you will be able to:
 
 - Walk back from the destination to find a shortest path, and explain why the path leaves the start out
 - Explain why a computer takes intersections oldest-first, and why it writes down where each one came from
-- Write breadth-first search as a numbered list of sentences a computer could follow
-- Follow those sentences exactly, by hand, including on a grid with no path
+- Explain the whole algorithm in your own words
+- Carry it out exactly as a computer would, by hand, including on a grid with no path
 
 </Objectives>
 
-<QuizLink id="module-05-pathfinding/lesson-02-rings-to-steps" />
+<QuizLink id="module-05-pathfinding/lesson-02-finding-the-path" />
 
 ## Discuss · Where's the path?
 
@@ -98,7 +98,7 @@ against one list.
 
 ## Discuss · Teaching it to a computer
 
-You numbered the rings with your eyes: you looked at the whole board and found "all the
+You numbered the grid with your eyes: you looked at the whole board and found "all the
 2s" at once. A computer can't do that. It sees one intersection and its open neighbors,
 the same limit your own rule had in Lesson 5-1.
 
@@ -118,7 +118,8 @@ program would *do*. Each answer below is one piece of the program, so write each
 board as it's found, in words, and leave it up for the rest of the lesson.
 
 1. **In the order they were numbered.** Every 1 was numbered before any 2, so taking
-   them oldest-first finishes ring 1 before ring 2 starts.
+   them oldest-first deals with everything 1 step away before anything 2 steps away:
+   the wave front moves out one step at a time, just as it did on paper.
 2. **A list.** When an intersection gets its number, add it to the *end*. To choose
    where to look next, take the one at the *front*. Call it the **to-visit list**. Act it
    out if the room is flat: students in a line, the one at the front sits down and sends
@@ -190,88 +191,86 @@ next and why.
 <KnowledgeCheck
   question="Why does the computer take intersections from the FRONT of the to-visit list?"
   options={[
-    {text: 'The front holds the oldest, so every ring is finished before the next one starts', correct: true},
+    {text: 'The front holds the oldest, so everything 1 step away is handled before anything 2 steps away', correct: true},
     {text: 'So the search heads toward the destination'},
     {text: "It doesn't matter: any order finds the shortest path"},
     {text: 'So blocked intersections are skipped'},
   ]}
-  explanation="New intersections go on the end, so the front is always the oldest. Oldest-first means every ring-1 intersection is looked around before any ring-2 one, which is the whole guarantee that the first route found is shortest."
+  explanation="New intersections go on the end, so the front is always the oldest. Oldest-first means the wave front moves out one step at a time, which is the whole guarantee that the first route found is shortest."
 />
 
-## The method in sentences
+## Review: the algorithm
 
-Here is everything you just did, as sentences in order. Read them as a computer would:
-do exactly what each one says and nothing else. In Lesson 5-5 **each sentence becomes one
-line of Python**, so keep this list.
+Here is breadth-first search all in one place, the way you would explain it if someone
+asked you how it works.
 
-```text
- 1. Write down that the start was reached, from nowhere.
- 2. Put the start on the to-visit list.
- 3. While the to-visit list is not empty:
- 4.     Take the oldest one off the front. Call it current.
- 5.     If current is the destination, stop looking.
- 6.     For each open neighbor of current:
- 7.         If that neighbor has not been reached yet:
- 8.             Write down that it came from current.
- 9.             Add it to the end of the to-visit list.
-10. If the destination was never reached, there is no path.
-11. Start with an empty path, standing on the destination.
-12. Until you are back at the start:
-13.     Add where you are standing to the path.
-14.     Step back to where it came from.
-15. Turn the path around. That is the answer.
-```
+**Spread out from the start.** Make a to-visit list with just the start on it, and note
+that the start came from nowhere. Then, until the list is empty: take the intersection at
+the front of the list, the one that has waited longest. If it's the destination, stop.
+Otherwise look at each of its open neighbors. A neighbor that hasn't been reached yet gets
+a note saying which intersection it came from, and joins the end of the list. A neighbor
+that has already been reached is left alone.
 
-Sentences 1 to 9 are the search; 10 to 15 are the walk back. The indents show what
-repeats: sentences 4 to 9 happen again and again inside 3, and Python will indent them the
-same way. Notice what isn't there: no ring numbers (sentence 7's "not reached yet" does
-their job), and no looking at the destination except in sentence 5.
+Because new intersections join the end and you always take from the front, everything 1
+step from the start is handled before anything 2 steps away. That's the wave from Lesson
+5-1, moving out one step at a time.
+
+**Walk back to get the path.** If the destination never got a came-from note, the wave
+never reached it, and there is no path. Otherwise, start at the destination and keep
+stepping back to where it came from, writing down each intersection, until you're back at
+the start. Leave the start off; the robot is already there. You wrote the path down
+backwards, so turn it around. That's the list of intersections the robot drives to.
+
+Notice two things it never needs. It doesn't need the distance numbers: a came-from note
+already says both "this one has been reached" and "this is the way back". And it never
+looks at where the destination is, except to notice when it gets there.
 
 <KnowledgeCheck
-  question="Which sentence makes sure no intersection is ever numbered twice?"
+  question="What in the algorithm makes sure no intersection is ever numbered twice?"
   options={[
-    {text: '7: If that neighbor has not been reached yet', correct: true},
-    {text: '4: Take the oldest one off the front'},
-    {text: '5: If current is the destination, stop looking'},
-    {text: '9: Add it to the end of the to-visit list'},
+    {text: 'Only a neighbor that has not been reached yet gets a came-from note and joins the list', correct: true},
+    {text: 'Always taking the intersection at the front of the list'},
+    {text: 'Stopping as soon as the destination comes off the list'},
+    {text: 'Turning the path around at the end'},
   ]}
-  explanation="Sentence 7 skips anything that already has a came-from note. That is the numbered-once rule from Lesson 5-1, without the numbers."
+  explanation="A neighbor that already has a came-from note is left alone. That is the numbered-once rule from Lesson 5-1, without the numbers."
 />
 
 <KnowledgeCheck
-  question="Which sentence makes sure every 1 is looked around before any 2?"
+  question="What makes sure everything 1 step away is handled before anything 2 steps away?"
   options={[
-    {text: '4: Take the oldest one off the front', correct: true},
-    {text: '3: While the to-visit list is not empty'},
-    {text: '6: For each open neighbor of current'},
-    {text: '12: Until you are back at the start'},
+    {text: 'New intersections join the end of the list, and the next one is always taken from the front', correct: true},
+    {text: 'Stopping when the list is empty'},
+    {text: 'Looking at the open neighbors only'},
+    {text: 'Walking back from the destination'},
   ]}
-  explanation="New intersections go on the end (sentence 9), so taking from the front (sentence 4) always takes the oldest. That is what finishes each ring before the next."
+  explanation="Joining at the end and taking from the front means the oldest is always next, so the wave front moves out one step at a time."
 />
 
 ## Activity · Be the computer
 
-Work in pairs. One of you reads the sentences aloud, one at a time; the other does
-exactly what each says and keeps the to-visit list and the came-from notes on paper. No
-looking at the whole grid: only the sentence being read.
+Work in pairs. One of you is the computer: you may look only at the intersection you're
+working on and its open neighbors, and you keep the to-visit list and the came-from notes
+on paper. The other reads the review above aloud, one instruction at a time, and checks
+that the computer does exactly that and nothing more.
 
 Use a 3×3 grid with the whole middle column blocked: (1,0), (1,1) and (1,2). Start at
 (0,0), destination (2,0).
 
-1. Which sentence ends the search, and what is on the to-visit list when it does?
-2. What does sentence 10 do?
+1. What ends the search, and what is on the to-visit list when it does?
+2. Did the destination get a came-from note? What does that mean?
 3. Swap jobs and run it once more, this time with only (1,1) blocked. What path do you get?
 
-<Reveal title="Check your run" hint="run the sentences first">
+<Reveal title="Check your run" hint="run it first">
 
 **Middle column blocked:** (0,0) is reached and taken. Its only open neighbor is (0,1),
 which goes on the list. Then (0,1) adds (0,2). Then (0,2) has no neighbor that isn't
-reached yet. The list is now empty, so sentence 3 ends the search, and (2,0) never got a
-came-from note. Sentence 10 says **there is no path**; the program will hand back an
+reached yet. The list is now empty, so the search ends, and (2,0) never got a came-from
+note: the wave never reached it, so **there is no path**. The program will hand back an
 empty list, `[]`.
 
 **Only (1,1) blocked:** (1,0) and (0,1) from (0,0). Then (1,0) adds (2,0), and (0,1)
-adds (0,2). Next, (2,0) comes off the front and sentence 5 stops the search. Walking
+adds (0,2). Next, (2,0) comes off the front: it's the destination, so the search stops. Walking
 back: (2,0) from (1,0) from (0,0). The path is `[(1, 0), (2, 0)]`.
 
 </Reveal>
@@ -279,10 +278,10 @@ back: (2,0) from (1,0) from (0,0). The path is `[(1, 0), (2, 0)]`.
 ## Check your paper against the computer
 
 Nothing goes into `robot.py` yet. Next lesson works out what a program has to keep track
-of to follow these sentences, and by Lesson 5-5 your own file draws the grid below. For
+of to follow the algorithm, and by Lesson 5-5 your own file draws the grid below. For
 now your teacher has a demonstration program that runs the 3×3-with-(1,1)-blocked trace
 step by step, printing each intersection as it's reached and the to-visit list after
-every step, then draws the ring numbers:
+every step, then draws the distance numbers:
 
 ```text
  2 |   2  3  4
@@ -299,9 +298,9 @@ If your trace matches, you ran the algorithm the way the computer does.
 The program is in the [Module 5 sample programs](/teacher-guide/sample-programs/module-5).
 It is plain Python — no robot, no XRPLib — so it runs on any laptop or in XRP Code with
 the robot connected; project it rather than handing it out, since Lesson 5-5 has students
-write `bfs_rings()` and `print_grid()` themselves. Seeing the computer produce *their*
+write `bfs_distances()` and `print_grid()` themselves. Seeing the computer produce *their*
 trace is what convinces students the paper method is the real algorithm. Don't walk
-through its code: Lessons 5-3 to 5-5 get there from the sentences, one step at a time.
+through its code: Lessons 5-3 to 5-5 get there from the review, one step at a time.
 
 </TeacherNote>
 
@@ -312,7 +311,7 @@ through its code: Lessons 5-3 to 5-5 get there from the sentences, one step at a
     A maps app spreads out from where you are, then reads the route back from the destination, the same walk back you just did.
   </InfoCard>
   <InfoCard tag="Printers" title="Paint-bucket fill">
-    The fill tool in a paint program spreads out from where you click with a to-visit list, exactly like the rings.
+    The fill tool in a paint program spreads out from where you click with a to-visit list, exactly like the wave from Lesson 5-1.
   </InfoCard>
   <InfoCard tag="Puzzles" title="Maze solvers">
     A maze solver floods the maze from the start and follows its came-from notes back from the exit.
@@ -321,33 +320,32 @@ through its code: Lessons 5-3 to 5-5 get there from the sentences, one step at a
 
 ## Wrap-up
 
-- How do you get the path from the ring numbers? (Walk back from the destination, always to a neighbor one less.)
-- Why does the computer take the oldest intersection first? (So each ring is finished before the next.)
+- How do you get the path from the distance numbers? (Walk back from the destination, always to a neighbor one less.)
+- Why does the computer take the oldest intersection first? (So the wave front moves out one step at a time.)
 - Why doesn't the computer need the numbers? (A came-from note says both "reached" and "which way back".)
 - What happens when the destination is walled off? (The to-visit list empties first; there is no path.)
 
-<TeacherNote title="Pacing, and why the sentences matter">
+<TeacherNote title="Pacing, and why the review matters">
 
 Two discussions and two activities: about 10, 15, 15 and 10 minutes. If time is short,
-keep "Teaching it to a computer" and "The method in sentences" and shorten the trace to
-steps 2 to 4.
+keep "Teaching it to a computer" and the review, and shorten the trace to steps 2 to 4.
 
-Post the fifteen sentences on the wall for the rest of the module. Lesson 5-3 asks of
-each one what the program has to remember to do it; Lesson 5-5 pastes them into
-`robot.py` as numbered comments, and students write one line of Python under each. A
-student who can point at a sentence and say what it does can write the program; a
-student who skipped the sentences is translating a picture.
+Have students explain the review back to a partner in their own words before "Be the
+computer". Lesson 5-3 goes through it asking what the program has to remember for each
+part, and Lesson 5-5's skeleton lists its steps as numbered comments, with one line of
+Python under each. A student who can explain the review can write the program; a student
+who skipped it is translating a picture.
 
 </TeacherNote>
 
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** a correct trace table; the "Be the computer" answers, especially that
-sentence 3 ends the dead-end search. **Exit ticket:** "Which sentence would you change to
-make the computer take the *newest* intersection instead, and what would go wrong?"
-(Sentence 4; rings would no longer finish in order, so the first route found might not be
-shortest.) **Preview:** next lesson goes through the sentences one at a time and asks what
-the program has to remember for each. That's where the grid becomes a **graph** and
+the dead-end search ends because the list runs out. **Exit ticket:** "What would go wrong
+if the computer took the *newest* intersection from the list instead of the oldest?" (The
+wave front would no longer move out one step at a time, so the first route found might
+not be shortest.) **Preview:** next lesson goes through the algorithm one part at a time
+and asks what the program has to remember for each. That's where the grid becomes a **graph** and
 Python's **dictionary** comes in.
 
 </TeacherNote>

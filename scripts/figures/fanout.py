@@ -2,7 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR, ROBOT_SRC, REPO
 # Module 5 / 6: how the search fans out, on a grid bigger than the floor grid so the shape shows.
-#   fanout-bfs.svg            (Lesson 5-1)  a StepFigure, one step per ring: BFS around a wall
+#   fanout-bfs.svg            (Lesson 5-1)  a StepFigure, one step per distance: BFS around a wall
 #   fanout-bfs-vs-dijkstra.svg (Lesson 6-3) two buttons: same grid plus a slow road
 # Both searches follow the course code exactly: neighbors in the order left, right, down, up;
 # BFS numbers a neighbor when it is first reached and stops when the destination is taken off
@@ -123,8 +123,8 @@ def build(out,modes_spec,slow,title,desc,panel):
     if len(segs)>1:
         attr=" data-modes='"+json.dumps(modes)+"'"
     else:
-        # one search: a StepFigure, one step per ring (just before the next ring appears,
-        # so this ring's orange "just reached" circles still show), then the path drawn
+        # one search: a StepFigure, one step per distance (just before the next one appears,
+        # so this wave's orange "just reached" circles still show), then the path drawn
         sg=segs[0]; rings=sorted({v for (_,_,v) in sg['ev']})
         steps=[sg['s0']+0.3+v*UNIT+0.38 for v in rings]+[sg['te']+0.1]
         attr=f' data-steps="{",".join(f"{t:.2f}" for t in steps)}" data-dur="{T:.2f}"'
@@ -133,8 +133,8 @@ def build(out,modes_spec,slow,title,desc,panel):
     print(out,[(s['label'],s['steps'],s['cost'],s['seen'],round(s['stop'],1)) for s in segs])
 bfs_panel=[('h',60,'Breadth-first search'),('n',84,'Numbers = steps from S.'),
            ('sm',108,'Every intersection one step out'),('sm',124,'gets its number before any two'),
-           ('sm',140,'steps out does, so the search'),('sm',156,'spreads in even rings, like a'),
-           ('sm',172,'ripple. The wall bends the'),('sm',188,'ripple around its end.'),
+           ('sm',140,'steps out does, so the search'),('sm',156,'spreads out from S like a wave.'),
+           ('sm',172,'The wall bends the wave'),('sm',188,'around its end.'),
            ('sm',214,'Orange: just reached. Red: the'),('sm',230,'walk-back from D.')]
 dij_panel=[('h',60,"Dijkstra's algorithm"),('n',84,'Numbers = cost from S.'),
            ('sm',108,'It always takes the cheapest'),('sm',124,'intersection next, so the wave'),
@@ -142,8 +142,8 @@ dij_panel=[('h',60,"Dijkstra's algorithm"),('n',84,'Numbers = cost from S.'),
            ('sm',172,'costs 5, and the wave crawls'),('sm',188,'there while it races along'),
            ('sm',204,'the bottom.'),('sm',230,'Orange: just finished.')]
 build('fanout-bfs.svg',[("Run BFS",'bfs')],False,'How breadth-first search spreads',
- 'An animation of breadth-first search on a grid of 8 by 6 intersections, bigger than the floor grid so the shape shows, with (0, 0) at the bottom-left. A wall of four blocked intersections stands at x = 3 from y = 1 to y = 4, leaving gaps at the top and bottom. The search starts at S, (0, 4), and the destination D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S the moment the search first reaches it: 1 for the neighbors of S, then 2, then 3, so the numbers spread out from S in even rings, like a ripple. The ripple flows through the gap at the top of the wall and bends around it, and also around the bottom. When D is taken off the list the search stops, and the walk-back from D to S is drawn in red: up, along the top through the gap, and back down to D, 9 steps.',
+ 'An animation of breadth-first search on a grid of 8 by 6 intersections, bigger than the floor grid so the shape shows, with (0, 0) at the bottom-left. A wall of four blocked intersections stands at x = 3 from y = 1 to y = 4, leaving gaps at the top and bottom. The search starts at S, (0, 4), and the destination D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S the moment the search first reaches it: 1 for the neighbors of S, then 2, then 3, so the numbers spread out from S like a wave. The wave flows through the gap at the top of the wall and bends around it, and also around the bottom. When D is taken off the list the search stops, and the walk-back from D to S is drawn in red: up, along the top through the gap, and back down to D, 9 steps.',
  dict(intro=['Press Run BFS. The search starts at','S and has to find its way around','the wall to D.'],bfs=bfs_panel))
 build('fanout-bfs-vs-dijkstra.svg',[("BFS: counts steps",'bfs'),("Dijkstra: counts cost",'dij')],True,'Steps or cost: how the two searches spread',
- 'An animation on a grid of 8 by 6 intersections with (0, 0) at the bottom-left, bigger than the floor grid so the shape shows. A wall of four blocked intersections stands at x = 3 from y = 1 to y = 4, so the only ways past it are the gap along the top row, where the two blocks either side of x = 3 are a slow road costing 5 each, and the gap along the bottom row. S is (0, 4) and D is (7, 4). Two buttons. BFS: each intersection lights up with its step count, the ripple spreads evenly and crosses the slow road as if it were normal, and the path goes over the top: 9 steps, cost 17. Dijkstra: each intersection lights up with its cheapest cost when it is finished; the wave races along the bottom but crawls through the slow road, and reaches D first from below, so the path goes around the bottom: 15 steps, cost 15.',
- dict(intro=['Same grid, plus a slow road through','the top gap. Press each button and','watch how differently they spread.'],bfs=bfs_panel[:1]+[('n',84,'Numbers = steps from S.'),('sm',108,'BFS counts every block as one'),('sm',124,'step, so the slow road looks'),('sm',140,'like any other street. The'),('sm',156,'ripple spreads evenly and goes'),('sm',172,'straight over the top.')],dij=dij_panel))
+ 'An animation on a grid of 8 by 6 intersections with (0, 0) at the bottom-left, bigger than the floor grid so the shape shows. A wall of four blocked intersections stands at x = 3 from y = 1 to y = 4, so the only ways past it are the gap along the top row, where the two blocks either side of x = 3 are a slow road costing 5 each, and the gap along the bottom row. S is (0, 4) and D is (7, 4). Two buttons. BFS: each intersection lights up with its step count, the wave spreads evenly and crosses the slow road as if it were normal, and the path goes over the top: 9 steps, cost 17. Dijkstra: each intersection lights up with its cheapest cost when it is finished; the wave races along the bottom but crawls through the slow road, and reaches D first from below, so the path goes around the bottom: 15 steps, cost 15.',
+ dict(intro=['Same grid, plus a slow road through','the top gap. Press each button and','watch how differently they spread.'],bfs=bfs_panel[:1]+[('n',84,'Numbers = steps from S.'),('sm',108,'BFS counts every block as one'),('sm',124,'step, so the slow road looks'),('sm',140,'like any other street. The'),('sm',156,'wave spreads evenly and goes'),('sm',172,'straight over the top.')],dij=dij_panel))

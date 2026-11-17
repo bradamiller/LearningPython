@@ -208,9 +208,9 @@ b+=card(X,82,280,60,RED,[("nb","By the slow road"),("m","1 + 5 = 6")])
 b+=card(X,160,280,60,GRN,[("nb","Right, up, back left"),("m","1 + 1 + 1 + 1 = 4")])
 b+=[f'<text class="n" x="{X}" y="250">4 is cheaper, so 4 is kept.</text>',
     f'<text class="sm" x="{X}" y="276">Every other number is the step count:</text>',
-    f'<text class="sm" x="{X}" y="292">Module 5\'s BFS rings.</text>']
+    f'<text class="sm" x="{X}" y="292">Module 5\'s BFS distances.</text>']
 open(O+'cost-grid.svg','w').write(svg('Reading the cost grid',
- 'The 4 by 4 grid with (0, 0) at the bottom-left, each intersection labeled by its cheapest cost from (0, 0). Read row by row from the far side: y = 3 is 5, 4, 5, 6; y = 2 is 4, 3, 4, 5; y = 1 is 1, 2, 3, 4; y = 0 is 0, 1, 2, 3. The slow edge between (0, 1) and (0, 2), on the left edge, is drawn as a red wiggle. (0, 2) is highlighted: by the slow road it would cost 1 + 5 = 6, but right to x = 1, up and back left costs 1 + 1 + 1 + 1 = 4, so 4 is kept. Every other number equals the step count, the Module 5 BFS rings.',b,H=340))
+ 'The 4 by 4 grid with (0, 0) at the bottom-left, each intersection labeled by its cheapest cost from (0, 0). Read row by row from the far side: y = 3 is 5, 4, 5, 6; y = 2 is 4, 3, 4, 5; y = 1 is 1, 2, 3, 4; y = 0 is 0, 1, 2, 3. The slow edge between (0, 1) and (0, 2), on the left edge, is drawn as a red wiggle. (0, 2) is highlighted: by the slow road it would cost 1 + 5 = 6, but right to x = 1, up and back left costs 1 + 1 + 1 + 1 = 4, so 4 is kept. Every other number equals the step count, the Module 5 BFS distances.',b,H=340))
 
 # ---------- 6-4 cost predicts seconds ----------
 b=['<text class="h" x="20" y="26">Predict the stopwatch from the cost</text>']

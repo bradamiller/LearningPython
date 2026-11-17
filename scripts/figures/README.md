@@ -106,13 +106,13 @@ they match the generator byte for byte. **Known stale:** the deployed
 | g59.py | capstone-thread.svg | /img/lesson-m5-09/capstone-thread-xy-v2.svg |
 | g6.py | break-even.svg | /img/lesson-m6-01/break-even-xy.svg |
 | g6.py | closest-vs-oldest.svg | /img/lesson-m6-03/closest-vs-oldest-xy.svg |
-| g6.py | cost-grid.svg | /img/lesson-m6-03/cost-grid-xy.svg |
+| g6.py | cost-grid.svg | /img/lesson-m6-03/cost-grid-xy-v2.svg |
 | g6.py | cost-to-seconds.svg | /img/lesson-m6-04/cost-to-seconds.svg |
 | g6.py | floor-vs-graph.svg | /img/lesson-m6-01/floor-vs-graph-xy.svg |
 | g6.py | path-cost.svg | /img/lesson-m6-02/path-cost.svg |
 | g6.py | slow-road.svg | /img/lesson-m6-00/slow-road-xy.svg |
 | g6.py | three-planners.svg | /img/lesson-m6-05/three-planners.svg |
-| grings.py | bfs-rings.svg | /img/lesson-m5-03/bfs-rings-xy.svg |
+| grings.py | bfs-rings.svg | /img/lesson-m5-03/bfs-wave-xy.svg |
 | hill.py | effort-vs-speed-hill.svg | /img/lesson-06/effort-vs-speed-on-a-hill.svg |
 | kpanim.py | kp-tuning-v2.svg | /img/lesson-m2-05/kp-tuning-v2.svg |
 | m12.py | square-goal.svg | /img/lesson-02/square-goal.svg |
@@ -148,5 +148,5 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m15poly.py | polygon-calls.svg | /img/lesson-05/polygon-calls.svg |
 | m17map.py | course-map.svg | /img/lesson-07/course-map.svg |
 | m13copy.py | copy-paste-vs-function.svg | /img/lesson-03/copy-paste-vs-function.svg |
-| fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs-steps.svg |
-| fanout.py | fanout-bfs-vs-dijkstra.svg | /img/lesson-m6-03/fanout-bfs-vs-dijkstra.svg |
+| fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs-wave.svg |
+| fanout.py | fanout-bfs-vs-dijkstra.svg | /img/lesson-m6-03/fanout-bfs-vs-dijkstra-v2.svg |

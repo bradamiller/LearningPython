@@ -685,11 +685,23 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   (`lesson-02-rings-to-steps`): "Discuss · Where's the path?" (walk back downhill, ties),
   "Discuss · Teaching it to a computer" (one at a time -> oldest first -> the to-visit list;
   came-from so the walk back never searches; the numbers aren't needed), the trace done the
-  computer's way (blank table + Reveal), then **The method in sentences: fifteen numbered English
-  sentences, indented like Python, one per line of code**, then "Be the computer" (pairs run the
-  sentences on a dead end). Those exact sentences are reprinted in 5-3 (mapped to what each must
-  remember) and are 5-5's skeleton comments (sentences 11 and 15 take two lines each; graph build
-  and guard are marked program-only). **If the sentences change, change all three places.**
+  computer's way (blank table + Reveal), then **"Review: the algorithm"**, then "Be the
+  computer" (pairs run the review on a dead end).
+  **2026-11-17 (Brad): the review is plain prose, not code-looking text, and "rings" are gone.**
+  Brad: "don't keep calling it 15 sentences"; he wanted "a readable explanation of the
+  algorithm all in one place", the way you'd explain it if asked. So 5-2 is now **Finding the
+  Path** (`lesson-02-finding-the-path`) and ends with two short prose parts, *Spread out from
+  the start* and *Walk back to get the path*. 5-3's table maps parts of the algorithm (not
+  numbered sentences) to what the program remembers. Only 5-5's skeleton numbers the steps,
+  as code comments ("The algorithm from Lesson 5-2, one line of code per step"; steps 11 and
+  15 take two lines). **Say "wave", not "ring" or "ripple"**: BFS on a grid is a wavefront
+  algorithm, and 5-1's "What you found: a wave" explains it once (a stone in a pond; the wave
+  front is the intersections just numbered; a blocked intersection is a rock it flows
+  around). `bfs_rings()`/`test_rings()` were renamed **`bfs_distances()`/`test_distances()`**
+  (pairs with Module 6's `dijkstra_distances()`), in the lessons, Module 6 and
+  `build_templates.py`'s recipe. Figures renamed for it: `bfs-wave-xy.svg`,
+  `fanout-bfs-wave.svg` (a StepFigure, one step per distance), and in Module 6
+  `fanout-bfs-vs-dijkstra-v2.svg` and `cost-grid-xy-v2.svg`.
   Answers to every discussion question live in teacher notes.
   **Materials NOT updated yet (Brad: website only until the changes settle):** the 5-1 to 5-5
   slide decks (5-1 to 5-3 have no deck link now, since their page ids changed; `slides.json`

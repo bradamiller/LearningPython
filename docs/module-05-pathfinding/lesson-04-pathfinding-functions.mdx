@@ -113,8 +113,8 @@ replaces it.
 # The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
-# leaves the start out), but it searches the GRID GRAPH ring
-# by ring, so it routes AROUND whatever is in BLOCKED. Pure
+# leaves the start out), but it searches the GRID GRAPH as a
+# wave from the start, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
 def compute_bfs_path(start, destination):
@@ -355,8 +355,8 @@ def test_blocked_graph():
 # The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
-# leaves the start out), but it searches the GRID GRAPH ring
-# by ring, so it routes AROUND whatever is in BLOCKED. Pure
+# leaves the start out), but it searches the GRID GRAPH as a
+# wave from the start, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
 def compute_bfs_path(start, destination):
@@ -391,7 +391,7 @@ the one that shows it.
 **Challenge for students who finish early:** `add_blocked((1, 0))`,
 `add_blocked((1, 1))`, rebuild, and print the whole graph. Which intersections in the
 left column (x = 0) can still reach the column at x = 2, and through what? Then: "Using only `build_graph` and the
-ripples idea, write `is_reachable(a, b)`." They'll write most of Lesson 5-5 a day
+wave idea, write `is_reachable(a, b)`." They'll write most of Lesson 5-5 a day
 early, which is fine.
 
 </TeacherNote>

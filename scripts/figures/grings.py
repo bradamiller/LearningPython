@@ -31,10 +31,10 @@ def panel(gx,gy,title,arrows):
         x,y=P(*n); col="#142D50" if n==(0,0) else ("#2E7D32" if n==(2,2) else "#4C8BF5")
         o.append(f'<circle cx="{x}" cy="{y}" r="16" fill="{col}"/><text class="nb" x="{x}" y="{y+5}" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">{r}</text>')
     return o
-b=panel(110,74,"Ripples: how far from the start",False)
+b=panel(110,74,"A wave: how far from the start",False)
 b+=panel(470,74,"Came from: walking back",True)
-b+=['<text class="sm" x="60" y="300">Every ring is one step further out. The X never gets a number.</text>',
+b+=['<text class="sm" x="60" y="300">Each number is one step further out. The X never gets one.</text>',
     '<text class="sm" x="420" y="300">4 came from 3, which came from 2, 1, 0.</text>',
     '<text class="ms" x="420" y="318">Read forward: (1,0), (2,0), (2,1), (2,2).</text>']
-open(OUTDIR+'bfs-rings.svg','w').write(svg('Breadth-first search as ripples',
+open(OUTDIR+'bfs-rings.svg','w').write(svg('Breadth-first search as a wave',
  'Left: a 3 by 3 grid of intersections with (0, 0) at the bottom-left. The start at the bottom-left is numbered 0. Its two neighbors are numbered 1, the two corners beyond them 2, the next two 3, and the top-right destination 4. The center intersection is crossed out and has no number. Right: the same grid with a small arrow on each numbered intersection pointing back to the one it was reached from, and the walk-back from the destination to the start highlighted: 4 to 3 to 2 to 1 to 0, down the right side and along the bottom.',b,W=720,H=332))

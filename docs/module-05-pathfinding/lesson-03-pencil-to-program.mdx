@@ -15,9 +15,9 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-Lesson 5-2 ended with breadth-first search as fifteen sentences a computer could follow.
-Before any of them can become Python, there's one more question: what does the program
-have to **remember** to do each one? Answering it brings in a new way to see the grid, a
+Lesson 5-2 ended with a review of breadth-first search in plain words. Before it can
+become Python, there's one more question: what does the program have to **remember** to
+do each part of it? Answering it brings in a new way to see the grid, a
 **graph**, and a new kind of Python data, the **dictionary**. By the end of the lesson
 the grid is in `robot.py`.
 
@@ -25,7 +25,7 @@ the grid is in `robot.py`.
 
 By the end of this lesson you will be able to:
 
-- Say, for each sentence of the method, what the program has to remember to do it
+- Say, for each part of the algorithm, what the program has to remember to do it
 - Describe the grid as a graph: nodes, edges and neighbors, and what blocking a node removes
 - Create a dictionary, look up a value by key, and check for a key with `in`
 - Write `build_grid_graph(rows, cols)` in a new GRID GRAPH section of `robot.py`, with a paper test
@@ -36,36 +36,16 @@ By the end of this lesson you will be able to:
 
 ## What the program has to remember
 
-Here are Lesson 5-2's sentences again. Go through them and ask what each one needs to
-know.
+Go back through Lesson 5-2's review of the algorithm and ask, for each part, what the
+program has to know to do it. Every answer is something you kept on paper:
 
-```text
- 1. Write down that the start was reached, from nowhere.
- 2. Put the start on the to-visit list.
- 3. While the to-visit list is not empty:
- 4.     Take the oldest one off the front. Call it current.
- 5.     If current is the destination, stop looking.
- 6.     For each open neighbor of current:
- 7.         If that neighbor has not been reached yet:
- 8.             Write down that it came from current.
- 9.             Add it to the end of the to-visit list.
-10. If the destination was never reached, there is no path.
-11. Start with an empty path, standing on the destination.
-12. Until you are back at the start:
-13.     Add where you are standing to the path.
-14.     Step back to where it came from.
-15. Turn the path around. That is the answer.
-```
-
-Every answer is something you kept on paper:
-
-| Sentences | The question they ask | On paper | In the program |
+| Part of the algorithm | The question it asks | On paper | In the program |
 |---|---|---|---|
-| 6 | "Which open intersections are next to this one?" | The grid drawing | A **graph**, this lesson |
-| 6 | "Which intersections are blocked?" | The X's | A list, `BLOCKED` (Lesson 5-4) |
-| 1, 7, 8, 10, 14 | "Has this one been reached? Where from?" | The came-from notes | A **dictionary**, `previous` (Lesson 5-5) |
-| 2, 3, 4, 9 | "Which one is next?" | The to-visit list | A list: add to the end, take from the front (Lesson 5-5) |
-| 11, 13, 15 | "What is the route so far?" | The path you wrote down | A list, `path` (Module 4) |
+| Look at each open neighbor | "Which open intersections are next to this one?" | The grid drawing | A **graph**, this lesson |
+| Look at each *open* neighbor | "Which intersections are blocked?" | The X's | A list, `BLOCKED` (Lesson 5-4) |
+| Note where it came from; skip it if already reached; walk back | "Has this one been reached? Where from?" | The came-from notes | A **dictionary**, `previous` (Lesson 5-5) |
+| Take from the front, add to the end | "Which one is next?" | The to-visit list | A list (Lesson 5-5) |
+| Write down each intersection on the walk back | "What is the route so far?" | The path you wrote down | A list, `path` (Module 4) |
 
 Three of these are lists, which you know from Module 4. The other two are looked up **by
 intersection**: you have `(1, 2)` and want its neighbors, or where it came from. A list
@@ -210,7 +190,7 @@ print(previous[(1, 0)])    # (0, 0) -- where (1, 0) came from
 print((2, 0) in previous)  # False -- (2, 0) has not been reached yet
 ```
 
-That last line is sentence 7, "if that neighbor has not been reached yet", in one `in`. You
+That last line is the check "has this neighbor been reached yet?", in one `in`. You
 will write `previous` in Lesson 5-5; today's job is the graph.
 
 <KnowledgeCheck
@@ -391,8 +371,8 @@ test_grid_graph()
 
 <TeacherNote title="The order is the point">
 
-This lesson exists so that nothing in it arrives unasked for. Read the sentences aloud
-with the class and, for each one, have them say what they were *looking at* on paper
+This lesson exists so that nothing in it arrives unasked for. Read Lesson 5-2's review aloud
+with the class and, for each part, have them say what they were *looking at* on paper
 when they did it; the table is the answer. Only then name the graph and the dictionary.
 Students who already know dictionaries can skip to the activity once the table is done.
 

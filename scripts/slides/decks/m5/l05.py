@@ -10,7 +10,7 @@ DECK = {
              'Explain why `if neighbor not in previous` is the "numbered once" rule',
              'Write the walk-back so the path leaves the start out; say why "already there" gives `[]`',
              'Return `[]` when the destination is walled off',
-             'Write `bfs_rings()` and use `print_grid()` to draw what the search found',
+             'Write `bfs_distances()` and use `print_grid()` to draw what the search found',
          ],
          'notes': '50 to 60 minutes. The heart of Module 5: the Lesson 5-3 hand trace becomes working '
                   'Python. Build it in three stages and run a paper test after each. Students who type '
@@ -68,11 +68,11 @@ DECK = {
          'callout': 'Seven pencil steps: SETUP is 1 to 3, SEARCH is 4, WALK-BACK is 5 to 7',
          'tone': 'teal'},
 
-        {'kind': 'code', 'title': 'Skeleton, part 3: bfs_rings()',
+        {'kind': 'code', 'title': 'Skeleton, part 3: bfs_distances()',
          'lead': 'Under `compute_bfs_path()`, paste the two functions for the picture. The first is an '
                  'outline:',
          'lead_h': 1.2,
-         'code': 'def bfs_rings(start):\n'
+         'code': 'def bfs_distances(start):\n'
                  '    """Ring number of every intersection reachable from\n'
                  '    start, as a dictionary -- the search with no break."""\n'
                  '    # the SETUP and SEARCH of compute_bfs_path, with two\n'
@@ -80,7 +80,7 @@ DECK = {
                  '    # write the ring number: one more than current\'s\n'
                  '    pass',
          'code_size': 20,
-         'notes': 'bfs_rings() is written at the end of the lesson, after all five paper tests pass.'},
+         'notes': 'bfs_distances() is written at the end of the lesson, after all five paper tests pass.'},
 
         {'kind': 'bullets', 'title': 'Skeleton, part 4: print_grid() is given',
          'bullets': [
@@ -291,7 +291,7 @@ DECK = {
                   'is why the wall test is the one to run. A test that passes by luck is the reason to '
                   'keep more than one case.'},
 
-        {'kind': 'bullets', 'title': 'The picture: bfs_rings()',
+        {'kind': 'bullets', 'title': 'The picture: bfs_distances()',
          'bullets': [
              'The same search with **no `break`**: it runs until every reachable intersection has a number',
              'It records the **ring number**, not came-from',
@@ -303,8 +303,8 @@ DECK = {
                   'Students write the body from the outline: the SETUP and SEARCH of compute_bfs_path() '
                   'with a rings dictionary in place of previous.'},
 
-        {'kind': 'code', 'title': 'test_rings(): your wall grid, drawn by the program',
-         'lead': 'Block `(1, 0)` and `(1, 1)`, then call:\n`print_grid(ROWS, COLS, BLOCKED, bfs_rings((0, 0)))`',
+        {'kind': 'code', 'title': 'test_distances(): your wall grid, drawn by the program',
+         'lead': 'Block `(1, 0)` and `(1, 1)`, then call:\n`print_grid(ROWS, COLS, BLOCKED, bfs_distances((0, 0)))`',
          'lead_h': 1.2,
          'code': ' 3 |   3  4  5  6\n'
                  ' 2 |   2  3  4  5\n'
@@ -316,7 +316,7 @@ DECK = {
          'callout': 'Your Lesson 5-3 wall grid. Test 4\'s path is one route down these numbers, 1, 2, '
                     '3 ... to the 7.',
          'tone': 'green',
-         'notes': 'Write the body of bfs_rings() first, then test_rings(). Ask students to trace Test 4\'s '
+         'notes': 'Write the body of bfs_distances() first, then test_distances(). Ask students to trace Test 4\'s '
                   'path on the printed grid with a finger.'},
 
         {'kind': 'bullets', 'title': 'Optional: the BFS class',

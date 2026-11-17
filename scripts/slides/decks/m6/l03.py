@@ -93,7 +93,7 @@ DECK = {
         {'kind': 'code', 'title': 'Skeleton (3 of 3): the cost map, the printer',
          'code': 'def dijkstra_distances(start):\n'
                  '    """Cheapest cost to every reachable intersection, as a\n'
-                 '    dictionary -- the search with no break, like bfs_rings()."""\n'
+                 '    dictionary -- the search with no break, like bfs_distances()."""\n'
                  '    pass\n'
                  '\n'
                  'def compare(start, destination):\n'
@@ -288,7 +288,7 @@ DECK = {
                         'Each upgrade earns its keep on exactly the grid that needs it.'},
 
         {'kind': 'code', 'title': 'The cost grid',
-         'lead': '`dijkstra_distances()` is to `compute_dijkstra_path()` what `bfs_rings()` was to '
+         'lead': '`dijkstra_distances()` is to `compute_dijkstra_path()` what `bfs_distances()` was to '
                  '`compute_bfs_path()` in Lesson 5-5: the setup and the search, with no `break` and no '
                  'walk-back, returning `distance` itself. Write it, then add one line to `test_cost_grid()`:',
          'lead_h': 1.5,

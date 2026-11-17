@@ -1185,7 +1185,7 @@ CLASS_RULES = [
      NOT_ATTR + r"planner\(", "planner.compute_path("),
     # 5-5: "add_blocked( becomes planner.add_blocked(, clear_blocked()
     # becomes planner.clear_blocked(), compute_bfs_path( becomes
-    # planner.compute_path(, and where a test or bfs_rings() reads
+    # planner.compute_path(, and where a test or bfs_distances() reads
     # BLOCKED it reads planner.blocked"
     ("5-5", None, NOT_ATTR + r"compute_bfs_path\b", "planner.compute_path"),
     ("5-5", None, NOT_ATTR + r"add_blocked\(", "planner.add_blocked("),
@@ -1450,11 +1450,11 @@ RECIPE = [
     ]),
     ("5-5", [
         Func("compute_bfs_path", "5-5", replace=True),
-        Func("bfs_rings", "5-5"),
+        Func("bfs_distances", "5-5"),
         Func("print_grid", "5-5", full=True),
         Invent("test_bfs_open", "5-5"),
         Invent("test_bfs_walls", "5-5"),
-        Invent("test_rings", "5-5"),
+        Invent("test_distances", "5-5"),
         # class track: "Paste it in place of the BFS PLANNER banner
         # and compute_bfs_path(), and delete BLOCKED, add_blocked()
         # and clear_blocked() from the Lesson 5-4 part of GRID
@@ -1464,12 +1464,12 @@ RECIPE = [
         Delete("add_blocked", tracks=C), Delete("clear_blocked", tracks=C),
         Delete("banner:BFS PLANNER", tracks=C), Delete("compute_bfs_path", tracks=C),
         Delete("planner", tracks=C),
-        Banner("BFS PLANNER", "5-5", "BFS PLANNER (class version)", before="bfs_rings", tracks=C),
+        Banner("BFS PLANNER", "5-5", "BFS PLANNER (class version)", before="bfs_distances", tracks=C),
         Class("BFS", "5-5", ["add_blocked", "clear_blocked", "compute_path"],
               after="banner:BFS PLANNER", tracks=C),
         Object("planner", "5-5", after="BFS", tracks=C),
         AddMethods("Manhattan", "5-5", ["add_blocked", "clear_blocked"], tracks=C),
-        Invent("test_two_planners", "5-5", after="test_rings", tracks=C),
+        Invent("test_two_planners", "5-5", after="test_distances", tracks=C),
     ]),
     ("5-6", [
         Banner("L5-6", "5-6", "--- Lesson 5-6:"),
@@ -2033,7 +2033,7 @@ SMOKE = {
         "test_drive_run", "test_l_shape", "test_my_path", "test_one_side", "test_square"],
     4: ["test_planner", "test_headings", "test_delivery"],
     5: ["test_grid_graph", "test_blocked_graph", "test_bfs_open", "test_bfs_walls",
-        "test_rings", "test_harness", "test_swap", "test_detect_once", "test_navigate",
+        "test_distances", "test_harness", "test_swap", "test_detect_once", "test_navigate",
         "test_capstone_paper", "test_capstone"],
     6: ["test_weights", "test_cost_check", "test_three_planners", "test_cost_grid",
         "test_drive_slow_grid"],

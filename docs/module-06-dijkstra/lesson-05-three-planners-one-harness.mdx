@@ -449,7 +449,7 @@ planner = Dijkstra()
 
 def dijkstra_distances(start):
     """Cheapest cost to every reachable intersection, as a
-    dictionary -- the search with no break, like bfs_rings()."""
+    dictionary -- the search with no break, like bfs_distances()."""
     graph = build_graph(ROWS, COLS, planner.blocked)
     if start not in graph:
         return {}

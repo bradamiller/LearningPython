@@ -24,7 +24,7 @@ templates](/templates) page.
 
 The planner work runs with the robot sitting still. These tests only print:
 `test_grid_graph()` (16 intersections), `test_blocked_graph()` (15),
-`test_bfs_open()`, `test_bfs_walls()`, `test_rings()`, `test_swap()`,
+`test_bfs_open()`, `test_bfs_walls()`, `test_distances()`, `test_swap()`,
 `test_capstone_paper()` and the harness, `test_harness()`, which should end with
 `Manhattan: 4 of 6 passed` and `BFS: 6 of 6 passed`. On the class track
 `test_two_planners()` is paper too.
@@ -36,13 +36,13 @@ your rangefinder and obstacle.
 
 </TeacherNote>
 
-## Lesson 5-2 · From Rings to Steps
+## Lesson 5-2 · Finding the Path
 
 <TeacherNote title="5-2 demonstration program (project it, don't hand it out)">
 
 The program the lesson promises: it runs the 3×3 trace with (1, 1) blocked, prints
 each number as it is written and the to-visit list after every step, then the
-path and the grid of ring numbers. Plain Python, no robot. Its steps match the
+path and the grid of distance numbers. Plain Python, no robot. Its steps match the
 lesson's trace table line for line, it ends with the path
 `[(1, 0), (2, 0), (2, 1), (2, 2)]`, and the last lines it prints are:
 
@@ -54,14 +54,14 @@ lesson's trace table line for line, it ends with the path
        0  1  2
 ```
 
-The two calls at the bottom, commented out, run the 4×4 wall (ring 7 on (3, 0),
+The two calls at the bottom, commented out, run the 4×4 wall (distance 7 on (3, 0),
 as in the lesson's answers) and the blocked column (no path).
 
-```python title="lesson_5_2_walk_back.py"
+```python title="lesson_5_2_finding_the_path.py"
 # Lesson 5-2 demonstration: breadth-first search on the 3x3 grid
 # with (1, 1) blocked, from (0, 0) to (2, 2), step by step.
 # Plain Python: no robot, no XRPLib. Project it; don't hand it
-# out (students write bfs_rings() and print_grid() in 5-5).
+# out (students write bfs_distances() and print_grid() in 5-5).
 
 def build_graph(rows, cols, blocked):
     """Return the grid as a dictionary, leaving out every
@@ -102,10 +102,10 @@ def print_grid(rows, cols, blocked, numbers):
 
 def trace(rows, cols, blocked, start, destination):
     """Run BFS out loud: every number written, the to-visit list
-    after every step, then the path and the grid of rings."""
+    after every step, then the path and the grid of distances."""
     graph = build_graph(rows, cols, blocked)
     previous = {start: None}     # where each intersection came from
-    ring = {start: 0}            # the number written on it
+    distance = {start: 0}        # the number written on it
     to_visit = [start]
     print("Start:", start, "gets 0.  To visit:", to_visit)
 
@@ -121,10 +121,10 @@ def trace(rows, cols, blocked, start, destination):
         for neighbor in graph[current]:
             if neighbor not in previous:       # no number yet
                 previous[neighbor] = current
-                ring[neighbor] = ring[current] + 1
+                distance[neighbor] = distance[current] + 1
                 to_visit.append(neighbor)
                 written.append(neighbor)
-                print("  ", neighbor, "gets", ring[neighbor], "- came from", current)
+                print("  ", neighbor, "gets", distance[neighbor], "- came from", current)
         if len(written) == 0:
             print("   nothing new")
         print("  To visit:", to_visit)
@@ -142,7 +142,7 @@ def trace(rows, cols, blocked, start, destination):
     else:
         print("No path: the destination never got a number.")
     print()
-    print_grid(rows, cols, blocked, ring)
+    print_grid(rows, cols, blocked, distance)
 
 
 # The activity: 3x3, (1, 1) blocked. Matches the trace table.
@@ -150,7 +150,7 @@ trace(3, 3, [(1, 1)], (0, 0), (2, 2))
 
 # The two follow-ups from "The wall, and the dead end", on the
 # 4x4 grid. Uncomment one at a time.
-# trace(4, 4, [(1, 0), (1, 1)], (0, 0), (3, 0))                  # (3,0) is ring 7
+# trace(4, 4, [(1, 0), (1, 1)], (0, 0), (3, 0))                  # (3,0) is distance 7
 # trace(4, 4, [(1, 0), (1, 1), (1, 2), (1, 3)], (0, 0), (3, 0))  # no path
 ```
 
