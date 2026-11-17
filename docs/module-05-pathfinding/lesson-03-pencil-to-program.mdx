@@ -7,7 +7,7 @@ sidebar_position: 3
 <LessonHeader
   eyebrow="Module 5 · Pathfinding Around Obstacles"
   title="Lesson 5-3 · From Pencil to Program"
-  meta={['55–60 min', 'Graphs and dictionaries', 'The grid in code']}
+  meta={['60–70 min', 'Graphs and dictionaries', 'The grid in code']}
 />
 
 <TeacherBanner>
@@ -28,7 +28,7 @@ By the end of this lesson you will be able to:
 - Say, for each part of the algorithm, what the program has to remember to do it
 - Describe the grid as a graph: nodes, edges and neighbors, and what blocking a node removes
 - Create a dictionary, look up a value by key, and check for a key with `in`
-- Write `build_grid_graph(rows, cols)` in a new GRID GRAPH section of `robot.py`, with a paper test
+- Build `build_grid_graph(rows, cols)` in a new GRID GRAPH section of `robot.py`, one printed step at a time
 
 </Objectives>
 
@@ -108,102 +108,6 @@ edge into (1,1) will happily step into the wall.
   explanation="(0,1) used to connect to (0,0), (0,2), and (1,1). With (1,1) removed, only two neighbors remain."
 />
 
-## Dictionaries
-
-The graph answers "what are the neighbors of `(1, 1)`?" and the numbers answer "how many
-steps is `(2, 1)` from the destination?" Both start from an intersection and look something up.
-Python's tool for that is the **dictionary**: it stores **key-value pairs** in curly
-braces. A printed dictionary maps words to definitions; a Python dictionary maps any key
-to any value.
-
-<Figure
-  src="/img/lesson-m5-02/word-dictionary.svg"
-  alt="A cartoon of an open printed dictionary with four entries, each a bold word with its definition: graph, nodes and edges; motor, turns a wheel; robot, senses and acts; sensor, measures the world. Letter tabs run down the edge, and a magnifying glass hovers over the highlighted entry for sensor, where the word is labeled key and the definition is labeled value. Beside it, the same entries as a Python dictionary called glossary, with words as keys and definitions as values, and glossary of sensor giving measures the world."
-  caption="The word you look up is the key; what's printed beside it is the value. Python's dictionary works the same way."
-/>
-
-<OptionalExtension title="Why a dictionary is fast" gate="Optional: open it if you have time. Nothing later depends on it.">
-
-A printed dictionary is quick because it's in alphabetical order: you flip straight to the
-right page. A Python dictionary is organized for speed too, though not alphabetically.
-When you store a value, Python turns the key into a number that says where to keep it;
-when you look the key up, it does the same arithmetic and goes straight there.
-
-That trick is **hashing**. It's why a lookup is just as fast with four thousand entries as
-with four, and why a key can't change: a changed key would send Python to the wrong place.
-
-</OptionalExtension>
-
-In code:
-
-```python
-scores = {"Alice": 95, "Bob": 87}
-graph = {}                         # empty, ready to fill
-graph[(0, 0)] = [(0, 1), (1, 0)]   # node (0,0) -> its neighbor list
-```
-
-For the graph, the **keys are node tuples** and the **values are lists of neighbor
-tuples.** (A key must be something that can't change, like a number or a tuple.) A
-blocked intersection simply isn't a key.
-
-<Figure
-  src="/img/lesson-m5-02/graph-dict-xy.svg"
-  alt="Left: the 3 by 3 graph with (1, 1) highlighted and its four neighbors shaded. Right: the dictionary as key and value rows. Key (0, 0) maps to [(1, 0), (0, 1)]; key (0, 1) maps to [(1, 1), (0, 0), (0, 2)]; key (1, 1) maps to [(0, 1), (2, 1), (1, 0), (1, 2)]. graph[(1, 1)] jumps straight to that list."
-  caption="One entry per node: the node is the key, its neighbor list is the value."
-/>
-
-<KnowledgeCheck
-  question="In our graph dictionary, what are the keys and what are the values?"
-  options={[
-    {text: 'Keys are numbers; values are strings'},
-    {text: 'Keys are (x, y) node tuples; values are lists of neighbor tuples', correct: true},
-    {text: 'Keys are lists; values are tuples'},
-    {text: 'Both are single integers'},
-  ]}
-  explanation="Each node is a tuple key, and its value is the list of nodes it connects to — the Python version of the paper graph."
-/>
-
-Look up a value with square brackets, and check whether a key exists with `in`. The
-snippets here are for trying out, not for keeping: type them in a scratch file or at the
-Python prompt, as you did with tuples in Lesson 4-7.
-
-```python
-graph = {(0, 0): [(0, 1), (1, 0)], (0, 1): [(0, 0), (0, 2), (1, 1)]}
-
-print(graph[(0, 0)])       # [(0, 1), (1, 0)]
-print(len(graph[(0, 0)]))  # 2  -- number of neighbors
-
-print((0, 0) in graph)     # True
-print((2, 2) in graph)     # False -- not added
-```
-
-Looking up a *missing* key, like `graph[(9, 9)]`, raises a `KeyError`, so check with `in`
-first.
-
-The numbers are a dictionary too. Here are the first three numbers from Lesson 5-2's
-trace: each intersection is a key, and its steps to the destination is the value.
-
-```python
-distance = {(2, 2): 0, (1, 2): 1, (2, 1): 1}
-
-print(distance[(1, 2)])    # 1 -- (1, 2) is one step from the destination
-print((0, 2) in distance)  # False -- (0, 2) has no number yet
-```
-
-That last line is the check "does this neighbor have a number yet?", in one `in`. You
-will write `distance` in Lesson 5-5; today's job is the graph.
-
-<KnowledgeCheck
-  question="Given distance = {(2,2): 0, (1,2): 1}, what does (1,2) in distance return, and what does it mean?"
-  options={[
-    {text: 'True: (1,2) already has a number', correct: true},
-    {text: 'False: (1,2) is blocked'},
-    {text: '1: its number'},
-    {text: 'A KeyError'},
-  ]}
-  explanation="in checks whether a key exists. (1,2) is a key, so it returns True: it already has a number, and must not get another. distance[(1,2)] would give 1, the number itself."
-/>
-
 ## This lesson's skeleton
 
 A new section for a new kind of data. Paste it into `robot.py` above `RUN`, after the
@@ -222,34 +126,104 @@ COLS = 4
 def build_grid_graph(rows, cols):
     """Return the open grid as a dictionary: every (x, y)
     maps to the list of its on-grid neighbors."""
-    # 1. graph = {}
-    # 2. for every x, for every y:
-    #       neighbors = []
-    #       left, right, down, up: append each one that is
-    #       still on the grid (a bounds check for each)
-    #       graph[(x, y)] = neighbors
-    # 3. return graph
     pass
 ```
 
 `ROWS` and `COLS` are the size of your taped grid. The function takes the size as
-parameters, so a test can build a 3×3 while the settings say 4×4.
+parameters, so you can build a small 3×3 while the settings say 4×4.
 
-The outline is fuller than Module 4's: it's your first dictionary built inside a
-function. It's the build-in-a-loop pattern from Lesson 4-2 — start empty, add one entry
-per pass — with two loops, one inside the other, and an entry whose value is itself a
-list you build. Lesson 5-4 teaches it to leave out blocked intersections; today's test
-will tell you whether that change broke anything.
+## Activity · Build the graph, one piece at a time
 
-## Activity · Build the graph automatically
+You will grow `build_grid_graph()` in six small steps. Each one prints something, so
+before every run **write down what you expect to see**, then run it and compare. While you
+work, set the run line to
 
-A 10×10 grid has 100 nodes, too many to type, so `build_grid_graph()` builds the graph
-for any size. For each node, check left, right, down and up, and add only the neighbors
-that are on the grid. That takes a **bounds check** before each `append`:
+```python
+build_grid_graph(3, 3)
+```
 
-- left only if `x > 0`
-- right only if `x < cols - 1`
-- the same two checks for `y`, against the bottom and top rows
+so it builds a 3×3 grid, small enough to check by eye. The robot stays on the desk.
+
+### Step 1 · Visit every intersection
+
+Replace `pass` with two `for` loops, one inside the other: the outer one over every `x`
+(`range(cols)`), the inner one over every `y` (`range(rows)`). Inside, print the
+intersection `(x, y)`.
+
+Before you run it: how many lines will print, and which number changes fastest, `x` or
+`y`?
+
+<Reveal title="Check your output" hint="predict first">
+
+```text
+(0, 0)
+(0, 1)
+(0, 2)
+(1, 0)
+(1, 1)
+(1, 2)
+(2, 0)
+(2, 1)
+(2, 2)
+```
+
+Nine lines. The inner loop runs all the way through for each pass of the outer one, so
+`y` changes fastest: the program walks up the first column, then the next.
+
+</Reveal>
+
+### Step 2 · List every neighbor
+
+Inside the inner loop, make an empty list called `neighbors` and append the four
+intersections next to `(x, y)`: left, right, down, up, in that order (the order Lesson
+5-1's trace used, so your program's paths will match the paper ones). Then print the
+intersection followed by its list.
+
+Before you run it: what will `(0, 0)` print?
+
+<Reveal title="Check your output" hint="predict first">
+
+```text
+(0, 0) [(-1, 0), (1, 0), (0, -1), (0, 1)]
+(0, 1) [(-1, 1), (1, 1), (0, 0), (0, 2)]
+(0, 2) [(-1, 2), (1, 2), (0, 1), (0, 3)]
+(1, 0) [(0, 0), (2, 0), (1, -1), (1, 1)]
+(1, 1) [(0, 1), (2, 1), (1, 0), (1, 2)]
+(1, 2) [(0, 2), (2, 2), (1, 1), (1, 3)]
+(2, 0) [(1, 0), (3, 0), (2, -1), (2, 1)]
+(2, 1) [(1, 1), (3, 1), (2, 0), (2, 2)]
+(2, 2) [(1, 2), (3, 2), (2, 1), (2, 3)]
+```
+
+</Reveal>
+
+Look at your output. Every intersection got four neighbors, but the graph figure above
+says a corner has only 2. Circle every neighbor in your output that isn't really there.
+What do they have in common?
+
+### Step 3 · Throw out the ones off the grid
+
+A neighbor is off the grid when one of its numbers is below 0 or past the last row or
+column. Put an `if` in front of each `append`, so each neighbor is added only when it is
+on the grid. Each direction needs its own test, and each test compares just one number.
+
+Before you run it: how many neighbors should a corner, an edge and the middle have?
+
+<Reveal title="Check your output" hint="run it first">
+
+```text
+(0, 0) [(1, 0), (0, 1)]
+(0, 1) [(1, 1), (0, 0), (0, 2)]
+(0, 2) [(1, 2), (0, 1)]
+(1, 0) [(0, 0), (2, 0), (1, 1)]
+(1, 1) [(0, 1), (2, 1), (1, 0), (1, 2)]
+(1, 2) [(0, 2), (2, 2), (1, 1)]
+(2, 0) [(1, 0), (2, 1)]
+(2, 1) [(1, 1), (2, 0), (2, 2)]
+(2, 2) [(1, 2), (2, 1)]
+```
+
+Corners 2, edges 3, the middle 4. These tests are called **bounds checks**:
 
 <Figure
   src="/img/lesson-m5-02/bounds-checks-xy.svg"
@@ -257,13 +231,78 @@ that are on the grid. That takes a **bounds check** before each `append`:
   caption="A failed check is a neighbor that would be off the grid, so it is never appended."
 />
 
-Check the directions in the order **left, right, down, up**: the order Lesson 5-1's
-trace used, so your program's paths will match the paper ones.
+</Reveal>
 
-Write the body, then a test, say `test_grid_graph()`, that builds the 4×4 graph and
-prints how many intersections it has (`len(graph)`), the neighbors of `(1, 1)`, and the
-neighbors of `(0, 0)`. Write down what each should be before you run it. Set the run line
-to it; the robot stays on the desk.
+### Step 4 · Keep them in a dictionary
+
+Printing the neighbors is how you check them. BFS needs to **keep** them, and look them
+up later by intersection: "what are the neighbors of `(1, 1)`?" A list can't do that; it
+finds things by position (`path[0]`), not by what they are. Python's tool for looking up
+by name is the **dictionary**.
+
+<Figure
+  src="/img/lesson-m5-02/word-dictionary.svg"
+  alt="A cartoon of an open printed dictionary with four entries, each a bold word with its definition: graph, nodes and edges; motor, turns a wheel; robot, senses and acts; sensor, measures the world. Letter tabs run down the edge, and a magnifying glass hovers over the highlighted entry for sensor, where the word is labeled key and the definition is labeled value. Beside it, the same entries as a Python dictionary called glossary, with words as keys and definitions as values, and glossary of sensor giving measures the world."
+  caption="The word you look up is the key; what's printed beside it is the value. Python's dictionary works the same way."
+/>
+
+The syntax is all you need:
+
+```python
+graph = {}                         # an empty dictionary
+graph[(0, 0)] = [(1, 0), (0, 1)]   # store: key (0, 0), value a list
+print(graph[(0, 0)])               # look up: [(1, 0), (0, 1)]
+print(len(graph))                  # how many keys: 1
+```
+
+A key must be something that can't change, like a number or a tuple, so an `(x, y)`
+tuple works.
+
+Now change your function:
+
+- make `graph = {}` before the loops
+- replace the print inside the loop with a line that stores `neighbors` under the key `(x, y)`
+- after the loops (not inside them), print `len(graph)`, then the neighbors of `(1, 1)`, then the neighbors of `(0, 0)`
+
+Before you run it: what three lines will print?
+
+<Reveal title="Check your output" hint="predict first">
+
+```text
+9
+[(0, 1), (2, 1), (1, 0), (1, 2)]
+[(1, 0), (0, 1)]
+```
+
+If you get 1 instead of 9, your `graph = {}` is inside a loop, so it starts over each pass.
+
+</Reveal>
+
+<Figure
+  src="/img/lesson-m5-02/graph-dict-xy.svg"
+  alt="Left: the 3 by 3 graph with (1, 1) highlighted and its four neighbors shaded. Right: the dictionary as key and value rows. Key (0, 0) maps to [(1, 0), (0, 1)]; key (0, 1) maps to [(1, 1), (0, 0), (0, 2)]; key (1, 1) maps to [(0, 1), (2, 1), (1, 0), (1, 2)]. graph[(1, 1)] jumps straight to that list."
+  caption="What you just built: one entry per node, the node is the key and its neighbor list is the value."
+/>
+
+<KnowledgeCheck
+  question="In our graph dictionary, what are the keys and what are the values?"
+  options={[
+    {text: 'Keys are numbers; values are strings'},
+    {text: 'Keys are (x, y) node tuples; values are lists of neighbor tuples', correct: true},
+    {text: 'Keys are lists; values are tuples'},
+    {text: 'Both are single integers'},
+  ]}
+  explanation="Each node is a tuple key, and its value is the list of nodes it connects to — the Python version of the paper graph."
+/>
+
+### Step 5 · Hand the graph back, and test it
+
+A function that only prints is no use to BFS; it needs the graph itself. Delete the three
+prints, end the function with `return graph`, and write `test_grid_graph()`: build the
+4×4 graph from `ROWS` and `COLS` and print the same three things. Set the run line to
+`test_grid_graph()`.
+
+Before you run it: which of the three lines change on a 4×4?
 
 <Reveal title="Check your graph" hint="run test_grid_graph() first">
 
@@ -272,6 +311,9 @@ to it; the robot stays on the desk.
 [(0, 1), (2, 1), (1, 0), (1, 2)]
 [(1, 0), (0, 1)]
 ```
+
+Only the count changes: `(1, 1)` and `(0, 0)` have the same neighbors on any grid at least
+3×3.
 
 ```python
 def build_grid_graph(rows, cols):
@@ -293,23 +335,63 @@ If yours differs but prints the same three lines, keep yours.
 
 </Reveal>
 
+### Step 6 · Ask whether a key is there
+
+Add these to the end of `test_grid_graph()` and predict each line before you run it:
+
+```python
+print((3, 3) in graph)
+print((4, 4) in graph)
+print(graph[(4, 4)])
+```
+
+<Reveal title="Check your output" hint="predict first">
+
+```text
+True
+False
+```
+
+and then the program stops with a `KeyError`: there is no key `(4, 4)` on a 4×4 grid
+(it runs 0 to 3). `in` asks "is this key in the dictionary?" without crashing, so check
+with `in` before you look up a key that might be missing. Delete the third line once
+you've seen the error.
+
+</Reveal>
+
+BFS uses `in` all the time. Its numbers will be a dictionary too, called `distance`:
+each intersection is a key, and its steps to the destination is the value. "Does this
+neighbor have a number yet?" is then one `in`. You will write it in Lesson 5-5.
+
 <KnowledgeCheck
-  question="In build_grid_graph, why is each neighbor guarded by an if (like `if x > 0`)?"
+  question="Given distance = {(2,2): 0, (1,2): 1}, what does (1,2) in distance return, and what does it mean?"
   options={[
-    {text: 'To make the code shorter'},
-    {text: 'To keep neighbors inside the grid — a corner or edge node has no neighbor off the grid', correct: true},
-    {text: 'To skip blocked nodes'},
-    {text: 'It has no effect'},
+    {text: 'True: (1,2) already has a number', correct: true},
+    {text: 'False: (1,2) is blocked'},
+    {text: '1: its number'},
+    {text: 'A KeyError'},
   ]}
-  explanation="The bounds checks prevent adding neighbors that fall off the edge of the grid, so corners get 2 neighbors and interior nodes get 4."
+  explanation="in checks whether a key exists. (1,2) is a key, so it returns True: it already has a number, and must not get another. distance[(1,2)] would give 1, the number itself."
 />
+
+<OptionalExtension title="Why a dictionary is fast" gate="Optional: open it if you have time. Nothing later depends on it.">
+
+A printed dictionary is quick because it's in alphabetical order: you flip straight to the
+right page. A Python dictionary is organized for speed too, though not alphabetically.
+When you store a value, Python turns the key into a number that says where to keep it;
+when you look the key up, it does the same arithmetic and goes straight there.
+
+That trick is **hashing**. It's why a lookup is just as fast with four thousand entries as
+with four, and why a key can't change: a changed key would send Python to the wrong place.
+
+</OptionalExtension>
 
 <TeacherNote title="Solution (teacher copy)">
 
 The GRID GRAPH section of `robot.py` as this lesson leaves it, plus the run block; the
 rest of the file is as the Lesson 4-6 teacher copy left it. The whole file at the end of
 the module is in the [Module 5 sample programs](/teacher-guide/sample-programs/module-5).
-Students see the outline and the body behind the reveal above.
+Students build it in six printed steps; the finished body is behind the Step 5 reveal.
 
 ```python
 # ===== GRID GRAPH =====
@@ -374,10 +456,15 @@ test_grid_graph()
 This lesson exists so that nothing in it arrives unasked for. Read Lesson 5-2's review aloud
 with the class and, for each part, have them say what they were *looking at* on paper
 when they did it; the table is the answer. Only then name the graph and the dictionary.
-Students who already know dictionaries can skip to the activity once the table is done.
 
-Show a plain dictionary (`{"name": "Alice"}`) before the tuple-keyed graph if the class
-needs it. Spend the time on the two halves of blocking a node: forgetting to remove the
+
+The activity is six small runs, each with a prediction first. Insist on the written
+prediction: it is what turns "it printed something" into "it printed what I meant". Step 2
+is wrong on purpose, and the moment students circle `(-1, 0)` is the moment they need the
+bounds checks; let them write the four tests before anyone opens the reveal. The dictionary
+arrives in Step 4, only when the program needs to keep the neighbors; show a plain one
+(`{"name": "Alice"}`) first if the class needs it. The common Step 4 bug is `graph = {}`
+inside the loop (the count prints 1). Step 6's `KeyError` is meant to happen. Spend the time on the two halves of blocking a node: forgetting to remove the
 edges into a blocked node is the #1 bug in Lessons 5-4 and 5-5, and the graph figure is
 the place to catch the idea. Remind them: tuples can be dictionary keys, lists cannot
 (keys must not change). `build_grid_graph` is the core deliverable: every student needs a
