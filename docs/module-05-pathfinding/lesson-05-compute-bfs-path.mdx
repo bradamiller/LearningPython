@@ -164,9 +164,9 @@ so there's only one place to look.
 
 ### Step 2 · The walk downhill
 
-Write `compute_bfs_path()`. Step 2's check, "the start has no number", covers every way
-there can be no path: a blocked start, a blocked destination (`bfs_distances()` then
-returns `{}`), or a wall between them.
+Write `compute_bfs_path()`. If the start has no number, the wave never reached it, so
+there's no path; that one check covers a blocked start, a blocked destination and a wall
+between them.
 
 Steps 4 to 7 are a loop inside a loop. The outer `while` keeps walking until you're on the
 destination. The inner `for` looks through the neighbors for one with a number one less;

@@ -201,19 +201,14 @@ Here is the method the class just worked out:
   caption="The numbers spread out from the destination like a wave, around a blocked intersection. Each number is the steps to D. The red walk on the right is next lesson's idea."
 />
 
-Think of dropping a stone in a pond. A wave spreads out from that single point, the same
-distance in every direction, and flows around anything in its way. The numbering works the
-same way, with the destination as the point where the stone lands. The **wave front**, the
-intersections that have just been numbered, moves out one step at a time: every
-intersection 1 step away is reached, then every one 2 steps away, and so on. A blocked
-intersection is a rock in the pond: the wave never touches it, and flows around it. That's
-why this kind of search on a grid is also called a **wavefront** algorithm.
-
-So the number on every intersection is its distance to the destination, in steps, and it
-is the smallest it could ever be: the wave reaches everything closer first. Computer
-scientists call this **breadth-first search**: it goes wide (everything at one distance)
-before it goes deep. It never looks at where the start is, which is why a wall that forces
-you away from the destination is no problem.
+Think of dropping a stone in a pond, right on the destination. A wave spreads out from
+that one point, the same distance in every direction, and flows around anything in its
+way, the way the numbers flow around a blocked intersection. The **wave front**, the
+intersections just numbered, moves out one step at a time, so everything closer is
+reached first and each number is the shortest distance to the destination. That's why
+this search is called **breadth-first** (it goes wide before it goes deep), and on a grid
+a **wavefront** algorithm. It never looks at where the start is, so a wall that forces you
+away from the destination is no problem.
 
 <KnowledgeCheck
   question="An intersection already has a 2 on it. Later, while looking around an intersection with a 3, you find it's a neighbor. What do you write on it?"
