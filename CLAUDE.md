@@ -724,6 +724,13 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   still builds Dijkstra by copying the came-from `compute_bfs_path`, and 6-5 and
   course-design D6 describe it that way.
   Answers to every discussion question live in teacher notes.
+  **2026-11-17 (Brad): less explaining, more small runnable pieces.** 5-3's activity is
+  now six printed steps that grow `build_grid_graph()` on a 3x3: visit every node (nested
+  loop), list all four neighbors (wrong on purpose, students circle the off-grid ones),
+  bounds checks, store in a dictionary (dictionary syntax is taught right there, not in its
+  own section), return + `test_grid_graph()` on 4x4, then `in` and a deliberate `KeyError`.
+  Every step: predict, run, compare to a Reveal. 5-3 is the model for 5-4 and 5-5 once
+  Brad has reviewed it (5-5 will also get the stop-when-the-start-is-numbered change).
   **Materials NOT updated yet (Brad: website only until the changes settle):** the 5-1 to 5-5
   slide decks (5-1 to 5-3 have no deck link now, since their page ids changed; `slides.json`
   still has the old ids), `build_templates.py`'s Module 5 recipe (it still adds
