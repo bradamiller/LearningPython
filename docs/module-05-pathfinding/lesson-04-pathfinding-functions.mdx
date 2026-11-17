@@ -113,8 +113,8 @@ replaces it.
 # The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
-# leaves the start out), but it searches the GRID GRAPH as a
-# wave from the start, so it routes AROUND whatever is in BLOCKED. Pure
+# leaves the start out), but it numbers the GRID GRAPH as a
+# wave from the destination, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
 def compute_bfs_path(start, destination):
@@ -355,8 +355,8 @@ def test_blocked_graph():
 # The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
-# leaves the start out), but it searches the GRID GRAPH as a
-# wave from the start, so it routes AROUND whatever is in BLOCKED. Pure
+# leaves the start out), but it numbers the GRID GRAPH as a
+# wave from the destination, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
 
 def compute_bfs_path(start, destination):
@@ -421,8 +421,8 @@ early, which is fine.
 
 **Formative:** the two rules from memory; the second-`in blocked` bug caught; the
 `global` explanation. **Exit ticket:** "Why doesn't `add_blocked()` need `global`?"
-**Preview:** next lesson the placeholder becomes real — `previous`, `to_visit`, and
-the walk-back from Lesson 5-2, in about twenty lines.
+**Preview:** next lesson the placeholder becomes real — the wave of numbers from the
+destination and the walk downhill from Lesson 5-2, in about twenty lines.
 
 </TeacherNote>
 

@@ -2,8 +2,8 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR, ROBOT_SRC, REPO
 import sys; from common import *
-rings={(0,0):0,(1,0):1,(0,1):1,(2,0):2,(0,2):2,(2,1):3,(1,2):3,(2,2):4}
-parent={(1,0):(0,0),(0,1):(0,0),(2,0):(1,0),(0,2):(0,1),(2,1):(2,0),(1,2):(0,2),(2,2):(2,1)}
+# numbered FROM THE DESTINATION (2,2): steps to D
+rings={(2,2):0,(1,2):1,(2,1):1,(0,2):2,(2,0):2,(0,1):3,(1,0):3,(0,0):4}
 path=[(0,0),(1,0),(2,0),(2,1),(2,2)]
 sp=80
 def panel(gx,gy,title,arrows):
@@ -22,19 +22,21 @@ def panel(gx,gy,title,arrows):
     if arrows:
         d='M '+' L '.join(f'{P(*q)[0]} {P(*q)[1]}' for q in path)
         o.append(f'<path d="{d}" fill="none" stroke="#D1182C" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>')
-        for n,p in parent.items():
-            (x1,y1),(x2,y2)=P(*n),P(*p); dx,dy=(x2-x1)/sp,(y2-y1)/sp
-            o.append(f'<line x1="{x1+dx*20}" y1="{y1+dy*20}" x2="{x1+dx*44}" y2="{y1+dy*44}" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>')
+        for a,c in zip(path,path[1:]):
+            (x1,y1),(x2,y2)=P(*a),P(*c); dx,dy=(x2-x1)/sp,(y2-y1)/sp
+            o.append(f'<line x1="{x1+dx*20}" y1="{y1+dy*20}" x2="{x1+dx*56}" y2="{y1+dy*56}" stroke="#22527B" stroke-width="2.6" marker-end="url(#aB)"/>')
     x,y=P(1,1)
     o.append(f'<circle cx="{x}" cy="{y}" r="16" fill="#F8F9FA" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M {x-9} {y-9} L {x+9} {y+9} M {x+9} {y-9} L {x-9} {y+9}" stroke="#D1182C" stroke-width="3" stroke-linecap="round"/>')
     for n,r in rings.items():
         x,y=P(*n); col="#142D50" if n==(0,0) else ("#2E7D32" if n==(2,2) else "#4C8BF5")
         o.append(f'<circle cx="{x}" cy="{y}" r="16" fill="{col}"/><text class="nb" x="{x}" y="{y+5}" text-anchor="middle" style="fill:#FFFFFF;font-size:15px">{r}</text>')
+    for n,lab,dx,dy in (((0,0),"S",-22,-20),((2,2),"D",30,5)):
+        x,y=P(*n); o.append(f'<text class="nb" x="{x+dx}" y="{y+dy}" text-anchor="middle">{lab}</text>')
     return o
-b=panel(110,74,"A wave: how far from the start",False)
-b+=panel(470,74,"Came from: walking back",True)
-b+=['<text class="sm" x="60" y="300">Each number is one step further out. The X never gets one.</text>',
-    '<text class="sm" x="420" y="300">4 came from 3, which came from 2, 1, 0.</text>',
-    '<text class="ms" x="420" y="318">Read forward: (1,0), (2,0), (2,1), (2,2).</text>']
-open(OUTDIR+'bfs-rings.svg','w').write(svg('Breadth-first search as a wave',
- 'Left: a 3 by 3 grid of intersections with (0, 0) at the bottom-left. The start at the bottom-left is numbered 0. Its two neighbors are numbered 1, the two corners beyond them 2, the next two 3, and the top-right destination 4. The center intersection is crossed out and has no number. Right: the same grid with a small arrow on each numbered intersection pointing back to the one it was reached from, and the walk-back from the destination to the start highlighted: 4 to 3 to 2 to 1 to 0, down the right side and along the bottom.',b,W=720,H=332))
+b=panel(110,74,"A wave: steps to the destination",False)
+b+=panel(470,74,"Walk downhill from the start",True)
+b+=['<text class="sm" x="60" y="300">Each number is one step further from D. The X never gets one.</text>',
+    '<text class="sm" x="420" y="300">From S, always step to a neighbor one less: 4, 3, 2, 1, 0.</text>',
+    '<text class="ms" x="420" y="318">The path: (1,0), (2,0), (2,1), (2,2).</text>']
+open(OUTDIR+'bfs-wave-from-d.svg','w').write(svg('Breadth-first search as a wave from the destination',
+ 'Left: a 3 by 3 grid of intersections with (0, 0) at the bottom-left. The destination D at the top-right is numbered 0. Its two neighbors are numbered 1, the next two 2, the next two 3, and the start S at the bottom-left 4. The center intersection is crossed out and has no number. Right: the same numbers, with the walk from S highlighted in red: from the 4 right to a 3, right to a 2, up to a 1 and up to the 0 at D, each step to a neighbor one less.',b,W=720,H=332))

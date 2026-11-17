@@ -43,12 +43,12 @@ program has to know to do it. Every answer is something you kept on paper:
 |---|---|---|---|
 | Look at each open neighbor | "Which open intersections are next to this one?" | The grid drawing | A **graph**, this lesson |
 | Look at each *open* neighbor | "Which intersections are blocked?" | The X's | A list, `BLOCKED` (Lesson 5-4) |
-| Note where it came from; skip it if already reached; walk back | "Has this one been reached? Where from?" | The came-from notes | A **dictionary**, `previous` (Lesson 5-5) |
+| Number each neighbor; skip it if it already has a number; walk downhill | "What is this intersection's number? Does it have one yet?" | The numbers on the grid | A **dictionary**, `distance` (Lesson 5-5) |
 | Take from the front, add to the end | "Which one is next?" | The to-visit list | A list (Lesson 5-5) |
-| Write down each intersection on the walk back | "What is the route so far?" | The path you wrote down | A list, `path` (Module 4) |
+| Write down each intersection on the walk downhill | "What is the route so far?" | The path you wrote down | A list, `path` (Module 4) |
 
 Three of these are lists, which you know from Module 4. The other two are looked up **by
-intersection**: you have `(1, 2)` and want its neighbors, or where it came from. A list
+intersection**: you have `(1, 2)` and want its neighbors, or its number. A list
 finds things by *position* (`path[0]`), not by what they are. That needs something new.
 First, though, the program needs the grid written down precisely.
 
@@ -110,8 +110,8 @@ edge into (1,1) will happily step into the wall.
 
 ## Dictionaries
 
-The graph answers "what are the neighbors of `(1, 1)`?" and the came-from record answers
-"where did `(2, 1)` come from?" Both start from an intersection and look something up.
+The graph answers "what are the neighbors of `(1, 1)`?" and the numbers answer "how many
+steps is `(2, 1)` from the destination?" Both start from an intersection and look something up.
 Python's tool for that is the **dictionary**: it stores **key-value pairs** in curly
 braces. A printed dictionary maps words to definitions; a Python dictionary maps any key
 to any value.
@@ -180,28 +180,28 @@ print((2, 2) in graph)     # False -- not added
 Looking up a *missing* key, like `graph[(9, 9)]`, raises a `KeyError`, so check with `in`
 first.
 
-The came-from record is a dictionary too. Here are the first three came-from notes from
-Lesson 5-2's trace: each intersection is a key, and where it came from is the value.
+The numbers are a dictionary too. Here are the first three numbers from Lesson 5-2's
+trace: each intersection is a key, and its steps to the destination is the value.
 
 ```python
-previous = {(0, 0): None, (1, 0): (0, 0), (0, 1): (0, 0)}
+distance = {(2, 2): 0, (1, 2): 1, (2, 1): 1}
 
-print(previous[(1, 0)])    # (0, 0) -- where (1, 0) came from
-print((2, 0) in previous)  # False -- (2, 0) has not been reached yet
+print(distance[(1, 2)])    # 1 -- (1, 2) is one step from the destination
+print((0, 2) in distance)  # False -- (0, 2) has no number yet
 ```
 
-That last line is the check "has this neighbor been reached yet?", in one `in`. You
-will write `previous` in Lesson 5-5; today's job is the graph.
+That last line is the check "does this neighbor have a number yet?", in one `in`. You
+will write `distance` in Lesson 5-5; today's job is the graph.
 
 <KnowledgeCheck
-  question="Given previous = {(0,0): None, (1,0): (0,0)}, what does (1,0) in previous return, and what does it mean?"
+  question="Given distance = {(2,2): 0, (1,2): 1}, what does (1,2) in distance return, and what does it mean?"
   options={[
-    {text: 'True: (1,0) has been reached', correct: true},
-    {text: 'False: (1,0) is blocked'},
-    {text: '(0,0): where (1,0) came from'},
+    {text: 'True: (1,2) already has a number', correct: true},
+    {text: 'False: (1,2) is blocked'},
+    {text: '1: its number'},
     {text: 'A KeyError'},
   ]}
-  explanation="in checks whether a key exists. (1,0) is a key, so it returns True, which in the search means it already has a number. previous[(1,0)] would give (0,0), where it came from."
+  explanation="in checks whether a key exists. (1,2) is a key, so it returns True: it already has a number, and must not get another. distance[(1,2)] would give 1, the number itself."
 />
 
 ## This lesson's skeleton
@@ -364,7 +364,7 @@ test_grid_graph()
 
 ## Wrap-up
 
-- What does the program need to remember that a list can't look up easily? (Things found by intersection: its neighbors, and where it came from.)
+- What does the program need to remember that a list can't look up easily? (Things found by intersection: its neighbors, and its number.)
 - What are a node, an edge, and a neighbor? (A point, a link between adjacent points, and the points a node links to.)
 - What does blocking a node remove? (The node and all its edges, so it is nobody's neighbor.)
 - How is a dictionary different from a list? (Looked up by key, not by position.)
@@ -390,8 +390,8 @@ folded in.
 
 **Formative:** the step-to-data table in students' own words; `test_grid_graph()`
 printing 16, four neighbors, two neighbors. **Exit ticket:** "Write a dictionary with two
-entries: (0, 0) came from nowhere, and (0, 1) came from (0, 0)."
-(`previous = {(0, 0): None, (0, 1): (0, 0)}`.) **Preview:** next lesson adds the blocked
+entries: (3, 3) is 0 steps from the destination, and (3, 2) is 1 step."
+(`distance = {(3, 3): 0, (3, 2): 1}`.) **Preview:** next lesson adds the blocked
 list, teaches `build_grid_graph()` to build around it, and opens the BFS PLANNER section.
 
 </TeacherNote>

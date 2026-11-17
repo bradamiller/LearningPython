@@ -3,7 +3,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _paths import OUTDIR, ROBOT_SRC, REPO
 import sys; from common import *
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'g51.py')).read().split("b=['<text class=\"h\" x=\"20\" y=\"26\">The 3×3")[0])
-from sim import bfs
+from sim import bfs, build_graph
 rows=[("previous = {start: None}","came-from table; start came from nowhere"),
       ("to_visit = [start]","the to-visit list beside the grid"),
       ("current = to_visit.pop(0)","take the oldest one, from the front"),
@@ -43,3 +43,45 @@ b+=panel(352,"pop(): newest first (depth-first)",pd,"#D1182C",f"{len(pd)} steps:
 open(OUTDIR+'bfs-vs-dfs.svg','w').write(svg('pop(0) versus pop()',
  f'Test 4 on the 4 by 4 grid with (0, 0) at the bottom-left, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), oldest first, breadth-first search finds a {len(pb)}-step path: up to (0, 2), right along y = 2 to (3, 2), then down the right edge to (3, 0). Right, with pop(), newest first, the search dives down one route and returns a {len(pd)}-step path: all the way up to (0, 3), right to (2, 3), back down the column at x = 2 to (2, 0), then right to (3, 0).',b,H=346))
 print(len(pb),len(pd))
+
+# 2026-11-17: the wave from the destination and the walk downhill (Lesson 5-5)
+rows2=[("distance = {destination: 0}","write 0 on the destination"),
+       ("to_visit = [destination]","the to-visit list beside the grid"),
+       ("current = to_visit.pop(0)","take the oldest one, from the front"),
+       ("if neighbor not in distance:","it has no number yet: numbered once"),
+       ("distance[neighbor] = distance[current] + 1","one more than current's number"),
+       ("to_visit.append(neighbor)","add it to the end of the list"),
+       ("while current != destination:","walk until you reach the destination"),
+       ("distance[neighbor] == distance[current] - 1","a neighbor one less: step onto it")]
+b=['<text class="h" x="12" y="24">Code</text>','<text class="h" x="408" y="24">Pencil (Lessons 5-1 and 5-2)</text>']
+for i,(c,p) in enumerate(rows2):
+    y=40+i*40
+    b.append(f'<rect x="12" y="{y}" width="350" height="30" rx="6" fill="#F1F6FB" stroke="#22527B" stroke-width="1.4"/><text class="ms" x="22" y="{y+20}">{c}</text>')
+    b.append(f'<line x1="364" y1="{y+15}" x2="404" y2="{y+15}" stroke="#ADB5BD" stroke-width="1.6" stroke-dasharray="4 3"/>')
+    b.append(f'<rect x="408" y="{y}" width="262" height="30" rx="6" fill="#FFF8E8" stroke="#C77C02" stroke-width="1.4"/><text class="n" x="418" y="{y+20}" style="font-size:12px">{p}</text>')
+open(OUTDIR+'code-pencil-downhill.svg','w').write(svg('Every line is a pencil step',
+ 'Eight lines of code matched to the pencil method from Lessons 5-1 and 5-2. distance = {destination: 0} writes 0 on the destination. to_visit = [destination] is the to-visit list beside the grid. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in distance means it has no number yet, so it is numbered once. distance[neighbor] = distance[current] + 1 gives it one more than current. to_visit.append(neighbor) adds it to the end of the list. while current != destination walks until it reaches the destination, and distance[neighbor] == distance[current] - 1 finds a neighbor one less to step onto.',b,W=680,H=370))
+
+# 2026-11-17: pop(0) vs pop() with the numbers written from the destination and the
+# walk downhill from the start (Lesson 5-5's code)
+def downhill(start, dest, blocked, newest=False):
+    g = build_graph(4, 4, blocked)
+    dist = {dest: 0}; tv = [dest]
+    while tv:
+        c = tv.pop() if newest else tv.pop(0)
+        for n in g[c]:
+            if n not in dist: dist[n] = dist[c] + 1; tv.append(n)
+    p = []; c = start
+    while c != dest:
+        for n in g[c]:
+            if dist.get(n) == dist[c] - 1: c = n; break
+        p.append(c)
+    return p
+pb2 = downhill((0, 0), (3, 0), B); pd2 = downhill((0, 0), (3, 0), B, newest=True)
+b = []
+b += panel(12, "pop(0): oldest first (BFS)", pb2, "#2E7D32", f"{len(pb2)} steps, the shortest")
+b += panel(352, "pop(): newest first", pd2, "#D1182C", f"{len(pd2)} steps: the numbers were wrong")
+open(OUTDIR + 'bfs-vs-dfs-downhill.svg', 'w').write(svg('pop(0) versus pop()',
+ f'Test 4 on the 4 by 4 grid with (0, 0) at the bottom-left, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), oldest first, the numbers are true distances and the walk downhill finds a {len(pb2)}-step path: up to (0, 2), right along y = 2 to (3, 2), then down the right edge to (3, 0). Right, with pop(), newest first, the numbers are not shortest distances, and walking downhill follows them on a {len(pd2)}-step path: up to (0, 2), right to (1, 2), up to the top row, right along it to (3, 3), then down the right edge to (3, 0).',
+ b, W=680, H=346))
+print(pb2, pd2)

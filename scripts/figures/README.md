@@ -96,7 +96,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | g53.py | wall-problem.svg | /img/lesson-m5-03/wall-problem-xy.svg |
 | g54.py | append-vs-assign.svg | — |
 | g54.py | blocked-list.svg | — |
-| g55.py | bfs-vs-dfs.svg | /img/lesson-m5-05/bfs-vs-dfs-xy.svg |
+| g55.py | bfs-vs-dfs-downhill.svg | /img/lesson-m5-05/bfs-vs-dfs-downhill-xy.svg |
 | g55.py | code-pencil.svg | — |
 | g56.py | path-properties.svg | /img/lesson-m5-06/path-properties-xy.svg |
 | g56.py | planner-slot.svg | — |
@@ -112,7 +112,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | g6.py | path-cost.svg | /img/lesson-m6-02/path-cost.svg |
 | g6.py | slow-road.svg | /img/lesson-m6-00/slow-road-xy.svg |
 | g6.py | three-planners.svg | /img/lesson-m6-05/three-planners.svg |
-| grings.py | bfs-rings.svg | /img/lesson-m5-03/bfs-wave-xy.svg |
+| grings.py | bfs-wave-from-d.svg | /img/lesson-m5-03/bfs-wave-from-d-xy.svg |
 | hill.py | effort-vs-speed-hill.svg | /img/lesson-06/effort-vs-speed-on-a-hill.svg |
 | kpanim.py | kp-tuning-v2.svg | /img/lesson-m2-05/kp-tuning-v2.svg |
 | m12.py | square-goal.svg | /img/lesson-02/square-goal.svg |
@@ -150,3 +150,5 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m13copy.py | copy-paste-vs-function.svg | /img/lesson-03/copy-paste-vs-function.svg |
 | fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs-wave.svg |
 | fanout.py | fanout-bfs-vs-dijkstra.svg | /img/lesson-m6-03/fanout-bfs-vs-dijkstra-v2.svg |
+| g52downhill.py | bfs-downhill-steps.svg | /img/lesson-m5-03/bfs-downhill-steps-xy.svg (StepFigure, wave from D then the walk downhill) |
+| g55.py | code-pencil-downhill.svg | /img/lesson-m5-05/code-pencil-downhill.svg |

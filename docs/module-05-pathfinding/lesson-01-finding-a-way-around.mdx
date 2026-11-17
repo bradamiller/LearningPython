@@ -25,8 +25,8 @@ By the end of this lesson you will be able to:
 
 - Explain why the Manhattan algorithm can't handle a blocked intersection
 - Explain why "look at the grid and guess" isn't a method a computer can use
-- Number every intersection with its distance from the start, one step further out at a time, around blocked intersections
-- Explain why the first number written on the destination is the shortest path length, so you can stop there
+- Number every intersection with its distance to the destination, one step further out at a time, around blocked intersections
+- Explain why the number on the start is the shortest path length
 
 </Objectives>
 
@@ -132,52 +132,53 @@ never looks at the goal at all.
 
 ## Discuss · How far away is everything?
 
-Draw a 4×4 grid and mark S in the bottom-left corner, (0,0). No obstacles yet. Answer
-each question before you go on to the next.
+Draw a 4×4 grid. Mark the start, S, in the bottom-left corner, (0,0), and the destination,
+D, in the far corner, (3,3). No obstacles yet. This time, work **from the destination**.
+Answer each question before you go on to the next.
 
 1. On our grid, what does "shortest" mean?
-2. Forget the destination for a moment. Which intersections can the robot reach in
-   exactly **1** step? Write a 1 on each.
-3. Which can it reach in exactly **2** steps? Write a 2 on each. How did you find them?
-4. Keep going until every intersection has a number. Say the destination is the far
-   corner, (3,3). When its number is written, could there still be a shorter way to it
-   that you missed?
-5. Now put back the wall from the last activity, (1,0) and (1,1) blocked, and number
-   the grid again from S. Do you need a new rule for the blocked intersections?
+2. Forget S for a moment. Which intersections are exactly **1** step from D? Write a 1 on
+   each.
+3. Which are exactly **2** steps from D? Write a 2 on each. How did you find them?
+4. Keep going until S gets a number. Could there be a shorter way from S to D than S's
+   number says?
+5. Now put back the wall from the last activity, (1,0) and (1,1) blocked, with D at (3,0)
+   and S at (0,0), and number the grid again from D. Do you need a new rule for the
+   blocked intersections?
 
 <TeacherNote title="Leading the discussion (15–20 min)">
 
 Draw the grid big on the board and write the numbers there as the class gives them. The
-goal is that *they* say the rule; your job is to ask the next question.
+goal is that *they* say the rule; your job is to ask the next question. If someone asks
+why we start from D, say it's a fair question and Lesson 5-2 answers it.
 
 1. **Fewest blocks driven.** Every block is one step. If anyone says "the straightest",
    ask: "Is a path with 5 steps ever shorter than one with 4?"
-2. **(1,0) and (0,1).** Easy on purpose. The real move is that the question is about
-   distance *from S*, not about getting to D. Don't mention D again until question 4.
-3. **(2,0), (1,1) and (0,2).** Someone will say S, by going out and back. Ask: "Do we learn
-   anything by writing a 2 on S? We already know it's 0." That is the first discovery:
+2. **(2,3) and (3,2).** Easy on purpose. The real move is that the question is about
+   distance *from D*, not about getting from S. Don't mention S again until question 4.
+3. **(1,3), (2,2) and (3,1).** Someone will say D, by going out and back. Ask: "Do we learn
+   anything by writing a 2 on D? We already know it's 0." That is the first discovery:
    **only number an intersection that has no number yet.** Then press on "How did you
    find them?" until someone says *you looked at the neighbors of the 1s*. Generalize out
    loud and write it on the board: **"Every unnumbered neighbor of a 2 gets a 3."** That
-   sentence is the whole algorithm; underline it.
-4. **(3,3) gets a 6, and no, nothing was missed.** Let them argue. The convincing reason:
-   every intersection 2 steps away was numbered before any 3 was written, so if (3,3)
-   could be reached in fewer steps, it would already have a smaller number. So the first
-   number written on the destination is the shortest distance, and **you can stop the
-   moment the destination gets a number.**
+   sentence is the whole method; underline it.
+4. **S gets a 6, and no, there's no shorter way.** Let them argue. The convincing reason:
+   every intersection 2 steps from D was numbered before any 3 was written, so if S were
+   fewer steps away, it would already have a smaller number. So **the number written on
+   an intersection is its shortest distance to D.**
 5. **No new rule.** A blocked intersection just never gets a number, and the numbers flow
-   around it. (3,0) gets a 7. Point at the first steps, which go up, *away* from (3,0):
-   "This method never looked at the destination. Is that a weakness or a strength?" It's
-   why it works where the head-toward-the-goal rules from the last activity didn't. Keep
-   this numbered grid on the board; Lesson 5-2 starts from it.
+   around it. S gets a 7. Point at the numbers next to S: the smaller one is *up*, away
+   from D. "This method never looked at where S is. Is that a weakness or a strength?" It
+   is why it works where the head-toward-the-goal rules from the last activity didn't.
+   Keep this numbered grid on the board; Lesson 5-2 starts from it.
 
 Their grid for question 5:
 
 ```text
- 3 |   3  4  5  6
- 2 |   2  3  4  5
- 1 |   1  X  5  6
- 0 |   0  X  6  7
+ 3 |   6  5  4  3
+ 2 |   5  4  3  2
+ 1 |   6  X  2  1
+ 0 |   7  X  1  0
     -------------
        0  1  2  3
 ```
@@ -188,32 +189,31 @@ Their grid for question 5:
 
 Here is the method the class just worked out:
 
-1. Write **0** on the start.
+1. Write **0** on the destination.
 2. Every intersection one step away gets a **1**.
 3. Every intersection one step from a 1 that *doesn't have a number yet* gets a **2**.
 4. Keep going, finishing every intersection at one distance before you start the next,
-   until the destination gets a number.
+   until the start has a number.
 
 <Figure
-  src="/img/lesson-m5-03/bfs-wave-xy.svg"
-  alt="Left: a 3 by 3 grid with the start numbered 0 at the bottom-left, its neighbors 1, the next corners 2, the next two 3, and the top-right destination 4; the center intersection is crossed out with no number. Right: the same grid with a small arrow on each intersection pointing back to the one it was reached from, and the walk-back from 4 down the right side and along the bottom highlighted in red."
-  caption="The numbers spread out from the start like a wave, around a blocked intersection. Each number is one step further out. The arrows on the right are next lesson's idea: they turn the numbers into a path."
+  src="/img/lesson-m5-03/bfs-wave-from-d-xy.svg"
+  alt="Left: a 3 by 3 grid with the destination D numbered 0 at the top-right, its two neighbors 1, the next two 2, the next two 3, and the start S at the bottom-left 4; the center intersection is crossed out with no number. Right: the same numbers, with the walk from S highlighted in red: from 4 right to 3, to 2, up to 1, to 0 at D, each step to a neighbor one less."
+  caption="The numbers spread out from the destination like a wave, around a blocked intersection. Each number is the steps to D. The red walk on the right is next lesson's idea."
 />
 
 Think of dropping a stone in a pond. A wave spreads out from that single point, the same
 distance in every direction, and flows around anything in its way. The numbering works the
-same way, with the start as the point where the stone lands. The **wave front**, the
+same way, with the destination as the point where the stone lands. The **wave front**, the
 intersections that have just been numbered, moves out one step at a time: every
-intersection 1 step away is reached, then every one 2 steps away, and so on. A number is
-just the moment the wave front reached that intersection. A blocked intersection is a rock
-in the pond: the wave never touches it, and flows around it. That's why this kind of search
-on a grid is also called a **wavefront** algorithm.
+intersection 1 step away is reached, then every one 2 steps away, and so on. A blocked
+intersection is a rock in the pond: the wave never touches it, and flows around it. That's
+why this kind of search on a grid is also called a **wavefront** algorithm.
 
-So the destination's number is its distance from the start, in steps, and the first
-number written on it is the smallest it could ever get: the wave reaches everything closer
-first. Computer scientists call this **breadth-first search**: it goes wide (everything at
-one distance) before it goes deep. It never looks at the destination, which is why a wall
-that forces you away from it is no problem.
+So the number on every intersection is its distance to the destination, in steps, and it
+is the smallest it could ever be: the wave reaches everything closer first. Computer
+scientists call this **breadth-first search**: it goes wide (everything at one distance)
+before it goes deep. It never looks at where the start is, which is why a wall that forces
+you away from the destination is no problem.
 
 <KnowledgeCheck
   question="An intersection already has a 2 on it. Later, while looking around an intersection with a 3, you find it's a neighbor. What do you write on it?"
@@ -227,14 +227,14 @@ that forces you away from it is no problem.
 />
 
 <KnowledgeCheck
-  question="The destination has just been given a 5. Should you keep numbering, in case a shorter way turns up?"
+  question="The start has just been given a 5. Could a shorter way from the start to the destination still turn up?"
   options={[
-    {text: 'No: every intersection 4 or fewer steps away is already numbered, so 5 is the shortest', correct: true},
-    {text: 'Yes: finish the whole grid, then take the smallest number the destination got'},
-    {text: 'Yes: a path that heads toward the destination might be shorter'},
+    {text: 'No: every intersection 4 or fewer steps from the destination is already numbered, so 5 is the shortest', correct: true},
+    {text: 'Yes: finish the whole grid, then look for a smaller number on the start'},
+    {text: 'Yes: a path that heads straight toward the destination might be shorter'},
     {text: 'It depends on how many intersections are blocked'},
   ]}
-  explanation="The wave reaches everything closer first, so the first number written on the destination can't be beaten. You can stop right there."
+  explanation="The wave reaches everything closer first, so the first number written on the start can't be beaten."
 />
 
 ## The wave on a bigger grid
@@ -244,18 +244,18 @@ breadth-first search. Here is the same rule on an 8 by 6 grid with a wall across
 middle.
 
 <StepFigure
-  src="/img/lesson-m5-03/fanout-bfs-wave.svg"
-  alt="An animation of breadth-first search on a grid of 8 by 6 intersections with a wall of four blocked intersections at x = 3, from y = 1 to y = 4. S is (0, 4) and D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S when the search first reaches it, so the numbers spread out from S like a wave. The wave flows around both ends of the wall. When D is taken off the list the search stops, and the walk-back from D is drawn in red: up, along the top past the wall, and down to D, 9 steps."
-  caption="Same rule as your grid: every intersection one step out is numbered before any two steps out. Press Step to move the wave out one step at a time, or Play to watch it spread and bend around the wall." />
+  src="/img/lesson-m5-03/fanout-bfs-from-d.svg"
+  alt="An animation of breadth-first search on a grid of 8 by 6 intersections with a wall of four blocked intersections at x = 3, from y = 1 to y = 4. S is (0, 4) and D is (7, 4), on the other side of the wall. The wave starts at D: each intersection lights up with its number of steps to D when the wave first reaches it, so the numbers spread out from D, flow around both ends of the wall, and fill the grid. Then the path from S is drawn in red, always stepping to a neighbor one less: up, along the top past the wall, and down to D, 9 steps."
+  caption="Same rule as your grid: every intersection one step from D is numbered before any two steps away. Press Step to move the wave out one step at a time, or Play to watch it spread and bend around the wall." />
 
-The search spreads evenly, even *away* from D: it has no idea where D is until it gets
-there. It stops as soon as D comes off the list, so a few far corners never get a number.
+The wave spreads evenly in every direction, even away from S: it never looks at where the
+start is. Here it fills the whole grid. The red line at the end is next lesson's idea.
 
 ## Real-world connections
 
 <CardGrid>
   <InfoCard tag="Maps" title="GPS routing">
-    Rerouting around a closed road is this problem. Turn-by-turn directions come from searches that spread out from where you are, like a wave.
+    Rerouting around a closed road is this problem. Route planners spread a wave of distances through the street map, just like your numbers.
   </InfoCard>
   <InfoCard tag="Social" title="Degrees of separation">
     "Friends of friends" are the people two steps out in a breadth-first search over a friend network.
@@ -268,9 +268,9 @@ there. It stops as soon as D comes off the list, so a few far corners never get 
 ## Wrap-up
 
 - Why can't Manhattan handle a blocked intersection? (One fixed route, no idea of obstacles.)
-- What does the number on an intersection mean? (Its distance from the start, in steps.)
+- What does the number on an intersection mean? (Its distance to the destination, in steps.)
 - Do blocked intersections need a special rule? (No: they never get a number, and the wave flows around them.)
-- Why can you stop as soon as the destination gets a number? (Everything closer was numbered first.)
+- Why is the number on the start the shortest distance? (Everything closer to the destination was numbered first.)
 
 <TeacherNote title="Make Manhattan's failure vivid, then let them find the rule">
 
@@ -297,10 +297,10 @@ them. "Intersection" and "neighbor" are enough today.
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** can students say the rule in their own words, and explain *why* the
-destination's number is the shortest length? **Exit ticket:** "An intersection already
+start's number is the shortest length? **Exit ticket:** "An intersection already
 has a 2. You reach it again from a 3. What do you write?" (Nothing.) **Preview:** the
-numbers say *how far*. Next lesson finds the path itself, then works out how a computer,
-which can't see the whole board, would do all of this.
+numbers say *how far*. Next lesson finds the path itself, and why numbering from the
+destination makes that easy, then works out how a computer would do it all.
 
 </TeacherNote>
 

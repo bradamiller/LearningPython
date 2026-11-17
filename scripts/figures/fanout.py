@@ -30,6 +30,21 @@ def bfs():
         for n in g[c]:
             if n not in prev: prev[n]=c; ring[n]=ring[c]+1; order.append((n,ring[n])); q.append(n)
     return prev,order
+def bfs_from_dest():
+    # the wave from D, filling every reachable intersection (as bfs_distances() does),
+    # then the walk downhill from S: each step to the first neighbor (left, right,
+    # down, up) whose number is one less
+    g=graph(); dist={DEST:0}; order=[(DEST,0)]; q=[DEST]
+    while q:
+        c=q.pop(0)
+        for n in g[c]:
+            if n not in dist: dist[n]=dist[c]+1; order.append((n,dist[n])); q.append(n)
+    p=[START]; c=START
+    while c!=DEST:
+        for n in g[c]:
+            if dist.get(n)==dist[c]-1: c=n; break
+        p.append(c)
+    return p,order
 def dijkstra():
     g=graph(); prev={START:None}; dist={START:0}; q=[START]; done=[]
     while q:
@@ -54,9 +69,11 @@ def build(out,modes_spec,slow,title,desc,panel):
     """modes_spec: list of (label, kind) with kind 'bfs' or 'dij'"""
     segs=[]; t=0.4
     for (label,kind) in modes_spec:
-        prev,order=bfs() if kind=='bfs' else dijkstra()
+        if kind=='bfsd': pth,order=bfs_from_dest()
+        else:
+            prev,order=bfs() if kind=='bfs' else dijkstra(); pth=path(prev)
         s0=t; ev=[(s0+0.3+v*UNIT,n,v) for (n,v) in order]
-        tf=ev[-1][0]+0.5; pth=path(prev); te=tf+0.12*len(pth)+0.4
+        tf=ev[-1][0]+0.5; te=tf+0.12*len(pth)+0.4
         segs.append(dict(label=label,kind=kind,s0=s0,ev=ev,tf=tf,te=te,path=pth,stop=te+1.2,steps=len(pth)-1,
                          cost=sum(weight(a,b,True) for a,b in zip(pth,pth[1:])),seen=len(order)))
         t=te+1.6
@@ -102,7 +119,7 @@ def build(out,modes_spec,slow,title,desc,panel):
             # the moment it is reached: an orange ring for one beat
             anim.append(f'<g opacity="0">{vis(te,te+0.6)}<circle cx="{x}" cy="{y}" r="15" fill="none" stroke="#F2A900" stroke-width="3"/></g>')
         pts=[P(n) for n in sg['path']]; Lp=sum(((a[0]-c[0])**2+(a[1]-c[1])**2)**.5 for a,c in zip(pts,pts[1:]))
-        pp=" ".join(f"{x},{y}" for x,y in pts[::-1])
+        pp=" ".join(f"{x},{y}" for x,y in (pts if sg['kind']=='bfsd' else pts[::-1]))
         anim.append(f'<g opacity="0">{vis(sg["tf"],end)}<polyline points="{pp}" fill="none" stroke="#D1182C" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85" stroke-dasharray="{Lp:.0f} {Lp+20:.0f}">'
                     f'<animate attributeName="stroke-dashoffset" values="{Lp:.0f};{Lp:.0f};0;0" keyTimes="0;{sg["tf"]/T:.5f};{sg["te"]/T:.5f};1" {DUR}/></polyline></g>')
     for n,lab in [(START,"S"),(DEST,"D")]:
@@ -115,7 +132,10 @@ def build(out,modes_spec,slow,title,desc,panel):
         anim.append(f'<g opacity="0">{vis(sg["s0"]+0.3,sg["stop"]+0.2)}{body}</g>')
         res=(f'<text class="nb" x="{X}" y="262" style="fill:#D1182C">Path: {sg["steps"]} steps, cost {sg["cost"]}</text>' if slow else
              f'<text class="nb" x="{X}" y="262" style="fill:#D1182C">Path: {sg["steps"]} steps</text>')
-        res+=f'<text class="sm" x="{X}" y="280">numbered {sg["seen"]} of {len(g)} intersections</text><text class="sm" x="{X}" y="296">before it could stop</text>'
+        if sg['kind']=='bfsd':
+            res+=f'<text class="sm" x="{X}" y="280">walking downhill from S:</text><text class="sm" x="{X}" y="296">always to a neighbor one less</text>'
+        else:
+            res+=f'<text class="sm" x="{X}" y="280">numbered {sg["seen"]} of {len(g)} intersections</text><text class="sm" x="{X}" y="296">before it could stop</text>'
         anim.append(f'<g opacity="0">{vis(sg["tf"],sg["stop"]+0.2)}{res}</g>')
     b.append('<g>'+''.join(anim)+'</g>')
     modes=[{"label":sg['label'],"start":round(sg['s0'],3),"stop":round(sg['stop'],3)} for sg in segs]
@@ -141,6 +161,14 @@ dij_panel=[('h',60,"Dijkstra's algorithm"),('n',84,'Numbers = cost from S.'),
            ('sm',140,'spreads by cost, not by steps.'),('sm',156,'On the slow road each block'),
            ('sm',172,'costs 5, and the wave crawls'),('sm',188,'there while it races along'),
            ('sm',204,'the bottom.'),('sm',230,'Orange: just finished.')]
+bfsd_panel=[('h',60,'Breadth-first search'),('n',84,'Numbers = steps to D.'),
+           ('sm',108,'Every intersection one step from'),('sm',124,'D gets its number before any two'),
+           ('sm',140,'steps away does, so the numbers'),('sm',156,'spread out from D like a wave.'),
+           ('sm',172,'The wall bends the wave'),('sm',188,'around its end.'),
+           ('sm',214,'Orange: just reached. Red: the'),('sm',230,'walk downhill from S.')]
+build('fanout-bfs-from-d.svg',[("Run BFS",'bfsd')],False,'How breadth-first search spreads',
+ 'An animation of breadth-first search on a grid of 8 by 6 intersections, bigger than the floor grid so the shape shows, with (0, 0) at the bottom-left. A wall of four blocked intersections stands at x = 3 from y = 1 to y = 4, leaving gaps at the top and bottom. The start S is (0, 4) and the destination D is (7, 4), on the other side of the wall. The wave starts at D: each intersection lights up with its number of steps to D the moment the wave first reaches it, 1 for the neighbors of D, then 2, then 3, so the numbers spread out from D like a wave, flow through the gaps at the top and bottom of the wall and bend around it, until every intersection has a number. Then the path is drawn in red from S, always stepping to a neighbor one less: right, up to the top row, along the top through the gap, and down to D, 9 steps.',
+ dict(intro=['Press Play. The wave starts at D','and spreads around the wall; then','the robot walks downhill from S.'],bfsd=bfsd_panel))
 build('fanout-bfs.svg',[("Run BFS",'bfs')],False,'How breadth-first search spreads',
  'An animation of breadth-first search on a grid of 8 by 6 intersections, bigger than the floor grid so the shape shows, with (0, 0) at the bottom-left. A wall of four blocked intersections stands at x = 3 from y = 1 to y = 4, leaving gaps at the top and bottom. The search starts at S, (0, 4), and the destination D is (7, 4), on the other side of the wall. Each intersection lights up with its step count from S the moment the search first reaches it: 1 for the neighbors of S, then 2, then 3, so the numbers spread out from S like a wave. The wave flows through the gap at the top of the wall and bends around it, and also around the bottom. When D is taken off the list the search stops, and the walk-back from D to S is drawn in red: up, along the top through the gap, and back down to D, 9 steps.',
  dict(intro=['Press Run BFS. The search starts at','S and has to find its way around','the wall to D.'],bfs=bfs_panel))

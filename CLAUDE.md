@@ -702,6 +702,27 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   `build_templates.py`'s recipe. Figures renamed for it: `bfs-wave-xy.svg`,
   `fanout-bfs-wave.svg` (a StepFigure, one step per distance), and in Module 6
   `fanout-bfs-vs-dijkstra-v2.svg` and `cost-grid-xy-v2.svg`.
+  **2026-11-17 (Brad's idea): BFS SEARCHES FROM THE DESTINATION, AND THE PATH IS WALKED
+  DOWNHILL FROM THE START.** No came-from notes, no walk back, no reverse: the wave of numbers
+  starts at D (5-1's discussion numbers from D; S gets its number last), and the path is
+  "from S, keep stepping to an open neighbor one less, until 0". 5-2's "Teaching it to a
+  computer" now asks when the wave is finished (the list is empty: the code lets it fill the
+  grid, no early stop) and what the walk needs (just the numbers). 5-3's second dictionary is
+  `distance`, not `previous`. 5-5 is two functions in two stages: **`bfs_distances(destination)`**
+  (the search; numbered-once is `if neighbor not in distance`) then **`compute_bfs_path()`**,
+  which calls it and walks downhill (`for` + `break` inside `while`; it appends only AFTER
+  stepping, so the start is never in the path; "start has no number" is the one no-path check).
+  Class track: `BFS.bfs_distances(self, destination)` and `compute_path()` calls it.
+  **Every printed path is unchanged**: with the same neighbor order (left, right, down, up),
+  walking downhill gives exactly the old came-from path for every start/destination pair on
+  every layout the course uses (checked, including the 8 by 6 figure grid), so 5-5 to 5-9 and
+  Module 6 outputs still hold. New figures: `bfs-wave-from-d-xy.svg` (grings.py),
+  `fanout-bfs-from-d.svg` (fanout.py, kind 'bfsd'), `bfs-downhill-steps-xy.svg`
+  (g52downhill.py; g53steps.py still makes the old came-from one), and from g55.py
+  `code-pencil-downhill.svg` and `bfs-vs-dfs-downhill-xy.svg` (pop() still gives 9 steps on
+  Test 4, by a different route). **Module 6 NOT updated yet** (Brad: Module 5 first): 6-3
+  still builds Dijkstra by copying the came-from `compute_bfs_path`, and 6-5 and
+  course-design D6 describe it that way.
   Answers to every discussion question live in teacher notes.
   **Materials NOT updated yet (Brad: website only until the changes settle):** the 5-1 to 5-5
   slide decks (5-1 to 5-3 have no deck link now, since their page ids changed; `slides.json`

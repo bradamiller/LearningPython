@@ -7,7 +7,7 @@ sidebar_position: 5
 <LessonHeader
   eyebrow="Module 5 · Pathfinding Around Obstacles"
   title="Lesson 5-5 · Implementing compute_bfs_path()"
-  meta={['50–60 min', 'The algorithm in code', 'Build in three stages']}
+  meta={['50–60 min', 'The algorithm in code', 'Build in two stages']}
 />
 
 <TeacherBanner>
@@ -15,21 +15,20 @@ Teacher mode is on — the gray boxes are yours only. Flip the switch (bottom-ri
 to preview the student view.
 </TeacherBanner>
 
-This is the heart of Module 5: the algorithm you reviewed at the end of Lesson 5-2 becomes about
-twenty lines of Python, each one a step you've done with a pencil. Build it in three stages, with a
-paper test after each (it prints paths and step counts; the robot stays on the desk).
-Then have the program draw its distance numbers to compare with yours.
+This is the heart of Module 5: the algorithm you reviewed at the end of Lesson 5-2 becomes
+about twenty lines of Python, each one a step you've done with a pencil. It comes in two
+functions, one for each part of the review: `bfs_distances()` numbers the grid from the
+destination, and `compute_bfs_path()` walks downhill from the start. Build and test them in
+that order; every test prints, and the robot stays on the desk.
 
 <Objectives>
 
 By the end of this lesson you will be able to:
 
-- Match each line of `compute_bfs_path()` to a step of the paper method
+- Match each line of `bfs_distances()` and `compute_bfs_path()` to a step of the paper method
 - Explain why `to_visit.pop(0)` (oldest first) matters, and what `pop()` would do instead
-- Explain why `if neighbor not in previous` is the whole "numbered once" rule
-- Write the walk-back so the path leaves the start out, and say why "already there" gives `[]`
-- Return `[]` when the destination is walled off
-- Write `bfs_distances()` and use `print_grid()` to draw what the search found
+- Explain why `if neighbor not in distance` is the whole "numbered once" rule
+- Write the walk downhill so the path leaves the start out, and return `[]` when the start can't be reached
 
 </Objectives>
 
@@ -37,42 +36,43 @@ By the end of this lesson you will be able to:
 
 ## This lesson's skeleton
 
-In the BFS PLANNER section, replace the placeholder `compute_bfs_path()` with this
-outline: the algorithm from Lesson 5-2's review, one numbered step per comment. Under it, paste the
-two functions for the picture at the end of the lesson.
+In the BFS PLANNER section, replace the placeholder `compute_bfs_path()` with these
+outlines: the algorithm from Lesson 5-2's review, one numbered step per comment.
+`print_grid()`, at the bottom, is given.
 
 ```python
+def bfs_distances(destination):
+    """Steps from every reachable intersection to
+    destination, as a dictionary: the wave of numbers."""
+    # Program only, not a step of the algorithm: build the
+    # graph from BLOCKED; return {} if destination is not in it.
+    #
+    # Number the grid from the destination (Lesson 5-2):
+    #  1. Write 0 on the destination.
+    #  2. Put the destination on the to-visit list.
+    #  3. While the to-visit list is not empty:
+    #  4.     Take the oldest one off the front. Call it current.
+    #  5.     For each open neighbor of current:
+    #  6.         If that neighbor has no number yet:
+    #  7.             Give it one more than current's number.
+    #  8.             Add it to the end of the to-visit list.
+    #  9. Return the numbers.
+    pass
+
 def compute_bfs_path(start, destination):
     """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
-    # Program only, not a step of the algorithm:
-    #   build the graph from BLOCKED, and return [] if
-    #   start or destination is not in it.
+    # Program only: build the graph from BLOCKED.
     #
-    # The algorithm from Lesson 5-2, one line of code per step:
-    #  1. Write down that the start was reached, from nowhere.
-    #  2. Put the start on the to-visit list.
-    #  3. While the to-visit list is not empty:
-    #  4.     Take the oldest one off the front. Call it current.
-    #  5.     If current is the destination, stop looking.
-    #  6.     For each open neighbor of current:
-    #  7.         If that neighbor has not been reached yet:
-    #  8.             Write down that it came from current.
-    #  9.             Add it to the end of the to-visit list.
-    # 10. If the destination was never reached, there is no path.
-    # 11. Start with an empty path, standing on the destination.
-    # 12. Until you are back at the start:
-    # 13.     Add where you are standing to the path.
-    # 14.     Step back to where it came from.
-    # 15. Turn the path around. That is the answer.
-    pass
-
-def bfs_distances(start):
-    """Distance, in steps, of every intersection reachable
-    from start, as a dictionary -- the search with no break."""
-    # the SETUP and SEARCH of compute_bfs_path, with two
-    # changes: never stop early, and instead of came-from,
-    # write the distance: one more than current's
+    # Walk downhill from the start (Lesson 5-2):
+    #  1. Number the grid: call bfs_distances(destination).
+    #  2. If the start has no number, there is no path.
+    #  3. Start with an empty path, standing on the start.
+    #  4. Until you are standing on the destination:
+    #  5.     Find the open neighbor whose number is one less
+    #  6.     and step onto it.
+    #  7.     Add where you are standing to the path.
+    #  8. That path is the answer.
     pass
 
 def print_grid(rows, cols, blocked, numbers):
@@ -105,97 +105,98 @@ front of you. `"{:>3}".format(cell)` is "this value, right-aligned in three spac
 
 ## Every line is a pencil step
 
-Under each numbered comment you write one line of Python that does what the step
-says. (Two steps take two lines: 11 makes an empty `path` and sets `current` to the
-destination; 15 reverses the path and returns it.) Use
-the names from Lesson 5-3: `previous` for the came-from notes, a dictionary, and
-`to_visit` for the list. Step 1 makes `previous` with one entry: the start, which came
-from nowhere, `None`.
+Under each numbered comment you write the Python that does what the step says, usually
+one line. Use the names from Lesson 5-3: `distance` for the numbers, a dictionary, and
+`to_visit` for the list. Step 1 of `bfs_distances()` makes `distance` with one entry: the
+destination, numbered 0.
 
 <Figure
-  src="/img/lesson-m5-05/code-pencil.svg"
-  alt="Seven lines of compute_bfs_path matched to the pencil method from Lessons 5-1 and 5-2. previous = {start: None} is the came-from table. to_visit = [start] is the to-visit list. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in previous means it has no number yet. previous[neighbor] = current writes where it came from. to_visit.append(neighbor) adds it to the end. while current != start walks back along came-from and stops at the start."
-  caption="Nothing in the function is new: each line is a step you already did with a pencil."
+  src="/img/lesson-m5-05/code-pencil-downhill.svg"
+  alt="Eight lines of code matched to the pencil method from Lessons 5-1 and 5-2. distance = {destination: 0} writes 0 on the destination. to_visit = [destination] is the to-visit list beside the grid. current = to_visit.pop(0) takes the oldest one, from the front. if neighbor not in distance means it has no number yet, so it is numbered once. distance[neighbor] = distance[current] + 1 gives it one more than current. to_visit.append(neighbor) adds it to the end of the list. while current != destination walks until it reaches the destination, and distance[neighbor] == distance[current] - 1 finds a neighbor one less to step onto."
+  caption="Nothing in the code is new: each line is a step you already did with a pencil."
 />
 
-`previous` does double duty. An intersection gets an entry only when it's reached, so
-"is a key in `previous`" means "has a number." That's why `if neighbor not in previous`
-is the whole numbered-once rule.
+An intersection gets an entry in `distance` only when the wave reaches it, so "is a key in
+`distance`" means "has a number." That's why `if neighbor not in distance` is the whole
+numbered-once rule.
 
 The list is a **queue**: `append()` adds to the end and `pop(0)` takes from the front
 (index 0), so the wave front moves out one step at a time.
 
 <KnowledgeCheck
-  question="In the search loop, what does `if neighbor not in previous:` mean in pencil terms?"
+  question="In bfs_distances(), what does `if neighbor not in distance:` mean in pencil terms?"
   options={[
     {text: '"Only if this intersection has no number yet"', correct: true},
     {text: '"Only if this intersection is not blocked"'},
     {text: '"Only if this intersection is the destination"'},
     {text: '"Only if we have not visited the current intersection"'},
   ]}
-  explanation="An intersection gets an entry in previous the first time it's reached, so not-in-previous means not-yet-numbered. Blocked intersections never come up at all — they aren't in the graph."
+  explanation="An intersection gets an entry in distance the first time the wave reaches it, so not-in-distance means not-yet-numbered. Blocked intersections never come up at all — they aren't in the graph."
 />
 
-## Activity · Build it in three stages
+## Activity · Build it in two stages
 
-Build `compute_bfs_path()` in three stages, running after each. Check every printed
+Build the two functions in order, running a test after each. Check every printed grid,
 path and step count against your traces from Lessons 5-1 and 5-2.
 
-### Step 1 · Setup and the guard
+### Step 1 · The numbers
 
-Write the two program-only lines and steps 1 and 2, and for now end the function
-with `return []`.
-The guard handles a blocked start or destination: it isn't in the graph, so return
-`[]` at once.
+Write `bfs_distances()`. Then write `test_distances()`: clear the blocked list, block
+`(1, 0)` and `(1, 1)`, and call
 
-Then write `test_bfs_open()` for the three open-grid cases below: `(0, 0)` to
-`(3, 3)`, `(0, 0)` to `(0, 3)`, and `(2, 2)` to `(2, 2)`. For each, print the path and
-`len(path)` next to the step count you expect. Start with `clear_blocked()` so the test
-means the same whatever ran before it. Set the run line to it: three empty paths,
-three wrong step counts, no errors.
+```python
+print_grid(ROWS, COLS, BLOCKED, bfs_distances((3, 0)))
+```
 
-### Step 2 · The search
+Set the run line to it. It should print the wall grid you numbered in Lesson 5-1:
 
-Add steps 3 to 9, the loop. Put a temporary `print(previous)` right after it, and write a
-throwaway `test_came_from()`: clear the blocked list, block `(1, 1)`, and call
-`compute_bfs_path((0, 0), (2, 2))`. Set `ROWS` and `COLS` to 3 for a moment and run
-it. The dictionary should match your Lesson 5-2 came-from table exactly, keys in the
-same order. Put the settings back to 4 and remove the print; the test can stay.
+```text
+ 3 |   6  5  4  3
+ 2 |   5  4  3  2
+ 1 |   6  X  2  1
+ 0 |   7  X  1  0
+    -------------
+       0  1  2  3
+```
 
-If the destination is walled off, `to_visit` empties, the `while` ends, and
-`destination` never appears in `previous`. Step 3 uses that.
+If a number is wrong, the bug is in this function, and you haven't written the walk yet,
+so there's only one place to look.
 
-### Step 3 · The walk-back
+### Step 2 · The walk downhill
 
-Steps 10 to 15: start at the destination and follow `previous` back to the start,
-appending as you go. Then reverse, because you collected the path backwards; a list's
-`reverse()` method does it in place.
+Write `compute_bfs_path()`. Step 2's check, "the start has no number", covers every way
+there can be no path: a blocked start, a blocked destination (`bfs_distances()` then
+returns `{}`), or a wall between them.
 
-Why `while current != start` and not `while current is not None`? Stopping *at* the
-start means it is never appended: Rule 2 from Lesson 5-4, with no trimming. And
-"already there" comes free: when `start == destination`, the loop never runs and
-the path is `[]`.
-
-Run `test_bfs_open()` again. The step counts should match now.
+Steps 4 to 7 are a loop inside a loop. The outer `while` keeps walking until you're on the
+destination. The inner `for` looks through the neighbors for one with a number one less;
+when it finds one, it steps onto it and uses `break` to stop looking. Check that the
+neighbor has a number before you compare it: `neighbor in distance and ...`. And notice
+when the start is left out: you add an intersection to the path only *after* stepping onto
+it, so the start never goes in, and "already there" comes free: when `start == destination`,
+the loop never runs and the path is `[]`.
 
 <KnowledgeCheck
-  question="A classmate writes the walk-back as `while current is not None:` and their straight-line test prints Steps: 4 instead of 3. What is in their path that shouldn't be?"
+  question="A classmate's walk adds current to the path BEFORE stepping. Their straight-line test, (0,0) to (0,3), prints Steps: 3, but the path is [(0, 0), (0, 1), (0, 2)]. What's wrong?"
   options={[
-    {text: 'The start — the loop ran one extra time and appended it', correct: true},
-    {text: 'The destination — it should be left out'},
-    {text: 'A blocked intersection'},
-    {text: 'Nothing — 4 is correct'},
+    {text: 'The start is in the path and the destination is missing', correct: true},
+    {text: 'Nothing: 3 steps is right'},
+    {text: 'The path goes the wrong way'},
+    {text: 'A blocked intersection got into the path'},
   ]}
-  explanation="Running until None appends the start before stopping. Rule 2 says the path is the intersections to drive TO; the robot is already on the start."
+  explanation="Adding before stepping writes down where you were, not where you went: the start goes in, and the loop ends on the destination without writing it. The step count is right, which is why a test should check the list, not just its length."
 />
 
 ## Run the five paper tests
 
-Five cases, all grids you traced by hand. Three are in `test_bfs_open()`. Write
-`test_bfs_walls()` for the two with walls: `add_blocked()` the two wall intersections
-and plan `(0, 0)` to `(3, 0)`; then block the rest of the column at x = 1 and plan
-again. Print the blocked list before each. Step counts must match; the exact path may
-differ from yours and still be right.
+Five cases, all grids you traced by hand. Write `test_bfs_open()` for three open-grid
+cases: `(0, 0)` to `(3, 3)`, `(0, 0)` to `(0, 3)`, and `(2, 2)` to `(2, 2)`; start it with
+`clear_blocked()` so the test means the same whatever ran before it. Then write
+`test_bfs_walls()` for the two with walls: `add_blocked()` the two wall intersections and
+plan `(0, 0)` to `(3, 0)`; then block the rest of the column at x = 1 and plan again. Print
+each path and `len(path)` next to the step count you expect, and the blocked list before
+each wall test. Step counts must match; the exact path may differ from yours and still be
+right.
 
 ```text
 === Test 1: no obstacles, (0,0) to (3,3) ===
@@ -221,123 +222,84 @@ Path: []
 Steps: 0 (expect 0 -- no way through)
 ```
 
-Tests 3 and 5 both return `[]`: one because the walk-back never ran, the other
-because the destination was never reached. Next lesson's harness tells them apart.
+Tests 3 and 5 both return `[]`: one because the start is already the destination, the
+other because the start never got a number. Next lesson's harness tells them apart.
 
-<Reveal title="Check your compute_bfs_path()" hint="all five tests first">
+<Reveal title="Check your two functions" hint="all five tests first">
 
 ```python
+def bfs_distances(destination):
+    """Steps from every reachable intersection to
+    destination, as a dictionary: the wave of numbers."""
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if destination not in graph:
+        return {}
+    distance = {destination: 0}
+    to_visit = [destination]
+    while len(to_visit) > 0:
+        current = to_visit.pop(0)
+        for neighbor in graph[current]:
+            if neighbor not in distance:
+                distance[neighbor] = distance[current] + 1
+                to_visit.append(neighbor)
+    return distance
+
 def compute_bfs_path(start, destination):
     """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if start not in graph or destination not in graph:
-        return []
-    previous = {start: None}
-    to_visit = [start]
-
-    while len(to_visit) > 0:
-        current = to_visit.pop(0)
-        if current == destination:
-            break
-        for neighbor in graph[current]:
-            if neighbor not in previous:
-                previous[neighbor] = current
-                to_visit.append(neighbor)
-
-    if destination not in previous:
+    distance = bfs_distances(destination)
+    if start not in distance:
         return []
     path = []
-    current = destination
-    while current != start:
+    current = start
+    while current != destination:
+        for neighbor in graph[current]:
+            if neighbor in distance and distance[neighbor] == distance[current] - 1:
+                current = neighbor
+                break
         path.append(current)
-        current = previous[current]
-    path.reverse()
     return path
 ```
 
-`break` is "stop looking": it ends the `while` as soon as the destination comes off
-the front. If yours differs but passes all five tests, keep yours.
+If yours differs but passes all five tests, keep yours.
 
 </Reveal>
 
 ## Activity · Break it on purpose
 
-Once all five pass, break the function two ways. Put each back before the next.
+Once all five pass, break `bfs_distances()` two ways. Put each back before the next.
 
 1. **Change `pop(0)` to `pop()`.** Run Test 4 and count the steps: more. `pop()` takes
-   the *newest* intersection, so the search dives down one path before finishing the
-   ones closer to the start, and the first route it finds may not be shortest. That is depth-first search:
-   fine for other jobs, not this one.
-2. **Delete `if neighbor not in previous:`** (keep the two lines under it, one indent
-   level out). Run Test 1. Later, longer routes overwrite "came from" entries, and the
-   walk-back can loop forever. If it hangs, press Ctrl-C. That one line is the
-   numbered-once rule.
+   the *newest* intersection, so the wave no longer moves out one step at a time and the
+   numbers stop being shortest distances. The walk downhill trusts the numbers, so it
+   follows them on a longer route. Run `test_distances()` too and compare the grid with
+   yours.
+2. **Delete `if neighbor not in distance:`** (keep the two lines under it, one indent level
+   out). Run Test 1. Every neighbor goes back on the list every time, so the list never
+   empties and the program hangs. Press Ctrl-C. That one line is the numbered-once rule.
 
 <KnowledgeCheck
-  question="You change pop(0) to pop() and Test 4, the wall test, prints Steps: 9 instead of 7. What changed?"
+  question="You change pop(0) to pop() in bfs_distances() and Test 4, the wall test, prints Steps: 9 instead of 7. What changed?"
   options={[
-    {text: 'The search now takes the newest intersection first and dives down one route before finishing the closer ones', correct: true},
+    {text: 'Newest-first writes numbers that are not shortest distances, and the walk downhill follows them on a longer route', correct: true},
     {text: 'The graph lost some neighbors'},
-    {text: 'The walk-back went the wrong way'},
+    {text: 'The walk downhill went the wrong way'},
     {text: 'Nothing — 9 is also a shortest path'},
   ]}
-  explanation="Oldest-first (a queue) moves the wave front out one step at a time. Newest-first (a stack) is depth-first search: it finds a path, but not necessarily a shortest one."
+  explanation="Oldest-first (a queue) moves the wave front out one step at a time, so each number is the fewest steps. Newest-first (a stack) numbers along whatever route it happens to dive down, and the walk is only as good as the numbers."
 />
 
 <Reveal title="What pop() did to Test 4" hint="try it first">
 
 <Figure
-  src="/img/lesson-m5-05/bfs-vs-dfs-xy.svg"
-  alt="Test 4 on the 4 by 4 grid, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), breadth-first search finds a 7-step path around the wall. Right, with pop(), the search dives down one route and returns a 9-step path: all the way up the left column, right along the top row, down the column at x = 2, then right to (3, 0)."
-  caption="Oldest first spreads out one step at a time and finds the shortest route. Newest first follows the latest branch as far as it goes."
+  src="/img/lesson-m5-05/bfs-vs-dfs-downhill-xy.svg"
+  alt="Test 4 on the 4 by 4 grid, from (0, 0) to (3, 0) with (1, 0) and (1, 1) blocked. Left, with pop(0), the numbers are true distances and the walk finds a 7-step path around the wall. Right, with pop(), the numbers are not shortest distances, and the walk follows them on a 9-step path: up to (0, 2), right to (1, 2), up to the top row, right along it to (3, 3), then down the right edge to (3, 0)."
+  caption="Oldest first numbers the grid one step at a time, and the walk finds the shortest route. Newest first writes the wrong numbers, and the walk can only be as good as its numbers."
 />
 
-On Test 1's open grid, `pop()` happens to find 6 steps too. A test can pass by luck, which is why you keep more than one case.
-
-</Reveal>
-
-## The picture
-
-`bfs_distances(start)` is the same search with no `break`, so it runs until every
-reachable intersection has a number. Instead of came-from it records the distance:
-0 for the start, and `current`'s number plus one for each new neighbor. `print_grid()`
-draws the result.
-
-Write the body, then `test_distances()`: block `(1, 0)` and `(1, 1)` and call
-`print_grid(ROWS, COLS, BLOCKED, bfs_distances((0, 0)))`:
-
-```text
- 3 |   3  4  5  6
- 2 |   2  3  4  5
- 1 |   1  X  5  6
- 0 |   0  X  6  7
-    -------------
-       0  1  2  3
-```
-
-That's your Lesson 5-2 wall grid; Test 4's path is one route down these numbers,
-1, 2, 3 … to the 7.
-
-<Reveal title="Check your bfs_distances()" hint="draw the wall grid first">
-
-```python
-def bfs_distances(start):
-    """Distance, in steps, of every intersection reachable
-    from start, as a dictionary -- the search with no break."""
-    graph = build_graph(ROWS, COLS, BLOCKED)
-    if start not in graph:
-        return {}
-    distances = {start: 0}
-    to_visit = [start]
-    while len(to_visit) > 0:
-        current = to_visit.pop(0)
-        for neighbor in graph[current]:
-            if neighbor not in distances:
-                distances[neighbor] = distances[current] + 1
-                to_visit.append(neighbor)
-    return distances
-```
+On Test 1's open grid, `pop()` happens to give 6 steps too. A test can pass by luck, which
+is why you keep more than one case.
 
 </Reveal>
 
@@ -352,53 +314,43 @@ the end of the module is in the [Module 5 sample programs](/teacher-guide/sample
 # The second planner. compute_bfs_path(start, destination)
 # has the same shape as the MANHATTAN PLANNER's function and
 # keeps the same two promises (told the position; the path
-# leaves the start out), but it searches the GRID GRAPH as a
-# wave from the start, so it routes AROUND whatever is in BLOCKED. Pure
+# leaves the start out). bfs_distances() numbers the GRID GRAPH
+# as a wave from the destination; the path walks downhill from
+# the start, so it routes AROUND whatever is in BLOCKED. Pure
 # dictionary work: every test here runs with the robot still.
+
+def bfs_distances(destination):
+    """Steps from every reachable intersection to
+    destination, as a dictionary: the wave of numbers."""
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    if destination not in graph:
+        return {}
+    distance = {destination: 0}
+    to_visit = [destination]
+    while len(to_visit) > 0:
+        current = to_visit.pop(0)
+        for neighbor in graph[current]:
+            if neighbor not in distance:
+                distance[neighbor] = distance[current] + 1
+                to_visit.append(neighbor)
+    return distance
 
 def compute_bfs_path(start, destination):
     """Shortest path from start to destination around
     BLOCKED, as the list of intersections to drive to."""
     graph = build_graph(ROWS, COLS, BLOCKED)
-    if start not in graph or destination not in graph:
-        return []
-    previous = {start: None}
-    to_visit = [start]
-
-    while len(to_visit) > 0:
-        current = to_visit.pop(0)
-        if current == destination:
-            break
-        for neighbor in graph[current]:
-            if neighbor not in previous:
-                previous[neighbor] = current
-                to_visit.append(neighbor)
-
-    if destination not in previous:
+    distance = bfs_distances(destination)
+    if start not in distance:
         return []
     path = []
-    current = destination
-    while current != start:
-        path.append(current)
-        current = previous[current]
-    path.reverse()
-    return path
-
-def bfs_distances(start):
-    """Distance, in steps, of every intersection reachable
-    from start, as a dictionary -- the search with no break."""
-    graph = build_graph(ROWS, COLS, BLOCKED)
-    if start not in graph:
-        return {}
-    distances = {start: 0}
-    to_visit = [start]
-    while len(to_visit) > 0:
-        current = to_visit.pop(0)
+    current = start
+    while current != destination:
         for neighbor in graph[current]:
-            if neighbor not in distances:
-                distances[neighbor] = distances[current] + 1
-                to_visit.append(neighbor)
-    return distances
+            if neighbor in distance and distance[neighbor] == distance[current] - 1:
+                current = neighbor
+                break
+        path.append(current)
+    return path
 
 def print_grid(rows, cols, blocked, numbers):
     """Draw the grid the way it lies in front of you: the top
@@ -422,6 +374,13 @@ def print_grid(rows, cols, blocked, numbers):
     for x in range(cols):
         footer = footer + "{:>3}".format(x)
     print(footer)
+
+def test_distances():
+    clear_blocked()
+    add_blocked((1, 0))
+    add_blocked((1, 1))
+    print("=== Distances to (3,0) with (1,0) and (1,1) blocked ===")
+    print_grid(ROWS, COLS, BLOCKED, bfs_distances((3, 0)))
 
 def test_bfs_open():
     clear_blocked()
@@ -450,37 +409,36 @@ def test_bfs_walls():
     print("Path:", path)
     print("Steps:", len(path), "(expect 0 -- no way through)")
 
-def test_distances():
-    clear_blocked()
-    add_blocked((1, 0))
-    add_blocked((1, 1))
-    print("=== Distances from (0,0) with (1,0) and (1,1) blocked ===")
-    print_grid(ROWS, COLS, BLOCKED, bfs_distances((0, 0)))
-
 # ===== RUN =====
 board.wait_for_button()
 test_bfs_walls()
 ```
 
 `test_bfs_open()` loops over three tuples; three separate print blocks are just as
-good and are what most students will write.
+good and are what most students will write. `compute_bfs_path()` builds the graph itself
+as well as calling `bfs_distances()`, because the walk needs each intersection's open
+neighbors.
 
 </TeacherNote>
 
 <TeacherNote title="Stages, breakage, and what to keep out of the room">
 
-Three stages, run after each; students who type the whole thing and then debug lose
-the mapping to the paper method, which is the point. The outline in the skeleton is
-deliberately the longest in the module — this is the one place in Module 5 where
-students need the hand-holding, and the comments are the steps of Lesson 5-2's review,
-numbered, rather than the code. A stuck student should be pointed at the step, not at the
-answer. The break-it activity is not optional: seeing `pop()` give a longer path is what
-makes "oldest first" stick, and seeing the missing `not in previous` hang the program is
-what makes "numbered once" stick. Keep `distances`, `999999` and "closest first" out of
-the room; a student who asks about roads that take longer gets "Module 6 — and it's
-two changes to this function."
+Two stages, run after each; students who type the whole thing and then debug lose the
+mapping to the paper method, which is the point. The numbers come first on purpose:
+`test_distances()` prints a grid students have already drawn by hand, so a wrong number
+is found before there's a walk to blame. The outlines in the skeleton are deliberately the
+longest in the module — this is the one place in Module 5 where students need the
+hand-holding, and the comments are the steps of Lesson 5-2's review, numbered, rather than
+the code. A stuck student should be pointed at the step, not at the answer.
 
-**Exit ticket:** the `while current is not None` question above.
+The `for` with a `break` inside the `while` is the one genuinely new shape; walk through it
+once on the board with the 3×3 numbers from Lesson 5-2. The break-it activity is not
+optional: seeing `pop()` give a longer path is what makes "oldest first" stick, and seeing
+the missing `not in distance` hang the program is what makes "numbered once" stick. Keep
+`999999` and "closest first" out of the room; a student who asks about roads that take
+longer gets "Module 6."
+
+**Exit ticket:** the add-before-stepping question above.
 
 </TeacherNote>
 
@@ -503,9 +461,15 @@ def add_blocked(intersection):
     if intersection not in BLOCKED:
         BLOCKED.append(intersection)
 
-def compute_bfs_path(start, destination):
+def bfs_distances(destination):
     graph = build_graph(ROWS, COLS, BLOCKED)
     ...   # the function body
+
+def compute_bfs_path(start, destination):
+    graph = build_graph(ROWS, COLS, BLOCKED)
+    distance = bfs_distances(destination)
+    ...   # the walk downhill
+
 
 
 add_blocked((1, 1))
@@ -523,9 +487,14 @@ class BFS:
         if intersection not in self.blocked:
             self.blocked.append(intersection)
 
-    def compute_path(self, start, destination):
+    def bfs_distances(self, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
         ...   # the function body, unchanged
+
+    def compute_path(self, start, destination):
+        graph = build_graph(self.rows, self.cols, self.blocked)
+        distance = self.bfs_distances(destination)
+        ...   # the walk downhill, unchanged
 
 planner = BFS()
 planner.add_blocked((1, 1))
@@ -539,16 +508,17 @@ The same four changes as every extension so far: the functions move inside
 `self.rows`, `self.cols`, `self.blocked`; inside the methods they gain `self.`;
 from outside, calls go through the object.
 
-Paste this class-track skeleton **in place of** the BFS PLANNER banner and
-`compute_bfs_path()`. Delete `BLOCKED`, `add_blocked()` and `clear_blocked()` from the
-Lesson 5-4 part of GRID GRAPH: they live in the object now. `ROWS`, `COLS`,
-`build_graph()`, `bfs_distances()`, `print_grid()` and your tests stay.
+Paste this class-track skeleton **in place of** the BFS PLANNER banner,
+`bfs_distances()` and `compute_bfs_path()`. Delete `BLOCKED`, `add_blocked()` and
+`clear_blocked()` from the Lesson 5-4 part of GRID GRAPH: they live in the object now.
+`ROWS`, `COLS`, `build_graph()`, `print_grid()` and your tests stay.
 
 ```python
 # ===== BFS PLANNER (class version) =====
 # One BFS object holds the grid size and ITS OWN blocked list
-# and plans around it: compute_path() builds the graph from
-# self.blocked on every call. It holds NO position (Rule 1).
+# and plans around it: bfs_distances() and compute_path()
+# build the graph from self.blocked on every call. It holds
+# NO position (Rule 1).
 # Same names as the function version, with planner. in front.
 class BFS:
     def __init__(self, rows=4, cols=4):
@@ -565,9 +535,14 @@ class BFS:
         # attribute freely; no global, no pop loop
         pass
 
-    def compute_path(self, start, destination):
-        # your compute_bfs_path(), with
+    def bfs_distances(self, destination):
+        # your function, with
         # build_graph(self.rows, self.cols, self.blocked)
+        pass
+
+    def compute_path(self, start, destination):
+        # your compute_bfs_path(), with the same graph line
+        # and self.bfs_distances(destination)
         pass
 
 planner = BFS()
@@ -597,8 +572,9 @@ so that Module 4's exact-match suite keeps testing the planner it was written fo
 
 Your tests change the usual way: `add_blocked(` becomes `planner.add_blocked(`,
 `clear_blocked()` becomes `planner.clear_blocked()`, `compute_bfs_path(` becomes
-`planner.compute_path(`, and where a test or `bfs_distances()` reads `BLOCKED` it reads
-`planner.blocked`. Run all three tests again — same five paths, same grid.
+`planner.compute_path(`, `bfs_distances(` becomes `planner.bfs_distances(`, and where a
+test reads `BLOCKED` it reads `planner.blocked`. Run all three tests again — same five
+paths, same grid.
 
 Why a method that does nothing? Next lesson's harness calls `planner.add_blocked(...)`
 on whatever planner it's handed. Without it, the harness would need to know which
@@ -609,7 +585,7 @@ Then write `test_two_planners()`: create a `Manhattan()` and a `BFS()`, tell eac
 `compute_path((0, 0), (3, 0))`. `BFS` goes around; `Manhattan` drives straight
 through. Same calls, different objects.
 
-<Reveal title="Check your BFS" hint="translate all three methods and run the tests first">
+<Reveal title="Check your BFS" hint="translate all four methods and run the tests first">
 
 ```python
     def add_blocked(self, intersection):
@@ -619,35 +595,38 @@ through. Same calls, different objects.
     def clear_blocked(self):
         self.blocked = []
 
-    def compute_path(self, start, destination):
+    def bfs_distances(self, destination):
         graph = build_graph(self.rows, self.cols, self.blocked)
-        if start not in graph or destination not in graph:
-            return []
-        previous = {start: None}
-        to_visit = [start]
-
+        if destination not in graph:
+            return {}
+        distance = {destination: 0}
+        to_visit = [destination]
         while len(to_visit) > 0:
             current = to_visit.pop(0)
-            if current == destination:
-                break
             for neighbor in graph[current]:
-                if neighbor not in previous:
-                    previous[neighbor] = current
+                if neighbor not in distance:
+                    distance[neighbor] = distance[current] + 1
                     to_visit.append(neighbor)
+        return distance
 
-        if destination not in previous:
+    def compute_path(self, start, destination):
+        graph = build_graph(self.rows, self.cols, self.blocked)
+        distance = self.bfs_distances(destination)
+        if start not in distance:
             return []
         path = []
-        current = destination
-        while current != start:
+        current = start
+        while current != destination:
+            for neighbor in graph[current]:
+                if neighbor in distance and distance[neighbor] == distance[current] - 1:
+                    current = neighbor
+                    break
             path.append(current)
-            current = previous[current]
-        path.reverse()
         return path
 ```
 
-The method body is the function body with one line changed: `build_graph()` reads
-the object's own size and list.
+Each method body is the function body with the graph line changed to read the object's
+own size and list, and `compute_path()` asks its own object for the numbers.
 
 </Reveal>
 
@@ -673,13 +652,13 @@ it says `compute_bfs_path(position, destination)`, write
 ## Wrap-up
 
 - Which line is "take the oldest one"? (`to_visit.pop(0)`.) What would `pop()` do? (Newest first — depth-first, not shortest.)
-- Which line is "numbered once"? (`if neighbor not in previous`.)
-- Why does the walk-back stop at `start`? (So the start is never appended — Rule 2.)
-- Two cases return `[]`. What are they? (Already there; walled off.)
+- Which line is "numbered once"? (`if neighbor not in distance`.)
+- Why does the walk add an intersection only after stepping onto it? (So the start is never in the path — Rule 2.)
+- Two cases return `[]`. What are they? (Already there; the start never got a number.)
 
 <TeacherNote title="Assessment & next lesson">
 
-**Formative:** the line-to-pencil mapping; five tests passing in order; the two
+**Formative:** the line-to-pencil mapping; the grid and five tests passing in order; the two
 breakages explained, not just observed. **Preview:** next lesson we test this
 properly. On an open grid there are many shortest paths, so instead of one expected
 list the harness checks what must be true of any correct answer — and then the same

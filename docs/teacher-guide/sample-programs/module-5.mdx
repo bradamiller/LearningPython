@@ -40,28 +40,28 @@ your rangefinder and obstacle.
 
 <TeacherNote title="5-2 demonstration program (project it, don't hand it out)">
 
-The program the lesson promises: it runs the 3×3 trace with (1, 1) blocked, prints
-each number as it is written and the to-visit list after every step, then the
-path and the grid of distance numbers. Plain Python, no robot. Its steps match the
+The program the lesson promises: it runs the 3×3 trace with (1, 1) blocked, numbering
+from the destination, prints each number as it is written and the to-visit list after
+every step, then each step of the walk downhill, the path, and the grid of numbers. Plain Python, no robot. Its steps match the
 lesson's trace table line for line, it ends with the path
 `[(1, 0), (2, 0), (2, 1), (2, 2)]`, and the last lines it prints are:
 
 ```text
- 2 |   2  3  4
- 1 |   1  X  3
- 0 |   0  1  2
+ 2 |   2  1  0
+ 1 |   3  X  1
+ 0 |   4  3  2
     ----------
        0  1  2
 ```
 
-The two calls at the bottom, commented out, run the 4×4 wall (distance 7 on (3, 0),
-as in the lesson's answers) and the blocked column (no path).
+The two calls at the bottom, commented out, run the 4×4 wall (the start is 7, as in
+Lesson 5-1's answers) and the blocked column (no path).
 
 ```python title="lesson_5_2_finding_the_path.py"
 # Lesson 5-2 demonstration: breadth-first search on the 3x3 grid
 # with (1, 1) blocked, from (0, 0) to (2, 2), step by step.
 # Plain Python: no robot, no XRPLib. Project it; don't hand it
-# out (students write bfs_distances() and print_grid() in 5-5).
+# out (students write bfs_distances() and the walk in 5-5).
 
 def build_graph(rows, cols, blocked):
     """Return the grid as a dictionary, leaving out every
@@ -101,46 +101,45 @@ def print_grid(rows, cols, blocked, numbers):
     print(footer)
 
 def trace(rows, cols, blocked, start, destination):
-    """Run BFS out loud: every number written, the to-visit list
-    after every step, then the path and the grid of distances."""
+    """Run BFS out loud: number the grid from the destination,
+    printing every number and the to-visit list after every
+    step, then walk downhill from the start."""
     graph = build_graph(rows, cols, blocked)
-    previous = {start: None}     # where each intersection came from
-    distance = {start: 0}        # the number written on it
-    to_visit = [start]
-    print("Start:", start, "gets 0.  To visit:", to_visit)
+    distance = {destination: 0}  # the number written on each one
+    to_visit = [destination]
+    print("Start:", destination, "gets 0.  To visit:", to_visit)
 
     step = 0
     while len(to_visit) > 0:
         current = to_visit.pop(0)              # the OLDEST one
         step = step + 1
         print("Step", step, "- looking around", current)
-        if current == destination:
-            print("  destination reached - stop")
-            break
         written = []
         for neighbor in graph[current]:
-            if neighbor not in previous:       # no number yet
-                previous[neighbor] = current
+            if neighbor not in distance:       # no number yet
                 distance[neighbor] = distance[current] + 1
                 to_visit.append(neighbor)
                 written.append(neighbor)
-                print("  ", neighbor, "gets", distance[neighbor], "- came from", current)
+                print("  ", neighbor, "gets", distance[neighbor])
         if len(written) == 0:
             print("   nothing new")
         print("  To visit:", to_visit)
 
     print()
-    if destination in previous:
+    if start in distance:
         path = []
-        current = destination
-        while current != start:                 # walk the arrows back
+        current = start
+        while current != destination:          # walk downhill
+            for neighbor in graph[current]:
+                if neighbor in distance and distance[neighbor] == distance[current] - 1:
+                    current = neighbor
+                    break
             path.append(current)
-            current = previous[current]
-        path.reverse()
+            print("Step down to", current, "-", distance[current])
         print("Path:", path)
         print("Steps:", len(path))
     else:
-        print("No path: the destination never got a number.")
+        print("No path: the start never got a number.")
     print()
     print_grid(rows, cols, blocked, distance)
 
@@ -148,9 +147,9 @@ def trace(rows, cols, blocked, start, destination):
 # The activity: 3x3, (1, 1) blocked. Matches the trace table.
 trace(3, 3, [(1, 1)], (0, 0), (2, 2))
 
-# The two follow-ups from "The wall, and the dead end", on the
-# 4x4 grid. Uncomment one at a time.
-# trace(4, 4, [(1, 0), (1, 1)], (0, 0), (3, 0))                  # (3,0) is distance 7
+# The wall from Lesson 5-1 and the dead end, on the 4x4 grid.
+# Uncomment one at a time.
+# trace(4, 4, [(1, 0), (1, 1)], (0, 0), (3, 0))                  # the start is 7
 # trace(4, 4, [(1, 0), (1, 1), (1, 2), (1, 3)], (0, 0), (3, 0))  # no path
 ```
 
