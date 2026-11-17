@@ -302,7 +302,16 @@ prints, end the function with `return graph`, and write `test_grid_graph()`: bui
 4×4 graph from `ROWS` and `COLS` and print the same three things. Set the run line to
 `test_grid_graph()`.
 
-Before you run it: which of the three lines change on a 4×4?
+Then end the test by printing the whole graph, one intersection per line. A `for` loop
+over a dictionary hands you each **key** in turn, and the key looks up its value:
+
+```python
+for node in graph:
+    print(node, graph[node])
+```
+
+Before you run it: which of the first three lines change on a 4×4? How many lines does
+the loop print, and how many of them should have exactly 2 neighbors?
 
 <Reveal title="Check your graph" hint="run test_grid_graph() first">
 
@@ -310,10 +319,28 @@ Before you run it: which of the three lines change on a 4×4?
 16
 [(0, 1), (2, 1), (1, 0), (1, 2)]
 [(1, 0), (0, 1)]
+(0, 0) [(1, 0), (0, 1)]
+(0, 1) [(1, 1), (0, 0), (0, 2)]
+(0, 2) [(1, 2), (0, 1), (0, 3)]
+(0, 3) [(1, 3), (0, 2)]
+(1, 0) [(0, 0), (2, 0), (1, 1)]
+(1, 1) [(0, 1), (2, 1), (1, 0), (1, 2)]
+(1, 2) [(0, 2), (2, 2), (1, 1), (1, 3)]
+(1, 3) [(0, 3), (2, 3), (1, 2)]
+(2, 0) [(1, 0), (3, 0), (2, 1)]
+(2, 1) [(1, 1), (3, 1), (2, 0), (2, 2)]
+(2, 2) [(1, 2), (3, 2), (2, 1), (2, 3)]
+(2, 3) [(1, 3), (3, 3), (2, 2)]
+(3, 0) [(2, 0), (3, 1)]
+(3, 1) [(2, 1), (3, 0), (3, 2)]
+(3, 2) [(2, 2), (3, 1), (3, 3)]
+(3, 3) [(2, 3), (3, 2)]
 ```
 
-Only the count changes: `(1, 1)` and `(0, 0)` have the same neighbors on any grid at least
-3×3.
+Of the first three lines, only the count changes: `(1, 1)` and `(0, 0)` have the same
+neighbors on any grid at least 3×3. The loop prints 16 lines in the order they were
+added, the order of your two loops. The four corners have 2 neighbors, the eight edge
+intersections 3, and the four in the middle 4.
 
 ```python
 def build_grid_graph(rows, cols):
@@ -422,6 +449,8 @@ def test_grid_graph():
     print("Intersections:", len(graph))          # 16
     print("Neighbors of (1, 1):", graph[(1, 1)])  # 4 of them
     print("Neighbors of (0, 0):", graph[(0, 0)])  # 2: a corner
+    for node in graph:                            # the whole graph,
+        print(node, graph[node])                  # one line per node
 
 # ===== RUN =====
 board.wait_for_button()
@@ -476,7 +505,7 @@ folded in.
 <TeacherNote title="Assessment & next lesson">
 
 **Formative:** the step-to-data table in students' own words; `test_grid_graph()`
-printing 16, four neighbors, two neighbors. **Exit ticket:** "Write a dictionary with two
+printing 16, four neighbors, two neighbors, then all 16 intersections with 2, 3 or 4 neighbors each. **Exit ticket:** "Write a dictionary with two
 entries: (3, 3) is 0 steps from the destination, and (3, 2) is 1 step."
 (`distance = {(3, 3): 0, (3, 2): 1}`.) **Preview:** next lesson adds the blocked
 list, teaches `build_grid_graph()` to build around it, and opens the BFS PLANNER section.

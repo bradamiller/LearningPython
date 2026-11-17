@@ -192,7 +192,7 @@ checked neighbors, which is why its printed path matched the table.
 The old name is gone, the way `SETPOINT` disappeared in Lesson 2-6, so fix
 `test_grid_graph()` to build with `build_graph(ROWS, COLS, BLOCKED)` and set the run
 line to it. With nothing blocked, the output matches Lesson 5-3: 16, four neighbors,
-two neighbors. Don't go on until it does.
+two neighbors, then the whole graph. Don't go on until it does.
 
 <KnowledgeCheck
   question="(1,1) is blocked. Someone wrote build_graph with the first `in blocked` check but forgot the second. What is wrong with the result?"
@@ -321,6 +321,8 @@ def test_grid_graph():
     print("Intersections:", len(graph))          # 16
     print("Neighbors of (1, 1):", graph[(1, 1)])  # 4 of them
     print("Neighbors of (0, 0):", graph[(0, 0)])  # 2: a corner
+    for node in graph:                            # the whole graph,
+        print(node, graph[node])                  # one line per node
 
 # --- Lesson 5-4: the blocked list ---
 # BLOCKED is the one record of where the robot must not go.
