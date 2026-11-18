@@ -74,7 +74,6 @@ const sidebars = {
         'module-04-manhattan/lesson-04-the-driver',
         'module-04-manhattan/lesson-05-turning',
         'module-04-manhattan/lesson-06-on-the-robot',
-        'module-04-manhattan/lesson-07-tuples-and-lists',
       ],
     },
     {

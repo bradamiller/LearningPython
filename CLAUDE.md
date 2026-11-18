@@ -662,6 +662,28 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
+- **2026-11-18: MODULE 4 REWORKED LIKE 5-3 (Brad: "Do all of Module 4").** Every coding
+  lesson (4-1 to 4-5) is now "Activity · ..., one piece at a time": numbered Steps, each
+  predict, run, compare to a Reveal, with the Python taught inside the step that first needs
+  it (tuple/list/for in 4-1 Step 1; `[]`/`append()`/`len()` in 4-2 Step 2; `==` in 4-3
+  Step 1 by shell prediction; indexing, `range(len(...))` and `IndexError` in 4-4 Step 1;
+  `%` in 4-5 Step 2). Each has a "Break it on purpose" step: 4-1 dropped return, 4-2
+  indent, 4-3 append-before-step in the west loop (+ the `added:` debug print; NOT flipping
+  `+ 1`, which loops forever), 4-4 dropped `current_heading =`, 4-5 no `% 4` (spins; press
+  Stop). **Lesson 4-7 is deleted** (page, deck, pptx, sidebar, slides.json; old URL 404s):
+  "tuple can't change" + rule of thumb is 4-2 Step 6, references ("two names, one list",
+  move()/extend(), number-vs-list.svg, both checks) are 4-2 Step 7, the index loop is 4-4,
+  the exit ticket is in 4-6's last teacher note. Dropped: list-item replacement
+  (`path[0] = (0, 1)`), the Real-world cards, the tables-side-by-side. Cross-refs now say
+  4-2 (Module 1-9 page and deck), 5-4 (Module 6 pages/deck), or nothing (5-4, 5-2 deck).
+  New StepFigures `lesson-m4-04/drive-path-steps.svg` and `lesson-m4-05/turn-to-steps.svg`
+  from `scripts/figures/m4drive.py`; `gridanim.py` gained op `'pause'` (a hold that is not a
+  Step stop). 4-2 no longer shows `path-list-xy.svg` (it indexes before 4-4).
+  *Builds:* `build_templates.py` 4-1 recipe now uses the single skeleton (no `pick=1`). The
+  4-4 Step 1 shell snippet is fenced ```py, not ```python, so the template's `Setting`
+  keeps the skeleton's `HEADING_NAMES` line with its comment. Both builders currently stop
+  on Module 5 (renamed 5-1 to 5-3 pages, old recipe): Module 4 decks and templates were
+  built with a temporary copy limited to Modules 1 to 4, and only Module 4 outputs kept.
 - **2026-11-15: MODULE 5 IS CONCEPT FIRST, DATA STRUCTURES AS NEEDED (Brad: "BFS concept
   first, then the implementation"; no trial, done in place).** New order: **5-1 Finding a
   Way Around** (`lesson-01-finding-a-way-around`: Manhattan fails, detour by eye and the

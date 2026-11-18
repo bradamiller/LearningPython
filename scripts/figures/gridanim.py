@@ -5,7 +5,7 @@ import sys, math; from common import *
 S=0.42; SENS=60*S; SPEED=90.0; PAUSE=1.0
 def make(out, title, g, runs, note, desc, H=410, panel_title="What your test does", extra=None, step_ops=None):
     """runs: list of dict(start=(a,b), heading=deg, lines=[(indent,text)], steps=[(op,line,label,sub)], name=str)
-       op: 'track','past','cw','ccw','hold'"""
+       op: 'track','past','cw','ccw','hold','pause' (a hold that is never a Step stop)"""
     marks={}; stepT=[]   # step_ops: ops whose finished frame is a Step stop (StepFigure)
     frames=[]; t=0.0; hls=[]; labels=[]; flashes=[]; trails=[]; fades=[]; panels=[]
     def P(a,b): return g.p(a,b)
@@ -51,7 +51,7 @@ def make(out, title, g, runs, note, desc, H=410, panel_title="What your test doe
                 h+=s*90; t+=0.3*PAUSE; frames.append((t,x,y,h))
             elif op=='mark':
                 marks[lab]=t; continue
-            elif op=='hold':
+            elif op in ('hold','pause'):   # 'pause' = a hold that is never a Step stop
                 t+=hd; frames.append((t,x,y,h))
             if step_ops and op in step_ops: stepT.append(t-0.05)
             if li is not None: hls.append((ri,t0,t,li))

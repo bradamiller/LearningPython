@@ -275,7 +275,7 @@ def clear_blocked():
 
 This version differs from Lesson 5-3's: one loop over a list of `(dx, dy)` changes
 does the four checks, and `continue` skips a blocked intersection. The `for dx, dy
-in` line unpacks as it loops (Lesson 4-7): each item in the list is a two-number tuple,
+in` line unpacks as it loops: each item in the list is a two-number tuple,
 and every pass splits it into `dx` and `dy`. The line under it assigns two at once the
 same way: the right side makes a tuple, and `nx, ny` unpacks it. Keeping four `if`
 lines, each with its own `not in blocked` check added, is the same function. Compare

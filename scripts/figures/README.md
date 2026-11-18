@@ -135,6 +135,8 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m43.py | build-path.svg | /img/lesson-m4-02/build-path.svg |
 | m44.py | four-loops-run.svg | /img/lesson-m4-03/four-loops-run.svg |
 | m49.py | delivery-drive.svg | /img/lesson-m4-07/delivery-drive.svg |
+| m4drive.py | drive-path-steps.svg | /img/lesson-m4-04/drive-path-steps.svg (a `<StepFigure>`) |
+| m4drive.py | turn-to-steps.svg | /img/lesson-m4-05/turn-to-steps.svg (a `<StepFigure>`) |
 | manhattan.py | manhattan-grid.svg | /img/lesson-m4-00/manhattan-grid.svg |
 | manhattan.py | manhattan-xy.svg | /img/lesson-m4-00/manhattan-xy.svg |
 | mission.py | final-project-mission.svg | — |

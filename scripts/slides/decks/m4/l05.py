@@ -15,54 +15,8 @@ DECK = {
          'notes': '40 to 50 minutes, robot on the desk. Right now turn_to() is a stub: the robot '
                   'faces whichever way it\'s told, instantly. A real robot turns a quarter turn at a '
                   'time with the Module 2 turn_clockwise(). Today students write the real turn_to(), '
-                  'with one more stub standing in for the turn itself.'},
-
-        {'kind': 'code', 'title': 'Turning until you face it',
-         'lead': 'Each clockwise quarter turn adds 1 to the heading. So: turn clockwise while it '
-                 'isn\'t facing the right way.',
-         'lead_h': 1.1,
-         'code': '# while current_heading is not desired_heading:\n'
-                 '#     one clockwise quarter turn\n'
-                 '#     current_heading goes up by 1, wrapping 3 back to 0',
-         'code_size': 22,
-         'notes': 'Get students standing and turning clockwise a quarter at a time, calling out 0, '
-                  '1, 2, 3, 0: the kinesthetic bit cements the wrap.'},
-
-        {'kind': 'code', 'title': 'West to North: the wrap',
-         'lead': '3 + 1 is 4, and 4 isn\'t a heading. The remainder `%` from Lesson 2-5 wraps it:',
-         'code': 'heading = (heading + 1) % 4',
-         'code_size': 28,
-         'callout': 'For 1, 2 and 3 the remainder is the number itself; `4 % 4` is 0, so after West '
-                    'comes North',
-         'tone': 'teal'},
-
-        {'kind': 'table', 'title': 'Trace it: from South (2) to East (1)',
-         'headers': ['Pass', 'Heading before', 'Heading after, `(h + 1) % 4`', 'Facing East?'],
-         'widths': [1, 2.4, 3.6, 2.8],
-         'rows': [
-             ['1', '2 (S)', '3 (W)', 'no'],
-             ['2', '3 (W)', '0 (N)', 'no'],
-             ['3', '0 (N)', '1 (E)', 'yes, the loop ends'],
-         ],
-         'size': 22,
-         'callout': 'Three passes: it always goes clockwise, so a quarter turn **left** takes three '
-                    'turns right',
-         'tone': 'orange',
-         'notes': 'The long way round is on purpose: it is the simplest turn that always works. '
-                  'Lesson 4-6 has an optional challenge to make it turn whichever way is fewer '
-                  'turns. Already facing the right way? The condition is False on the first check '
-                  'and the loop does nothing, with no special case. At the end the function returns '
-                  'current_heading, which by then equals desired_heading.'},
-
-        {'kind': 'check',
-         'question': 'The robot faces West (3) and makes one clockwise turn. What does '
-                     '`(heading + 1) % 4` give?',
-         'options': ['4', '0, North: 4 % 4 is 0, so the heading wraps around',
-                     '3, because West is the last heading',
-                     'An error, because there is no heading 4'],
-         'answer': 1,
-         'explanation': '3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn '
-                        'from West faces North.'},
+                  'with one more stub standing in for the turn itself, so every quarter turn shows '
+                  'up as a printed line.'},
 
         {'kind': 'code', 'title': 'This lesson\'s skeleton',
          'code': 'def fake_turn_clockwise():\n'
@@ -79,30 +33,73 @@ DECK = {
                   'fake_track_to_intersection(). The slide leaves out the docstrings to fit; '
                   'students copy the block from the lesson page.'},
 
-        {'kind': 'steps', 'title': 'Step 1 · Predict',
+        {'kind': 'steps', 'title': 'Step 1 · Predict the turns',
          'tag': 'Activity',
-         'lead': 'The robot starts facing North. How many clockwise turns before each of Leg 1\'s '
-                 'five moves?',
+         'lead': 'Every step: write down what you expect, run it, compare.',
          'steps': [
-             'The moves face **E, E, N, N, N**',
-             'Write down a number for each move',
+             'The robot starts facing North and turns only **clockwise**, a quarter turn at a time',
+             'How many turns before each of Leg 1\'s five moves: **E, E, N, N, N**?',
          ],
-         'callout': 'Predict before you write any code',
-         'tone': 'orange',
          'notes': 'Answer: 1, 0, 3, 0, 0. North to East is one turn. East to East is none: the loop '
-                  'doesn\'t run. East to North is three: East, South, West, North.'},
+                  'doesn\'t run. East to North is three: South, West, North.'},
 
-        {'kind': 'steps', 'title': 'Step 2 · Write it and run it',
+        {'kind': 'figure', 'title': 'Step 1 · Check your prediction',
+         'tag': 'Activity',
+         'figure': '/img/lesson-m4-05/turn-to-steps.svg',
+         'caption': '1, 0, 3, 0, 0. The loop never asks which way is shorter.',
+         'notes': 'One clockwise quarter turn at a time: heading 1 to 2, 2 to 3, and 3 wraps to 0 '
+                  'at the third move. On the lesson page students can step through it.'},
+
+        {'kind': 'code', 'title': 'Step 2 · Wrap 3 back to 0',
+         'tag': 'Activity',
+         'lead': 'West is 3, and 3 + 1 is 4: not a heading. `%` from Lesson 2-5 wraps it. Predict '
+                 'the four lines, then run this in the shell:',
+         'lead_h': 1.1,
+         'code': 'for h in range(4):\n'
+                 '    print(h, (h + 1) % 4)',
+         'code_size': 28,
+         'notes': 'Output: 0 1, 1 2, 2 3, 3 0 (one pair per line). For 1, 2 and 3, the remainder '
+                  'after dividing by 4 is the number itself. 4 % 4 is 0, so after West comes North. '
+                  'Get students standing and turning clockwise a quarter at a time, calling out 0, '
+                  '1, 2, 3, 0: the kinesthetic bit cements the wrap.'},
+
+        {'kind': 'check',
+         'question': 'The robot faces West (3) and makes one clockwise turn. What does '
+                     '`(heading + 1) % 4` give?',
+         'options': ['4', '0, North: 4 % 4 is 0, so the heading wraps around',
+                     '3, because West is the last heading',
+                     'An error, because there is no heading 4'],
+         'answer': 1,
+         'explanation': '3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn '
+                        'from West faces North.'},
+
+        {'kind': 'steps', 'title': 'Step 3 · Write it and run it',
          'tag': 'Activity',
          'steps': [
-             'Write `turn_to()` from its outline',
-             'Run `test_delivery()`',
+             'Write `turn_to()` from its outline, using `(current_heading + 1) % 4`',
+             'Predict: how many `turning clockwise` lines will Leg 2 print, from (2, 3) to (1, 0)?',
+             'Run `test_delivery()` and compare',
          ],
-         'callout': 'Correct: each `turning:` line becomes zero to three `turning clockwise` lines. '
-                    'Leg 1 matches your prediction. Still ends heading S.',
-         'tone': 'green',
-         'notes': 'Every turn count should be three or fewer. The finished turn_to() and the full '
-                  'printout are behind a reveal on the lesson page.'},
+         'callout': 'Already facing the right way? The condition is False on the first check: no '
+                    'special case needed',
+         'tone': 'teal',
+         'notes': 'Each turning: line from last lesson becomes zero to three turning clockwise '
+                  'lines. Leg 2 prints six: three to face West, three more to face South. The run '
+                  'still ends with new position: (0, 0) heading: S. The finished turn_to() and the '
+                  'full printout are behind a reveal on the lesson page.'},
+
+        {'kind': 'steps', 'title': 'Step 4 · Break it on purpose',
+         'tag': 'Activity',
+         'steps': [
+             'Change the update line to `current_heading = current_heading + 1`, with no `% 4`',
+             'Predict what happens at Leg 1\'s third move, East to North',
+             'Run it, and press **Stop** when you\'ve seen enough',
+             'Put `% 4` back and run it again',
+         ],
+         'notes': 'turning clockwise scrolls forever. The heading goes 1, 2, 3, 4, 5... and never '
+                  'comes back to 0, so the loop\'s condition never becomes False. On the floor, '
+                  'that\'s a robot spinning in place, and the screen version is much easier to stop '
+                  'and read. Show students where Stop is before they run it.'},
 
         {'kind': 'check',
          'question': 'A student\'s printout shows `turning clockwise` forever after the first move. '
@@ -113,9 +110,9 @@ DECK = {
                      '`HEADING_NAMES` is in the wrong order',
                      'The robot is not on the grid'],
          'answer': 1,
-         'explanation': 'The loop ends only when current_heading equals desired_heading. On screen '
-                        'that\'s a scrolling printout; on the floor it would be a robot spinning in '
-                        'place.'},
+         'explanation': 'The loop ends only when current_heading equals desired_heading. If the '
+                        'heading never changes, or counts past 3 without wrapping, it never matches '
+                        'and the loop never ends.'},
 
         {'kind': 'wrapup',
          'questions': [
@@ -127,7 +124,9 @@ DECK = {
          'notes': 'Answers: its loop runs until the heading equals the one it wants; already facing '
                   'it means zero turns. Each clockwise turn adds 1, and % 4 wraps 4 back to 0. The '
                   'loop always turns clockwise, so a quarter turn left takes three quarter turns '
-                  'right. An endless turning clockwise printout usually means the heading isn\'t '
-                  'updated in the loop, or is updated without the wrap.'},
+                  'right. The long way round is on purpose: it is the simplest turn that always '
+                  'works. Students will spot the three-turn corners; agree, and point them at the '
+                  'optional challenge in Lesson 4-6. Three sensor-ended turns take three times as '
+                  'long as one and give the line sensors three chances to miss.'},
     ],
 }

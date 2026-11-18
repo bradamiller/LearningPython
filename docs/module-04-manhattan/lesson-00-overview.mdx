@@ -115,17 +115,10 @@ route first, then **drive** it.
   caption="The plan is a list of (x, y) coordinates. One function makes it; another drives it."
 />
 
-1. **Plan.** The planner, `compute_manhattan_path`, works out the whole route. It never
-   moves the robot, so you can test it **without a robot**: print the route and check it
-   against the grid.
-2. **Drive.** Once the plan is right, the driver, `drive_path`, **takes the plan and
-   drives it**, then reports where the robot ended up.
-
-Each intersection is an `(x, y)` pair, so the plan is a **list of coordinates**, the one
-thing the two functions share.
-
-One job each is called **separation of concerns**, and it makes bugs easy to find: a
-wrong route is a planner problem; a wrong turn is a driver problem.
+The **planner**, `compute_manhattan_path`, works out the whole route and never moves the
+robot, so you can check its list of coordinates with no robot at all. The **driver**,
+`drive_path`, takes that list and drives it. One job each is called **separation of
+concerns**: a wrong route is a planner problem; a wrong turn is a driver problem.
 
 <KnowledgeCheck
   question="Why plan the whole route first, as its own function, before writing the code that drives?"
@@ -172,10 +165,8 @@ every change. The printout tells you right away whether it still works. The robo
 drives in Lesson 4-6, so you never have to wonder whether a bug is in your code or in
 the robot.
 
-**The Python arrives the same way.** A position like `(1, 1)` is a Python **tuple**, and a
-route is a Python **list**. You won't study them first: each lesson teaches the piece of
-tuples and lists it needs, right where the program needs it. Lesson 4-7 puts it all
-together.
+**The Python arrives the same way:** each lesson teaches the Python the program needs,
+right where it needs it.
 
 ## The module at a glance
 
@@ -185,7 +176,6 @@ together.
 - **4-4:** the driver
 - **4-5:** turning
 - **4-6:** the stubs out, the robot on the grid
-- **4-7:** tuples and lists: what you now know
 
 <TeacherNote title="Why there is no tuples-and-lists lesson up front">
 
@@ -198,13 +188,13 @@ program needs it.
 | Tuple `(x, y)`, list `[...]`, `for item in list` | the main program | 4-1 |
 | Returning two values, unpacking | the main program | 4-1 |
 | `[]`, `append()`, `len()`, tuples can't change | building a path | 4-2 |
+| References: two names, one list | Module 5 (`BLOCKED`) | 4-2 |
 | `==` on tuples and lists | testing the planner | 4-3 |
-| Indexing, `names[2]` | the driver | 4-4 |
-| References: two names, one list | Module 5 | 4-7 |
+| Indexing, `names[2]`, `range(len(...))` | the driver | 4-4 |
+| `%` to wrap a heading | turning | 4-5 |
 
-Lesson 4-7 gathers them and checks them. If a student asks for more than a lesson
-gives ("can a tuple have three numbers?"), answer it and move on; 4-7 is the place for
-the full picture.
+If a student asks for more than a lesson gives ("can a tuple have three numbers?"),
+answer it and move on.
 
 </TeacherNote>
 

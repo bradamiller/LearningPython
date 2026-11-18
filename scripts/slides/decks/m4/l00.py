@@ -198,18 +198,14 @@ DECK = {'module': 4,
                       'can only be a robot problem: everything else was checked on screen first.'},
             {'kind': 'bullets',
              'title': 'The Python arrives the same way',
-             'bullets': ['A position like `(1, 1)` is a Python **tuple**',
-                         'A route is a Python **list**',
-                         "You won't study them first: each lesson teaches the piece it needs, "
-                         'right where the program needs it',
-                         'Lesson 4-7 puts it all together'],
+             'bullets': ['Each lesson teaches the Python the program needs, '
+                         'right where it needs it'],
              'size': 28,
              'notes': 'Where each piece is taught: tuple and list literals, for over a list, '
                       'returning two values and unpacking in 4-1; empty list, append(), len(), '
-                      "tuples can't change in 4-2; == on tuples and lists in 4-3; indexing in 4-4; "
-                      'references (two names, one list) in 4-7. If a student asks for more than a '
-                      'lesson gives, answer it and move on: 4-7 is the place for the full '
-                      'picture.'},
+                      "tuples can't change and references (two names, one list) in 4-2; == on tuples and lists in 4-3; "
+                      'indexing and range(len(...)) in 4-4; % to wrap a heading in 4-5. If a student '
+                      'asks for more than a lesson gives, answer it and move on.'},
             {'kind': 'bullets',
              'title': 'The module at a glance',
              'bullets': ['**4-1:** the main program, with stubs',
@@ -217,8 +213,7 @@ DECK = {'module': 4,
                          '**4-3:** the planner, part 2: every direction, and tests',
                          '**4-4:** the driver',
                          '**4-5:** turning',
-                         '**4-6:** the stubs out, the robot on the grid',
-                         '**4-7:** tuples and lists: what you now know'],
+                         '**4-6:** the stubs out, the robot on the grid'],
              'size': 26},
             {'kind': 'wrapup',
              'questions': ['What problem does Module 4 solve?',

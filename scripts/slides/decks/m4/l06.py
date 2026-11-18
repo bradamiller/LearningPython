@@ -16,18 +16,17 @@ DECK = {
                   'screen. Today the last two stubs come out, the real Module 2 functions go in, and '
                   'the robot drives it. Keep the intro short: this is a run-and-fix day.'},
 
-        {'kind': 'table', 'title': 'The toolkit you already have',
+        {'kind': 'bullets', 'title': 'The toolkit you already have',
          'lead': 'Module 2 built these in the LINE TRACKING section; Module 3 drove the grid with '
                  'them:',
-         'headers': ['Function', 'What it does', 'Ends when'],
-         'widths': [3.6, 2.8, 3.8],
-         'rows': [['`track_to_intersection()`', 'Follows the line forward',
-                   'the robot\'s center is on the cross'],
-                  ['`turn_clockwise()`', 'Pivots right', 'the sensors find the next line'],
-                  ['`turn_counterclockwise()`', 'Pivots left', 'the sensors find the next line']],
-         'size': 20,
-         'callout': 'They only follow tape. The planner doesn\'t know how to drive; these don\'t '
-                    'know what a path is. The NAVIGATOR sits between them.',
+         'bullets': [
+             '`track_to_intersection()` follows the line until the robot\'s center is on the cross',
+             '`turn_clockwise()` and `turn_counterclockwise()` pivot until the sensors find the '
+             'next line',
+             'None of them knows coordinates, headings or paths: they only follow tape',
+         ],
+         'callout': 'The planner doesn\'t know how to drive, these don\'t know what a path is, and '
+                    'the NAVIGATOR sits between them',
          'tone': 'teal'},
 
         {'kind': 'steps', 'title': 'Step 1 · Swap two lines',
@@ -37,7 +36,8 @@ DECK = {
              'In `drive_path()`, change `fake_track_to_intersection()` to `track_to_intersection()`',
              'That\'s all. Leave the two fake functions in the file',
          ],
-         'callout': 'Class track: `tracker.turn_clockwise()` and `tracker.track_to_intersection()`',
+         'callout': 'Built `LineTrack` in Lesson 2-9? Use `tracker.turn_clockwise()` and '
+                    '`tracker.track_to_intersection()`',
          'tone': 'teal',
          'notes': 'The fakes stay because they are handy for checking a new run on screen first.'},
 
@@ -45,14 +45,15 @@ DECK = {
          'tag': 'Activity',
          'steps': [
              'Put the robot on (0, 0) facing North',
+             'Predict from last lesson\'s printout: how many right turns at the start, and at '
+             '(2, 0)? Where and which way will it end up?',
              'Run `test_delivery()` and press the button',
-             'Count the turns at each corner against the printout',
          ],
-         'callout': 'Correct: exactly what the printout said, in order. One right turn at the start, '
-                    'three at (2, 0). Ends on (0, 0) facing South.',
-         'tone': 'green',
-         'notes': 'The moving: lines still print as it goes. Charge between runs: the delivery run '
-                  'has a lot of turns. When a robot finishes the whole run, let the class watch.'},
+         'notes': 'Answer: it does exactly what last lesson\'s printout said, in the same order: one '
+                  'right turn at the start, three at (2, 0). It finishes back on (0, 0), facing '
+                  'South, parked on the cross. The moving: lines still print as it goes. Charge '
+                  'between runs: the delivery run has a lot of turns. When a robot finishes the '
+                  'whole run, let the class watch.'},
 
         {'kind': 'check',
          'question': 'Yesterday\'s printout was right, but today the robot turns one too few times '
@@ -124,12 +125,16 @@ DECK = {
              'If the robot goes wrong but the printout was right, where do you look?',
              'Where did top-down pay off?',
          ],
-         'next': 'tuples and lists: what you now know',
+         'next': 'Module 5 · When the Road Is Blocked',
          'notes': 'Answers: two lines, the fake turn and the fake track became the real Module 2 '
                   'functions. The robot side: turns, tape, battery. The whole run worked on screen '
                   'before the robot moved, and every step was checked as it was added. Name what '
                   'students built: a main program first, a planner and a driver that know nothing '
                   'about each other, a test for every step, and the hardware last. In Module 5, '
-                  'breadth-first search replaces the planner and drive_path() keeps driving.'},
+                  'breadth-first search replaces the planner and drive_path() keeps driving. Exit '
+                  'ticket on the Python: "Write the line that makes an empty list called seen, the '
+                  'line that adds the position 3 across and 1 up to it, and the line that prints '
+                  'that position\'s y." (seen = [], seen.append((3, 1)), print(seen[0][1]).) A '
+                  'student who gets all three has the tuples and lists Module 5 builds on.'},
     ],
 }

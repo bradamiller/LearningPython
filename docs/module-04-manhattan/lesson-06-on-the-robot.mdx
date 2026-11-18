@@ -37,15 +37,12 @@ By the end of this lesson you will be able to:
 Module 2 ended with these in the LINE TRACKING section of `robot.py`, and Module 3 drove
 the whole grid with them:
 
-| Function | What it does | Ends when |
-|---|---|---|
-| `track_to_intersection()` | Follows the line forward | the robot's center is on the cross |
-| `turn_clockwise()` | Pivots right | the sensors find the next line |
-| `turn_counterclockwise()` | Pivots left | the sensors find the next line |
+- **`track_to_intersection()`** follows the line until the robot's center is on the cross.
+- **`turn_clockwise()`** and **`turn_counterclockwise()`** pivot until the sensors find the next line.
 
 None of them knows anything about coordinates, headings or paths: they only follow tape.
-That's the split from Lesson 4-0 again. The planner doesn't know how to drive, the Module 2
-functions don't know what a path is, and the NAVIGATOR sits between them.
+The planner doesn't know how to drive, these don't know what a path is, and the NAVIGATOR
+sits between them.
 
 ## Activity · Swap the stubs, drive the run
 
@@ -62,12 +59,17 @@ If you built the `LineTrack` class in Lesson 2-9, the real calls are
 
 ### Step 2 · Drive it
 
-Put the robot on (0, 0) facing North. Run `test_delivery()` and press the button.
+Put the robot on (0, 0) facing North. Before you press the button, use last lesson's
+printout to predict: how many right turns at the start, and how many at (2, 0)? Where and
+which way will the robot end up? Run `test_delivery()` and press the button.
 
-**What correct looks like:** the robot does exactly what last lesson's printout said, in
-the same order. Count the turns at each corner against the printout: one right turn at the
-start, three at (2, 0). The robot finishes back on (0, 0), facing South, parked on the
+<Reveal title="What should happen?" hint="predict first">
+
+The robot does exactly what last lesson's printout said, in the same order: one right turn
+at the start, three at (2, 0). It finishes back on (0, 0), facing South, parked on the
 cross. The `moving:` lines still print as it goes.
+
+</Reveal>
 
 <KnowledgeCheck
   question="Yesterday's printout was right, but today the robot turns one too few times at a corner. Where is the problem?"
@@ -322,15 +324,17 @@ robot_heading)`, you write `navigator.drive_path(path)`, and where it reads `rob
 - If the robot goes wrong but the printout was right, where do you look? (The robot side: turns, tape, battery.)
 - Where did top-down pay off? (The whole run worked on screen before the robot moved, and every step was checked as it was added.)
 
-One lesson is left. You picked up tuples and lists a piece at a time, as the program
-needed them. Lesson 4-7 puts the pieces side by side.
-
 <TeacherNote title="You built a system">
 
 Name what students did across the module: a main program first, then a planner and a
 driver that know nothing about each other, a test for every step, tuples and lists as
 they were needed, and the hardware last. In Module 5, breadth-first search replaces the Manhattan planner and
 `drive_path()` keeps driving, unchanged.
+
+**Exit ticket on the Python:** "Write the line that makes an empty list called `seen`, the
+line that adds the position 3 across and 1 up to it, and the line that prints that
+position's y." (`seen = []`, `seen.append((3, 1))`, `print(seen[0][1])`.) A student who
+gets all three has the tuples and lists Module 5 builds on.
 
 </TeacherNote>
 

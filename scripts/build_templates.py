@@ -1361,9 +1361,9 @@ RECIPE = [
         # the main program first, over two stubs given in full
         # (Brad, 2026-11-14: Module 4 is top down)
         Banner("MANHATTAN PLANNER", "4-1", "===== MANHATTAN PLANNER ====="),
-        Func("compute_manhattan_path", "4-1", full=True, pick=1),
+        Func("compute_manhattan_path", "4-1", full=True),
         Banner("NAVIGATOR", "4-1", "===== NAVIGATOR ====="),
-        Func("drive_path", "4-1", full=True, pick=1),
+        Func("drive_path", "4-1", full=True),
         Banner("MAIN", "4-1", "--- The main program"),
         Setting("DELIVERY_STOPS", "4-1"),
         Func("test_delivery", "4-1"),

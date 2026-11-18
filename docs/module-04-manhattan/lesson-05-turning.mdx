@@ -31,53 +31,6 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-05-turning" />
 
-## Turning until you face it
-
-`turn_to(current_heading, desired_heading)` knows both headings. Each clockwise quarter
-turn adds 1 to the heading, so the robot can simply turn clockwise while it isn't facing
-the right way:
-
-```python
-# while current_heading is not desired_heading:
-#     one clockwise quarter turn
-#     current_heading goes up by 1, wrapping 3 back to 0
-```
-
-Adding 1 isn't enough on its own when the robot turns from West to North: 3 + 1 is 4, and
-4 isn't a heading. The remainder operator `%` from Lesson 2-5 wraps it:
-
-```python
-heading = (heading + 1) % 4
-```
-
-For 1, 2 and 3 the remainder is the number itself, and `4 % 4` is 0, so after West comes
-North. Trace the loop from South (2) to East (1):
-
-| pass | heading before | heading after, `(h + 1) % 4` | facing East? |
-|---|---|---|---|
-| 1 | 2 (S) | 3 (W) | no |
-| 2 | 3 (W) | 0 (N) | no |
-| 3 | 0 (N) | 1 (E) | yes, the loop ends |
-
-Three passes. The loop never asks which way is shorter: it always goes clockwise, so to
-face what's a quarter turn to its left it turns three quarters of the way around. It works,
-and it's simple; Lesson 4-6 has an optional challenge to make it quicker.
-
-If the robot already faces the right way, the condition is False on the first check and
-the loop does nothing, with no special case. At the end the function returns
-`current_heading`, which by then equals `desired_heading`.
-
-<KnowledgeCheck
-  question="The robot faces West (3) and makes one clockwise turn. What does (heading + 1) % 4 give?"
-  options={[
-    {text: '4'},
-    {text: '0, North: 4 % 4 is 0, so the heading wraps around', correct: true},
-    {text: '3, because West is the last heading'},
-    {text: 'An error, because there is no heading 4'},
-  ]}
-  explanation="3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from West faces North."
-/>
-
 ## This lesson's skeleton
 
 Replace the `turn_to()` stub function with this, and add the new stub next to the
@@ -100,30 +53,76 @@ def turn_to(current_heading, desired_heading):
     pass
 ```
 
-## Activity · Predict, then count
+## Activity · Build turn_to(), one piece at a time
 
-### Step 1 · Predict
+Each step prints something. Before every run, **write down what you expect to see**, then
+run it and compare.
 
-The robot starts facing North. Before you write anything, work out how many clockwise
-turns `turn_to()` makes before each of Leg 1's five moves (E, E, N, N, N).
+### Step 1 · Predict the turns
+
+The real `turn_to()` only turns **clockwise**, a quarter turn at a time, until it faces
+the way it wants. The robot starts facing North. How many quarter turns does it make
+before each of Leg 1's five moves (E, E, N, N, N)?
 
 <Reveal title="Check your prediction" hint="write it down first">
 
 1, 0, 3, 0, 0. North to East is one turn. East to East is none: the loop doesn't run.
-East to North is three: East, South, West, North.
+East to North is three: South, West, North.
+
+<StepFigure
+  src="/img/lesson-m4-05/turn-to-steps.svg"
+  alt="A step-through animation of the real turn_to() on Leg 1 of the delivery run, seen from above on a 4 by 4 grid. The robot starts at (0, 0) facing North. To face East it makes one clockwise quarter turn, heading 0 to 1, and drives to (1, 0). Already facing East, it makes no turn and drives to (2, 0). To face North it makes three clockwise quarter turns, East to South, South to West, West to North, heading 1 to 2, 2 to 3, and 3 wraps to 0, then drives to (2, 1). Already facing North, it drives to (2, 2) and (2, 3) with no turns. Beside it, the turn_to() loop with the running line highlighted and a box showing the heading after each turn."
+  caption="One clockwise quarter turn per Step. The loop never asks which way is shorter." />
 
 </Reveal>
 
-### Step 2 · Write it and run it
+### Step 2 · Wrap 3 back to 0
 
-Write `turn_to()` from its outline. Run `test_delivery()`.
+Each clockwise quarter turn adds 1 to the heading. But West is 3, and 3 + 1 is 4, which
+isn't a heading. The remainder operator `%` from Lesson 2-5 wraps it. Predict the four
+lines, then run this in the shell:
 
-**What correct looks like:** the same output as last lesson, with each `turning:` line
-replaced by zero to three `turning clockwise` lines. Leg 1's turn counts match your
-prediction. Every turn you count is three or fewer, and the run still ends with
-`new position: (0, 0) heading: S`.
+```python
+for h in range(4):
+    print(h, (h + 1) % 4)
+```
 
-<Reveal title="Check your turn_to() and its output" hint="run it first">
+<Reveal title="Check your output" hint="predict first">
+
+```text
+0 1
+1 2
+2 3
+3 0
+```
+
+For 1, 2 and 3, the remainder after dividing by 4 is the number itself. `4 % 4` is 0, so
+after West comes North.
+
+</Reveal>
+
+<KnowledgeCheck
+  question="The robot faces West (3) and makes one clockwise turn. What does (heading + 1) % 4 give?"
+  options={[
+    {text: '4'},
+    {text: '0, North: 4 % 4 is 0, so the heading wraps around', correct: true},
+    {text: '3, because West is the last heading'},
+    {text: 'An error, because there is no heading 4'},
+  ]}
+  explanation="3 + 1 is 4, and the remainder of 4 divided by 4 is 0. One clockwise turn from West faces North."
+/>
+
+### Step 3 · Write it and run it
+
+Write `turn_to()` from its outline, using `(current_heading + 1) % 4`. If the robot
+already faces the right way, the loop's condition is False on the first check and it does
+nothing: no special case needed.
+
+Each `turning:` line from last lesson becomes zero to three `turning clockwise` lines.
+Before you run `test_delivery()`: how many `turning clockwise` lines will Leg 2 print, from
+(2, 3) to (1, 0)?
+
+<Reveal title="Check your turn_to() and its output" hint="predict first">
 
 ```python
 def turn_to(current_heading, desired_heading):
@@ -136,7 +135,8 @@ def turn_to(current_heading, desired_heading):
     return current_heading
 ```
 
-```
+
+```text
 computing path from: (0, 0) to: (2, 3)
 [(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
 moving: from (0, 0) to: (1, 0) heading: E
@@ -216,7 +216,26 @@ tracking to intersection
 new position: (0, 0) heading: S
 ```
 
+Leg 2 prints six: three to face West, three more to face South. The run still ends with
+`new position: (0, 0) heading: S`.
+
 </Reveal>
+
+### Step 4 · Break it on purpose
+
+Change the update line to `current_heading = current_heading + 1`, with no `% 4`. Predict
+what happens at Leg 1's third move, East to North. Then run it, and press **Stop** when
+you've seen enough.
+
+<Reveal title="What happened?" hint="predict first">
+
+`turning clockwise` scrolls forever. The heading goes 1, 2, 3, 4, 5... and never comes
+back to 0, so the loop's condition never becomes False. On the floor, that's a robot
+spinning in place.
+
+</Reveal>
+
+Put `% 4` back and run it again.
 
 <KnowledgeCheck
   question="A student's printout shows turning clockwise forever after the first move. What's the likely bug?"
@@ -226,21 +245,19 @@ new position: (0, 0) heading: S
     {text: 'HEADING_NAMES is in the wrong order'},
     {text: 'The robot is not on the grid'},
   ]}
-  explanation="The loop ends only when current_heading equals desired_heading. If the turn doesn't add 1 to current_heading, nothing changes and the loop never ends. On screen that's a scrolling printout; on the floor it would be a robot spinning in place."
+  explanation="The loop ends only when current_heading equals desired_heading. If the heading never changes, or counts past 3 without wrapping, it never matches and the loop never ends."
 />
 
 <TeacherNote title="The long way round is on purpose">
 
 Get students standing and turning clockwise a quarter at a time, calling out 0, 1, 2, 3,
 0: the kinesthetic bit cements the wrap. The loop always turns clockwise because it is
-the simplest turn that always works. Students will spot the three-turn corners in the
-printout; agree, and point them at the optional challenge in Lesson 4-6. Three
-sensor-ended turns take three times as long as one and give the line sensors three
-chances to miss.
+the simplest turn that always works. Students will spot the three-turn corners; agree, and
+point them at the optional challenge in Lesson 4-6. Three sensor-ended turns take three
+times as long as one and give the line sensors three chances to miss.
 
-An endless `turning clockwise` printout is the screen version of a robot spinning forever,
-and much easier to stop and read. The usual cause: the heading isn't updated in the loop,
-or is updated without the wrap, so it counts past 3 and never matches.
+Step 4's endless printout is the screen version of a robot spinning forever, and much
+easier to stop and read. Show students where Stop is before they run it.
 
 </TeacherNote>
 
