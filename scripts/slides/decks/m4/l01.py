@@ -220,33 +220,6 @@ DECK = {
          'notes': 'The full printout is behind a reveal on the lesson page. The last stop ends '
                   'with: new position: (0, 0) heading: 0.'},
 
-        # --- Step 4 ---
-        {'kind': 'steps', 'title': 'Step 4 · Break it on purpose',
-         'tag': 'Activity',
-         'steps': [
-             'Change the driving call to just `drive_path(path, robot_position, robot_heading)`, '
-             'with nothing on the left',
-             '**Predict:** what will each `computing path from:` line say?',
-             'Run it. Then put `robot_position, robot_heading =` back',
-         ],
-         'callout': 'Predict before you run',
-         'tone': 'orange',
-         'notes': 'This is the lesson\'s point. The dropped return value is the most common Module 4 '
-                  'bug, and it normally surfaces on the floor, on leg 2. Here students cause it on '
-                  'purpose, on screen, in two minutes.'},
-
-        {'kind': 'bullets', 'title': 'Step 4 · What happened?',
-         'tag': 'Activity',
-         'bullets': [
-             'Every line says `computing path from: (0, 0)`, and every `new position:` is `(0, 0)`',
-             '`current_position = next_pos` changes only `drive_path()`\'s **own** variable '
-             '(Lesson 2-7)',
-             'The **return value** is the only way the new pose gets back, and nobody caught it',
-         ],
-         'size': 24,
-         'notes': 'On the floor, that robot would drive leg 1 right and then plan every later leg '
-                  'from home.'},
-
         {'kind': 'check',
          'question': 'A student drops `robot_position, robot_heading =` from the driving call. '
                      'What goes wrong?',

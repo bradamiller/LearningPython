@@ -190,6 +190,10 @@ faces, together called its **pose**. Where you call it, give each value its own 
 That's **unpacking**: the first variable gets the first value, the second gets the second.
 There must be one variable per value, or Python stops with a `ValueError`.
 
+Don't leave the left side off. Inside `drive_path()`, `current_position = next_pos`
+changes only the function's own variable (as in Lesson 2-7), so the return value is the
+only way the new pose gets back to the main program.
+
 <Figure
   src="/img/lesson-m4t-01/pose-robot.svg"
   alt="A 4 by 4 grid with the robot at (1, 1) facing East. Beside it: the robot's pose, where it is and which way it faces, written ((1, 1), 1). The (1, 1) is labeled position; the final 1 is labeled heading, 1 = East. Below: robot_position, robot_heading = drive_path(...), drive_path hands back the pose."
@@ -246,24 +250,6 @@ time: the driver stub never turns.
 
 </Reveal>
 
-### Step 4 · Break it on purpose
-
-Change the driving call to just `drive_path(path, robot_position, robot_heading)`, with
-nothing on the left. Before you run it, predict: what will each `computing path from:`
-line say? Then run it.
-
-<Reveal title="What happened?" hint="predict first">
-
-Every one says `computing path from: (0, 0)`, and every `new position:` is `(0, 0)`.
-Inside `drive_path()`, `current_position = next_pos` changes only the function's own
-variable; as in Lesson 2-7, the caller's `robot_position` is never touched. The return
-value is the only way the new pose gets back, and nobody caught it. On the floor, that
-robot would drive leg 1 right and then plan every later leg from home.
-
-</Reveal>
-
-Put `robot_position, robot_heading =` back and run it again.
-
 <KnowledgeCheck
   question="A student calls drive_path(path, robot_position, robot_heading) on its own line, with nothing on the left, then plans the next leg. What goes wrong?"
   options={[
@@ -285,9 +271,10 @@ Tuples, lists and the `for` loop get a sentence or two each, inside the step tha
 them, on purpose. Don't expand them: `append()` arrives in 4-2, `==` in 4-3, indexing in
 4-4.
 
-Step 4 is the lesson's point. The dropped return value is the most common Module 4 bug,
-and it normally surfaces on the floor, on leg 2. Here students cause it on purpose, on
-screen, in two minutes. If someone asks why the stub planner returns a wrong path, that's
+Watch for the dropped return value: a student who calls `drive_path()` with nothing on
+the left sees every `computing path from:` line say `(0, 0)`. It is the most common
+Module 4 bug, and it normally surfaces on the floor, on leg 2, where the robot drives leg
+1 right and then plans every later leg from home. If someone asks why the stub planner returns a wrong path, that's
 the right question: a stub only has to keep the program running.
 
 </TeacherNote>

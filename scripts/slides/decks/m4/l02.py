@@ -312,7 +312,7 @@ DECK = {
          'code': '(1, 1)\n'
                  '[(1, 1), (9, 9)]',
          'code_size': 26,
-         'callout': '`=` stores a new value in the function\'s own variable (4-1, Step 4). '
+         'callout': '`=` stores a new value in the function\'s own variable (4-1). '
                     '`append()` goes to the list itself, and there is only one list.',
          'tone': 'green',
          'notes': 'The caller never sees the =. Module 5 relies on the append: a planner sees '

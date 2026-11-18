@@ -667,7 +667,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   predict, run, compare to a Reveal, with the Python taught inside the step that first needs
   it (tuple/list/for in 4-1 Step 1; `[]`/`append()`/`len()` in 4-2 Step 2; `==` in 4-3
   Step 1 by shell prediction; indexing, `range(len(...))` and `IndexError` in 4-4 Step 1;
-  `%` in 4-5 Step 2). Each has a "Break it on purpose" step: 4-1 dropped return, 4-2
+  `%` in 4-5 Step 2). Each has a "Break it on purpose" step except 4-1 (Brad cut it 2026-11-18; Step 3 now says in one paragraph why the left side of the `drive_path()` call matters): 4-2
   indent, 4-3 append-before-step in the west loop (+ the `added:` debug print; NOT flipping
   `+ 1`, which loops forever), 4-4 dropped `current_heading =`, 4-5 no `% 4` (spins; press
   Stop). **Lesson 4-7 is deleted** (page, deck, pptx, sidebar, slides.json; old URL 404s):
