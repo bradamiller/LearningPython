@@ -22,8 +22,8 @@ real paths for any trip that goes right and up. Left and down are Lesson 4-3.
 
 By the end of this lesson you will be able to:
 
-- Trace a path by hand: across first, then up
-- Start with an empty list and add to it with `append()`
+- Build a path by hand with `append()`, across first, then up
+- Start with an empty list, add to it with `append()`, and count it with `len()`
 - Unpack a tuple into `x` and `y`, and make a new tuple from them
 - Build a path inside a `while` loop, one step per trip around
 - Explain what happens when two names refer to the same list
@@ -51,35 +51,7 @@ until y is right.**
 Each step prints something. Before every run, **write down what you expect to see**, then
 run it and compare.
 
-### Step 1 · Trace Leg 1 on paper
-
-Trace Leg 1 of the delivery run, (0, 0) to (2, 3), one row per move. Row 1 is done for
-you.
-
-| Step | Action | New position |
-|---|---|---|
-| 1 | x + 1 | (1, 0) |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
-
-<Reveal title="Check your trace" hint="fill in the table first">
-
-| Step | Action | New position |
-|---|---|---|
-| 1 | x + 1 | (1, 0) |
-| 2 | x + 1 | (2, 0) |
-| 3 | y + 1 | (2, 1) |
-| 4 | y + 1 | (2, 2) |
-| 5 | y + 1 | (2, 3) |
-
-</Reveal>
-
-The path is those five positions, in order. The start, (0, 0), is **not** in it: a path
-lists the places the robot drives *to*, and it's already standing on the start.
-
-### Step 2 · Leg 1, by hand
+### Step 1 · Leg 1, by hand
 
 The planner can't write its list out in full, as `DELIVERY_STOPS` does: it doesn't know
 the path until it works it out. So it starts with an **empty list**, `[]`, and adds one
@@ -97,21 +69,62 @@ print(len(path))     # 2
 Mind the double parentheses in `path.append((1, 0))`: the outer pair belongs to
 `append()`, the inner pair is the tuple.
 
-In `compute_manhattan_path()`, keep the `print` line. Replace `return [destination]` with:
+Leg 1 of the delivery run goes from (0, 0) to (2, 3): right twice, then up three times.
+The path is the five intersections the robot drives *to*. The start, (0, 0), is **not**
+in it: the robot is already standing there.
+
+In `compute_manhattan_path()`, keep the `print` line and replace `return [destination]`
+with:
 
 1. `path = []`
-2. Five `append()` lines, one per row of your trace, in order. The first is
-   `path.append((1, 0))`.
+2. Five `append()` lines, one per move of Leg 1, in order, each followed by
+   `print(path)`. The first two are:
+   ```python
+   path.append((1, 0))
+   print(path)
+   ```
 3. `return path`
 
-Before you run `test_delivery()`: what will Leg 2's path be?
+Before you run `test_delivery()`: write down the five lists Leg 1 will print, and what
+Leg 2's path will be.
 
-<Reveal title="What happened?" hint="predict first">
+<Reveal title="Check your output" hint="predict first">
 
-Leg 1's path matches your trace, and the driver stub moves one step at a time. Every other
-leg gets **the same path**, which is wrong for all of them. The function never looks at
-`start` or `destination`: it hands back what you typed. A planner has to **work the path
-out** from where the robot is and where it's going.
+```text
+computing path from: (0, 0) to: (2, 3)
+[(1, 0)]
+[(1, 0), (2, 0)]
+[(1, 0), (2, 0), (2, 1)]
+[(1, 0), (2, 0), (2, 1), (2, 2)]
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+moving: from (0, 0) to: (1, 0)
+moving: from (1, 0) to: (2, 0)
+moving: from (2, 0) to: (2, 1)
+moving: from (2, 1) to: (2, 2)
+moving: from (2, 2) to: (2, 3)
+new position: (2, 3) heading: 0
+computing path from: (2, 3) to: (1, 0)
+[(1, 0)]
+...
+```
+
+Leg 1 is right: the list grows by one tuple per `append()`, always on the end. But Leg 2
+gets **the same five steps**, starting with a jump from (2, 3) to (1, 0), and so does
+every other leg. The function never looks at `start` or `destination`: it hands back
+what you typed.
+
+</Reveal>
+
+Could you fix it by typing more? Count first: how many `append()` lines would Leg 2
+need? All five legs? A trip corner to corner on a 10×10 grid?
+
+<Reveal title="Check your count" hint="count first">
+
+Leg 2 needs 4, and all five legs need 18 between them, but one function only has one
+set of lines, so typed lines could only ever be right for one trip. Corner to corner on a
+10×10 grid is 18 by itself. A planner has to **work the path out** from where the robot
+is and where it's going.
 
 </Reveal>
 
@@ -127,15 +140,16 @@ out** from where the robot is and where it's going.
   explanation="append() adds to the end, so the items stay in the order they were added. Three appends, three tuples, so len() is 3."
 />
 
-### Step 3 · Let a loop do the appending
+### Step 2 · Let a loop do the appending
 
-Rows 1 and 2 of your trace: add 1 to x, write down the new position, and again, until x
-is right. That's a `while` loop.
+Look at your five appends. The first two each add 1 to x and append the new position,
+until x is right. The last three do the same with y. Doing the same thing until something
+is right is a `while` loop.
 
 <Figure
-  src="/img/lesson-m4-03/trace-to-loops.svg"
-  alt="The trace table for (0, 0) to (2, 3). Rows 1 and 2, in red, say x + 1 and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). Rows 3 to 5, in green, say y + 1 and are bracketed to loop 2, the same loop for y."
-  caption="Each row is one trip around a loop."
+  src="/img/lesson-m4-03/appends-to-loops.svg"
+  alt="The five typed lines for (0, 0) to (2, 3), under path = []. The first two, in red, append (1, 0) and (2, 0), each x + 1, and are bracketed to loop 1: while x < dest_x, x = x + 1, path.append((x, y)). The last three, in green, append (2, 1), (2, 2) and (2, 3), each y + 1, and are bracketed to loop 2, the same loop for y."
+  caption="Each append is one trip around a loop."
 />
 
 To add 1 to x, the function needs x on its own. **Unpacking**, from Lesson 4-1, takes a
@@ -189,7 +203,7 @@ complete. The third only goes up, so nothing is appended.
 
 </Reveal>
 
-### Step 4 · Break it on purpose
+### Step 3 · Break it on purpose
 
 Move `path.append((x, y))` one indent to the left, so it lines up with `while`. Predict
 the first path, then run it.
@@ -213,7 +227,7 @@ the function appended the start itself.
 
 Put the indent back.
 
-### Step 5 · Write north
+### Step 4 · Write north
 
 Under the north comment, copy the east loop, comparing `y` with `dest_y` and stepping `y`
 instead of `x`. Leave `path.append((x, y))` as it is: it always records the whole
@@ -239,7 +253,7 @@ computing path from: (2, 0) to: (2, 3)
 
 </Reveal>
 
-### Step 6 · Why a new tuple every step
+### Step 5 · Why a new tuple every step
 
 Could the loop just add to one tuple instead of making new ones? Predict, then type these
 into the shell:
@@ -271,7 +285,7 @@ position. A **list** is any number of things in order, like the stops on a route
   explanation="Each position is a fixed pair, so a tuple. The collection grows as the robot drives, so a list. That is exactly what Module 5 does."
 />
 
-### Step 7 · Two names, one list
+### Step 6 · Two names, one list
 
 In Lesson 1-9, a variable was a named memory location, and `=` stored a value there. A
 list can grow, but a location is a fixed size. So the list lives somewhere else, and the
@@ -362,7 +376,7 @@ Module 5 relies on this: a planner sees every obstacle you add to your list.
   explanation="The parameter holds the list's address, so append() changes the one list both sides share. Only assigning with = inside the function would leave the caller's list alone."
 />
 
-### Step 8 · Run the main program
+### Step 7 · Run the main program
 
 Set the run line back to `test_delivery()`. Before you run it: will Leg 2, (2, 3) to
 (1, 0), work?
@@ -412,22 +426,24 @@ after it goes wrong.
 <TeacherNote title="What to watch">
 
 "Empty list, append inside a loop" is the pattern the rest of the course builds paths
-with. Step 2 is deliberately clumsy: five typed appends make students want the loop, and
-the repeated path shows why a planner must use its parameters. Keep it to five minutes.
+with. Step 1 is deliberately clumsy: printing after every append shows the list growing
+on the end, the repeated path on Leg 2 shows why a planner must use its parameters, and
+the count makes the typed version hopeless. Students should leave it wanting the loop.
+Keep it to ten minutes.
 
-Take real time on the double parentheses in `path.append((x, y))`, and on Step 4: the
+Take real time on the double parentheses in `path.append((x, y))`, and on Step 3: the
 indentation bug is the most common list bug there is, and here it costs one keystroke to
-cause and to fix. Check the paper tests before Step 3's run: a wrong trace sends a student
-hunting for a bug that isn't there.
+cause and to fix. Check the paper tests before Step 2's run: a wrong prediction sends a
+student hunting for a bug that isn't there.
 
-Step 7 **adds** to Lesson 1-9; it doesn't correct it. A variable is still a named
+Step 6 **adds** to Lesson 1-9; it doesn't correct it. A variable is still a named
 location, and `=` still stores there. The new fact is what the stored value *is* for a
 list. A demo that lands: two students hold slips with the same post office box number;
 one puts something in the box, and the other finds it there. Don't teach `copy()` or
 slicing: nothing in this course needs a separate copy, and Module 5's `BLOCKED` list
 relies on the sharing.
 
-The broken delivery run in Step 8 is the hook for Lesson 4-3. Let students say what's
+The broken delivery run in Step 7 is the hook for Lesson 4-3. Let students say what's
 missing.
 
 Scope: `[]`, `append()`, `len()`, unpacking. No indexing yet (Lesson 4-4), and no

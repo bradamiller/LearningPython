@@ -665,14 +665,14 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
 - **2026-11-18: MODULE 4 REWORKED LIKE 5-3 (Brad: "Do all of Module 4").** Every coding
   lesson (4-1 to 4-5) is now "Activity · ..., one piece at a time": numbered Steps, each
   predict, run, compare to a Reveal, with the Python taught inside the step that first needs
-  it (tuple/list/for in 4-1 Step 1; `[]`/`append()`/`len()` in 4-2 Step 2; `==` in 4-3
+  it (tuple/list/for in 4-1 Step 1; `[]`/`append()`/`len()` in 4-2 Step 1; `==` in 4-3
   Step 1 by shell prediction; indexing, `range(len(...))` and `IndexError` in 4-4 Step 1;
-  `%` in 4-5 Step 2). Each has a "Break it on purpose" step except 4-1 (Brad cut it 2026-11-18; Step 3 now says in one paragraph why the left side of the `drive_path()` call matters): 4-2
+  `%` in 4-5 Step 2). **4-2 Step 1 (Brad, 2026-11-18) is the paper trace done in code:** five typed `append()` lines, each followed by `print(path)`, so students watch the list grow; Leg 2 repeats Leg 1's path, and a count (Leg 2 needs 4, all legs 18, a 10x10 corner-to-corner trip 18) shows typing can't scale. The figure `appends-to-loops.svg` (was `trace-to-loops.svg`, `f44loops.py`) brackets those appends into the two loops. The east loop stays given as the one worked example; students write north, then west and south in 4-3. Each has a "Break it on purpose" step except 4-1 (Brad cut it 2026-11-18; Step 3 now says in one paragraph why the left side of the `drive_path()` call matters): 4-2
   indent, 4-3 append-before-step in the west loop (+ the `added:` debug print; NOT flipping
   `+ 1`, which loops forever), 4-4 dropped `current_heading =`, 4-5 no `% 4` (spins; press
   Stop). **Lesson 4-7 is deleted** (page, deck, pptx, sidebar, slides.json; old URL 404s):
-  "tuple can't change" + rule of thumb is 4-2 Step 6, references ("two names, one list",
-  move()/extend(), number-vs-list.svg, both checks) are 4-2 Step 7, the index loop is 4-4,
+  "tuple can't change" + rule of thumb is 4-2 Step 5, references ("two names, one list",
+  move()/extend(), number-vs-list.svg, both checks) are 4-2 Step 6, the index loop is 4-4,
   the exit ticket is in 4-6's last teacher note. Dropped: list-item replacement
   (`path[0] = (0, 1)`), the Real-world cards, the tables-side-by-side. Cross-refs now say
   4-2 (Module 1-9 page and deck), 5-4 (Module 6 pages/deck), or nothing (5-4, 5-2 deck).

@@ -7,8 +7,8 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Trace a path by hand: across first, then up',
-             'Start with an empty list and add to it with `append()`',
+             'Build a path by hand with `append()`, across first, then up',
+             'Start with an empty list, add to it with `append()`, and count it with `len()`',
              'Unpack a tuple into `x` and `y`, and make a new tuple from them',
              'Build a path inside a `while` loop, one step per trip around',
              'Explain what happens when two names refer to the same list',
@@ -37,30 +37,7 @@ DECK = {
                   'before every run, then compare.'},
 
         # --- Step 1 ---
-        {'kind': 'table', 'title': 'Step 1 · Trace Leg 1 on paper',
-         'tag': 'Activity',
-         'lead': 'Leg 1, (0, 0) to (2, 3), one row per move. Row 1 is done for you.',
-         'headers': ['Step', 'Action', 'New position'],
-         'widths': [1, 1.6, 2.2],
-         'rows': [['1', 'x + 1', '(1, 0)'], ['2', '', ''], ['3', '', ''], ['4', '', ''],
-                  ['5', '', '']],
-         'row_h': 0.5,
-         'notes': 'Check traces before Step 3\'s run: a wrong trace sends a student hunting for a '
-                  'bug that isn\'t there.'},
-
-        {'kind': 'table', 'title': 'Step 1 · Check your trace',
-         'tag': 'Activity',
-         'headers': ['Step', 'Action', 'New position'],
-         'widths': [1, 1.6, 2.2],
-         'rows': [['1', 'x + 1', '(1, 0)'], ['2', 'x + 1', '(2, 0)'], ['3', 'y + 1', '(2, 1)'],
-                  ['4', 'y + 1', '(2, 2)'], ['5', 'y + 1', '(2, 3)']],
-         'row_h': 0.5,
-         'callout': 'The path is these five positions. The start is **not** in it: the robot is '
-                    'already standing there.',
-         'tone': 'green'},
-
-        # --- Step 2 ---
-        {'kind': 'code', 'title': 'Step 2 · A list can grow',
+        {'kind': 'code', 'title': 'Step 1 · A list can grow',
          'tag': 'Activity',
          'lead': 'The planner doesn\'t know the path until it works it out. So it starts **empty** '
                  'and adds to the **end**:',
@@ -74,22 +51,49 @@ DECK = {
          'tone': 'teal',
          'notes': 'len() counts the items. Take real time on the double parentheses.'},
 
-        {'kind': 'steps', 'title': 'Step 2 · Leg 1, by hand',
+        {'kind': 'steps', 'title': 'Step 1 · Leg 1, by hand',
          'tag': 'Activity',
-         'lead': 'In `compute_manhattan_path()`, keep the `print` line. Replace '
+         'lead': 'Leg 1: (0, 0) to (2, 3), right twice, then up three times. The start is **not** '
+                 'in the path. In `compute_manhattan_path()`, keep the `print` line. Replace '
                  '`return [destination]` with:',
          'steps': [
              '`path = []`',
-             'Five `append()` lines, one per row of your trace. The first is '
+             'Five `append()` lines, one per move, each followed by `print(path)`. The first is '
              '`path.append((1, 0))`',
              '`return path`. Then run `test_delivery()`',
          ],
-         'callout': '**Predict:** what will Leg 2\'s path be?',
+         'callout': '**Predict:** the five lists Leg 1 prints, and Leg 2\'s path',
          'tone': 'orange',
-         'notes': 'Answer: Leg 1 matches the trace, and every other leg gets the same path. The '
-                  'function never looks at start or destination: it hands back what was typed. A '
-                  'planner has to work the path out. Deliberately clumsy; keep it to five '
-                  'minutes. Five typed appends make students want the loop.'},
+         'notes': 'Answer: the list grows by one tuple per append, on the end. Leg 2 gets the same '
+                  'five steps, starting with a jump from (2, 3) to (1, 0), and so does every leg: '
+                  'the function never looks at start or destination. Deliberately clumsy; keep it '
+                  'to ten minutes.'},
+
+        {'kind': 'code', 'title': 'Step 1 · Check: Leg 1',
+         'tag': 'Activity',
+         'code': 'computing path from: (0, 0) to: (2, 3)\n'
+                 '[(1, 0)]\n'
+                 '[(1, 0), (2, 0)]\n'
+                 '[(1, 0), (2, 0), (2, 1)]\n'
+                 '[(1, 0), (2, 0), (2, 1), (2, 2)]\n'
+                 '[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]',
+         'code_size': 20,
+         'callout': 'Leg 1 is right. But Leg 2 gets **the same five steps**: the function hands back '
+                    'what you typed.',
+         'tone': 'green'},
+
+        {'kind': 'bullets', 'title': 'Step 1 · Could you just type more?',
+         'tag': 'Activity',
+         'bullets': [
+             'How many `append()` lines would Leg 2 need?',
+             'All five legs?',
+             'Corner to corner on a 10 x 10 grid?',
+         ],
+         'callout': 'A planner has to **work the path out** from where the robot is and where it\'s going',
+         'tone': 'orange', 'size': 26,
+         'notes': 'Leg 2 needs 4; all five legs need 18 between them, but one function has only one '
+                  'set of lines, so typed lines are right for one trip at most. Corner to corner on '
+                  'a 10 x 10 grid is 18 by itself.'},
 
         {'kind': 'check',
          'question': 'What does this print? `stops = []`, then `stops.append((0, 1))`, '
@@ -103,13 +107,13 @@ DECK = {
          'explanation': 'append() adds to the end, so the items stay in the order they were added. '
                         'Three appends, three tuples, so len() is 3.'},
 
-        # --- Step 3 ---
-        {'kind': 'figure', 'title': 'Step 3 · A loop appends',
+        # --- Step 2 ---
+        {'kind': 'figure', 'title': 'Step 2 · A loop appends',
          'tag': 'Activity',
-         'figure': '/img/lesson-m4-03/trace-to-loops.svg',
-         'caption': 'Each row is one trip around a loop.'},
+         'figure': '/img/lesson-m4-03/appends-to-loops.svg',
+         'caption': 'Each append is one trip around a loop.'},
 
-        {'kind': 'code', 'title': 'Step 3 · Take the tuples apart',
+        {'kind': 'code', 'title': 'Step 2 · Take the tuples apart',
          'tag': 'Activity',
          'lead': 'To add 1 to x, the function needs x on its own. **Unpacking** (Lesson 4-1):',
          'code': 'x, y = start              # where the plan is now\n'
@@ -119,7 +123,7 @@ DECK = {
                     'path',
          'tone': 'teal'},
 
-        {'kind': 'code', 'title': 'Step 3 · The new planner',
+        {'kind': 'code', 'title': 'Step 2 · The new planner',
          'tag': 'Activity',
          'code': 'def compute_manhattan_path(start, destination):\n'
                  '    print("computing path from:", start, "to:", destination)\n'
@@ -139,7 +143,7 @@ DECK = {
          'notes': 'The slide leaves out the docstring to fit; students paste the whole block from '
                   'the lesson page.'},
 
-        {'kind': 'code', 'title': 'Step 3 · Paper test, then run',
+        {'kind': 'code', 'title': 'Step 2 · Paper test, then run',
          'tag': 'Activity',
          'lead': 'Add this under it. On paper, write the full path for each trip:',
          'code': 'def test_planner():\n'
@@ -151,7 +155,7 @@ DECK = {
                     '`test_planner()`.',
          'tone': 'orange'},
 
-        {'kind': 'code', 'title': 'Step 3 · Check your output',
+        {'kind': 'code', 'title': 'Step 2 · Check your output',
          'tag': 'Activity',
          'code': 'computing path from: (0, 0) to: (2, 3)\n'
                  '[(1, 0), (2, 0)]\n'
@@ -164,8 +168,8 @@ DECK = {
                     'so nothing is appended.',
          'tone': 'green'},
 
-        # --- Step 4 ---
-        {'kind': 'steps', 'title': 'Step 4 · Break it on purpose',
+        # --- Step 3 ---
+        {'kind': 'steps', 'title': 'Step 3 · Break it on purpose',
          'tag': 'Activity',
          'steps': [
              'Move `path.append((x, y))` one indent to the left, so it lines up with `while`',
@@ -177,7 +181,7 @@ DECK = {
          'notes': 'The indentation bug is the most common list bug there is; here it costs one '
                   'keystroke to cause and to fix.'},
 
-        {'kind': 'code', 'title': 'Step 4 · What happened?',
+        {'kind': 'code', 'title': 'Step 3 · What happened?',
          'tag': 'Activity',
          'code': 'computing path from: (0, 0) to: (2, 3)\n'
                  '[(2, 0)]\n'
@@ -192,8 +196,8 @@ DECK = {
          'notes': 'Only the last position is recorded. The third path is worse: the loop never '
                   'ran, so the function appended the start itself.'},
 
-        # --- Step 5 ---
-        {'kind': 'steps', 'title': 'Step 5 · Write north',
+        # --- Step 4 ---
+        {'kind': 'steps', 'title': 'Step 4 · Write north',
          'tag': 'Activity',
          'steps': [
              'Under the north comment, **copy the east loop**',
@@ -203,7 +207,7 @@ DECK = {
          ],
          'tone': 'green'},
 
-        {'kind': 'code', 'title': 'Step 5 · Check your north loop',
+        {'kind': 'code', 'title': 'Step 4 · Check your north loop',
          'tag': 'Activity',
          'code': '    # North: copy east, but step y until it matches dest_y\n'
                  '    while y < dest_y:\n'
@@ -211,7 +215,7 @@ DECK = {
                  '        path.append((x, y))',
          'code_size': 22},
 
-        {'kind': 'code', 'title': 'Step 5 · Check your output',
+        {'kind': 'code', 'title': 'Step 4 · Check your output',
          'tag': 'Activity',
          'code': 'computing path from: (0, 0) to: (2, 3)\n'
                  '[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]\n'
@@ -223,8 +227,8 @@ DECK = {
          'callout': 'All three match the paper test',
          'tone': 'green'},
 
-        # --- Step 6 ---
-        {'kind': 'code', 'title': 'Step 6 · A tuple can\'t change',
+        # --- Step 5 ---
+        {'kind': 'code', 'title': 'Step 5 · A tuple can\'t change',
          'tag': 'Activity',
          'lead': 'Could the loop just add to one tuple instead of making new ones? Type these into the shell:',
          'code': 'spot = (2, 3)\n'
@@ -233,7 +237,7 @@ DECK = {
          'callout': '**Predict:** what happens?',
          'tone': 'orange'},
 
-        {'kind': 'code', 'title': 'Step 6 · What happened?',
+        {'kind': 'code', 'title': 'Step 5 · What happened?',
          'tag': 'Activity',
          'lead': 'A tuple **can\'t be changed** once it\'s made, so the loop makes a new one every '
                  'step:',
@@ -256,8 +260,8 @@ DECK = {
          'explanation': 'Each position is a fixed pair, so a tuple. The collection grows as the '
                         'robot drives, so a list. That is exactly what Module 5 does.'},
 
-        # --- Step 7 ---
-        {'kind': 'code', 'title': 'Step 7 · Two names, one list',
+        # --- Step 6 ---
+        {'kind': 'code', 'title': 'Step 6 · Two names, one list',
          'tag': 'Activity',
          'lead': 'A list can grow, so it lives elsewhere. The variable holds its **address**: a '
                  '**reference**.',
@@ -279,7 +283,7 @@ DECK = {
                   'else. A demo that lands: two students hold slips with the same post office box '
                   'number; one puts something in the box, and the other finds it there.'},
 
-        {'kind': 'figure', 'title': 'Step 7 · What happened?',
+        {'kind': 'figure', 'title': 'Step 6 · What happened?',
          'tag': 'Activity',
          'figure': '/img/lesson-m4-02/number-vs-list.svg',
          'caption': 'Prints 5 6, then [(1, 0), (2, 0)]. b = a makes a second 5. same_path = path '
@@ -289,7 +293,7 @@ DECK = {
                   'teach copy() or slicing: nothing in this course needs a separate copy, and '
                   'Module 5\'s BLOCKED list relies on the sharing.'},
 
-        {'kind': 'code', 'title': 'Step 7 · Same for a parameter',
+        {'kind': 'code', 'title': 'Step 6 · Same for a parameter',
          'tag': 'Activity',
          'lead': '**Predict** both printouts, then run it:',
          'code': 'def move(spot):\n'
@@ -307,7 +311,7 @@ DECK = {
                  'print(route)',
          'code_size': 17},
 
-        {'kind': 'code', 'title': 'Step 7 · What happened?',
+        {'kind': 'code', 'title': 'Step 6 · What happened?',
          'tag': 'Activity',
          'code': '(1, 1)\n'
                  '[(1, 1), (9, 9)]',
@@ -342,8 +346,8 @@ DECK = {
                         'both sides share. Only assigning with = inside the function would leave '
                         'the caller\'s list alone.'},
 
-        # --- Step 8 ---
-        {'kind': 'steps', 'title': 'Step 8 · Run the main program',
+        # --- Step 7 ---
+        {'kind': 'steps', 'title': 'Step 7 · Run the main program',
          'tag': 'Activity',
          'steps': [
              'Set the run line back to `test_delivery()`',
@@ -352,7 +356,7 @@ DECK = {
          ],
          'tone': 'orange'},
 
-        {'kind': 'code', 'title': 'Step 8 · Check: Legs 1 and 2',
+        {'kind': 'code', 'title': 'Step 7 · Check: Legs 1 and 2',
          'tag': 'Activity',
          'code': 'computing path from: (0, 0) to: (2, 3)\n'
                  '[(1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]\n'

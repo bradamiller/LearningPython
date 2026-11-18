@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 802 366" role="img" aria-labelledby="tl-t tl-d" font-family="Montserrat, Helvetica, Arial, sans-serif">
+  <title id="tl-t">From five appends to two loops</title>
+  <desc id="tl-d">The five typed lines for (0, 0) to (2, 3), under path = []. The first two, in red, append (1, 0) and (2, 0), each x + 1; a red bracket points to loop 1: while x &lt; dest_x, x = x + 1, path.append((x, y)). The last three, in green, append (2, 1), (2, 2) and (2, 3), each y + 1; a green bracket points to loop 2, the same loop for y. Each append is one trip around a loop: add 1, then append the new position.</desc>
+  <style>
+    .hdr { font-size: 13px; font-weight: 700; fill: #22527B; letter-spacing: .6px; }
+    .th { font-size: 13px; font-weight: 700; }
+    .m, .c { font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .m { font-size: 15px; font-weight: 700; }
+    .c { font-size: 16px; }
+    .lab { font-size: 13.5px; font-weight: 700; }
+    .cap { font-size: 13px; }
+  </style>
+  <defs>
+    <marker id="mx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#D1182C"/></marker>
+    <marker id="my" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/></marker>
+  </defs>
+    <text class="hdr" x="24" y="30" text-anchor="start" fill="#343A40">YOUR FIVE APPENDS: (0, 0) TO (2, 3)</text>
+  <rect x="24" y="56" width="290" height="40" fill="#22527B" rx="6"/>
+  <text class="m" x="38" y="82" text-anchor="start" fill="#fff">path = []</text>
+  <rect x="24" y="96" width="290" height="40" fill="#FDECEE" stroke="#fff" stroke-width="2"/>
+  <text class="m" x="38" y="122" text-anchor="start" fill="#343A40">path.append((1, 0))</text>
+  <text class="m" x="302" y="122" text-anchor="end" fill="#D1182C"># x + 1</text>
+  <rect x="24" y="136" width="290" height="40" fill="#FDECEE" stroke="#fff" stroke-width="2"/>
+  <text class="m" x="38" y="162" text-anchor="start" fill="#343A40">path.append((2, 0))</text>
+  <text class="m" x="302" y="162" text-anchor="end" fill="#D1182C"># x + 1</text>
+  <rect x="24" y="176" width="290" height="40" fill="#E8F3E9" stroke="#fff" stroke-width="2"/>
+  <text class="m" x="38" y="202" text-anchor="start" fill="#343A40">path.append((2, 1))</text>
+  <text class="m" x="302" y="202" text-anchor="end" fill="#2E7D32"># y + 1</text>
+  <rect x="24" y="216" width="290" height="40" fill="#E8F3E9" stroke="#fff" stroke-width="2"/>
+  <text class="m" x="38" y="242" text-anchor="start" fill="#343A40">path.append((2, 2))</text>
+  <text class="m" x="302" y="242" text-anchor="end" fill="#2E7D32"># y + 1</text>
+  <rect x="24" y="256" width="290" height="40" fill="#E8F3E9" stroke="#fff" stroke-width="2"/>
+  <text class="m" x="38" y="282" text-anchor="start" fill="#343A40">path.append((2, 3))</text>
+  <text class="m" x="302" y="282" text-anchor="end" fill="#2E7D32"># y + 1</text>
+  <path d="M328,100 h10 V172 h-10" fill="none" stroke="#D1182C" stroke-width="3"/>
+  <path d="M328,180 h10 V292 h-10" fill="none" stroke="#2E7D32" stroke-width="3"/>
+  <rect x="418" y="64" width="360" height="116" rx="8" fill="#FDECEE" stroke="#D1182C" stroke-width="2.5"/>
+  <text class="lab" x="432" y="88" text-anchor="start" fill="#D1182C">Loop 1 · appends 1 and 2: add 1 to x</text>
+  <text class="c" x="432" y="116" xml:space="preserve" fill="#343A40">while x &lt; dest_x:</text>
+  <text class="c" x="432" y="140" xml:space="preserve" fill="#343A40">    x = x + 1</text>
+  <text class="c" x="432" y="164" xml:space="preserve" fill="#343A40">    path.append((x, y))</text>
+  <rect x="418" y="204" width="360" height="116" rx="8" fill="#E8F3E9" stroke="#2E7D32" stroke-width="2.5"/>
+  <text class="lab" x="432" y="228" text-anchor="start" fill="#2E7D32">Loop 2 · appends 3 to 5: add 1 to y</text>
+  <text class="c" x="432" y="256" xml:space="preserve" fill="#343A40">while y &lt; dest_y:</text>
+  <text class="c" x="432" y="280" xml:space="preserve" fill="#343A40">    y = y + 1</text>
+  <text class="c" x="432" y="304" xml:space="preserve" fill="#343A40">    path.append((x, y))</text>
+  <path d="M340,136.0 C378,136.0 378,122.0 414,122.0" fill="none" stroke="#D1182C" stroke-width="2.5" marker-end="url(#mx)"/>
+  <path d="M340,236.0 C378,236.0 378,262.0 414,262.0" fill="none" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#my)"/>
+  <text class="cap" x="24" y="350" text-anchor="start" fill="#495057">Each append is one trip around a loop: add 1, then append the new position.</text>
+</svg>

@@ -65,7 +65,7 @@ they match the generator byte for byte. **Known stale:** the deployed
 | f43alias.py | number-vs-list.svg | /img/lesson-m4-02/number-vs-list.svg (right panel lifted from the hand-made two-names-one-list.svg, no longer used, 2026-11-08) |
 | f44.py, m44.py | four-loops.svg | /img/lesson-m4-03/four-loops-xy.svg |
 | f44step.py | one-step.svg | /img/lesson-m4-03/one-step.svg |
-| f44loops.py | trace-to-loops.svg | /img/lesson-m4-03/trace-to-loops.svg |
+| f44loops.py | appends-to-loops.svg | /img/lesson-m4-03/appends-to-loops.svg |
 | f44skip.py | one-x-loop-runs.svg | /img/lesson-m4-03/one-x-loop-runs.svg |
 | f45promises.py | three-promises.svg | no longer used (removed 2026-11-10) |
 | f47.py | headings.svg | /img/lesson-m4-05/headings-xy.svg |
