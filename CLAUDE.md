@@ -783,10 +783,11 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   (numbers circled in orange on the answer slide that writes them). 5-0's roadmap table
   uses the new lesson names. The old 5-1 to 5-3 decks (`l03.py`, three pptx) are deleted, so
   `build.py` runs again. The 5-3 deck (`l03.py`, 2026-11-19) follows the new 5-3 page, same
-  Question/Answer slides plus a predict slide and a check slide per activity step; the 5-4 and 5-5 decks
-  still follow the pages before Brad's rewrite (`remove_blocked()`, came-from walk back).
-  **Other materials NOT updated yet:** the 5-4 and 5-5
-  slide decks, `build_templates.py`'s Module 5 recipe (it still adds
+  Question/Answer slides plus a predict slide and a check slide per activity step. The 5-4 and 5-5
+  decks were rebuilt the same day to match their pages (Brad: "Yes, update them"): 5-4 opens
+  with the obstacles question and answer, 5-5 follows `bfs_distances()` then the walk downhill,
+  with predict/check slides for each stage, the five tests and both break-its.
+  **Other materials NOT updated yet:** `build_templates.py`'s Module 5 recipe (it still adds
   `remove_blocked()` at 5-2), the generated `_module-5-files.mdx` and `templates.mdx` rows,
   and the printable PDFs. Regenerate all of them once Brad says Module 5 is settled.
 - **2026-11-15: THE TOP-DOWN TRIAL IS NOW MODULE 4 (Brad: "Replace module 4 with the trial

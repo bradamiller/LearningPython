@@ -15,18 +15,26 @@ DECK = {
                   'a function that adds to it, and build_graph() built around it. A new BFS PLANNER '
                   'section opens with a placeholder that Lesson 5-5 fills in.'},
 
-        {'kind': 'bullets', 'title': 'Where does the robot keep what it has learned?',
+        {'kind': 'bullets', 'title': 'Where do obstacles go?', 'tag': 'Discuss',
          'bullets': [
-             'Lesson 5-7: the robot sees a box mid-drive and must plan **around** it',
-             'Where does it write that down?',
-             '"Pass the list in" is **half right**: obstacles arrive **one at a time**',
+             'Lesson 5-7: the robot sees a box **while driving**',
+             'It has to plan around it',
+             'Where does it write down that the box is there?',
          ],
-         'callout': 'The list must last **between** one path and the next',
-         'tone': 'teal',
-         'notes': 'Ask the question before showing the bullets. Most students say "pass it in". Agree '
-                  'that it is half right, then ask when the robot finds out about each obstacle: one '
-                  'at a time, in the middle of driving. So something has to keep the list between '
-                  'one path and the next.'},
+         'size': 28,
+         'notes': 'Most students say "pass the list to the function". Agree that it is half right, then '
+                  'ask when the robot finds out about each obstacle: one at a time, in the middle of '
+                  'driving.'},
+
+        {'kind': 'bullets', 'title': 'Answer', 'tag': 'Discuss',
+         'bullets': [
+             '"Pass the list in" is **half right**',
+             'Obstacles arrive **one at a time**, while driving',
+             'So the list has to last **between** one path and the next',
+         ],
+         'size': 28,
+         'callout': 'One list at the top of the section, where every function can see it',
+         'tone': 'green'},
 
         {'kind': 'code', 'title': 'One list at the top of the section',
          'lead': 'At the top of GRID GRAPH, where every function can see it, like `ROWS` and `COLS`:',
@@ -75,7 +83,7 @@ DECK = {
                         'ends up planning from an intersection the robot left three steps ago.'},
 
         {'kind': 'code', 'title': 'Add to robot.py: the blocked list',
-         'lead': 'At the end of GRID GRAPH, under your Lesson 5-2 tests:',
+         'lead': 'At the end of GRID GRAPH, under your Lesson 5-3 test:',
          'lead_h': 0.7,
          'code': '# --- Lesson 5-4: the blocked list ---\n'
                  '# BLOCKED is the one record of where the robot must not go.\n'
@@ -95,15 +103,16 @@ DECK = {
          'notes': 'Two pastes today and one rewrite. This is the first paste. Both bodies are written '
                   'in Step 1.'},
 
-        {'kind': 'code', 'title': 'Add to robot.py: a new BFS PLANNER section',
+        {'kind': 'code', 'title': 'Add to robot.py: BFS PLANNER',
          'lead': 'After GRID GRAPH, above `RUN`. The placeholder body is given: Lesson 5-5 replaces it.',
          'lead_h': 0.7,
          'code': '# ===== BFS PLANNER =====\n'
                  '# The second planner. compute_bfs_path(start, destination)\n'
                  '# has the same shape as the MANHATTAN PLANNER\'s function and\n'
                  '# keeps the same two promises (told the position; the path\n'
-                 '# leaves the start out), but it searches the GRID GRAPH ring\n'
-                 '# by ring, so it routes AROUND whatever is in BLOCKED. Pure\n'
+                 '# leaves the start out), but it numbers the GRID GRAPH as a\n'
+                 '# wave from the destination, so it routes AROUND whatever\n'
+                 '# is in BLOCKED. Pure\n'
                  '# dictionary work: every test here runs with the robot still.\n'
                  '\n'
                  'def compute_bfs_path(start, destination):\n'
@@ -142,7 +151,7 @@ DECK = {
          'callout': 'Write both bodies. Step 2 tests them.',
          'tone': 'orange'},
 
-        {'kind': 'code', 'title': 'Does add_blocked() need `global BLOCKED`?',
+        {'kind': 'code', 'title': 'Does it need `global`?',
          'lead': 'In Lesson 2-7, `set_threshold()` needed `global THRESHOLD`. What does each do to the name?',
          'lead_h': 1.2,
          'code': '    THRESHOLD = new_value              # Lesson 2-7: REASSIGNS the name -- needs global\n'
@@ -156,7 +165,7 @@ DECK = {
                   'inside it would reassign the name and need global; popping does not. This is the '
                   'exit ticket question, so give it time.'},
 
-        {'kind': 'figure', 'title': 'Changing the list vs. reassigning the name',
+        {'kind': 'figure', 'title': 'Change the list, or the name?',
          'figure': '/img/lesson-m5-04/append-vs-assign.svg',
          'caption': '`append` changes the list the name points at. `=` points a name at something else, '
                     'and inside a function that name is a new local.',
@@ -175,9 +184,9 @@ DECK = {
          'explanation': '`global` is needed only to reassign a module-level name. Appending to a list changes '
                         'the list that BLOCKED already names; the name itself is untouched.'},
 
-        {'kind': 'code', 'title': 'Step 2 · build_graph(): two functions become one',
-         'lead': 'Lesson 5-2: `build_grid_graph()`, then `remove_blocked()`. Now one function skips '
-                 'anything blocked while building. Change the `def` line to:',
+        {'kind': 'code', 'title': 'Step 2 · build_graph()', 'tag': 'Activity',
+         'lead': 'Lesson 5-3 built the open grid. Now it leaves out the blocked intersections. '
+                 'In GRID GRAPH, change the `def` line to:',
          'lead_h': 1.2,
          'code': 'def build_graph(rows, cols, blocked):\n'
                  '    """Return the grid as a dictionary, leaving out every\n'
@@ -191,27 +200,27 @@ DECK = {
          'bullets': [
              '**1.** `(x, y)` in `blocked`? Skip it: never a key',
              '**2.** Each neighbor check also needs the neighbor **not** in `blocked`',
-             'Keep the order **left, right, down, up** (Lesson 5-3\'s trace)',
+             'Keep the order **left, right, down, up** (Lesson 5-1\'s trace)',
          ],
          'size': 24,
          'callout': 'Miss check 2 and the graph has **edges into the wall**',
          'tone': 'orange',
          'notes': 'Both checks are needed: the second keeps a blocked intersection out of every other '
-                  'intersection\'s neighbor list. The order matters because it is why the Lesson 5-3 '
+                  'intersection\'s neighbor list. The order matters because it is why the Lesson 5-1 '
                   'trace\'s printed path matched the table. A build_graph that drops blocked keys but '
                   'still lists them as neighbors is the single most common bug in the module, and it '
                   'only shows up in Lesson 5-5 as a search that walks into a wall. Catch it today.'},
 
         {'kind': 'steps', 'title': 'Step 2 · Tidy up, then test',
-         'notes': 'remove_blocked() is absorbed by the new function, the way SETPOINT disappeared in '
-                  'Lesson 2-6. Every call to build_grid_graph() has to change, not only the definition. '
-                  'A NameError at this point usually means a call was missed.',
+         'notes': 'The old name is gone, the way SETPOINT disappeared in Lesson 2-6. Every call to '
+                  'build_grid_graph() has to change, not only the definition. A NameError at this '
+                  'point usually means a call was missed.',
          'steps': [
-             'Delete `remove_blocked()` and its test, the way `SETPOINT` went in Lesson 2-6',
+             'The old name is gone, the way `SETPOINT` went in Lesson 2-6',
              'Fix `test_grid_graph()` to build with `build_graph(ROWS, COLS, BLOCKED)`',
-             'Run it. Nothing blocked: **16**, four neighbors, two neighbors',
+             'Run it. Nothing blocked: **16**, four neighbors, two neighbors, then the whole graph',
          ],
-         'callout': 'Don\'t go on until it matches Lesson 5-2',
+         'callout': 'Don\'t go on until it matches Lesson 5-3',
          'tone': 'orange'},
 
         {'kind': 'check',
@@ -225,7 +234,7 @@ DECK = {
          'explanation': 'The first check removes (1,1) as a key. Only the second check removes it from the '
                         'lists of (0,1), (1,0), (1,2) and (2,1). Without it, a search could step into the wall.'},
 
-        {'kind': 'bullets', 'title': 'Step 3 · Why rebuild the graph on every call?',
+        {'kind': 'bullets', 'title': 'Step 3 · Why rebuild every call?',
          'notes': 'The placeholder compute_bfs_path() builds the graph itself, from BLOCKED, every time '
                   'it is called, rather than once at the top of the file. Rebuilding every call means '
                   'there is no "forgot to rebuild" bug to have, and on a 4x4 grid it visits sixteen '
@@ -253,7 +262,7 @@ DECK = {
              'Print `compute_bfs_path((0, 0), (3, 3))`',
          ]},
 
-        {'kind': 'code', 'title': 'What test_blocked_graph() should show',
+        {'kind': 'code', 'title': 'Step 3 · Check your output', 'tag': 'Activity',
          'code': 'Blocked: [(1, 1)]\n'
                  'Number of intersections: 15\n'
                  '(1,1) in graph? False\n'
@@ -268,7 +277,7 @@ DECK = {
          'notes': 'The neighbors-of-(0,1) line is the one that catches the missing second in-blocked '
                   'check. The empty path is the placeholder: for now, the right answer to nothing.'},
 
-        {'kind': 'bullets', 'title': 'Before you leave: write down, don\'t run',
+        {'kind': 'bullets', 'title': 'Before you leave',
          'lead': 'What should these return once Lesson 5-5 is done, with nothing blocked?',
          'lead_h': 1.5,
          'bullets': [
@@ -281,7 +290,7 @@ DECK = {
          'notes': 'Answers: [(0, 1), (0, 2)] and [], Rule 2 both times. Challenge for early finishers: '
                   'block (1, 0) and (1, 1), rebuild, and print the whole graph. Which intersections in '
                   'the left column (x = 0) can still reach the column at x = 2, and through what? Then: '
-                  'using only build_graph and the ripples idea, write is_reachable(a, b). They will '
+                  'using only build_graph and the wave idea, write is_reachable(a, b). They will '
                   'write most of Lesson 5-5 a day early, which is fine.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
@@ -289,11 +298,11 @@ DECK = {
                   'A navigation app keeps one shared list of closed roads and rebuilds its routing '
                   'graph from it: this toolkit at city scale.',
          'cards': [
-             ('Maps', 'Road closures', 'One shared list of closed roads; the routing graph is '
+             ('Maps', 'Closures', 'One shared list of closed roads; the routing graph is '
                                        'rebuilt from it.'),
-             ('Software', 'One owner per fact', 'Keep one copy of each fact and tell everything '
+             ('Software', 'One owner', 'Keep one copy of each fact and tell everything '
                                                 'else. Copies drift apart.'),
-             ('Robotics', 'Maps that grow', 'A robot vacuum\'s map fills in as it bumps walls: '
+             ('Robotics', 'Vacuums', 'A robot vacuum\'s map fills in as it bumps walls: '
                                             'a huge BLOCKED list.'),
          ],
          'height': 4.0},
@@ -311,6 +320,7 @@ DECK = {
                   'just-found obstacle is already missing from it. Appending changes the list; it does '
                   'not reassign the name. Formative: the two rules from memory, the second in-blocked bug '
                   'caught, the global explanation. Exit ticket: "Why doesn\'t add_blocked() need global?" '
-                  'Next lesson: previous, to_visit and the walk-back from Lesson 5-3, in about twenty lines.'},
+                  'Next lesson: the wave of numbers from the destination and the walk downhill from Lesson '
+                  '5-2, in about twenty lines.'},
     ],
 }
