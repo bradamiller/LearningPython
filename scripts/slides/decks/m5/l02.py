@@ -1,272 +1,353 @@
+"""Module 5, Lesson 5-2 · Finding the Path.
+
+Both discussions ("Where's the path?" and "Teaching it to a computer") run one
+slide per question, then one slide with the answer. Each question slide's notes
+hold that step of the lesson's teacher note. Grids: fig/make_discuss_grids.py.
+"""
+
+FIG = './decks/m5/fig/'
+
+
+def ask(n, total, question, figure=None, notes=None):
+    s = {'kind': 'bullets', 'title': f'Question {n} of {total}', 'tag': 'Discuss',
+         'bullets': question, 'size': 28}
+    if figure:
+        s.update(figure=FIG + figure + '.svg', split=0.55)
+    if notes:
+        s['notes'] = notes
+    return s
+
+
+def answer(n, total, points, rule=None, figure=None, notes=None):
+    s = {'kind': 'bullets', 'title': f'Answer {n} of {total}', 'tag': 'Discuss',
+         'bullets': points, 'size': 28}
+    if figure:
+        s.update(figure=FIG + figure + '.svg', split=0.55)
+    if rule:
+        s.update(callout=rule, tone='green')
+    if notes:
+        s['notes'] = notes
+    return s
+
+
 DECK = {
     'module': 5, 'lesson': 2,
-    'doc': 'module-05-pathfinding/lesson-02-dictionaries',
-    'title': 'Dictionaries',
+    'doc': 'module-05-pathfinding/lesson-02-finding-the-path',
+    'title': 'Finding the Path',
     'slides': [
         {'kind': 'title',
          'objectives': [
-             'Explain what a dictionary is: a collection of key-value pairs',
-             'Create a dictionary, add pairs, and look up a value by key',
-             'Check whether a key exists with the `in` keyword',
-             'Represent a grid graph as `{node: [neighbors]}`',
-             'Write `build_grid_graph()` and `remove_blocked()` in a new GRID GRAPH section of '
-             '`robot.py`, each with a paper test that prints its result',
+             'Walk downhill from the start to find a shortest path, and explain why the path '
+             'leaves the start out',
+             'Explain why the wave starts at the destination',
+             'Explain why a computer takes intersections oldest-first, and why the numbers are '
+             'all it needs',
+             'Carry out the algorithm exactly as a computer would, by hand, including on a grid '
+             'with no path',
          ],
-         'notes': '50 minutes. You drew the grid graph on paper in Lesson 5-1; today it goes into '
-                  'Python. The last objective on the lesson page names the full signatures, '
-                  'build_grid_graph(rows, cols) and remove_blocked(graph, blocked_nodes); the slide '
-                  'shortens them. Show a plain dictionary like {"name": "Alice"} before the '
-                  'tuple-keyed graph.'},
+         'notes': '55 to 60 minutes, no coding. Two discussions and two activities: about 10, '
+                  '15, 15 and 10 minutes. If time is short, keep "Teaching it to a computer" and '
+                  'the review, and shorten the trace to steps 2 to 4.'},
 
-        {'kind': 'bullets', 'title': 'What is a dictionary?',
+        {'kind': 'bullets', 'title': 'The numbers say how far',
          'bullets': [
-             'A **dictionary** stores **key-value pairs** in curly braces',
-             'A printed dictionary maps words to definitions',
-             'A Python dictionary maps any key to any value',
+             'The robot needs a **path**: a list of intersections to drive to',
+             'Today: what\'s the path?',
+             'And how would a computer find it?',
          ],
-         'callout': 'Today: store the Lesson 5-1 graph in a dictionary',
+         'callout': 'It ends with the whole algorithm in plain words: Lesson 5-5 turns it into '
+                    'Python',
          'tone': 'teal'},
 
-        {'kind': 'figure', 'title': 'The key and the value',
-         'figure': '/img/lesson-m5-02/word-dictionary.svg',
-         'caption': 'The word you look up is the **key**; what\'s printed beside it is the '
-                    '**value**. Python\'s dictionary works the same way.'},
-
-        {'kind': 'bullets', 'title': 'Optional: why a dictionary is fast',
-         'tag': 'Optional extension',
+        # --- Discuss · Where's the path? ---
+        {'kind': 'bullets', 'title': 'Where\'s the path?', 'tag': 'Discuss',
          'bullets': [
-             'A printed dictionary is alphabetical, so you flip straight to the page',
-             'Python turns the key into a number: where to keep the value',
-             'Looking up repeats the arithmetic and goes straight there: **hashing**',
+             'Start from the grid you numbered in Lesson 5-1',
+             'The wall at (1,0) and (1,1)',
+             'D at (3,0) is 0; S at (0,0) got a **7**',
          ],
-         'callout': 'Just as fast with four thousand entries as with four',
-         'tone': 'orange',
-         'notes': 'Optional: open it if you have time. Nothing later depends on it. On the page it '
-                  'is a box that starts closed. If the key could change, Python would be looking in the wrong place. Tuples '
-                  'can be dictionary keys, lists cannot: keys must be immutable.'},
+         'split': 0.55,
+         'figure': FIG + 'd51-wall-full.svg',
+         'notes': 'Leading the discussion, 10 minutes. Put the numbered wall grid from the end of '
+                  'Lesson 5-1 back on the board.'},
 
-        {'kind': 'code', 'title': 'Dictionaries in code',
-         'lead': 'Snippets like these are for trying out in a scratch file or at the Python '
-                 'prompt, not for keeping in `robot.py`:',
-         'lead_h': 1.2,
-         'code': 'scores = {"Alice": 95, "Bob": 87}\n'
-                 'graph = {}                         # empty, ready to fill\n'
-                 'graph[(0, 0)] = [(0, 1), (1, 0)]   # node (0,0) -> its neighbor list',
+        ask(1, 4, ['You\'re standing on S, a 7', 'Which way do you go first?'], 'd51-wall-full',
+            notes='Let them notice that it goes away from D, and that the numbers say so with '
+                  'complete confidence.'),
+        answer(1, 4, ['**Up, to (0,1), the 6**',
+                      'The only neighbor with a smaller number',
+                      'It goes **away** from D, and that\'s right'],
+               figure='d52-first-step'),
+
+        ask(2, 4, ['Keep going', 'How do you choose each step, and when do you stop?'],
+            'd52-first-step',
+            notes='Ask why it can\'t fail: every intersection got its number from a neighbor one '
+                  'less, so there is always a way down.'),
+        answer(2, 4, ['Every number came from a neighbor one less, so there is always a way down'],
+               rule='**Always step to a neighbor one less. Stop at 0, which is D.**',
+               figure='d52-walk',
+               notes='One walk from the 7: up the left column, along the row y = 2, down the '
+                     'right column.'),
+
+        ask(3, 4, ['Somewhere you\'ll find two neighbors with the same number',
+                   'Which one do you pick?'], 'd52-walk',
+            notes='Look at (2,2), the 3: its neighbors (3,2) and (2,1) are both 2.'),
+        answer(3, 4, ['**Either one**',
+                      'Both lead down to 0 in the same number of steps',
+                      'There can be several shortest paths; the number of steps is the same'],
+               figure='d52-tie'),
+
+        ask(4, 4, ['Why did we start the wave at D, and not at S?'],
+            notes='Ask what would happen had we numbered from S: you would walk downhill from D '
+                  'back to S, and then have to turn the list around.'),
+        answer(4, 4, ['**So the walk starts where the robot is** and goes forward to D',
+                      'The path comes out in driving order',
+                      'Bonus: the numbers from D give the way from **any** start']),
+
+        # --- Walking downhill ---
+        {'kind': 'code', 'title': 'Walking downhill',
+         'lead': 'Each step is an intersection the robot drives **to**. In order, they are the '
+                 'path:',
+         'code': '[(0, 1), (0, 2), (1, 2), (2, 2), (3, 2), (3, 1), (3, 0)]',
          'code_size': 22,
-         'callout': 'For our graph, the **keys are node tuples** and the **values are lists of '
-                    'neighbor tuples**',
+         'callout': 'The start is left out: the robot is already there. So `len(path)` is the '
+                    'number of steps, 7',
          'tone': 'teal',
-         'notes': 'A key must be something that can\'t change, like a number or a tuple. Why not '
-                  'just a list? Because we look things up by content ("what are the '
-                  'neighbors of (1,1)?"), not by position. A dictionary jumps straight to the '
-                  'answer.'},
-
-        {'kind': 'figure', 'title': 'The graph as a dictionary',
-         'figure': '/img/lesson-m5-02/graph-dict-xy.svg',
-         'caption': 'One entry per node: the node is the key, its neighbor list is the value.',
-         'notes': 'Have students open their Lesson 5-1 drawings and translate each node into a '
-                  'key-value pair: it makes the paper-to-code jump concrete. The snippets in this '
-                  'part of the lesson are for trying out in a scratch file or at the Python '
-                  'prompt, as with tuples and lists in Module 4. Only the two functions in the skeleton '
-                  'go into robot.py.'},
+         'notes': 'Same as Module 4\'s compute_manhattan_path. A classmate who picked differently '
+                  'at a tie might have [..., (2, 2), (2, 1), (2, 0), (3, 0)]: also 7 steps, also '
+                  'right. In Lesson 5-6 students test the planner by checking what must be true '
+                  'of any correct answer, not by comparing against one list.'},
 
         {'kind': 'check',
-         'question': 'In our graph dictionary, what are the keys and what are the values?',
-         'options': ['Keys are numbers; values are strings',
-                     'Keys are (x, y) node tuples; values are lists of neighbor tuples',
-                     'Keys are lists; values are tuples',
-                     'Both are single integers'],
-         'answer': 1,
-         'explanation': 'Each node is a tuple key, and its value is the list of nodes it connects '
-                        'to: the Python version of the paper graph.'},
-
-        {'kind': 'code', 'title': 'Access and the `in` keyword',
-         'lead': 'Look up a value with square brackets, and check whether a key exists with `in`:',
-         'code': 'graph = {(0, 0): [(0, 1), (1, 0)], (0, 1): [(0, 0), (0, 2), (1, 1)]}\n'
-                 '\n'
-                 'print(graph[(0, 0)])       # [(0, 1), (1, 0)]\n'
-                 'print(len(graph[(0, 0)]))  # 2  -- number of neighbors\n'
-                 '\n'
-                 'print((0, 0) in graph)     # True\n'
-                 'print((2, 2) in graph)     # False -- not added',
-         'code_size': 20,
-         'callout': '**A blocked node simply isn\'t in the graph**, so `(1, 1) in graph` tells '
-                    'you whether that intersection is reachable',
-         'tone': 'teal'},
-
-        {'kind': 'bullets', 'title': 'Missing keys, and deleting one',
-         'bullets': [
-             'A **missing** key, like `graph[(9, 9)]`, raises a `KeyError`',
-             'So check with `in` first',
-             '`del graph[(1, 1)]` removes that key',
-             'Afterwards, `(1, 1) in graph` is `False`',
-         ],
-         'callout': 'You\'ll need `del` to block a node',
-         'tone': 'orange'},
-
-        {'kind': 'check',
-         'question': 'Given `graph = {(0,0): [(0,1)]}`, what does `(0,0) in graph` return?',
-         'options': ['True', 'False', '[(0,1)]', 'A KeyError'],
+         'question': 'Walking downhill, you are on an intersection numbered 4. Its open neighbors '
+                     'are numbered 3, 3 and 5. Where can you step?',
+         'options': ['To either 3: both lead down to the destination in 3 more steps',
+                     'Only to the first 3 you check',
+                     'To the 5, because it is further from the destination',
+                     'Nowhere: two 3s means there is no path'],
          'answer': 0,
-         'explanation': '`in` checks whether a key exists. (0,0) is a key, so it returns True. '
-                        '(Accessing a missing key with [] would raise KeyError, which is why we '
-                        'use `in`.)'},
+         'explanation': 'Any neighbor with one less works. Two choices just means two different '
+                        'shortest paths, both correct.'},
 
-        {'kind': 'code', 'title': 'Add to robot.py: GRID GRAPH (1 of 3)',
-         'lead': 'A new kind of data gets a new section. Paste it above `RUN`, after the '
-                 'NAVIGATOR section. Nothing in it drives.',
-         'lead_h': 1.2,
-         'code': '# ===== GRID GRAPH =====\n'
-                 '# The grid as a graph, in a dictionary: every intersection is\n'
-                 '# a key, and its value is the list of neighbors it is joined\n'
-                 '# to. The BFS PLANNER searches this graph. Starts with the\n'
-                 '# open grid; Lesson 5-4 adds the blocked list, so a blocked\n'
-                 '# intersection is neither a key nor anyone\'s neighbor.\n'
-                 'ROWS = 4                 # the grid is ROWS x COLS intersections\n'
-                 'COLS = 4',
-         'code_size': 18,
-         'callout': '`ROWS` and `COLS` are the size of your taped grid',
-         'tone': 'teal',
-         'notes': 'Like the MANHATTAN PLANNER, nothing here drives: two functions that take '
-                  'numbers and lists and return a dictionary. The functions take the size as '
-                  'parameters rather than reading the settings, so a test can build a 3x3 while '
-                  'the settings say 4x4.'},
-
-        {'kind': 'code', 'title': 'Add to robot.py: GRID GRAPH (2 of 3)',
-         'code': 'def build_grid_graph(rows, cols):\n'
-                 '    """Return the open grid as a dictionary: every (x, y)\n'
-                 '    maps to the list of its on-grid neighbors."""\n'
-                 '    # 1. graph = {}\n'
-                 '    # 2. for every x, for every y:\n'
-                 '    #       neighbors = []\n'
-                 '    #       left, right, down, up: append each one that is\n'
-                 '    #       still on the grid (a bounds check for each)\n'
-                 '    #       graph[(x, y)] = neighbors\n'
-                 '    # 3. return graph\n'
-                 '    pass',
-         'code_size': 18,
-         'callout': 'The build-in-a-loop pattern from Lesson 4-2, with two loops, one inside the '
-                    'other, and a value that is itself a list you build',
-         'tone': 'teal',
-         'callout_size': 20,
-         'notes': 'It goes under the ROWS and COLS settings. The outline is longer than Module 4\'s because this is the first time students '
-                  'build a dictionary inside a function: start empty, add one entry per pass. In '
-                  'Lesson 5-4 this function is rewritten with the blocked list folded in; the '
-                  'tests students write today will tell them whether that rewrite broke '
-                  'anything. Every student needs a working copy.'},
-
-        {'kind': 'code', 'title': 'Add to robot.py: GRID GRAPH (3 of 3)',
-         'lead': 'Right under `build_grid_graph()`:',
-         'code': 'def remove_blocked(graph, blocked_nodes):\n'
-                 '    """Take every node in blocked_nodes out of graph: delete\n'
-                 '    its key AND drop it from every other node\'s neighbors."""\n'
-                 '    # 1. for each blocked node that is in graph: del its key\n'
-                 '    # 2. for each node still in graph: replace its neighbor\n'
-                 '    #    list with one that leaves the blocked nodes out\n'
-                 '    # 3. return graph\n'
-                 '    pass',
-         'code_size': 19,
-         'callout': 'Two numbered steps: delete the key, then clean every neighbor list',
-         'tone': 'orange',
-         'notes': 'remove_blocked() is deleted in Lesson 5-4, the way SETPOINT went in Lesson '
-                  '2-6, when the blocked list is folded into the graph builder.'},
-
-        {'kind': 'bullets', 'title': 'Activity · Build the graph automatically', 'tag': 'Activity',
+        # --- Discuss · Teaching it to a computer ---
+        {'kind': 'bullets', 'title': 'Teaching it to a computer', 'tag': 'Discuss',
          'bullets': [
-             '`build_grid_graph()` builds the graph for any size',
-             'Add a neighbor only if it is on the grid: a **bounds check** before each `append`',
-             ['left: `x > 0`',
-              'right: `x < cols - 1`',
-              'the same two for `y`'],
+             'You numbered the grid **with your eyes**: "all the 2s" at once',
+             'A computer can\'t: it sees **one intersection** and its open neighbors',
+             'The same limit your own rule had in Lesson 5-1',
          ],
-         'notes': 'A 10x10 grid has 100 nodes, too many to type. For each node, check left, right, '
-                  'down and up; the y checks are against the bottom and top rows. The four checks '
-                  'are what give corners 2 neighbors and interior nodes 4: the next slide shows '
-                  'it.'},
+         'notes': 'Leading the bridge, 10 to 15 minutes: the most important ten minutes in the '
+                  'module. This is where students usually get stuck: they can do it by hand, but '
+                  'can\'t see what a program would do. Each answer is one piece of the program, so '
+                  'write each on the board as it\'s found, in words, and leave it up for the rest '
+                  'of the lesson.'},
 
-        {'kind': 'figure', 'title': 'Four bounds checks', 'tag': 'Activity',
-         'figure': '/img/lesson-m5-02/bounds-checks-xy.svg',
-         'caption': 'A failed check is a neighbor that would be off the grid, so it is never '
-                    'appended.'},
+        ask(1, 4, ['A computer looks around **one intersection at a time**',
+                   'In what order should it take them, so that every 1 is looked around before '
+                   'any 2?'],
+            notes='Listen for "the order they were numbered". If they\'re stuck, ask: "Which got '
+                  'its number first, a 1 or a 2?"'),
+        answer(1, 4, ['**In the order they were numbered**',
+                      'Every 1 was numbered before any 2',
+                      'Oldest first: the wave front moves out one step at a time, just as on '
+                      'paper']),
 
-        {'kind': 'steps', 'title': 'Step 1 · Test `build_grid_graph()`',
+        ask(2, 4, ['How can it remember that order?',
+                   'What does it write down, and where does each newly numbered intersection '
+                   'go?']),
+        answer(2, 4, ['**A list: the to-visit list**',
+                      'A newly numbered intersection goes on the **end**',
+                      'The next one to look around comes off the **front**'],
+               rule='**Add to the end, take from the front.**',
+               notes='Act it out if the room is flat: students in a line, the one at the front '
+                     'sits down and sends any unnumbered neighbors to the back.'),
+
+        ask(3, 4, ['When is the wave finished?']),
+        answer(3, 4, ['**When the list is empty**',
+                      'Every intersection the wave can reach has its number'],
+               notes='On paper you could stop once S had a number; the computer just lets the '
+                     'wave finish, which on a 4×4 grid costs nothing.'),
+
+        ask(4, 4, ['To walk downhill, what does the computer need to know about each '
+                   'intersection?', 'Does it need anything else?']),
+        answer(4, 4, ['**Just its number**',
+                      'The walk only looks for a neighbor one less',
+                      'Nothing else needs remembering'],
+               notes='Say this plainly; students expect something more complicated, and it\'s why '
+                     'the code in Lesson 5-5 is short.'),
+
+        # --- Activity · Trace it the computer's way ---
+        {'kind': 'steps', 'title': 'Trace it the computer\'s way', 'tag': 'Activity',
+         'lead': '3×3, center (1,1) blocked. Start (0,0), destination (2,2). Neighbors in the '
+                 'order left, right, down, up.',
          'steps': [
-             'Write the body of `build_grid_graph()` from its outline',
-             'Write `test_grid_graph()`: build the 4×4 graph, print `len(graph)` and the '
-             'neighbors of `(1, 1)` and `(0, 0)`',
-             'Predict each from your Lesson 5-1 drawing first',
-             'Run it with the robot on the desk',
+             'Take the intersection at the **front** of the to-visit list',
+             'Each open neighbor with **no number yet** gets one more, and goes on the **end**',
+             'Stop when the list is **empty**',
+             'Then walk downhill from (0,0). At a tie, take the first in left, right, down, up',
          ],
-         'notes': 'The expected output is behind a reveal on the lesson page; let students '
-                  'predict and run first. The order inside a neighbor list depends on the order '
-                  'the four directions are checked; left, right, down, up is the order the search '
-                  'in Lesson 5-5 will use.'},
+         'notes': 'Students copy the table on the next slide and fill it in; the first two rows '
+                  'are done for them. The full trace is on the lesson page behind a reveal, and '
+                  'the step-through after the table shows it.'},
+
+        {'kind': 'table', 'title': 'Fill in the table', 'tag': 'Activity',
+         'headers': ['Step', 'Take off the front', 'Newly numbered', 'To-visit afterward'],
+         'rows': [
+             ['start', '—', '(2,2): 0', '(2,2)'],
+             ['1', '(2,2)', '(1,2): 1, (2,1): 1', '(1,2), (2,1)'],
+             ['2', '', '', ''],
+             ['3', '', '', ''],
+             ['…', '', '', ''],
+             ['8', '', '', ''],
+         ],
+         'widths': [1, 2, 3, 3],
+         'notes': 'Answer: 2 (1,2) gives (0,2): 2. 3 (2,1) gives (2,0): 2. 4 (0,2) gives (0,1): 3. '
+                  '5 (2,0) gives (1,0): 3. 6 (0,1) gives (0,0): 4. 7 (1,0): nothing new. 8 (0,0): '
+                  'nothing new, the list is empty. Walking downhill from the 4: (1,0) and (0,1) '
+                  'are both 3, and (1,0) comes first. The path is [(1, 0), (2, 0), (2, 1), (2, 2)]: '
+                  '4 steps.'},
+
+        {'kind': 'figure', 'title': 'Check your trace', 'tag': 'Activity',
+         'figure': '/img/lesson-m5-03/bfs-downhill-steps-xy.svg',
+         'caption': 'Take from the front, add to the back, until the list is empty; then walk '
+                    'downhill from S.',
+         'notes': 'On the lesson page students can press Step to see what the computer does next '
+                  'and why. The last step says why it is the shortest: every 1 was written before '
+                  'any 2 and every 2 before any 3, so S\'s 4 is the fewest steps.'},
 
         {'kind': 'check',
-         'question': 'In `build_grid_graph`, why is each neighbor guarded by an if (like `if x > 0`)?',
-         'options': ['To make the code shorter',
-                     'To keep neighbors inside the grid: a corner or edge node has no neighbor '
-                     'off the grid',
-                     'To skip blocked nodes',
-                     'It has no effect'],
-         'answer': 1,
-         'explanation': 'The bounds checks prevent adding neighbors that fall off the edge of the '
-                        'grid, so corners get 2 neighbors and interior nodes get 4.'},
+         'question': 'Why does the computer take intersections from the FRONT of the to-visit '
+                     'list?',
+         'options': ['The front holds the oldest, so everything 1 step away is handled before '
+                     'anything 2 steps away',
+                     'So the search heads toward the start',
+                     'It doesn\'t matter: any order gives the right numbers',
+                     'So blocked intersections are skipped'],
+         'answer': 0,
+         'explanation': 'New intersections go on the end, so the front is always the oldest. '
+                        'Oldest-first means the wave front moves out one step at a time, which is '
+                        'what makes every number a shortest distance.'},
 
-        {'kind': 'bullets', 'title': 'Activity · Removing blocked nodes', 'tag': 'Activity',
+        # --- Review: the algorithm ---
+        {'kind': 'bullets', 'title': 'Review: number from D',
+         'tag': 'The algorithm',
          'bullets': [
-             'Blocking a node takes the outline\'s **two steps**:',
-             ['delete its key', '**and** remove it from every other node\'s neighbor list'],
-             'Skip step 2 and other nodes still "reach" it',
-             'Step 2: keep each old neighbor that is `not in blocked_nodes`',
+             'Write 0 on the destination and put it on a to-visit list',
+             'Until the list is empty, take the intersection at the **front**',
+             'Each open neighbor **with no number yet** gets one more, and joins the **end**',
+             'A neighbor that already has a number is left alone',
          ],
-         'notes': 'Step 2, one way: start a new empty list, loop over the old neighbors, append '
-                  'each one that is not in blocked_nodes, then assign the new list back to '
-                  'graph[node]. Spend extra time here: forgetting to clean the neighbor lists is the number '
-                  'one bug in later lessons. A plain loop-and-append is the version to expect '
-                  'from most students, and it is fine.'},
+         'callout': 'Join at the end, take from the front: everything 1 step away is numbered '
+                    'before anything 2 steps away',
+         'tone': 'teal',
+         'notes': 'Have students explain the review back to a partner in their own words before '
+                  '"Be the computer". Lesson 5-3 goes through it asking what the program has to '
+                  'remember for each part, and Lesson 5-5\'s skeleton lists its steps as numbered '
+                  'comments, with one line of Python under each. A student who can explain the '
+                  'review can write the program; a student who skipped it is translating a '
+                  'picture.'},
 
-        {'kind': 'steps', 'title': 'Step 2 · Test `remove_blocked()`',
-         'steps': [
-             'Write the body of `remove_blocked()` from its outline',
-             'Write `test_remove_blocked()`: build a **3×3** graph and remove `(1, 1)`',
-             'Predict, then print: intersections left, `(1, 1) in graph`, neighbors of `(0, 1)`',
-             'Don\'t go on until both tests print what you predicted',
+        {'kind': 'bullets', 'title': 'Review: walk downhill',
+         'tag': 'The algorithm',
+         'bullets': [
+             'No number on the start? The wave never reached it: **no path**',
+             'Otherwise, from the start, step to an open neighbor **one less**',
+             'Write down each intersection you step onto, until you\'re on the destination',
+             'Leave the start off: the robot is already there',
          ],
-         'notes': 'The finished bodies and the expected output are behind a reveal on the lesson '
-                  'page, and the whole file at the end of the module is in the '
-                  'Teacher Guide: learningpython.bradhouse.com/teacher-guide/sample-programs/module-5 (teacher mode). The reveal uses a list '
-                  'comprehension, which is new; students who wrote the loop keep the loop.'},
+         'callout': 'All it needs is one number per intersection',
+         'tone': 'teal',
+         'notes': 'And while it numbers the grid it never looks at where the start is, which is '
+                  'why walls in the way are no problem.'},
 
         {'kind': 'check',
-         'question': 'To block node (1,1), what two things must happen to the graph dictionary?',
-         'options': ['Just delete the key (1,1)',
-                     'Delete the key (1,1) AND remove (1,1) from every other node\'s neighbor list',
-                     'Set graph[(1,1)] to an empty list',
-                     'Nothing: blocked nodes are ignored automatically'],
-         'answer': 1,
-         'explanation': 'Deleting only the key leaves dangling references: neighbors still list '
-                        '(1,1). You must also clean it out of every neighbor list.'},
+         'question': 'What in the algorithm makes sure no intersection is ever numbered twice?',
+         'options': ['Only a neighbor that does not have a number yet gets one and joins the list',
+                     'Always taking the intersection at the front of the list',
+                     'Stopping when the list is empty',
+                     'Walking downhill from the start'],
+         'answer': 0,
+         'explanation': 'A neighbor that already has a number is left alone. That is the '
+                        'numbered-once rule from Lesson 5-1.'},
+
+        {'kind': 'check',
+         'question': 'What makes sure everything 1 step from the destination is numbered before '
+                     'anything 2 steps away?',
+         'options': ['New intersections join the end of the list, and the next one is always '
+                     'taken from the front',
+                     'Stopping when the list is empty',
+                     'Looking at the open neighbors only',
+                     'Walking downhill from the start'],
+         'answer': 0,
+         'explanation': 'Joining at the end and taking from the front means the oldest is always '
+                        'next, so the wave front moves out one step at a time.'},
+
+        # --- Activity · Be the computer ---
+        {'kind': 'steps', 'title': 'Be the computer', 'tag': 'Activity',
+         'lead': 'Pairs. The computer sees only one intersection and its open neighbors. The '
+                 'other reads the review aloud and checks. 3×3, middle column blocked, start '
+                 '(0,0), destination (2,0).',
+         'lead_h': 1.15,
+         'steps': [
+             'What ends the numbering, and which intersections got numbers?',
+             'Did the start get a number? What does that mean?',
+             'Swap jobs and run it again with only (1,1) blocked. What path do you get?',
+         ],
+         'notes': 'Answers. Middle column blocked: (2,0) gets 0, (2,1) gets 1, (2,2) gets 2, then '
+                  'the list is empty. The start never got a number: there is no path, and the '
+                  'program will hand back an empty list, []. Only (1,1) blocked: (1,0) and (2,1) '
+                  'get 1; (0,0) and (2,2) get 2; (0,1) and (1,2) get 3; (0,2) gets 4. The start '
+                  'is a 2, and the path is [(1, 0), (2, 0)]. Listen for: the numbering ends '
+                  'because the list runs out, not because the start was found.'},
+
+        # --- Check your paper against the computer ---
+        {'kind': 'code', 'title': 'Check against the computer',
+         'lead': 'Your teacher\'s demonstration program runs the 3×3 with (1,1) blocked, step by '
+                 'step, then prints the numbers:',
+         'code': ' 2 |   2  1  0\n'
+                 ' 1 |   3  X  1\n'
+                 ' 0 |   4  3  2\n'
+                 '    ----------\n'
+                 '       0  1  2',
+         'code_size': 26,
+         'callout': 'If your trace matches, you ran the algorithm the way the computer does',
+         'tone': 'green',
+         'notes': 'The program is in the Module 5 sample programs. It is plain Python, no robot '
+                  'and no XRPLib, so it runs on any laptop or in XRP Code with the robot '
+                  'connected. Project it rather than handing it out, since Lesson 5-5 has students '
+                  'write bfs_distances() and the walk themselves. Don\'t walk through its code: '
+                  'Lessons 5-3 to 5-5 get there from the review, one step at a time. Nothing goes '
+                  'into robot.py yet.'},
 
         {'kind': 'cards', 'title': 'Real-world connections',
          'cards': [
-             ('Web', 'User profiles', 'A username maps to a profile: any user, found instantly '
-                                      'by key.'),
-             ('Games', 'Inventories', 'Item name maps to quantity: "how many potions?" with no '
-                                      'searching.'),
-             ('Data', 'Caches & indexes', 'Databases and caches use key lookups so huge datasets '
-                                          'stay fast to search.'),
+             ('Robotics', 'Wavefront planners', 'Many robots spread a wave of numbers out from '
+                                                'the goal, then drive downhill from wherever '
+                                                'they are.'),
+             ('Graphics', 'Paint-bucket fill', 'The fill tool spreads out from where you click '
+                                               'with a to-visit list, like the wave.'),
+             ('Puzzles', 'Maze solvers', 'Flood the maze from the exit, then walk downhill from '
+                                         'the entrance.'),
          ]},
 
         {'kind': 'wrapup',
          'questions': [
-             'How is a dictionary different from a list?',
-             'Why are tuples the keys and lists the values in our graph?',
-             'What are the two steps to block a node?',
+             'How do you get the path from the numbers?',
+             'Why does the wave start at the destination?',
+             'Why does the computer take the oldest intersection first?',
+             'What happens when the start is walled off?',
          ],
-         'next': 'breadth-first search, on paper',
-         'notes': 'Answers: looked up by key, not by position. A node is a fixed pair; its '
-                  'neighbors are a changing collection. Delete its key; remove it from all '
-                  'neighbor lists.'},
+         'next': 'what the program has to remember, and the grid as a graph',
+         'notes': 'Answers: from the start, keep stepping to a neighbor one less until you reach '
+                  '0. So the walk starts where the robot is and the path comes out in driving '
+                  'order. So the wave front moves out one step at a time. The list empties '
+                  'without reaching it; there is no path. Formative: a correct trace table, and '
+                  'the "Be the computer" answers, especially that the dead-end numbering ends '
+                  'because the list runs out. Exit ticket: "What would go wrong if the computer '
+                  'took the newest intersection from the list instead of the oldest?" (The wave '
+                  'front would no longer move out one step at a time, so the numbers might not be '
+                  'shortest distances, and the walk could take a longer route.) Preview: next '
+                  'lesson asks what the program has to remember for each part; that\'s where the '
+                  'grid becomes a graph and Python\'s dictionary comes in.'},
     ],
 }

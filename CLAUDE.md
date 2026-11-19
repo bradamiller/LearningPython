@@ -753,9 +753,20 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   own section), return + `test_grid_graph()` on 4x4, then `in` and a deliberate `KeyError`.
   Every step: predict, run, compare to a Reveal. 5-3 is the model for 5-4 and 5-5 once
   Brad has reviewed it (5-5 will also get the stop-when-the-start-is-numbered change).
-  **Materials NOT updated yet (Brad: website only until the changes settle):** the 5-1 to 5-5
-  slide decks (5-1 to 5-3 have no deck link now, since their page ids changed; `slides.json`
-  still has the old ids), `build_templates.py`'s Module 5 recipe (it still adds
+  **Decks for 5-0 to 5-2 rebuilt 2026-11-19 (Brad: "the slides follow that same discussion
+  path ... one step would be the question, and then the next slide would be a description of
+  the answer").** `decks/m5/l01.py` and `l02.py` follow the new pages; every discussion
+  ("How far away is everything?", "Where's the path?", "Teaching it to a computer") is a
+  setup slide, then for each question a "Question n of N" slide and an "Answer n of N" slide
+  (key rule in a green callout where the page underlines one). The teacher note for that
+  step is in the question slide's notes; what to say after the answer is in the answer
+  slide's notes. Slide-only grids, one per step, from `decks/m5/fig/make_discuss_grids.py`
+  (numbers circled in orange on the answer slide that writes them). 5-0's roadmap table
+  uses the new lesson names. The old 5-1 to 5-3 decks (`l03.py`, three pptx) are deleted, so
+  `build.py` runs again; **5-3 Pencil to Program has no deck yet**, and the 5-4 and 5-5 decks
+  still follow the pages before Brad's rewrite (`remove_blocked()`, came-from walk back).
+  **Other materials NOT updated yet (Brad: website only until the changes settle):** the 5-3 to 5-5
+  slide decks, `build_templates.py`'s Module 5 recipe (it still adds
   `remove_blocked()` at 5-2), the generated `_module-5-files.mdx` and `templates.mdx` rows,
   and the printable PDFs. Regenerate all of them once Brad says Module 5 is settled.
 - **2026-11-15: THE TOP-DOWN TRIAL IS NOW MODULE 4 (Brad: "Replace module 4 with the trial

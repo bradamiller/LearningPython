@@ -13,10 +13,10 @@ DECK = {
              'of the program',
          ],
          'notes': '15 to 20 minutes, no coding yet. Keep it to the destination and the three '
-                  'pieces. Do not say how the planner searches: students invent that in Lesson '
-                  '5-3. The figure uses a different grid from Lesson 5-1\'s detour activity, so it '
-                  'does not give that answer away. If students ask how the robot finds the way '
-                  'around: "Lessons 5-1 and 5-3, with a pencil, before any code."'},
+                  'pieces. Do not say how the planner searches: students work it out in Lessons '
+                  '5-1 and 5-2. The figure uses a different grid from Lesson 5-1\'s detour '
+                  'activity, so it does not give that answer away. If students ask how the robot '
+                  'finds the way around: "Lessons 5-1 and 5-2, with a pencil, before any code."'},
 
         {'kind': 'bullets', 'title': 'Module 4\'s one blind spot',
          'bullets': [
@@ -98,11 +98,12 @@ DECK = {
          'headers': ['Lesson', 'What happens'],
          'widths': [3.6, 7.8],
          'size': 20,
-         'rows': [['**5-1** Grid as a Graph',
-                   'Block an intersection and find a way around by hand. No code.'],
-                  ['**5-2** Dictionaries', 'Store the graph in Python. GRID GRAPH opens.'],
-                  ['**5-3** BFS Concept',
-                   'Turn "I just looked" into a method, traced with a pencil. No code.'],
+         'rows': [['**5-1** Finding a Way Around',
+                   'Find a way around by eye, then work out a method as a class. No code.'],
+                  ['**5-2** Finding the Path',
+                   'Find the route, then work out how a computer would do it. No code.'],
+                  ['**5-3** Pencil to Program',
+                   'What the program must remember; the grid in Python. GRID GRAPH opens.'],
                   ['**5-4** Pathfinding Functions', 'A shared blocked list; BFS PLANNER opens'],
                   ['**5-5** compute_bfs_path()', 'The pencil method, line for line, in Python']]},
 

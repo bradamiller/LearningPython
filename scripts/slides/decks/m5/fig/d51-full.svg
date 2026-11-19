@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 454" width="520" height="454" role="img" aria-labelledby="fT fD">
+  <title id="fT">Every intersection numbered</title>
+  <desc id="fD">The 4 by 4 grid numbered from D: each intersection holds its steps to D. S, at (0, 0), is 6.</desc>
+  <style>
+    .ax { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 17px; font-weight: 700; fill: #6C757D; }
+    .lb { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 800; fill: #142D50; }
+    .nm { font-family: Montserrat, Helvetica, Arial, sans-serif; font-size: 21px; font-weight: 800; fill: #FFFFFF; }
+  </style>
+  <defs>
+    <marker id="aB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22527B"/></marker>
+    <marker id="aT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C77C02"/></marker>
+  </defs>
+  <rect width="520" height="454" fill="#FFFFFF"/>
+  <line x1="110" y1="380" x2="220" y2="380" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="110" y1="380" x2="110" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="110" y1="270" x2="220" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="110" y1="270" x2="110" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="110" y1="160" x2="220" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="110" y1="160" x2="110" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="110" y1="50" x2="220" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="380" x2="330" y2="380" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="380" x2="220" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="270" x2="330" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="270" x2="220" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="160" x2="330" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="160" x2="220" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="220" y1="50" x2="330" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="380" x2="440" y2="380" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="380" x2="330" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="270" x2="440" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="270" x2="330" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="160" x2="440" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="160" x2="330" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="330" y1="50" x2="440" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="440" y1="380" x2="440" y2="270" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="440" y1="270" x2="440" y2="160" stroke="#ADB5BD" stroke-width="3"/>
+  <line x1="440" y1="160" x2="440" y2="50" stroke="#ADB5BD" stroke-width="3"/>
+  <text class="ax" x="110" y="438" text-anchor="middle">x = 0</text>
+  <text class="ax" x="62" y="386" text-anchor="end">y = 0</text>
+  <text class="ax" x="220" y="438" text-anchor="middle">x = 1</text>
+  <text class="ax" x="62" y="276" text-anchor="end">y = 1</text>
+  <text class="ax" x="330" y="438" text-anchor="middle">x = 2</text>
+  <text class="ax" x="62" y="166" text-anchor="end">y = 2</text>
+  <text class="ax" x="440" y="438" text-anchor="middle">x = 3</text>
+  <text class="ax" x="62" y="56" text-anchor="end">y = 3</text>
+  <circle cx="110" cy="380" r="32" fill="none" stroke="#C77C02" stroke-width="4"/>
+  <circle cx="110" cy="380" r="24" fill="#142D50" stroke="#142D50" stroke-width="2.5"/>
+  <text class="nm" x="110" y="387.5" text-anchor="middle">6</text>
+  <circle cx="110" cy="270" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="110" y="277.5" text-anchor="middle">5</text>
+  <circle cx="110" cy="160" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="110" y="167.5" text-anchor="middle">4</text>
+  <circle cx="110" cy="50" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="110" y="57.5" text-anchor="middle">3</text>
+  <circle cx="220" cy="380" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="220" y="387.5" text-anchor="middle">5</text>
+  <circle cx="220" cy="270" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="220" y="277.5" text-anchor="middle">4</text>
+  <circle cx="220" cy="160" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="220" y="167.5" text-anchor="middle">3</text>
+  <circle cx="220" cy="50" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="220" y="57.5" text-anchor="middle">2</text>
+  <circle cx="330" cy="380" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="330" y="387.5" text-anchor="middle">4</text>
+  <circle cx="330" cy="270" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="330" y="277.5" text-anchor="middle">3</text>
+  <circle cx="330" cy="160" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="330" y="167.5" text-anchor="middle">2</text>
+  <circle cx="330" cy="50" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="330" y="57.5" text-anchor="middle">1</text>
+  <circle cx="440" cy="380" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="440" y="387.5" text-anchor="middle">3</text>
+  <circle cx="440" cy="270" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="440" y="277.5" text-anchor="middle">2</text>
+  <circle cx="440" cy="160" r="24" fill="#4C8BF5" stroke="#4C8BF5" stroke-width="2.5"/>
+  <text class="nm" x="440" y="167.5" text-anchor="middle">1</text>
+  <circle cx="440" cy="50" r="24" fill="#2E7D32" stroke="#2E7D32" stroke-width="2.5"/>
+  <text class="nm" x="440" y="57.5" text-anchor="middle">0</text>
+  <text class="lb" x="64" y="358" text-anchor="middle">S</text>
+  <text class="lb" x="486" y="28" text-anchor="middle">D</text>
+</svg>
