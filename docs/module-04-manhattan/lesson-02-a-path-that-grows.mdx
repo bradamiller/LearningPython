@@ -7,7 +7,7 @@ sidebar_position: 2
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-2 · The Planner: A Path That Grows"
-  meta={['50–60 min', 'Python code', 'Building a list', 'Robot stays on the desk']}
+  meta={['60–75 min', 'Python code', 'Building a list', 'Robot stays on the desk']}
 />
 
 <TeacherBanner>
@@ -22,6 +22,7 @@ real paths for any trip that goes right and up. Left and down are Lesson 4-3.
 
 By the end of this lesson you will be able to:
 
+- Work out the planner's rule: change one number by 1 until it matches the destination's
 - Build a path by hand with `append()`, across first, then up
 - Start with an empty list, add to it with `append()`, and count it with `len()`
 - Unpack a tuple into `x` and `y`, and make a new tuple from them
@@ -32,10 +33,72 @@ By the end of this lesson you will be able to:
 
 <QuizLink id="module-04-manhattan/lesson-02-a-path-that-grows" />
 
-## One step at a time
+## Discuss · Where does the path go?
 
-Each step moves the robot to a neighboring intersection, so **exactly one of x or y
-changes, by 1**. Never both: that would be a diagonal, and the robot can't drive one.
+Draw a 4×4 grid. Mark the start, S, at (0,0) and the destination, D, at (2,3): Leg 1 of
+the delivery run. Answer each question before you open its answer.
+
+<TeacherNote title="Leading the discussion (10–15 min)">
+
+Draw the grid big on the board and mark the intersections as the class names them. The
+goal is that *they* say the rule; your job is to ask the next question. Keep the robot out
+of it: turning and driving are Lesson 4-4's discussion. Today the driver stays a stub.
+
+</TeacherNote>
+
+**Question 1.** What is the fewest number of blocks the robot can drive from S to D? Is
+there only one route that short?
+
+<Reveal title="Answer 1" hint="discuss first">
+
+**5 blocks:** 2 across and 3 up. **No**, there are several. We pick the one that's
+easiest to describe: all the way east, then all the way north.
+
+<Figure
+  src="/img/lesson-m4-discuss/m4d-42-routes.svg"
+  alt="The 4 by 4 grid from S at (0, 0) to D at (2, 3). A solid red route goes right to (2, 0), then up to D. A dashed orange route goes up to (0, 3), then right to D. Both are 5 blocks."
+  caption="Two of the 5-block routes. There are more."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 1">
+
+Have a few students trace different 5-block routes on the board. Then ask: "Which one is
+easiest to explain to someone over the phone?" Steer to *across first, then up*, the rule
+from Lesson 4-0.
+
+</TeacherNote>
+
+**Question 2.** List, in order, every intersection the robot drives to on that route.
+Does S go on the list?
+
+<Reveal title="Answer 2" hint="discuss first">
+
+(1,0), (2,0), (2,1), (2,2), (2,3). **S doesn't:** the robot is already there. This list is
+the path the planner has to hand back.
+
+<Figure
+  src="/img/lesson-m4-discuss/m4d-42-path.svg"
+  alt="The 4 by 4 grid with the route from S at (0, 0) to D at (2, 3): right to (1, 0) and (2, 0), then up to (2, 1), (2, 2) and (2, 3). The five intersections it drives to are numbered 1 to 5 and labeled with their coordinates. S has no number."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 2">
+
+Write the list on the board as a list of tuples, the way `DELIVERY_STOPS` is written, and
+leave it there: Step 1 types it in. If someone starts with (0,0), ask: "Does the robot
+drive to (0,0)?"
+
+</TeacherNote>
+
+**Question 3.** From one intersection on the list to the next, what changes?
+
+<Reveal title="Answer 3" hint="discuss first">
+
+**One number, by exactly 1:** x on the way across, then y on the way up. Never both: that
+would be a diagonal, and the robot can't drive one.
 
 <Figure
   src="/img/lesson-m4-03/one-step.svg"
@@ -43,8 +106,104 @@ changes, by 1**. Never both: that would be a diagonal, and the robot can't drive
   caption="One step changes x or y by 1, never both."
 />
 
-The Manhattan rule from Lesson 4-0: **step across until x is right, then step up or down
-until y is right.**
+</Reveal>
+
+<TeacherNote title="Question 3">
+
+Point at neighbors on the board list, (1,0) then (2,0), (2,1) then (2,2), and ask each
+time: "Which number changed? By how much?"
+
+</TeacherNote>
+
+**Question 4.** On the way across, how does the planner know when to stop going east?
+
+<Reveal title="Answer 4" hint="discuss first">
+
+**When x equals D's x.** Then it does the same with y. That is the whole planner:
+**add 1 to x until it matches D's x, then add 1 to y until it matches D's y.**
+
+</Reveal>
+
+<TeacherNote title="Question 4">
+
+Questions 3 and 4 are the heart of it. Write the rule on the board and underline it.
+"Until it matches" is a loop that keeps going while x is less than D's x: Step 2 writes it.
+
+</TeacherNote>
+
+**Question 5.** Leg 2 goes from (2,3) to (1,0). What is different? How does the planner
+know which way to go?
+
+<Reveal title="Answer 5" hint="discuss first">
+
+**Both numbers get smaller:** one step west, then three south. Compare where you are with
+D, one number at a time. If x is smaller than D's x, go east; if it's bigger, go west.
+The same with y gives north or south: **four directions.** Today you write east and north;
+west and south are Lesson 4-3.
+
+<Figure
+  src="/img/lesson-m4-discuss/m4d-42-leg2.svg"
+  alt="The 4 by 4 grid from S at (2, 3) to D at (1, 0): one step left to (1, 3), then down to (1, 2), (1, 1) and (1, 0), numbered 1 to 4 with their coordinates. Both x and y get smaller."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 5">
+
+Draw Leg 2 on a fresh grid. If someone says "subtract", ask "subtract what from what?"
+and steer back to comparing.
+
+</TeacherNote>
+
+**Question 6.** What if x already matches D's x at the start? What if S and D are the
+same intersection?
+
+<Reveal title="Answer 6" hint="discuss first">
+
+**No steps across:** the robot only goes up or down. **If S is D, the path is empty:** the
+robot is already there. The rule handles both with nothing extra.
+
+</Reveal>
+
+<TeacherNote title="Question 6">
+
+If anyone wants a special case, ask: "Does the rule already do the right thing?" Walk it
+through (2,0) to (2,3): x already matches, so there are no steps across. Lesson 4-3 tests
+both cases.
+
+</TeacherNote>
+
+**Question 7.** Without listing the path, can you tell how many intersections are on it?
+
+<Reveal title="Answer 7" hint="discuss first">
+
+**Steps across plus steps up or down.** Leg 1 is 2 + 3 = 5; Leg 2 is 1 + 3 = 4. That's a
+quick check on any path the planner prints.
+
+</Reveal>
+
+<TeacherNote title="Question 7">
+
+Steps across is how far apart the two x's are; steps up or down is how far apart the two
+y's are. Don't name it yet: Lesson 5-1 calls it the Manhattan distance.
+
+</TeacherNote>
+
+**Question 8.** Does it matter that we go across first?
+
+<Reveal title="Answer 8" hint="discuss first">
+
+**Not for the length:** up first is 5 blocks too. **It does change which intersections
+the robot drives through** (look back at Answer 1).
+
+</Reveal>
+
+<TeacherNote title="Question 8">
+
+Leave this one open. In Module 5 an intersection can be blocked, and then which
+intersections you drive through is exactly what matters.
+
+</TeacherNote>
 
 ## Activity · Build the planner, one piece at a time
 
@@ -69,9 +228,8 @@ print(len(path))     # 2
 Mind the double parentheses in `path.append((1, 0))`: the outer pair belongs to
 `append()`, the inner pair is the tuple.
 
-Leg 1 of the delivery run goes from (0, 0) to (2, 3): right twice, then up three times.
-The path is the five intersections the robot drives *to*. The start, (0, 0), is **not**
-in it: the robot is already standing there.
+Leg 1 is the trip from the discussion: (0, 0) to (2, 3). Its path is the five
+intersections you listed in Answer 2, without the start.
 
 In `compute_manhattan_path()`, keep the `print` line and replace `return [destination]`
 with:

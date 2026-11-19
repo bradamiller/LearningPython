@@ -1,4 +1,34 @@
-"""Module 4, Lesson 4-2 · The Planner: A Path That Grows."""
+"""Module 4, Lesson 4-2 · The Planner: A Path That Grows.
+
+The discussion "Where does the path go?" runs one slide per question, then one
+slide with the answer, as in Lesson 5-1. Each question slide's notes hold that
+step of the lesson's teacher notes. Grids: scripts/figures/m4discuss.py.
+"""
+
+FIG = '/img/lesson-m4-discuss/'
+
+
+def ask(n, total, question, figure=None, notes=None):
+    s = {'kind': 'bullets', 'title': f'Question {n} of {total}', 'tag': 'Discuss',
+         'bullets': question, 'size': 28}
+    if figure:
+        s.update(figure=figure if figure.startswith('/') else FIG + figure + '.svg', split=0.55)
+    if notes:
+        s['notes'] = notes
+    return s
+
+
+def answer(n, total, points, rule=None, figure=None, notes=None):
+    s = {'kind': 'bullets', 'title': f'Answer {n} of {total}', 'tag': 'Discuss',
+         'bullets': points, 'size': 28}
+    if figure:
+        s.update(figure=figure if figure.startswith('/') else FIG + figure + '.svg', split=0.55)
+    if rule:
+        s.update(callout=rule, tone='green')
+    if notes:
+        s['notes'] = notes
+    return s
+
 
 DECK = {
     'module': 4, 'lesson': 2,
@@ -7,13 +37,15 @@ DECK = {
     'slides': [
         {'kind': 'title',
          'objectives': [
+             'Work out the planner\'s rule: change one number by 1 until it matches the '
+             'destination\'s',
              'Build a path by hand with `append()`, across first, then up',
              'Start with an empty list, add to it with `append()`, and count it with `len()`',
              'Unpack a tuple into `x` and `y`, and make a new tuple from them',
              'Build a path inside a `while` loop, one step per trip around',
              'Explain what happens when two names refer to the same list',
          ],
-         'notes': '50 to 60 minutes, robot on the desk. The planner stub hands back one jump; '
+         'notes': '60 to 75 minutes, robot on the desk. It opens with a 10 to 15 minute discussion in which the class works out the planner\'s rule. The planner stub hands back one jump; '
                   'today it starts to build real paths, for any trip that goes right and up. Left '
                   'and down are Lesson 4-3. "Empty list, append inside a loop" is the pattern the '
                   'rest of the course builds paths with. Scope: [], append(), len(), unpacking. '
@@ -28,13 +60,93 @@ DECK = {
          'callout': 'Left and down come in Lesson 4-3',
          'tone': 'teal', 'size': 28},
 
-        {'kind': 'figure', 'title': 'One step at a time',
-         'figure': '/img/lesson-m4-03/one-step.svg',
-         'caption': 'One step changes x or y by 1, never both. Both would be a diagonal, and the '
-                    'robot can\'t drive one.',
-         'notes': 'The Manhattan rule from Lesson 4-0: step across until x is right, then step up '
-                  'or down until y is right. Each step below prints something: students predict '
-                  'before every run, then compare.'},
+        # --- Discuss · Where does the path go? ---
+        {'kind': 'bullets', 'title': 'Where does the path go?', 'tag': 'Discuss',
+         'bullets': [
+             'Draw a 4×4 grid: S at (0,0), D at (2,3)',
+             'That\'s Leg 1 of the delivery run',
+             'Answer each question before you go on to the next',
+         ],
+         'split': 0.55,
+         'figure': FIG + 'm4d-42-grid.svg',
+         'notes': 'Leading the discussion, 10 to 15 minutes. Draw the grid big on the board and '
+                  'mark the intersections as the class names them. The goal is that they say the '
+                  'rule; your job is to ask the next question. Keep the robot out of it: turning '
+                  'and driving are Lesson 4-4\'s discussion. Today the driver stays a stub.'},
+
+        ask(1, 8, ['What is the **fewest** number of blocks the robot can drive from S to D?',
+                   'Is there only one route that short?'], 'm4d-42-grid',
+            notes='Have a few students trace different 5-block routes on the board. Then ask: '
+                  '"Which one is easiest to explain to someone over the phone?" Steer to across '
+                  'first, then up, the rule from Lesson 4-0.'),
+        answer(1, 8, ['**5 blocks**: 2 across and 3 up',
+                      '**No**, there are several',
+                      'We pick the easiest to describe: all the way **east**, then all the way '
+                      '**north**'], figure='m4d-42-routes'),
+
+        ask(2, 8, ['List, in order, every intersection the robot drives to on that route',
+                   'Does S go on the list?'], 'm4d-42-route',
+            notes='Write the list on the board as a list of tuples, the way DELIVERY_STOPS is '
+                  'written, and leave it there: Step 1 types it in. If someone starts with (0,0), '
+                  'ask: "Does the robot drive to (0,0)?"'),
+        answer(2, 8, ['(1,0), (2,0), (2,1), (2,2), (2,3)',
+                      '**S doesn\'t**: the robot is already there'],
+               rule='This list is the path the planner has to hand back', figure='m4d-42-path'),
+
+        ask(3, 8, ['From one intersection on the list to the next, **what changes**?'],
+            'm4d-42-path',
+            notes='Point at neighbors on the board list, (1,0) then (2,0), (2,1) then (2,2), and '
+                  'ask each time: "Which number changed? By how much?"'),
+        answer(3, 8, ['**One number, by exactly 1**',
+                      'x on the way across, then y on the way up',
+                      'Never both: that would be a diagonal'],
+               figure='/img/lesson-m4-03/one-step.svg'),
+
+        ask(4, 8, ['On the way across, how does the planner know when to **stop** going east?'],
+            'm4d-42-path',
+            notes='Questions 3 and 4 are the heart of it. Write the rule on the board and '
+                  'underline it. "Until it matches" is a loop that keeps going while x is less '
+                  'than D\'s x: Step 2 writes it.'),
+        answer(4, 8, ['**When x equals D\'s x**',
+                      'Then the same with y'],
+               rule='**Add 1 to x until it matches D\'s x, then add 1 to y until it matches '
+                    'D\'s y.**'),
+
+        ask(5, 8, ['Leg 2 goes from (2,3) to (1,0). What is different?',
+                   'How does the planner know **which way** to go?'], 'm4d-42-leg2-q',
+            notes='Draw Leg 2 on a fresh grid. If someone says "subtract", ask "subtract what '
+                  'from what?" and steer back to comparing.'),
+        answer(5, 8, ['**Both numbers get smaller**: one step west, then three south',
+                      'Compare where you are with D, one number at a time',
+                      'x smaller than D\'s x: east. Bigger: west. Same with y: north or south'],
+               rule='Four directions. East and north today; west and south in Lesson 4-3',
+               figure='m4d-42-leg2'),
+
+        ask(6, 8, ['What if x already matches D\'s x at the start?',
+                   'What if S and D are the **same** intersection?'],
+            notes='If anyone wants a special case, ask: "Does the rule already do the right '
+                  'thing?" Walk it through (2,0) to (2,3): x already matches, so there are no '
+                  'steps across. Lesson 4-3 tests both cases.'),
+        answer(6, 8, ['**No steps across**: the robot only goes up or down',
+                      '**S is D: the path is empty**. The robot is already there'],
+               rule='The rule handles both with nothing extra'),
+
+        ask(7, 8, ['Without listing the path, can you tell **how many** intersections are on '
+                   'it?'],
+            notes='Steps across is how far apart the two x\'s are; steps up or down is how far '
+                  'apart the two y\'s are. Don\'t name it yet: Lesson 5-1 calls it the '
+                  'Manhattan distance.'),
+        answer(7, 8, ['**Steps across plus steps up or down**',
+                      'Leg 1: 2 + 3 = 5',
+                      'Leg 2: 1 + 3 = 4'],
+               rule='A quick check on any path the planner prints'),
+
+        ask(8, 8, ['Does it matter that we go **across first**?'], 'm4d-42-routes',
+            notes='Leave this one open. In Module 5 an intersection can be blocked, and then '
+                  'which intersections you drive through is exactly what matters.'),
+        answer(8, 8, ['**Not for the length**: up first is 5 blocks too',
+                      '**It does change which intersections** the robot drives through'],
+               figure='m4d-42-routes'),
 
         # --- Step 1 ---
         {'kind': 'code', 'title': 'Step 1 · A list can grow',

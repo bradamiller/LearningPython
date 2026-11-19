@@ -790,6 +790,18 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   **Other materials NOT updated yet:** `build_templates.py`'s Module 5 recipe (it still adds
   `remove_blocked()` at 5-2), the generated `_module-5-files.mdx` and `templates.mdx` rows,
   and the printable PDFs. Regenerate all of them once Brad says Module 5 is settled.
+- **2026-11-19: guided discussions open 4-2 and 4-4 (Brad: "Add both").** 4-2 "Discuss · Where
+  does the path go?" (8 questions on S (0,0), D (2,3): fewest blocks, the list without S,
+  one number changes by 1, stop when x matches, Leg 2 and the four directions, edge cases,
+  length = steps across plus steps up or down, does across-first matter) replaced "One step at
+  a time"; 4-3 still writes west and south. Manhattan distance is NOT named in 4-2 (cut from
+  Module 4 Nov 11; 5-1 names it). 4-4 "Discuss · Driving the path" (4 questions: which way to
+  face, compare the two positions, turn right once or twice, then drive) sits before "Heading is
+  a number"; the driving discussion is kept separate from the planner one on purpose (Brad: the
+  planner is done top-down with driving stubbed). Same page pattern as 5-1 (Question n, Reveal,
+  TeacherNote) and the same deck pattern (setup slide, then Question n of N / Answer n of N,
+  ask()/answer() helpers in decks/m4/l02.py and l04.py). Grids: `scripts/figures/m4discuss.py`
+  -> `static/img/lesson-m4-discuss/`, used by pages and decks. 4-2 is now 60-75 min, 4-4 65-75.
 - **2026-11-15: THE TOP-DOWN TRIAL IS NOW MODULE 4 (Brad: "Replace module 4 with the trial
   version").** It lives at `docs/module-04-manhattan`; the old bottom-up Module 4 is only in
   git history (last on main at `ca490e9`). Old lesson URLs 404 (no redirects plugin).

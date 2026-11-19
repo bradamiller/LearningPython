@@ -1,4 +1,34 @@
-"""Module 4, Lesson 4-4 · The Driver."""
+"""Module 4, Lesson 4-4 · The Driver.
+
+The discussion "Driving the path" runs one slide per question, then one slide
+with the answer, as in Lessons 4-2 and 5-1. Grids: scripts/figures/m4discuss.py.
+"""
+
+FIG = '/img/lesson-m4-discuss/'
+
+
+def ask(n, total, question, figure=None, notes=None):
+    s = {'kind': 'bullets', 'title': f'Question {n} of {total}', 'tag': 'Discuss',
+         'bullets': question, 'size': 28}
+    if figure:
+        s.update(figure=figure if figure.startswith('/') else FIG + figure + '.svg', split=0.55)
+    if notes:
+        s['notes'] = notes
+    return s
+
+
+def answer(n, total, points, rule=None, figure=None, notes=None):
+    s = {'kind': 'bullets', 'title': f'Answer {n} of {total}', 'tag': 'Discuss',
+         'bullets': points, 'size': 28}
+    if figure:
+        s.update(figure=figure if figure.startswith('/') else FIG + figure + '.svg', split=0.55)
+    if rule:
+        s.update(callout=rule, tone='green')
+    if notes:
+        s['notes'] = notes
+    return s
+
+
 
 DECK = {
     'module': 4, 'lesson': 4,
@@ -16,9 +46,10 @@ DECK = {
              '(Optional) Catch a mistake early by raising an error when a function is asked '
              'something it can\'t answer',
          ],
-         'notes': '55 to 65 minutes, robot on the desk. The planner is real; now the driver stub '
-                  'goes. At each intersection the robot turns to face the next one, then drives to '
-                  'it. Turning and driving stay stubs, so every move shows up as printed lines. '
+         'notes': '65 to 75 minutes, robot on the desk. The planner is real; now the driver stub '
+                  'goes. It opens with an 8 to 10 minute discussion in which the class works out '
+                  'what the robot does at each intersection: turn to face the next one, then '
+                  'drive to it. Turning and driving stay stubs, so every move shows up as printed lines. '
                   'Indexing and range(len(...)) are new here; Module 5 numbers the legs of a run '
                   'with the same loop. Every step of the activity is predict, run, compare.'},
 
@@ -26,6 +57,53 @@ DECK = {
          'figure': './decks/m4/fig/topdown-decomp-4.svg',
          'caption': 'drive_path() and get_desired_heading() today. Turning is Lesson 4-5; driving '
                     'on the tape is 4-6.'},
+
+        # --- Discuss · Driving the path ---
+        {'kind': 'bullets', 'title': 'Driving the path', 'tag': 'Discuss',
+         'bullets': [
+             'Leg 1\'s path: (1,0), (2,0), (2,1), (2,2), (2,3)',
+             'The planner\'s job is done',
+             'Now the robot has to drive it, one intersection at a time',
+         ],
+         'split': 0.55,
+         'figure': FIG + 'm4d-44-q1.svg',
+         'notes': 'Leading the discussion, 8 to 10 minutes. Run it like the planner discussion in '
+                  'Lesson 4-2: draw on the board, ask, and let the class answer. Park talk of '
+                  'motors and sensors: driving on the tape is Module 2\'s code, and it goes on '
+                  'the robot in Lesson 4-6.'},
+
+        ask(1, 4, ['The robot is at (1,0). The next intersection on the path is (2,0)',
+                   'Which way must the robot **face**? How do you know?'], 'm4d-44-q1',
+            notes='Ask "How do you know?" until someone names the number that changed and which '
+                  'way.'),
+        answer(1, 4, ['**East**', 'x went up by 1'], figure='m4d-44-a1'),
+
+        ask(2, 4, ['What if the next intersection is **(1,1)**?',
+                   'What if it\'s **(0,0)**?'], 'm4d-44-q2',
+            notes='It\'s the planner\'s comparison read the other way: the planner made each '
+                  'step, and now the driver works out which way the step went. Ask "What would '
+                  'South be?" (y goes down by 1.)'),
+        answer(2, 4, ['**(1,1) is North**: y went up by 1',
+                      '**(0,0) is West**: x went down by 1'],
+               rule='Compare the two positions: which number changed, and which way. Today: '
+                    '`get_desired_heading()`',
+               figure='m4d-44-a2'),
+
+        ask(3, 4, ['The robot faces North and needs to face **East**. What does it do?',
+                   'It faces North and needs to face **South**?'],
+            notes='Someone will ask about West: right three times, or left once. Always turning '
+                  'right is fine for now; the short way is an optional challenge in Lesson 4-6.'),
+        answer(3, 4, ['East: **turn right once**',
+                      'South: **turn right twice** (left twice works too)'],
+               rule='Lesson 4-5 writes this as `turn_to()`'),
+
+        ask(4, 4, ['Once the robot faces the next intersection, **what\'s left**?'],
+            notes='Those three steps are drive_path()\'s loop, one pass per intersection. Write '
+                  'them on the board; Step 3 turns them into the loop\'s numbered comments.'),
+        answer(4, 4, ['**Drive to it**, following the tape: `track_to_intersection()`, from '
+                      'Module 2',
+                      'Then the same for the next intersection, until the path runs out'],
+               rule='At every intersection: **which way to face, turn, drive**'),
 
         {'kind': 'table', 'title': 'Heading is a number',
          'lead': 'Since Lesson 4-1 the program has carried a `robot_heading` that never changed. '

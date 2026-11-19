@@ -7,17 +7,17 @@ sidebar_position: 4
 <LessonHeader
   eyebrow="Module 4 · Manhattan Navigation"
   title="Lesson 4-4 · The Driver"
-  meta={['55–65 min', 'Python code', 'Headings as numbers', 'Robot stays on the desk']}
+  meta={['65–75 min', 'Python code', 'Headings as numbers', 'Robot stays on the desk']}
 />
 
 <TeacherBanner>
 Teacher mode is on. Toggle it off (bottom-right) to preview the student view.
 </TeacherBanner>
 
-The planner is real. Now the driver stub goes. At each intersection on the path, the
-robot does two things: **turn** to face the next intersection, then **drive** to it. Today
-you write the loop that does that and the function that works out which way to face.
-Turning and driving stay stubs for now, so every move shows up as printed lines.
+The planner is real. Now the driver stub goes. First, as a class, work out what the robot
+does to get from one intersection on the path to the next. Then you write the loop that
+does it and the function that works out which way to face. Turning and driving stay stubs
+for now, so every move shows up as printed lines.
 
 <Objectives>
 
@@ -33,6 +33,91 @@ By the end of this lesson you will be able to:
 </Objectives>
 
 <QuizLink id="module-04-manhattan/lesson-04-the-driver" />
+
+## Discuss · Driving the path
+
+Draw Leg 1's path on a 4×4 grid: (1,0), (2,0), (2,1), (2,2), (2,3). The planner's job is
+done. Now the robot has to drive that path, one intersection at a time. Answer each
+question before you open its answer.
+
+<TeacherNote title="Leading the discussion (8–10 min)">
+
+Run it like the planner discussion in Lesson 4-2: draw on the board, ask, and let the
+class answer. Park talk of motors and sensors: driving on the tape is Module 2's code, and
+it goes on the robot in Lesson 4-6.
+
+</TeacherNote>
+
+**Question 1.** The robot is at (1,0), and the next intersection on the path is (2,0).
+Which way must the robot face? How do you know?
+
+<Reveal title="Answer 1" hint="discuss first">
+
+**East.** x went up by 1.
+
+</Reveal>
+
+<TeacherNote title="Question 1">
+
+Ask "How do you know?" until someone names the number that changed and which way.
+
+</TeacherNote>
+
+**Question 2.** What if the next intersection is (1,1)? What if it's (0,0)?
+
+<Reveal title="Answer 2" hint="discuss first">
+
+**(1,1) is North:** y went up by 1. **(0,0) is West:** x went down by 1. The direction
+comes from **comparing the two positions**: which number changed, and which way. Today you
+write that as `get_desired_heading()`.
+
+<Figure
+  src="/img/lesson-m4-discuss/m4d-44-a2.svg"
+  alt="The robot at (1, 0), with an arrow up to (1, 1) labeled North and an arrow left to (0, 0) labeled West."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 2">
+
+It's the planner's comparison read the other way: the planner made each step, and now the
+driver works out which way the step went. Ask "What would South be?" (y goes down by 1.)
+
+</TeacherNote>
+
+**Question 3.** The robot faces North and needs to face East. What does it do? What if it
+faces North and needs to face South?
+
+<Reveal title="Answer 3" hint="discuss first">
+
+**Turn right once.** For South, **turn right twice** (left twice works too). Lesson 4-5
+writes this as `turn_to()`.
+
+</Reveal>
+
+<TeacherNote title="Question 3">
+
+Someone will ask about West: right three times, or left once. Always turning right is fine
+for now; the short way is an optional challenge in Lesson 4-6.
+
+</TeacherNote>
+
+**Question 4.** Once the robot faces the next intersection, what's left?
+
+<Reveal title="Answer 4" hint="discuss first">
+
+**Drive to it**, following the tape, with `track_to_intersection()` from Module 2. Then do
+the same for the next intersection, until the path runs out. At every intersection on the
+path: **work out which way to face, turn to face it, drive there.**
+
+</Reveal>
+
+<TeacherNote title="Question 4">
+
+Those three steps are `drive_path()`'s loop, one pass per intersection. Write them on the
+board; Step 3 turns them into the loop's numbered comments.
+
+</TeacherNote>
 
 ## Heading is a number
 
