@@ -38,7 +38,7 @@ def bfs(dest, blocked):
 
 
 def draw(name, title, start, dest, blocked=(), upto=-1, new=(), paths=(), desc='',
-         visited=None, ring=(), lists=(), shown=None, side=False):
+         visited=None, ring=(), lists=(), shown=None, side=False, table=()):
     """upto: show numbers 0..upto (-1: none). new: numbers to circle in orange.
     paths: [(list of intersections, 'main' | 'alt')]
     The computer's way (5-2): shown = the intersections numbered so far (overrides upto);
@@ -132,6 +132,18 @@ def draw(name, title, start, dest, blocked=(), upto=-1, new=(), paths=(), desc='
         h += 82
     if side:
         h = max(gh, h)
+    if table:
+        tx, w = w + 30, w + 350
+        o.append(f'<text class="lb" x="{tx}" y="{Y0 + 4}">distance</text>'
+                 f'<text class="ax" x="{tx}" y="{Y0 + 44}">key</text>'
+                 f'<text class="ax" x="{tx + 170}" y="{Y0 + 44}">value</text>')
+        for i, (k, v) in enumerate(table):
+            y = Y0 + 62 + i * 56
+            o.append(f'<rect x="{tx}" y="{y}" width="120" height="42" rx="7" fill="#FFFFFF" stroke="#22527B" stroke-width="2.5"/>'
+                     f'<text class="lb" x="{tx + 60}" y="{y + 29}" text-anchor="middle" style="font-size:20px">({k[0]}, {k[1]})</text>'
+                     f'<line x1="{tx + 128}" y1="{y + 21}" x2="{tx + 160}" y2="{y + 21}" stroke="#22527B" stroke-width="3" marker-end="url(#aB)"/>'
+                     f'<rect x="{tx + 170}" y="{y}" width="60" height="42" rx="7" fill="#4C8BF5"/>'
+                     f'<text class="nm" x="{tx + 200}" y="{y + 29}" text-anchor="middle">{v}</text>')
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" aria-labelledby="fT fD">
   <title id="fT">{title}</title>
   <desc id="fD">{desc}</desc>
@@ -202,3 +214,8 @@ draw('dc-walk', 'Walking downhill needs only the numbers', S, D, upto=6,
      desc='The numbered 4 by 4 grid with a walk from S, the 6, always to a neighbor one less: right along the bottom, then up the right side to D.')
 draw('dc-full', 'Every intersection numbered', S, D, upto=6,
      desc='The 4 by 4 grid numbered from D: each intersection holds its steps to D. S, at (0, 0), is 6.')
+
+# Lesson 5-3: the numbers in a dictionary
+draw('d53-distance', 'The numbers in a dictionary', S, D, upto=1,
+     table=[((3, 3), 0), ((2, 3), 1), ((3, 2), 1)],
+     desc='The 4 by 4 grid with D, (3, 3), numbered 0 and (2, 3) and (3, 2) numbered 1. Beside it, the dictionary distance: key (3, 3) gives value 0, key (2, 3) gives 1, key (3, 2) gives 1.')

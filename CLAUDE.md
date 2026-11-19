@@ -746,13 +746,22 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   still builds Dijkstra by copying the came-from `compute_bfs_path`, and 6-5 and
   course-design D6 describe it that way.
   Answers to every discussion question live in teacher notes.
-  **2026-11-17 (Brad): less explaining, more small runnable pieces.** 5-3's activity is
-  now six printed steps that grow `build_grid_graph()` on a 3x3: visit every node (nested
-  loop), list all four neighbors (wrong on purpose, students circle the off-grid ones),
-  bounds checks, store in a dictionary (dictionary syntax is taught right there, not in its
-  own section), return + `test_grid_graph()` on 4x4, then `in` and a deliberate `KeyError`.
-  Every step: predict, run, compare to a Reveal. 5-3 is the model for 5-4 and 5-5 once
-  Brad has reviewed it (5-5 will also get the stop-when-the-start-is-numbered change).
+  **2026-11-17 (Brad): less explaining, more small runnable pieces.** Every 5-3 step:
+  predict, run, compare to a Reveal. 5-3 is the model for 5-4 and 5-5 once Brad has reviewed
+  it (5-5 will also get the stop-when-the-start-is-numbered change).
+  **2026-11-19 (Brad): lead students to each Python tool from the problem they're solving.**
+  5-3 now runs: Discuss "Where does the program keep the numbers?" (a list finds by position;
+  real-life lookup by name -> a dictionary) -> "Python's dictionary" -> practice
+  `try_distance()` in three printed steps (store/look up/`len`, one more than a neighbor,
+  `in` + a deliberate `KeyError`; deleted at the end, 5-5 writes the real `distance`) ->
+  Discuss "Where does the program keep the neighbors?" on a 3x3 with (1,1) blocked (try four
+  directions with two checks -> do them once before the search, so the search never checks
+  for blocked again -> another dictionary; the case is made with blocked intersections, not
+  speed) -> the grid as a graph -> `build_grid_graph()` in five printed steps (nested loop,
+  all four neighbors wrong on purpose, bounds checks, store in `graph`, return +
+  `test_grid_graph()`). **Every discussion on the 5-1 to 5-3 pages follows the slides:**
+  `**Question n.**`, then `<Reveal title="Answer n" hint="discuss first">`, then
+  `<TeacherNote title="Question n">`, after one general "Leading the discussion" note.
   **Decks for 5-0 to 5-2 rebuilt 2026-11-19 (Brad: "the slides follow that same discussion
   path ... one step would be the question, and then the next slide would be a description of
   the answer").** `decks/m5/l01.py` and `l02.py` follow the new pages; every discussion
@@ -763,9 +772,10 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   slide's notes. Slide-only grids, one per step, from `decks/m5/fig/make_discuss_grids.py`
   (numbers circled in orange on the answer slide that writes them). 5-0's roadmap table
   uses the new lesson names. The old 5-1 to 5-3 decks (`l03.py`, three pptx) are deleted, so
-  `build.py` runs again; **5-3 Pencil to Program has no deck yet**, and the 5-4 and 5-5 decks
+  `build.py` runs again. The 5-3 deck (`l03.py`, 2026-11-19) follows the new 5-3 page, same
+  Question/Answer slides plus a predict slide and a check slide per activity step; the 5-4 and 5-5 decks
   still follow the pages before Brad's rewrite (`remove_blocked()`, came-from walk back).
-  **Other materials NOT updated yet (Brad: website only until the changes settle):** the 5-3 to 5-5
+  **Other materials NOT updated yet:** the 5-4 and 5-5
   slide decks, `build_templates.py`'s Module 5 recipe (it still adds
   `remove_blocked()` at 5-2), the generated `_module-5-files.mdx` and `templates.mdx` rows,
   and the printable PDFs. Regenerate all of them once Brad says Module 5 is settled.

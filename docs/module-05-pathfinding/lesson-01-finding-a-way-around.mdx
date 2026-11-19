@@ -134,17 +134,7 @@ never looks at the goal at all.
 
 Draw a 4×4 grid. Mark the start, S, in the bottom-left corner, (0,0), and the destination,
 D, in the far corner, (3,3). No obstacles yet. This time, work **from the destination**.
-Answer each question before you go on to the next.
-
-1. On our grid, what makes one path shorter than another?
-2. Forget S for a moment. Which intersections are exactly **1** step from D? Write a 1 on
-   each.
-3. Which are exactly **2** steps from D? Write a 2 on each. How did you find them?
-4. Keep going until S gets a number. Could there be a shorter way from S to D than S's
-   number says?
-5. Now take the grid from the last activity: (1,0) and (1,1) blocked, D at (3,0), S at
-   (0,0). Number it from D the same way. Do the blocked intersections need a rule of
-   their own?
+Answer each question before you open its answer.
 
 <TeacherNote title="Leading the discussion (15–20 min)">
 
@@ -152,36 +142,113 @@ Draw the grid big on the board and write the numbers there as the class gives th
 goal is that *they* say the rule; your job is to ask the next question. If someone asks
 why we start from D, say it's a fair question and Lesson 5-2 answers it.
 
-1. **Fewest blocks driven.** Every block is one step. If anyone says "the straightest",
-   ask: "Is a path with 5 steps ever shorter than one with 4?"
-2. **(2,3) and (3,2).** Easy on purpose. The real move is that the question is about
-   distance *from D*, not about getting from S. Don't mention S again until question 4.
-3. **(1,3), (2,2) and (3,1).** Someone will say D, by going out and back. Ask: "Do we learn
-   anything by writing a 2 on D? We already know it's 0." That is the first discovery:
-   **only number an intersection that has no number yet.** Then press on "How did you
-   find them?" until someone says *you looked at the neighbors of the 1s*. Generalize out
-   loud and write it on the board: **"Every unnumbered neighbor of a 2 gets a 3."** That
-   sentence is the whole method; underline it.
-4. **S gets a 6, and no, there's no shorter way.** Let them argue. The convincing reason:
-   every intersection 2 steps from D was numbered before any 3 was written, so if S were
-   fewer steps away, it would already have a smaller number. So **the number written on
-   an intersection is its shortest distance to D.**
-5. **No new rule.** A blocked intersection just never gets a number, and the numbers flow
-   around it. S gets a 7. Point at the numbers next to S: the smaller one is *up*, away
-   from D. "This method never looked at where S is. Is that a weakness or a strength?" It
-   is why it works where the head-toward-the-goal rules from the last activity didn't.
-   Keep this numbered grid on the board; Lesson 5-2 starts from it.
+</TeacherNote>
 
-Their grid for question 5:
+**Question 1.** On our grid, what makes one path shorter than another?
 
-```text
- 3 |   6  5  4  3
- 2 |   5  4  3  2
- 1 |   6  X  2  1
- 0 |   7  X  1  0
-    -------------
-       0  1  2  3
-```
+<Reveal title="Answer 1" hint="discuss first">
+
+Fewer blocks driven. Every block is one step.
+
+</Reveal>
+
+<TeacherNote title="Question 1">
+
+If anyone says "the straightest", ask: "Is a path with 5 steps ever shorter than one
+with 4?"
+
+</TeacherNote>
+
+**Question 2.** Forget S for a moment. Which intersections are exactly **1** step from D?
+Write a 1 on each.
+
+<Reveal title="Answer 2" hint="discuss first">
+
+**(2,3) and (3,2).** D itself is 0.
+
+<Figure
+  src="/img/lesson-m5-01/discuss-ones-xy.svg"
+  alt="The 4 by 4 grid with S at (0, 0) and D at (3, 3). D is numbered 0, and (2, 3) and (3, 2) are circled with a 1."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 2">
+
+Easy on purpose. The real move is that the question is about distance *from D*, not
+about getting from S. Don't mention S again until question 4.
+
+</TeacherNote>
+
+**Question 3.** Which are exactly **2** steps from D? Write a 2 on each. How did you find
+them?
+
+<Reveal title="Answer 3" hint="discuss first">
+
+**(1,3), (2,2) and (3,1).** Look at the neighbors of the 1s, and only number an
+intersection that has no number yet: D stays 0. That is the whole method: **every
+unnumbered neighbor of a 2 gets a 3.**
+
+<Figure
+  src="/img/lesson-m5-01/discuss-twos-xy.svg"
+  alt="The 4 by 4 grid: D is 0, (2, 3) and (3, 2) are 1, and (1, 3), (2, 2) and (3, 1) are circled with a 2."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 3">
+
+Someone will say D, by going out and back. Ask: "Do we learn anything by writing a 2 on
+D? We already know it's 0." Then press on "How did you find them?" until someone says
+*you looked at the neighbors of the 1s*. Write the rule on the board and underline it.
+
+</TeacherNote>
+
+**Question 4.** Keep going until S gets a number. Could there be a shorter way from S to D
+than S's number says?
+
+<Reveal title="Answer 4" hint="discuss first">
+
+**S gets a 6, and no.** Everything closer to D was numbered first, so if S were fewer
+steps away it would already have a smaller number. **The number on an intersection is
+its shortest distance to D.**
+
+<Figure
+  src="/img/lesson-m5-01/discuss-full-xy.svg"
+  alt="The 4 by 4 grid numbered from D: each intersection holds its steps to D. S, at (0, 0), is 6."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 4">
+
+Let them argue before anyone opens the answer. The convincing reason is the order:
+every intersection 2 steps from D was numbered before any 3 was written.
+
+</TeacherNote>
+
+**Question 5.** Now take the grid from the last activity: (1,0) and (1,1) blocked, D at
+(3,0), S at (0,0). Number it from D the same way. Do the blocked intersections need a rule
+of their own?
+
+<Reveal title="Answer 5" hint="discuss first">
+
+**No.** A blocked intersection never gets a number, and the numbers flow around it. S
+gets a 7.
+
+<Figure
+  src="/img/lesson-m5-01/discuss-wall-xy.svg"
+  alt="A 4 by 4 grid with (1, 0) and (1, 1) blocked, numbered from D at (3, 0). The numbers flow around the blocked intersections; S, at (0, 0), is 7."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 5">
+
+Give them a couple of minutes to number it on paper. Then point at the numbers next to S:
+the smaller one is *up*, away from D. "This method never looked at where S is. Is that a
+weakness or a strength?" It is why it works where the head-toward-the-goal rules from the
+last activity didn't. Keep this numbered grid on the board; Lesson 5-2 starts from it.
 
 </TeacherNote>
 

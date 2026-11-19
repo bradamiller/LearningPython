@@ -103,7 +103,7 @@ DECK = {
                   ['**5-2** Finding the Path',
                    'Find the route, then work out how a computer would do it. No code.'],
                   ['**5-3** Pencil to Program',
-                   'What the program must remember; the grid in Python. GRID GRAPH opens.'],
+                   'Two dictionaries: the numbers, then the neighbors. GRID GRAPH opens.'],
                   ['**5-4** Pathfinding Functions', 'A shared blocked list; BFS PLANNER opens'],
                   ['**5-5** compute_bfs_path()', 'The pencil method, line for line, in Python']]},
 

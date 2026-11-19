@@ -40,36 +40,92 @@ By the end of this lesson you will be able to:
 Start from the grid you numbered at the end of Lesson 5-1: the wall at (1,0) and (1,1),
 the destination D at (3,0) numbered 0, and the start S at (0,0), which got a 7.
 
-1. You're on S, numbered 7. Which neighbor do you step to first, and why?
-2. Keep stepping. How do you choose each step, and when do you stop?
-3. At one intersection, two neighbors have the same smaller number. Which do you step to?
-4. Why did we number the grid starting from D, and not from S?
+<Figure
+  src="/img/lesson-m5-01/discuss-wall-xy.svg"
+  alt="A 4 by 4 grid with (1, 0) and (1, 1) blocked, numbered from D at (3, 0). The numbers flow around the blocked intersections; S, at (0, 0), is 7."
+/>
 
 <TeacherNote title="Leading the discussion (10 min)">
 
-1. **Up, to (0,1), the 6.** It's the only neighbor with a smaller number. Let them notice
-   that it goes *away* from D, and that the numbers say so with complete confidence.
-2. **Always step to a neighbor one less; stop at 0, which is D.** Ask why it can't fail:
-   every intersection got its number *from* a neighbor one less, so there is always a way
-   down.
-3. **Either one.** Both lead down to the 0 in the same number of steps. There can be
-   several shortest paths; what's unique is the number of steps.
-4. **So the walk starts where the robot is and goes forward to D.** The path comes out in
-   driving order. Ask what would happen had we numbered from S: you would walk downhill
-   from D back to S, and then have to turn the list around. A bonus worth saying: the
-   numbers from D tell the way from *any* start, not just this one.
+Put the numbered wall grid from the end of Lesson 5-1 back on the board.
 
-Their grid, for reference. One walk from the 7: up the left column, along the row y = 2,
-down the right column.
+</TeacherNote>
 
-```text
- 3 |   6  5  4  3
- 2 |   5  4  3  2
- 1 |   6  X  2  1
- 0 |   7  X  1  0
-    -------------
-       0  1  2  3
-```
+**Question 1.** You're on S, numbered 7. Which neighbor do you step to first, and why?
+
+<Reveal title="Answer 1" hint="discuss first">
+
+**Up, to (0,1), the 6.** It's the only neighbor with a smaller number. It goes *away*
+from D, and that's right.
+
+<Figure
+  src="/img/lesson-m5-02/path-first-step-xy.svg"
+  alt="The numbered wall grid with one step drawn from S, the 7, up to (0, 1), the 6: away from D."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 1">
+
+Let them notice that it goes away from D, and that the numbers say so with complete
+confidence.
+
+</TeacherNote>
+
+**Question 2.** Keep stepping. How do you choose each step, and when do you stop?
+
+<Reveal title="Answer 2" hint="discuss first">
+
+**Always step to a neighbor one less. Stop at 0, which is D.** Every number came from a
+neighbor one less, so there is always a way down.
+
+<Figure
+  src="/img/lesson-m5-02/path-walk-xy.svg"
+  alt="The numbered wall grid with the walk from S: up the left column, along y = 2, down the right column to D. Each step goes to a neighbor one less: 7, 6, 5, 4, 3, 2, 1, 0."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 2">
+
+Ask why it can't fail: every intersection got its number *from* a neighbor one less.
+
+</TeacherNote>
+
+**Question 3.** At one intersection, two neighbors have the same smaller number. Which do
+you step to?
+
+<Reveal title="Answer 3" hint="discuss first">
+
+**Either one.** Both lead down to 0 in the same number of steps. There can be several
+shortest paths; the number of steps is the same.
+
+<Figure
+  src="/img/lesson-m5-02/path-tie-xy.svg"
+  alt="The walk from S, with a second, dashed route where (2, 2), a 3, has two neighbors numbered 2: one goes right then down, the other down the x = 2 column. Both reach D in 7 steps."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 3">
+
+The tie is at (2,2), the 3: its neighbors (3,2) and (2,1) are both 2.
+
+</TeacherNote>
+
+**Question 4.** Why did we number the grid starting from D, and not from S?
+
+<Reveal title="Answer 4" hint="discuss first">
+
+**So the walk starts where the robot is and goes forward to D.** The path comes out in
+driving order. And the numbers from D give the way from *any* start, not just this one.
+
+</Reveal>
+
+<TeacherNote title="Question 4">
+
+Ask what would happen had we numbered from S: you would walk downhill from D back to S,
+and then have to turn the list around.
 
 </TeacherNote>
 
@@ -112,6 +168,14 @@ intersection's number. Call that **visiting** the intersection.
   caption="Visiting D: its two open neighbors get a 1."
 />
 
+<TeacherNote title="Leading the bridge (10–15 min): the most important ten minutes in the module">
+
+This is where students usually get stuck: they can do it by hand, but can't see what a
+program would *do*. Each answer is one piece of the program, so write each on the board
+as it's found, in words, and leave it up for the rest of the lesson.
+
+</TeacherNote>
+
 Use the 4×4 grid from Lesson 5-1, with no obstacles: S at (0,0), D at (3,3). The computer
 has visited D, then the 1 at (2,3), which gave a 2 to (1,3) and (2,2).
 
@@ -121,38 +185,82 @@ has visited D, then the 1 at (2,3), which gave a 2 to (1,3) and (2,2).
   caption="Gray: visited. Blue: numbered, not visited yet."
 />
 
-1. Three intersections have a number but haven't been visited: (3,2), (1,3) and (2,2).
-   Which one should the computer visit next, and why?
-2. The computer has to remember which numbered intersections are still waiting, and in
-   what order. How could it write them down? Where does a newly numbered intersection go,
-   and which one does it visit next?
-3. How does the computer know it has finished numbering the grid?
-4. To walk downhill from S, what does the computer need to know about each intersection?
-   Does it need anything else?
+**Question 1.** Three intersections have a number but haven't been visited: (3,2), (1,3)
+and (2,2). Which one should the computer visit next, and why?
 
-<TeacherNote title="Leading the bridge (10–15 min): the most important ten minutes in the module">
+<Reveal title="Answer 1" hint="discuss first">
 
-This is where students usually get stuck: they can do it by hand, but can't see what a
-program would *do*. Each answer below is one piece of the program, so write each on the
-board as it's found, in words, and leave it up for the rest of the lesson.
+**(3,2), the other 1, because it got its number first.** Visiting it gives (3,1) a 2. Both
+1s are visited before any 2, so the wave moves out one step at a time, just as on paper.
+The rule: **visit intersections in the order they got their numbers.**
 
-1. **(3,2), the other 1, because it got its number first.** Visiting it gives (3,1) a 2.
-   Then both 1s are visited before any 2, so every 2 is written before any 3: the wave
-   moves out one step at a time, just as it did on paper. The rule: **visit
-   intersections in the order they got their numbers.** If someone picks a 2, follow it:
-   visit (2,2), then its new 3s, and keep going deep; (3,1) can end up with a 4 when it
-   is only 2 steps from D.
-2. **A list: the to-visit list.** A newly numbered intersection goes on the *end*; the
-   next one to visit comes off the *front*. Right now it reads (3,2), (1,3), (2,2).
-   Visiting (3,2) takes it off the front and puts (3,1) on the end: (1,3), (2,2), (3,1).
-   Act it out if the room is flat: students in a line, the one at the front sits down
-   and sends any unnumbered neighbors to the back.
-3. **When the to-visit list is empty.** Then every intersection the wave can reach has
-   its number. (On paper you could stop once S had a number; the computer just lets the
-   wave finish, which on a 4×4 grid costs nothing.)
-4. **Just its number.** That's all the walk uses: find a neighbor one less. Nothing else
-   needs remembering. Say this plainly; students expect something more complicated, and
-   it's why the code in Lesson 5-5 is short.
+<Figure
+  src="/img/lesson-m5-02/visit-next-xy.svg"
+  alt="(3, 2), the 1, has now been visited too: its neighbor (3, 1) got a 2, circled. Both 1s are visited before any 2."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 1">
+
+Listen for "the other 1" or "the one numbered first". If someone picks a 2, follow it:
+visit (2,2), then its new 3s, and keep going deep; (3,1) can end up with a 4 when it is
+only 2 steps from D.
+
+</TeacherNote>
+
+**Question 2.** The computer has to remember which numbered intersections are still
+waiting, and in what order. How could it write them down? Where does a newly numbered
+intersection go, and which one does it visit next?
+
+<Reveal title="Answer 2" hint="discuss first">
+
+**A list: the to-visit list.** A newly numbered intersection goes on the **end**; the next
+one to visit comes off the **front**. Add to the end, take from the front.
+
+<Figure
+  src="/img/lesson-m5-02/to-visit-list-xy.svg"
+  alt="The grid after visiting (3, 2), with the to-visit list before, (3, 2), (1, 3), (2, 2), and after, (1, 3), (2, 2), (3, 1): (3, 2) came off the front and (3, 1) went on the end."
+/>
+
+</Reveal>
+
+<TeacherNote title="Question 2">
+
+Act it out if the room is flat: students in a line, the one at the front sits down and
+sends any unnumbered neighbors to the back.
+
+</TeacherNote>
+
+**Question 3.** How does the computer know it has finished numbering the grid?
+
+<Reveal title="Answer 3" hint="discuss first">
+
+**When the to-visit list is empty.** Then every intersection it can reach has its number.
+
+</Reveal>
+
+<TeacherNote title="Question 3">
+
+On paper you could stop once S had a number; the computer just lets the wave finish,
+which on a 4×4 grid costs nothing.
+
+</TeacherNote>
+
+**Question 4.** To walk downhill from S, what does the computer need to know about each
+intersection? Does it need anything else?
+
+<Reveal title="Answer 4" hint="discuss first">
+
+**Just its number.** The walk only looks for a neighbor one less. Nothing else needs
+remembering.
+
+</Reveal>
+
+<TeacherNote title="Question 4">
+
+Say this plainly; students expect something more complicated, and it's why the code in
+Lesson 5-5 is short.
 
 </TeacherNote>
 
@@ -353,8 +461,8 @@ Two discussions and two activities: about 10, 15, 15 and 10 minutes. If time is 
 keep "How a computer numbers the grid" and the review, and shorten the trace to steps 2 to 4.
 
 Have students explain the review back to a partner in their own words before "Be the
-computer". Lesson 5-3 goes through it asking what the program has to remember for each
-part, and Lesson 5-5's skeleton lists its steps as numbered comments, with one line of
+computer". Lesson 5-3 asks where the program keeps the numbers and the neighbors, and
+Lesson 5-5's skeleton lists its steps as numbered comments, with one line of
 Python under each. A student who can explain the review can write the program; a student
 who skipped it is translating a picture.
 
@@ -367,9 +475,9 @@ the dead-end numbering ends because the list runs out and the start never gets a
 **Exit ticket:** "What would go wrong if the computer took the *newest* intersection from
 the list instead of the oldest?" (The wave front would no longer move out one step at a
 time, so the numbers might not be shortest distances, and the walk downhill could take a
-longer route.) **Preview:** next lesson goes through the algorithm one part at a time and
-asks what the program has to remember for each. That's where the grid becomes a
-**graph** and Python's **dictionary** comes in.
+longer route.) **Preview:** next lesson asks where the program keeps the numbers you
+wrote on the grid, and which intersections are next to each other. Both answers are a
+Python **dictionary**, and the second one is the grid as a **graph**.
 
 </TeacherNote>
 
