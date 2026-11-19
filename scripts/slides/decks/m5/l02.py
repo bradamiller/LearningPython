@@ -1,6 +1,6 @@
 """Module 5, Lesson 5-2 · Finding the Path.
 
-Both discussions ("Where's the path?" and "Teaching it to a computer") run one
+Both discussions ("Where's the path?" and "How a computer numbers the grid") run one
 slide per question, then one slide with the answer. Each question slide's notes
 hold that step of the lesson's teacher note. Grids: fig/make_discuss_grids.py.
 """
@@ -18,11 +18,11 @@ def ask(n, total, question, figure=None, notes=None):
     return s
 
 
-def answer(n, total, points, rule=None, figure=None, notes=None):
+def answer(n, total, points, rule=None, figure=None, notes=None, split=0.55):
     s = {'kind': 'bullets', 'title': f'Answer {n} of {total}', 'tag': 'Discuss',
          'bullets': points, 'size': 28}
     if figure:
-        s.update(figure=FIG + figure + '.svg', split=0.55)
+        s.update(figure=FIG + figure + '.svg', split=split)
     if rule:
         s.update(callout=rule, tone='green')
     if notes:
@@ -46,7 +46,7 @@ DECK = {
              'with no path',
          ],
          'notes': '55 to 60 minutes, no coding. Two discussions and two activities: about 10, '
-                  '15, 15 and 10 minutes. If time is short, keep "Teaching it to a computer" and '
+                  '15, 15 and 10 minutes. If time is short, keep "How a computer numbers the grid" and '
                   'the review, and shorten the trace to steps 2 to 4.'},
 
         {'kind': 'bullets', 'title': 'The numbers say how far',
@@ -71,7 +71,7 @@ DECK = {
          'notes': 'Leading the discussion, 10 minutes. Put the numbered wall grid from the end of '
                   'Lesson 5-1 back on the board.'},
 
-        ask(1, 4, ['You\'re standing on S, a 7', 'Which way do you go first?'], 'd51-wall-full',
+        ask(1, 4, ['You\'re on S, numbered 7', 'Which neighbor do you step to first? Why?'], 'd51-wall-full',
             notes='Let them notice that it goes away from D, and that the numbers say so with '
                   'complete confidence.'),
         answer(1, 4, ['**Up, to (0,1), the 6**',
@@ -79,7 +79,7 @@ DECK = {
                       'It goes **away** from D, and that\'s right'],
                figure='d52-first-step'),
 
-        ask(2, 4, ['Keep going', 'How do you choose each step, and when do you stop?'],
+        ask(2, 4, ['Keep stepping', 'How do you choose each step, and when do you stop?'],
             'd52-first-step',
             notes='Ask why it can\'t fail: every intersection got its number from a neighbor one '
                   'less, so there is always a way down.'),
@@ -89,15 +89,15 @@ DECK = {
                notes='One walk from the 7: up the left column, along the row y = 2, down the '
                      'right column.'),
 
-        ask(3, 4, ['Somewhere you\'ll find two neighbors with the same number',
-                   'Which one do you pick?'], 'd52-walk',
+        ask(3, 4, ['At one intersection, two neighbors have the same smaller number',
+                   'Which do you step to?'], 'd52-walk',
             notes='Look at (2,2), the 3: its neighbors (3,2) and (2,1) are both 2.'),
         answer(3, 4, ['**Either one**',
                       'Both lead down to 0 in the same number of steps',
                       'There can be several shortest paths; the number of steps is the same'],
                figure='d52-tie'),
 
-        ask(4, 4, ['Why did we start the wave at D, and not at S?'],
+        ask(4, 4, ['Why did we number the grid starting from **D**, and not from S?'],
             notes='Ask what would happen had we numbered from S: you would walk downhill from D '
                   'back to S, and then have to turn the list around.'),
         answer(4, 4, ['**So the walk starts where the robot is** and goes forward to D',
@@ -129,50 +129,63 @@ DECK = {
          'explanation': 'Any neighbor with one less works. Two choices just means two different '
                         'shortest paths, both correct.'},
 
-        # --- Discuss · Teaching it to a computer ---
-        {'kind': 'bullets', 'title': 'Teaching it to a computer', 'tag': 'Discuss',
+        # --- Discuss · How a computer numbers the grid ---
+        {'kind': 'bullets', 'title': 'How a computer numbers the grid', 'tag': 'Discuss',
          'bullets': [
-             'You numbered the grid **with your eyes**: "all the 2s" at once',
-             'A computer can\'t: it sees **one intersection** and its open neighbors',
-             'The same limit your own rule had in Lesson 5-1',
+             'You numbered the grid **with your eyes**: all the 2s at once',
+             'A computer works on **one intersection at a time**',
+             'It checks that intersection\'s open neighbors. Each one with **no number yet** '
+             'gets one more',
+             'That is **visiting** the intersection',
          ],
+         'split': 0.55, 'size': 24,
+         'figure': FIG + 'dc-visit-d.svg',
          'notes': 'Leading the bridge, 10 to 15 minutes: the most important ten minutes in the '
                   'module. This is where students usually get stuck: they can do it by hand, but '
                   'can\'t see what a program would do. Each answer is one piece of the program, so '
                   'write each on the board as it\'s found, in words, and leave it up for the rest '
-                  'of the lesson.'},
+                  'of the lesson. Use the open 4×4 grid from Lesson 5-1: S at (0,0), D at (3,3). '
+                  'The picture: visiting D gives its two open neighbors a 1.'},
 
-        ask(1, 4, ['A computer looks around **one intersection at a time**',
-                   'In what order should it take them, so that every 1 is looked around before '
-                   'any 2?'],
-            notes='Listen for "the order they were numbered". If they\'re stuck, ask: "Which got '
-                  'its number first, a 1 or a 2?"'),
-        answer(1, 4, ['**In the order they were numbered**',
-                      'Every 1 was numbered before any 2',
-                      'Oldest first: the wave front moves out one step at a time, just as on '
-                      'paper']),
+        ask(1, 4, ['Visited: D, then the 1 at (2,3)',
+                   'Waiting: (3,2), (1,3) and (2,2)',
+                   'Which one should the computer visit **next**? Why?'], 'dc-q1',
+            notes='Gray is visited, blue is numbered but not visited yet. Listen for "the other 1" '
+                  'or "the one numbered first". If someone picks a 2, follow it: visit (2,2), then '
+                  'its new 3s, and keep going deep; (3,1) can end up with a 4 when it is only 2 '
+                  'steps from D.'),
+        answer(1, 4, ['**(3,2), the other 1**',
+                      'It got its number first',
+                      'Both 1s are visited before any 2, so the wave moves out one step at a '
+                      'time'],
+               rule='**Visit intersections in the order they got their numbers.**',
+               figure='dc-a1'),
 
-        ask(2, 4, ['How can it remember that order?',
-                   'What does it write down, and where does each newly numbered intersection '
-                   'go?']),
+        ask(2, 4, ['The computer must remember which intersections are **waiting**, in order',
+                   'How could it write them down?',
+                   'Where does a newly numbered one go? Which one is visited next?'], 'dc-q1'),
         answer(2, 4, ['**A list: the to-visit list**',
                       'A newly numbered intersection goes on the **end**',
-                      'The next one to look around comes off the **front**'],
+                      'The next one to visit comes off the **front**'],
                rule='**Add to the end, take from the front.**',
-               notes='Act it out if the room is flat: students in a line, the one at the front '
-                     'sits down and sends any unnumbered neighbors to the back.'),
+               figure='dc-a2', split=0.38,
+               notes='Visiting (3,2) takes it off the front and puts (3,1) on the end. Act it out '
+                     'if the room is flat: students in a line, the one at the front sits down and '
+                     'sends any unnumbered neighbors to the back.'),
 
-        ask(3, 4, ['When is the wave finished?']),
-        answer(3, 4, ['**When the list is empty**',
-                      'Every intersection the wave can reach has its number'],
+        ask(3, 4, ['How does the computer know it has **finished** numbering the grid?']),
+        answer(3, 4, ['**When the to-visit list is empty**',
+                      'Every intersection it can reach has its number'],
+               figure='dc-a3',
                notes='On paper you could stop once S had a number; the computer just lets the '
                      'wave finish, which on a 4×4 grid costs nothing.'),
 
-        ask(4, 4, ['To walk downhill, what does the computer need to know about each '
-                   'intersection?', 'Does it need anything else?']),
+        ask(4, 4, ['To walk downhill from S, what does the computer need to know about each '
+                   'intersection?', 'Does it need anything else?'], 'dc-full'),
         answer(4, 4, ['**Just its number**',
                       'The walk only looks for a neighbor one less',
                       'Nothing else needs remembering'],
+               figure='dc-walk',
                notes='Say this plainly; students expect something more complicated, and it\'s why '
                      'the code in Lesson 5-5 is short.'),
 
@@ -181,7 +194,7 @@ DECK = {
          'lead': '3×3, center (1,1) blocked. Start (0,0), destination (2,2). Neighbors in the '
                  'order left, right, down, up.',
          'steps': [
-             'Take the intersection at the **front** of the to-visit list',
+             'Visit the intersection at the **front** of the to-visit list',
              'Each open neighbor with **no number yet** gets one more, and goes on the **end**',
              'Stop when the list is **empty**',
              'Then walk downhill from (0,0). At a tie, take the first in left, right, down, up',
@@ -208,7 +221,7 @@ DECK = {
                   '4 steps.'},
 
         {'kind': 'figure', 'title': 'Check your trace', 'tag': 'Activity',
-         'figure': '/img/lesson-m5-03/bfs-downhill-steps-xy.svg',
+         'figure': '/img/lesson-m5-03/bfs-downhill-visit-xy.svg',
          'caption': 'Take from the front, add to the back, until the list is empty; then walk '
                     'downhill from S.',
          'notes': 'On the lesson page students can press Step to see what the computer does next '

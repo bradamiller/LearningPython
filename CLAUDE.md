@@ -705,7 +705,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   unnumbered neighbor of a 2 gets a 3"; why the first number on D is shortest so you can stop;
   the wall needs no new rule), then "What you found: ripples". 5-2 is now **From Rings to Steps**
   (`lesson-02-rings-to-steps`): "Discuss · Where's the path?" (walk back downhill, ties),
-  "Discuss · Teaching it to a computer" (one at a time -> oldest first -> the to-visit list;
+  "Discuss · How a computer numbers the grid" (was "Teaching it to a computer"; renamed 2026-11-19 after Brad found "it"/"them" unclear: it now defines **visiting** an intersection and asks about a pictured 4×4 state) (one at a time -> oldest first -> the to-visit list;
   came-from so the walk back never searches; the numbers aren't needed), the trace done the
   computer's way (blank table + Reveal), then **"Review: the algorithm"**, then "Be the
   computer" (pairs run the review on a dead end).
@@ -739,7 +739,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   walking downhill gives exactly the old came-from path for every start/destination pair on
   every layout the course uses (checked, including the 8 by 6 figure grid), so 5-5 to 5-9 and
   Module 6 outputs still hold. New figures: `bfs-wave-from-d-xy.svg` (grings.py),
-  `fanout-bfs-from-d.svg` (fanout.py, kind 'bfsd'), `bfs-downhill-steps-xy.svg`
+  `fanout-bfs-from-d.svg` (fanout.py, kind 'bfsd'), `bfs-downhill-visit-xy.svg`
   (g52downhill.py; g53steps.py still makes the old came-from one), and from g55.py
   `code-pencil-downhill.svg` and `bfs-vs-dfs-downhill-xy.svg` (pop() still gives 9 steps on
   Test 4, by a different route). **Module 6 NOT updated yet** (Brad: Module 5 first): 6-3
@@ -756,7 +756,7 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   **Decks for 5-0 to 5-2 rebuilt 2026-11-19 (Brad: "the slides follow that same discussion
   path ... one step would be the question, and then the next slide would be a description of
   the answer").** `decks/m5/l01.py` and `l02.py` follow the new pages; every discussion
-  ("How far away is everything?", "Where's the path?", "Teaching it to a computer") is a
+  ("How far away is everything?", "Where's the path?", "How a computer numbers the grid") is a
   setup slide, then for each question a "Question n of N" slide and an "Answer n of N" slide
   (key rule in a green callout where the page underlines one). The teacher note for that
   step is in the question slide's notes; what to say after the answer is in the answer

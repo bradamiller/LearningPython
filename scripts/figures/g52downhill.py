@@ -5,7 +5,7 @@ Back / Step / Play: every frame is a step stop, and the panel on the right says 
 plain words what just happened. After the wave fills the grid it walks downhill from S,
 one step per frame, then says why the path is the shortest.
 
-Output: out/bfs-downhill-steps.svg -> static/img/lesson-m5-03/bfs-downhill-steps-xy.svg
+Output: out/bfs-downhill-steps.svg -> static/img/lesson-m5-03/bfs-downhill-visit-xy.svg
 (replaces bfs-steps-xy.svg, the came-from version that g53steps.py still makes).
 """
 import os, sys
@@ -22,27 +22,27 @@ NUM = {(2, 2): 0, (1, 2): 1, (2, 1): 1, (0, 2): 2, (2, 0): 2, (0, 1): 3, (1, 0):
 FROM = {}                       # no came-from arrows: the numbers are the map
 PATH = [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)]
 W = list(zip(PATH, PATH[1:]))   # the walk downhill, one segment per step
-# One dict per step: look = intersection being looked around, new = numbered this step,
+# One dict per step: look = intersection being visited, new = numbered this step,
 # queue = to-visit list after the step, walk = segments of the downhill walk highlighted.
 STEPS = [
     dict(new=[(2, 2)], queue=['(2,2)'], head='Write 0 on the destination, D.',
          lines=['D is 0 steps from itself.', 'It goes on the to-visit list.']),
     dict(look=(2, 2), new=[(1, 2), (2, 1)], queue=['(1,2)', '(2,1)'],
-         head='Take the oldest: (2,2).',
+         head='Visit the oldest: (2,2).',
          lines=['Its open neighbors, (1,2) and (2,1),', 'are 1 step from D: they get 1.']),
-    dict(look=(1, 2), new=[(0, 2)], queue=['(2,1)', '(0,2)'], head='Take the oldest: (1,2).',
+    dict(look=(1, 2), new=[(0, 2)], queue=['(2,1)', '(0,2)'], head='Visit the oldest: (1,2).',
          lines=['(0,2) gets 2. The middle is blocked,', 'and (2,2) already has a number.']),
-    dict(look=(2, 1), new=[(2, 0)], queue=['(0,2)', '(2,0)'], head='Take the oldest: (2,1).',
-         lines=['(2,0) gets 2. Now every spot 1 step', 'from D has been looked around, and', 'every spot 2 steps away has a 2.']),
-    dict(look=(0, 2), new=[(0, 1)], queue=['(2,0)', '(0,1)'], head='Take the oldest: (0,2).',
+    dict(look=(2, 1), new=[(2, 0)], queue=['(0,2)', '(2,0)'], head='Visit the oldest: (2,1).',
+         lines=['(2,0) gets 2. Now every spot 1 step', 'from D has been visited, and', 'every spot 2 steps away has a 2.']),
+    dict(look=(0, 2), new=[(0, 1)], queue=['(2,0)', '(0,1)'], head='Visit the oldest: (0,2).',
          lines=['(0,1) gets 3.']),
-    dict(look=(2, 0), new=[(1, 0)], queue=['(0,1)', '(1,0)'], head='Take the oldest: (2,0).',
+    dict(look=(2, 0), new=[(1, 0)], queue=['(0,1)', '(1,0)'], head='Visit the oldest: (2,0).',
          lines=['(1,0) gets 3.']),
-    dict(look=(0, 1), new=[(0, 0)], queue=['(1,0)', '(0,0)'], head='Take the oldest: (0,1).',
+    dict(look=(0, 1), new=[(0, 0)], queue=['(1,0)', '(0,0)'], head='Visit the oldest: (0,1).',
          lines=['S gets 4: it is 4 steps from D.', 'It still goes on the list.']),
-    dict(look=(1, 0), new=[], queue=['(0,0)'], head='Take the oldest: (1,0).',
+    dict(look=(1, 0), new=[], queue=['(0,0)'], head='Visit the oldest: (1,0).',
          lines=['Its neighbors already have numbers,', 'so nothing new is written. A number', 'is never changed.']),
-    dict(look=(0, 0), new=[], queue=[], head='Take the oldest: (0,0), S.',
+    dict(look=(0, 0), new=[], queue=[], head='Visit the oldest: (0,0), S.',
          lines=['Nothing new, and the list is empty:', 'every spot has its number. Now walk', 'downhill from S.']),
     dict(walk=W[:1], queue=[], head='From S, 4 to 3: step to (1,0).',
          lines=['S has two neighbors with a 3. Either', 'works; take the first one checked.']),
@@ -138,7 +138,7 @@ b += [f'<circle cx="{X + 8}" cy="318" r="8" fill="#D1182C"/><text class="sm" x="
       f'<line x1="{X + 112}" y1="318" x2="{X + 136}" y2="318" stroke="#D1182C" stroke-width="8" stroke-linecap="round" opacity="0.4"/>'
       f'<text class="sm" x="{X + 142}" y="322">walk</text>',
       f'<circle cx="{X + 230}" cy="318" r="9" fill="none" stroke="#C77C02" stroke-width="3" stroke-dasharray="4 3"/>'
-      f'<text class="sm" x="{X + 244}" y="322">looking</text>',
+      f'<text class="sm" x="{X + 244}" y="322">visiting</text>',
       f'<circle cx="{X + 8}" cy="344" r="9" fill="none" stroke="#2E7D32" stroke-width="3"/>'
       f'<text class="sm" x="{X + 21}" y="348">just numbered</text>']
 

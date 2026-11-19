@@ -151,7 +151,7 @@ DECK = {
                   'the rule; your job is to ask the next question. If someone asks why we start '
                   'from D, say it\'s a fair question and Lesson 5-2 answers it.'},
 
-        ask(1, 5, ['On our grid, what does **"shortest"** mean?'], 'd51-grid',
+        ask(1, 5, ['On our grid, what makes one path **shorter** than another?'], 'd51-grid',
             notes='Listen for "fewest blocks". If anyone says "the straightest", ask: "Is a path '
                   'with 5 steps ever shorter than one with 4?"'),
         answer(1, 5, ['The **fewest blocks** driven', 'Every block is one step']),
@@ -186,9 +186,9 @@ DECK = {
                rule='**The number on an intersection is its shortest distance to D.**',
                figure='d51-full'),
 
-        ask(5, 5, ['Put back the wall: (1,0) and (1,1) blocked, D at (3,0)',
-                   'Number the grid again from D',
-                   'Do you need a new rule for the blocked intersections?'], 'd51-wall',
+        ask(5, 5, ['The grid from the last activity: (1,0) and (1,1) blocked, D at (3,0)',
+                   'Number it from D the same way',
+                   'Do the blocked intersections need a rule of their own?'], 'd51-wall',
             notes='Give them a couple of minutes to number it on paper while you draw it on the '
                   'board.'),
         answer(5, 5, ['**No new rule**',

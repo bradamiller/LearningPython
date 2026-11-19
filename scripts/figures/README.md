@@ -152,5 +152,5 @@ they match the generator byte for byte. **Known stale:** the deployed
 | m13copy.py | copy-paste-vs-function.svg | /img/lesson-03/copy-paste-vs-function.svg |
 | fanout.py | fanout-bfs.svg | /img/lesson-m5-03/fanout-bfs-wave.svg |
 | fanout.py | fanout-bfs-vs-dijkstra.svg | /img/lesson-m6-03/fanout-bfs-vs-dijkstra-v2.svg |
-| g52downhill.py | bfs-downhill-steps.svg | /img/lesson-m5-03/bfs-downhill-steps-xy.svg (StepFigure, wave from D then the walk downhill) |
+| g52downhill.py | bfs-downhill-steps.svg | /img/lesson-m5-03/bfs-downhill-visit-xy.svg (StepFigure, wave from D then the walk downhill) |
 | g55.py | code-pencil-downhill.svg | /img/lesson-m5-05/code-pencil-downhill.svg |

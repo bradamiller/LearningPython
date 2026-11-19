@@ -40,10 +40,10 @@ By the end of this lesson you will be able to:
 Start from the grid you numbered at the end of Lesson 5-1: the wall at (1,0) and (1,1),
 the destination D at (3,0) numbered 0, and the start S at (0,0), which got a 7.
 
-1. You're standing on S, a 7. Which way do you go first?
-2. Keep going. How do you choose each step, and when do you stop?
-3. Somewhere you'll find two neighbors with the same number. Which one do you pick?
-4. Why did we start the wave at D, and not at S?
+1. You're on S, numbered 7. Which neighbor do you step to first, and why?
+2. Keep stepping. How do you choose each step, and when do you stop?
+3. At one intersection, two neighbors have the same smaller number. Which do you step to?
+4. Why did we number the grid starting from D, and not from S?
 
 <TeacherNote title="Leading the discussion (10 min)">
 
@@ -99,19 +99,36 @@ correct answer, not by comparing against one list.
   explanation="Any neighbor with one less works. Two choices just means two different shortest paths, both correct."
 />
 
-## Discuss · Teaching it to a computer
+## Discuss · How a computer numbers the grid
 
-You numbered the grid with your eyes: you looked at the whole board and found "all the
-2s" at once. A computer can't do that. It sees one intersection and its open neighbors,
-the same limit your own rule had in Lesson 5-1.
+You numbered the grid by looking at the whole board and spotting all the 2s at once. A
+computer can't see the whole board. It works on one intersection at a time: it checks that
+intersection's open neighbors, and each neighbor with no number yet gets one more than this
+intersection's number. Call that **visiting** the intersection.
 
-1. A computer looks around **one intersection at a time**. In what order should it take
-   them, so that every 1 is looked around before any 2?
-2. How can it remember that order? What does it write down, and where does each newly
-   numbered intersection go?
-3. When is the wave finished?
-4. To walk downhill, what does the computer need to know about each intersection? Does
-   it need anything else?
+<Figure
+  src="/img/lesson-m5-02/visit-d-xy.svg"
+  alt="The 4 by 4 grid with S at (0, 0) and D at (3, 3), numbered 0. D has been visited: its open neighbors (2, 3) and (3, 2) got a 1 and are circled."
+  caption="Visiting D: its two open neighbors get a 1."
+/>
+
+Use the 4×4 grid from Lesson 5-1, with no obstacles: S at (0,0), D at (3,3). The computer
+has visited D, then the 1 at (2,3), which gave a 2 to (1,3) and (2,2).
+
+<Figure
+  src="/img/lesson-m5-02/which-next-xy.svg"
+  alt="D and the 1 at (2, 3) have been visited and are gray. Three intersections are numbered but not yet visited, circled: the 1 at (3, 2) and the 2s at (1, 3) and (2, 2)."
+  caption="Gray: visited. Blue: numbered, not visited yet."
+/>
+
+1. Three intersections have a number but haven't been visited: (3,2), (1,3) and (2,2).
+   Which one should the computer visit next, and why?
+2. The computer has to remember which numbered intersections are still waiting, and in
+   what order. How could it write them down? Where does a newly numbered intersection go,
+   and which one does it visit next?
+3. How does the computer know it has finished numbering the grid?
+4. To walk downhill from S, what does the computer need to know about each intersection?
+   Does it need anything else?
 
 <TeacherNote title="Leading the bridge (10–15 min): the most important ten minutes in the module">
 
@@ -119,16 +136,20 @@ This is where students usually get stuck: they can do it by hand, but can't see 
 program would *do*. Each answer below is one piece of the program, so write each on the
 board as it's found, in words, and leave it up for the rest of the lesson.
 
-1. **In the order they were numbered.** Every 1 was numbered before any 2, so taking
-   them oldest-first deals with everything 1 step away before anything 2 steps away:
-   the wave front moves out one step at a time, just as it did on paper.
-2. **A list.** When an intersection gets its number, add it to the *end*. To choose
-   where to look next, take the one at the *front*. Call it the **to-visit list**. Act it
-   out if the room is flat: students in a line, the one at the front sits down and sends
-   any unnumbered neighbors to the back.
-3. **When the list is empty.** Then every intersection the wave can reach has its
-   number. (On paper you could stop once S had a number; the computer just lets the wave
-   finish, which on a 4×4 grid costs nothing.)
+1. **(3,2), the other 1, because it got its number first.** Visiting it gives (3,1) a 2.
+   Then both 1s are visited before any 2, so every 2 is written before any 3: the wave
+   moves out one step at a time, just as it did on paper. The rule: **visit
+   intersections in the order they got their numbers.** If someone picks a 2, follow it:
+   visit (2,2), then its new 3s, and keep going deep; (3,1) can end up with a 4 when it
+   is only 2 steps from D.
+2. **A list: the to-visit list.** A newly numbered intersection goes on the *end*; the
+   next one to visit comes off the *front*. Right now it reads (3,2), (1,3), (2,2).
+   Visiting (3,2) takes it off the front and puts (3,1) on the end: (1,3), (2,2), (3,1).
+   Act it out if the room is flat: students in a line, the one at the front sits down
+   and sends any unnumbered neighbors to the back.
+3. **When the to-visit list is empty.** Then every intersection the wave can reach has
+   its number. (On paper you could stop once S had a number; the computer just lets the
+   wave finish, which on a 4×4 grid costs nothing.)
 4. **Just its number.** That's all the walk uses: find a neighbor one less. Nothing else
    needs remembering. Say this plainly; students expect something more complicated, and
    it's why the code in Lesson 5-5 is short.
@@ -141,7 +162,7 @@ Now do exactly what the computer will do. Use a 3×3 grid with the center, (1,1)
 The start is (0,0), the destination (2,2). Check neighbors in the order the code will use:
 left, right, down, up.
 
-Each step: take the intersection at the **front** of the to-visit list. Every open
+Each step: visit the intersection at the **front** of the to-visit list. Every open
 neighbor that doesn't have a number yet gets one more than this one's number, and goes on
 the **end** of the list. Stop when the list is empty. Copy the table and fill it in; the
 first two rows are done for you.
@@ -185,7 +206,7 @@ Here is the same trace, run one step at a time, and then the walk. Press **Step*
 what the computer does next and why.
 
 <StepFigure
-  src="/img/lesson-m5-03/bfs-downhill-steps-xy.svg"
+  src="/img/lesson-m5-03/bfs-downhill-visit-xy.svg"
   alt="A step-by-step animation of breadth-first search on the 3 by 3 grid with the center blocked, from S at (0, 0) to D at (2, 2), with the numbers written from D and a sentence for each step. D gets 0 and goes on the to-visit list. Each later step takes the oldest intersection from the front of the list; every open neighbor without a number gets the next number and a place at the back of the list. (1, 2) and (2, 1) get 1; (0, 2) and (2, 0) get 2; (0, 1) and (1, 0) get 3; S gets 4. When the list is empty, the walk downhill from S goes to (1, 0), (2, 0), (2, 1) and D, so the path is [(1, 0), (2, 0), (2, 1), (2, 2)]. The last step explains why it is the shortest: every 1 was written before any 2 and every 2 before any 3, so S's 4 is the fewest steps."
   caption="The computer's way: take from the front, add to the back, until the list is empty; then walk downhill from S."
 />
@@ -329,7 +350,7 @@ through its code: Lessons 5-3 to 5-5 get there from the review, one step at a ti
 <TeacherNote title="Pacing, and why the review matters">
 
 Two discussions and two activities: about 10, 15, 15 and 10 minutes. If time is short,
-keep "Teaching it to a computer" and the review, and shorten the trace to steps 2 to 4.
+keep "How a computer numbers the grid" and the review, and shorten the trace to steps 2 to 4.
 
 Have students explain the review back to a partner in their own words before "Be the
 computer". Lesson 5-3 goes through it asking what the program has to remember for each
