@@ -662,10 +662,20 @@ Then check for 4xx responses and images with `naturalWidth === 0`.
   insertion silently makes it wrong.
   Printable checks and the pacing guide read titles from frontmatter, so both
   followed automatically.
+- **2026-11-19: 4-1 REACHES THE LIST AND THE LOOP AS A FIX (Brad: "a similar introduction of
+  a feature to solve a problem").** The skeleton no longer has `DELIVERY_STOPS`, and
+  `test_delivery()`'s outline is one delivery to (2, 3). Steps: 1 tuple + planner stub (one
+  plan), 2 drive and unpack the pose, 3 copy the four lines for a second delivery to (1, 0)
+  and predict where leg 2 starts (the dropped-return check lives here), 4 "Now five. Or
+  fifty?": count the lines, then the list and the `for` loop arrive, and students rewrite
+  `test_delivery()`. The end state (teacher copy, every later lesson, templates, samples)
+  is unchanged. `build_templates.py` gives the 4-1 template the loop outline with a
+  multi-line `EditOutline` (EditOutline now accepts a multi-line `old`). The deck has
+  Question/Answer slides for Step 3 and Step 4's discussion, teacher prompts in their notes.
 - **2026-11-18: MODULE 4 REWORKED LIKE 5-3 (Brad: "Do all of Module 4").** Every coding
   lesson (4-1 to 4-5) is now "Activity · ..., one piece at a time": numbered Steps, each
   predict, run, compare to a Reveal, with the Python taught inside the step that first needs
-  it (tuple/list/for in 4-1 Step 1; `[]`/`append()`/`len()` in 4-2 Step 1; `==` in 4-3
+  it (tuple in 4-1 Step 1, list/for in 4-1 Step 4; `[]`/`append()`/`len()` in 4-2 Step 1; `==` in 4-3
   Step 1 by shell prediction; indexing, `range(len(...))` and `IndexError` in 4-4 Step 1;
   `%` in 4-5 Step 2). **4-2 Step 1 (Brad, 2026-11-18) is the paper trace done in code:** five typed `append()` lines, each followed by `print(path)`, so students watch the list grow; Leg 2 repeats Leg 1's path, and a count (Leg 2 needs 4, all legs 18, a 10x10 corner-to-corner trip 18) shows typing can't scale. The figure `appends-to-loops.svg` (was `trace-to-loops.svg`, `f44loops.py`) brackets those appends into the two loops. The east loop stays given as the one worked example; students write north, then west and south in 4-3. Each has a "Break it on purpose" step except 4-1 (Brad cut it 2026-11-18; Step 3 now says in one paragraph why the left side of the `drive_path()` call matters): 4-2
   indent, 4-3 append-before-step in the west loop (+ the `added:` debug print; NOT flipping

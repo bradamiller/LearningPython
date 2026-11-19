@@ -660,6 +660,14 @@ class EditOutline(Op):
         it = model.find(self.name)
         if it is None:
             fail("lesson %s edits %s(), which is not in the file" % (self.lesson, self.name))
+        if "\n" in self.old:
+            # a multi-line edit (4-1 turns one delivery into the loop)
+            joined = "\n".join(it.outline)
+            if joined.count(self.old) != 1:
+                fail("lesson %s: %r is in %s()'s outline %d times, not once" % (
+                    self.lesson, self.old, self.name, joined.count(self.old)))
+            it.outline = joined.replace(self.old, self.new).split("\n")
+            return
         hits = [i for i, l in enumerate(it.outline) if self.old in l]
         if len(hits) != 1:
             fail("lesson %s: %r is in %s()'s outline %d times, not once" % (self.lesson, self.old, self.name, len(hits)))
@@ -1367,6 +1375,20 @@ RECIPE = [
         Banner("MAIN", "4-1", "--- The main program"),
         Setting("DELIVERY_STOPS", "4-1"),
         Func("test_delivery", "4-1"),
+        # Step 4: "Rewrite test_delivery()" with the for loop
+        # (Brad, 2026-11-19: one delivery, two, then the loop)
+        EditOutline("test_delivery", "4-1",
+                    "    # 2. plan the path from robot_position to (2, 3),\n"
+                    "    #    and print it\n"
+                    "    # 3. drive it, and assign the pose it hands back\n"
+                    "    # 4. print \"new position:\", robot_position,\n"
+                    "    #          \"heading:\", robot_heading",
+                    "    # 2. for each delivery_destination in DELIVERY_STOPS:\n"
+                    "    #      plan the path from robot_position, and print it\n"
+                    "    #      drive it, and assign the pose it hands back\n"
+                    "    #      print \"new position:\", robot_position,\n"
+                    "    #            \"heading:\", robot_heading",
+                    r"Rewrite `test_delivery\(\)`: keep the two starting lines"),
     ]),
     ("4-2", [
         # the planner: east given, north to write
