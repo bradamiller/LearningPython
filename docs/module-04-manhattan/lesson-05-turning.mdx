@@ -283,6 +283,99 @@ def turn_to(current_heading, desired_heading):
 
 </TeacherNote>
 
+<TeacherNote title="The whole program on screen (teacher copy)">
+
+The delivery run as it stands after this lesson, in one file that runs on any computer
+with Python, no XRP. Use it to show the run or to check a student's printout: 77 lines
+ending `new position: (0, 0) heading: S`. Lesson 4-6 swaps the two stubs for the real
+calls.
+
+```python title="manhattan_on_screen.py"
+# Module 4 delivery run, on screen only: no XRP needed.
+# Runs on any computer with Python. Stubs print instead of
+# turning and driving; Lesson 4-6 swaps in the real calls.
+
+# ===== STUBS =====
+def fake_turn_clockwise():
+    print("turning clockwise")
+
+def fake_track_to_intersection():
+    print("tracking to intersection")
+
+# ===== PLANNER =====
+def compute_manhattan_path(start, destination):
+    """Return the (x, y) steps from start to destination, across
+    first, then up or down. The start itself is not in the list."""
+    print("computing path from:", start, "to:", destination)
+    x, y = start
+    dest_x, dest_y = destination
+    path = []
+    while x < dest_x:
+        x = x + 1
+        path.append((x, y))
+    while x > dest_x:
+        x = x - 1
+        path.append((x, y))
+    while y < dest_y:
+        y = y + 1
+        path.append((x, y))
+    while y > dest_y:
+        y = y - 1
+        path.append((x, y))
+    return path
+
+# ===== DRIVER =====
+HEADING_NAMES = ["N", "E", "S", "W"]
+
+def get_desired_heading(position, next_pos):
+    """Return the heading (0-3) that points from position to
+    next_pos, which must be one step away."""
+    x, y = position
+    next_x, next_y = next_pos
+    if next_y > y: return 0   # North
+    if next_x > x: return 1   # East
+    if next_y < y: return 2   # South
+    if next_x < x: return 3   # West
+
+def turn_to(current_heading, desired_heading):
+    """Turn clockwise a quarter turn at a time until
+    current_heading is desired_heading; return the new heading."""
+    while current_heading != desired_heading:
+        fake_turn_clockwise()
+        current_heading = (current_heading + 1) % 4
+    return current_heading
+
+def drive_path(path, current_position, current_heading):
+    """Turn and drive through every intersection in path;
+    return the final position and heading."""
+    for next_pos in path:
+        desired_heading = get_desired_heading(current_position, next_pos)
+        print("moving: from", current_position, "to:", next_pos,
+              "heading:", HEADING_NAMES[desired_heading])
+        current_heading = turn_to(current_heading, desired_heading)
+        fake_track_to_intersection()
+        current_position = next_pos
+    return current_position, current_heading
+
+# ===== MAIN PROGRAM =====
+DELIVERY_STOPS = [(2, 3), (1, 0), (3, 1), (2, 2), (0, 0)]
+
+def test_delivery():
+    robot_position = (0, 0)
+    robot_heading = 0               # facing North
+    for delivery_destination in DELIVERY_STOPS:
+        path = compute_manhattan_path(robot_position, delivery_destination)
+        print(path)
+        robot_position, robot_heading = drive_path(
+            path, robot_position, robot_heading)
+        print("new position:", robot_position,
+              "heading:", HEADING_NAMES[robot_heading])
+
+test_delivery()
+```
+
+</TeacherNote>
+
 ## Wrap-up
 
 - How does `turn_to()` know when to stop? (Its loop runs until the heading equals the one it wants; already facing it means zero turns.)
