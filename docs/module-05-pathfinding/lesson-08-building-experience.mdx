@@ -53,14 +53,15 @@ setting, and the function the capstone is built from.
 # last run found, typed in by you: memory between runs.
 KNOWN_OBSTACLES = []     # what the last run printed; empty on Run 1
 
-def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
-    """Drive from position (facing heading) to destination,
+def navigate_with_detection(current_position, current_heading,
+                            destination, rangefinder, obstacle_cm):
+    """Drive from current_position (facing current_heading) to destination,
     re-planning around every obstacle the rangefinder finds;
-    return (position, heading, step_count, reroute_count)."""
+    return (current_position, current_heading, step_count, reroute_count)."""
     # step_count = 0 ; reroute_count = 0
     # arrived = False
     # while not arrived:
-    #     plan from position; print the path
+    #     plan from current_position; print the path
     #     if the path is empty: say "No path"; return the four
     #     rerouted = False
     #     for each next_pos in path:          -- Lesson 5-7
@@ -70,9 +71,9 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
     #             add_blocked(next_pos); count the reroute
     #             rerouted = True ; break
     #         else:
-    #             arrive; position = next_pos; count the step
+    #             arrive; current_position = next_pos; count the step
     #     if not rerouted: arrived = True
-    # return position, heading, step_count, reroute_count
+    # return current_position, current_heading, step_count, reroute_count
     pass
 ```
 
@@ -87,12 +88,12 @@ Lesson 5-7's loop broke out as soon as it re-planned. Now put that `for` loop in
 - The `rerouted` flag tells the `while` how the `for` ended. It is `False` before the
   `for` and set `True` in the obstacle branch. After the `for`, "not rerouted" means the
   whole path was driven: arrived.
-- The function returns the new `position` and `heading`, because the *next* trip is
+- The function returns the new `current_position` and `current_heading`, because the *next* trip is
   planned from there. Lesson 5-9 chains several trips.
 
 <Figure
-  src="/img/lesson-m5-08/until-arrive.svg"
-  alt="A loop. Plan from here with compute_bfs_path(position, dest). Follow it, looking ahead before each step. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns position, heading and the counts."
+  src="/img/lesson-m5-08/until-arrive-v2.svg"
+  alt="A loop. Plan from here with compute_bfs_path(current_position, dest). Follow it, looking ahead before each step. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns current_position, current_heading and the counts."
   caption="Plan, follow, and if something got in the way, plan again from here."
 />
 
@@ -127,7 +128,7 @@ the robot declares itself arrived at the wrong intersection.
 />
 
 If you built the `Navigator` class in Lesson 4-6, this function wants to be a method
-of it: `position` and `heading` become `self.position` and `self.heading` and drop
+of it: `current_position` and `current_heading` become `self.position` and `self.heading` and drop
 out of the parameter list and the return, the driving calls go through
 `self.line_track.` and `self.get_desired_heading()` / `self.turn_to()`, and the planner
 calls are `planner.add_blocked()` and `planner.compute_path()`. It returns only the
@@ -197,26 +198,27 @@ meets, and arrive. Write down the last line it prints: the blocked list.
 <Reveal title="Check your navigate_with_detection()" hint="dry run first, then obstacles">
 
 ```python
-def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
-    """Drive from position (facing heading) to destination,
+def navigate_with_detection(current_position, current_heading,
+                            destination, rangefinder, obstacle_cm):
+    """Drive from current_position (facing current_heading) to destination,
     re-planning around every obstacle the rangefinder finds;
-    return (position, heading, step_count, reroute_count)."""
+    return (current_position, current_heading, step_count, reroute_count)."""
     step_count = 0
     reroute_count = 0
 
     arrived = False
     while not arrived:
-        path = compute_bfs_path(position, destination)
-        print("  Path from", position, ":", path)
+        path = compute_bfs_path(current_position, destination)
+        print("  Path from", current_position, ":", path)
 
         if len(path) == 0:
             print("No path to", destination, "!")
-            return position, heading, step_count, reroute_count
+            return current_position, current_heading, step_count, reroute_count
 
         rerouted = False
         for next_pos in path:
-            desired_heading = get_desired_heading(position, next_pos)
-            heading = turn_to(heading, desired_heading)
+            desired_heading = get_desired_heading(current_position, next_pos)
+            current_heading = turn_to(current_heading, desired_heading)
 
             distance = rangefinder.distance()          # look before driving
             if distance < obstacle_cm:
@@ -227,13 +229,13 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
                 break
             else:
                 track_to_intersection()
-                position = next_pos
+                current_position = next_pos
                 step_count = step_count + 1
 
         if not rerouted:
             arrived = True
 
-    return position, heading, step_count, reroute_count
+    return current_position, current_heading, step_count, reroute_count
 ```
 
 If yours re-plans at the bottom of the `for` and still arrives, keep it. But check
@@ -322,26 +324,27 @@ the real sensor here; step 1 uses `simulate_rangefinder(next_pos)` in its place.
 # last run found, typed in by you: memory between runs.
 KNOWN_OBSTACLES = []     # what the last run printed; empty on Run 1
 
-def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):
-    """Drive from position (facing heading) to destination,
+def navigate_with_detection(current_position, current_heading,
+                            destination, rangefinder, obstacle_cm):
+    """Drive from current_position (facing current_heading) to destination,
     re-planning around every obstacle the rangefinder finds;
-    return (position, heading, step_count, reroute_count)."""
+    return (current_position, current_heading, step_count, reroute_count)."""
     step_count = 0
     reroute_count = 0
 
     arrived = False
     while not arrived:
-        path = compute_bfs_path(position, destination)
-        print("  Path from", position, ":", path)
+        path = compute_bfs_path(current_position, destination)
+        print("  Path from", current_position, ":", path)
 
         if len(path) == 0:
             print("No path to", destination, "!")
-            return position, heading, step_count, reroute_count
+            return current_position, current_heading, step_count, reroute_count
 
         rerouted = False
         for next_pos in path:
-            desired_heading = get_desired_heading(position, next_pos)
-            heading = turn_to(heading, desired_heading)
+            desired_heading = get_desired_heading(current_position, next_pos)
+            current_heading = turn_to(current_heading, desired_heading)
 
             distance = rangefinder.distance()          # look before driving
             if distance < obstacle_cm:
@@ -352,13 +355,13 @@ def navigate_with_detection(position, heading, destination, rangefinder, obstacl
                 break
             else:
                 track_to_intersection()
-                position = next_pos
+                current_position = next_pos
                 step_count = step_count + 1
 
         if not rerouted:
             arrived = True
 
-    return position, heading, step_count, reroute_count
+    return current_position, current_heading, step_count, reroute_count
 
 def test_navigate():
     for intersection in KNOWN_OBSTACLES:

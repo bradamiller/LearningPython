@@ -113,11 +113,11 @@ DECK = {
          'tone': 'teal'},
 
         {'kind': 'figure', 'title': 'One list, leg by leg',
-         'figure': '/img/lesson-m5-09/capstone-thread-xy.svg',
+         'figure': '/img/lesson-m5-09/capstone-thread-xy-v2.svg',
          'caption': 'The dry run with `SIMULATED_OBSTACLES = [(1, 0), (2, 2), (3, 1)]`. One list '
                     'grows across the run and starts the next.',
          'notes': 'Left: the robot at home, the four destinations numbered in order, and the three '
-                  'pretend boxes. Right: leg 1 adds (1, 0); leg 3 adds (3, 1) and (2, 2). Run 1 '
+                  'pretend obstacles. Right: leg 1 adds (1, 0); leg 3 adds (3, 1) and (2, 2). Run 1 '
                   'totals 20 steps and 3 reroutes and prints the list; Run 2 starts with all three '
                   'and takes 18 steps with 0 reroutes. Useful numbers to have when a team\'s dry run '
                   'looks off.'},
@@ -125,7 +125,7 @@ DECK = {
         {'kind': 'check',
          'question': 'What single data structure connects the start of the run, pathfinding, '
                      'detection, and what you carry into the next run?',
-         'options': ['The previous dictionary',
+         'options': ['The distance dictionary',
                      'The blocked list: filled at the start, planned from, added to on detection, then printed',
                      'The to_visit list',
                      'The heading number'],
@@ -191,8 +191,8 @@ DECK = {
              '**Planner alone.** `test_capstone_paper()`: four paths and step counts. Then try a '
              'pretend `KNOWN_OBSTACLES`',
              '**Dry run.** `test_capstone()`, simulated sensor, `SIMULATED_OBSTACLES = [(1, 0), (2, 2), '
-             '(3, 1)]`, no boxes. Does the list grow?',
-             '**The real thing.** Real sensor, boxes. Run 1 with `KNOWN_OBSTACLES = []`, then Run 2 '
+             '(3, 1)]`, no obstacles. Does the list grow?',
+             '**The real thing.** Real sensor, obstacles. Run 1 with `KNOWN_OBSTACLES = []`, then Run 2 '
              'with the printed list',
          ],
          'size': 20,
@@ -202,7 +202,7 @@ DECK = {
                   'reveal). Level 2: the simulated sensor goes in navigate_with_detection()\'s '
                   'look-ahead line (Lesson 5-8, step 1); verify paths compute, pretend obstacles '
                   'register, and the list printed at the end is the one to start the next run with. '
-                  'Insist everyone gets the dry run working before a box touches the grid: logic '
+                  'Insist everyone gets the dry run working before an obstacle touches the grid: logic '
                   'first, hardware second. Level 1 runs with no robot; in level 2 the blocked list '
                   'should grow across all four legs; level 3 puts rangefinder.distance() back.'},
 

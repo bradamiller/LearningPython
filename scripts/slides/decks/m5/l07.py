@@ -99,7 +99,7 @@ DECK = {
                  '# 5-6 harness made) and a new path is planned from where the\n'
                  '# robot stands. Facing and driving are the NAVIGATOR\'s job.\n'
                  'OBSTACLE_CM = 15                         # closer than this = blocked\n'
-                 'SIMULATED_OBSTACLES = [(2, 0), (2, 2)]   # pretend boxes, for a dry run\n'
+                 'SIMULATED_OBSTACLES = [(2, 0), (2, 2)]   # pretend obstacles, for a dry run\n'
                  '\n'
                  'def simulate_rangefinder(next_pos):\n'
                  '    """Stand-in for rangefinder.distance(): 8.0 if next_pos is\n'
@@ -114,10 +114,10 @@ DECK = {
          'lead': 'The one **directly in front** of the robot, and the loop already knows it:',
          'lead_h': 0.95,
          'code': 'for next_pos in path:\n'
-                 '    desired_heading = get_desired_heading(position, next_pos)\n'
-                 '    heading = turn_to(heading, desired_heading)\n'
+                 '    desired_heading = get_desired_heading(current_position, next_pos)\n'
+                 '    current_heading = turn_to(current_heading, desired_heading)\n'
                  '    track_to_intersection()\n'
-                 '    position = next_pos',
+                 '    current_position = next_pos',
          'code_size': 22,
          'callout': 'After `turn_to()`, the robot **faces** `next_pos`. A short reading then means '
                     '`next_pos` is blocked.',
@@ -130,11 +130,11 @@ DECK = {
                   'the path, point at it.'},
 
         {'kind': 'figure', 'title': 'Parked, and facing next_pos',
-         'figure': '/img/lesson-m5-07/rangefinder-ahead-xy.svg',
+         'figure': '/img/lesson-m5-07/rangefinder-ahead-xy-v2.svg',
          'caption': 'The robot is parked and facing `next_pos`, so a short reading can only mean '
                     '`next_pos`.',
-         'notes': 'Left: the robot on (1, 0), turned east toward next_pos (2, 0), where a box sits. '
-                  'Right: the reading scale with the cutoff at OBSTACLE_CM = 15. A box on the next '
+         'notes': 'Left: the robot on (1, 0), turned east toward next_pos (2, 0), where an obstacle sits. '
+                  'Right: the reading scale with the cutoff at OBSTACLE_CM = 15. An obstacle on the next '
                   'intersection reads about 12 cm, nothing there about 50 cm.'},
 
         {'kind': 'check',
@@ -145,7 +145,7 @@ DECK = {
                      '(3,1)',
                      'It depends on the heading number'],
          'answer': 1,
-         'explanation': '`turn_to(heading, desired_heading)` pointed the robot at `next_pos`. Whatever the '
+         'explanation': '`turn_to(current_heading, desired_heading)` pointed the robot at `next_pos`. Whatever the '
                         'sensor sees now is at `next_pos`. The robot sits on a clear intersection; '
                         'the obstacle is the one it faces.'},
 
@@ -157,14 +157,14 @@ DECK = {
                  '    #     face it: get_desired_heading(), then turn_to()\n'
                  '    #     NEW: look ahead -- distance = simulate_rangefinder(\n'
                  '    #          next_pos) for now; rangefinder.distance() later\n'
-                 '    #     print position, HEADING_NAMES[heading], the distance\n'
+                 '    #     print current_position, HEADING_NAMES[current_heading], the distance\n'
                  '    #     if distance < OBSTACLE_CM:\n'
                  '    #         tell the planner: add_blocked(next_pos); say so\n'
-                 '    #         new path from HERE: compute_bfs_path(position,\n'
+                 '    #         new path from HERE: compute_bfs_path(current_position,\n'
                  '    #             destination); print it; then break\n'
                  '    #     else:\n'
                  '    #         arrive: track_to_intersection();\n'
-                 '    #         position = next_pos\n'
+                 '    #         current_position = next_pos\n'
                  '    # print the blocked list\n'
                  '    pass',
          'code_size': 16,
@@ -177,7 +177,7 @@ DECK = {
          'code': '        if distance < OBSTACLE_CM:\n'
                  '            add_blocked(next_pos)\n'
                  '            print("Obstacle at", next_pos, "! Rerouting...")\n'
-                 '            path = compute_bfs_path(position, destination)\n'
+                 '            path = compute_bfs_path(current_position, destination)\n'
                  '            print("New path:", path)\n'
                  '            break      # Lesson 5-8 keeps going instead',
          'code_size': 20,
@@ -196,7 +196,7 @@ DECK = {
          ],
          'size': 24,
          'notes': 'The planner can\'t tell a test script from a sensor. The re-plan is '
-                  'compute_bfs_path(position, destination), Rule 1 from Lesson 5-4, and there is no '
+                  'compute_bfs_path(current_position, destination), Rule 1 from Lesson 5-4, and there is no '
                   '"rebuild the graph" step to forget. Every track ends with the robot\'s center on '
                   'the cross, so the robot is still on the intersection it re-planned from. '
                   'Nothing moves the robot during a re-plan. Class track: if students built the '
@@ -207,7 +207,7 @@ DECK = {
         {'kind': 'check',
          'question': 'When the robot detects a new obstacle, what does it do to reroute?',
          'options': ['Stops permanently',
-                     'Calls `add_blocked(next_pos)`, then `compute_bfs_path(position, destination)` from where it is',
+                     'Calls `add_blocked(next_pos)`, then `compute_bfs_path(current_position, destination)` from where it is',
                      'Reverses back to the start',
                      'Ignores it and drives through'],
          'answer': 1,
@@ -230,7 +230,7 @@ DECK = {
          'lead': 'A new habit: plan and **print** the path, then wait for the button before the '
                  'robot moves.',
          'lead_h': 0.95,
-         'code': '    path = compute_bfs_path(position, destination)\n'
+         'code': '    path = compute_bfs_path(current_position, destination)\n'
                  '    print("Planned path:", path)\n'
                  '\n'
                  '    board.wait_for_button()',
@@ -246,7 +246,7 @@ DECK = {
          'steps': [
              'Add the import and the object to the **start block**',
              'Write `test_rangefinder()`: print `rangefinder.distance()` 50 times, 0.1 s apart',
-             'Run it. Hold a box at the next intersection\'s distance, then remove it',
+             'Run it. Hold an obstacle at the next intersection\'s distance, then remove it',
              'Check `OBSTACLE_CM` sits **between** the readings',
          ],
          'size': 20,
@@ -265,9 +265,9 @@ DECK = {
          'callout': 'Check: the blocked list **grew**; the new path goes **around**',
          'tone': 'teal',
          'notes': 'Before the second press, check that (2, 0) is on the planned path. The robot '
-                  'faces East, drives to (1, 0), faces (2, 0), sees the pretend box, prints the new '
+                  'faces East, drives to (1, 0), faces (2, 0), sees the pretend obstacle, prints the new '
                   'path, and stops. Only the sensor is simulated. The planner needs no simulation: it was tested in '
-                  'Lesson 5-6. Have everyone run this before touching a box: the robot still '
+                  'Lesson 5-6. Have everyone run this before touching an obstacle: the robot still '
                   'drives, but the obstacle is pretend, so a wrong reroute is a logic bug and '
                   'nothing else. Separating software bugs from hardware bugs saves enormous '
                   'frustration.'},
@@ -275,7 +275,7 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 3 · The real sensor',
          'steps': [
              'Change the look-ahead line to `rangefinder.distance()`',
-             'Put a box on the printed path: `(2, 0)` again works',
+             'Put an obstacle on the printed path: `(2, 0)` again works',
              'Press the button. It should stop, print "Rerouting..." and the new path',
          ],
          'callout': 'Taking the new path is next lesson',

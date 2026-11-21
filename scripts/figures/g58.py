@@ -35,9 +35,9 @@ open(OUTDIR+'run1-run2.svg','w').write(svg('Run 1 and Run 2',
  'Two runs from S at (0, 0), the bottom-left, to D at (3, 3), the far top-right, with obstacles at (2, 0), (2, 2) and (3, 1). Run 1 starts with an empty list and finds each obstacle only when it faces it: it reroutes at (1, 0) on seeing (2, 0), then twice at (2, 1) on seeing (3, 1) and (2, 2), backs up to (1, 1), and goes up the column at x = 1 and right along the top row: 8 steps and 3 reroutes. Run 2 starts with the three obstacles typed in and plans around them from the start, up the column at x = 1 and right along the top row: 6 steps and 0 reroutes. Same planner, same driving code; only the blocked list it started with changed.',b,H=370))
 # loop flow
 b=[]
-def bx(x,y,w,h,t,s,col,fill):
-    return [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{fill}" stroke="{col}" stroke-width="1.8"/>',f'<text class="nb" x="{x+w/2}" y="{y+22}" text-anchor="middle">{t}</text>',f'<text class="ms" x="{x+w/2}" y="{y+40}" text-anchor="middle" style="font-size:11px">{s}</text>']
-b+=bx(12,40,214,52,"Plan from here","compute_bfs_path(position, dest)","#22527B","#F1F6FB")
+def bx(x,y,w,h,t,s,col,fill,fs="font-size:11px"):
+    return [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{fill}" stroke="{col}" stroke-width="1.8"/>',f'<text class="nb" x="{x+w/2}" y="{y+22}" text-anchor="middle">{t}</text>',f'<text class="ms" x="{x+w/2}" y="{y+40}" text-anchor="middle" style="{fs}">{s}</text>']
+b+=bx(12,40,214,52,"Plan from here","compute_bfs_path(current_position, dest)","#22527B","#F1F6FB",'font-size:9.5px" textLength="200" lengthAdjust="spacingAndGlyphs')
 b.append('<line x1="228" y1="66" x2="242" y2="66" stroke="#495057" stroke-width="2" marker-end="url(#aG)"/>')
 b+=bx(244,40,214,52,"Follow it, looking ahead","turn, look, track","#22527B","#F1F6FB")
 b.append('<line x1="460" y1="66" x2="478" y2="66" stroke="#495057" stroke-width="2" marker-end="url(#aG)"/>')
@@ -47,8 +47,8 @@ b+=bx(440,144,230,52,"Tell the planner","add_blocked(next_pos); rerouted","#D118
 b.append('<path d="M 440 170 C 300 170, 119 170, 119 96" fill="none" stroke="#D1182C" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#aR)"/>')
 b.append('<text class="sm" x="290" y="194" text-anchor="middle" style="fill:#D1182C">break out of the for; the while plans again</text>')
 b.append('<path d="M 642 66 L 668 66 L 668 236 L 560 236" fill="none" stroke="#2E7D32" stroke-width="2" marker-end="url(#aGr)"/><text class="sm" x="652" y="216" text-anchor="end" style="fill:#2E7D32;font-weight:700">no, every step</text>')
-b+=bx(340,212,216,52,"Arrived","return position, heading, ...","#2E7D32","#F2F8F2")
+b+=bx(340,212,216,52,"Arrived","return current_position, current_heading","#2E7D32","#F2F8F2",'font-size:9.5px" textLength="204" lengthAdjust="spacingAndGlyphs')
 b.append('<text class="n" x="20" y="232">The while ends only when a whole path was</text>')
 b.append('<text class="n" x="20" y="249">followed with no reroute: that means arrived.</text>')
-open(OUTDIR+'until-arrive.svg','w').write(svg('Drive until you arrive',
- 'A loop. Plan from here with compute_bfs_path(position, dest). Follow it, looking ahead before each step: turn, look, track. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns position, heading and the counts. The while ends only when a whole path was followed with no reroute.',b,H=280))
+open(OUTDIR+'until-arrive-v2.svg','w').write(svg('Drive until you arrive',
+ 'A loop. Plan from here with compute_bfs_path(current_position, dest). Follow it, looking ahead before each step: turn, look, track. If something is ahead: tell the planner with add_blocked(next_pos), set rerouted, break out of the for loop, and the while loop plans again from where the robot is. If every step was followed with nothing ahead, the robot has arrived and the function returns current_position, current_heading and the counts. The while ends only when a whole path was followed with no reroute.',b,H=280))

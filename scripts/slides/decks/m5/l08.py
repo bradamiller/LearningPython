@@ -39,10 +39,11 @@ DECK = {
                  '# last run found, typed in by you: memory between runs.\n'
                  'KNOWN_OBSTACLES = []     # what the last run printed; empty on Run 1\n'
                  '\n'
-                 'def navigate_with_detection(position, heading, destination, rangefinder, obstacle_cm):\n'
-                 '    """Drive from position (facing heading) to destination,\n'
+                 'def navigate_with_detection(current_position, current_heading,\n'
+                 '                            destination, rangefinder, obstacle_cm):\n'
+                 '    """Drive from current_position (facing current_heading) to destination,\n'
                  '    re-planning around every obstacle the rangefinder finds;\n'
-                 '    return (position, heading, step_count, reroute_count)."""',
+                 '    return (current_position, current_heading, step_count, reroute_count)."""',
          'code_size': 17,
          'notes': 'The function\'s outline, which is the rest of the skeleton, is on the next slide.'},
 
@@ -50,7 +51,7 @@ DECK = {
          'code': '    # step_count = 0 ; reroute_count = 0\n'
                  '    # arrived = False\n'
                  '    # while not arrived:\n'
-                 '    #     plan from position; print the path\n'
+                 '    #     plan from current_position; print the path\n'
                  '    #     if the path is empty: say "No path"; return the four\n'
                  '    #     rerouted = False\n'
                  '    #     for each next_pos in path:          -- Lesson 5-7\n'
@@ -60,9 +61,9 @@ DECK = {
                  '    #             add_blocked(next_pos); count the reroute\n'
                  '    #             rerouted = True ; break\n'
                  '    #         else:\n'
-                 '    #             arrive; position = next_pos; count the step\n'
+                 '    #             arrive; current_position = next_pos; count the step\n'
                  '    #     if not rerouted: arrived = True\n'
-                 '    # return position, heading, step_count, reroute_count\n'
+                 '    # return current_position, current_heading, step_count, reroute_count\n'
                  '    pass',
          'code_size': 17,
          'notes': 'Under the docstring from the previous slide. Trace it on the board with a path '
@@ -81,24 +82,24 @@ DECK = {
                   're-plan happens at the top of the while instead of inside the if.'},
 
         {'kind': 'figure', 'title': 'Plan, follow, plan again',
-         'figure': '/img/lesson-m5-08/until-arrive.svg',
+         'figure': '/img/lesson-m5-08/until-arrive-v2.svg',
          'caption': 'Plan, follow, and if something got in the way, plan again from here.',
-         'notes': 'Plan from here with compute_bfs_path(position, dest). Follow it, looking ahead '
+         'notes': 'Plan from here with compute_bfs_path(current_position, dest). Follow it, looking ahead '
                   'before each step. Something ahead: add_blocked(next_pos), set rerouted, break out '
                   'of the for, and the while plans again. Every step followed with nothing ahead: '
-                  'arrived, return position, heading and the counts.'},
+                  'arrived, return current_position, current_heading and the counts.'},
 
         {'kind': 'bullets', 'title': 'The rerouted flag, and what comes back',
          'bullets': [
              '`rerouted` tells the `while` whether the `for` **finished** or **broke out**',
              ['`False` before the `for`', '`True` in the obstacle branch',
               'Still `False` after it: **arrived**'],
-             'Return the new pose (`position`, `heading`)',
+             'Return the new pose (`current_position`, `current_heading`)',
              ['The **next** trip is planned from there (Lesson 5-9)'],
          ],
          'size': 24,
          'notes': 'Class track: if students built the Navigator class in Lesson 4-6, this function '
-                  'wants to be a method of it. position and heading become self.position and '
+                  'wants to be a method of it. current_position and current_heading become self.position and '
                   'self.heading and drop out of the parameters and the return; the driving calls go '
                   'through self.line_track. and self.get_desired_heading() / self.turn_to(); the planner '
                   'calls are planner.add_blocked() and planner.compute_path(). It returns only the '
@@ -137,13 +138,13 @@ DECK = {
                         'position. Only a complete pass sets `arrived`.'},
 
         {'kind': 'check',
-         'question': 'Why does the function return the pose (`position` and `heading`), not just the step counts?',
+         'question': 'Why does the function return the pose (`current_position` and `current_heading`), not just the step counts?',
          'options': ['Python requires functions to return at least two values',
                      'So the next trip is planned from where the robot actually ended up, facing the way it faces',
                      'To reset them to (0, 0) and 0',
                      'For the print statement only'],
          'answer': 1,
-         'explanation': 'The pose (`position` and `heading`) is local to the function. The caller '
+         'explanation': 'The pose (`current_position` and `current_heading`) is local to the function. The caller '
                         'learns the new pose only if the function hands it back, and Lesson 5-9 '
                         'needs it to chain destinations.'},
 
@@ -163,11 +164,11 @@ DECK = {
                   'traffic report when you closed the app?"'},
 
         {'kind': 'figure', 'title': 'Run 1 and Run 2',
-         'figure': '/img/lesson-m5-08/run1-run2-xy.svg',
-         'caption': 'One example with three boxes. Your numbers will depend on your grid; the shape '
+         'figure': '/img/lesson-m5-08/run1-run2-xy-v2.svg',
+         'caption': 'One example with three obstacles. Your numbers will depend on your grid; the shape '
                     'of the difference won\'t.',
-         'notes': 'S at (0, 0) to D at (3, 3), boxes at (2, 0), (2, 2) and (3, 1). Run 1 starts '
-                  'empty and finds each box only when it faces it: 8 steps, 3 reroutes, backing up '
+         'notes': 'S at (0, 0) to D at (3, 3), obstacles at (2, 0), (2, 2) and (3, 1). Run 1 starts '
+                  'empty and finds each obstacle only when it faces it: 8 steps, 3 reroutes, backing up '
                   'once. Run 2 starts with the three typed in: 6 steps, 0 reroutes.'},
 
         {'kind': 'check',
@@ -191,7 +192,7 @@ DECK = {
          'notes': 'The KNOWN_OBSTACLES loop is two lines. At the end, print where the robot '
                   'arrived, the step and reroute counts, and on its own line "All known '
                   'obstacles:" and BLOCKED. The dry run proves the loop with Lesson 5-7\'s simulate_rangefinder() before any '
-                  'box goes on the grid.'},
+                  'obstacle goes on the grid.'},
 
         {'kind': 'code', 'title': 'Assign all four return values',
          'lead': 'The call hands back **four** values. Catch every one:',
@@ -210,8 +211,8 @@ DECK = {
         {'kind': 'steps', 'title': 'Step 2 · The real sensor',
          'steps': [
              'Change the look-ahead line to `rangefinder.distance()`',
-             'Put two boxes on the printed path; run again',
-             'It should reroute around each box it meets, and arrive',
+             'Put two obstacles on the printed path; run again',
+             'It should reroute around each obstacle it meets, and arrive',
              'Write down the last line: the **blocked list**',
          ],
          'notes': 'Set up the grid so Run 1 has 2 to 3 reroutes; the contrast with a zero-reroute '
